@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
     <string name="automation_missing_trigger">Lütfen en az bir tetikleyici belirtin.</string>
     <string name="automation_missing_action">Lütfen en az bir işlem belirtin.</string>
+    <string name="exportsettings_message">Ayarlar Dışa Aktarılıyor: %1$s</string>
+    <string name="export_settings_short">Tedavi metinleri:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Msj:</string>
@@ -87,6 +89,20 @@
     <string name="cobcompared">AKRB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Nabız</string>
     <string name="triggerHeartRateDesc">KA %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensör yaşı</string>
+    <string name="triggerSensorAgeDesc">Sensör yaşı %1$s %2$.1f saat</string>
+    <string name="triggerCannulaAgeLabel">Kanül yaşı</string>
+    <string name="triggerCannulaAgeDesc">Kanül yaşı %1$s %2$.1f saat</string>
+    <string name="triggerPodChangeLabel">Pod aktivasyonu</string>
+    <string name="triggerPodChangeDesc">Pod Etkinleştirildi</string>
+    <string name="triggerInsulinAgeLabel">İnsülin yaşı</string>
+    <string name="triggerInsulinAgeDesc">İnsülin yaşı %1$s %2$.1f saat</string>
+    <string name="triggerPumpBatteryAgeLabel">Pompa pil yaşı</string>
+    <string name="triggerPumpBatteryAgeDesc">Pompa pil yaşı %1$s %2$.1f saat</string>
+    <string name="triggerReservoirLevelLabel">Rezervuar seviyesi</string>
+    <string name="triggerReservoirLevelDesc">Rezervuar seviyesi %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pompa pil seviyesi</string>
+    <string name="triggerPumpBatteryLevelDesc">Pompa pil seviyesi %1$s %2$.0f</string>
     <string name="iob_u">AİNS [U]:</string>
     <string name="distance_short">Mesafe [m]:</string>
     <string name="recurringTime">Yinelenen zaman</string>
@@ -104,8 +120,6 @@
     <string name="automation_event">Otomasyon durumu</string>
     <string name="reorder_label">Yeniden sırala</string>
     <string name="user_action">Kullanıcı onayı ile</string>
-    <string name="remove_automation">Otomasyonu kaldır</string>
-    <string name="sort_automation">Otomasyonu sırala</string>
     <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="system_automation">Sistem otomasyonu</string>
@@ -116,4 +130,15 @@
     <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve hesaplamayı tekrar yapın.</string>
     <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="error_setting_reminder">Gelecek alarmı ayarlanırken hata oluştu</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">OtoAyar profili %1$s</string>
+    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
+    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştı</string>
+    <string name="autotune_run_with_autoswitch">OtoAyar çalıştı ve profil otomatik olarak değiştirildi</string>
+    <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
+    <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Adım Sayacı</string>
+    <string name="triggerStepsCountDesc">Her %1$s dakikadaki %2$s %3$.0f Adım sayısı</string>
+    <string name="triggerStepsCountDropdownLabel">Ölçüm Süresi</string>
 </resources>

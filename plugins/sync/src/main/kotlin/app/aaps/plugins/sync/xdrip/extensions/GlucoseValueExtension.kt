@@ -1,9 +1,9 @@
 package app.aaps.plugins.sync.xdrip.extensions
 
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.core.data.model.GV
 import org.json.JSONObject
 
-fun GlucoseValue.toXdripJson(): JSONObject =
+fun GV.toXdripJson(): JSONObject =
     JSONObject()
         .put("device", sourceSensor.text)
         .put("mills", timestamp)

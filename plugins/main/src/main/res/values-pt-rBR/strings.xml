@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Para desativar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reativar diretamente apenas a partir do celular principal do AAPS.</string>
     <string name="smscommunicator_stopped_sms">SMS Serviço Remoto interrompido. Para reativá-lo, use o AAPS no telemóvel mestre.</string>
     <string name="smscommunicator_calibration_reply_with_code">Para enviar calibração %1$.2f responder com código %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus falhou</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remote_bolus_min_distance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Para sua segurança, para editar esta preferência você precisa adicionar pelo menos 2 números de telefone.</string>
@@ -201,11 +200,6 @@
     <string name="overview_shortname">Início</string>
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="overview_buttons_selection">Botões</string>
-    <string name="show_calibration_button_summary">Enviar uma calibração para o xDrip+ ou abrir diálogo de calibração BYODA</string>
-    <string name="show_cgm_button_summary">Abre xDrip+ ou BYODA, botão \"voltar\" para retornar ao AAPS</string>
-    <string name="dexcom_app_not_installed">App Dexcom não está instalada.</string>
-    <string name="dexcom_app_not_detected">Por favor atualize as sua aplicação Dexcom para uma versão suportada</string>
-    <string name="error_starting_cgm">Não foi possível lançar aplicação de monitorização contínua. Por favor verifique que está instalada.</string>
     <string name="not_available_full">Indisponível</string>
     <string name="constraints_violation">Violação das restrições</string>
     <string name="change_your_input">Altere sua entrada!</string>
@@ -226,12 +220,6 @@
     <string name="thirdcarbsincrement">Terceiro incremento hidratos</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Alvo-Temp padrão</string>
-    <string name="eatingsoon_duration">duração comerbreve</string>
-    <string name="eatingsoon_target">alvo comerbreve</string>
-    <string name="activity_duration">duração da atividade</string>
-    <string name="activity_target">alvo da atividade</string>
-    <string name="hypo_duration">duração hipo</string>
-    <string name="hypo_target">alvo hipo</string>
     <string name="fill_bolus_title">Purgar/Preencher os valores padrões</string>
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
@@ -259,7 +247,6 @@
     <string name="overview_show_deviation_slope">Desvio de inclinação</string>
     <string name="overview_show_activity">Atividade</string>
     <string name="overview_show_bgi">Impacto na glicose</string>
-    <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
     <string name="overview_show_cob">Carboidratos a bordo</string>
     <string name="overview_show_iob">Insulina a bordo</string>
@@ -274,7 +261,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRATA</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Escala do gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <!-- Skins -->
@@ -285,7 +271,6 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="old_data">DADOS ANTIGOS</string>

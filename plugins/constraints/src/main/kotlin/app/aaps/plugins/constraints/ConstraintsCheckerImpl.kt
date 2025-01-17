@@ -1,12 +1,12 @@
 package app.aaps.plugins.constraints
 
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.objects.constraints.ConstraintObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -72,18 +72,6 @@ class ConstraintsCheckerImpl @Inject constructor(
             val constraint = p as PluginConstraints
             if (!p.isEnabled()) continue
             constraint.isSMBModeEnabled(value)
-        }
-        return value
-    }
-
-    override fun isDynIsfModeEnabled(): Constraint<Boolean> = isDynIsfModeEnabled(ConstraintObject(true, aapsLogger))
-
-    override fun isDynIsfModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
-        for (p in constraintsPlugins) {
-            val constraint = p as PluginConstraints
-            if (!p.isEnabled()) continue
-            constraint.isDynIsfModeEnabled(value)
         }
         return value
     }

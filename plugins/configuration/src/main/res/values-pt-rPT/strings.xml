@@ -30,15 +30,12 @@
     <string name="status">Estado:</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça o nome do paciente ou alcunha para diferenciar entre várias configurações</string>
-    <string name="privacy_settings">Definições de privacidade</string>
-    <string name="privacy_summary">Opcionalmente pode fornecer um endereço de e-mail se quiser ser notificado sobre os erros da app. Este não é um serviço automatizado. Será contactado por desenvolvedores em situações perigosas.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir que a AndroidAPS sugira/faça alterações nas basais</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar a configuração assim que a bomba for configurada.\n</string>
@@ -47,8 +44,6 @@
     <string name="readstatus">Ler estado</string>
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
-    <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
-    <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para que possamos contatá-lo em casos urgentes. É opcional.</string>
     <string name="identification">Identificação (e-mail, nick FB ou Discord, etc)</string>
     <string name="request">Pedido</string>
     <string name="apsmode_title">Modo APS</string>
@@ -96,7 +91,6 @@
     <string name="check_preferences_before_import">Por favor, verifique as preferências antes da importação:</string>
     <string name="check_preferences_cannot_import">Preferências não podem ser importadas!</string>
     <string name="check_preferences_dangerous_import">As preferências não devem ser importadas!</string>
-    <string name="nav_export">Exportar definições</string>
     <string name="export_to">Exportar definições para</string>
     <string name="import_from">Importar definições de</string>
     <string name="setting_imported">Definições importadas</string>
@@ -109,7 +103,6 @@
     <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
     <string name="ue_exported">Registos do utilizador exportadas</string>
     <string name="protection">Protecção</string>
-    <string name="master_password_missing">A Senha Mestre não está definida!\n\nPor favor, configure Senha Mestre em Preferências (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
@@ -132,11 +125,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado há %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado às %1$s</string>
     <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
-    <string name="in_directory" comment="placeholder is for exported file path">no diretório: %1$s</string>
     <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
     <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas definições podem estar ausentes ou inválidas - após a importação, por favor verifique e actualize suas preferências.</string>
     <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
-    <string name="metadata_warning_outdated_format">Está a utilizar formato ultrapassado herdado a partir de versões antigas do AAPS, o que não é seguro! Utilize-o apenas como um último recurso, se não tiver uma exportação no actual no formato JSON.</string>
     <string name="metadata_warning_old_export">Preferências importadas já são %1$s dias antigas! Talvez tenha preferências mais actualizadas ou escolheu o ficheiro errado? Lembre-se de exportar preferências regularmente!</string>
     <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
     <string name="metadata_warning_different_version">Preferências de uma versão menor diferente de aplicação. Está OK se está a importar após o upgrade, mas verifique após a importação se as preferências ainda estão correctas!</string>
@@ -154,8 +145,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Selecionar Watchface Personalizada</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie a AAPS nas Configurações do Sistema \ncaso contrário a android APS não terá registo (isto é importante para analisar e verificar se os algoritmos estão funcionando corretamente)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato do ficheiro</string>
     <string name="metadata_label_created_at">Criado em</string>
@@ -165,6 +154,5 @@
     <string name="metadata_label_device_model">A exportar modelo do dispositivo</string>
     <string name="metadata_label_encryption">Encriptação do Ficheiro</string>
     <string name="metadata_format_new">Novo formato de encriptação</string>
-    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>
 </resources>

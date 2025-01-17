@@ -19,6 +19,7 @@
     <string name="permission">Povolenie</string>
     <string name="need_system_window_permission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
     <string name="need_location_permission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
+    <string name="need_background_location_permission">Aplikácia potrebuje povolenie na zisťovanie polohy na pozadí pre automatizáciu</string>
     <string name="need_storage_permission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
     <string name="need_whitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
@@ -30,15 +31,13 @@
     <string name="status">Stav:</string>
     <string name="patient_name">Meno pacienta</string>
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
-    <string name="privacy_settings">Nastavenia súkromia</string>
-    <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_loop_description">Stlačte tlačidlo nižšie, pre povolenie, aby mohlo AndroidAPS navrhovať, alebo robiť zmeny bazálu</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
@@ -47,8 +46,8 @@
     <string name="readstatus">Načítať stav</string>
     <string name="data_choices">Možnosti dát</string>
     <string name="fabric_upload">Odosielanie do Fabric</string>
-    <string name="allow_automated_crash_reporting">Automatické odosielanie chýb aplikácie a štatistiky používania vývojárom pomocou služby fabric.io.</string>
-    <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
+    <string name="unattended_settings_export">Automatický export nastavení</string>
+    <string name="unattended_settings_export_summary">Povolenie tejto voľby bezpečne uloží vaše heslo do telefónu</string>
     <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
     <string name="request">Požiadavka</string>
     <string name="apsmode_title">APS mód</string>
@@ -82,6 +81,8 @@
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
     <string name="a11y_open_settings">otvoriť nastavenia</string>
     <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
+    <string name="expand_category">Rozbaliť kategóriu</string>
+    <string name="collapse_category">Zbaliť kategóriu</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nastavenia</string>
     <string name="password_preferences_encrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie exportovaných nastavení.</string>
@@ -93,10 +94,11 @@
     <string name="check_preferences_import_btn">Importovať</string>
     <string name="check_preferences_import_anyway_btn">Importovať rovnako (NEBEZPEČNÉ!)</string>
     <string name="import_setting">Importovať nastavenia</string>
+    <string name="aaps_directory">AAPS priečinok</string>
+    <string name="select_aaps_directory">Vyberte adresár AAPS na ukladanie exportov, konfigurácií atď.</string>
     <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
     <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
     <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
-    <string name="nav_export">Exportovať nastavenia</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="import_from">Importovať nastavenia z</string>
     <string name="setting_imported">Nastavenia importované</string>
@@ -104,18 +106,20 @@
     <string name="different_password_used">Tento súbor bol exportovaný a zašifrovaný iným hlavným heslom. Pre dešifrovanie súboru použite staré hlavné heslo.</string>
     <string name="master_password_will_be_replaced">V dôsledku úspešného importu bude aktuálne hlavné heslo NAHRADENÉ týmto starým hlavným heslom!</string>
     <string name="exported">Nastavenie exportované</string>
+    <string name="exported_failed">Export nastavení se zlyhal!</string>
     <string name="filenotfound">Súbor nenájdený</string>
     <string name="goto_main_try_again">Prosím, vráťte se späť na hlavnú obrazovku a skúste to znovu.</string>
     <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
     <string name="ue_exported">Užívateľské záznamy exportované</string>
     <string name="protection">Ochrana</string>
-    <string name="master_password_missing">Hlavné heslo nie je nastavené!\n\nProsím nastavte svoje hlavné heslo v nastaveniach (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">Hlavné heslo nie je nastavené!\n\nProsím nastavte svoje hlavné heslo v nastaveniach (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">Údržba</string>
     <string name="description_maintenance">Poskytuje viaceré funkcie pre údržbu (ako napr. zasielanie logov, vymazanie logov).</string>
     <string name="database_cleanup">Vyčistenie databázy</string>
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
+    <string name="reset_aps_results_confirm">Naozaj chcete resetovať uložené výsledky AAPS?</string>
     <string name="maintenance_settings">Nastavenie údržby</string>
     <string name="maintenance_email">E-Mail</string>
     <string name="maintenance_amount">Počet protokolov na odoslanie</string>
@@ -132,11 +136,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
     <string name="exported_less_than_hour_ago">exportované pred menej ako hodinou</string>
-    <string name="in_directory" comment="placeholder is for exported file path">v adresári: %1$s</string>
     <string name="preferences_import_list_title">Vyberte súbor, ktorý chcete importovať</string>
     <string name="metadata_warning_different_flavour">Nastavenia boli vytvorené inou verziou AAPS (%1$s) pretože máte: %2$s.\n\nNiektoré nastavenia môžu chýbať, alebo byť poškodené - po importovaní prosím skontrolujte a upravte nastavenia.</string>
     <string name="metadata_warning_different_device">Nastavenia boli vytvorené na inom zariadení. Je to v poriadku, keď importujete zo staršieho/iného telefónu, ale skontrolujte, že importované nastavenia sú správne!</string>
-    <string name="metadata_warning_outdated_format">Používate zastaralý formát zo staršej verzie AAPS, čo nie je bezpečné! Používajte len ako poslednú možnosť, ak nemáte export v aktuálnom, JSON formáte.</string>
     <string name="metadata_warning_old_export">Importované nastavenia sú už %1$s dní staré! Možno máte viacero novších nastavení, alebo ste zvolili nesprávny súbor? Nezabúdajte pravidelne exportovať nastavenia!</string>
     <string name="metadata_warning_date_format">Nesprávny formát dátumu a času!</string>
     <string name="metadata_warning_different_version">Nastavenie z odlišnej, nižšej verzie aplikácie. Je to v poriadku, pokiaľ importujete po aktualizácii, po importe však skontrolujte, či sú nastavenia stále správne!</string>
@@ -154,8 +156,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Vyberte vlastný ciferník</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formát súboru</string>
     <string name="metadata_label_created_at">Vytvorené</string>
@@ -165,6 +165,7 @@
     <string name="metadata_label_device_model">Model zariadenia použitý pri exporte</string>
     <string name="metadata_label_encryption">Šifrovanie súborov</string>
     <string name="metadata_format_new">Nový šifrovaný formát</string>
-    <string name="metadata_format_debug">Nový formát pre ladenie (nešifrovaný)</string>
     <string name="metadata_format_other">Neznámy formát exportu</string>
+    <string name="reset_aps_results">Resetovať výsledky APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba pri prístupe k súborom. Vyberte adresár AAPS.</string>
 </resources>

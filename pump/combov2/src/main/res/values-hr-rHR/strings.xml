@@ -2,7 +2,6 @@
 <resources>
     <string name="combov2_could_not_connect">Nije moguće spojiti pumpu</string>
     <string name="combov2_not_paired">Nije uparen s pumpom</string>
-    <string name="combov2_pump_terminated_connection">Pumpa je prekinula vezu</string>
     <string name="combov2_warning">Kombinirano upozorenje</string>
     <string name="combov2_error">Kombinirano greška</string>
     <string name="combov2_warning_4">Nazovite telefonsku liniju za ažuriranje</string>

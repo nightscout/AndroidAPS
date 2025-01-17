@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="app.aaps.weardata.permission" />
+
+    <permission
+        android:name="app.aaps.weardata.permission"
+        android:label="AAPS WEAR DATA"
+        android:protectionLevel="signature" />
+
     <application>
 
         <service
@@ -12,12 +19,13 @@
             android:name=".nsclientV3.services.NSClientV3Service"
             android:enabled="true"
             android:exported="false" />
+
         <activity
             android:name=".openhumans.ui.OHLoginActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/OpenHumans"
+            android:exported="true"
             android:label="Setup Open Humans"
-            android:exported="true">
+            android:launchMode="singleTop"
+            android:theme="@style/OpenHumans">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -29,6 +37,18 @@
                     android:scheme="androidaps" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name="app.aaps.plugins.sync.wear.receivers.WearDataReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="app.aaps.weardata.permission">
+            <intent-filter>
+                <!-- Receiver from aapsclient -->
+                <action android:name="app.aaps.aapsclient.weardata" />
+            </intent-filter>
+        </receiver>
+
 
     </application>
 

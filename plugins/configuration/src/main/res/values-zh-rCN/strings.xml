@@ -27,8 +27,6 @@
     <string name="status">状态:</string>
     <string name="patient_name">患者名称</string>
     <string name="patient_name_summary">请提供患者姓名或昵称来区分多个设置</string>
-    <string name="privacy_settings">隐私设置</string>
-    <string name="privacy_summary">如果你想得到应用程序重大缺陷的通知，你可以选择提供电子邮件地址、Facebook或Discord等信息。这不是一项自动化的服务。在可能存在危险时，开发人员才会联系您。</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
     <string name="profile">配置文件</string>
     <string name="doprofileswitch">配置文件切换</string>
@@ -42,8 +40,6 @@
     <string name="readstatus">读取状态</string>
     <string name="data_choices">数据选择</string>
     <string name="fabric_upload">通过Fabric上传</string>
-    <string name="allow_automated_crash_reporting">允许通过fabric.io服务将自动崩溃报告和功能使用数据发送给开发人员。</string>
-    <string name="summary_email_for_crash_report">此项为选填信息，会附在反馈的崩溃报告中，以便我们在紧急情况下与您联系。</string>
     <string name="identification">身份识别 (email邮件地址, FaceBook账号 或 Discord账号等等)</string>
     <string name="request">请求</string>
     <string name="apsmode_title">APS模式</string>
@@ -81,7 +77,6 @@
     <string name="check_preferences_before_import">请在导入之前检查首选项：</string>
     <string name="check_preferences_cannot_import">无法导入首选项！</string>
     <string name="check_preferences_dangerous_import">不应导入首选项 !</string>
-    <string name="nav_export">导出配置</string>
     <string name="export_to">导出配置</string>
     <string name="import_from">导入配置</string>
     <string name="setting_imported">配置导入了</string>
@@ -113,11 +108,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">已导出 %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">导出 %1$s</string>
     <string name="exported_less_than_hour_ago">不到 1 小时前更新过</string>
-    <string name="in_directory" comment="placeholder is for exported file path">目录: %1$s</string>
     <string name="preferences_import_list_title">选择要导入的文件</string>
     <string name="metadata_warning_different_flavour">使用 AAPS 的不同版本创建首选项 (%1$s) 而你有 %2$s\n\n某些设置可能缺失或无效 - 导入后，请检查并更新首选项。</string>
     <string name="metadata_warning_different_device">首选项是在不同的设备上创建的。 如果要从较旧/不同的电话导入，但确保导入的首选项正确 !</string>
-    <string name="metadata_warning_outdated_format">您正在使用旧版本的 AAPS 中过时的旧格式，这不安全 ! 仅当您没有当前的 JSON 格式的导出时，才将其用作最后的手段。</string>
     <string name="metadata_warning_old_export">导入的首选项已存在 %1$s 天 ! 您可能有更多最新的首选项，还是选择了错误的文件? 请记住定期导出首选项 !</string>
     <string name="metadata_warning_date_format">日期-时间格式无效 !</string>
     <string name="metadata_warning_different_version">来自应用程序的不同次版本的首选项。 升级后输入正常，但如果首选项仍然正确，请在导入后进行检查 !</string>
@@ -134,7 +127,6 @@
     <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
     <!-- Custom Watchface -->
-    <!-- Permissions -->
     <!-- Maintenance -->
     <string name="metadata_label_format">文件格式</string>
     <string name="metadata_label_created_at">创建于</string>
@@ -143,6 +135,5 @@
     <string name="metadata_label_device_model">导出设备型号</string>
     <string name="metadata_label_encryption">文件加密密钥。</string>
     <string name="metadata_format_new">新的加密格式</string>
-    <string name="metadata_format_debug">新调试格式 (未加密)</string>
     <string name="metadata_format_other">未知的导出格式</string>
 </resources>

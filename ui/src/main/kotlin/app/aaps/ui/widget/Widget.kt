@@ -12,17 +12,20 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.extensions.toVisibility
-import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -32,13 +35,16 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
-import app.aaps.core.main.extensions.directionToIcon
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.iob.displayText
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.database.entities.interfaces.end
-import dagger.android.HasAndroidInjector
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.objects.extensions.directionToIcon
+import app.aaps.core.objects.extensions.displayText
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
+import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.ui.R
+import dagger.android.HasAndroidInjector
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
@@ -51,6 +57,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var overviewData: OverviewData
+    @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
@@ -59,11 +66,14 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var loop: Loop
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     companion object {
 
@@ -112,7 +122,12 @@ class Widget : AppWidgetProvider() {
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
-        views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
+        if (config.APS)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
+        if (config.AAPSCLIENT1)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0xE8, 0xC5, 0x0C))
+        if (config.AAPSCLIENT2)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0x0F, 0xBB, 0xE0))
 
         handler.post {
             if (config.appInitialized) {
@@ -132,12 +147,12 @@ class Widget : AppWidgetProvider() {
     private fun updateBg(views: RemoteViews) {
         views.setTextViewText(
             R.id.bg,
-            overviewData.lastBg(iobCobCalculator.ads)?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
+            lastBgData.lastBg()?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
-                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-                overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-                else                                      -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+                lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
+                else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
         trendCalculator.getTrendArrow(iobCobCalculator.ads)?.let {
@@ -146,9 +161,9 @@ class Widget : AppWidgetProvider() {
         views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow(iobCobCalculator.ads) != null).toVisibilityKeepSpace())
         views.setInt(
             R.id.arrow, "setColorFilter", when {
-                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-                overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-                else                                      -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+                lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
+                else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
 
@@ -164,37 +179,43 @@ class Widget : AppWidgetProvider() {
         }
 
         // strike through if BG is old
-        if (!overviewData.isActualBg(iobCobCalculator.ads)) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+        if (!lastBgData.isActualBg()) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
         else views.setInt(R.id.bg, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
 
-        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg(iobCobCalculator.ads)?.timestamp))
+        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, lastBgData.lastBg()?.timestamp))
         //views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
     }
 
     private fun updateTemporaryBasal(views: RemoteViews) {
-        views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText(iobCobCalculator))
-        views.setTextColor(R.id.base_basal, iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(app.aaps.core.ui.R.color.widget_basal) }
+        views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText())
+        views.setTextColor(R.id.base_basal, processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(app.aaps.core.ui.R.color.widget_basal) }
             ?: rh.gc(app.aaps.core.ui.R.color.white))
-        views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon(iobCobCalculator))
+        views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon())
     }
 
     private fun updateExtendedBolus(views: RemoteViews) {
         val pump = activePlugin.activePump
-        views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText(iobCobCalculator))
-        views.setViewVisibility(R.id.extended_layout, (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
+        views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText())
+        views.setViewVisibility(R.id.extended_layout, (persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
     }
 
+    private fun bolusIob(): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
+    private fun basalIob(): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    private fun iobText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
+
     private fun updateIobCob(views: RemoteViews) {
-        views.setTextViewText(R.id.iob, overviewData.iobText(iobCobCalculator))
+        views.setTextViewText(R.id.iob, iobText())
         // cob
-        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+        var cobText = iobCobCalculator.getCobInfo("Overview COB").displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
         if (config.APS && constraintsProcessed != null && lastRun != null) {
             if (constraintsProcessed.carbsReq > 0) {
                 //only display carbsreq when carbs have not been entered recently
-                if (overviewData.lastCarbsTime < lastRun.lastAPSRun) {
+                val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
+                if (lastCarbsTime < lastRun.lastAPSRun) {
                     cobText += " | " + constraintsProcessed.carbsReq + " " + rh.gs(app.aaps.core.ui.R.string.required)
                 }
             }
@@ -204,7 +225,7 @@ class Widget : AppWidgetProvider() {
 
     private fun updateTemporaryTarget(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        val tempTarget = overviewData.temporaryTarget
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tempTarget != null) {
             // this is crashing, use background as text for now
             //views.setTextColor(R.id.temp_target, rh.gc(R.color.ribbonTextWarning))
@@ -259,30 +280,56 @@ class Widget : AppWidgetProvider() {
     }
 
     private fun updateSensitivity(views: RemoteViews) {
+        val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Widget", aapsLogger, dateUtil)
+        val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
         if (constraintChecker.isAutosensModeEnabled().value())
-            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
+            views.setImageViewResource(
+                R.id.sensitivity_icon,
+                lastAutosensRatio?.let {
+                    when {
+                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_as_above
+                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_as_below
+                        else     -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+                    }
+                }
+                    ?: app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+            )
         else
-            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_x_swap_vert)
-        views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData(iobCobCalculator)?.let { autosensData ->
-            String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
+            views.setImageViewResource(
+                R.id.sensitivity_icon,
+                lastAutosensRatio?.let {
+                    when {
+                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_above
+                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_below
+                        else     -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
+                    }
+                }
+                    ?: app.aaps.core.objects.R.drawable.ic_x_swap_vert
+            )
+        views.setTextViewText(R.id.sensitivity, lastAutosensData?.let {
+            rh.gs(app.aaps.core.ui.R.string.autosens_short, it.autosensResult.ratio * 100)
         } ?: "")
 
         // Show variable sensitivity
         val request = loop.lastRun?.request
-        if (request is VariableSensitivityResult) {
-            val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
-            val variableSens = request.variableSens
-            if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
-                views.setTextViewText(
-                    R.id.variable_sensitivity,
-                    String.format(
-                        Locale.getDefault(), "%1$.1f→%2$.1f",
-                        profileUtil.fromMgdlToUnits(isfMgdl),
-                        profileUtil.fromMgdlToUnits(variableSens)
-                    )
+        val isfMgdl = profileFunction.getProfile()?.getProfileIsfMgdl()
+        val variableSens =
+            if (config.APS) request?.variableSens ?: 0.0
+            else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
+            else 0.0
+        val ratioUsed = request?.autosensResult?.ratio ?: 1.0
+        if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
+            val overViewText: ArrayList<String> = ArrayList()
+            if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) overViewText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_short,ratioUsed * 100))
+            overViewText.add(
+                String.format(
+                    Locale.getDefault(), "%1$.1f→%2$.1f",
+                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
                 )
-                views.setViewVisibility(R.id.variable_sensitivity, View.VISIBLE)
-            } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
+            )
+            views.setTextViewText(R.id.variable_sensitivity, overViewText.joinToString("\n"))
+            views.setViewVisibility(R.id.variable_sensitivity, View.VISIBLE)
         } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
     }
 }

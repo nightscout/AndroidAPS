@@ -8,13 +8,13 @@ import android.widget.EditText
  *
  * @author Said Tahsin Dane <tasomaniac></tasomaniac>@gmail.com>
  */
-class NumericRangeValidator(_customErrorMessage: String?, private val min: Int, private val max: Int) : Validator(_customErrorMessage) {
+class NumericRangeValidator(customErrorMessage: String?, private val min: Int, private val max: Int) : Validator(customErrorMessage) {
 
     override fun isValid(editText: EditText): Boolean {
         return try {
             val value = editText.text.toString().toInt()
             value in min..max
-        } catch (e: NumberFormatException) {
+        } catch (_: NumberFormatException) {
             false
         }
     }

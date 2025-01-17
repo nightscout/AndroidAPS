@@ -1,13 +1,13 @@
 package app.aaps.core.interfaces.iob
 
+import app.aaps.core.data.aps.BasalData
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.interfaces.aps.BasalData
+import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.TemporaryBasal
-import org.json.JSONArray
 
 interface IobCobCalculator {
 
@@ -23,9 +23,8 @@ interface IobCobCalculator {
     fun getBasalData(profile: Profile, fromTime: Long): BasalData
 
     fun calculateIobArrayInDia(profile: Profile): Array<IobTotal>
-    fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal>
+    fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exerciseMode: Boolean, halfBasalExerciseTarget: Int, isTempTarget: Boolean): Array<IobTotal>
     fun iobArrayToString(array: Array<IobTotal>): String
-    fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray
 
     fun clearCache()
 
@@ -46,40 +45,6 @@ interface IobCobCalculator {
      * @return calculated iob
      */
     fun calculateIobFromBolus(): IobTotal
-
-    /**
-     * Get running temporary basal at time
-     *
-     *  @return     running temporary basal or null if no tbr is running
-     */
-    fun getTempBasal(timestamp: Long): TemporaryBasal?
-
-    /**
-     * Get running temporary basal at time
-     *
-     *  @return     running temporary basal or null if no tbr is running
-     *              If pump is faking extended boluses as temporary basals
-     *              return extended converted to temporary basal with type == FAKE_EXTENDED
-     */
-    fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal?
-
-    /**
-     * Get running temporary basals for given time range, sliced by calculationStep.
-     * For each step between given range it calculates equivalent of getTempBasalIncludingConvertedExtended
-     *
-     *  @param startTime start of calculated period, timestamp
-     *  @param endTime end of calculated period, timestamp
-     *  @param calculationStep calculation step, in millisecond
-     *  @return map where for each step, its timestamp is a key and calculated optional temporary basal is a value
-     */
-    fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TemporaryBasal?>
-
-    /**
-     * Get running extended bolus at time
-     *
-     *  @return     running extended bolus or null if no eb is running
-     */
-    fun getExtendedBolus(timestamp: Long): ExtendedBolus?
 
     /**
      *  Calculate IOB of base basal insulin (usually not accounted towards IOB)

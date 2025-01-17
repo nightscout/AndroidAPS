@@ -89,6 +89,7 @@
     <string name="removerecord">Kaydı kaldır</string>
     <string name="loopisdisabled">Döngü devre dışı</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Dışa aktarma ayarları</string>
     <string name="disableloop">Döngüyü devre dışı bırak</string>
     <string name="enableloop">Döngüyü etkinleştir</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
     <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
-    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek teslim edilen miktarı manuel olarak kontrol edin</string>
+    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek iletilen insülin ve karbonhidrat miktarını manuel olarak kontrol edin</string>
     <string name="bolus_reminder">Bolus hatırlatıcısı</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <string name="loopstatus_targets">HEDEFLER:</string>
     <string name="loopstatus_OAPS_result">OAPS SONUCU:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f Ü ( %2$.2f Ü/s )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f Ü/s (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f Ü/s @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f Ü/s @%2$s %3$s/%4$s dk</string>
+    <string name="extended_bolus_medium">%1$.2f Ü/s %2$s/%3$s\'</string>
+    <string name="nav_export">Dışa aktarma ayarları</string>
+    <string name="location_permission_not_granted">Konum izni verilmedi. Android ayarlarında izin verin.</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
     <string name="wrongpin">Yanlış PIN</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">KŞ Kontrol</string>
     <string name="careportal_mbg">Manuel KŞ veya Kalibrasyon</string>
     <string name="careportal_announcement">Duyuru</string>
+    <string name="careportal_settings_export">Ayarları dışa aktar</string>
     <string name="careportal_note">Not</string>
     <string name="careportal_question">Soru</string>
     <string name="careportal_exercise">Egzersiz</string>
     <string name="careportal_announcement_message">Duyuru : %1$s</string>
+    <string name="careportal_settings_export_message">Ayarlar Dışa Aktarılıyor: %1$s</string>
     <string name="careportal_note_message">Not : %1$s</string>
     <string name="careportal_question_message">Soru : %1$s</string>
     <string name="careportal_exercise_message">Alıştırma : %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Aktivite</string>
     <string name="wear">Wear</string>
     <string name="automation">Otomasyon</string>
+    <string name="settingsexport">Ayarları dışa aktar</string>
     <string name="custom">Özel</string>
     <string name="loop">Döngü</string>
     <string name="ns">NS</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">İleri tarihli tedavileri sil</string>
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
+    <string name="uel_select_directory">DİZİNİ SEÇİN</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
+    <string name="uel_reset_aps_results">APS SONUÇLARINI SIFIRLA</string>
     <string name="uel_cleanup_databases">TEMİZLEME VERİTABANLARI</string>
     <string name="uel_export_databases">VERİTABANINI DIŞA AKTAR</string>
     <string name="uel_import_databases">VERİTABANINI İÇE AKTAR</string>
@@ -399,57 +413,18 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazal</string>
     <string name="basalpct">Bazal %</string>
+    <string name="sensitivity">Duyarlılık</string>
+    <string name="isf_for_carbs">Hesap makinesi ve Karb. emilimi için İDF: %1$.1f</string>
+    <string name="autosens_long">Otoduyarlılık değeri: %.0f%%</string>
+    <string name="autosens_short">OD: %.0f%%</string>
+    <string name="algorithm_long">Algoritmadaki otoduyarlılık: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">dosya</string>
     <string name="a11y_user">kullanıcı</string>
     <!-- Autotune -->
     <string name="autotune">Otoayar</string>
-    <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">OtoAyar ayarları</string>
-    <string name="autotune_auto_title">Otomasyon Profil değişimi</string>
-    <string name="autotune_auto_summary">Etkinleştirildiğinde, OtoAyar otomatik olarak güncellenir ve bir otomasyon kuralından hesaplama yapıldıktan sonra profile işlenir.</string>
-    <string name="autotune_categorize_uam_as_basal_title">UAM\'yi bazal olarak sınıflandır</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Yalnızca yenen tüm karbonhidratları güvenilir bir şekilde girdiyseniz etkinleştirin, bu seçenekle OtoAyar tarafından görülen ani artışlar bazal oranda değişiklik önermek için kullanılacaktır.</string>
-    <string name="autotune_tune_insulin_curve_title">İnsülin eğrisini ayarla</string>
-    <string name="autotune_tune_insulin_curve_summary">Yalnızca serbest tepe noktası kullanıyorsanız etkinleştirin. Bu seçenek, tepe ve İES sürelerini ayarlayacaktır</string>
-    <string name="autotune_default_tune_days_title">Veri gün sayısı</string>
-    <string name="autotune_circadian_ic_isf_title">Sirkadiyen IC/İDF ortalama sonucunu uygula</string>
-    <string name="autotune_circadian_ic_isf_summary">OtoAyar sirkadiyen varyasyonları ayarlamaz, bu seçenek sirkadiyen giriş profilinize yalnızca IC ve İDF\'nün ortalama ayarını uygular</string>
-    <string name="autotune_additional_log_title">Hata ayıklama için daha fazla günlük bilgisi ekleyin</string>
-    <string name="autotune_additional_log_summary">OtoAyar eklentisinde hata ayıklamaya yardımcı olmak için yalnızca geliştirici tarafından daha fazla günlük bilgisi göndermesi istenirse açın</string>
-    <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (30\'a kadar)</string>
-    <string name="autotune_tunedprofile_name">Ayarlandı</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Ayar günleri:</string>
-    <string name="autotune_last_run">Son Çalıştırma :</string>
-    <string name="autotune_warning">Uyarı :</string>
     <string name="autotune_select_profile">Ayarlanacak profili seçin</string>
-    <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
-    <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
-    <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
-    <string name="autotune_error_more_days">Veri girişinde hata, gün sayısını artırın</string>
-    <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
-    <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>
-    <string name="autotune_partial_result">Kısmi sonuç günü %1$d / %2$d ayarlandı</string>
-    <string name="autotune_result">Sonuç: %1$s</string>
-    <string name="autotune_param">Parametre</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Eksik</string>
-    <string name="autotune_profile_name">OtoAyar profili %1$s</string>
-    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
-    <string name="autotune_check_input_profile_button">Giriş profilini kontrol edin</string>
-    <string name="autotune_compare_profile">Profilleri karşılaştırın</string>
-    <string name="autotune_copy_localprofile_button">Yerel profile kopyala</string>
-    <string name="autotune_update_input_profile_button">Giriş profilini güncelle</string>
-    <string name="autotune_revert_input_profile_button">Giriş profilini geri al</string>
-    <string name="autotune_copy_local_profile_message">Bu OtoAyar Profilinden yeni bir yerel profil oluşturulsun mu?</string>
-    <string name="autotune_update_local_profile_message">OtoAyar Profili ile %1$s profili güncellensin mi?</string>
-    <string name="autotune_revert_local_profile_message">Giriş Profili ile %1$s profili geri alınsın mı?</string>
-    <string name="autotune_profile_invalid">Profil geçersiz</string>
-    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştı</string>
-    <string name="autotune_run_with_autoswitch">OtoAyar çalıştı ve profil otomatik olarak değiştirildi</string>
-    <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
-    <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="urgent_alarm">Acil önemli Alarm</string>
@@ -525,13 +500,13 @@
     <string name="password_cleared">Parola temizlendi!</string>
     <string name="pairing">Eşleştiriliyor</string>
     <string name="initializing">Başlatılıyor ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
     <string name="pumplimit">pompa sınırı</string>
     <string name="limitingpercentrate">%2$s\'den dolayı max yüzde oranı %1$d%% ile sınırlandırılıyor</string>
     <string name="itmustbepositivevalue">pozitif bir değer olmalıdır</string>
     <string name="limitingbolus">%2$s\'den dolayı bolus %1$.1f Ü ile sınırlandırılıyor</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
     <string name="message">İleti</string>
@@ -543,6 +518,19 @@
     <string name="close">Kapat</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">İçe aktarılan tercihlerin şifresini çözmek için gerekli olan ana parola sorulacaktır.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">Tamam</string>
+    <string name="export_warning">Uyarı</string>
+    <string name="export_expired">Süresi doldu</string>
+    <string name="export_disabled">Devre dışı</string>
+    <string name="export_failed">Başarısız oldu</string>
+    <string name="export_alert">UYARI</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Ayarlar dışa aktarıldı</string>
+    <string name="export_result_message_failed">Ayarları dışa aktama BAŞARISIZ!</string>
+    <string name="export_result_message_about_to_expire">Ayarlar dışa aktarıldı: parola yakında sona erecek. Manuel olarak dışa aktarın ve parolayı (tekrar) girin.</string>
+    <string name="export_result_message_expired">Ayarların dışa aktarımı iptal edildi: parola süresi doldu. Manuel olarak dışa aktarın ve (tekrar) girin!</string>
+    <string name="export_result_message_disabled">Uyarı (otomasyon): Ayarların dışa aktarılması etkin değil!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">%2$s\'dan %1$s\'a azalma</string>
     <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
@@ -604,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f Ü</string>
     <string name="format_insulin_units">%1$.2f Ü</string>
+    <string name="percent_rate_duration">Oran: %1$.2f%% (%2$.2f Ü/s) Süre: %3$d dk</string>
+    <string name="rate_percent_duration">Oran: %1$.2f Ü/s (%2$.2f%%) Süre: %3$d dk</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f%% (%2$.2f Ü/s)<br><b>Süre</b>: %3$d dk<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/s (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
 </resources>

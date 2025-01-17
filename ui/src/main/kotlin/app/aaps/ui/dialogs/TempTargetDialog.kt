@@ -6,26 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTemptargetBinding
 import com.google.common.base.Joiner
@@ -43,9 +43,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var ctx: Context
     @Inject lateinit var protectionCheck: ProtectionCheck
 
@@ -75,19 +74,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         binding.duration.setParams(
             savedInstanceState?.getDouble("duration")
-                ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok
+                ?: 60.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok
         )
 
         if (profileUtil.units == GlucoseUnit.MMOL)
             binding.temptarget.setParams(
                 savedInstanceState?.getDouble("tempTarget")
-                    ?: 8.0,
+                    ?: 5.6,
                 Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok
             )
         else
             binding.temptarget.setParams(
                 savedInstanceState?.getDouble("tempTarget")
-                    ?: 144.0,
+                    ?: 101.0,
                 Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, binding.okcancel.ok
             )
 
@@ -96,10 +95,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         // temp target
         context?.let { context ->
-            if (repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing)
-                binding.targetCancel.visibility = View.VISIBLE
-            else
-                binding.targetCancel.visibility = View.GONE
+            binding.targetCancel.visibility = (persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null).toVisibility()
 
             reasonList = Lists.newArrayList(
                 rh.gs(app.aaps.core.ui.R.string.manual),
@@ -139,20 +135,20 @@ class TempTargetDialog : DialogFragmentWithDate() {
     private fun longClick(v: View) {
         when (v.id) {
             R.id.eating_soon -> {
-                binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
-                binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
+                binding.temptarget.value = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                binding.duration.value = preferences.get(IntKey.OverviewEatingSoonDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.eatingsoon), false)
             }
 
             R.id.activity    -> {
-                binding.temptarget.value = defaultValueHelper.determineActivityTT()
-                binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
+                binding.temptarget.value = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+                binding.duration.value = preferences.get(IntKey.OverviewActivityDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.activity), false)
             }
 
             R.id.hypo        -> {
-                binding.temptarget.value = defaultValueHelper.determineHypoTT()
-                binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
+                binding.temptarget.value = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+                binding.duration.value = preferences.get(IntKey.OverviewHypoDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.hypo), false)
             }
         }
@@ -185,63 +181,66 @@ class TempTargetDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
-                when (reason) {
-                    rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.EATING_SOON
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                val listValues = when (reason) {
+                    rh.gs(app.aaps.core.ui.R.string.eatingsoon)     -> listOf(
+                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                        ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                        ValueWithUnit.fromGlucoseUnit(target, units),
+                        ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.activity) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.ACTIVITY
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                    rh.gs(app.aaps.core.ui.R.string.activity)       -> listOf(
+                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                        ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
+                        ValueWithUnit.fromGlucoseUnit(target, units),
+                        ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.hypo) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.HYPOGLYCEMIA
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                    rh.gs(app.aaps.core.ui.R.string.hypo)           -> listOf(
+                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                        ValueWithUnit.TETTReason(TT.Reason.HYPOGLYCEMIA),
+                        ValueWithUnit.fromGlucoseUnit(target, units),
+                        ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.manual) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.CUSTOM
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                    rh.gs(app.aaps.core.ui.R.string.manual)         -> listOf(
+                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                        ValueWithUnit.TETTReason(TT.Reason.CUSTOM),
+                        ValueWithUnit.fromGlucoseUnit(target, units),
+                        ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.stoptemptarget) -> uel.log(
-                        UserEntry.Action.CANCEL_TT,
-                        UserEntry.Sources.TTDialog,
-                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                    rh.gs(app.aaps.core.ui.R.string.stoptemptarget) -> listOf(ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+
+                    else                                            -> listOf()
                 }
                 if (target == 0.0 || duration == 0) {
-                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))
-                        .subscribe({ result ->
-                                       result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                   }, {
-                                       aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                   })
+                    disposable += persistenceLayer.cancelCurrentTemporaryTargetIfAny(
+                        timestamp = eventTime,
+                        action = Action.TT,
+                        source = Sources.TTDialog,
+                        note = null,
+                        listValues = listOf()
+                    ).subscribe()
                 } else {
-                    disposable += repository.runTransactionForResult(
-                        InsertAndCancelCurrentTemporaryTargetTransaction(
+                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        TT(
                             timestamp = eventTime,
                             duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                             reason = when (reason) {
-                                rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
-                                rh.gs(app.aaps.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
-                                rh.gs(app.aaps.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
-                                else                                        -> TemporaryTarget.Reason.CUSTOM
+                                rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TT.Reason.EATING_SOON
+                                rh.gs(app.aaps.core.ui.R.string.activity)   -> TT.Reason.ACTIVITY
+                                rh.gs(app.aaps.core.ui.R.string.hypo)       -> TT.Reason.HYPOGLYCEMIA
+                                else                                        -> TT.Reason.CUSTOM
                             },
                             lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
                             highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
-                        )
-                    ).subscribe({ result ->
-                                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                })
+                        ),
+                        action = Action.TT,
+                        source = Sources.TTDialog,
+                        note = null,
+                        listValues = listValues.filterNotNull()
+                    ).subscribe()
                 }
 
                 if (duration == 10) sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusetemptarget, true)

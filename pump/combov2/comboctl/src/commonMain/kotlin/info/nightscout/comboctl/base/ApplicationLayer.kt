@@ -75,7 +75,7 @@ object ApplicationLayer {
         val payload: List<Byte>
     ) : ExceptionBase(
         "Invalid/unknown application layer packet command ID " +
-        "0x${commandID.toString(16)} (service ID: ${serviceID.name})"
+            "0x${commandID.toString(16)} (service ID: ${serviceID.name})"
     )
 
     /**
@@ -91,7 +91,7 @@ object ApplicationLayer {
         val expectedCommand: Command
     ) : ExceptionBase(
         "Incorrect packet: expected ${expectedCommand.name} " +
-        "packet, got ${appLayerPacket.command.name} one"
+            "packet, got ${appLayerPacket.command.name} one"
     )
 
     /**
@@ -176,6 +176,7 @@ object ApplicationLayer {
      * information.
      */
     enum class Command(val serviceID: ServiceID, val commandID: Int, val reliable: Boolean) {
+
         CTRL_CONNECT(ServiceID.CONTROL, 0x9055, true),
         CTRL_CONNECT_RESPONSE(ServiceID.CONTROL, 0xA055, true),
         CTRL_GET_SERVICE_VERSION(ServiceID.CONTROL, 0x9065, true),
@@ -220,7 +221,8 @@ object ApplicationLayer {
         RT_RELEASE(ServiceID.RT_MODE, 0x056A, false);
 
         companion object {
-            private val values = Command.values()
+
+            private val values = Command.entries.toTypedArray()
 
             /**
              * Returns the command that has a matching service ID and command ID.
@@ -237,12 +239,15 @@ object ApplicationLayer {
      * Valid application layer command service IDs.
      */
     enum class ServiceID(val id: Int) {
+
         CONTROL(0x00),
         RT_MODE(0x48),
         COMMAND_MODE(0xB7);
 
         companion object {
-            private val values = ServiceID.values()
+
+            private val values = ServiceID.entries.toTypedArray()
+
             /**
              * Converts an int to a service ID.
              *
@@ -267,7 +272,9 @@ object ApplicationLayer {
      * an ErrorCode instance. Said integer comes from the reliable packets.
      */
     sealed class ErrorCode {
+
         data class Known(val code: Code) : ErrorCode() {
+
             override fun toString(): String = "error code \"${code.description}\""
 
             enum class Category {
@@ -284,14 +291,18 @@ object ApplicationLayer {
                 INVALID_PAYLOAD_LENGTH(0xF006, Category.GENERAL, "Invalid payload length"),
                 NOT_CONNECTED(0xF056, Category.GENERAL, "Application layer not connected"),
                 INCOMPATIBLE_SERVICE_VERSION(0xF059, Category.GENERAL, "Incompatible service version"),
-                REQUEST_WITH_UNKNOWN_SERVICE_ID(0xF05A, Category.GENERAL,
-                    "Version, activate, deactivate request with unknown service ID"),
+                REQUEST_WITH_UNKNOWN_SERVICE_ID(
+                    0xF05A, Category.GENERAL,
+                    "Version, activate, deactivate request with unknown service ID"
+                ),
                 SERVICE_ACTIVATION_NOT_ALLOWED(0xF05C, Category.GENERAL, "Service activation not allowed"),
                 COMMAND_NOT_ALLOWED(0xF05F, Category.GENERAL, "Command not allowed (wrong mode)"),
 
                 RT_PAYLOAD_WRONG_LENGTH(0xF503, Category.REMOTE_TERMINAL_MODE, "RT payload wrong length"),
-                RT_DISPLAY_INCORRECT_INDEX(0xF505, Category.REMOTE_TERMINAL_MODE,
-                    "RT display with incorrect row index, update, or display index"),
+                RT_DISPLAY_INCORRECT_INDEX(
+                    0xF505, Category.REMOTE_TERMINAL_MODE,
+                    "RT display with incorrect row index, update, or display index"
+                ),
                 RT_DISPLAY_TIMEOUT(0xF506, Category.REMOTE_TERMINAL_MODE, "RT display timeout"),
                 RT_UNKNOWN_AUDIO_SEQUENCE(0xF509, Category.REMOTE_TERMINAL_MODE, "RT unknown audio sequence"),
                 RT_UNKNOWN_VIBRATION_SEQUENCE(0xF50A, Category.REMOTE_TERMINAL_MODE, "RT unknown vibration sequence"),
@@ -310,12 +321,15 @@ object ApplicationLayer {
                 CMD_INTERNAL_PUMP_ERROR(0xF63C, Category.COMMAND_MODE, "CMD pump has internal error (RAM values changed)");
             }
         }
+
         data class Unknown(val code: Int) : ErrorCode() {
+
             override fun toString(): String = "unknown error code ${code.toHexString(4, true)}"
         }
 
         companion object {
-            private val knownCodes = Known.Code.values()
+
+            private val knownCodes = Known.Code.entries.toTypedArray()
 
             fun fromInt(value: Int): ErrorCode {
                 val foundCode = knownCodes.firstOrNull { (it.value == value) }
@@ -346,6 +360,7 @@ object ApplicationLayer {
         val serviceIDValue: Int,
         val commandIDValue: Int
     ) {
+
         override fun toString(): String {
             var command: Command? = null
 
@@ -367,6 +382,7 @@ object ApplicationLayer {
      * Possible status the pump can be in.
      */
     enum class CMDPumpStatus(val str: String) {
+
         STOPPED("STOPPED"),
         RUNNING("RUNNING");
 
@@ -382,38 +398,45 @@ object ApplicationLayer {
      * so for example, "57" means 5.7 IU.
      */
     sealed class CMDHistoryEventDetail(val isBolusDetail: Boolean) {
+
         data class QuickBolusRequested(val bolusAmount: Int) : CMDHistoryEventDetail(isBolusDetail = true)
         data class QuickBolusInfused(val bolusAmount: Int) : CMDHistoryEventDetail(isBolusDetail = true)
         data class StandardBolusRequested(
             val bolusAmount: Int,
             val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
+
         data class StandardBolusInfused(
             val bolusAmount: Int,
             val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
+
         data class ExtendedBolusStarted(
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
+
         data class ExtendedBolusEnded(
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
+
         data class MultiwaveBolusStarted(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
+
         data class MultiwaveBolusEnded(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
+
         data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail(isBolusDetail = false)
     }
 
@@ -437,6 +460,7 @@ object ApplicationLayer {
         val eventCounter: Long,
         val detail: CMDHistoryEventDetail
     ) {
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null) return false
@@ -535,11 +559,13 @@ object ApplicationLayer {
      * a multiwave bolus is partially made up of an immediate and an extended delivery.
      */
     enum class CMDImmediateBolusType(val id: Int) {
+
         STANDARD(0x47),
         MULTI_WAVE(0xB7);
 
         companion object {
-            private val values = CMDImmediateBolusType.values()
+
+            private val values = CMDImmediateBolusType.entries.toTypedArray()
             fun fromInt(value: Int) = values.firstOrNull { it.id == value }
         }
     }
@@ -548,6 +574,7 @@ object ApplicationLayer {
      * Possible states of an ongoing bolus (or NOT_DELIVERING if there's no bolus ongoing).
      */
     enum class CMDBolusDeliveryState(val id: Int) {
+
         NOT_DELIVERING(0x55),
         DELIVERING(0x66),
         DELIVERED(0x99),
@@ -555,7 +582,8 @@ object ApplicationLayer {
         ABORTED_DUE_TO_ERROR(0xAA);
 
         companion object {
-            private val values = CMDBolusDeliveryState.values()
+
+            private val values = CMDBolusDeliveryState.entries.toTypedArray()
             fun fromInt(value: Int) = values.firstOrNull { it.id == value }
         }
     }
@@ -583,6 +611,7 @@ object ApplicationLayer {
      * These can be bitwise OR combined to implement combined button presses.
      */
     enum class RTButton(val id: Int, val str: String) {
+
         UP(0x30, "UP"),
         DOWN(0xC0, "DOWN"),
         MENU(0x03, "MENU"),
@@ -594,11 +623,14 @@ object ApplicationLayer {
      * Valid display update reasons that an RT_DISPLAY packet can contain in its payload.
      */
     enum class RTDisplayUpdateReason(val id: Int) {
+
         UPDATED_BY_COMBO(0x48),
         UPDATED_BY_CLIENT(0xB7);
 
         companion object {
-            private val values = RTDisplayUpdateReason.values()
+
+            private val values = RTDisplayUpdateReason.entries.toTypedArray()
+
             /**
              * Converts an int to an RTDisplayUpdateReason.
              *
@@ -651,7 +683,7 @@ object ApplicationLayer {
             )
 
         val commandID = (tpLayerPacket.payload[COMMAND_ID_BYTE_OFFSET + 0].toPosInt() shl 0) or
-                (tpLayerPacket.payload[COMMAND_ID_BYTE_OFFSET + 1].toPosInt() shl 8)
+            (tpLayerPacket.payload[COMMAND_ID_BYTE_OFFSET + 1].toPosInt() shl 8)
 
         return Command.fromIDs(serviceID, commandID)
             ?: throw InvalidCommandIDException(
@@ -709,6 +741,7 @@ object ApplicationLayer {
         val version: Byte = 0x10,
         var payload: ArrayList<Byte> = ArrayList(0)
     ) {
+
         init {
             if (payload.size > MAX_VALID_PAYLOAD_SIZE) {
                 throw IllegalArgumentException(
@@ -751,9 +784,9 @@ object ApplicationLayer {
 
         override fun toString(): String {
             return "version: ${version.toHexString(2)}" +
-                    "  service ID: ${command.serviceID}" +
-                    "  command: $command" +
-                    "  payload: ${payload.size} byte(s): ${payload.toHexString()}"
+                "  service ID: ${command.serviceID}" +
+                "  command: $command" +
+                "  payload: ${payload.size} byte(s): ${payload.toHexString()}"
         }
     }
 
@@ -1067,16 +1100,16 @@ object ApplicationLayer {
         // since we don't know what happens if we transmit a nonzero value to
         // the Combo with these bolus types.
         val (effectiveImmediateBolusAmount, effectiveDurationInMinutes) = when (bolusType) {
-            CMDDeliverBolusType.STANDARD_BOLUS -> Pair(0, 0)
-            CMDDeliverBolusType.EXTENDED_BOLUS -> Pair(0, durationInMinutes)
+            CMDDeliverBolusType.STANDARD_BOLUS  -> Pair(0, 0)
+            CMDDeliverBolusType.EXTENDED_BOLUS  -> Pair(0, durationInMinutes)
             CMDDeliverBolusType.MULTIWAVE_BOLUS -> Pair(immediateBolusAmount, durationInMinutes)
         }
 
         // Apply argument requirement checks, depending on the bolus type.
         when (bolusType) {
-            CMDDeliverBolusType.STANDARD_BOLUS -> Unit
+            CMDDeliverBolusType.STANDARD_BOLUS  -> Unit
 
-            CMDDeliverBolusType.EXTENDED_BOLUS ->
+            CMDDeliverBolusType.EXTENDED_BOLUS  ->
                 require(effectiveDurationInMinutes >= 15) {
                     "extended bolus duration must be at least 15; actual duration: $effectiveDurationInMinutes"
                 }
@@ -1087,7 +1120,7 @@ object ApplicationLayer {
                 }
                 require(immediateBolusAmount <= totalBolusAmount) {
                     "immediate bolus duration must be <= total bolus amount; actual immediate/total amount: " +
-                    "$effectiveImmediateBolusAmount / $totalBolusAmount"
+                        "$effectiveImmediateBolusAmount / $totalBolusAmount"
                 }
             }
         }
@@ -1104,8 +1137,8 @@ object ApplicationLayer {
 
         // NOTE: The 0x55, 0x59, 0x65 etc. values have been found empirically.
         val bolusTypeIDBytes = when (bolusType) {
-            CMDDeliverBolusType.STANDARD_BOLUS -> intArrayOf(0x55, 0x59)
-            CMDDeliverBolusType.EXTENDED_BOLUS -> intArrayOf(0x65, 0x69)
+            CMDDeliverBolusType.STANDARD_BOLUS  -> intArrayOf(0x55, 0x59)
+            CMDDeliverBolusType.EXTENDED_BOLUS  -> intArrayOf(0x65, 0x69)
             CMDDeliverBolusType.MULTIWAVE_BOLUS -> intArrayOf(0xA5, 0xA9)
         }
 
@@ -1296,8 +1329,8 @@ object ApplicationLayer {
             throw PayloadDataCorruptionException(
                 packet,
                 "Incorrect payload size in ${packet.command} packet; expected $expectedPayloadSize bytes " +
-                        "for a history block with $numEvents events, got ${packet.payload.size} bytes instead; " +
-                        "event amount may have been corrupted"
+                    "for a history block with $numEvents events, got ${packet.payload.size} bytes instead; " +
+                    "event amount may have been corrupted"
             )
         }
 
@@ -1309,10 +1342,10 @@ object ApplicationLayer {
 
         logger(LogLevel.DEBUG) {
             "History block information:  " +
-                    "num remaining events: $numRemainingEvents  " +
-                    "more events available: $moreEventsAvailable  " +
-                    "historyGap: $historyGap  " +
-                    "number of events: $numEvents"
+                "num remaining events: $numRemainingEvents  " +
+                "more events available: $moreEventsAvailable  " +
+                "historyGap: $historyGap  " +
+                "number of events: $numEvents"
         }
 
         val events = mutableListOf<CMDHistoryEvent>()
@@ -1327,33 +1360,33 @@ object ApplicationLayer {
             val timestamp = LocalDateTime(
                 second = payload[payloadOffset + 0].toPosInt() and 0b00111111,
                 minute = ((payload[payloadOffset + 0].toPosInt() and 0b11000000) ushr 6) or
-                        ((payload[payloadOffset + 1].toPosInt() and 0b00001111) shl 2),
+                    ((payload[payloadOffset + 1].toPosInt() and 0b00001111) shl 2),
                 hour = ((payload[payloadOffset + 1].toPosInt() and 0b11110000) ushr 4) or
-                        ((payload[payloadOffset + 2].toPosInt() and 0b00000001) shl 4),
+                    ((payload[payloadOffset + 2].toPosInt() and 0b00000001) shl 4),
                 dayOfMonth = (payload[payloadOffset + 2].toPosInt() and 0b00111110) ushr 1,
                 monthNumber = ((payload[payloadOffset + 2].toPosInt() and 0b11000000) ushr 6) or
-                              ((payload[payloadOffset + 3].toPosInt() and 0b00000011) shl 2),
+                    ((payload[payloadOffset + 3].toPosInt() and 0b00000011) shl 2),
                 year = ((payload[payloadOffset + 3].toPosInt() and 0b11111100) ushr 2) + 2000
             )
 
             val eventTypeId = (payload[payloadOffset + 8].toPosInt() shl 0) or
-                    (payload[payloadOffset + 9].toPosInt() shl 8)
+                (payload[payloadOffset + 9].toPosInt() shl 8)
             val detailBytesCrcChecksum = (payload[payloadOffset + 10].toPosInt() shl 0) or
-                    (payload[payloadOffset + 11].toPosInt() shl 8)
+                (payload[payloadOffset + 11].toPosInt() shl 8)
             val eventCounter = (payload[payloadOffset + 12].toPosLong() shl 0) or
-                    (payload[payloadOffset + 13].toPosLong() shl 8) or
-                    (payload[payloadOffset + 14].toPosLong() shl 16) or
-                    (payload[payloadOffset + 15].toPosLong() shl 24)
+                (payload[payloadOffset + 13].toPosLong() shl 8) or
+                (payload[payloadOffset + 14].toPosLong() shl 16) or
+                (payload[payloadOffset + 15].toPosLong() shl 24)
             val eventCounterCrcChecksum = (payload[payloadOffset + 16].toPosInt() shl 0) or
-                    (payload[payloadOffset + 17].toPosInt() shl 8)
+                (payload[payloadOffset + 17].toPosInt() shl 8)
             val detailBytes = payload.subList(payloadOffset + 4, payloadOffset + 8)
 
             logger(LogLevel.DEBUG) {
                 "Event #$eventIndex:  timestamp $timestamp  event type ID $eventTypeId  " +
-                        "detail bytes CRC16 checksum ${detailBytesCrcChecksum.toHexString(width = 4, prependPrefix = true)}  " +
-                        "event counter $eventCounter  " +
-                        "counter CRC16 checksum ${eventCounterCrcChecksum.toHexString(width = 4, prependPrefix = true)}  " +
-                        "raw detail data bytes ${detailBytes.toHexString()}"
+                    "detail bytes CRC16 checksum ${detailBytesCrcChecksum.toHexString(width = 4, prependPrefix = true)}  " +
+                    "event counter $eventCounter  " +
+                    "counter CRC16 checksum ${eventCounterCrcChecksum.toHexString(width = 4, prependPrefix = true)}  " +
+                    "raw detail data bytes ${detailBytes.toHexString()}"
             }
 
             // The eventCounterCrcChecksum is the CRC-16-MCRF4XX checksum
@@ -1364,8 +1397,8 @@ object ApplicationLayer {
                 throw PayloadDataCorruptionException(
                     packet,
                     "Integrity check failed for counter value of event #$eventIndex; computed CRC16 is " +
-                            "checksum ${computedEventCounterCrcChecksum.toHexString(width = 4, prependPrefix = true)}, " +
-                            "expected checksum is ${eventCounterCrcChecksum.toHexString(width = 4, prependPrefix = true)}"
+                        "checksum ${computedEventCounterCrcChecksum.toHexString(width = 4, prependPrefix = true)}, " +
+                        "expected checksum is ${eventCounterCrcChecksum.toHexString(width = 4, prependPrefix = true)}"
                 )
             }
 
@@ -1378,8 +1411,8 @@ object ApplicationLayer {
                 throw PayloadDataCorruptionException(
                     packet,
                     "Integrity check failed for detail bytes of event #$eventIndex; computed CRC16 is " +
-                            "checksum ${computedDetailCrcChecksum.toHexString(width = 4, prependPrefix = true)}, " +
-                            "expected checksum is ${detailBytesCrcChecksum.toHexString(width = 4, prependPrefix = true)}"
+                        "checksum ${computedDetailCrcChecksum.toHexString(width = 4, prependPrefix = true)}, " +
+                        "expected checksum is ${detailBytesCrcChecksum.toHexString(width = 4, prependPrefix = true)}"
                 )
             }
 
@@ -1393,7 +1426,7 @@ object ApplicationLayer {
 
             val eventDetail = when (eventTypeId) {
                 // Quick bolus.
-                4, 5 -> {
+                4, 5           -> {
                     // Bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val bolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Event type ID 4 = bolus requested. ID 5 = bolus infused (= it is done).
@@ -1401,7 +1434,7 @@ object ApplicationLayer {
 
                     logger(LogLevel.DEBUG) {
                         "Detail info: got history event \"quick bolus ${if (requested) "requested" else "infused"}\" " +
-                                "with amount of ${bolusAmount.toFloat() / 10} IU"
+                            "with amount of ${bolusAmount.toFloat() / 10} IU"
                     }
 
                     if (requested)
@@ -1415,7 +1448,7 @@ object ApplicationLayer {
                 }
 
                 // Extended bolus.
-                8, 9, 16, 17 -> {
+                8, 9, 16, 17   -> {
                     // Total bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val totalBolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Total duration in minutes is recorded in the next 2 detail bytes as a 16-bit little endian integer.
@@ -1426,9 +1459,9 @@ object ApplicationLayer {
 
                     logger(LogLevel.DEBUG) {
                         "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
-                        "extended bolus ${if (started) "started" else "ended"}\" " +
-                        "with total amount of ${totalBolusAmount.toFloat() / 10} IU and " +
-                        "total duration of $totalDurationMinutes minutes"
+                            "extended bolus ${if (started) "started" else "ended"}\" " +
+                            "with total amount of ${totalBolusAmount.toFloat() / 10} IU and " +
+                            "total duration of $totalDurationMinutes minutes"
                     }
 
                     if (started)
@@ -1452,19 +1485,19 @@ object ApplicationLayer {
                     // 4 MSB of third byte + all 8 bits of fourth byte: duration in minutes.
                     val totalBolusAmount = ((detailBytes[1].toPosInt() and 0b00000011) shl 8) or detailBytes[0].toPosInt()
                     val immediateBolusAmount = ((detailBytes[2].toPosInt() and 0b00001111) shl 6) or
-                            ((detailBytes[1].toPosInt() and 0b11111100) ushr 2)
+                        ((detailBytes[1].toPosInt() and 0b11111100) ushr 2)
                     val totalDurationMinutes = (detailBytes[3].toPosInt() shl 4) or
-                            ((detailBytes[2].toPosInt() and 0b11110000) ushr 4)
+                        ((detailBytes[2].toPosInt() and 0b11110000) ushr 4)
                     // Event type IDs 10 or 18 = bolus started. IDs 11 or 19 = bolus ended.
                     val started = (eventTypeId == 10) || (eventTypeId == 18)
                     val manual = (eventTypeId == 10) || (eventTypeId == 11)
 
                     logger(LogLevel.DEBUG) {
                         "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
-                        "multiwave bolus ${if (started) "started" else "ended"}\" " +
-                        "with total amount of ${totalBolusAmount.toFloat() / 10} IU, " +
-                        "immediate amount of ${immediateBolusAmount.toFloat() / 10} IU, " +
-                        "and total duration of $totalDurationMinutes minutes"
+                            "multiwave bolus ${if (started) "started" else "ended"}\" " +
+                            "with total amount of ${totalBolusAmount.toFloat() / 10} IU, " +
+                            "immediate amount of ${immediateBolusAmount.toFloat() / 10} IU, " +
+                            "and total duration of $totalDurationMinutes minutes"
                     }
 
                     if (started)
@@ -1484,7 +1517,7 @@ object ApplicationLayer {
                 }
 
                 // Standard bolus.
-                6, 14, 7, 15 -> {
+                6, 14, 7, 15   -> {
                     // Bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val bolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Events with type IDs 6 and 7 indicate manual infusion.
@@ -1495,8 +1528,8 @@ object ApplicationLayer {
 
                     logger(LogLevel.DEBUG) {
                         "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
-                                "standard bolus ${if (requested) "requested" else "infused"}\" " +
-                                "with amount of ${bolusAmount.toFloat() / 10} IU"
+                            "standard bolus ${if (requested) "requested" else "infused"}\" " +
+                            "with amount of ${bolusAmount.toFloat() / 10} IU"
                     }
 
                     if (requested)
@@ -1512,7 +1545,7 @@ object ApplicationLayer {
                 }
 
                 // New datetime set.
-                24 -> {
+                24             -> {
                     // byte 0: bits 0..5 : seconds                         bits 6..7 : lower 2 bits of the minutes
                     // byte 1: bits 0..3 : upper 4 bits of the minutes     bits 4..7 : lower 4 bits of the hours
                     // byte 2: bit 0 : highest bit of the hours            bits 1..5 : days                            bits 6..7 : lower 2 bits of the months
@@ -1521,12 +1554,12 @@ object ApplicationLayer {
                     val newDateTime = LocalDateTime(
                         second = detailBytes[0].toPosInt() and 0b00111111,
                         minute = ((detailBytes[0].toPosInt() and 0b11000000) ushr 6) or
-                                ((detailBytes[1].toPosInt() and 0b00001111) shl 2),
+                            ((detailBytes[1].toPosInt() and 0b00001111) shl 2),
                         hour = ((detailBytes[1].toPosInt() and 0b11110000) ushr 4) or
-                                ((detailBytes[2].toPosInt() and 0b00000001) shl 4),
+                            ((detailBytes[2].toPosInt() and 0b00000001) shl 4),
                         dayOfMonth = (detailBytes[2].toPosInt() and 0b00111110) ushr 1,
                         monthNumber = ((detailBytes[2].toPosInt() and 0b11000000) ushr 6) or
-                                      ((detailBytes[3].toPosInt() and 0b00000011) shl 2),
+                            ((detailBytes[3].toPosInt() and 0b00000011) shl 2),
                         year = ((detailBytes[3].toPosInt() and 0b11111100) ushr 2) + 2000
                     )
 
@@ -1536,7 +1569,8 @@ object ApplicationLayer {
 
                     CMDHistoryEventDetail.NewDateTimeSet(newDateTime)
                 }
-                else -> {
+
+                else           -> {
                     logger(LogLevel.DEBUG) {
                         "No detail info available: event type ID unrecognized; skipping this event"
                     }
@@ -1716,7 +1750,8 @@ object ApplicationLayer {
 
         val reasonInt = payload[2].toPosInt()
         val reason = RTDisplayUpdateReason.fromInt(reasonInt) ?: throw InvalidPayloadException(
-            packet, "Invalid RT display update reason $reasonInt")
+            packet, "Invalid RT display update reason $reasonInt"
+        )
 
         val row = when (val rowInt = payload[4].toPosInt()) {
             0x47 -> 0
@@ -1752,9 +1787,9 @@ object ApplicationLayer {
         // so we ignore these 2 bytes.
 
         return (payload[2].toPosInt() shl 0) or
-                (payload[3].toPosInt() shl 8) or
-                (payload[4].toPosInt() shl 16) or
-                (payload[5].toPosInt() shl 24)
+            (payload[3].toPosInt() shl 8) or
+            (payload[4].toPosInt() shl 16) or
+            (payload[5].toPosInt() shl 24)
     }
 
     /**
@@ -1774,9 +1809,9 @@ object ApplicationLayer {
         // so we ignore these 2 bytes.
 
         return (payload[2].toPosInt() shl 0) or
-                (payload[3].toPosInt() shl 8) or
-                (payload[4].toPosInt() shl 16) or
-                (payload[5].toPosInt() shl 24)
+            (payload[3].toPosInt() shl 8) or
+            (payload[4].toPosInt() shl 16) or
+            (payload[5].toPosInt() shl 24)
     }
 
     /**
@@ -1785,7 +1820,7 @@ object ApplicationLayer {
      * This is preferred over directly using the [Packet] constructor.
      */
     fun checkAndParseTransportLayerDataPacket(tpLayerPacket: TransportLayer.Packet):
-            Packet {
+        Packet {
         try {
             logger(LogLevel.VERBOSE) { "Parsing DATA packet as application layer packet" }
             val appLayerPacket = Packet(tpLayerPacket)
@@ -1800,7 +1835,7 @@ object ApplicationLayer {
             // recover from those errors.
             // An exception is made for CTRL_SERVICE_ERROR packets. These are passed
             // through, since they are supposed to inform the caller about an error.
-            if ((tpLayerPacket.reliabilityBit) && (appLayerPacket.command != ApplicationLayer.Command.CTRL_SERVICE_ERROR)) {
+            if ((tpLayerPacket.reliabilityBit) && (appLayerPacket.command != Command.CTRL_SERVICE_ERROR)) {
                 logger(LogLevel.VERBOSE) {
                     "This packet was delivered inside a reliable transport layer packet; checking the error code"
                 }
@@ -1817,8 +1852,8 @@ object ApplicationLayer {
         } catch (e: InvalidCommandIDException) {
             logger(LogLevel.WARN) {
                 "Got an application layer packet with invalid/unknown command ID 0x${e.commandID.toString(16)} " +
-                        "service ID ${e.serviceID.name} and payload (with ${e.payload.size} byte(s)) ${e.payload.toHexString()}" +
-                        ""
+                    "service ID ${e.serviceID.name} and payload (with ${e.payload.size} byte(s)) ${e.payload.toHexString()}" +
+                    ""
             }
             throw e
         } catch (e: ErrorCodeException) {

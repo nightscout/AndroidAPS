@@ -1,12 +1,12 @@
 package app.aaps.plugins.configuration.maintenance.data
 
 import androidx.annotation.DrawableRes
+import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
 import app.aaps.plugins.configuration.R
 import kotlinx.parcelize.Parcelize
-import java.io.File
 
 typealias PrefMetadataMap = Map<PrefsMetadataKey, PrefMetadata>
 
@@ -16,13 +16,12 @@ interface PrefsFormat {
     companion object {
 
         const val FORMAT_KEY_ENC = "aaps_encrypted"
-        const val FORMAT_KEY_NOENC = "aaps_structured"
     }
 
-    fun savePreferences(file: File, prefs: Prefs, masterPassword: String? = null)
-    fun loadPreferences(file: File, masterPassword: String? = null): Prefs
+    fun savePreferences(file: DocumentFile, prefs: Prefs, masterPassword: String? = null)
+    fun loadPreferences(contents: String, masterPassword: String? = null): Prefs
     fun loadMetadata(contents: String? = null): PrefMetadataMap
-    fun isPreferencesFile(file: File, preloadedContents: String? = null): Boolean
+    fun isPreferencesFile(file: DocumentFile, preloadedContents: String? = null): Boolean
 }
 
 @Parcelize

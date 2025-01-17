@@ -3,23 +3,22 @@
 package app.aaps.plugins.sync.nsclient.data
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Action
 import app.aaps.plugins.sync.R
 import org.json.JSONException
 import org.json.JSONObject
@@ -116,14 +115,12 @@ import javax.inject.Singleton
  "activeProfile": "2016 +30%"
  }
  */
-@OpenForTesting
 @Singleton
 class NSSettingsStatusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
-    private val defaultValueHelper: DefaultValueHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val uel: UserEntryLogger,
     private val uiInteraction: UiInteraction
@@ -159,11 +156,7 @@ class NSSettingsStatusImpl @Inject constructor(
         }
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Received status: $status")
-        val targetHigh = getSettingsThreshold("bgTargetTop")
-        val targetlow = getSettingsThreshold("bgTargetBottom")
-        if (targetHigh != null) defaultValueHelper.bgTargetHigh = targetHigh
-        if (targetlow != null) defaultValueHelper.bgTargetLow = targetlow
-        if (config.NSCLIENT) copyStatusLightsNsSettings(null)
+        if (config.AAPSCLIENT) copyStatusLightsNsSettings(null)
     }
 
     override fun getVersion(): String =
@@ -188,15 +181,6 @@ class NSSettingsStatusImpl @Inject constructor(
         } catch (e: Exception) {
             null
         }
-    }
-
-    // "bgHigh": 252,
-    // "bgTargetTop": 180,
-    // "bgTargetBottom": 72,
-    // "bgLow": 71
-    private fun getSettingsThreshold(what: String): Double? {
-        val threshold = JsonHelper.safeGetJSONObject(getSettings(), "thresholds", null)
-        return JsonHelper.safeGetDoubleAllowNull(threshold, what)
     }
 
     /*
@@ -238,15 +222,15 @@ class NSSettingsStatusImpl @Inject constructor(
 
     override fun copyStatusLightsNsSettings(context: Context?) {
         val action = Runnable {
-            getExtendedWarnValue("cage", "warn")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_cage_warning, it) }
-            getExtendedWarnValue("cage", "urgent")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_cage_critical, it) }
-            getExtendedWarnValue("iage", "warn")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_iage_warning, it) }
-            getExtendedWarnValue("iage", "urgent")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_iage_critical, it) }
-            getExtendedWarnValue("sage", "warn")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_sage_warning, it) }
-            getExtendedWarnValue("sage", "urgent")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_sage_critical, it) }
-            getExtendedWarnValue("bage", "warn")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_bage_warning, it) }
-            getExtendedWarnValue("bage", "urgent")?.let { sp.putDouble(app.aaps.core.utils.R.string.key_statuslights_bage_critical, it) }
-            uel.log(Action.NS_SETTINGS_COPIED, UserEntry.Sources.NSClient)
+            getExtendedWarnValue("cage", "warn")?.let { preferences.put(IntKey.OverviewCageWarning, it.toInt()) }
+            getExtendedWarnValue("cage", "urgent")?.let { preferences.put(IntKey.OverviewCageCritical, it.toInt()) }
+            getExtendedWarnValue("iage", "warn")?.let { preferences.put(IntKey.OverviewIageWarning, it.toInt()) }
+            getExtendedWarnValue("iage", "urgent")?.let { preferences.put(IntKey.OverviewIageCritical, it.toInt()) }
+            getExtendedWarnValue("sage", "warn")?.let { preferences.put(IntKey.OverviewSageWarning, it.toInt()) }
+            getExtendedWarnValue("sage", "urgent")?.let { preferences.put(IntKey.OverviewSageCritical, it.toInt()) }
+            getExtendedWarnValue("bage", "warn")?.let { preferences.put(IntKey.OverviewBageWarning, it.toInt()) }
+            getExtendedWarnValue("bage", "urgent")?.let { preferences.put(IntKey.OverviewBageCritical, it.toInt()) }
+            uel.log(Action.NS_SETTINGS_COPIED, Sources.NSClient)
         }
 
         if (context != null) OKDialog.showConfirmation(context, rh.gs(app.aaps.core.ui.R.string.statuslights), rh.gs(R.string.copy_existing_values), action)

@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">Самост собран прилож Dexcom</string>
     <string name="dexcom_short">ССП DEXCOM</string>
     <string name="description_source_dexcom">Получать данные ГК от \'Самостоятельно собранного приложения Dexcom\'.</string>
-    <string name="eversense">Приложение Eversense (пропатченное)</string>
-    <string name="description_source_eversense">Получать данные гликемии от пропатченного приложения Eversense.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,16 +22,18 @@
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
-    <string name="aidex">Aidex GlucoRx</string>
-    <string name="aidex_short">Aidex </string>
-    <string name="description_source_aidex">Получить значения ГК от GlucoRx Aidex</string>
     <string name="random_bg">Случайные значения ГК</string>
     <string name="description_source_random_bg">Генерировать случайные данные ГК (только демо-режим)</string>
     <string name="random_bg_short">ГК</string>
-    <string name="do_xdrip_upload_title">Отправлять данные СК на xDrip+</string>
-    <string name="do_xdrip_upload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="bgsource_upload">Параметры загрузки СК</string>
     <string name="dexcom_log_ns_sensor_change_title">Вносить запись о замене сенсора в NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
     <string name="direction">направление</string>
+    <string name="bg_generation_interval_minutes">Интервал генерации ГК в мин</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Получать данные о ГК от приложения Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Получать уровень ГК из приложения Syai Tag.</string>
 </resources>

@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Moniteur d\'activité</string>
     <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
-    <string name="do_you_want_reset_tdd_stats">Voulez-vous réinitialiser les statistiques de DTQ ?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Voulez-vous recalculer les statistiques de DTQ ?</string>
     <string name="statistics">Statistiques</string>
     <string name="calculation_in_progress">Calcul en cours</string>
     <string name="invalid_age">Âge invalide</string>
@@ -80,24 +80,15 @@
     <string name="no_records_available">Aucun enregistrement disponible</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA: </string>
-    <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Glucides:</string>
-    <string name="treatments_iobtotal_label_string">IA Totale:</string>
-    <string name="treatments_iob_activity_total_label_string">Activité IA Totale:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
     <string name="treatments_wizard_correction_label">Corr.</string>
     <string name="meal_bolus">Repas</string>
     <string name="prime">Amorcer</string>
-    <string name="profile_changes">Changements de profil</string>
-    <string name="tempt_targets">Cibles Temp</string>
     <string name="carbs_and_bolus">Glucides et bolus</string>
     <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
     <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
-    <string name="refresh_from_nightscout">Rafraîchir depuis Nightscout</string>
-    <string name="refresheventsfromnightscout">Actualiser depuis NS</string>
     <string name="show_invalidated">Montrer les entrées invalides</string>
     <string name="hide_invalidated">Masquer les entrées invalides</string>
     <string name="careportal_remove_started_events">Suppr. entrées \"Démarrage AAPS\"</string>
@@ -131,26 +122,21 @@
     <string name="a11y_only_on_watch">uniquement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
     <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
-    <string name="overview_edit_quickwizard_button_text">Texte du bouton :</string>
-    <string name="overview_edit_quickwizard_carbs">Glucides:</string>
+    <string name="overview_edit_quickwizard_button_text">Texte du bouton</string>
     <string name="overview_edit_quickwizard_valid">Valide:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Ajouter</string>
-    <string name="overview_quickwizard_item_edit_button">Éditer</string>
-    <string name="overview_edit_quickwizard_show_on_device">Afficher l\'entrée sur l\'appareil :</string>
-    <string name="overview_edit_quickwizard_use_bg">Calcul de Glycémie</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IA du Bolus</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IA du Basal</string>
-    <string name="overview_edit_quickwizard_use_trend">Calcul de tendance</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Calcul du Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage">Pourcentage</string>
-    <string name="device_all">Tous</string>
-    <string name="device_phone">Téléphone</string>
-    <string name="device_watch">Montre</string>
-    <string name="positive_only">Positif uniquement</string>
-    <string name="negative_only">Négatif uniquement</string>
-    <string name="overview_editquickwizard_usecob">Calcul GA</string>
-    <string name="overview_editquickwizard_usetemptarget">Calcul de la cible temporaire</string>
-    <string name="overview_editquickwizard_usepercentage">Calcul du pourcentage</string>
-    <string name="app_default">Application par défaut</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">IA positive uniquement</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Pourcentage trop élevé !</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
+    <string name="additional_ecarbs">Ajouter eGlucides</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Utiliser pour le calcul:</string>
+    <string name="constraints_violation">Violation des restrictions</string>
+    <string name="change_your_input">Changez votre entrée !</string>
+    <string name="confirm_treatment">Veuillez confirmer le traitement</string>
+    <string name="recalculate">Recalculer</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Les deux</item>
+        <item>Positif uniquement</item>
+        <item>Négatif uniquement</item>
+    </string-array>
 </resources>

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+
+        <import type="app.aaps.pump.eopatch.code.PatchStep" />
+
         <variable
             name="viewModel"
-            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+            type="app.aaps.pump.eopatch.ui.viewmodel.EopatchViewModel" />
     </data>
 
     <LinearLayout
@@ -21,7 +22,7 @@
             android:id="@+id/framelayout_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="15dp" />
 
     </LinearLayout>
 

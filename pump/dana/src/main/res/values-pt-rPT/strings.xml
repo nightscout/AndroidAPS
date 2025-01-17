@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Desactivar modo EasyUI na bomba</string>
     <string name="profile_set_failed">Não foi possível configurar o perfil de basal</string>
     <string name="danar_bluetooth_status">Estado do Bluetooth</string>
-    <string name="danar_iob_label">IA Bomba</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Definições da bomba Dana</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="danars_password_title">Senha da bomba (apenas v1)</string>
     <string name="danar_password_title">Senha da bomba</string>
-    <string name="danar_useextended_title">Utilizar bólus estendido por &gt;200%%</string>
     <string name="bolusspeed">Velocidade Bólus</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Registar mudança de reservatório</string>

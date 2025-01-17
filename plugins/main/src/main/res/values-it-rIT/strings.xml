@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Per disabilitare il servizio di controllo remoto tramite SMS rispondi col codice %1$s.\n\nRicorda che potrai riattivarlo solo in maniera diretta dallo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_stopped_sms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolo fallito</string>
+    <string name="smscommunicator_bolus_failed">Bolo non riuscito. Verificare lo stato reale prima di inviare un altro comando!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Numero minimo di minuti che devono trascorrere tra un bolo remoto e il successivo</string>
     <string name="smscommunicator_remote_bolus_min_distance">Quanti minuti devono trascorrere, almeno, tra un bolo e il successivo</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Per la tua sicurezza, per modificare questa preferenza hai bisogno di aggiungere almeno 2 numeri di telefono.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="ic_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'IC. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
     <!-- Actions -->
     <string name="actions">Azioni</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
     <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
     <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
+    <string name="graph_scale_6h">6 ore</string>
+    <string name="graph_scale_12h">12 ore</string>
+    <string name="graph_scale_18h">18 ore</string>
+    <string name="graph_scale_24h">24 ore</string>
+    <string name="graph_long_scale_6h">6 ore</string>
+    <string name="graph_long_scale_12h">12 ore</string>
+    <string name="graph_long_scale_18h">18 ore</string>
+    <string name="graph_long_scale_24h">24 ore</string>
     <string name="a11y_graph">grafico</string>
+    <string name="a11y_graph_scale">seleziona scala del grafico</string>
+    <string name="a11y_graph_scale_6h">scala del grafico 6 ore</string>
+    <string name="a11y_graph_scale_12h">scala del grafico 12 ore</string>
+    <string name="a11y_graph_scale_18h">scala del grafico 18 ore</string>
+    <string name="a11y_graph_scale_24h">scala del grafico 24 ore</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu grafico</string>
     <string name="a11y_bg_quality">qualità glicemia</string>
@@ -201,11 +216,8 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="overview_buttons_selection">Tasti</string>
-    <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ o apre la finestra di calibrazione di BYODA</string>
-    <string name="show_cgm_button_summary">Apre xDrip+ o BYODA, il tasto indietro torna ad AAPS</string>
-    <string name="dexcom_app_not_installed">App Dexcom non installata.</string>
-    <string name="dexcom_app_not_detected">Aggiorna la tua app Dexcom a una versione supportata</string>
-    <string name="error_starting_cgm">Impossibile avviare l\'applicazione CGM. Assicurati che sia installata.</string>
+    <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ (assicurati che \'Accetta calibrazioni\' sia abilitata in xDrip+ nelle impostazioni Inter-App).</string>
+    <string name="show_cgm_button_summary">Apri xDrip+ o l\'app Dexcom (puoi usare il tasto indietro per tornare ad AAPS).</string>
     <string name="not_available_full">Non disponibile</string>
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="change_your_input">Cambia il tuo input!</string>
@@ -226,12 +238,12 @@
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Target temporanei predefiniti</string>
-    <string name="eatingsoon_duration">target \"pasto a breve\" - durata</string>
-    <string name="eatingsoon_target">target \"pasto a breve\"</string>
-    <string name="activity_duration">target \"attività fisica\" - durata</string>
-    <string name="activity_target">target \"attività fisica\"</string>
-    <string name="hypo_duration">target \"ipoglicemia\" - durata</string>
-    <string name="hypo_target">target \"ipoglicemia\"</string>
+    <string name="eatingsoon_duration">Durata Pasto a breve (minuti)</string>
+    <string name="eatingsoon_target">Valore target Pasto a breve</string>
+    <string name="activity_duration">Durata Attività (minuti)</string>
+    <string name="activity_target">Valore target Attività</string>
+    <string name="hypo_duration">Durata Ipoglicemia (minuti)</string>
+    <string name="hypo_target">Valore target Ipoglicemia</string>
     <string name="fill_bolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="button1">Tasto 1</string>
     <string name="button2">Tasto 2</string>
@@ -258,12 +270,13 @@
     <string name="overview_show_deviation_slope">Pendenza deviazione</string>
     <string name="overview_show_activity">Attività</string>
     <string name="overview_show_bgi">Impatto glicemia (BGI)</string>
-    <string name="overview_show_sensitivity">Sensibilità</string>
+    <string name="overview_show_sensitivity">Variazione di sensibilità</string>
     <string name="overview_show_deviations">Deviazioni</string>
     <string name="overview_show_cob">CHO attivi</string>
     <string name="overview_show_iob">Insulina attiva</string>
     <string name="overview_show_basals">Basali</string>
     <string name="overview_show_abs_insulin">Insulina assoluta</string>
+    <string name="overview_show_variable_sens">Sensibilità variabile</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -273,9 +286,11 @@
     <string name="devslope_shortname">PENDEV</string>
     <string name="treatments_shortname">TRATT</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="graph_menu_divider_header">Grafico</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema originale</string>
     <string name="lowres_description">Tema a bassa risoluzione</string>
@@ -284,8 +299,10 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">uso:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
+    <string name="overview_show_steps">Passi</string>
+    <string name="steps_shortname">PASSI</string>
+    <string name="simple_mode_enabled">Modalità semplice abilitata</string>
 </resources>

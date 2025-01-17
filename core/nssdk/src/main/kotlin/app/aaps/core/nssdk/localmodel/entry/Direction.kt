@@ -1,21 +1,21 @@
 package app.aaps.core.nssdk.localmodel.entry
 
-enum class Direction(val nsName: String, val txtIcon: String) {
-    TRIPLE_DOWN("TripleDown", "\u290B"), // ⤋
-    DOUBLE_DOWN("DoubleDown", "\u21ca"), // ⇊
-    SINGLE_DOWN("SingleDown", "\u2193"), // ↓
-    FORTY_FIVE_DOWN("FortyFiveDown", "\u2198"), // ↘
-    FLAT("Flat", "\u2192"), // →
-    FORTY_FIVE_UP("FortyFiveUp", "\u2197"), // ↗
-    SINGLE_UP("SingleUp", "\u2191"), // ↑
-    DOUBLE_UP("DoubleUp", "\u21c8"), // ⇈
-    TRIPLE_UP("TripleUp", "\u290A"), // ⤊
-    NONE("NONE", "⇼"),
-    INVALID("", "-");
+enum class Direction(val nsName: String) {
+    TRIPLE_DOWN("TripleDown"), // ⤋
+    DOUBLE_DOWN("DoubleDown"), // ⇊
+    SINGLE_DOWN("SingleDown"), // ↓
+    FORTY_FIVE_DOWN("FortyFiveDown"), // ↘
+    FLAT("Flat"), // →
+    FORTY_FIVE_UP("FortyFiveUp"), // ↗
+    SINGLE_UP("SingleUp"), // ↑
+    DOUBLE_UP("DoubleUp"), // ⇈
+    TRIPLE_UP("TripleUp"), // ⤊
+    NONE("NONE"),
+    INVALID("");
 
     companion object {
 
-        fun fromString(text: String?) = Direction.values().firstOrNull { it.nsName == text } ?: NONE
+        fun fromString(text: String?) = entries.firstOrNull { it.nsName == text } ?: NONE
     }
 }
 

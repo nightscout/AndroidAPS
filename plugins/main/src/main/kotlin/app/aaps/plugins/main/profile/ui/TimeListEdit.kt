@@ -37,8 +37,8 @@ class TimeListEdit(
     range1: DoubleArray,
     range2: DoubleArray?,
     private val step: Double,
-    formatter: NumberFormat,
-    save: Runnable?
+    private val formatter: NumberFormat,
+    private val save: Runnable?
 ) {
 
     private val intervals = arrayOfNulls<View>(24)
@@ -48,23 +48,15 @@ class TimeListEdit(
     private val addButtons = arrayOfNulls<ImageView>(24)
     private val removeButtons = arrayOfNulls<ImageView>(24)
     private var finalAdd: ImageView? = null
-    private val min: Double
-    private val max: Double
-    private val min2: Double
-    private val max2: Double
-    private val formatter: NumberFormat
-    private val save: Runnable?
+    private val min: Double = range1[0]
+    private val max: Double = range1[1]
+    private val min2: Double = range2?.get(0) ?: 0.0
+    private val max2: Double = range2?.get(1) ?: 0.0
     private var layout: LinearLayout? = null
     private var textLabel: TextView? = null
     private var inflatedUntil = -1
 
     init {
-        min = range1[0]
-        max = range1[1]
-        min2 = range2?.get(0) ?: 0.0
-        max2 = range2?.get(1) ?: 0.0
-        this.formatter = formatter
-        this.save = save
         buildView()
     }
 
@@ -94,7 +86,7 @@ class TimeListEdit(
         val factor = layout.context.resources.displayMetrics.density
         ImageView(context).also {
             this.finalAdd = it
-            it.setImageResource(app.aaps.core.main.R.drawable.ic_add)
+            it.setImageResource(app.aaps.core.objects.R.drawable.ic_add)
             it.contentDescription = layout.context.resources.getString(R.string.a11y_add_new_to_list)
             layout.addView(it)
             it.layoutParams = LinearLayout.LayoutParams((35.0 * factor).toInt(), (35 * factor).toInt()).also { llp ->

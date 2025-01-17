@@ -1,15 +1,16 @@
 package app.aaps.plugins.sync.tidepool.elements
 
+import app.aaps.core.data.model.EPS
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import com.google.gson.annotations.Expose
 import java.util.UUID
 
-class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil: DateUtil, profileUtil: ProfileUtil) :
+@Suppress("unused")
+class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileUtil: ProfileUtil) :
     BaseElement(ps.timestamp, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.timestamp).toByteArray()).toString(), dateUtil) {
 
     @Expose
@@ -44,7 +45,7 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
 
     init {
         type = "pumpSettings"
-        val profile: Profile = ProfileSealed.EPS(ps)
+        val profile: Profile = ProfileSealed.EPS(value = ps, activePlugin = null)
         // for (br in profile.getBasalValues())
         //     basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
         // for (target in profile.getSingleTargetsMgdl())
@@ -59,7 +60,7 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
             bgTargets.Normal.add(
                 Target(
                     seconds * 1000,
-                    profileUtil.convertToMgdlDetect((((profile.getTargetLowMgdlTimeFromMidnight(seconds) + profile.getTargetLowMgdlTimeFromMidnight(seconds))) / 2)).toInt()
+                    profileUtil.convertToMgdlDetect(((profile.getTargetLowMgdlTimeFromMidnight(seconds) + profile.getTargetLowMgdlTimeFromMidnight(seconds)) / 2)).toInt()
                 )
             )
             carbRatios.Normal.add(Ratio(seconds * 1000, profile.getIcTimeFromMidnight(seconds).toInt()))

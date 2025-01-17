@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/startEquilActivationFragment">
+    <fragment
+        android:id="@+id/startEquilActivationFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairAssembleFragment"
+        android:label="StartEquilActivationFragment">
+        <action
+            android:id="@+id/action_startEquilActivationFragment_to_startEquilSerialNumberFragment"
+            app:destination="@id/startEquilSerialNumberFragment" />
+        <action
+            android:id="@+id/action_startEquilActivationFragment_to_startEquilPairFillFragment"
+            app:destination="@id/startEquilPairFillFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startEquilSerialNumberFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairSerialNumberFragment"
+        android:label="StartEquilSerialNumberFragment">
+
+        <action
+            android:id="@+id/action_startEquilActivationFragment_to_startEquilPairFillFragment"
+            app:destination="@id/startEquilPairFillFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startEquilChangeInsulinFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilChangeInsulinFragment"
+        android:label="StartEquilSerialNumberFragment">
+
+        <action
+            android:id="@+id/action_startEquilChangeInsulinFragment_to_startEquilPairAssembleFragment"
+            app:destination="@id/startEquilActivationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startEquilPairFillFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairFillFragment"
+        android:label="StartEquilPairFillFragment">
+        <action
+            android:id="@+id/action_startEquilActivationFragment_to_startEquilPairAttachFragment"
+            app:destination="@id/startEquilPairAttachFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/startEquilPairAttachFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairAttachFragment"
+        android:label="StartEquilPairAttachFragment">
+        <action
+            android:id="@+id/action_startEquilActivationFragment_to_startEquilPairAirFragment"
+            app:destination="@id/startEquilPairAirFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startEquilPairAirFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairAirFragment"
+        android:label="StartEquilPairAirFragment">
+        <action
+            android:id="@+id/action_startEquilActivationFragment_to_startEquilPairConfirmFragment"
+            app:destination="@id/startEquilPairConfirmFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startEquilPairConfirmFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairConfirmFragment"
+        android:label="StartEquilPairConfirmFragment" />
+</navigation>

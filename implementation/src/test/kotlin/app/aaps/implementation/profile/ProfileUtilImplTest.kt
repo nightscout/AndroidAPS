@@ -1,9 +1,11 @@
 package app.aaps.implementation.profile
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.core.keys.Preferences
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -14,17 +16,17 @@ import org.mockito.Mock
 class ProfileUtilImplTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private val glucoseValue =
-        GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
+        GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
 
     private lateinit var sut: ProfileUtilImpl
 
     @BeforeEach
     fun setup() {
         val decimalFormatter = DecimalFormatterImpl(rh)
-        sut = ProfileUtilImpl(sp, decimalFormatter)
+        sut = ProfileUtilImpl(preferences, decimalFormatter)
     }
 
     @Test

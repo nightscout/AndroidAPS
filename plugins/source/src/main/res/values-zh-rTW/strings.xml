@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient 血糖</string>
+    <string name="ns_client_bg_short">NS 血糖</string>
+    <string name="description_source_ns_client">從 Nightscout 下載血糖資料</string>
+    <string name="source_xdrip">xDrip+ 血糖</string>
+    <string name="description_source_xdrip">接收來自 xDrip+ 的血糖值。</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">接收來自「Build Your Own Dexcom App」的血糖值。</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">接收來自 Glimp 的血糖值。</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">接收來自 600SeriesAndroidUploader 的血糖值。</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">接收來自 Poctech 應用的血糖值</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">接收來自 Glunovo 應用的資料</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">接收來自 Intelligo 應用的資料</string>
+    <string name="tomato">Tomato（MiaoMiao）</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">接收來自 Tomato 應用（MiaoMiao 設備）的血糖值</string>
+    <string name="random_bg">隨機血糖值</string>
+    <string name="description_source_random_bg">生成隨機血糖資料（僅限演示模式）</string>
+    <string name="random_bg_short">血糖值</string>
+    <string name="bgsource_upload">血糖資料上傳設置</string>
+    <string name="dexcom_log_ns_sensor_change_title">紀錄傳感器更換到 NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">在傳感器啟動時自動在 NS 中建立「傳感器更換」事件</string>
+    <string name="direction">方向</string>
+    <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">歐泰(Ottai)</string>
+    <string name="description_source_patched_ottai_app">從歐泰應用程式接收血糖資料。</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">從 Syai Tag 應用程式接收血糖資料。</string>
+</resources>

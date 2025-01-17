@@ -49,7 +49,6 @@
     <string name="alarm_expired">Verlopen</string>
     <string name="alarm_reservoir_empty">Reservoir leeg</string>
     <string name="alarm_patch_fault">Patch fout</string>
-    <string name="alarm_patch_fault2">Patch fout 2</string>
     <string name="alarm_base_fault">Basis fout</string>
     <string name="alarm_battery_out">Batterij leeg</string>
     <string name="alarm_no_calibration">Geen kalibratie</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Pomp basis mag niet verbonden zijn met de patch tot de volgende stap!</string>
     <string name="connect_pump_base">Verbind de pompbasis op een nieuwe patch, ontlucht de patch, vul met insuline en druk op <b>Volgende</b>.</string>
     <string name="note_min_70_units">Opmerking: Voor de activering zijn minimaal 70 eenheden vereist.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Plaats de patch nog niet op het lichaam.</string>
     <string name="half_press_needle">Druk de naald knop half in. Druk daarna op <b>Volgende</b> om het voorvullen te starten.</string>
     <string name="wait_for_priming">Wacht alstublieft tot het voorvullen voltooid is.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Pomp activeren en initiële basaalstand instellen. Even geduld alstublieft.</string>
     <string name="activating_error">Activeren mislukt, druk op <b>Opnieuw</b> om het nogmaals te proberen.</string>
     <string name="activating_complete">Nieuwe patch geactiveerd. %.2f Eenheden resterend.</string>
+    <string name="can_export_settings">Je kunt de instellingen exporteren om deze patch sessie later te kunnen herstellen.</string>
     <string name="press_OK_to_return">Druk op <b>OK</b> om terug te keren naar het hoofdscherm.</string>
     <string name="deactivate_sure">Weet u zeker dat u de huidige patch wilt deactiveren?</string>
     <string name="cancel_sure">Weet u zeker dat u de activatie wil annuleren?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Voer het serienummer van uw pompbasis in.</string>
     <string name="sn_input_invalid">Ongeldig serienummer!</string>
-    <string name="pump_unsupported">Pomp niet getest, %1$d! Neem contact met ons op via discord of github voor ondersteuning</string>
+    <string name="pump_unsupported">Pomp niet getest, %1$s! Neem contact met ons op via Discord of GitHub voor ondersteuning</string>
     <string name="alarm_setting_title">Alarminstellingen</string>
     <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
     <string name="pump_warning_notification_title">Notificatie bij pomp waarschuwing</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Geef de maximale hoeveelheid insuline per uur op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
     <string name="daily_max_insulin_title">Maximale insuline per dag [Eenheden]</string>
     <string name="daily_max_insulin_summary">Geef de maximale hoeveelheid insuline per dag op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
+    <string name="scan_on_connection_error_title">Scan bij verbindingsfout</string>
+    <string name="scan_on_connection_error_summary">WAARSCHUWING: Alleen inschakelen als je verbindingsproblemen ondervindt. Indien ingeschakeld zoekt het stuurprogramma opnieuw naar de pomp voordat het opnieuw verbinding probeert te maken met de pomp. Zorg ervoor dat je Locatiemachtiging is ingesteld op \"Altijd toestaan\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pompstatus aan het ophalen</string>
+    <string name="syncing_records">Records synchroniseren, nog %1$d te doen</string>
     <string name="getting_bolus_status">Bolus status aan het ophalen</string>
     <string name="getting_temp_basal_status">Tijdelijke basaal status aan het ophalen</string>
     <string name="setting_pump_settings">Gebruikersopties worden ingesteld</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus afgebroken door gebruiker</string>
+    <string name="bolus_error_reason_not_connected">Pomp niet verbonden</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus wordt al uitgevoerd</string>
+    <string name="bolus_error_reason_unable_to_send_command">Kan bolus opdracht niet verzenden</string>
+    <string name="bolus_error_reason_communication_lost">Time-out bij het lezen van de bolus status</string>
+    <string name="bolus_error_reason_pump_error">Pomp fout</string>
 </resources>

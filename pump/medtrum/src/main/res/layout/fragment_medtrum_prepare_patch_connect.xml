@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="info.nightscout.pump.medtrum.code.PatchStep" />
+        <import type="app.aaps.pump.medtrum.code.PatchStep" />
 
         <variable
             name="viewModel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
+            type="app.aaps.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
     </data>
 
     <ScrollView
@@ -54,6 +54,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_connect_pump_base" />
 
             <TextView
+                android:id="@+id/text_reservoir_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text='@{viewModel.medtrumPump.reservoirFlow > 70 ? @string/reservoir_text_and_level(viewModel.medtrumPump.reservoirFlow) : ""}'
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_note_min_70" />
+
+            <TextView
                 android:id="@+id/do_not_attach"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -62,7 +76,7 @@
                 android:layout_marginBottom="40dp"
                 android:gravity="center"
                 android:text="@string/do_not_attach_to_body"
-                android:textColor="@color/red"
+                android:textColor="@color/warning"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/layout_button"
                 app:layout_constraintEnd_toEndOf="parent"

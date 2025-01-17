@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Открытый цикл может быть использован для получения рекомендаций по терапии, если у вас нет совместимой помпы или если вы не готовы закрыть цикл.</string>
     <string name="objectives_maxbasal_objective">Глубже понимаем работу открытого цикла, включая рекомендации по ВБС</string>
     <string name="objectives_maxbasal_gate">На основе накопленного опыта, определяем максимальную величину базала и задаем ее в помпе и в настройках AAPS</string>
+    <string name="objectives_maxbasal">Выполните рекомендуемое действие</string>
     <string name="objectives_maxbasal_learned">Примите меры предосторожности и корректируйте, если необходимо, параметры безопасности.</string>
     <string name="objectives_maxiobzero_objective">Начинаем замыкать цикл с прекращением подачи инсулина при низких значениях ГК (режим Low Glucose Suspend)</string>
     <string name="objectives_maxiobzero_gate">Работа в замкнутом цикле с maxIOB = 0 на протяжении нескольких дней. Старайтесь избегать низкой ГК, чтобы не вызывать события приостановки подачи инсулина на низких сахарах.</string>
@@ -23,14 +24,12 @@
     <string name="objectives_autosens_objective">Настраиваем базал и коэффициенты с последующей активацией auto-sens</string>
     <string name="objectives_autosens_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
     <string name="objectives_autosens_learned">Если результаты расчетов auto-sense не колеблются около 100%, то, возможно, ваш профиль неверный.</string>
-    <string name="objectives_smb_objective">Активация в дневное время дополнительных функций, таких как СМБ</string>
+    <string name="objectives_smb_objective">Активация в дневное время дополнительных функций, таких как микроболюсы SMB</string>
     <string name="objectives_smb_gate">Прочтите статью wiki и увеличьте maxIOB, чтобы SMB заработал как положено! Для начала рассчитайте maxIOB = средний болюс на еду + макс. суточная базальная скорость*3</string>
-    <string name="objectives_smb_learned">Ваша цель - это использование СМБ. Алгоритм Oref1 предназначен также, чтобы помочь вам с болюсами. Вы не должны подавать полный болюс на еду, а только часть его, предоставив AAPS подать при необходимости остальную часть болюса. Таким образом вы можете иметь большее пространство для ошибки в подсчетах углеводов. Вы знаете, что можно установить проценты для уменьшения размера болюса?</string>
-    <string name="objectives_dyn_isf_objective">Включение дополнительных функций для использования в дневное время, например - плагина Динамической чувствительности</string>
-    <string name="objectives_dyn_isf_gate">Убедитесь, что СМБ работают правильно. Включите плагин DynamicISF и определите поправку, подходящую лично для вас. Для безопасности рекомендуется начинать со значения ниже 100%.</string>
-    <string name="objectives_dyn_isf_learned">Плагин Динамической чувствительности (Динамик) основан на идее о том, что суточная доза инсулина и текущий уровень ГК влияют на чувствительность. Динамик может индивидуально подстраивать Фактор чувствительности к инсулину (ISF).</string>
+    <string name="objectives_smb_learned">Ваша цель - пользоваться микроболюсами SMB. Алгоритм Oref1 также помогает с болюсами. Следует вводить не полный болюс на еду, а только часть его, позволив AAPS при необходимости ввести остальную часть болюса. Таким образом нивелируются ошибки при подсчете углеводов. Знаете ли вы, что можно установить процент от результата калькулятора болюса, чтобы уменьшить размер болюса?</string>
     <string name="objectives_auto_objective">Включение автоматизации</string>
-    <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Прочитайте документацию по принципу работы автоматизаций. Настройте свои первые простые правила. Вместо действия, позвольте AAPS лишь показывать уведомление. Когда вы будете уверены, что автоматизация сработает в нужное время, замените уведомление на реальное действие.
+(https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
     <string name="objectives_bgavailableinns">ГК доступна в NS или Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS или Tidepool</string>
@@ -77,12 +76,13 @@
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>
     <string name="objectives_hint">(отметьте все правильные ответы)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/ru/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/ru/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
     <string name="what_i_ve_learned">Мной усвоено:</string>
+    <string name="verify_master_password">Убедитесь, что вы знаете мастер-пароль</string>
 </resources>

@@ -4,7 +4,7 @@
     <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
     <string name="next_button">Далее</string>
     <string name="previous_button">Назад</string>
-    <string name="nav_setupwizard">Мастер настройки</string>
+    <string name="nav_setupwizard">Мастер установки</string>
     <string name="setupwizard_finish">ГОТОВО</string>
     <string name="welcome">Добро пожаловать</string>
     <string name="welcometosetupwizard">Добро пожаловать в мастер установки</string>
@@ -19,6 +19,7 @@
     <string name="permission">Права доступа</string>
     <string name="need_system_window_permission">Приложению требуется разрешение системного окна для уведомлений</string>
     <string name="need_location_permission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
+    <string name="need_background_location_permission">Приложению необходим доступ к геолокации в любое время для автоматизаций</string>
     <string name="need_storage_permission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="need_whitelisting">для корректной работы %1$s необходимо включить в белый список оптимизации батареи</string>
@@ -30,15 +31,13 @@
     <string name="status">состояние:</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
-    <string name="privacy_settings">Настройки конфиденцальности</string>
-    <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="profile">Профиль</string>
     <string name="doprofileswitch">Переключить профиль</string>
-    <string name="exitwizard">Пропустить Мастер настройки</string>
+    <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
@@ -47,8 +46,8 @@
     <string name="readstatus">Статус \'чтение\'</string>
     <string name="data_choices">Отбор данных</string>
     <string name="fabric_upload">Загрузка отчета для разработчиков</string>
-    <string name="allow_automated_crash_reporting">Разрешить отправлять сообщения о неполадках и данные об использовании опций разработчикам при помощи сервиса fabric.io.</string>
-    <string name="summary_email_for_crash_report">Эта идентификация будет прикреплена к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
+    <string name="unattended_settings_export">Автоматический экспорт настроек</string>
+    <string name="unattended_settings_export_summary">Включение данного параметра безопасно сохранит ваш пароль на этом телефоне</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="request">Запрос</string>
     <string name="apsmode_title">Режим APS</string>
@@ -82,6 +81,8 @@
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="a11y_open_settings">открыть настройки</string>
     <string name="nsclient_version_does_not_match">Версия AAPSClient не совпадает с версией AAPS. Обновите версию.</string>
+    <string name="expand_category">Развернуть категорию</string>
+    <string name="collapse_category">Свернуть категорию</string>
     <!--ImportExport-->
     <string name="nav_preferences">Настройки</string>
     <string name="password_preferences_encrypt_prompt">Будет предложено ввести главный пароль, который будет использоваться для шифрования экспортированных параметров.</string>
@@ -93,10 +94,11 @@
     <string name="check_preferences_import_btn">Импортировать</string>
     <string name="check_preferences_import_anyway_btn">Импортировать в любом случае (ОПАСНО!)</string>
     <string name="import_setting">Импортировать настройки</string>
+    <string name="aaps_directory">Папка AAPS</string>
+    <string name="select_aaps_directory">Выберите папку AAPS для хранения экспорта настроек, конфигураций и т. д.</string>
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
     <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
-    <string name="nav_export">экспорт настроек</string>
     <string name="export_to">экспортировать настройки в</string>
     <string name="import_from">импортировать настройки из</string>
     <string name="setting_imported">настройки импортированы</string>
@@ -104,18 +106,20 @@
     <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
     <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
     <string name="exported">настройки экспортированы</string>
+    <string name="exported_failed">Не удалось экспортировать настройки!</string>
     <string name="filenotfound">файл не найден</string>
     <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
     <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="ue_exported">Записи пользователя экспортированы</string>
     <string name="protection">Защита</string>
-    <string name="master_password_missing">Не задан главный пароль!\n\nЗадайте главный пароль в настройках (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">Не задан главный пароль!\n\nЗадайте главный пароль в настройках (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Обслуживание</string>
     <string name="maintenance_shortname">ОБСЛУЖ</string>
     <string name="description_maintenance">Предоставляет возможности для обслуживания (например. отправку логов, удаление логов).</string>
     <string name="database_cleanup">Очистка базы данных</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
+    <string name="reset_aps_results_confirm">Вы действительно хотите сбросить хранящиеся результаты APS?</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>
     <string name="maintenance_amount">Количество логов для отправки</string>
@@ -132,11 +136,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
     <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
     <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
-    <string name="in_directory" comment="placeholder is for exported file path">в каталоге: %1$s</string>
     <string name="preferences_import_list_title">Выберите файл для импорта</string>
     <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
     <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
-    <string name="metadata_warning_outdated_format">Вы используете устаревший формат из старых версий AAPS, который не безопасен! Используйте его только в крайнем случае, если у вас нет экспорта в текущем формате JSON.</string>
     <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
     <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
     <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
@@ -154,8 +156,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Выберите пользовательский циферблат</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AAPS из системных настроек \n иначе AAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Формат файла</string>
     <string name="metadata_label_created_at">Дата создания</string>
@@ -165,6 +165,7 @@
     <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
     <string name="metadata_label_encryption">Шифрование файла</string>
     <string name="metadata_format_new">Новый зашифрованный формат</string>
-    <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
+    <string name="reset_aps_results">Сбросить результаты APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Ошибка доступа к файловой системе. Выберите каталог AAPS правильно.</string>
 </resources>

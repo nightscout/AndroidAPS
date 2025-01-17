@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Crează anunțuri din alertele de cerere carbohidrați</string>
     <string name="ns_create_announcements_from_errors_summary">Crează anunțuri în Nightscout pentru dialoguri de erori și alerte locale (vizibile și în Careportal - Tratamente)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Creează anunțuri Nightscout din alertele de cerere carbohidrați</string>
-    <string name="description_ns_client">Sincronizare a datelor cu Nightscout</string>
     <string name="description_ns_client_v3">Sincronizează datele cu Nightscout folosind v3 API</string>
     <string name="blocked_by_charging">Blocat de opțiunile de încărcare</string>
     <string name="blocked_by_connectivity">Blocat de opțiunile de conectivitate</string>
@@ -24,24 +23,11 @@
     <string name="ns_malfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT nu are permisiuni de scriere. Cheia API este corect scrisă?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Client NS</string>
-    <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Restartare</string>
-    <string name="ns_client_internal_title">Client NS</string>
     <string name="ns_client_url_title">Adresa Nightscout</string>
-    <string name="ns_client_url_dialog_message">Introduceți adresa Nightscout</string>
-    <string name="ns_client_secret_title">Cheia API NS</string>
-    <string name="ns_client_secret_dialog_title">Cheia API NS</string>
-    <string name="ns_client_secret_dialog_message">Introduceți cheia API NS (min 12 caractere)</string>
-    <string name="nsclient_token_title">Token acces NS</string>
-    <string name="nsclient_token_dialog_title">Token acces NS</string>
-    <string name="nsclient_token_dialog_message">Token de acces generat pe pagina de administrare NS (min 17 caractere)</string>
     <string name="deliver_now">Livrează acum</string>
-    <string name="clear_queue">Curăță coada de așteptare</string>
-    <string name="show_queue">Arată coada de așteptare</string>
     <string name="queue">Coadă:</string>
     <string name="status">Stare:</string>
     <string name="clear_log">Șterge istoricul</string>
@@ -89,18 +75,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Înregistrează datele la Tidepool</string>
-    <string name="tidepool_upload_cgm">Înregistrează datele din CGM</string>
-    <string name="tidepool_upload_bolus">Înregistrează tratamentele (insulină, carbohidrați)</string>
-    <string name="tidepool_upload_tbr">Înregistrează bazalele temporare</string>
-    <string name="tidepool_upload_profile">Înregistrează schimbările de profil, țintele temporare</string>
-    <string name="tidepool_upload_bg">Înregistrează testările de glicemie</string>
     <string name="remove_all">Înlătură Tot</string>
-    <string name="reset_start">Reinițializare start</string>
     <string name="upload_now">Încarcă acum</string>
     <string name="not_connected">Neconectat</string>
     <string name="read_only">Doar vizualizare</string>
     <string name="working">În lucru</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +102,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexiune la dispozitivul Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Setări Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">CEAS</string>
     <string name="description_wear">Monitorizează și controlează AAPS folosind ceasul WearOS.</string>
@@ -133,7 +111,6 @@
     <string name="wizard_result">Calc. Asistent:\nInsulină: %1$.2fU\nCarburi: %2$dg</string>
     <string name="quick_wizard_not_available">Asistentul rapid selectat nu mai este disponibil, vă rugăm să reîncărcați iconița</string>
     <string name="quick_wizard_message">Asistent calcul: %1$s\nInsulină: %2$.2fU\nCarbohidrați: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Presetare ȚintăTemporară necunoscută: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Se anulează rularea țintelor temporare?</string>
     <string name="wear_action_tempt_unit_error">Unități diferite folosite pe ceas și telefon!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - anulați ȚinteleTemporare actuale?</string>

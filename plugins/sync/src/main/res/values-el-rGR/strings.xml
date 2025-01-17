@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Δημιουργία ανακοινώσεων από τις ειδοποιήσεις απαιτούμενων υδατανθράκων</string>
     <string name="ns_create_announcements_from_errors_summary">Δημιουργήστε μια ειδοποίηση Ns για σφάλματα διαλόγων και τοπικούς συναγερμούς (που φαίνονται στο Careportal κάτω από τις Θεραπείες)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Δημιουργία ανακοινώσεων Nightscout για τις ειδοποιήσεις απαιτούμενων υδατανθράκων</string>
-    <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
     <string name="description_ns_client_v3">Συγχρονίζει τα δεδομένα σας με το Nightscout χρησιμοποιώντας v3 API</string>
     <string name="blocked_by_charging">Αποκλεισμός από τις επιλογές φόρτισης</string>
     <string name="blocked_by_connectivity">Αποκλεισμός από τις επιλογές συνδεσιμότητας</string>
@@ -23,24 +22,11 @@
     <string name="ns_malfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Επανεκκίνηση</string>
-    <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Διεύθυνση Nightscout</string>
-    <string name="ns_client_url_dialog_message">Βάλτε την διεύθυνσή σας Nightscout</string>
-    <string name="ns_client_secret_title">Μυστικός κωδικός NS API secret</string>
-    <string name="ns_client_secret_dialog_title">Μυστικός κωδικός NS API secret</string>
-    <string name="ns_client_secret_dialog_message">Βάλτε 12ψήφιο μυστικό κωδικό</string>
-    <string name="nsclient_token_title">Διακριτικό πρόσβασης NS</string>
-    <string name="nsclient_token_dialog_title">Διακριτικό πρόσβασης NS</string>
-    <string name="nsclient_token_dialog_message">Διακριτικό πρόσβασης που δημιουργείται στη σελίδα διαχείρισης του NS (ελάχιστο 17 χαρακτήρες)</string>
     <string name="deliver_now">Έγχυση τώρα</string>
-    <string name="clear_queue">Διαγραφή σειράς</string>
-    <string name="show_queue">Δείξε σειρά</string>
     <string name="queue">Σειρά:</string>
     <string name="status">Κατάσταση:</string>
     <string name="clear_log">Διαγραφή αρχείου καταγραφής</string>
@@ -88,18 +74,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
-    <string name="tidepool_upload_cgm">Αποστολή δεδομένων CGM</string>
-    <string name="tidepool_upload_bolus">Αποστολή θεραπειών (ινσουλίνης, υδατανθράκων)</string>
-    <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
-    <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
-    <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
     <string name="remove_all">Αφαίρεση όλων</string>
-    <string name="reset_start">Επαναφορά έναρξης</string>
     <string name="upload_now">Ανέβασμα τώρα</string>
     <string name="not_connected">Μη συνδεδεμένο</string>
     <string name="read_only">Μόνο για ανάγνωση</string>
     <string name="working">Σε επεξεργασία</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -125,7 +104,6 @@
     <string name="wizard_result">Υπολογισμός. Οδηγός:\nΙνσουλίνη: %1$.2fU\nΥδατάνθρακες: %2$dg</string>
     <string name="quick_wizard_not_available">Ο επιλεγμένος οδηγός δεν είναι πλέον διαθέσιμος, παρακαλώ ανανεώστε το πλακίδιο σας</string>
     <string name="quick_wizard_message">Γρήγορος οδηγός: %1$s\nΙνσουλίνη: %2$.2fU\nΥδατάνθρακες: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Άγνωστη προεπιλογή προσωρινού στόχου: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Ακύρωση εκτέλεσης προσωρινών στόχων;</string>
     <string name="wear_action_tempt_unit_error">Χρησιμοποιούνται διαφορετικές μονάδες στο ρολόι και το τηλέφωνο!</string>
     <string name="wear_action_tempt_zero_message">Μηδενικός-Προσωρινός-Στόχος - ακύρωση εκτέλεσης Πρισωρινών-Στόχων;</string>

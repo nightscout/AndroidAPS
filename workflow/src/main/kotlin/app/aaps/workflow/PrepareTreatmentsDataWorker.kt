@@ -3,32 +3,33 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
+import app.aaps.core.graph.data.BolusDataPoint
+import app.aaps.core.graph.data.CarbsDataPoint
+import app.aaps.core.graph.data.DataPointWithLabelInterface
+import app.aaps.core.graph.data.EffectiveProfileSwitchDataPoint
+import app.aaps.core.graph.data.ExtendedBolusDataPoint
+import app.aaps.core.graph.data.HeartRateDataPoint
+import app.aaps.core.graph.data.PointsWithLabelGraphSeries
+import app.aaps.core.graph.data.StepsDataPoint
+import app.aaps.core.graph.data.TherapyEventDataPoint
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.BolusDataPoint
-import app.aaps.core.main.graph.data.CarbsDataPoint
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
-import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
-import app.aaps.core.main.graph.data.ExtendedBolusDataPoint
-import app.aaps.core.main.graph.data.HeartRateDataPoint
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
-import app.aaps.core.main.graph.data.TherapyEventDataPoint
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -43,9 +44,9 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var translator: Translator
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var repository: AppRepository
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var preferences: Preferences
 
     class PrepareTreatmentsData(
         val overviewData: OverviewData
@@ -60,19 +61,20 @@ class PrepareTreatmentsDataWorker(
         val fromTime = data.overviewData.fromTime
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
         data.overviewData.maxTreatmentsValue = 0.0
+        data.overviewData.maxTherapyEventValue = 0.0
         data.overviewData.maxEpsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
         val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = ArrayList()
         val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
-        repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-            .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper, decimalFormatter) }
-            .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
+        persistenceLayer.getBolusesFromTimeToTime(fromTime, endTime, true)
+            .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, preferences, decimalFormatter) }
+            .filter { it.data.type == BS.Type.NORMAL || it.data.type == BS.Type.SMB }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())
                 filteredTreatments.add(it)
             }
-        repository.getCarbsDataFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
+        persistenceLayer.getCarbsFromTimeToTimeExpanded(fromTime, endTime, true)
             .map { CarbsDataPoint(it, rh) }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())
@@ -80,7 +82,7 @@ class PrepareTreatmentsDataWorker(
             }
 
         // ProfileSwitch
-        repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+        persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, endTime, true)
             .map { EffectiveProfileSwitchDataPoint(it, rh, data.overviewData.epsScale) }
             .forEach {
                 data.overviewData.maxEpsValue = maxOf(data.overviewData.maxEpsValue, it.data.originalPercentage.toDouble())
@@ -88,10 +90,10 @@ class PrepareTreatmentsDataWorker(
             }
 
         // OfflineEvent
-        repository.getOfflineEventDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
+        persistenceLayer.getOfflineEventsFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true)
             .map {
                 TherapyEventDataPoint(
-                    TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL),
+                    TE(timestamp = it.timestamp, duration = it.duration, type = TE.Type.APS_OFFLINE, glucoseUnit = GlucoseUnit.MMOL),
                     rh,
                     profileUtil,
                     translator
@@ -101,8 +103,8 @@ class PrepareTreatmentsDataWorker(
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-                .map { ExtendedBolusDataPoint(it, rh, decimalFormatter) }
+            persistenceLayer.getExtendedBolusesStartingFromTimeToTime(fromTime, endTime, true)
+                .map { ExtendedBolusDataPoint(it, rh) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(data.overviewData, it.x.toLong())
@@ -111,7 +113,7 @@ class PrepareTreatmentsDataWorker(
         }
 
         // Careportal
-        repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
+        persistenceLayer.getTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
             .map { TherapyEventDataPoint(it, rh, profileUtil, translator) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
@@ -132,9 +134,15 @@ class PrepareTreatmentsDataWorker(
         data.overviewData.epsSeries = PointsWithLabelGraphSeries(filteredEps.toTypedArray())
 
         data.overviewData.heartRateGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
-            repository.getHeartRatesFromTimeToTime(fromTime, endTime)
+            persistenceLayer.getHeartRatesFromTimeToTime(fromTime, endTime)
                 .map { hr -> HeartRateDataPoint(hr, rh) }
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.heartRateColor) }
+
+        data.overviewData.stepsCountGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
+            persistenceLayer.getStepsCountFromTimeToTime(fromTime, endTime)
+                .map { steps -> StepsDataPoint(steps, rh) }
+                .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.stepsColor) }
+
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

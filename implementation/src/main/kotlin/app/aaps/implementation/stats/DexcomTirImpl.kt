@@ -6,15 +6,17 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.implementation.R
+import dagger.Reusable
 import java.util.Calendar
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+@Reusable
 class DexcomTirImpl : DexcomTIR {
 
     private var veryLow = 0
@@ -79,7 +81,7 @@ class DexcomTirImpl : DexcomTIR {
                     (10 * (mean() + 46.7) / 28.7).roundToInt() / 10.0 + "%" +
                     " (" +
                     (((mean() + 46.7) / 28.7 - 2.15) * 10.929).roundToInt() +
-                    " mmol/L)"
+                    " mmol/mol)"
             setTypeface(typeface, Typeface.NORMAL)
             gravity = Gravity.CENTER_HORIZONTAL
         }

@@ -1,16 +1,16 @@
 package app.aaps.core.interfaces.aps
 
 import androidx.collection.LongSparseArray
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.GlucoseValue
 
 interface AutosensDataStore {
 
     val dataLock: Any
 
-    var bgReadings: List<GlucoseValue>
+    var bgReadings: List<GV>
     var autosensDataTable: LongSparseArray<AutosensData>
     var bucketedData: MutableList<InMemoryGlucoseValue>?
     var lastUsed5minCalculation: Boolean?
@@ -30,7 +30,7 @@ interface AutosensDataStore {
     fun actualBg(): InMemoryGlucoseValue?
     fun lastDataTime(dateUtil: DateUtil): String
     fun clone(): AutosensDataStore
-    fun getBgReadingsDataTableCopy(): List<GlucoseValue>
+    fun getBgReadingsDataTableCopy(): List<GV>
     fun getLastAutosensData(reason: String, aapsLogger: AAPSLogger, dateUtil: DateUtil): AutosensData?
     fun getAutosensDataAtTime(fromTime: Long): AutosensData?
     fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>?

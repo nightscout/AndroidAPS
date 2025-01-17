@@ -39,21 +39,15 @@ project.afterEvaluate {
             "**/BR.class"
         )
 
-        val classesDirectories = mutableListOf<String>().also {
-            subprojects.forEach { proj ->
-                variants.forEach { variant ->
-                    it.add("${proj.buildDir}/intermediates/javac/$variant/classes")
-                    it.add("${proj.buildDir}/tmp/kotlin-classes/$variant")
-                }
+        val classes = HashSet<ConfigurableFileTree>()
+        subprojects.forEach { proj ->
+            variants.forEach { variant ->
+                val path1 = proj.layout.buildDirectory.dir("intermediates/javac/$variant/classes").get()
+                classes.add(fileTree(path1) { exclude(excludes) })
+                val path2 = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
+                classes.add(fileTree(path2) { exclude(excludes) })
             }
         }
-
-        val classes = HashSet<ConfigurableFileTree>().also {
-            classesDirectories.forEach { path ->
-                it.add(fileTree(path) { exclude(excludes) })
-            }
-        }
-
         classDirectories.setFrom(files(listOf(classes)))
 
         val sources = mutableListOf<String>().also {
@@ -68,24 +62,21 @@ project.afterEvaluate {
         }
         sourceDirectories.setFrom(files(sources))
 
-        val executions = mutableListOf<String>().also {
-            subprojects.forEach { proj ->
-                variants.forEach { variant ->
-                    val path = "${proj.buildDir}/outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec"
-                    if ((File(path)).exists()) {
-                        it.add(path)
-                        println("Collecting execution data from: $path")
-                    }
-                    val androidPath = "${proj.buildDir}/outputs/code_coverage/${variant}AndroidTest/connected/"
-                    val androidFiles = fileTree(androidPath)
-                    androidFiles.forEach { file ->
-                        it.add(file.path)
-                        println("Collecting android execution data from: ${file.path}")
-                    }
+        val executions = mutableListOf<File>()
+        subprojects.forEach { proj ->
+            variants.forEach { variant ->
+                val path = proj.layout.buildDirectory.dir("outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec").get()
+                files(path).forEach { file ->
+                    println("Collecting execution data from: ${file.absolutePath}")
+                    executions.add(file)
+                }
+                val androidPath = proj.layout.buildDirectory.dir("outputs/code_coverage/${variant}AndroidTest/connected/").get()
+                fileTree(androidPath).forEach { file ->
+                    println("Collecting android execution data from: ${file.absolutePath}")
+                    executions.add(file)
                 }
             }
         }
-
-        executionData.setFrom(files(executions))
+        executionData.setFrom(executions)
     }
 }

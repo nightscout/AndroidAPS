@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">禁用泵中的 EasyUI 模式</string>
     <string name="profile_set_failed">设定基础率配置文件失败</string>
     <string name="danar_bluetooth_status">蓝牙状态</string>
-    <string name="danar_iob_label">泵 IOB</string>
     <string name="firmware_label">固件</string>
     <string name="danar_pump_settings">DanaR 泵设置</string>
     <string name="time_format_12h">12小时制</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">丹纳R 蓝牙设备</string>
     <string name="danars_password_title">泵密码 (仅v1)</string>
     <string name="danar_password_title">泵密码</string>
-    <string name="danar_useextended_title">当建议剂量大于200%时，启用扩展剂量(方波)进行增补。</string>
     <string name="bolusspeed">大剂量输注速度</string>
     <string name="selectedpump">已选择的泵</string>
     <string name="rs_loginsulinchange_title">记录储药器更换</string>

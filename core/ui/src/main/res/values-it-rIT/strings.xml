@@ -89,6 +89,7 @@
     <string name="removerecord">Rimuovi record</string>
     <string name="loopisdisabled">Il loop è disabilitato</string>
     <string name="alarm">Allarme</string>
+    <string name="exportsettings">Esporta impostazioni</string>
     <string name="disableloop">Disabilita loop</string>
     <string name="enableloop">Abilita loop</string>
     <string name="resumeloop">Riprendi loop</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Insulina attiva (IOB)</string>
     <string name="loopstatus_targets">TARGET:</string>
     <string name="loopstatus_OAPS_result">RISULTATO OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="nav_export">Esporta impostazioni</string>
+    <string name="location_permission_not_granted">Permessi posizione non concessi. Consenti nelle impostazioni Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
     <string name="careportal_announcement">Avviso</string>
+    <string name="careportal_settings_export">Esportazione Impostazioni</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Domanda</string>
     <string name="careportal_exercise">Esercizio fisico</string>
     <string name="careportal_announcement_message">Avviso: %1$s</string>
+    <string name="careportal_settings_export_message">Esportazione Impostazioni: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Attività</string>
     <string name="wear">Smartwatch</string>
     <string name="automation">Automazione</string>
+    <string name="settingsexport">Esportazione Impostazioni</string>
     <string name="custom">Personalizzato</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -243,7 +255,7 @@
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
-    <string name="enacted">Attivato</string>
+    <string name="enacted">Emanato</string>
     <string name="comment">Commento</string>
     <string name="percent">Percento</string>
     <string name="absolute">Assoluto</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">Elimina trattamenti futuri</string>
     <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
     <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
+    <string name="uel_select_directory">SELEZIONA CARTELLA</string>
     <string name="uel_reset_databases">RESETTA DATABASE</string>
+    <string name="uel_reset_aps_results">RESETTA RISULTATI APS</string>
     <string name="uel_cleanup_databases">PULIZIA DATABASE</string>
     <string name="uel_export_databases">ESPORTA DATABASE</string>
     <string name="uel_import_databases">IMPORTA DATABASE</string>
@@ -399,57 +413,18 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
+    <string name="sensitivity">Sensibilità</string>
+    <string name="isf_for_carbs">ISF per Calcolatrice e Assorbimento di Carbo: %1$.1f</string>
+    <string name="autosens_long">Valore Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens nell\'algoritmo: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">utente</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Aiuto per potenziali regolazioni del profilo (ISF, rapporto CHO e velocità basali)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Impostazioni Autotune</string>
-    <string name="autotune_auto_title">Automazione cambio profilo</string>
-    <string name="autotune_auto_summary">Se abilitato, dopo il calcolo di una regola di automazione Autotune verrà eseguito e il profilo generato verrà automaticamente attivato.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Classifica UAM come basale</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Abilita solo se hai inserito in modo affidabile tutti i carboidrati assunti, con questa opzione gli aumenti improvvisi individuati da Autotune verranno usati per consigliare modifiche alla velocità basale.</string>
-    <string name="autotune_tune_insulin_curve_title">Regola la curva dell\'insulina</string>
-    <string name="autotune_tune_insulin_curve_summary">Abilita solo se usi free-peak. Questa opzione regolerà la durata di picco e DIA</string>
-    <string name="autotune_default_tune_days_title">Numero di giorni di dati</string>
-    <string name="autotune_circadian_ic_isf_title">Applica il risultato medio in IC/ISF circadiano</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune non regolerà le variazioni circadiane, questa opzione applica solo la regolazione media di IC e ISF al tuo profilo di input circadiano</string>
-    <string name="autotune_additional_log_title">Includi più informazioni di log per il debug</string>
-    <string name="autotune_additional_log_summary">Attiva solo se richiesto dallo sviluppatore per inviare ulteriori informazioni di log per aiutare il debug del plugin Autotune</string>
-    <string name="autotune_default_tune_days_summary">Numero predefinito di giorni di dati da elaborare da Autotune (fino a 30)</string>
-    <string name="autotune_tunedprofile_name">Regolato</string>
-    <string name="autotune_profile">Profilo :</string>
     <string name="autotune_tune_days">Giorni regolazione :</string>
-    <string name="autotune_last_run">Ultima esecuzione :</string>
-    <string name="autotune_warning">Avviso :</string>
     <string name="autotune_select_profile">Seleziona il profilo da regolare</string>
-    <string name="autotune_ic_warning">Il profilo selezionato ha %1$d valori IC. Autotune userà %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Il profilo selezionato ha %1$d valori ISF. Autotune userà %2$.1f %3$s/U</string>
-    <string name="autotune_error">Errore nei dati di input, prova a eseguire di nuovo Autotune o ridurre il numero di giorni</string>
-    <string name="autotune_error_more_days">Errore nei dati di input, aumenta il numero di giorni</string>
-    <string name="autotune_warning_during_run">Il calcolo di Autotune è iniziato, attendi</string>
-    <string name="autotune_warning_after_run">Controlla attentamente i risultati prima di utilizzarli!</string>
-    <string name="autotune_partial_result">Risultato parziale giorno %1$d / %2$d regolato</string>
-    <string name="autotune_result">Risultato: %1$s</string>
-    <string name="autotune_param">Param</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Mancante</string>
-    <string name="autotune_profile_name">Profilo Autotune %1$s</string>
-    <string name="autotune_run">Esegui Autotune</string>
-    <string name="autotune_check_input_profile_button">Controlla il profilo di input</string>
-    <string name="autotune_compare_profile">Compara profili</string>
-    <string name="autotune_copy_localprofile_button">Copia nel profilo locale</string>
-    <string name="autotune_update_input_profile_button">Aggiorna il profilo di input</string>
-    <string name="autotune_revert_input_profile_button">Ripristina il profilo di input</string>
-    <string name="autotune_copy_local_profile_message">Creare un nuovo profilo locale da questo profilo Autotune?</string>
-    <string name="autotune_update_local_profile_message">Aggiornare il profilo %1$s con il profilo Autotune?</string>
-    <string name="autotune_revert_local_profile_message">Ripristinare il profilo %1$s con il profilo di input?</string>
-    <string name="autotune_profile_invalid">Profilo non valido</string>
-    <string name="autotune_run_without_autoswitch">Autotune eseguito senza cambio profilo</string>
-    <string name="autotune_run_with_autoswitch">Autotune eseguito e profilo cambiato automaticamente</string>
-    <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
-    <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
     <string name="urgent_alarm">Allarme urgente</string>
@@ -525,13 +500,13 @@
     <string name="password_cleared">Password cancellata!</string>
     <string name="pairing">Associazione</string>
     <string name="initializing">Inizializzazione...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
     <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
     <string name="itmustbepositivevalue">deve essere un valore positivo</string>
     <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Conferma</string>
     <string name="message">Messaggio</string>
@@ -543,6 +518,19 @@
     <string name="close">Chiudi</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Avviso</string>
+    <string name="export_expired">Scaduto</string>
+    <string name="export_disabled">Disabilitato</string>
+    <string name="export_failed">Fallito</string>
+    <string name="export_alert">SEGNALAZIONE</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Impostazioni esportate</string>
+    <string name="export_result_message_failed">Esportazione Impostazioni FALLITA!</string>
+    <string name="export_result_message_about_to_expire">Impostazioni esportate: la password sta per scadere presto. Esporta manualmente e (re)inserisci la password.</string>
+    <string name="export_result_message_expired">Esportazione impostazioni annullata: password scaduta. Esporta manualmente e (re)inserisci!</string>
+    <string name="export_result_message_disabled">Attenzione (automazione): Esportazione impostazioni non abilitata!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
@@ -604,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">Velocità: %1$.2f%% (%2$.2f U/h) Durata: %3$d min</string>
+    <string name="rate_percent_duration">Velocità: %1$.2f U/h (%2$.2f%%) Durata: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Velocità</b>: %1$.2f%% (%2$.2f U/h)<br><b>Durata</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Velocità</b>: %1$.2f U/h (%2$.2f%%) <br><b>Durata</b>: %3$d min<br>]]></string>
 </resources>

@@ -28,7 +28,7 @@ class InputDelta(private val rh: ResourceHelper) : Element {
 
             fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
-                for (d in values()) {
+                for (d in DeltaType.entries) {
                     list.add(rh.gs(d.stringRes))
                 }
                 return list
@@ -72,7 +72,7 @@ class InputDelta(private val rh: ResourceHelper) : Element {
                 }
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        deltaType = DeltaType.values()[position]
+                        deltaType = DeltaType.entries.toTypedArray()[position]
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}

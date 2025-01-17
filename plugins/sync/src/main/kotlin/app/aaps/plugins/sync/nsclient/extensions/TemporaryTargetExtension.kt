@@ -1,16 +1,16 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
 import org.json.JSONObject
 
-fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: ProfileUtil): TemporaryTarget? {
+fun TT.Companion.fromJson(jsonObject: JSONObject, profileUtil: ProfileUtil): TT? {
     val units = GlucoseUnit.fromText(JsonHelper.safeGetString(jsonObject, "units", GlucoseUnit.MGDL.asText))
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
@@ -25,7 +25,7 @@ fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: Prof
     val reasonString = if (duration != 0L) JsonHelper.safeGetStringAllowNull(jsonObject, "reason", null)
         ?: return null else ""
     // this string can be localized from NS, it will not work in this case CUSTOM will be used
-    val reason = TemporaryTarget.Reason.fromString(reasonString)
+    val reason = TT.Reason.fromString(reasonString)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
         ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
         ?: return null
@@ -41,7 +41,7 @@ fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: Prof
         if (high > Constants.MAX_TT_MGDL) return null
         if (low > high) return null
     }
-    val tt = TemporaryTarget(
+    val tt = TT(
         timestamp = timestamp,
         duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         reason = reason,
@@ -49,13 +49,13 @@ fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: Prof
         highTarget = high,
         isValid = isValid
     )
-    tt.interfaceIDs.nightscoutId = id
+    tt.ids.nightscoutId = id
     return tt
 }
 
-fun TemporaryTarget.toJson(isAdd: Boolean, dateUtil: DateUtil, profileUtil: ProfileUtil): JSONObject =
+fun TT.toJson(isAdd: Boolean, dateUtil: DateUtil, profileUtil: ProfileUtil): JSONObject =
     JSONObject()
-        .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
+        .put("eventType", TE.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("isValid", isValid)
@@ -67,5 +67,5 @@ fun TemporaryTarget.toJson(isAdd: Boolean, dateUtil: DateUtil, profileUtil: Prof
                 .put("targetBottom", profileUtil.fromMgdlToUnits(lowTarget))
                 .put("targetTop", profileUtil.fromMgdlToUnits(highTarget))
                 .put("units", profileUtil.units.asText)
-            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }

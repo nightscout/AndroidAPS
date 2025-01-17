@@ -16,9 +16,9 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.locale.LocaleHelper.update
 import app.aaps.plugins.configuration.R
@@ -36,7 +36,6 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var swDefinition: SWDefinition
-    @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction
@@ -85,7 +84,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
                     android.R.id.home -> {
-                        sp.putBoolean(R.string.key_setupwizard_processed, true)
+                        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
                         OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() }
                         true
                     }
@@ -182,7 +181,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     // Go back to overview
     @Suppress("UNUSED_PARAMETER")
     fun finishSetupWizard(view: View?) {
-        sp.putBoolean(R.string.key_setupwizard_processed, true)
+        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         val intent = Intent(this, uiInteraction.mainActivity).setAction("app.aaps.plugins.configuration.setupwizard.SetupWizardActivity")
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
-    <string name="do_you_want_reset_tdd_stats">¿Desea restablecer las estadísticas de TDD?</string>
+    <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
     <string name="statistics">Estadísticas</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="invalid_age">Entrada de edad no válida</string>
@@ -48,9 +48,9 @@
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
-    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
-    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
+    <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
+    <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
+    <string name="suspendloopfor3h">Suspender bucle durante 3 horas</string>
     <string name="suspendloopfor10h">Suspender bucle durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
     <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
@@ -80,33 +80,24 @@
     <string name="no_records_available">No hay registros disponibles</string>
     <string name="calculation_short">Cálculo</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
-    <string name="treatments_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_iob_activity_total_label_string">Actividad IOB:</string>
-    <string name="tempbasals_realduration_label_string">Duración:</string>
     <string name="tempbasals_netratio_label_string">Relación:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Corrección</string>
     <string name="meal_bolus">Comida</string>
     <string name="prime">Cebar</string>
-    <string name="profile_changes">Cambios en el perfil</string>
-    <string name="tempt_targets">Objetivos temporales</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
     <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
     <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
-    <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
-    <string name="refresheventsfromnightscout">Actualizar desde Nightscout</string>
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
-    <string name="hide_loop">Ocultar lazo</string>
-    <string name="show_loop">Mostrar lazo</string>
+    <string name="hide_loop">Ocultar bucle</string>
+    <string name="show_loop">Mostrar bucle</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
-    <string name="show_loop_records">Mostrar registros del lazo</string>
-    <string name="show_hide_records">Ocultar registros del lazo</string>
+    <string name="show_loop_records">Mostrar registros del bucle</string>
+    <string name="show_hide_records">Ocultar registros del bucle</string>
     <!-- ProfileHelperActivity -->
     <string name="profile1">Perfil 1</string>
     <string name="profile2">Perfil 2</string>
@@ -131,26 +122,21 @@
     <string name="a11y_only_on_watch">sólo en reloj</string>
     <string name="a11y_only_on_phone">sólo en teléfono</string>
     <string name="quickwizard_settings">Configuración del asistente de configuración</string>
-    <string name="overview_edit_quickwizard_button_text">Texto del botón:</string>
-    <string name="overview_edit_quickwizard_carbs">Carbohidratos:</string>
+    <string name="overview_edit_quickwizard_button_text">Botón texto</string>
     <string name="overview_edit_quickwizard_valid">Válido:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Añadir</string>
-    <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada en dispositivo:</string>
-    <string name="overview_edit_quickwizard_use_bg">Cálculo de glucosa</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Cálculo del bolo IOB</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo de basal IOB</string>
-    <string name="overview_edit_quickwizard_use_trend">Cálculo de tendencia</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Cálculo de superbolo</string>
-    <string name="overview_edit_quickwizard_percentage">Porcentaje</string>
-    <string name="device_all">Todo</string>
-    <string name="device_phone">Teléfono</string>
-    <string name="device_watch">Reloj</string>
-    <string name="positive_only">Sólo positivo</string>
-    <string name="negative_only">Sólo negativo</string>
-    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Cálculo de objetivo temporal</string>
-    <string name="overview_editquickwizard_usepercentage">Cálculo de porcentaje</string>
-    <string name="app_default">Aplicación por defecto</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">¡Porcentaje demasiado alto!</string>
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
+    <string name="additional_ecarbs">Añadir eCarbs</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
+    <string name="constraints_violation">Violación de restricciones</string>
+    <string name="change_your_input">Cambiar datos de entrada</string>
+    <string name="confirm_treatment">Por favor, confirma el tratamiento</string>
+    <string name="recalculate">Recalcular</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Ambos</item>
+        <item>Sólo positivo</item>
+        <item>Sólo negativo</item>
+    </string-array>
 </resources>

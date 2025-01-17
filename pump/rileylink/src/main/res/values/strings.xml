@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Never contacted</string>
+    <string name="pump_status_sleeping">Sleeping</string>
+    <string name="pump_status_waking_up">Waking up</string>
+    <string name="pump_status_active">Active</string>
+    <string name="pump_status_error_comm">Error with communication</string>
+    <string name="pump_status_timeout_comm">Timeout on communication</string>
+    <string name="pump_status_pump_unreachable">Pump unreachable</string>
+    <string name="pump_status_invalid_config">Invalid configuration</string>
+
     <!-- RL keys -->
     <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
     <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
@@ -74,8 +84,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Yes</string>
-    <string name="riley_link_common_no">No</string>
 
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink/DiaLink</string>
@@ -93,4 +101,5 @@
     <string name="orange_use_scanning_level_summary">Scan before connecting to OrangeLink, it should improve connections (can also be used with other RileyLink clones, if needed)</string>
     <string name="key_orange_use_scanning" translatable="false">pref_orange_use_scanning</string>
     <string name="rileylink_configuration">RileyLink Configuration</string>
+
 </resources>

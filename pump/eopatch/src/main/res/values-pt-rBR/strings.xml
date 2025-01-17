@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integração para EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Alertas</string>
     <string name="low_reservoir">Alertas de Reservatório Baixo</string>
     <string name="patch_expiration_reminders">Lembrete de Expiração do Patch</string>
     <string name="patch_buzzer_reminders">Lembrete do sinal sonoro do patch</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Número de série</string>
     <string name="eopatch_lot_number">Número de Lote</string>
@@ -26,14 +24,11 @@
     <string name="time_1hr">1 hr</string>
     <string name="time_1hr_30min">1 hora 30 min</string>
     <string name="time_2hr">2 horas</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Para alterar para uma nova patch, a atualização atual deve ser descartada. Todas as entregas de insulina da Patch serão canceladas.</string>
     <string name="patch_discard_complete_title">Descartar o patch está completo.</string>
     <string name="patch_finish">Fim</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_activate_reminder_desc">Ativação do patch não foi concluída.\n Continuar.</string>
-    <string name="patch_communication_check">Verificação de comunicação</string>
-    <string name="patch_communication_check_status_1">Verificando comunicação do patch…</string>
     <string name="patch_communication_check_helper_1">Deixe seu smartphone mais perto do Patch</string>
     <string name="patch_communication_check_helper_2">Por favor, mova para outro local e tente novamente.</string>
     <string name="patch_communication_failed">Erro de Comunicação</string>
@@ -64,7 +59,6 @@
     <string name="retry">Tente novamente</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] NÃO remova o limite de agulha e o suporte para adesivo até as instruções.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Tem certeza de que deseja descartar este Patch?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Devido a informações de bolus não confirmadas, o bolus calc não pode ser usado até %s.\n\nTem certeza que deseja descartar o patch atual?</string>
     <string name="needle_insertion_error_1">Erro de inserção de Agulha.</string>
     <string name="string_suspended_insulin_delivery_message">A administração da insulina está suspensa.</string>
     <string name="finish">Fim</string>

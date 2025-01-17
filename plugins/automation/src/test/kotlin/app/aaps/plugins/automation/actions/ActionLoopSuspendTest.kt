@@ -6,6 +6,7 @@ import app.aaps.plugins.automation.elements.InputDuration
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -16,9 +17,9 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
 
-        `when`(context.getString(app.aaps.core.ui.R.string.suspendloop)).thenReturn("Suspend loop")
+        `when`(rh.gs(app.aaps.core.ui.R.string.suspendloop)).thenReturn("Suspend loop")
         `when`(rh.gs(R.string.suspendloopforXmin)).thenReturn("Suspend loop for %d min")
-        `when`(context.getString(R.string.alreadysuspended)).thenReturn("Already suspended")
+        `when`(rh.gs(R.string.alreadysuspended)).thenReturn("Already suspended")
 
         sut = ActionLoopSuspend(injector)
     }
@@ -42,14 +43,14 @@ class ActionLoopSuspendTest : ActionsTestBase() {
         sut.doAction(object : Callback() {
             override fun run() {}
         })
-        Mockito.verify(loopPlugin, Mockito.times(1)).suspendLoop(30)
+        Mockito.verify(loopPlugin, Mockito.times(1)).suspendLoop(anyInt(), anyObject(), anyObject(), anyObject(), anyObject())
 
         // another call should keep it suspended, no more invocations
         `when`(loopPlugin.isSuspended).thenReturn(true)
         sut.doAction(object : Callback() {
             override fun run() {}
         })
-        Mockito.verify(loopPlugin, Mockito.times(1)).suspendLoop(30)
+        Mockito.verify(loopPlugin, Mockito.times(1)).suspendLoop(anyInt(), anyObject(), anyObject(), anyObject(), anyObject())
     }
 
     @Test fun applyTest() {

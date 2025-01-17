@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Karbonhidrat gerekli uyarılarından duyurular oluşturun</string>
     <string name="ns_create_announcements_from_errors_summary">Hata diyalogları ve yerel uyarılar için Nightscout anonsu oluşturun (Tedaviler altında Bakım portalında da görüntülenebilir)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Karbonhidrat gerekli uyarılarından Nightscout duyuruları oluşturun</string>
-    <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
+    <string name="description_ns_client">v1 API kullanarak verilerinizi Nightscout ile senkronize eder</string>
     <string name="description_ns_client_v3">Verilerinizi v3 API kullanarak Nightscout ile senkronize eder</string>
     <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT yazma izni yok. Yanlış API Anahtarı?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCl</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Yeniden başlat</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Nightscout URL adresinizi girin</string>
-    <string name="ns_client_secret_title">Nightscout API Anahtarı</string>
-    <string name="ns_client_secret_dialog_title">Nightscout API Anahtarı</string>
-    <string name="ns_client_secret_dialog_message">Nightscout API anahtarını girin (min. 12 Karekter)</string>
-    <string name="nsclient_token_title">NS erişim anahtarları</string>
-    <string name="nsclient_token_dialog_title">NS erişim anahtarları</string>
-    <string name="nsclient_token_dialog_message">NS yönetici sayfasında oluşturulan erişim anahtarları (en az 17 karakter)</string>
+    <string name="ns_client_url_dialog_message">Nightscout URL\'nizi girin (örn: https://sitenizinadı.platformunuzunadı.com)</string>
+    <string name="ns_client_secret_title">Nightscout API parolası</string>
+    <string name="ns_client_secret_dialog_message">Nightscout API parolanızı girin (Nightscout değişkenlerinizde kayıtlı en az 12 karakterlik parola)</string>
+    <string name="nsclient_token_title">Nightscout erişim anahtarı</string>
+    <string name="nsclient_token_dialog_message">Nightscout yönetici araçlarında oluşturulan yönetici düzeyindeki erişim anahtarınızı girin (minimum 17 karakter, API parolanız değildir!)</string>
     <string name="deliver_now">Simdi ilet</string>
-    <string name="clear_queue">Sırayı temizle</string>
-    <string name="show_queue">Sırayı göster</string>
     <string name="queue">Sıra:</string>
     <string name="status">Durum:</string>
     <string name="clear_log">Günlüğü temizle</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Tidepool\'a veri yükler</string>
-    <string name="tidepool_upload_cgm">SGİ (CGM) verilerini yükle</string>
-    <string name="tidepool_upload_bolus">Tedavileri yükleyin (insülin, karbonhidratlar)</string>
-    <string name="tidepool_upload_tbr">Geçici bazalları yükleyin</string>
-    <string name="tidepool_upload_profile">Profil değişimlerini, geçici hedefleri yükleyin</string>
-    <string name="tidepool_upload_bg">KŞ testlerini yükleyin</string>
     <string name="remove_all">Tümünü kaldır</string>
-    <string name="reset_start">Başlatmayı sıfırla</string>
     <string name="upload_now">Şimdi yükle</string>
     <string name="not_connected">Bağlantı yok</string>
     <string name="read_only">Salt okunur</string>
     <string name="working">İşleniyor</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +112,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Garmin cihazına bağlantı (Fenix, Edge,…)</string>
-    <string name="key_garmin_settings">Garmin ayarları</string>
+    <string name="garmin_local_http_server_port">Yerel HTTP sunucusu bağlantı noktası</string>
+    <string name="garmin_local_http_server">Yerel HTTP sunucusu</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
@@ -133,7 +123,7 @@
     <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
+    <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
     <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
     <string name="wear_action_tempt_zero_message">Sıfır-Geçici-Hedef - Çalışan Geçici-Hedefler iptal edilsin mi?</string>
@@ -146,6 +136,8 @@
     <string name="wear_settings">Wear ayarları</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
+    <string name="wear_broadcast_data">Veri yayını</string>
+    <string name="wear_broadcast_data_summary">Verileri AAPS veya AAPSClient\'a yayınla</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
     <string name="wear_notifysmb_title">SMB\'yi bildir</string>
@@ -158,6 +150,7 @@
     <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
     <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
     <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
     <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
@@ -189,4 +182,5 @@
     <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
+    <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
 </resources>

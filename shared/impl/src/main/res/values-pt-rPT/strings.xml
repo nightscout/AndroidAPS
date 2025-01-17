@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cwf_comment_background">Imagem de fundo</string>
+    <string name="cwf_comment_chart">Gráficos (GLIC, basal, linhas de previsão...)</string>
+    <string name="cwf_comment_cover_chart">Imagem na frente do gráfico e atrás dos campos de texto</string>
+    <string name="cwf_comment_freetext1">Texto livre 1</string>
+    <string name="cwf_comment_freetext2">Texto livre 2</string>
+    <string name="cwf_comment_freetext3">Texto livre 3</string>
+    <string name="cwf_comment_freetext4">Texto livre 4</string>
+    <string name="cwf_comment_iob1">Etiqueta de IA ou Soma IA se detalhada</string>
+    <string name="cwf_comment_iob2">Soma IA ou (Bolus_IA|Basal_IA) se detalhada</string>
+    <string name="cwf_comment_cob1">Etiqueta HCA</string>
+    <string name="cwf_comment_cob2">valor HCA</string>
+    <string name="cwf_comment_delta">Delta curto da glicemia</string>
+    <string name="cwf_comment_avg_delta">Delta da glicemia média (15min)</string>
+    <string name="cwf_comment_uploader_battery">Bateria do telefone (%)</string>
+    <string name="cwf_comment_rig_battery">Bateria do loop (%)</string>
+    <string name="cwf_comment_basalRate">Taxa Basal</string>
+    <string name="cwf_comment_bgi">Valor de IG</string>
+    <string name="cwf_comment_time">Horário (HH:MM ou HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Hora (HH)</string>
+    <string name="cwf_comment_minute">Minuto (MM)</string>
+    <string name="cwf_comment_second">Segundo (SS)</string>
+    <string name="cwf_comment_timePeriod">AM ou PM</string>
+    <string name="cwf_comment_day_name">Nome do Dia da Semana</string>
+    <string name="cwf_comment_day">Dia (DD)</string>
+    <string name="cwf_comment_month">Nome do Mês (curto)</string>
+    <string name="cwf_comment_direction">Seta de direção</string>
+    <string name="cwf_comment_timestamp">Minutos desde a recepção do último valor de GLIC</string>
+    <string name="cwf_comment_sgv">Valor de GLIC</string>
+    <string name="cwf_comment_cover_plate">Imagem da capa na frente do texto</string>
+    <string name="cwf_comment_hour_hand">Imagem do ponteiro das horas (Relógio Analógico)</string>
+    <string name="cwf_comment_minute_hand">Imagem do ponteiro dos minutos (Relógio Analógico)</string>
+    <string name="cwf_comment_second_hand">Imagem do ponteiro dos segundos (Relógio Analógico)</string>
+</resources>

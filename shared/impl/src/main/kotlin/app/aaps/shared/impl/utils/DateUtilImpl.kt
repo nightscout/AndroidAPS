@@ -1,15 +1,12 @@
 package app.aaps.shared.impl.utils
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -22,6 +19,9 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.EnumSet
@@ -40,7 +40,6 @@ import kotlin.math.floor
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
  * with TZ
  */
-@OpenForTesting
 @Singleton
 class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil {
 
@@ -111,8 +110,9 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
     }
 
     override fun dateString(mills: Long): String {
-        val df = DateFormat.getDateInstance(DateFormat.SHORT)
-        return df.format(mills)
+        val zonedTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault())
+        val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        return zonedTime.format(dateFormatter)
     }
 
     override fun dateStringRelative(mills: Long, rh: ResourceHelper): String {
@@ -420,7 +420,6 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
         return df.format(hour.toLong()) + ":" + df.format(minutes.toLong())
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun timeZoneByOffset(offsetInMilliseconds: Long): TimeZone =
         TimeZone.getTimeZone(
             if (offsetInMilliseconds == 0L) ZoneId.of("UTC")

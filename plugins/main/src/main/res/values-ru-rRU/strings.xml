@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
     <string name="smscommunicator_stopped_sms">Удаленная служба SMS остановлена. Для ее реактивации используйте AAPS на главном смартфоне.</string>
     <string name="smscommunicator_calibration_reply_with_code">Чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
-    <string name="smscommunicator_bolus_failed">Подача болюса не состоялась</string>
+    <string name="smscommunicator_bolus_failed">Ошибка болюса. Проверьте его реальное состояние перед отправкой следующей команды.</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Минимальное количество минут между одним удаленным болюсом и следующим</string>
     <string name="smscommunicator_remote_bolus_min_distance">Минимум минут между одним болюсом и следующим</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">В целях безопасности, для изменения этого параметра необходимо добавить не менее 2 телефонных номеров.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">Время действия инсулина DIA</string>
     <string name="target_short">ЦЕЛЬ</string>
     <string name="basal_short">БАЗАЛ</string>
+    <string name="isf_dynamic_label_warning">Алгоритм может обеспечить динамический расчет ISF. Значения ниже можно использовать только в качестве запасного варианта в случае отсутствия данных или только в качестве эталонного значения</string>
+    <string name="ic_dynamic_label_warning">Алгоритм может обеспечить динамический расчет углеводного коэффициента IC. Значения ниже можно использовать только в качестве запасного варианта в случае отсутствия данных или только в качестве эталонного значения</string>
     <!-- Actions -->
     <string name="actions">Действия</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
     <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="statuslights_copy_ns">Копировать параметры из NS</string>
+    <string name="graph_scale_6h">6ч</string>
+    <string name="graph_scale_12h">12 ч</string>
+    <string name="graph_scale_18h">18 ч</string>
+    <string name="graph_scale_24h">24 ч</string>
+    <string name="graph_long_scale_6h">6 часов</string>
+    <string name="graph_long_scale_12h">12 часов</string>
+    <string name="graph_long_scale_18h">18 часов</string>
+    <string name="graph_long_scale_24h">24 часа</string>
     <string name="a11y_graph">график</string>
+    <string name="a11y_graph_scale">выберите масштаб графика</string>
+    <string name="a11y_graph_scale_6h">масштаб шкалы 6 часов</string>
+    <string name="a11y_graph_scale_12h">масштаб шкалы 12 часов</string>
+    <string name="a11y_graph_scale_18h">масштаб шкалы 18 часов</string>
+    <string name="a11y_graph_scale_24h">масштаб шкалы 24 часа</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="chart_menu">Меню графика</string>
     <string name="a11y_bg_quality">качество ГК</string>
@@ -201,11 +216,8 @@
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="overview_buttons_selection">Кнопки</string>
-    <string name="show_calibration_button_summary">Отправляет калибровки на xDrip+ или открывает диалоговое окно калибровки BYODA DEXCOM</string>
-    <string name="show_cgm_button_summary">Открывает xDrip + или BYODA DEXCOM, кнопка назад возвращает в AAPS</string>
-    <string name="dexcom_app_not_installed">Приложение Dexcom не установлено</string>
-    <string name="dexcom_app_not_detected">Пожалуйста, обновите приложение Dexcom до поддерживаемой версии</string>
-    <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
+    <string name="show_calibration_button_summary">Отправляет калибровку xDrip+ (убедитесь, что параметр \'Принимать калибровки\' включен в xDrip+ в Настройках между приложениями).</string>
+    <string name="show_cgm_button_summary">Открывает приложение xDrip+ или Dexcom (можно использовать кнопку \"Назад\" для возврата к AAPS).</string>
     <string name="not_available_full">Недоступно</string>
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="change_your_input">измените введенные данные</string>
@@ -226,12 +238,12 @@
     <string name="thirdcarbsincrement">Третий шаг увеличения углеводов</string>
     <string name="cgm">Мониторинг ГК</string>
     <string name="default_temptargets">Временные цели по умолчанию</string>
-    <string name="eatingsoon_duration">продолжительность ожидания приема пищи eatingsoon</string>
-    <string name="eatingsoon_target">целевое значение ГК при ожидаемом приеме пищи eatingsoon</string>
-    <string name="activity_duration">длительность нагрузки</string>
-    <string name="activity_target">целевое значение ГК при физической нагрузке</string>
-    <string name="hypo_duration">длительность гипо</string>
-    <string name="hypo_target">целевое значение ГК при гипо</string>
+    <string name="eatingsoon_duration">Продолжительность ВЦ Ожидаемый прием пищи (в минутах)</string>
+    <string name="eatingsoon_target">Целевое значение ВЦ Ожидаемый прием пищи</string>
+    <string name="activity_duration">Продолжительность ВЦ Нагрузка (минут)</string>
+    <string name="activity_target">Целевое значение ВЦ Нагрузка</string>
+    <string name="hypo_duration">Продолжительность ВЦ Гипо (минуты)</string>
+    <string name="hypo_target">Целевое значение ВЦ Гипо</string>
     <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
     <string name="button1">Кнопка 1</string>
     <string name="button2">Кнопка 2</string>
@@ -242,7 +254,7 @@
     <string name="high_mark">Отметка ВЫСОКИЙ</string>
     <string name="short_tabtitles">Сокращенные наименования вкладок</string>
     <string name="overview_show_notes_field_in_dialogs_title">Показать поле примечаний в диалогах терапии</string>
-    <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подается только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
+    <string name="deliverpartofboluswizard">Помощник болюса выполняет расчет, но подается только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Подать полный болюс (100%), если гликемия старше</string>
     <string name="enable_bolus_advisor">Вкл помощник болюса</string>
     <string name="enable_bolus_advisor_summary">Воспользуйтесь напоминанием, чтобы начать есть позже, вместо того, чтобы задействовать помощник болюса на высоких значениях ГК (\"пре-болюс\")</string>
@@ -258,12 +270,13 @@
     <string name="overview_show_deviation_slope">Линия отклонения</string>
     <string name="overview_show_activity">Активность</string>
     <string name="overview_show_bgi">Влияние ГК</string>
-    <string name="overview_show_sensitivity">Чувствительность</string>
+    <string name="overview_show_sensitivity">Изменение чувствительности</string>
     <string name="overview_show_deviations">Отклонение</string>
     <string name="overview_show_cob">Активные углеводы COB</string>
     <string name="overview_show_iob">Активный инсулин IOB</string>
     <string name="overview_show_basals">Базал</string>
     <string name="overview_show_abs_insulin">Абсолютный инсулин</string>
+    <string name="overview_show_variable_sens">Переменная чувствительность</string>
     <string name="prediction_shortname">ОЖИД</string>
     <string name="basal_shortname">БАЗ</string>
     <string name="deviation_shortname">ОТКЛН</string>
@@ -273,9 +286,11 @@
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
     <string name="heartRate_shortname">ЧСС</string>
-    <string name="sensitivity_shortname">ЧУВСТВ</string>
+    <string name="sensitivity_shortname">ЧУВСТВ%</string>
+    <string name="variable_sensitivity_shortname">ПЕРЕМЧУВСТВ</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="graph_menu_divider_header">График</string>
+    <string name="temp_basal_overview_short_name">ВРЕМ:</string>
     <!-- Skins -->
     <string name="classic_description">Исходная тема оформления</string>
     <string name="lowres_description">Тема для низкого разрешения</string>
@@ -284,8 +299,10 @@
     <string name="skin">Тема оформления</string>
     <string name="cannula_usage">применение:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Отправьте файлы сегодняшнего лога разработчикам наряду с этим. Непредвиденная ситуация.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>
+    <string name="overview_show_steps">Действия</string>
+    <string name="steps_shortname">ШАГИ</string>
+    <string name="simple_mode_enabled">Простой режим включен</string>
 </resources>

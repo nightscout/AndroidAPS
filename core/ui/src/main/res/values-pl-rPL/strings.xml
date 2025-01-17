@@ -89,6 +89,7 @@
     <string name="removerecord">Usuń wpis</string>
     <string name="loopisdisabled">Pętla jest wyłączona</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Eksport ustawień</string>
     <string name="disableloop">Wyłącz pętle</string>
     <string name="enableloop">Włącz pętle</string>
     <string name="resumeloop">Wznów pętlę</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
-    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie rzeczywiście dostarczoną ilość</string>
+    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie ile faktycznie podano insuliny i ilość węglowodanów</string>
     <string name="bolus_reminder">Przypomnienie bolusa</string>
     <string name="duration_label">Czas trwania</string>
     <string name="shortgramm">g</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Aktywna insulina (IOB)</string>
     <string name="loopstatus_targets">CELE:</string>
     <string name="loopstatus_OAPS_result">WYNIK OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="nav_export">Eksport ustawień</string>
+    <string name="location_permission_not_granted">Nie przyznano uprawnień do lokalizacji. Pozwól aplikacji AAPS na lokalizację w ustawieniach Androida.</string>
     <!--    Protection-->
     <string name="wrongpassword">Złe hasło</string>
     <string name="wrongpin">Nieprawidłowy PIN</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">Sprawdź BG</string>
     <string name="careportal_mbg">Ręczny pomiar cukru lub kalibracja</string>
     <string name="careportal_announcement">Powiadomienie</string>
+    <string name="careportal_settings_export">Eksport ustawień</string>
     <string name="careportal_note">Notatka</string>
     <string name="careportal_question">Pytanie</string>
     <string name="careportal_exercise">Ćwiczenia</string>
     <string name="careportal_announcement_message">Ogłoszenie: %1$s</string>
+    <string name="careportal_settings_export_message">Eksport ustawień : %1$s</string>
     <string name="careportal_note_message">Wskazówka: %1$s</string>
     <string name="careportal_question_message">Pytanie : %1$s</string>
     <string name="careportal_exercise_message">Ćwiczenie: %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Ćwiczenia</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="automation">Automatyzacja</string>
+    <string name="settingsexport">Eksport ustawień</string>
     <string name="custom">Niestandardowe</string>
     <string name="loop">Pętla</string>
     <string name="ns">NS</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">Usuń przyszłe zabiegi</string>
     <string name="uel_export_settings">EXPORT USTAWIEŃ</string>
     <string name="uel_import_settings">IMPORT USTAWIEŃ</string>
+    <string name="uel_select_directory">WYBIERZ KATALOG</string>
     <string name="uel_reset_databases">RESET BAZ DANYCH</string>
+    <string name="uel_reset_aps_results">RESET WYNIKÓW APS</string>
     <string name="uel_cleanup_databases">WYCZYŚĆ BAZY DANYCH</string>
     <string name="uel_export_databases">EKSPORT BAZ DANYCH</string>
     <string name="uel_import_databases">IMPORT BAZ DANCH</string>
@@ -403,53 +417,8 @@
     <string name="a11y_user">użytkownik</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Pomoc w ewentualnym dostosowaniu profilu (ISF, współczynnik węglowodanów i dawki bazowe)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Ustawienia Autotune</string>
-    <string name="autotune_auto_title">Zmiana profilu w Automatyzacji</string>
-    <string name="autotune_auto_summary">Jeśli włączono, autotune automatycznie zaktualizuje i przełączy się na podany profil po obliczeniu z reguły automatyzacji.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Kategoryzuj UAM jako bazę</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Włącz tylko wtedy, gdy sumiennie i dokładnie wprowadzano wszystkie zjedzone węglowodany. Z tą opcją nagłe wzrosty obserwowane przez Autotune będą używane do rekomendowania zmian dawki bazowej.</string>
-    <string name="autotune_tune_insulin_curve_title">Dostrój krzywą insuliny</string>
-    <string name="autotune_tune_insulin_curve_summary">Włącz tylko jeśli korzystasz z samodzielnie ustalanego profilu insuliny. Ta opcja dostraja szczyt działania insuliny (peak) i całkowity czas działania insuliny (DIA)</string>
-    <string name="autotune_default_tune_days_title">Liczba uwzględnianych dni danych</string>
-    <string name="autotune_circadian_ic_isf_title">Zastosuj średni wynik w dobowym rytmie IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune nie dostroi różnic okołodobowych, ta opcja zastosuje tylko średnią poprawkę do IC i ISF na twój wejściowy profil okołodobowy</string>
-    <string name="autotune_additional_log_title">Dołącz więcej informacji serwisowych do dziennika</string>
-    <string name="autotune_additional_log_summary">Włącz tylko na żądanie dewelopera aby zebrać i wysłać więcej informacji dziennika, aby pomóc w debugowaniu i naprawie wtyczki Autotune</string>
-    <string name="autotune_default_tune_days_summary">Domyślna liczba dni do przetworzenia przez Autotune (do 30)</string>
-    <string name="autotune_tunedprofile_name">Dostrojono</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Dostrojonych dni :</string>
-    <string name="autotune_last_run">Ostatnio uruchomiono :</string>
-    <string name="autotune_warning">Ostrzeżenie :</string>
     <string name="autotune_select_profile">Wybierz profil do dostrojenia</string>
-    <string name="autotune_ic_warning">Wybrany profil ma %1$d wartości IC. Autotune użyje %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Wybrany profil ma %1$d wartości ISF. Autotune użyje %2$.1f %3$s/U</string>
-    <string name="autotune_error">Błąd w danych wejściowych, spróbuj uruchomić Autotune ponownie lub zmniejszyć liczbę dni</string>
-    <string name="autotune_error_more_days">Błąd w danych wejściowych, zwiększ liczbę dni</string>
-    <string name="autotune_warning_during_run">Rozpoczęto obliczenia Autotune, prosimy o cierpliwość</string>
-    <string name="autotune_warning_after_run">Uważnie sprawdź wyniki przed ich użyciem!</string>
-    <string name="autotune_partial_result">Wynik częściowy - dostrojono dzień %1$d / %2$d</string>
-    <string name="autotune_result">Wynik: %1$s</string>
-    <string name="autotune_param">Parametr</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Brakujące</string>
-    <string name="autotune_profile_name">Profil Autotune %1$s</string>
-    <string name="autotune_run">Uruchom Autotune</string>
-    <string name="autotune_check_input_profile_button">Sprawdź profil wejściowy</string>
-    <string name="autotune_compare_profile">Porównaj profile</string>
-    <string name="autotune_copy_localprofile_button">Skopiuj do profilu lokalnego</string>
-    <string name="autotune_update_input_profile_button">Zaktualizuj profil wejściowy</string>
-    <string name="autotune_revert_input_profile_button">Przywróć profil wejściowy</string>
-    <string name="autotune_copy_local_profile_message">Utworzyć nowy profil lokalny z tego profilu Autotune?</string>
-    <string name="autotune_update_local_profile_message">Zaktualizować profil %1$s za pomocą profilu Autotune?</string>
-    <string name="autotune_revert_local_profile_message">Przywrócić profil %1$s przy użyciu profilu wejściowego?</string>
-    <string name="autotune_profile_invalid">Nieprawidłowy profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune zakończył się bez przełączenia profilu</string>
-    <string name="autotune_run_with_autoswitch">W wyniku uruchomienia Autotune profil został automatycznie przełączony</string>
-    <string name="autotune_run_with_error">Błąd podczas ostatniego uruchomienia Autotune</string>
-    <string name="autotune_run_cancelled">Wykryto Autotune w toku, anulowano próbę kolejnego uruchomienia</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
     <string name="urgent_alarm">Pilny alarm</string>
@@ -525,13 +494,13 @@
     <string name="password_cleared">Hasło usunięte!</string>
     <string name="pairing">Parowanie</string>
     <string name="initializing">Inicjuje ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
     <string name="limitingpercentrate">Ograniczam maksymalną wartość w procentach do %1$d%% z uwagi na %2$s</string>
     <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
     <string name="limitingbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potwierdzenie</string>
     <string name="message">Wiadomość</string>
@@ -543,6 +512,19 @@
     <string name="close">Zamknij</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych ustawień.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Ostrzeżenie</string>
+    <string name="export_expired">Wygasły</string>
+    <string name="export_disabled">Wyłączony</string>
+    <string name="export_failed">Niepowodzenie</string>
+    <string name="export_alert">OSTRZEŻENIE</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Ustawienia wyeksportowane</string>
+    <string name="export_result_message_failed">Eksport ustawień nie powiódł się!</string>
+    <string name="export_result_message_about_to_expire">Ustawienia wyeksportowane: hasło wkrótce wygasa. Eksportuj ręcznie i (ponownie) wprowadź hasło.</string>
+    <string name="export_result_message_expired">Eksport ustawień anulowany: hasło wygasło. Eksportuj ręcznie i (ponownie) podaj hasło!</string>
+    <string name="export_result_message_disabled">Ostrzeżenie (automatyzacja): Eksport ustawień nie jest włączony!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zmniejszenie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zwiększenie %1$s o %2$s</string>
@@ -610,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">Dawka: %1$.2f%% (%2$.2f U/h) Czas: %3$d min</string>
+    <string name="rate_percent_duration">Dawka: %1$.2f U/h (%2$.2f%%) Czas: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Dawka</b>: %1$.2f%% (%2$.2f U/h)<br><b>Czas</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Dawka</b>: %1$.2f U/h (%2$.2f%%) <br><b>Czas</b>: %3$d min<br>]]></string>
 </resources>

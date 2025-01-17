@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="automation">Автоматизація</string>
+    <string name="delta">Дельта</string>
+    <string name="remove_selected_items">Видалити вибрані елементи</string>
+    <string name="count_selected">%1$d обрано</string>
     <!--    Reminders-->
+    <!--    Autotune-->
+    <string name="autotune_run">Запустити Автотюн</string>
+    <string name="autotune_run_without_autoswitch">Autotune запущений без перемикання профілю</string>
+    <string name="autotune_run_with_autoswitch">Autotune запущений і профіль автоматично перемикається</string>
+    <string name="autotune_run_with_error">Помилка при останньому запуску Autotune</string>
+    <string name="autotune_run_cancelled">Виявлено ще один запуск Autotune, запуск скасовано</string>
+    <!--    Steps count-->
 </resources>

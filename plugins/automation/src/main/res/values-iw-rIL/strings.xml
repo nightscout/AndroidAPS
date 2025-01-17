@@ -104,8 +104,6 @@
     <string name="automation_event">אירוע אוטומציה</string>
     <string name="reorder_label">סדר מחדש</string>
     <string name="user_action">פעולות משתמש</string>
-    <string name="remove_automation">הסר אוטומציה</string>
-    <string name="sort_automation">מיין אוטומציות</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="system_automation">אוטומציית מערכת</string>
@@ -116,4 +114,12 @@
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="error_setting_reminder">חלה תקלה בעת הגדרת תזכורת</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">פרופיל אוטומטי %1$s</string>
+    <string name="autotune_run">הפעל Autotune</string>
+    <string name="autotune_run_without_autoswitch">כוונון אוטומטי הופעל ללא החלפת פרופיל</string>
+    <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
+    <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
+    <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה בוטלה</string>
+    <!--    Steps count-->
 </resources>

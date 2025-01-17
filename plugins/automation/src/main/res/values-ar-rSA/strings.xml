@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delta">التغيير</string>
+    <string name="remove_selected_items">إزالة العناصر المُحددة</string>
+    <string name="count_selected">%1$d محدد</string>
+    <!--    Reminders-->
+    <!--    Autotune-->
+    <!--    Steps count-->
+</resources>

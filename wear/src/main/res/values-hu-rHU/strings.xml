@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Nagy)</string>
-    <string name="label_watchface_big_chart">AAPS(NagyGrafikon)</string>
-    <string name="label_watchface_no_chart">AAPS(NincsGrafikon)</string>
     <string name="label_watchface_circle">AAPS(Kör)</string>
     <string name="label_watchface_digital_style">AAPS(Digitális)</string>
     <string name="label_warning_sync">Nincs adat!</string>
@@ -27,10 +24,6 @@
     <string name="pref_default">Alapértelmezett</string>
     <string name="pref_quick_righty">Gyorsan jobbra</string>
     <string name="pref_quick_lefty">Gyorsan balra</string>
-    <string name="pref_low">Alacsony</string>
-    <string name="pref_medium">Közepes</string>
-    <string name="pref_high">Magas</string>
-    <string name="pref_auto">Automatikus</string>
     <string name="pref_big_numbers">Nagy számok</string>
     <string name="pref_animations">Animációk</string>
     <string name="pref_version">Verzió:</string>
@@ -55,7 +48,6 @@
     <string name="action_preset_3">Előre beállított 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Szabad mennyiség</string>
     <string name="action_confirm">JÓVÁHAGY</string>
-    <string name="action_bolus">Bólus</string>
     <string name="bolus_progress">Bólus folyamata</string>
     <string name="press_to_cancel">megszakításhoz nyomja meg</string>
     <string name="cancel_bolus">BÓLUS MEGSZAKÍT</string>

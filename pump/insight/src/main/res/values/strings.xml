@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enable_tbr_over_notification">Enable notification of TBR end\n(pump setting)</string>
+    <string name="disable_tbr_over_notification">Disable notification of TBR end\n(pump setting)</string>
+    <string name="not_paired">Not paired</string>
+    <string name="recovering">Recovering</string>
+    <string name="insight_status">Status</string>
+    <string name="recovery_duration">Recovery duration</string>
+    <string name="last_connected">Last connected</string>
+    <string name="start_pump">Start pump</string>
+    <string name="stop_pump">Stop pump</string>
+    <string name="started">Started</string>
+    <string name="stopped">Stopped</string>
+    <string name="operating_mode">Operating mode</string>
+    <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
+    <string name="not_inserted">Not inserted</string>
+    <string name="tdd_bolus">TDD Bolus</string>
+    <string name="tdd_basal">TDD Basal</string>
+    <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
+    <string name="multiwave_bolus">Multiwave bolus</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
+    <string name="insight_last_bolus">Last Bolus</string>
+    <string name="insight_last_bolus_formater" translatable="false">%1$.1f %2$s (%3$s)</string>
+    <string name="searching_for_devices">Searching for devices…</string>
+    <string name="pairing_completed">Pairing completed</string>
+    <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>
+    <string name="insight_pairing">Insight pairing</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
+    <string name="tube_changed">Tube changed</string>
+    <string name="insightpump_shortname">Sight</string>
+    <string name="insight_alert_notification_channel">Insight Pump Alerts</string>
+    <string name="disable_vibration">Disable vibrations on manual bolus delivery</string>
+    <string name="disable_vibration_summary">For bolus and extended bolus (only available with Insight firmware 3.x)</string>
+    <string name="key_insight_disable_vibration" translatable="false">insight_disable_vibration</string>
+    <string name="key_insight_disable_vibration_auto" translatable="false">insight_disable_vibration_auto</string>
+    <string name="key_insight_enable_tbr_emulation" translatable="false">insight_enable_tbr_emulation</string>
+    <string name="key_insight_log_site_changes" translatable="false">insight_log_site_changes</string>
+    <string name="key_insight_log_tube_changes" translatable="false">insight_log_tube_changes</string>
+    <string name="key_insight_log_reservoir_changes" translatable="false">insight_log_reservoir_changes</string>
+    <string name="key_insight_log_battery_changes" translatable="false">insight_log_battery_changes</string>
+    <string name="key_insight_log_operating_mode_changes" translatable="false">insight_log_operating_mode_changes</string>
+    <string name="key_insight_log_alerts" translatable="false">insight_log_alerts</string>
+    <string name="key_insight_min_recovery_duration" translatable="false">insight_min_recovery_duration</string>
+    <string name="key_insight_max_recovery_duration" translatable="false">insight_max_recovery_duration</string>
+    <string name="key_insight_disconnect_delay" translatable="false">insight_disconnect_delay</string>
+    <string name="key_insight_last_bolus_amount" translatable="false">insight_last_bolus_amount</string>
+    <string name="key_insight_last_bolus_timestamp" translatable="false">insight_last_bolus_timestamp</string>
+    <string name="disable_vibration_auto">Disable vibrations on automated bolus delivery</string>
+    <string name="disable_vibration_auto_summary">For SMB and Temp Basal with TBR emulation (only available with Insight firmware 3.x)</string>
+    <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
+    <string name="pump_stopped">Pump stopped</string>
+    <string name="pump_started">Pump started</string>
+    <string name="short_status_last_connected">Last conn: %1$d min ago</string>
+    <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
+    <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Reser.: %1$.2f U</string>
+    <string name="short_status_battery">Batt.: %1$d%%</string>
+    <string name="release_software_version">Release software version</string>
+    <string name="ui_processor_software_version">UI processor software version</string>
+    <string name="pc_processor_software_version">PC processor software version</string>
+    <string name="md_tel_processor_software_version">MD tel processor software version</string>
+    <string name="safety_processor_software_version">Safety processor software version</string>
+    <string name="bt_info_page_version">BT info page version</string>
+    <string name="bluetooth_address">Bluetooth address</string>
+    <string name="system_id_appendix">System ID appendix</string>
+    <string name="manufacturing_date">Manufacturing date</string>
+    <string name="delete_pairing">Delete pairing</string>
+    <string name="log_site_changes">Log site changes</string>
+    <string name="log_reservoir_changes">Log reservoir changes</string>
+    <string name="log_tube_changes">Log tube changes</string>
+    <string name="log_battery_changes">Log battery changes</string>
+    <string name="log_operating_mode_changes">Log operating mode changes</string>
+    <string name="log_alerts">Log alerts</string>
+    <string name="enable_tbr_emulation">Enable TBR emulation</string>
+    <string name="enable_tbr_emulation_summary">Use extended boluses instead of TBRs to bypass the 250%% limit</string>
+    <string name="disconnect_delay">Disconnect delay [s]</string>
+    <string name="max_recovery_duration">Max. recovery duration [s]</string>
+    <string name="min_recovery_duration">Min. recovery duration [s]</string>
+    <string name="pump_alert">Pump alert</string>
+    <string name="pairing_information">Pairing information</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+
+</resources>

@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">泵和/或驱动程序不支持此操作。</string>
-    <string name="pump_operation_not_yet_supported_by_pump">泵暂不支持此操作。</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">泵序列号</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">尚未初始化</string>
     <string name="pump_status_initialized">已初始化</string>
@@ -45,29 +42,9 @@
     <string name="ble_config_scan_scanning">扫描中</string>
     <string name="ble_config_scan_finished">扫描完成</string>
     <string name="ble_config_scan_error">扫描错误: %1$d</string>
-    <string name="ble_config_connected_never">从未</string>
     <string name="ble_config_remove">删除</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">蓝牙已禁用</string>
-    <string name="ble_error_no_bt_adapter">未找到蓝牙适配器</string>
-    <string name="ble_error_configured_pump_not_found">未找到已配置的泵</string>
-    <string name="ble_error_pump_unreachable">泵无法连接</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">BLE设备无法连接</string>
-    <string name="ble_error_encryption_failed">加密失败</string>
-    <string name="ble_error_pump_found_unbonded">找不到绑定的泵</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">泵上未启用基础率设置。请启用。</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">泵上设置的基础率配置错误 (应当为 %s)。</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">在泵上设置了错误的临时基础率类型 (必须是 %s) 。</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">泵上设置的最大大剂量错误 (应当为 %1$.2f)。</string>
-    <string name="pump_settings_error_wrong_max_basal_set">泵上设置的最大基础率错误 (应当为 %1$.2f)。</string>
     <!-- Pump History -->
     <string name="pump_history_type">类型：</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">从未连接</string>
-    <string name="pump_status_sleeping">休眠</string>
-    <string name="pump_status_waking_up">唤醒中</string>
-    <string name="pump_status_active">启用</string>
     <plurals name="duration_days">
         <item quantity="other">%1$d 天</item>
     </plurals>

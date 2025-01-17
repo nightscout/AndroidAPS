@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">幫浦驅動程式已更改。</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d 分鐘前</string>
+    <string name="minago_long">%1$d 分鐘前</string>
+    <string name="hoursago">%1$.1f 小時前</string>
+    <string name="days_ago">%1$.1f 天前</string>
+    <string name="days_ago_round">%1$.0f 天前</string>
+    <string name="in_days">%1$.0f 天內</string>
+    <string name="in_days_round">%1$.0f 天內</string>
+    <string name="shorthour">小時</string>
+    <string name="days">天</string>
+    <string name="hours">小時</string>
+    <string name="unit_second">秒</string>
+    <string name="unit_minute">分鐘</string>
+    <string name="unit_hour">小時</string>
+    <string name="unit_day">天</string>
+    <string name="unit_week">週</string>
+    <string name="unit_seconds">秒</string>
+    <string name="unit_minutes">分鐘</string>
+    <string name="unit_hours">小時</string>
+    <string name="unit_days">天</string>
+    <string name="unit_weeks">週</string>
+    <string name="shortminute">分</string>
+    <string name="shortday">天</string>
+    <string name="later_today">今天稍晚</string>
+    <string name="tomorrow">明天</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <!-- Rx -->
+    <string name="connecting_for">連線中 %1$d 秒</string>
+    <string name="handshaking">交握中</string>
+    <string name="connected">已連線</string>
+    <string name="disconnecting">斷線中</string>
+    <string name="waiting_for_disconnection">等待斷線</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">建立於：%1$s</string>
+    <string name="metadata_label_watchface_author">作者：%1$s</string>
+    <string name="metadata_label_watchface_name">名稱：%1$s</string>
+    <string name="metadata_wear_import_filename">檔案名稱：%1$s</string>
+    <string name="metadata_label_plugin_version">外掛版本：%1$s</string>
+    <string name="metadata_label_watchface_name_version">名稱：%1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">資訊：%1$s</string>
+    <string name="pref_show_iob">顯示 IOB</string>
+    <string name="pref_show_detailed_iob">顯示詳細 IOB</string>
+    <string name="pref_show_cob">顯示 COB</string>
+    <string name="pref_show_delta">顯示增量</string>
+    <string name="pref_show_detailed_delta">顯示詳細增量</string>
+    <string name="pref_show_avgdelta">顯示平均增量</string>
+    <string name="pref_show_tempTarget">顯示臨時目標</string>
+    <string name="pref_show_reservoir_level">顯示胰島素儲存量</string>
+    <string name="pref_show_phone_battery">顯示手機電池</string>
+    <string name="pref_show_rig_battery">顯示設備電池</string>
+    <string name="pref_show_basal_rate">顯示基礎率</string>
+    <string name="pref_show_loop_status">顯示循環狀態</string>
+    <string name="pref_show_bg">顯示 血糖</string>
+    <string name="pref_show_bgi">顯示血糖變化率</string>
+    <string name="pref_show_direction_arrow">顯示方向箭頭</string>
+    <string name="pref_show_ago">顯示前</string>
+    <string name="pref_show_week_number">顯示週數</string>
+    <string name="pref_show_date">顯示日期</string>
+    <string name="pref_show_seconds">顯示秒數</string>
+    <string name="default_custom_watchface_comment">預設錶盤，您可以點擊匯出錶盤按鈕來生成模板</string>
+    <string name="default_custom_watchface_external_comment">預設錶盤包含外部視圖供追蹤者使用，您可以點擊匯出錶盤按鈕來生成模板</string>
+    <string name="wear_default_watchface">預設錶盤</string>
+    <string name="wear_more_watchfaces">更多錶盤</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+</resources>

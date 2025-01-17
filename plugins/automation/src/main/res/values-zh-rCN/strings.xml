@@ -102,8 +102,6 @@
     <string name="automation_event">自动化事件</string>
     <string name="reorder_label">重新排序</string>
     <string name="user_action">用户操作</string>
-    <string name="remove_automation">删除自动化</string>
-    <string name="sort_automation">自动化排序</string>
     <string name="remove_selected_items">删除选中项？</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="system_automation">系统自动化</string>
@@ -111,4 +109,10 @@
     <string name="add_automation">添加规则</string>
     <!--    Reminders-->
     <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
+    <!--    Autotune-->
+    <string name="autotune_run">运行自动协调</string>
+    <string name="autotune_run_with_autoswitch">运行 Autotune 并自动切换配置文件</string>
+    <string name="autotune_run_with_error">上次 Autotune 运行期间出错</string>
+    <string name="autotune_run_cancelled">检测到另一次自动调试运行，本次运行已取消</string>
+    <!--    Steps count-->
 </resources>

@@ -67,7 +67,6 @@
     <string name="bg_label">GUK</string>
     <string name="calibration">Kalibracija</string>
     <string name="alarminxmin">Uključi alarm za %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus je prijavio pogrešku. Ručno provjerite stvarni isporučeni iznos</string>
     <string name="bolus_reminder">Podsjetnik za bolus</string>
     <string name="duration_label">Trajanje</string>
     <string name="shortgramm">g</string>
@@ -215,46 +214,8 @@
     <string name="a11y_file">datoteka</string>
     <string name="a11y_user">korisnik</string>
     <!-- Autotune -->
-    <string name="autotune_categorize_uam_as_basal_summary">Omogućite samo ako ste pouzdano unijeli sve pojedene ugljikohidrate, uz ovu opciju iznenadna povećanja koja vidi Autotune koristit će se za preporučivanje promjena bazalne doze.</string>
-    <string name="autotune_tune_insulin_curve_title">Podesite krivulju inzulina</string>
-    <string name="autotune_tune_insulin_curve_summary">Omogućite samo ako koristite besplatni vrh. Ova opcija će podesiti trajanje vršne vrijednosti i DIA</string>
-    <string name="autotune_default_tune_days_title">Broj dana podataka</string>
-    <string name="autotune_circadian_ic_isf_title">Primijeni prosječni rezultat u cirkadijanskom IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune neće ugoditi cirkadijalne varijacije, ova opcija samo primjenjuje prosječno ugađanje IC i ISF na vaš cirkadijalni ulazni profil</string>
-    <string name="autotune_additional_log_title">Uključite više podataka dnevnika za otklanjanje pogrešaka</string>
-    <string name="autotune_additional_log_summary">Uključite samo ako razvojni programer to zatraži za slanje više informacija o dnevniku za pomoć u otklanjanju pogrešaka dodatka Autotune</string>
-    <string name="autotune_default_tune_days_summary">Zadani broj dana podataka koje će obraditi Autotune (do 30)</string>
-    <string name="autotune_tunedprofile_name">Ugođen</string>
-    <string name="autotune_profile">Profile :</string>
     <string name="autotune_tune_days">Dani prilagodbe:</string>
-    <string name="autotune_last_run">Zadnje izvođenje:</string>
-    <string name="autotune_warning">Upozorenje:</string>
     <string name="autotune_select_profile">Odaberite profil za podešavanje</string>
-    <string name="autotune_ic_warning">Odabrani profil ima %1$d IC vrijednosti. Autotune će koristiti %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Odabrani profil ima %1$d ISF vrijednosti. Autotune će koristiti %2$.1f %3$s/U</string>
-    <string name="autotune_error">Pogreška u unosu podataka, pokušajte ponovno pokrenuti automatsko podešavanje ili smanjite broj dana</string>
-    <string name="autotune_warning_during_run">Autotune izračun je započeo, molimo za strpljenje</string>
-    <string name="autotune_warning_after_run">Prije uporabe pažljivo provjerite rezultate!</string>
-    <string name="autotune_partial_result">Djelomični rezultat dan %1$d / %2$d podešeno</string>
-    <string name="autotune_result">Rezultat: %1$s</string>
-    <string name="autotune_param">Param</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Nedostaje</string>
-    <string name="autotune_profile_name">Automatsko podešavanje profila %1$s</string>
-    <string name="autotune_run">Pokrenite Autotune</string>
-    <string name="autotune_check_input_profile_button">Provjerite ulazni profil</string>
-    <string name="autotune_compare_profile">Usporedite profile</string>
-    <string name="autotune_copy_localprofile_button">Kopiraj na lokalni profil</string>
-    <string name="autotune_update_input_profile_button">Ažurirajte ulazni profil</string>
-    <string name="autotune_revert_input_profile_button">Vrati profil unosa</string>
-    <string name="autotune_copy_local_profile_message">Napraviti novi lokalni profil iz ovog Autotune profila?</string>
-    <string name="autotune_update_local_profile_message">Želite li ažurirati %1$s profil pomoću Autotune profila?</string>
-    <string name="autotune_revert_local_profile_message">Vratiti profil %1$s s profilom unosa?</string>
-    <string name="autotune_profile_invalid">Profil nije valjan</string>
-    <string name="autotune_run_without_autoswitch">Autotune je odradio bez promjene profila</string>
-    <string name="autotune_run_with_autoswitch">Autotune je pokrenut i profil se automatski promijenio</string>
-    <string name="autotune_run_with_error">Pogreška tijekom zadnjeg pokretanja automatskog podešavanja</string>
-    <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Koristite obavijesti sustava za upozorenja i obavijesti</string>
     <string name="urgent_alarm">Hitan alarm</string>
@@ -288,7 +249,6 @@
     <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
     <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
     <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrda</string>
     <string name="message">Poruka</string>
@@ -297,6 +257,8 @@
     <string name="dismiss">ODBACITI</string>
     <string name="close">Zatvori</string>
     <!-- TwoMessagesDialog -->
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="you_are_on_allowed_limit">Dosegnuto je dopušteno ograničenje</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>

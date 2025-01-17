@@ -46,7 +46,7 @@
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
     <string name="advanced_settings_title">Avanserte innstillinger</string>
-    <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
+    <string name="extendedbolusdeliveryerror">Forlenget bolus leveringsfeil</string>
     <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Forlenget bolus</string>
     <string name="paused">Pauset</string>
@@ -89,6 +89,7 @@
     <string name="removerecord">Fjern registrering</string>
     <string name="loopisdisabled">Loop er deaktivert</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Eksporter innstillinger</string>
     <string name="disableloop">Stans loop</string>
     <string name="enableloop">Aktiver loop</string>
     <string name="resumeloop">Gjenoppta loop</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
-    <string name="treatmentdeliveryerror">Det er registrert en feil med bolus-leveransen. Sjekk manuelt om den er levert og hvor mye</string>
+    <string name="treatmentdeliveryerror">Det er registrert en feil med boluslevering. Sjekk manuelt om den er levert og hvor mye</string>
     <string name="bolus_reminder">Bolus-påminnelse</string>
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Aktivt insulin (IOB)</string>
     <string name="loopstatus_targets">MÅLVERDIER:</string>
     <string name="loopstatus_OAPS_result">OAPS resultat:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f E ( %2$.2f E/t )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f E/t (%2$.2fF) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f E/t @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">F %1$.2f E/t @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f E/t %2$s/%3$s\'</string>
+    <string name="nav_export">Eksporter innstillinger</string>
+    <string name="location_permission_not_granted">Lokasjonstillatelse er ikke gitt. Tillat i android-innstillinger.</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">BS-kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Melding</string>
+    <string name="careportal_settings_export">Eksporter innstillinger</string>
     <string name="careportal_note">Merknad</string>
     <string name="careportal_question">Spørsmål</string>
     <string name="careportal_exercise">Trening</string>
     <string name="careportal_announcement_message">Kunngjøring: %1$s</string>
+    <string name="careportal_settings_export_message">Eksporter innstillinger: %1$s</string>
     <string name="careportal_note_message">Notat: %1$s</string>
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Aktivitet</string>
     <string name="wear">Klokke</string>
     <string name="automation">Automatisering</string>
+    <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -291,7 +303,7 @@
     <string name="uel_resume">GJENOPPTA</string>
     <string name="uel_suspend">PAUSE</string>
     <string name="uel_hw_pump_allowed">HW PUMPE TILLATT</string>
-    <string name="uel_clear_pairing_keys">NULLSTILL PARRINGSNØKLER</string>
+    <string name="uel_clear_pairing_keys">NULLSTILL SAMMENKOBLINGSNØKLER</string>
     <string name="uel_accepts_temp_basal">AKSEPTER MIDL. BASAL</string>
     <string name="uel_cancel_temp_basal">AVBRYT MIDL. BASAL</string>
     <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">Slett behandlinger i fremtiden</string>
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
+    <string name="uel_select_directory">VELG MAPPE</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
+    <string name="uel_reset_aps_results">TILBAKESTILL APS-RESULTATER</string>
     <string name="uel_cleanup_databases">OPPRYDDING I DATABASER</string>
     <string name="uel_export_databases">EKSPORTER DATABASER</string>
     <string name="uel_import_databases">IMPORTER DATABASER</string>
@@ -399,60 +413,21 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Sensitivitet</string>
+    <string name="isf_for_carbs">ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
+    <string name="autosens_long">Autosens-verdi: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Algoritmens sensitivitet: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fil</string>
     <string name="a11y_user">bruker</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Hjelp til å justere profilen (insulinfølsomhet, karbohydratfaktor og basaldoser)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Autotune innstillinger</string>
-    <string name="autotune_auto_title">Automatisering profilbytte</string>
-    <string name="autotune_auto_summary">Hvis det er aktivert så vil Autotune automatisk oppdatere profilen og skifte til denne etter beregninger fra en automatiseringsregel.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM (uannonsert måltid) som basal</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du har angitt alle spiste karbohydrater nøyaktig. Med dette alternativet vil Autotune foreslå endringer i basaldoser hvis den plutselig oppdager BS-stigninger.</string>
-    <string name="autotune_tune_insulin_curve_title">Tilpass insulinkurven</string>
-    <string name="autotune_tune_insulin_curve_summary">Aktiver kun hvis du bruker egendefinert toppunkt. Dette alternativet vil justere topp- og DIA-varigheten</string>
-    <string name="autotune_default_tune_days_title">Antall dager med data</string>
-    <string name="autotune_circadian_ic_isf_title">Bruk gjennomsnittsverdier i cirkadisk IK/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere cirkadiske variasjoner. Dette valget benytter gjennomsnittsverdier til å justere IK og ISF i din cirkadiske inngangsprofil</string>
-    <string name="autotune_additional_log_title">Inkluder mer logginformasjon for feilsøking</string>
-    <string name="autotune_additional_log_summary">Slå på kun dersom det er forespurt av utviklere for å sende mer logginformasjon for å hjelpe i feilsøking av Autotune</string>
-    <string name="autotune_default_tune_days_summary">Standard antall dager som skal analyseres av Autotune (opp til 30)</string>
-    <string name="autotune_tunedprofile_name">Innstilt</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Antall dager:</string>
-    <string name="autotune_last_run">Siste beregning :</string>
-    <string name="autotune_warning">Varsel :</string>
     <string name="autotune_select_profile">Velg profil du vil justere</string>
-    <string name="autotune_ic_warning">Valgt profil har %1$d IK verdier. Autotune vil bruke %2$.2f g/E</string>
-    <string name="autotune_isf_warning">Valgte profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
-    <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
-    <string name="autotune_error_more_days">Feil i inntastet data, øk antall dager</string>
-    <string name="autotune_warning_during_run">Har startet Autotune-beregning, vennligst vent</string>
-    <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>
-    <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justert</string>
-    <string name="autotune_result">Resultat: %1$s</string>
-    <string name="autotune_param">Parametre</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Mangler</string>
-    <string name="autotune_profile_name">Autotune profil %1$s</string>
-    <string name="autotune_run">Kjør Autotune</string>
-    <string name="autotune_check_input_profile_button">Sjekk inngangsprofil</string>
-    <string name="autotune_compare_profile">Sammenlign profiler</string>
-    <string name="autotune_copy_localprofile_button">Kopier til lokal profil</string>
-    <string name="autotune_update_input_profile_button">Oppdater inngangsprofil</string>
-    <string name="autotune_revert_input_profile_button">Tilbakestill inngangsprofil</string>
-    <string name="autotune_copy_local_profile_message">Opprette ny lokal profil fra denne Autotune-profilen?</string>
-    <string name="autotune_update_local_profile_message">Oppdater %1$s profil med Autotune-profil?</string>
-    <string name="autotune_revert_local_profile_message">Tilbakestill %1$s profil med inngangsprofil?</string>
-    <string name="autotune_profile_invalid">Ugyldig profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune ble kjørt uten profilbytte</string>
-    <string name="autotune_run_with_autoswitch">Autotune utført og profil ble automatisk skiftet ut</string>
-    <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
-    <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
-    <string name="urgent_alarm">Kritisk alarm</string>
+    <string name="urgent_alarm">Viktig varsel</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusveiviser</string>
@@ -517,21 +492,21 @@
     <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
     <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="temp_basal_delivery_error">Feil ved levering av midl. basal</string>
+    <string name="temp_basal_delivery_error">Feil ved levering av midlertidig basal</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="pump_busy">Pumpen er opptatt</string>
     <string name="connection_error">Tilkoblingsfeil til pumpe</string>
     <string name="reading_pump_history">Leser pumpehistorikk</string>
     <string name="password_cleared">Passordet er fjernet!</string>
-    <string name="pairing">Kobler sammen</string>
+    <string name="pairing">Sammenkobler</string>
     <string name="initializing">Initialiserer...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basaldose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
     <string name="limitingpercentrate">Begrenser maks prosentsats til %1$d%% på grunn av %2$s</string>
     <string name="itmustbepositivevalue">det på være positiv verdi</string>
     <string name="limitingbolus">Begrenser bolus til %1$.1f E på grunn av %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekreftelse</string>
     <string name="message">Melding</string>
@@ -543,6 +518,19 @@
     <string name="close">Lukk</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du må angi et hovedpassord som vil bli brukt for å lese inn og dekryptere innstillinger.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Advarsel</string>
+    <string name="export_expired">Utløpt</string>
+    <string name="export_disabled">Deaktivert</string>
+    <string name="export_failed">Mislyktes</string>
+    <string name="export_alert">Varsel</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Innstillinger eksportert</string>
+    <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
+    <string name="export_result_message_about_to_expire">Innstillinger eksportert: passord er i ferd med å utløpe snart. Eksporter manuelt og skriv inn passord på nytt.</string>
+    <string name="export_result_message_expired">Eksport av innstillinger avbrutt: passord utløpt. Eksporter manuelt og skriv inn passord på nytt!</string>
+    <string name="export_result_message_disabled">Advarsel (automatisering): Eksport av innstillinger er ikke aktivert!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
@@ -604,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f E</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="percent_rate_duration">Dose: %1$.2f%% (%2$.2f E/t) Varighet: %3$d min</string>
+    <string name="rate_percent_duration">Dose: %1$.2f E/t (%2$.2f%%) Varighet: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Dose</b>: %1$.2f%% (%2$.2f E/t)<br><b>Varighet</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Dose</b>: %1$.2f E/t (%2$.2f%%) <br><b>Varighet</b>: %3$d min<br>]]></string>
 </resources>

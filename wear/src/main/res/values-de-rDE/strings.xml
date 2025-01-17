@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(groß)</string>
-    <string name="label_watchface_big_chart">AAPS(GroßerGraph)</string>
-    <string name="label_watchface_no_chart">AAPS(KeinGraph)</string>
     <string name="label_watchface_circle">AAPS(Kreis)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
@@ -18,8 +15,12 @@
     <string name="msg_warning_sync">Keine Daten seit %1$s! Prüfe, ob AAPS auf dem Smartphone Daten an die Uhr sendet.</string>
     <string name="msg_warning_old">AAPS Daten sind %1$s alt! Prüfe Deinen Sensor, xDrip+, NS, AAPS Einstellungen etc!</string>
     <string name="pref_vibrate_on_bolus">Bei Bolus vibrieren</string>
-    <string name="pref_units_for_actions">Einheit (mg/dl od. mmol/l)</string>
     <string name="units_short">E</string>
+    <string name="pref_display_settings">Anzeige</string>
+    <string name="pref_graph_settings">Diagramm</string>
+    <string name="pref_interface_settings">Aussehen</string>
+    <string name="pref_others_settings">Sonstiges</string>
+    <string name="pref_complication_settings">Komplikation</string>
     <string name="pref_show_date">Datum anzeigen</string>
     <string name="pref_show_iob">IOB anzeigen</string>
     <string name="pref_show_detailed_iob">Zeige detailliertes IOB</string>
@@ -35,8 +36,12 @@
     <string name="pref_show_bgi">Zeige BGI</string>
     <string name="pref_show_direction_arrow">Trendpfeil anzeigen</string>
     <string name="pref_show_ago">Min. seit letztem Wert</string>
+    <string name="pref_show_temp_basal">TBR anzeigen</string>
+    <string name="pref_show_bolus">Bolus &amp; SMB anzeigen</string>
+    <string name="pref_show_grid">Raster anzeigen</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dunkel</string>
     <string name="pref_highlight_basals">Basal hervorheben</string>
+    <string name="pref_prediction_lines">Vorhersagen anzeigen</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Querbalken farbgleich</string>
     <string name="pref_chart_timeframe">Zeitraum Diagramm</string>
     <string name="pref_1_hour">1 Std.</string>
@@ -49,10 +54,6 @@
     <string name="pref_quick_righty">Schnell rechts</string>
     <string name="pref_quick_lefty">Schnell links</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_low">Niedrig</string>
-    <string name="pref_medium">Mittel</string>
-    <string name="pref_high">Hoch</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Große Zahlen</string>
     <string name="pref_ring_history">Ring BZ-Historie</string>
     <string name="pref_light_ring_history">Ring BZ-Historie light</string>
@@ -106,7 +107,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
     <string name="action_timeshift">Zeitverschiebung</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>
@@ -175,17 +175,11 @@
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--IE/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min. her</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Kein Loop Status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">AAPS Schlummeralarm</string>
     <string name="sending_snooze">Sende Schlummern an AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>

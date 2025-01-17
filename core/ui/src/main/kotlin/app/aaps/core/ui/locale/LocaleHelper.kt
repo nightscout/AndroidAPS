@@ -5,13 +5,14 @@ import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.os.LocaleList
 import androidx.preference.PreferenceManager
-import app.aaps.core.ui.R
 import java.util.Locale
 
 object LocaleHelper {
 
     private fun selectedLanguage(context: Context): String =
-        PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_language), "default")
+        // do not use app.aaps.core.keys.R.strings.kay_language = "language" to avoid module dependency
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("simple_mode", true)) "default"
+        else PreferenceManager.getDefaultSharedPreferences(context).getString("language", "default")
             ?: "default"
     // injection not possible because of use in attachBaseContext
     //SP.getString(R.string.key_language, Locale.getDefault().language)

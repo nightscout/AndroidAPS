@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio all\'ora legale/solare in 24h o meno</string>
     <string name="dst_loop_disabled_warning">Cambio all\'ora legale/solare avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>
+    <string name="dst_loop_disabled_error">Il cambio dell\'ora legale è avvenuto meno di 3 ore fa. Il loop chiuso è disabilitato temporaneamente, si riattiverà automaticamente 3 ore dopo il cambio dell\'ora legale</string>
     <!-- Storage constraint -->
     <string name="disk_full">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <!-- Version Checker -->

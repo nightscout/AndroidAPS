@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nunca contactado</string>
+    <string name="pump_status_sleeping">En reposo</string>
+    <string name="pump_status_waking_up">Iniciando</string>
+    <string name="pump_status_active">Activo</string>
+    <string name="pump_status_error_comm">Error en la comunicación</string>
+    <string name="pump_status_timeout_comm">Tiempo de espera agotado en la comunicación</string>
+    <string name="pump_status_pump_unreachable">Bomba inaccesible</string>
+    <string name="pump_status_invalid_config">Configuración inválida</string>
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Escanear</string>
@@ -62,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Infusora Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Sí</string>
-    <string name="riley_link_common_no">No</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Mostar el nivel de batería notificado por OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NO funciona con el RileyLink original. Puede que no funcione con otras alternativas de RiyeyLink.</string>

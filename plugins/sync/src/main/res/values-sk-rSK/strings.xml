@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Vytvoriť oznámenie z výstrahy požadovaných sacharidov</string>
     <string name="ns_create_announcements_from_errors_summary">Vytvárať oznámenia pre chyby a lokálne výstrahy v NS (zobraziteľné v starostlivosti pod ošetrením)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Pre výstrahy požadovaných sacharidov vytvoriť oznámenie v Nightscoute</string>
-    <string name="description_ns_client">Synchronizuje vaše dáta s NS</string>
+    <string name="description_ns_client">Synchronizuje vaše dáta s Nightscoutom pomocou v1 API</string>
     <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom pomocou v3 API</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSClient nemá právo na zápis. Nesprávne API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">Interný NSClient</string>
-    <string name="ns_client_short_name">NSCl</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">Adresa URL:</string>
     <string name="restart">Reštart</string>
-    <string name="ns_client_internal_title">Interný NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Adresa Nightscoutu</string>
-    <string name="ns_client_url_dialog_message">Zadajte adresu Nightscoutu</string>
-    <string name="ns_client_secret_title">NS heslo (API secret)</string>
-    <string name="ns_client_secret_dialog_title">NS heslo (API secret)</string>
-    <string name="ns_client_secret_dialog_message">Zadajte API secret (min 12. znakov)</string>
-    <string name="nsclient_token_title">Prístupový token NS</string>
-    <string name="nsclient_token_dialog_title">Prístupový token NS</string>
-    <string name="nsclient_token_dialog_message">Prístupový token vygenerovaný na stránke pre administráciu NS (min. 17 znakov)</string>
+    <string name="ns_client_url_dialog_message">Zadajte vašu webovú adresu Nightscout (t. j. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API Secret</string>
+    <string name="ns_client_secret_dialog_message">Zadajte svoje Nightscout API secret (minimálne 12 znakové heslo uložené vo vašich premenných v Nightscoute)</string>
+    <string name="nsclient_token_title">Nightscout prístupový token</string>
+    <string name="nsclient_token_dialog_message">Zadajte svoj prístupový token vygenerovaný na úrovni správcu v správcovských nástrojoch Nightscout (minimálne 17 znakov, nie vaše API Secret heslo!)</string>
     <string name="deliver_now">Podať teraz</string>
-    <string name="clear_queue">Vymazať frontu</string>
-    <string name="show_queue">Zobraziť frontu</string>
     <string name="queue">Fronta:</string>
     <string name="status">Stav:</string>
     <string name="clear_log">Vymazať log</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávánie dát na Tidepool</string>
-    <string name="tidepool_upload_cgm">Nahrávať CGM dáta</string>
-    <string name="tidepool_upload_bolus">Nahrávať ošetrenia (inzulín, sacharidy)</string>
-    <string name="tidepool_upload_tbr">Nahrávať dočasné bazály</string>
-    <string name="tidepool_upload_profile">Nahrávať prepnutia profilu, dočasné ciele</string>
-    <string name="tidepool_upload_bg">Nahrávať merania z prsta</string>
     <string name="remove_all">Odstrániť všetko</string>
-    <string name="reset_start">Resetovať štart</string>
     <string name="upload_now">Nahrať teraz</string>
     <string name="not_connected">Nepripojené</string>
     <string name="read_only">Iba na čítanie</string>
     <string name="working">Pracujem</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +112,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Pripájanie k zariadeniu Garmin (Fénix, Edge, ...)</string>
-    <string name="key_garmin_settings">Garmin nastavenia</string>
+    <string name="garmin_local_http_server_port">Port lokálneho HTTP servera</string>
+    <string name="garmin_local_http_server">Lokálny HTTP server</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
@@ -133,7 +123,7 @@
     <string name="wizard_result">Kalkulačka: \nInzulín: %1$.2fJI\nSacharidy: %2$dg</string>
     <string name="quick_wizard_not_available">Vybraný rýchly bolus už nie je k dispozícii, obnovte prosím dlaždicu</string>
     <string name="quick_wizard_message">Rýchly bolus: %1$s\nInzulín: %2$.2fJI\nSacharidy: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
+    <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
     <string name="wear_action_tempt_zero_message">Nulový dočasný cieľ - zrušenie bežiaceho dočasného cieľa?</string>
@@ -146,6 +136,8 @@
     <string name="wear_settings">Nastavenie hodiniek</string>
     <string name="wearcontrol_title">Ovládanie z hodiniek</string>
     <string name="wearcontrol_summary">Nastavovanie dočasných cieľov a vkladanie ošetrení hodinkami.</string>
+    <string name="wear_broadcast_data">Odosielať dáta</string>
+    <string name="wear_broadcast_data_summary">Odosielanie dát do AAPS alebo AAPSClient</string>
     <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>
     <string name="wear_general_settings">Všeobecné nastavenia</string>
     <string name="wear_notifysmb_title">Oznámenie pri SMB</string>
@@ -158,6 +150,7 @@
     <string name="wear_infos_watchface">Informácie o ciferníku</string>
     <string name="wear_export_watchface">Exportovať šablónu</string>
     <string name="wear_new_custom_watchface_exported">Vlastná šablóna ciferníka exportovaná</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/cs/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Všetky dáta poslať znova</string>
     <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
     <string name="cwf_infos_pref_locked">Zoznam preferencií uzamknutý hodinkami</string>
@@ -189,4 +182,5 @@
     <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
+    <string name="full_xdrip_sync_comment">Úplná synchronizácia? Môže to chvíľu trvať a kým neskončí, neuvidíte nové dáta v xDrip+.</string>
 </resources>

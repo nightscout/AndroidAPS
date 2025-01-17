@@ -1,7 +1,28 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import android.content.SharedPreferences
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.DS
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -9,32 +30,18 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.DeviceStatus
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.embedments.InsulinConfiguration
-import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
-import app.aaps.plugins.sync.nsclient.extensions.fromConstant
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,34 +60,64 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
+    @Mock lateinit var l: L
+    @Mock lateinit var sharedPrefs: SharedPreferences
 
-    private lateinit var storeDataForDb: StoreDataForDb
+    private lateinit var storeDataForDb: StoreDataForDbImpl
     private lateinit var sut: NSClientV3Plugin
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
+    private var insulinConfiguration: ICfg = ICfg("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
+
+    init {
+        addInjector {
+            if (it is AdaptiveDoublePreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveIntentPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveUnitPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveSwitchPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
         }
     }
 
-    private var insulinConfiguration: InsulinConfiguration = InsulinConfiguration("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
-
     @BeforeEach
     fun mock() {
-        Mockito.`when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
+        Mockito.`when`(insulin.iCfg).thenReturn(insulinConfiguration)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
     }
 
     @BeforeEach
     fun prepare() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, repository, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, sp, preferences, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
         sut =
             NSClientV3Plugin(
-                injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-                nsClientSource, storeDataForDb, decimalFormatter
+                aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
+                sp, preferences, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
+                nsClientSource, storeDataForDb, decimalFormatter, l
             )
         sut.nsAndroidClient = nsAndroidClient
         Mockito.`when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)
@@ -89,7 +126,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddDeviceStatus() = runTest {
-        val deviceStatus = DeviceStatus(
+        val deviceStatus = DS(
             timestamp = 10000,
             suggested = "{\"temp\":\"absolute\",\"bg\":133,\"tick\":-6,\"eventualBG\":67,\"targetBG\":99,\"insulinReq\":0,\"deliverAt\":\"2023-01-02T15:29:33.374Z\",\"sensitivityRatio\":1,\"variable_sens\":97.5,\"predBGs\":{\"IOB\":[133,127,121,116,111,106,101,97,93,89,85,81,78,75,72,69,67,65,62,60,58,57,55,54,52,51,50,49,48,47,46,45,45,44,43,43,42,42,41,41,41,41,40,40,40,40,39],\"ZT\":[133,127,121,115,110,105,101,96,92,88,84,81,77,74,71,69,66,64,62,59,58,56,54,53,51,50,49,48,47,46,45,44,44,43,42,42,41,41,40,40,40,39,39,39,39,39,39,39],\"UAM\":[133,127,121,115,110,105,101,96,92,88,84,81,77,74,71,69,66,64,62,59,58,56,54,53,51,50,49,48,47,46,45,44,44,43,42,42,41,41,40,40,40,39]},\"reason\":\"COB: 0, Dev: 0.1, BGI: -0.3, ISF: 5.4, CR: 13, Target: 5.5, minPredBG 2.2, minGuardBG 2.1, IOBpredBG 2.2, UAMpredBG 2.2; minGuardBG 2.1<4.0\",\"COB\":0,\"IOB\":0.692,\"duration\":90,\"rate\":0,\"timestamp\":\"2023-01-02T15:29:39.460Z\"}",
             iob = "{\"iob\":0.692,\"basaliob\":-0.411,\"activity\":0.0126,\"time\":\"2023-01-02T15:29:39.460Z\"}",
@@ -116,17 +153,15 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddEntries() = runTest {
-        val glucoseValue = GlucoseValue(
+        val glucoseValue = GV(
             timestamp = 10000,
             isValid = true,
             raw = 101.0,
             value = 99.0,
-            trendArrow = GlucoseValue.TrendArrow.DOUBLE_UP,
+            trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL,
-            interfaceIDs_backing = InterfaceIDs(
-                nightscoutId = "nightscoutId"
-            )
+            sourceSensor = SourceSensor.DEXCOM_G4_WIXEL,
+            ids = IDs(nightscoutId = "nightscoutId")
         )
         val dataPair = DataSyncSelector.PairGlucoseValue(glucoseValue, 1000)
         // create
@@ -142,7 +177,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddFood() = runTest {
-        val food = Food(
+        val food = FD(
             isValid = true,
             name = "name",
             category = "category",
@@ -154,7 +189,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             energy = 23,
             unit = "g",
             gi = 25,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId"
             )
         )
@@ -172,17 +207,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddBolus() = runTest {
-        val bolus = Bolus(
+        val bolus = BS(
             timestamp = 10000,
             isValid = true,
             amount = 1.0,
-            type = Bolus.Type.SMB,
+            type = BS.Type.SMB,
             notes = "aaaa",
             isBasalInsulin = false,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -200,16 +235,16 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddCarbs() = runTest {
-        val carbs = Carbs(
+        val carbs = CA(
             timestamp = 10000,
             isValid = true,
             amount = 1.0,
             duration = 0,
             notes = "aaaa",
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -227,7 +262,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddBolusCalculatorResult() = runTest {
-        val bolus = BolusCalculatorResult(
+        val bolus = BCR(
             timestamp = 10000,
             isValid = true,
             targetBGLow = 110.0,
@@ -259,10 +294,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             percentageCorrection = 70,
             profileName = " sss",
             note = "ddd",
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -280,27 +315,27 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddEffectiveProfileSwitch() = runTest {
-        val profileSwitch = EffectiveProfileSwitch(
+        val profileSwitch = EPS(
             timestamp = 10000,
             isValid = true,
             basalBlocks = validProfile.basalBlocks,
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units,
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+            iCfg = activePlugin.activeInsulin.iCfg.also {
                 it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
             },
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -318,25 +353,25 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddProfileSwitch() = runTest {
-        val profileSwitch = ProfileSwitch(
+        val profileSwitch = PS(
             timestamp = 10000,
             isValid = true,
             basalBlocks = validProfile.basalBlocks,
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units,
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+            iCfg = activePlugin.activeInsulin.iCfg.also {
                 it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
             },
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -354,16 +389,16 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddExtendedBolus() = runTest {
-        val extendedBolus = ExtendedBolus(
+        val extendedBolus = EB(
             timestamp = 10000,
             isValid = true,
             amount = 2.0,
             isEmulatingTempBasal = false,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -381,15 +416,15 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddOffilineEvent() = runTest {
-        val offlineEvent = OfflineEvent(
+        val offlineEvent = OE(
             timestamp = 10000,
             isValid = true,
-            reason = OfflineEvent.Reason.DISCONNECT_PUMP,
+            reason = OE.Reason.DISCONNECT_PUMP,
             duration = 30000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -407,17 +442,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTemporaryBasal() = runTest {
-        val temporaryBasal = TemporaryBasal(
+        val temporaryBasal = TB(
             timestamp = 10000,
             isValid = true,
-            type = TemporaryBasal.Type.NORMAL,
+            type = TB.Type.NORMAL,
             rate = 2.0,
             isAbsolute = true,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -435,17 +470,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTemporaryTarget() = runTest {
-        val temporaryTarget = TemporaryTarget(
+        val temporaryTarget = TT(
             timestamp = 10000,
             isValid = true,
-            reason = TemporaryTarget.Reason.ACTIVITY,
+            reason = TT.Reason.ACTIVITY,
             highTarget = 100.0,
             lowTarget = 99.0,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -463,20 +498,20 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTherapyEvent() = runTest {
-        val therapyEvent = TherapyEvent(
+        val therapyEvent = TE(
             timestamp = 10000,
             isValid = true,
-            type = TherapyEvent.Type.ANNOUNCEMENT,
+            type = TE.Type.ANNOUNCEMENT,
             note = "ccccc",
             enteredBy = "dddd",
             glucose = 101.0,
-            glucoseType = TherapyEvent.MeterType.FINGER,
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            glucoseType = TE.MeterType.FINGER,
+            glucoseUnit = GlucoseUnit.MGDL,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -506,5 +541,12 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut.nsUpdate("profile", dataPair, "1/3")
         // verify(dataSyncSelectorV3, Times(2)).confirmLastProfileStore(1000)
         // verify(dataSyncSelectorV3, Times(2)).processChangedProfileStore()
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        sut.addPreferenceScreen(preferenceManager, screen, context, null)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

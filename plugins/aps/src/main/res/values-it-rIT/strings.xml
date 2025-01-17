@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Abilita il rapporto di sensibilità basato sul TDD per la modifica della basale e del target del glucosio</string>
     <string name="dynisf_adjust_sensitivity_summary">Usa le ultime 24h TDD/7D TDD per calcolare il rapporto di sensibilità utilizzato per aumentare o diminuire la velocità basale e anche per regolare il target di glucosio se le relative opzioni sono abilitate, allo stesso modo in cui fa Autosens. Si consiglia di iniziare con questa opzione disattivata</string>
-    <string name="DynISFAdjust_title" formatted="false">Fattore di regolazione per ISF Dinamico (%)</string>
-    <string name="DynISFAdjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
+    <string name="dyn_isf_adjust_title" formatted="false">Fattore di regolazione per ISF Dinamico (%)</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
     <string name="high_temptarget_raises_sensitivity_title">Target temporaneo \"alto\" aumenta la sensibilità</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per Target temporaneo >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Target temporaneo \"basso\" riduce la sensibilità</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Riduci la sensibilità per Target temporaneo < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Frequenza erogazione SMB (min)</string>
     <string name="resistance_lowers_target_title">La resistenza abbassa il target</string>
     <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Dati glicemia non disponibili</string>
     <string name="openaps_no_as_data">Nessun dato autosens disponibile</string>
     <string name="dynisf_shortname">ISFDIN</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Esecuzione</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice di %1$d elementi.\nValore attuale:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
     <string name="description_smb">Algoritmo più recente per utenti avanzati</string>
     <string name="description_smb_dynamic_isf">Algoritmo più recente per utenti avanzati con ISF dinamico/automatico</string>
+    <string name="description_auto_isf">Algoritmo più recente per utenti avanzati con estensione AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze - divisore DIA</string>
     <string name="openapsma_run">Esegui ora</string>
     <string name="openapsma_last_run_label">Ultima esecuzione</string>
@@ -62,9 +66,9 @@
     <string name="enable_smb_summary">Usa super-micro-boli (SMB) al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enable_uam_summary">Rilevamento dei pasti non annunciati</string>
     <string name="enable_smb_always">Abilita SMB sempre</string>
-    <string name="enable_smb_always_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
+    <string name="enable_smb_always_summary">Abilita SMB sempre, indipendentemente dai COB, dai target temporanei o i boli. Possibile solo con una sorgente glicemia con un buon filtraggio dei dati</string>
     <string name="enable_smb_after_carbs">Abilita SMB dopo i CHO</string>
-    <string name="enable_smb_after_carbs_summary">Abilita SMB per 6h dopo i carboidrati, anche con 0 COB. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
+    <string name="enable_smb_after_carbs_summary">Abilita SMB per 6h dopo i carboidrati, anche con 0 COB. Possibile solo con sorgente glicemia con un buon filtraggio dei dati</string>
     <string name="enable_smb_with_cob">Abilita SMB con COB</string>
     <string name="enable_smb_with_cob_summary">Abilita SMB quando COB è attivo (ci sono carboidrati non assorbiti).</string>
     <string name="enable_smb_with_temp_target">Abilita SMB con target temporanei</string>
@@ -84,7 +88,8 @@
     <string name="smb_disabled_in_preferences">SMB disabilitato nelle preferenze</string>
     <string name="uam_disabled_in_preferences">UAM disabilitato nelle preferenze</string>
     <string name="autosens_disabled_in_preferences">Autosens disabilitato nelle preferenze</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens disabilitato in ISFdin</string>
+    <string name="use_dynamic_sensitivity_title">Abilita sensibilità dinamica</string>
+    <string name="use_dynamic_sensitivity_summary">Regola algoritmo per usare la sensibilità dinamica invece del valore del profilo</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="maxvalueinpreferences">valore max nelle preferenze</string>
@@ -117,4 +122,86 @@
     <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <string name="fallback_smb_no_tdd">Ripiego a SMB. Dati TDD insufficienti.</string>
+    <string name="fallback_to_isf_no_tdd">Torna alla sensibilità del profilo. Dati insufficienti. Motivo: %1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">Aiuto per potenziali regolazioni del profilo (ISF, rapporto CHO e velocità basali)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Impostazioni Autotune</string>
+    <string name="autotune_auto_title">Automazione cambio profilo</string>
+    <string name="autotune_auto_summary">Se abilitato, dopo il calcolo di una regola di automazione Autotune verrà eseguito e il profilo generato verrà automaticamente attivato.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Classifica UAM come basale</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Abilita solo se hai inserito in modo affidabile tutti i carboidrati assunti, con questa opzione gli aumenti improvvisi individuati da Autotune verranno usati per consigliare modifiche alla velocità basale.</string>
+    <string name="autotune_tune_insulin_curve_title">Regola la curva dell\'insulina</string>
+    <string name="autotune_tune_insulin_curve_summary">Abilita solo se usi free-peak. Questa opzione regolerà la durata di picco e DIA</string>
+    <string name="autotune_default_tune_days_title">Numero di giorni di dati</string>
+    <string name="autotune_circadian_ic_isf_title">Applica il risultato medio in IC/ISF circadiano</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune non regolerà le variazioni circadiane, questa opzione applica solo la regolazione media di IC e ISF al tuo profilo di input circadiano</string>
+    <string name="autotune_additional_log_title">Includi più informazioni di log per il debug</string>
+    <string name="autotune_additional_log_summary">Attiva solo se richiesto dallo sviluppatore per inviare ulteriori informazioni di log per aiutare il debug del plugin Autotune</string>
+    <string name="autotune_default_tune_days_summary">Numero predefinito di giorni di dati da elaborare da Autotune (fino a 30)</string>
+    <string name="autotune_tunedprofile_name">Regolato</string>
+    <string name="autotune_profile">Profilo :</string>
+    <string name="autotune_last_run">Ultima esecuzione :</string>
+    <string name="autotune_warning">Avviso :</string>
+    <string name="autotune_ic_warning">Il profilo selezionato ha %1$d valori IC. Autotune userà %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Il profilo selezionato ha %1$d valori ISF. Autotune userà %2$.1f %3$s/U</string>
+    <string name="autotune_error">Errore nei dati di input, prova a eseguire di nuovo Autotune o ridurre il numero di giorni</string>
+    <string name="autotune_error_more_days">Errore nei dati di input, aumenta il numero di giorni</string>
+    <string name="autotune_warning_during_run">Il calcolo di Autotune è iniziato, attendi</string>
+    <string name="autotune_warning_after_run">Controlla attentamente i risultati prima di utilizzarli!</string>
+    <string name="autotune_partial_result">Risultato parziale giorno %1$d / %2$d regolato</string>
+    <string name="autotune_result">Risultato: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Mancante</string>
+    <string name="autotune_run">Esegui Autotune</string>
+    <string name="autotune_check_input_profile_button">Controlla il profilo di input</string>
+    <string name="autotune_compare_profile">Compara profili</string>
+    <string name="autotune_copy_localprofile_button">Copia nel profilo locale</string>
+    <string name="autotune_update_input_profile_button">Aggiorna il profilo di input</string>
+    <string name="autotune_revert_input_profile_button">Ripristina il profilo di input</string>
+    <string name="autotune_copy_local_profile_message">Creare un nuovo profilo locale da questo profilo Autotune?</string>
+    <string name="autotune_update_local_profile_message">Aggiornare il profilo %1$s con il profilo Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Ripristinare il profilo %1$s con il profilo di input?</string>
+    <string name="autotune_profile_invalid">Profilo non valido</string>
+    <string name="not_available_full">Non disponibile</string>
+    <string name="pump_disconnected">Micro disconnesso</string>
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Obiettivo Di Esercizio Metà Basale</string>
+    <string name="half_basal_exercise_target_summary">Impostare un numero, ad esempio 160, significa che quando il target temporaneo è 160 mg/dL e l\'opzione aumenta la sensibilità se rileva sensibilità è attivo, esegue il 50%% della basale a questo livello (120 = 75%%; 140 = 60%%).</string>
+    <string name="autoISF_settings_title">Impostazioni AutoISF</string>
+    <string name="autoISF_settings_summary">AutoISF consente di adattare il fattore di sensibilità all\'insulina (ISF) in vari scenari di comportamento glicemico\n\nPuò anche adattare le impostazioni di erogazione SMB</string>
+    <string name="smb_delivery_settings_title">Impostazioni di erogazione SMB</string>
+    <string name="smb_delivery_settings_summary">Insieme di opzioni per aumentare le dimensioni effettive di SMB che possono essere erogate in situazioni in cui ISF è stato rafforzato, cioè con una cifra ISF piuttosto bassa. \n \nUTILIZZARE CON CAUTELA</string>
+    <string name="openapsama_enable_autoISF">Abilita l\'adattamento ISF in base al comportamento del glucosio</string>
+    <string name="openapsama_autoISF_max_summary">Simile a autosens_max questo definisce quanto forte ISF può diventare.\n\nIl valore predefinito 1.0 disattiva in modo efficace questo effetto.\n\nATTENZIONE: Fai molta attenzione quando usi valori superiori a 2,5</string>
+    <string name="openapsama_autoISF_min_summary">Simile a autosens_min questo definisce quanto debole ISF possa diventare.\n\nIl valore predefinito 1.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Questo è il peso applicato durante eventi di glucosio alto di lunga durata e che rafforza ISF aumentando così potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Questo è il peso applicato mentre il glucosio è al di sotto del target e che indebolisce ISF riducendo potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Questo è il peso applicato mentre il glucosio è superiore all’obiettivo e che rafforza l’ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Questo è il peso applicato mentre il glucosio sta aumentando e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Questo è il peso applicato mentre il glucosio accelera e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Questo è il peso applicato mentre il glucosio decelera e che indebolisce ISF riducendo potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_autoISF_max">Rapporto max autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Rapporto min autoISF\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">livello inferiore all\'intervallo ISF\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">livello superiore dell\'intervallo ISF\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">ISF postprandiale\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Peso mentre il BG accelera\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Peso mentre il BG decelera\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">peso dura_ISF\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">erogazione SMB fisso\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">erogazione SMB variabile, livello inferiore\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">erogazione SMB variabile, livello superiore\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">rapporto di erogazione SMB variabile, intervallo di glucosio mappato\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">Estensione massima del raggio SMB/UAM\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valore predefinito: 0,5 Questo è un altro importante limite di sicurezza di OpenAPS e specifica quale parte dell\'insulina totale necessaria può essere somministrata come SMB. Questo per evitare che le persone si trovino in una zona pericolosa impostando contemporaneamente le richieste SMB dal telefono dei caregiver. Aumentare lentamente e con cautela questo valore sperimentale.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Valore predefinito: 0,5 Questo è il limite inferiore di un rapporto crescente lineare anziché il valore fisso soprastante.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valore predefinito: 0,5 Questo è il limite superiore di un rapporto che aumenta linearmente anziché il valore fisso sopra.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valore predefinito: 0. Il rapporto di erogazione SMB che aumenta linearmente è mappato sull\'intervallo di glucosio [target_bg, target_bg+bg_range].\nA target_bg il rapporto SMB è smb_delivery_ratio_min, a target_bg+bg_range è smb_delivery_ratio_max\nCon 0 il rapporto SMB che aumenta linearmente è disattivato e viene utilizzato il rapporto fisso smb_delivery_ratio.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valore predefinito: 1 Questo è un altro parametro chiave della sicurezza OpenAPS, che specifica per quale fattore è possibile superare i soliti 120 minuti maxSMB/maxUAM. Aumentare lentamente questo valore sperimentale con cautela.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Abilita l\'attivazione alternativa di SMB a seconda che il target attivo sia un numero pari</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nenabled ...\nif il target attivo(mmol/L) ha una cifra decimale pari\no il bersaglio attivo(mg/dL) è un numero pari\n\nnon abilitato altrimenti</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentuale di maxIOB al di sopra del quale gli SMB sono disabilitati.\nValore predefinito: 100%\nCon 100% questa funzione è effettivamente disabilitata.</string>
+    <string name="openapsama_iob_threshold_percent">soglia maxIOB percentuale per SMB\n(iob_threshold_percent)</string>
 </resources>

@@ -3,10 +3,6 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pump driver changed.</string>
 
-    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
-    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
-    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
-
     <!--    DateUtil-->
     <string name="minago">%1$d m ago</string>
     <string name="minago_long">%1$d minutes ago</string>
@@ -57,6 +53,8 @@
     <string name="pref_show_delta">Show Delta</string>
     <string name="pref_show_detailed_delta">Show detailed Delta</string>
     <string name="pref_show_avgdelta">Show AvgDelta</string>
+    <string name="pref_show_tempTarget">Show TempTarget</string>
+    <string name="pref_show_reservoir_level">Show Reservoir Level</string>
     <string name="pref_show_phone_battery">Show Phone Battery</string>
     <string name="pref_show_rig_battery">Show Rig Battery</string>
     <string name="pref_show_basal_rate">Show Basal Rate</string>
@@ -67,41 +65,13 @@
     <string name="pref_show_ago">Show Ago</string>
     <string name="pref_show_week_number">Show Week number</string>
     <string name="pref_show_date">Show Date</string>
+    <string name="pref_show_seconds">Show Seconds</string>
     <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
+    <string name="default_custom_watchface_external_comment">Default watchface including external views for followers, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="wear_default_watchface">Default Watchface</string>
-    <string name="cwf_comment_background">Background image</string>
-    <string name="cwf_comment_chart">Graphs (BG, basal, prediction lines...)</string>
-    <string name="cwf_comment_cover_chart">Image in front of graph and behind text fields</string>
-    <string name="cwf_comment_freetext1">Free text 1</string>
-    <string name="cwf_comment_freetext2">Free text 2</string>
-    <string name="cwf_comment_freetext3">Free text 3</string>
-    <string name="cwf_comment_freetext4">Free text 4</string>
-    <string name="cwf_comment_iob1">IOB label or IOB Sum if detailed</string>
-    <string name="cwf_comment_iob2">IOB Sum or (Bolus_IOB|Basal_IOB) if detailed</string>
-    <string name="cwf_comment_cob1">COB label</string>
-    <string name="cwf_comment_cob2">COB value</string>
-    <string name="cwf_comment_delta">Short BG delta</string>
-    <string name="cwf_comment_avg_delta">Average BG delta (15min)</string>
-    <string name="cwf_comment_uploader_battery">Phone battery (%)</string>
-    <string name="cwf_comment_rig_battery">Global loop battery (%)</string>
-    <string name="cwf_comment_basalRate">Basal Rate</string>
-    <string name="cwf_comment_bgi">BGI value</string>
-    <string name="cwf_comment_time">Time (HH:MM or HH:MM:SS)</string>
-    <string name="cwf_comment_hour">Hour (HH)</string>
-    <string name="cwf_comment_minute">Minute (MM)</string>
-    <string name="cwf_comment_second">Second (SS)</string>
-    <string name="cwf_comment_timePeriod">AM or PM</string>
-    <string name="cwf_comment_day_name">Name of day of the week</string>
-    <string name="cwf_comment_day">Day (DD)</string>
-    <string name="cwf_comment_week_number">Week number (ww)</string>
-    <string name="cwf_comment_month">Month name (short)</string>
-    <string name="cwf_comment_loop">Loop status and ago</string>
-    <string name="cwf_comment_direction">Direction arrow</string>
-    <string name="cwf_comment_timestamp">Mintutes ago for last received BG</string>
-    <string name="cwf_comment_sgv">BG value</string>
-    <string name="cwf_comment_cover_plate">Cover image in front of text (dials…)</string>
-    <string name="cwf_comment_hour_hand">Image of hour hand (Analog Watch)</string>
-    <string name="cwf_comment_minute_hand">Image of minute hand (Analog Watch)</string>
-    <string name="cwf_comment_second_hand">Image of second hand (Analog Watch)</string>
+    <string name="wear_more_watchfaces">More watchfaces</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 
 </resources>

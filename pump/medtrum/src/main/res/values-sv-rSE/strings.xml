@@ -46,7 +46,6 @@
     <string name="alarm_expired">Utgången</string>
     <string name="alarm_reservoir_empty">Reservoar tom</string>
     <string name="alarm_patch_fault">Poddfel</string>
-    <string name="alarm_patch_fault2">Poddfel 2</string>
     <string name="alarm_base_fault">Basfel</string>
     <string name="alarm_battery_out">Batteri urladdat</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
@@ -101,7 +100,6 @@
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Ange serienumret för pumpbasen.</string>
     <string name="sn_input_invalid">Ogiltigt serienummer!</string>
-    <string name="pump_unsupported">Pump otestad: %1$d! Kontakta oss på Discord eller Github för support</string>
     <string name="alarm_setting_title">Larminställningar</string>
     <string name="alarm_setting_summary">Ställ in dina föredragna larminställningar för pumpen.</string>
     <string name="patch_expiration_title">Poddens utgångsdatum</string>
@@ -113,4 +111,5 @@
     <string name="getting_bolus_status">Hämtar bolus-status</string>
     <string name="getting_temp_basal_status">Hämtar status för tillfällig basal</string>
     <string name="setting_pump_settings">Ställer in användaralternativ</string>
+    <!-- bolus-->
 </resources>

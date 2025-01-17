@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Pour désactiver les commandes à distance SMS, renvoyez le code %1$s.\n\nGardez à l\'esprit que vous ne pourrez le réactiver que directement à partir de l\'application AAPS du smartphone maître.</string>
     <string name="smscommunicator_stopped_sms">Service de commande à distance SMS arrêté. Pour le réactiver, utilisez AAPS sur le smartphone maître.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pour envoyer la calibration %1$.2f, renvoyez le code %2$s</string>
-    <string name="smscommunicator_bolus_failed">Échec du Bolus</string>
+    <string name="smscommunicator_bolus_failed">Le bolus a échoué. Vérifiez l\'état réel avant d\'envoyer une autre commande !</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Nombre minimum de minutes qu\'il doit y avoir entre un bolus distant et le suivant</string>
     <string name="smscommunicator_remote_bolus_min_distance">Combien de minutes doit-il y avoir, au minimum, entre un bolus et le suivant</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Pour votre sécurité, pour modifier cette préférence vous devez ajouter au moins 2 numéros de téléphone.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DAI</string>
     <string name="target_short">CIBLE</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label_warning">Votre algorithme peut fournir le calcul dynamique de la SI. Les valeurs ci-dessous sont utilisées comme solution de secours en cas de données manquantes ou comme valeur de référence pour le calcul de la SI</string>
+    <string name="ic_dynamic_label_warning">Votre algorithme peut fournir le calcul dynamique de la G/I. Les valeurs ci-dessous sont utilisées comme solution de secours en cas de données manquantes ou comme valeur de référence pour le calcul de la G/I</string>
     <!-- Actions -->
     <string name="actions">Actions</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Seuil d’alerte niveau pile pompe [%]</string>
     <string name="statuslights_bat_critical">Seuil critique niveau pile pompe [%]</string>
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 heures</string>
+    <string name="graph_long_scale_12h">12 heures</string>
+    <string name="graph_long_scale_18h">18 heures</string>
+    <string name="graph_long_scale_24h">24 heures</string>
     <string name="a11y_graph">graphique</string>
+    <string name="a11y_graph_scale">choisir l\'échelle du graph.</string>
+    <string name="a11y_graph_scale_6h">échelle du graphique 6 heures</string>
+    <string name="a11y_graph_scale_12h">échelle du graphique 12 heures</string>
+    <string name="a11y_graph_scale_18h">échelle du graphique 18 heures</string>
+    <string name="a11y_graph_scale_24h">échelle du graphique 24 heures</string>
     <string name="a11y_insulin_label">insuline</string>
     <string name="chart_menu">Menu graphique</string>
     <string name="a11y_bg_quality">qualité de la glycémie</string>
@@ -201,11 +216,8 @@
     <string name="overview_shortname">ACCUEIL</string>
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
     <string name="overview_buttons_selection">Boutons</string>
-    <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration de BYODA</string>
-    <string name="show_cgm_button_summary">Ouvre xDrip+ ou BYODA, le bouton de retour renverra vers AAPS</string>
-    <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
-    <string name="dexcom_app_not_detected">Veuillez mettre à jour votre application Dexcom vers la version prise en charge</string>
-    <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
+    <string name="show_calibration_button_summary">Envoie une calibration à xDrip+ (assurez-vous que \'Accepter les étalonnages\' est activé dans xDrip+ dans les paramètres Inter-App).</string>
+    <string name="show_cgm_button_summary">Ouvre xDrip+ ou Dexcom app (vous pouvez utiliser le bouton Retour pour retourner à AAPS).</string>
     <string name="not_available_full">Non disponible</string>
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="change_your_input">Changez vos entrées !</string>
@@ -226,12 +238,12 @@
     <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
     <string name="cgm">MGC</string>
     <string name="default_temptargets">Cibles Temporaires par défaut</string>
-    <string name="eatingsoon_duration">durée repas imminent [min]</string>
-    <string name="eatingsoon_target">Cible Glyc. pour le prochain repas</string>
-    <string name="activity_duration">Durée d\'activité</string>
-    <string name="activity_target">Cible Glycémie pour l\'activité</string>
-    <string name="hypo_duration">durée hypo [min]</string>
-    <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
+    <string name="eatingsoon_duration">Durée pour Repas Imminent (minutes)</string>
+    <string name="eatingsoon_target">Valeur de la cible pour Repas imminent</string>
+    <string name="activity_duration">Durée pour Activité (minutes)</string>
+    <string name="activity_target">Valeur de la cible pour Activité</string>
+    <string name="hypo_duration">Durée pour Hypo (minutes)</string>
+    <string name="hypo_target">Valeur de la cible pour Hypo</string>
     <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
     <string name="button1">Bouton 1</string>
     <string name="button2">Bouton 2</string>
@@ -258,12 +270,13 @@
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
-    <string name="overview_show_sensitivity">Sensibilité</string>
+    <string name="overview_show_sensitivity">AutoSens</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
     <string name="overview_show_basals">Basals</string>
     <string name="overview_show_abs_insulin">Insuline absolue</string>
+    <string name="overview_show_variable_sens">SI variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -273,9 +286,11 @@
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">V_SI</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Thème d\'origine</string>
     <string name="lowres_description">Basse résolution</string>
@@ -284,8 +299,10 @@
     <string name="skin">Thème</string>
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Envoyer les fichiers journaux d\'aujourd\'hui aux développeurs avec l\'heure actuel. Situation inattendue.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
+    <string name="overview_show_steps">Pas</string>
+    <string name="steps_shortname">PAS</string>
+    <string name="simple_mode_enabled">Mode simple activé</string>
 </resources>

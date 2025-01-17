@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="delta">Delta</string>
+    <string name="remove_selected_items">Ukloni izabrane stavke</string>
+    <string name="count_selected">%1$d izabrano</string>
     <!--    Reminders-->
+    <!--    Autotune-->
+    <!--    Steps count-->
 </resources>

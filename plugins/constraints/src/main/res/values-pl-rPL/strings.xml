@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Zmiana czasu w 24h lub mniej</string>
     <string name="dst_loop_disabled_warning">Zmiana czasu nastąpiła mniej niż 3 godziny temu - Zamknięta pętla wyłączona</string>
+    <string name="dst_loop_disabled_error">Zmiana na czas letni/zimowy (DST) wystąpiła mniej niż 3 godziny temu. Zamknięta pętla została tymczasowo wyłączona, zostanie automatycznie re-aktywowana 3 godziny po zmianie DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Brak miejsca! Zwolnij co najmniej %1$d MB w pamięci wewnętrznej! Pętla zatrzymana!</string>
     <!-- Version Checker -->

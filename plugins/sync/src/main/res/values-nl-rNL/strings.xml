@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Maak melding bij waarschuwingen voor benodigde koolhydraten</string>
     <string name="ns_create_announcements_from_errors_summary">Creëer een Nightscout melding voor storingen en lokale waarschuwingen (ook zichtbaar in het Careportal en Behandelingen)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Maak Nightscout melding bij waarschuwingen voor benodigde koolhydraten</string>
-    <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
+    <string name="description_ns_client">Synchroniseert je data met Nightscout via de v1 API</string>
     <string name="description_ns_client_v3">Synchroniseert je data met Nightscout via de v3 API</string>
     <string name="blocked_by_charging">Geblokkeerd door oplaad instellingen</string>
     <string name="blocked_by_connectivity">Geblokkeerd door verbindings instellingen</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT heeft geen schrijfrechten. Verkeerde API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Herstart</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Nightscout URL ingeven</string>
-    <string name="ns_client_secret_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_message">Geen NS API secret op (min 12 kar.)</string>
-    <string name="nsclient_token_title">NS toegangstoken</string>
-    <string name="nsclient_token_dialog_title">NS toegangstoken</string>
-    <string name="nsclient_token_dialog_message">Toegangstoken gegenereerd op de NS beheerderspagina (min. 17 tekens)</string>
+    <string name="ns_client_url_dialog_message">Voer je Nightscout URL in (bijv. https://jouwwebsitenaam.jouwplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_dialog_message">Voer je Nightscout API secret (wachtwoord met minimaal 12 tekens als gedefinieerd je Nightscout variabelen)</string>
+    <string name="nsclient_token_title">Nightscout toegangstoken</string>
+    <string name="nsclient_token_dialog_message">Voer uw admin level toegangstoken, welke is gegenereerd via de Nightscout admin tools in (minimaal 17 tekens, niet uw API secret!)</string>
     <string name="deliver_now">Toedienen</string>
-    <string name="clear_queue">Ledig wachtrij</string>
-    <string name="show_queue">Toon wachtrij</string>
     <string name="queue">Wachtend:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Logboek wissen</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
-    <string name="tidepool_upload_cgm">CGM-gegevens uploaden</string>
-    <string name="tidepool_upload_bolus">Upload behandelingen (insuline, carbs)</string>
-    <string name="tidepool_upload_tbr">Tijdelijke basalen uploaden</string>
-    <string name="tidepool_upload_profile">Upload profiel wisselingen, tijdelijke doelen</string>
-    <string name="tidepool_upload_bg">Upload BG-tests</string>
     <string name="remove_all">Alles verwijderen</string>
-    <string name="reset_start">Start reset</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>
     <string name="working">Bezig</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -117,10 +106,14 @@
     <string name="xdrip_local_broadcasts_summary">Verzend glucose en behandelingsgegevens naar xDrip+. Gegevensbron \"xDrip+ Sync Follower\" moet worden geselecteerd en het accepteren van gegevens moet worden ingeschakeld in Instellingen - Inter-app instellingen - Accepteer Glucose/Behandelingen</string>
     <string name="xdrip_local_broadcasts_title">Activeer uitzendingen naar xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Verzend gegevens naar Garmin\'s G-Watch Wear App (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Verbinding met Garmin apparaat (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Garmin instellingen</string>
+    <string name="garmin_local_http_server_port">Lokale HTTP server poort</string>
+    <string name="garmin_local_http_server">Lokale HTTP server</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
@@ -130,7 +123,7 @@
     <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="quick_wizard_not_available">Geselecteerde QuickWizard is niet meer beschikbaar, vernieuw uw tegel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Tijdelijke doel onbekende preset: %1$s</string>
+    <string name="user_action_not_available">De geselecteerde gebruikersactie %1$s is niet meer beschikbaar, ververs uw tegel</string>
     <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
     <string name="wear_action_tempt_unit_error">Verschillende eenheden gebruikt op horloge en telefoon!</string>
     <string name="wear_action_tempt_zero_message">Tijdelijk streefdoel 0 minuten,  huidige tijdelijk streefdoel annuleren?</string>
@@ -143,6 +136,8 @@
     <string name="wear_settings">Wear instellingen</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
+    <string name="wear_broadcast_data">Gegevens verzenden</string>
+    <string name="wear_broadcast_data_summary">Verzend gegevens naar AAPS of AAPSClient</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
@@ -155,6 +150,7 @@
     <string name="wear_infos_watchface">Watchface informatie</string>
     <string name="wear_export_watchface">Exporteer template</string>
     <string name="wear_new_custom_watchface_exported">Aanpasbare watchface template geëxporteerd</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/nl/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Update Wear gegevens</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
     <string name="cwf_infos_pref_locked">Lijst met instellingen die zijn vergrendeld door watchface</string>
@@ -186,4 +182,5 @@
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="today">Vandaag</string>
     <string name="weighted">gewogen</string>
+    <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>
 </resources>

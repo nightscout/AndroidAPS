@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package info.nightscout.comboctl.base
 
 /**
@@ -23,17 +25,16 @@ fun calculateCRC16MCRF4XX(data: List<Byte>, currentChecksum: Int = 0xFFFF): Int 
 
     for (dataByte in data) {
         var t: Int
-        var L: Int
 
         newChecksum = newChecksum xor dataByte.toPosInt()
         // The "and 0xFF" are needed since the original C implementation
         // worked with implicit 8-bit logic, meaning that only the lower
         // 8 bits are kept - the rest is thrown away.
-        L = (newChecksum xor (newChecksum shl 4)) and 0xFF
-        t = ((L shl 3) or (L shr 5)) and 0xFF
-        L = L xor (t and 0x07)
+        var el: Int = (newChecksum xor (newChecksum shl 4)) and 0xFF
+        t = ((el shl 3) or (el shr 5)) and 0xFF
+        el = el xor (t and 0x07)
         t = (t and 0xF8) xor (((t shl 1) or (t shr 7)) and 0x0F) xor (newChecksum shr 8)
-        newChecksum = (L shl 8) or t
+        newChecksum = (el shl 8) or t
     }
 
     return newChecksum

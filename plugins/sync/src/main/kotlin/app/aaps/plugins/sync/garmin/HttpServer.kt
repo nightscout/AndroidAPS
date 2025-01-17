@@ -72,7 +72,7 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
                 waitNanos = readyCond.awaitNanos(waitNanos)
             }
         }
-        return serverSocket?.isBound ?: false
+        return serverSocket?.isBound == true
     }
 
     /** Register an endpoint (path) to handle requests. */

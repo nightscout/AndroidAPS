@@ -1,10 +1,10 @@
 package app.aaps.core.nssdk.mapper
 
-import com.google.gson.Gson
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
+import com.google.gson.Gson
 
 fun NSSgvV3.convertToRemoteAndBack(): NSSgvV3? =
     toRemoteEntry().toSgv()
@@ -27,8 +27,8 @@ internal fun RemoteEntry.toSgv(): NSSgvV3? {
         subject = this.subject,
         direction = this.direction.toDirection(),
         sgv = this.sgv,
-        isReadOnly = this.isReadOnly ?: false,
-        isValid = this.isValid ?: true,
+        isReadOnly = this.isReadOnly == true,
+        isValid = this.isValid != false,
         noise = this.noise, // TODO: to Enum?
         filtered = this.filtered,
         unfiltered = this.unfiltered,
@@ -37,7 +37,7 @@ internal fun RemoteEntry.toSgv(): NSSgvV3? {
 }
 
 private fun String?.toDirection(): Direction =
-    Direction.values().firstOrNull { it.nsName == this } ?: Direction.INVALID
+    Direction.entries.firstOrNull { it.nsName == this } ?: Direction.INVALID
 
 internal fun NSSgvV3.toRemoteEntry(): RemoteEntry =
     RemoteEntry(

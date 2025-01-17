@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">Šaltinis</string>
     <string name="omnipod_dash_history_item_date">Data</string>
     <string name="omnipod_dash_history_type">Tipas:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f v</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f v, AV=%2$.1f g</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth statusas</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresas</string>
@@ -19,7 +17,7 @@
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Ryšio kokybė</string>
     <string name="omnipod_dash_overview_delivery_status">Insulino statusas</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod        insulinu, kurio pakaktų 3 dienoms.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš Pod, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80 v. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Toliau</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio gaubtelio.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod insulinu, kurio pakaktų 3 dienoms.\n\nAtkreipkite dėmesį į du pyptelėjimus, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80 v. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Toliau</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio gaubtelio.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Vyksta naujo Pod susiejimas ir užpildymas.\n\nSėkmingai užsibaigus inicijavimo procesui, spauskite <b>Toliau</b>.</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Įjungtas pranešimų apie sustabdytą insulino tiekimą garsas</string>
     <!-- Exceptions -->

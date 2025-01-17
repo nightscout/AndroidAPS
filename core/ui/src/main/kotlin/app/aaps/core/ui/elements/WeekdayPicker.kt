@@ -3,7 +3,6 @@ package app.aaps.core.ui.elements
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Checkable
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +22,7 @@ class WeekdayPicker(context: Context, attrs: AttributeSet? = null, defStyleAttr:
         setupClickListeners()
     }
 
-    fun Boolean.toVisibility() = if (this) View.VISIBLE else View.GONE
+    fun Boolean.toVisibility() = if (this) VISIBLE else GONE
 
     private fun determineBeginOfWeek() {
         (Calendar.getInstance().firstDayOfWeek == Calendar.SUNDAY).let {

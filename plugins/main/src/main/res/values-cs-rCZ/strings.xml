@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Chcete-li deaktivovat Vzdálené řízení přes SMS, odpovězte pomocí SMS s kódem %1$s.\n\nUpozornění: tuto funkci budete moci znovu aktivovat pouze z telefonu s hlavní verzí AAPS.</string>
     <string name="smscommunicator_stopped_sms">Služba Vzdáleného řízení přes SMS zastavena. Chcete-li ji znovu aktivovat, použijte telefon s hlavní verzí AAPS.</string>
     <string name="smscommunicator_calibration_reply_with_code">Odeslání kalibrace %1$.2f potvrďte kódem %2$s</string>
-    <string name="smscommunicator_bolus_failed">Chyba při aplikování bolusu</string>
+    <string name="smscommunicator_bolus_failed">Bolus se nezdařil. Ověřte skutečný stav před odesláním dalšího příkazu!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimální počet minut, které musí uplynout mezi dvěma bolusy podanými přes vzdálené řízení</string>
     <string name="smscommunicator_remote_bolus_min_distance">Kolik minut (minimálně) musí uplynout mezi dvěma bolusy</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Úprava tohoto nastavení v zájmu vaší bezpečnosti vyžaduje, abyste zadali alespoň 2 telefonní čísla.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CÍL</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label_warning">Váš algoritmus dokáže poskytovat dynamický výpočet ISF. Níže uvedené hodnoty mohou být použity pouze jako záložní v případě chybějících údajů nebo jako referenční</string>
+    <string name="ic_dynamic_label_warning">Váš algoritmus dokáže poskytovat dynamický výpočet IC. Níže uvedené hodnoty mohou být použity pouze jako záložní v případě chybějících údajů nebo jako referenční</string>
     <!-- Actions -->
     <string name="actions">Akce</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Úroveň varování stavu baterie pumpy [%]</string>
     <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie pumpy [%]</string>
     <string name="statuslights_copy_ns">Zkopírovat nastavení z NS</string>
+    <string name="graph_scale_6h">6 h</string>
+    <string name="graph_scale_12h">12 h</string>
+    <string name="graph_scale_18h">18 h</string>
+    <string name="graph_scale_24h">24 h</string>
+    <string name="graph_long_scale_6h">6 hodin</string>
+    <string name="graph_long_scale_12h">12 hodin</string>
+    <string name="graph_long_scale_18h">18 hodin</string>
+    <string name="graph_long_scale_24h">24 hodin</string>
     <string name="a11y_graph">graf</string>
+    <string name="a11y_graph_scale">vyberte měřítko grafu</string>
+    <string name="a11y_graph_scale_6h">měřítko grafu 6 hodin</string>
+    <string name="a11y_graph_scale_12h">měřítko grafu 12 hodin</string>
+    <string name="a11y_graph_scale_18h">měřítko grafu 18 hodin</string>
+    <string name="a11y_graph_scale_24h">měřítko grafu 24 hodin</string>
     <string name="a11y_insulin_label">inzulín</string>
     <string name="chart_menu">Možnosti grafu</string>
     <string name="a11y_bg_quality">kvalita glykémií</string>
@@ -201,11 +216,8 @@
     <string name="overview_shortname">PŘEH</string>
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="overview_buttons_selection">Tlačítka</string>
-    <string name="show_calibration_button_summary">Odeslání kalibrace do xDrip+ nebo otevření kalibračního dialogu BYODA</string>
-    <string name="show_cgm_button_summary">Otevře xDrip+ nebo BYODA, tlačítko zpět vrátí do AndroidAPS</string>
-    <string name="dexcom_app_not_installed">Aplikace Dexcom není nainstalována.</string>
-    <string name="dexcom_app_not_detected">Prosím aktualizujte Dexcom aplikaci na podporovanou verzi</string>
-    <string name="error_starting_cgm">Nelze spustit aplikace CGM. Ujistěte se, že je nainstalovaná.</string>
+    <string name="show_calibration_button_summary">Odešle kalibraci do xDrip+ (ujistěte se, že je v xDrip+ povoleno \'Příjímat kalibrace\' v nastavení komunikace mezi aplikacemi).</string>
+    <string name="show_cgm_button_summary">Otevře xDrip+ nebo Dexcom aplikaci (můžete použít tlačítko zpět pro návrat do AAPS).</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="change_your_input">Změňte zadání!</string>
@@ -226,12 +238,12 @@
     <string name="thirdcarbsincrement">Třetí přídavek sacharidů</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Výchozí nastavení dočasných cílů</string>
-    <string name="eatingsoon_duration">Trvání „Před jídlem“</string>
-    <string name="eatingsoon_target">Cíl „Před jídlem“</string>
-    <string name="activity_duration">Trvání aktivity</string>
-    <string name="activity_target">Cíl při aktivitě</string>
-    <string name="hypo_duration">Trvání dočasného cíle při hypoglykémii</string>
-    <string name="hypo_target">Cílová glykémie při hypoglykémii</string>
+    <string name="eatingsoon_duration">Trvání Před jídlem (minuty)</string>
+    <string name="eatingsoon_target">Cílová hodnota Před jídlem</string>
+    <string name="activity_duration">Trvání Aktivita (minuty)</string>
+    <string name="activity_target">Cílová hodnota Aktivita</string>
+    <string name="hypo_duration">Trvání Hypoglykémie (minuty)</string>
+    <string name="hypo_target">Cílová hodnota Hypoglykémie</string>
     <string name="fill_bolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
@@ -258,12 +270,13 @@
     <string name="overview_show_deviation_slope">Odchylka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
-    <string name="overview_show_sensitivity">Citlivost</string>
+    <string name="overview_show_sensitivity">Změna citlivosti</string>
     <string name="overview_show_deviations">Odchylky</string>
     <string name="overview_show_cob">Zbývající sacharidy</string>
     <string name="overview_show_iob">Zbývající inzulín</string>
     <string name="overview_show_basals">Bazály</string>
     <string name="overview_show_abs_insulin">Absolutní inzulin</string>
+    <string name="overview_show_variable_sens">Proměnná citlivost</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">ODCH</string>
@@ -273,9 +286,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
     <string name="heartRate_shortname">TF</string>
-    <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivity_shortname">SEN%</string>
+    <string name="variable_sensitivity_shortname">VSEN</string>
     <string name="graph_scale">Měřítko grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Původní vzhled</string>
     <string name="lowres_description">Vzhled pro nízké rozlišení</string>
@@ -284,8 +299,10 @@
     <string name="skin">Vzhled</string>
     <string name="cannula_usage">použití:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>
+    <string name="overview_show_steps">Kroky</string>
+    <string name="steps_shortname">KROKY</string>
+    <string name="simple_mode_enabled">Jednoduchý režim povolen</string>
 </resources>

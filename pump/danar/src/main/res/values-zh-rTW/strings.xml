@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">幫浦不支援此操作。請使用 AndroidAPS 用戶界面！</string>
+</resources>

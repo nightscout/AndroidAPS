@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="diaconn_g8_history_errors">Hibák</string>
-    <string name="diaconn_firmware_version">Verzió</string>
-    <string name="diagonn_g8_tdd_label">TND</string>
     <string name="diaconn_g8_pumpalarm_intensity_low">alacsony</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">magas</string>
-    <string name="diaconn_g8_pumpalarm_low">alacsony</string>
     <string name="diaconn_g8_reasonother">Egyéb</string>
 </resources>

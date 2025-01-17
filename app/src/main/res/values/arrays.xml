@@ -1,62 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="languagesArray">
-        <item>@string/default_lang</item>
-        <item>@string/en_lang</item>
-        <item>@string/af_lang</item>
-        <item>@string/bg_lang</item>
-        <item>@string/cs_lang</item>
-        <item>@string/de_lang</item>
-        <item>@string/dk_lang</item>
-        <item>@string/fr_lang</item>
-        <item>@string/nl_lang</item>
-        <item>@string/es_lang</item>
-        <item>@string/el_lang</item>
-        <item>@string/ga_lang</item>
-        <item>@string/it_lang</item>
-        <item>@string/ko_lang</item>
-        <item>@string/lt_lang</item>
-        <item>@string/no_lang</item>
-        <item>@string/pt_lang</item>
-        <item>@string/pt_BR_lang</item>
-        <item>@string/ro_lang</item>
-        <item>@string/ru_lang</item>
-        <item>@string/sk_lang</item>
-        <item>@string/sv_lang</item>
-        <item>@string/pl_lang</item>
-        <item>@string/tr_lang</item>
-        <item>@string/zh_lang</item>
-    </string-array>
-
-    <string-array name="languagesValues" translatable="false">
-        <item>default</item>
-        <item>en</item>
-        <item>af</item>
-        <item>bg</item>
-        <item>cs</item>
-        <item>de</item>
-        <item>dk</item>
-        <item>fr</item>
-        <item>nl</item>
-        <item>es</item>
-        <item>el</item>
-        <item>ga</item>
-        <item>it</item>
-        <item>ko</item>
-        <item>lt</item>
-        <item>nb_NO</item>
-        <item>pt</item>
-        <item>pt_BR</item>
-        <item>ro</item>
-        <item>ru</item>
-        <item>sk</item>
-        <item>sv</item>
-        <item>pl</item>
-        <item>tr</item>
-        <item>zh</item>
-    </string-array>
-
     <string-array name="smbMaxMinutes">
         <item>15</item>
         <item>30</item>
@@ -66,22 +10,6 @@
         <item>90</item>
         <item>105</item>
         <item>120</item>
-    </string-array>
-
-    <string-array name="protectiontype">
-        <item>@string/noprotection</item>
-        <item>@string/biometric</item>
-        <item>@string/master_password</item>
-        <item>@string/custom_password</item>
-        <item>@string/custom_pin</item>
-    </string-array>
-
-    <string-array name="protectiontypeValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
     </string-array>
 
 </resources>

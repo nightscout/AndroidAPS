@@ -89,6 +89,7 @@
     <string name="removerecord">Supprimer l\'enregistrement</string>
     <string name="loopisdisabled">La Boucle est désactivée</string>
     <string name="alarm">Alarme</string>
+    <string name="exportsettings">Exporter les paramètres</string>
     <string name="disableloop">Désactiver la Boucle</string>
     <string name="enableloop">Activer la Boucle</string>
     <string name="resumeloop">Reprendre la boucle</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
     <string name="alarminxmin">Alerter dans %1$d min</string>
-    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
+    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée ainsi que les glucides actifs</string>
     <string name="bolus_reminder">Rappel bolus</string>
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Insuline Active (IA)</string>
     <string name="loopstatus_targets">CIBLES:</string>
     <string name="loopstatus_OAPS_result">RÉSULTATS OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U (%2$.2f U/h)</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="nav_export">Exporter les paramètres</string>
+    <string name="location_permission_not_granted">Autorisation de localisation non accordée. À autoriser dans les paramètres Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
+    <string name="careportal_settings_export">Export des paramètres</string>
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
     <string name="careportal_announcement_message">Annonce : %1$s</string>
+    <string name="careportal_settings_export_message">Export des paramètres : %1$s</string>
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercice : %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Activité</string>
     <string name="wear">Montre</string>
     <string name="automation">Automatisation</string>
+    <string name="settingsexport">Export des paramètres</string>
     <string name="custom">Manuel</string>
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">Supprimer traitements futurs</string>
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
+    <string name="uel_select_directory">SÉLECTIONNEZ LE REPERTOIRE</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
+    <string name="uel_reset_aps_results">RÉINITIALISER LES RÉSULTATS APS</string>
     <string name="uel_cleanup_databases">SUPPRIMER LES DONNÉES</string>
     <string name="uel_export_databases">BASE DE DONNÉES EXPORTÉE</string>
     <string name="uel_import_databases">BASE DE DONNÉES IMPORTÉE</string>
@@ -399,57 +413,18 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Sensibilité</string>
+    <string name="isf_for_carbs">SI pour l\'Assistant et le calcul GA: %1$.1f</string>
+    <string name="autosens_long">Valeur Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens dans l\'algorithme: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fichier</string>
     <string name="a11y_user">utilisateur</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Aide pour ajuster le profil (SI, rapport G/I et débits de basal)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Paramètres Autotune</string>
-    <string name="autotune_auto_title">Changer le profil avec l\'automatisation</string>
-    <string name="autotune_auto_summary">Si activé, Autotune mettra à jour automatiquement à jour le profil sélectionné et activera le profil calculé effectué à partir d\'une règle d\'automatisation.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Catégoriser UAM en tant que Basal</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Activer uniquement si vous avez correctement saisi tous les glucides consommés, avec cette option, des hausses soudaines vues par Autotune seront utilisées pour modifier les débits de basal.</string>
-    <string name="autotune_tune_insulin_curve_title">Ajuster la courbe d\'insuline</string>
-    <string name="autotune_tune_insulin_curve_summary">Activer uniquement si vous utilisez le Profil d\'insuline ajustable. Cette option réglera le pic et la DAI</string>
-    <string name="autotune_default_tune_days_title">Nombre de jours de données</string>
-    <string name="autotune_circadian_ic_isf_title">Appliquer le résultat G/I et SI moyen sur le profil circadien</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune ne réglera pas les variations circadiennes, cette option ne fait que appliquer le réglage moyen du G/I et de la SI à votre profil d\'entrée circadien</string>
-    <string name="autotune_additional_log_title">Inclure plus d\'informations de log pour le débogage</string>
-    <string name="autotune_additional_log_summary">A n\'activer que sur demande du développeur pour envoyer plus d\'informations dans les fichiers log pour aider à déboguer le plugin Autotune</string>
-    <string name="autotune_default_tune_days_summary">Nombre de jours de données par défaut à traiter par Autotune (jusqu\'à 30)</string>
-    <string name="autotune_tunedprofile_name">Tuned</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Nb jours :</string>
-    <string name="autotune_last_run">Dernier run :</string>
-    <string name="autotune_warning">Avertissement :</string>
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
-    <string name="autotune_ic_warning">Le profil sélectionné %1$d valeurs de G/I. Autotune va utiliser la moyenne %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Le profil sélectionné a %1$d valeurs de SI. Autotune va utiliser la moyenne %2$.1f %3$s/U</string>
-    <string name="autotune_error">Erreur dans les données d\'entrée, essayez de relancer le calcul ou réduire le nombre de jours</string>
-    <string name="autotune_error_more_days">Erreur dans les données de saisie, augmenter le nombre de jours</string>
-    <string name="autotune_warning_during_run">Le calcul Autotune a commencé, veuillez patienter</string>
-    <string name="autotune_warning_after_run">Vérifiez attentivement les résultats avant de les utiliser!</string>
-    <string name="autotune_partial_result">Résultat partiel jour %1$d / %2$d calculé</string>
-    <string name="autotune_result">Résultat: %1$s</string>
-    <string name="autotune_param">Param</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Manquant</string>
-    <string name="autotune_profile_name">Profil Autotune %1$s</string>
-    <string name="autotune_run">Lancer Autotune</string>
-    <string name="autotune_check_input_profile_button">Vérifier profil d\'entrée</string>
-    <string name="autotune_compare_profile">Comparer les profils</string>
-    <string name="autotune_copy_localprofile_button">Copier vers Profil Local</string>
-    <string name="autotune_update_input_profile_button">Mettre à jour profil d\'entrée</string>
-    <string name="autotune_revert_input_profile_button">Réinitialiser profil d\'entrée</string>
-    <string name="autotune_copy_local_profile_message">Créer un nouveau profil local à partir de ce profil Autotune ?</string>
-    <string name="autotune_update_local_profile_message">Mettre à jour le profil %1$s avec le profil Autotune ?</string>
-    <string name="autotune_revert_local_profile_message">Annuler la mise à jour du profil %1$s et remettre le profil d\'entrée ?</string>
-    <string name="autotune_profile_invalid">Profil invalide</string>
-    <string name="autotune_run_without_autoswitch">Autotune exécuté sans changement de profil</string>
-    <string name="autotune_run_with_autoswitch">Autotune exécuté et le profil automatiquement activé</string>
-    <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
-    <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Utiliser les notifications système pour les alertes et les notifications</string>
     <string name="urgent_alarm">Alarme d\'urgence</string>
@@ -525,13 +500,13 @@
     <string name="password_cleared">Mot de passe effacé !</string>
     <string name="pairing">Appairage</string>
     <string name="initializing">En cours d\'initialisation...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">limite de la pompe</string>
     <string name="limitingpercentrate">Limiter le pourcentage max à %1$d%% à cause de %2$s</string>
     <string name="itmustbepositivevalue">la valeur doit être positive</string>
     <string name="limitingbolus">Bolus limité à %1$.1f U à cause de %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
@@ -543,6 +518,19 @@
     <string name="close">Fermer</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Avertissement</string>
+    <string name="export_expired">Expiré</string>
+    <string name="export_disabled">Désactivé</string>
+    <string name="export_failed">Échec</string>
+    <string name="export_alert">ALERTE</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Paramètres exportés</string>
+    <string name="export_result_message_failed">Échec de l\'export des paramètres !</string>
+    <string name="export_result_message_about_to_expire">Paramètres exportés : le mot de passe va bientôt expirer. Exportez manuellement et (re)entrez le mot de passe.</string>
+    <string name="export_result_message_expired">Export des paramètres annulé : le mot de passe est expiré. Exporter manuellement et le (re)saisir !</string>
+    <string name="export_result_message_disabled">Avertissement (automatisation): L\'export des paramètres n\'est pas activée !</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
     <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>
@@ -604,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">Débit: %1$.2f%% (%2$.2f U/h) Durée: %3$d min</string>
+    <string name="rate_percent_duration">Débit: %1$.2f U/h (%2$.2f%%) Durée: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Débit</b>: %1$.2f%% (%2$.2f U/h)<br><b>Durée</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Débit</b>: %1$.2f U/h (%2$.2f%%) <br><b>Durée</b>: %3$d min<br>]]></string>
 </resources>

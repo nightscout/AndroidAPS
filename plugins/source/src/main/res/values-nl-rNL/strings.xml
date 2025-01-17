@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
-    <string name="eversense">Eversense App (aangepast)</string>
-    <string name="description_source_eversense">Ontvang BG waardes van de aangepaste Eversense app.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ontvang BG waardes van Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,16 +22,18 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Ontvang BG waarden van GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Willekeurige BG</string>
     <string name="description_source_random_bg">Willekeurige BG data genereren (alleen Demo modus)</string>
     <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Verstuur BG data naar xDrip+</string>
-    <string name="do_xdrip_upload_summary">In xDrip+ selecteer 640g/Eversense data bron</string>
     <string name="bgsource_upload">BG upload instellingen</string>
     <string name="dexcom_log_ns_sensor_change_title">Sensorwijziging in NS registreren</string>
     <string name="dexcom_log_ns_sensor_change_summary">Maak automatisch een gebeurtenis \"Sensor Change\" in NS wanneer de sensor start</string>
     <string name="direction">richting</string>
+    <string name="bg_generation_interval_minutes">Interval BG generatie minuten</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Ontvang glucose-gegevens van de Ottai App.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Ontvang glucose gegevens van de Syai Tag App.</string>
 </resources>

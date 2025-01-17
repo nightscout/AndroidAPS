@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Wyłącz tryb EasyUI w pompie</string>
     <string name="profile_set_failed">Ustawienie profilu bazy nie powiodło się</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
-    <string name="danar_iob_label">IOB w pompie</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Ustawienia pompy Dana</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,7 @@
     <string name="danar_bt_name_title">Urządzenie Bluetooth DanaR</string>
     <string name="danars_password_title">Hasło pompy (tylko v1)</string>
     <string name="danar_password_title">Hasło pompy</string>
-    <string name="danar_useextended_title">Używaj przedłużonych bolusów dla &gt;200%%</string>
+    <string name="danar_useextended_title">Używaj przedłużonych bolusów dla &gt;200%</string>
     <string name="bolusspeed">Szybkość podawania bolusa</string>
     <string name="selectedpump">Wybrana pompa</string>
     <string name="rs_loginsulinchange_title">Zapisz zmianę zbiorniczka</string>

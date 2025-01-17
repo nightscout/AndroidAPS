@@ -1,10 +1,6 @@
 <resources>
-    <string name="diaconn_g8_pump_settings" translatable="false" >diaconn_g8_pump_settings</string>
     <string name="key_diaconn_g8_address" translatable="false">diagonn_g8_address</string>
     <string name="key_diaconn_g8_name" translatable="false">Diaconn G8</string>
-    <string name="key_diaconn_g8_bt_name" translatable="false" >key_diaconn_g8_bt_name</string>
-    <string name="key_diaconn_g8_useextended" translatable="false">diaconn_g8_useextended</string>
-    <string name="key_diaconn_g8_visualizeextendedaspercentage"  translatable="false">diaconn_g8_visualizeextendedaspercentage</string>
 
     <string name="key_diaconn_g8_bolusspeed"  translatable="false">g8_bolusspeed</string>
     <string name="key_diaconn_g8_logbatterychange" translatable="false">diaconn_g8_logbatterychanges</string>
@@ -22,13 +18,8 @@
     <string name="diaconn_g8_history_basalhours" >Basal Hours</string>
     <string name="diaconn_g8_history_bolus" >Boluses</string>
     <string name="diaconn_g8_history_dailyinsulin" >Daily insulin</string>
-    <string name="diaconn_g8_history_errors">Errors</string>
-    <string name="diaconn_g8_history_prime">Prime</string>
     <string name="diaconn_g8_history_refill">Refill</string>
     <string name="diaconn_g8_history_suspend">Suspend</string>
-    <string name="diaconn_g8_pairingok" >Pairing Ok</string>
-    <string name="diaconn_g8_waitingforpairing" >Waiting for Pairing</string>
-    <string name="diaconn_firmware_version" >Version</string>
     <string name="invalidpairing" >Invalid pairing information. Requesting new pairing</string>
     <string name="gettingpumpsettings" >Getting pump settings</string>
     <string name="gettingpumptime" >Getting pump time</string>
@@ -51,47 +42,34 @@
     <string name="speederror" >Speed error</string>
     <string name="insulinlimitviolation" >Insulin limit violation</string>
     <string name="boluserrorcode" >Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
-    <string name="diaconn_g8_valuenotsetproperly" >Value not set properly</string>
-    <string name="diaconn_g8_bt_name_title" >Diaconn G8 Bluetooth device</string>
-
-    <string name="diaconn_g8_password_title" >Pump Password</string>
 
     <string name="bolusspeed">Bolus speed</string>
     <string name="selectedpump">Selected pump</string>
-    <string name="diaconn_g8_useextended_title">Use extended boluses for >200%%</string>
-    <string name="diaconn_g8_visualizeextendedaspercentage_title">Visualize extended bolus as %%</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth Status</string>
-    <string name="diagonn_g8_tdd_label">TDD</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
     <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">USER OPTIONS</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
     <string name="processinghistory">"Processing Event "</string>
-    <string name="apslastLogNum">aps_last_log_num</string>
-    <string name="apsWrappingCount">aps_wrapping_count</string>
     <string name="diaconn_g8_history_tempbasal">Temp Basal</string>
     <string name="diaconng8_pump_settings">Diaconn pump Settings</string>
     <string name="diaconn_g8_pumpalarm">Sound</string>
     <string name="diaconn_g8_pumpalarm_sound">sound</string>
     <string name="diaconn_g8_pumpalarm_vibrate">vibrate</string>
     <string name="diaconn_g8_pumpalarm_silent">silent</string>
-    <string name="diaconn_g8_pumpalarmlevel">Alarm intensity</string>
     <string name="diaconn_g8_pumpalarm_intensity_low">low</string>
     <string name="diaconn_g8_pumpalarm_intensity_middle">middle</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">high</string>
     <string name="diaconn_g8_screentimeout">LCD on time [second]</string>
-    <string name="diaconn_g8_saveuseroptions">SAVE OPTION TO PUMP</string>
     <string name="diaconn_g8_language">Language</string>
     <string name="diaconn_g8_bolus_speed">Bolus speed</string>
     <string name="diaconn_g8_pumplang_chiness">Chiness</string>
     <string name="diaconn_g8_pumplang_korean">Korean</string>
     <string name="diaconn_g8_pumplang_english">English</string>
-    <string name="diaconn_g8_screentimeout_10">"10 "</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
     <string name="diaconn_g8_pumpscreentimeout_20">20</string>
     <string name="diaconn_g8_pumpscreentimeout_30">30</string>
-    <string name="diaconn_g8_pumpalarm_low">low</string>
     <string name="injectionblocked">Injection Blocked</string>
     <string name="batterywarning">Battery Warning</string>
     <string name="insulinlackwarning">Insulin Lack Warning</string>
@@ -160,7 +138,6 @@
     <string name="diaconn_g8_errorcode_13">You cannot inject it because it exceeds the limit once.</string>
     <string name="diaconn_g8_errorcode_14">Injection cannot be injected because it exceeds the injection volume today.</string>
     <string name="diaconn_g8_errorcode_15">After basal setup is complete, basal injection can be performed.</string>
-    <string name="diaconn_g8_errotpreceivedyet">The command was not delivered. Please try again.</string>
     <string name="diaconn_g8_logtubechange_title">Log tube change</string>
     <string name="diaconn_g8_logtubechange_summary">Add \"Tube Change\" event to Note when detected in history</string>
     <string name="diaconn_g8_logtempstart">TempBasal Start</string>

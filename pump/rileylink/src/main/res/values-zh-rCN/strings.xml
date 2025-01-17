@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">扫描</string>
@@ -62,8 +63,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">美敦力泵</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">是</string>
-    <string name="riley_link_common_no">否</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">通过OrangeLink/EmaLink/DiaLink报告电池电量</string>
     <string name="riley_link_show_battery_level_summary">不适用于原始RileyLink。可能无法与其他RileyLink 替代品一起使用。</string>

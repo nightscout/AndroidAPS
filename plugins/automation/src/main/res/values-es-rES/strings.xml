@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Introduzca un nombre de tarea.</string>
     <string name="automation_missing_trigger">Por favor, especifique al menos un iniciador.</string>
     <string name="automation_missing_action">Por favor, especifique al menos una acción.</string>
+    <string name="exportsettings_message">Exportación de configuraciones: %1$s</string>
+    <string name="export_settings_short">Texto en tratamientos:</string>
     <string name="alarm_message">Alarma: %1$s</string>
     <string name="alarm_short">Alarma:</string>
     <string name="message_short">Msj:</string>
@@ -13,7 +15,7 @@
     <string name="alreadydisabled">Ya está deshabilitado</string>
     <string name="alreadysuspended">Ya está suspendido</string>
     <string name="notsuspended">No suspendido</string>
-    <string name="suspendloopforXmin">Suspender lazo durante %1$d min</string>
+    <string name="suspendloopforXmin">Suspender bucle durante %1$d min</string>
     <string name="notification_message">Notificación: %1$s</string>
     <string name="profilename">Cambiar perfil a</string>
     <string name="changengetoprofilename">Cambiar perfil a %1$s</string>
@@ -87,6 +89,20 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritmo cardíaco</string>
     <string name="triggerHeartRateDesc">RC %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Edad del sensor</string>
+    <string name="triggerSensorAgeDesc">Edad del sensor %1$s %2$.1f hora</string>
+    <string name="triggerCannulaAgeLabel">Edad de la cánula</string>
+    <string name="triggerCannulaAgeDesc">Edad de la cánula %1$s %2$.1f hora</string>
+    <string name="triggerPodChangeLabel">Activación del POD</string>
+    <string name="triggerPodChangeDesc">POD activado</string>
+    <string name="triggerInsulinAgeLabel">Edad de la insulina</string>
+    <string name="triggerInsulinAgeDesc">Edad de la insulina %1$s %2$.1f hour</string>
+    <string name="triggerPumpBatteryAgeLabel">Edad de la batería de la bomba</string>
+    <string name="triggerPumpBatteryAgeDesc">Edad de la batería de bomba %1$s %2$.1f hora</string>
+    <string name="triggerReservoirLevelLabel">Nivel de reservorio</string>
+    <string name="triggerReservoirLevelDesc">Nivel del reservorio %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Nivel de batería de la bomba</string>
+    <string name="triggerPumpBatteryLevelDesc">Nivel de batería de la bomba %1$s %2$.0f</string>
     <string name="iob_u">IOB (Insulina a Bordo) [U]:</string>
     <string name="distance_short">Dist. [m]:</string>
     <string name="recurringTime">Hora de Repetición</string>
@@ -104,8 +120,6 @@
     <string name="automation_event">Automatización de eventos</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Acción del usuario</string>
-    <string name="remove_automation">Eliminar automatización</string>
-    <string name="sort_automation">Ordenar automatizaciones</string>
     <string name="remove_selected_items">Eliminar elementos seleccionados</string>
     <string name="count_selected">%1$d seleccionados</string>
     <string name="system_automation">Automatización del sistema</string>
@@ -116,4 +130,15 @@
     <string name="time_to_eat">¡Hora de comer!\nEjecuta el asistente de bolo y calcula de nuevo.</string>
     <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="error_setting_reminder">Error al configurar la alarma en el futuro</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Perfil de Autotune %1$s</string>
+    <string name="autotune_run">Ejecutar Autotune</string>
+    <string name="autotune_run_without_autoswitch">Ejecutar Autotune sin cambio de perfil</string>
+    <string name="autotune_run_with_autoswitch">Ejecutar Autotune y cambiar de perfil automáticamente</string>
+    <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
+    <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Número de pasos</string>
+    <string name="triggerStepsCountDesc">Número de pasos por %1$s minutos %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Duración de la medición</string>
 </resources>

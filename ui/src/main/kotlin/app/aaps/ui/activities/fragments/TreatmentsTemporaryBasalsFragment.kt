@@ -14,11 +14,15 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -27,24 +31,14 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.iobCalc
-import app.aaps.core.main.extensions.toStringFull
-import app.aaps.core.main.extensions.toTemporaryBasal
-import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.objects.extensions.toTemporaryBasal
+import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.entities.interfaces.end
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
-import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
 import app.aaps.ui.databinding.TreatmentsTempbasalsFragmentBinding
@@ -68,8 +62,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: TreatmentsTempbasalsFragmentBinding? = null
@@ -77,7 +70,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
     private var menu: Menu? = null
-    private lateinit var actionHelper: ActionModeHelper<TemporaryBasal>
+    private lateinit var actionHelper: ActionModeHelper<TB>
     private val millsToThePast = T.days(30).msecs()
     private var showInvalidated = false
 
@@ -97,18 +90,18 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun tempBasalsWithInvalid(now: Long) = repository
-        .getTemporaryBasalsDataIncludingInvalidFromTime(now - millsToThePast, false)
+    private fun tempBasalsWithInvalid(now: Long) = persistenceLayer
+        .getTemporaryBasalsStartingFromTimeIncludingInvalid(now - millsToThePast, false)
 
-    private fun tempBasals(now: Long) = repository
-        .getTemporaryBasalsDataFromTime(now - millsToThePast, false)
+    private fun tempBasals(now: Long) = persistenceLayer
+        .getTemporaryBasalsStartingFromTime(now - millsToThePast, false)
 
-    private fun extendedBolusesWithInvalid(now: Long) = repository
-        .getExtendedBolusDataIncludingInvalidFromTime(now - millsToThePast, false)
+    private fun extendedBolusesWithInvalid(now: Long) = persistenceLayer
+        .getExtendedBolusStartingFromTimeIncludingInvalid(now - millsToThePast, false)
         .map { eb -> eb.map { profileFunction.getProfile(it.timestamp)?.let { profile -> it.toTemporaryBasal(profile) } } }
 
-    private fun extendedBoluses(now: Long) = repository
-        .getExtendedBolusDataFromTime(now - millsToThePast, false)
+    private fun extendedBoluses(now: Long) = persistenceLayer
+        .getExtendedBolusesStartingFromTime(now - millsToThePast, false)
         .map { eb -> eb.map { profileFunction.getProfile(it.timestamp)?.let { profile -> it.toTemporaryBasal(profile) } } }
 
     private fun swapAdapter() {
@@ -167,16 +160,16 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var tempBasalList: List<TemporaryBasal>) : RecyclerView.Adapter<TempBasalsViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var tempBasalList: List<TB>) : RecyclerView.Adapter<TempBasalsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempBasalsViewHolder =
             TempBasalsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_tempbasals_item, viewGroup, false))
 
         override fun onBindViewHolder(holder: TempBasalsViewHolder, position: Int) {
             val tempBasal = tempBasalList[position]
-            holder.binding.ns.visibility = (tempBasal.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.ns.visibility = (tempBasal.ids.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempBasal.isValid.not().toVisibility()
-            holder.binding.ph.visibility = (tempBasal.interfaceIDs.pumpId != null).toVisibility()
+            holder.binding.ph.visibility = (tempBasal.ids.pumpId != null).toVisibility()
             val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
             val newDay = position == 0 || !dateUtil.isSameDayGroup(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
@@ -197,10 +190,10 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
             holder.binding.iob.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, iob.basaliob)
-            holder.binding.extendedFlag.visibility = (tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED).toVisibility()
-            holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
-            holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
-            holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
+            holder.binding.extendedFlag.visibility = (tempBasal.type == TB.Type.FAKE_EXTENDED).toVisibility()
+            holder.binding.suspendFlag.visibility = (tempBasal.type == TB.Type.PUMP_SUSPEND).toVisibility()
+            holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TB.Type.EMULATED_PUMP_SUSPEND).toVisibility()
+            holder.binding.superBolusFlag.visibility = (tempBasal.type == TB.Type.SUPERBOLUS).toVisibility()
             if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(
                 rh.gac(
                     context,
@@ -243,7 +236,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
 
     override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.nav_remove_items -> actionHelper.startRemove()
+            R.id.nav_remove_items     -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
@@ -261,20 +254,20 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            else -> false
+            else                      -> false
         }
 
-    private fun getConfirmationText(selectedItems: SparseArray<TemporaryBasal>): String {
+    private fun getConfirmationText(selectedItems: SparseArray<TB>): String {
         if (selectedItems.size() == 1) {
             val tempBasal = selectedItems.valueAt(0)
-            val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
+            val isFakeExtended = tempBasal.type == TB.Type.FAKE_EXTENDED
             val profile = profileFunction.getProfile(dateUtil.now())
             if (profile != null)
                 return "${if (isFakeExtended) rh.gs(app.aaps.core.ui.R.string.extended_bolus) else rh.gs(app.aaps.core.ui.R.string.tempbasal_label)}: ${
                     tempBasal.toStringFull(
                         profile,
                         dateUtil,
-                        decimalFormatter
+                        rh
                     )
                 }\n" +
                     "${rh.gs(app.aaps.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
@@ -282,40 +275,41 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
         return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected(selectedItems: SparseArray<TemporaryBasal>) {
+    private fun removeSelected(selectedItems: SparseArray<TB>) {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                     selectedItems.forEach { _, tempBasal ->
-                        var extendedBolus: ExtendedBolus? = null
-                        val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
+                        var extendedBolus: EB? = null
+                        val isFakeExtended = tempBasal.type == TB.Type.FAKE_EXTENDED
                         if (isFakeExtended) {
-                            val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
-                            extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
+                            extendedBolus = persistenceLayer.getExtendedBolusActiveAt(tempBasal.timestamp)
                         }
                         if (isFakeExtended && extendedBolus != null) {
-                            uel.log(
-                                Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                                ValueWithUnit.Insulin(extendedBolus.amount),
-                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                            disposable += persistenceLayer.invalidateExtendedBolus(
+                                id = extendedBolus.id,
+                                action = Action.EXTENDED_BOLUS_REMOVED,
+                                source = Sources.Treatments,
+                                listValues = listOf(
+                                    ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                                    ValueWithUnit.Insulin(extendedBolus.amount),
+                                    ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                                )
                             )
-                            disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
-                                .subscribe(
-                                    { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
+                                .subscribe()
                         } else if (!isFakeExtended) {
-                            uel.log(
-                                Action.TEMP_BASAL_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(tempBasal.timestamp),
-                                if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
-                                ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                            disposable += persistenceLayer.invalidateTemporaryBasal(
+                                id = tempBasal.id,
+                                action = Action.TEMP_BASAL_REMOVED,
+                                source = Sources.Treatments,
+                                listValues = listOf(
+                                    ValueWithUnit.Timestamp(tempBasal.timestamp),
+                                    if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
+                                    ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                                )
                             )
-                            disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
-                                .subscribe(
-                                    { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
+                                .subscribe()
                         }
                     }
                     actionHelper.finish()

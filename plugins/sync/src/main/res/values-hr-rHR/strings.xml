@@ -5,7 +5,6 @@
     <string name="ns_wifi">Koristite WiFi vezu</string>
     <string name="ns_charging">Tijekom punjenja</string>
     <string name="ns_battery">Na bateriji</string>
-    <string name="description_ns_client">Sinkroniziraj svoje podatke sa Nightscout</string>
     <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
     <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
     <!-- NSClient -->
@@ -48,15 +47,8 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Učitava podatke u Tidepool</string>
-    <string name="tidepool_upload_cgm">Učitajte CGM podatke</string>
-    <string name="tidepool_upload_bolus">Prijenos tretmana (inzulin, ugljikohidrati)</string>
-    <string name="tidepool_upload_tbr">Učitajte privremene bazale</string>
-    <string name="tidepool_upload_profile">Učitajte prekidače profila, privremene ciljeve</string>
-    <string name="tidepool_upload_bg">Učitajte testove glukoze u krvi</string>
     <string name="remove_all">Ukloniti sve</string>
-    <string name="reset_start">Poništi početak</string>
     <string name="upload_now">Pošalji sada</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>

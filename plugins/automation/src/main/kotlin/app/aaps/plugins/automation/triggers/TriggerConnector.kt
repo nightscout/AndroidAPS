@@ -44,7 +44,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
 
             fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
-                for (t in values()) {
+                for (t in Type.entries) {
                     list.add(rh.gs(t.stringRes))
                 }
                 return list
@@ -61,13 +61,6 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     fun size(): Int = list.size
-
-    fun pos(trigger: Trigger): Int {
-        for (i in list.indices) {
-            if (list[i] === trigger) return i
-        }
-        return -1
-    }
 
     @Synchronized override fun shouldRun(): Boolean {
         var result = true
@@ -174,7 +167,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
                         dialog.setCallback(object : ChooseOperationDialog.Callback() {
                             override fun run() {
                                 result?.let { result ->
-                                    setType(Type.values()[result])
+                                    setType(Type.entries[result])
                                     text = rh.gs(connectorType.stringRes)
                                 }
                             }

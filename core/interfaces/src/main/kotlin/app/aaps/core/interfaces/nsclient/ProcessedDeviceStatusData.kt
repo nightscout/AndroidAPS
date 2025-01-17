@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.nsclient
 
 import android.text.Spanned
 import app.aaps.core.interfaces.aps.APSResult
-import org.json.JSONObject
+import app.aaps.core.interfaces.aps.RT
 
 interface ProcessedDeviceStatusData {
 
@@ -48,8 +48,8 @@ interface ProcessedDeviceStatusData {
 
         var clockSuggested = 0L
         var clockEnacted = 0L
-        var suggested: JSONObject? = null
-        var enacted: JSONObject? = null
+        var suggested: RT? = null
+        var enacted: RT? = null
     }
 
     var openAPSData: OpenAPSData
@@ -60,7 +60,7 @@ interface ProcessedDeviceStatusData {
     val extendedOpenApsStatus: Spanned
     val openApsStatus: Spanned
     val openApsTimestamp: Long
-    fun getAPSResult(): APSResult
+    fun getAPSResult(): APSResult?
     val uploaderStatus: String
     val uploaderStatusSpanned: Spanned
     val extendedUploaderStatus: Spanned

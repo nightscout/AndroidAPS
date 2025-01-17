@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Preferências</string>
-    <string name="nav_refreshtreatments">Atualizar tratamentos de NS</string>
     <string name="nav_exit">Sair</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Perfil</string>
     <string name="save">Salvar</string>
-    <string name="reloadprofile">Recarregar perfil</string>
-    <string name="correctionbous">Correção</string>
-    <string name="ns_upload_only">(PERIGOSO DESATIVAR) somente upload para NS</string>
-    <string name="ns_upload_only_summary">Somente upload para NS (sincronização desativada). Não é eficaz em SGV ao menos que você selecione uma fonte local como xDrip+. Não é eficaz em perfis enquanto NS-Profiles é usado.\n!!! AVISO!!! Desativar esta opção pode causar disfunções e overdose de insulina se qualquer um dos componentes (AAPS, NS, xDrip+) estiver configurado incorretamente. Observe cuidadosamente se os dados exibidos pelo AAPS correspondem ao estado da bomba!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Sobre</string>
-    <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="ns_alarm_options">Opções Alarme</string>
-    <string name="ns_alarms">Criar notificações dos alarmes do NightScout</string>
-    <string name="ns_announcements">Notificar alerta do servidor NS</string>
-    <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
-    <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
-    <string name="valuesnotstored">Valores não guardados!</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="gradually_increase_notification_volume">Aumentar o volume de alerta e notificações gradualmente</string>
     <string name="localalertsettings_title">Alertas local</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">Fechar a navegação</string>
     <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar itens</string>
-    <string name="error_adding_treatment_title">Dados de tratamento incompletos</string>
-    <string name="error_adding_treatment_message">Um tratamento (insulina: %1$.2f, hidratos: %2$d, às: %3$s) não ficou gravado. Por favor verifique se foi realmente efectuado e se sim adicione manualmente aos tratamentos.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), atraso: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Unidades</string>
-    <string name="show_removed">Mostrar removido(a)s</string>
-    <string name="clearqueueconfirm">Limpar fila? Todos os dados na fila serão perdidos!</string>
-    <string name="chartmenu">Menu do Gráfico</string>
     <string name="authorizationfailed">Falha na autorização</string>
-    <string name="copytolocalprofile_invalid">Não foi possível criar o perfil. Perfil inválido.</string>
-    <string name="clear_filter">Limpar filtro</string>
     <string name="cannula">Cânula</string>
-    <string name="email_address">Endereço de e-mail</string>
-    <string name="remove_bg_readings">Remover leituras de Glicemia</string>
     <string name="identification_not_set">Identificação não definida no modo de desenvolvimento</string>
-    <string name="a11y_dialog">caixa de diálogo</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Comando de ação desconhecida:</string>
     <string name="remove_selected_items">Remover itens selecionados</string>
     <string name="count_selected">%1$d selecionado(s)</string>
     <string name="sort_label">Ordenar</string>

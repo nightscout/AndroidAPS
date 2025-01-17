@@ -22,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="0dp"
-        android:paddingEnd="5dp">
+        android:paddingStart="@dimen/gray_material_button_margin_horizontal"
+        android:paddingEnd="@dimen/gray_material_button_margin_horizontal">
 
     </LinearLayout>
 
@@ -31,15 +31,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="0dp"
-        android:paddingEnd="5dp">
+        android:paddingStart="@dimen/gray_material_button_margin_horizontal"
+        android:paddingEnd="@dimen/gray_material_button_margin_horizontal">
 
         <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/treatment_button"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/icon_insulin_carbs"
             android:ellipsize="end"
@@ -54,7 +54,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_bolus"
             android:ellipsize="end"
@@ -68,7 +68,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_cp_bolus_carbs"
             android:ellipsize="end"
@@ -82,7 +82,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calculator"
             android:ellipsize="end"
@@ -96,7 +96,8 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginStart="@dimen/gray_material_button_margin_horizontal"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calibration"
             android:ellipsize="end"
@@ -111,7 +112,8 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginStart="@dimen/gray_material_button_margin_horizontal"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_xdrip"
             android:ellipsize="end"
@@ -126,7 +128,8 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginStart="@dimen/gray_material_button_margin_horizontal"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_quick_wizard"
             android:hint="@string/quickwizard"

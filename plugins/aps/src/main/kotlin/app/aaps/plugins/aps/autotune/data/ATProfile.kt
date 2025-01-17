@@ -1,7 +1,9 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -16,13 +18,14 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.blockValueBySeconds
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.blockValueBySeconds
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.entities.data.Block
+import app.aaps.plugins.aps.R
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONException
@@ -36,6 +39,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
@@ -92,8 +96,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     }
 
     fun updateProfile() {
-        data()?.let { profile = ProfileSealed.Pure(it) }
-        data(true)?.let { circadianProfile = ProfileSealed.Pure(it) }
+        data()?.let { profile = ProfileSealed.Pure(value = it, activePlugin = null) }
+        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin = null) }
     }
 
     //Export json string with oref0 format used for autotune
@@ -114,7 +118,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", 45)
             } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peakTime: Int = sp.getInt(rh.gs(app.aaps.core.utils.R.string.key_insulin_oref_peak), 75)
+                val peakTime: Int = preferences.get(IntKey.InsulinOrefPeak)
                 json.put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", peakTime)
@@ -142,8 +146,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                 )
             )
             json.put("carb_ratio", avgIC)
-            json.put("autosens_max", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
-            json.put("autosens_min", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_min, "0.7")))
+            json.put("autosens_max", preferences.get(DoubleKey.AutosensMax))
+            json.put("autosens_min", preferences.get(DoubleKey.AutosensMin))
             json.put("units", GlucoseUnit.MGDL.asText)
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")
@@ -178,7 +182,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         val store = JSONObject()
         val tunedProfile = if (circadian) circadianProfile else profile
         if (profileName.isEmpty())
-            profileName = rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name)
+            profileName = rh.gs(R.string.autotune_tunedprofile_name)
         try {
             store.put(profileName, tunedProfile.toPureNsJson(dateUtil))
             json.put("defaultProfile", profileName)

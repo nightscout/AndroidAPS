@@ -12,7 +12,7 @@
             android:enabled="true"
             android:key="@string/key_rileylink_mac_address"
             android:title="@string/rileylink_configuration">
-            <intent android:action="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity" />
+            <intent android:action="app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
 
         <SwitchPreference
@@ -76,8 +76,8 @@
             android:dependency="@string/key_omnipod_common_expiration_reminder_enabled"
             android:digits="0123456789"
             android:inputType="number"
-            android:key="@string/key_omnipod_common_expiration_reminder_hours_before_expiry"
-            android:title="@string/omnipod_common_preferences_expiration_reminder_hours_before_expiry"
+            android:key="@string/key_omnipod_common_expiration_alarm_hours_before_shutdown"
+            android:title="@string/omnipod_common_preferences_expiration_alarm_hours_before_shutdown"
             validate:maxNumber="24"
             validate:minNumber="2"
             validate:testType="numericRange" />

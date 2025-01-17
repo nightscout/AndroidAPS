@@ -19,6 +19,7 @@
     <string name="permission">Autorizzazione</string>
     <string name="need_system_window_permission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
     <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
+    <string name="need_background_location_permission">L\'applicazione necessita dei permessi di localizzazione in background per le automazioni</string>
     <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
     <string name="askforpermission">Chiedi l\'autorizzazione</string>
     <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
@@ -30,15 +31,12 @@
     <string name="status">Stato:</string>
     <string name="patient_name">Nome paziente</string>
     <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
-    <string name="privacy_settings">Impostazioni privacy</string>
-    <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5-6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="profile">Profilo</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AAPS di proporre/fare modifiche alla basale</string>
     <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato configurato.\n</string>
@@ -47,8 +45,8 @@
     <string name="readstatus">Lettura stato</string>
     <string name="data_choices">Scelta dei dati</string>
     <string name="fabric_upload">Invio a fabric.io</string>
-    <string name="allow_automated_crash_reporting">Consenti la segnalazione automatica degli errori e l\'invio dei dati d\'uso delle funzioni dell\'app agli sviluppatori tramite il servizio fabric.io.</string>
-    <string name="summary_email_for_crash_report">Questa identificazione verrà allegata ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È facoltativo.</string>
+    <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
+    <string name="unattended_settings_export_summary">Abilitando questa opzione memorizzerai in modo sicuro la tua password sul tuo telefono</string>
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
     <string name="request">Richiesta</string>
     <string name="apsmode_title">Modalità APS</string>
@@ -82,6 +80,8 @@
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="a11y_open_settings">apri impostazioni</string>
     <string name="nsclient_version_does_not_match">La versione di AAPSClient non corrisponde alla versione di AAPS. Aggiorna.</string>
+    <string name="expand_category">Espandi categoria</string>
+    <string name="collapse_category">Comprimi categoria</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferenze</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
@@ -93,10 +93,11 @@
     <string name="check_preferences_import_btn">Importa</string>
     <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
     <string name="import_setting">Importa impostazioni</string>
+    <string name="aaps_directory">Directory AAPS</string>
+    <string name="select_aaps_directory">Selezionare la directory AAPS per memorizzare esportazioni, configurazioni ecc.</string>
     <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
-    <string name="nav_export">Esporta impostazioni</string>
     <string name="export_to">Esportare impostazioni su</string>
     <string name="import_from">Importare impostazioni da</string>
     <string name="setting_imported">Impostazioni importate</string>
@@ -104,18 +105,20 @@
     <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
     <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
     <string name="exported">Preferenze esportate</string>
+    <string name="exported_failed">Esportazione delle preferenze fallita!</string>
     <string name="filenotfound">File non trovato</string>
     <string name="goto_main_try_again">Torna alla schermata principale e riprova.</string>
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
     <string name="ue_exported">Voci utente esportate</string>
     <string name="protection">Protezione</string>
-    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
     <string name="description_maintenance">Fornisce numerose funzioni per la manutenzione (es. invio log, eliminazione log).</string>
     <string name="database_cleanup">Pulizia database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
+    <string name="reset_aps_results_confirm">Sei sicuro di voler resettare i risultati di APS?</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
     <string name="maintenance_email">Destinatario email</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
@@ -132,11 +135,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
     <string name="exported_at" comment="at placeholder we add export date">esportato: %1$s</string>
     <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
-    <string name="in_directory" comment="placeholder is for exported file path">nella directory: %1$s</string>
     <string name="preferences_import_list_title">Seleziona il file da importare</string>
     <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
     <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
-    <string name="metadata_warning_outdated_format">Stai usando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Usalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
     <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
     <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
     <string name="metadata_warning_different_version">Le preferenze arrivano da una differente versione secondaria dell\'applicazione (minor). Va bene se le stai importando dopo l\'aggiornamento, ma controlla che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
@@ -154,8 +155,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Seleziona watchface personalizzata</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato file</string>
     <string name="metadata_label_created_at">Creato:</string>
@@ -165,6 +164,7 @@
     <string name="metadata_label_device_model">Esportazione modello dispositivo</string>
     <string name="metadata_label_encryption">Crittografia file</string>
     <string name="metadata_format_new">Nuovo formato crittografato</string>
-    <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
+    <string name="reset_aps_results">Resetta i risultati di APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Errore nell\'accedere al filesystem. Selezionare correttamente la directory AAPS.</string>
 </resources>

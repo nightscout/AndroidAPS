@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Voer een taaknaam in.</string>
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
+    <string name="exportsettings_message">Instellingen Exporteren: %1$s</string>
+    <string name="export_settings_short">Tekst in behandelingen:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Boodsch:</string>
@@ -87,6 +89,20 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Hartslag</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensor leeftijd</string>
+    <string name="triggerSensorAgeDesc">Sensor leeftijd %1$s %2$.1f uur</string>
+    <string name="triggerCannulaAgeLabel">Canule leeftijd</string>
+    <string name="triggerCannulaAgeDesc">Canule leeftijd %1$s %2$.1f uur</string>
+    <string name="triggerPodChangeLabel">Pod activering</string>
+    <string name="triggerPodChangeDesc">Pod geactiveerd</string>
+    <string name="triggerInsulinAgeLabel">Insuline leeftijd</string>
+    <string name="triggerInsulinAgeDesc">Insuline leeftijd %1$s %2$.1f uur</string>
+    <string name="triggerPumpBatteryAgeLabel">Pomp batterij leeftijd</string>
+    <string name="triggerPumpBatteryAgeDesc">Pomp batterij leeftijd %1$s %2$.1f uur</string>
+    <string name="triggerReservoirLevelLabel">Reservoir niveau</string>
+    <string name="triggerReservoirLevelDesc">Reservoir niveau %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pomp batterij niveau</string>
+    <string name="triggerPumpBatteryLevelDesc">Pomp batterij niveau %1$s %2$.0f</string>
     <string name="iob_u">IOB [E]:</string>
     <string name="distance_short">Afst [m]:</string>
     <string name="recurringTime">Herhaal tijd</string>
@@ -104,8 +120,6 @@
     <string name="automation_event">Automation gebeurtenis</string>
     <string name="reorder_label">Sorteren</string>
     <string name="user_action">Gebruikersactie</string>
-    <string name="remove_automation">Verwijder automatisering</string>
-    <string name="sort_automation">Sorteer automatisering</string>
     <string name="remove_selected_items">Geselecteerde items verwijderen</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="system_automation">Systeem automatisering</string>
@@ -116,4 +130,15 @@
     <string name="time_to_eat">Tijd om te eten!\nStart de Bolus wizard en doe de berekening opnieuw.</string>
     <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="error_setting_reminder">Fout bij het instellen van een toekomstig alarm</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune profiel %1$s</string>
+    <string name="autotune_run">Autotune uitvoeren</string>
+    <string name="autotune_run_without_autoswitch">Autotune uitgevoerd zonder profiel wissel</string>
+    <string name="autotune_run_with_autoswitch">Autotune uitgevoerd en profiel automatisch gewisseld</string>
+    <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
+    <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Aantal stappen</string>
+    <string name="triggerStepsCountDesc">Aantal stappen per %1$s minuten %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Metingsduur</string>
 </resources>

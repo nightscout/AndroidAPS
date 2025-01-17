@@ -7,40 +7,41 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants.INSULIN_PLUS1_DEFAULT
-import app.aaps.core.interfaces.configuration.Constants.INSULIN_PLUS2_DEFAULT
-import app.aaps.core.interfaces.configuration.Constants.INSULIN_PLUS3_DEFAULT
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.extensions.formatColor
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogInsulinBinding
 import app.aaps.ui.extensions.toSignedString
@@ -59,13 +60,11 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var ctx: Context
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
     @Inject lateinit var automation: Automation
     @Inject lateinit var uel: UserEntryLogger
@@ -74,6 +73,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var loop: Loop
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -123,11 +123,20 @@ class InsulinDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (config.NSCLIENT) {
+        val pump = activePlugin.activePump
+        if (config.AAPSCLIENT) {
             binding.recordOnly.isChecked = true
             binding.recordOnly.isEnabled = false
         }
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
+
+        if (loop.isDisconnected || pump.isSuspended() || !pump.isInitialized()) {
+            binding.recordOnly.isChecked = true
+            binding.recordOnly.isEnabled = false
+            binding.recordOnly.setTextColor(rh.gac(app.aaps.core.ui.R.attr.warningColor))
+            binding.header.setBackgroundColor(rh.gac(app.aaps.core.ui.R.attr.ribbonWarningColor))
+            binding.headerText.setTextColor(rh.gac(app.aaps.core.ui.R.attr.ribbonTextWarningColor))
+        }
 
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
@@ -135,45 +144,38 @@ class InsulinDialog : DialogFragmentWithDate() {
         )
         binding.amount.setParams(
             savedInstanceState?.getDouble("amount")
-                ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), false, binding
-                .okcancel.ok, textWatcher
+                ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep),
+            false, binding.okcancel.ok, textWatcher
         )
 
-        val plus05Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus05Text = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
-            binding.amount.value = max(
-                0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
-            )
+            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKey.OverviewInsulinButtonIncrement1))
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus10Text = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
-            binding.amount.value = max(
-                0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
-            )
+            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKey.OverviewInsulinButtonIncrement2))
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus20Text = preferences.get(DoubleKey.OverviewInsulinButtonIncrement3).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
-            binding.amount.value = max(
-                0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
-            )
+            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKey.OverviewInsulinButtonIncrement3))
             validateInputs()
             binding.amount.announceValue()
         }
 
-        binding.timeLayout.visibility = View.GONE
+        if (!binding.recordOnly.isChecked) {
+            binding.timeLayout.visibility = View.GONE
+        }
         binding.recordOnly.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.timeLayout.visibility = isChecked.toVisibility()
         }
@@ -210,8 +212,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
         }
-        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
-        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+        val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+        val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
         if (eatingSoonChecked)
             actions.add(
                 rh.gs(R.string.temp_target_short) + ": " + (decimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(
@@ -234,47 +236,42 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(
-                            UserEntry.Action.TT, UserEntry.Sources.InsulinDialog,
-                            notes,
-                            ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
-                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
-                            ValueWithUnit.Minute(eatingSoonTTDuration)
-                        )
-                        disposable += repository.runTransactionForResult(
-                            InsertAndCancelCurrentTemporaryTargetTransaction(
+                        disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                            TT(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                reason = TemporaryTarget.Reason.EATING_SOON,
+                                reason = TT.Reason.EATING_SOON,
                                 lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits()),
                                 highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits())
+                            ),
+                            action = Action.TT, source = Sources.InsulinDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                                ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                                ValueWithUnit.Minute(eatingSoonTTDuration)
                             )
-                        ).subscribe({ result ->
-                                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                    }, {
-                                        aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                    })
+                        ).subscribe()
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                        detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
                         detailedBolusInfo.insulin = insulinAfterConstraints
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
-                            uel.log(UserEntry.Action.BOLUS, UserEntry.Sources.InsulinDialog,
-                                    rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
-                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.record)),
-                                    ValueWithUnit.Insulin(insulinAfterConstraints),
-                                    ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
-                            persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
+                            disposable += persistenceLayer.insertOrUpdateBolus(
+                                bolus = detailedBolusInfo.createBolus(),
+                                action = Action.BOLUS,
+                                source = Sources.InsulinDialog,
+                                note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
+                            ).subscribe()
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
                         } else {
                             uel.log(
-                                UserEntry.Action.BOLUS, UserEntry.Sources.InsulinDialog,
+                                Action.BOLUS, Sources.InsulinDialog,
                                 notes,
                                 ValueWithUnit.Insulin(insulinAfterConstraints)
                             )

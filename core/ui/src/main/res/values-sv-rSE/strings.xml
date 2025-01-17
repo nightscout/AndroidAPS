@@ -112,7 +112,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Larma om %1$d min</string>
-    <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
     <string name="bolus_reminder">Boluspåminnelse</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
@@ -400,53 +399,8 @@
     <string name="a11y_user">ditt namn</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Hjälp för potentiella justeringar av profil (ISF, KH-kvoter och basaldoser)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Autotune-inställningar</string>
-    <string name="autotune_auto_title">Automatiskt profilbyte</string>
-    <string name="autotune_auto_summary">Om aktiverad kommer Autotune automatiskt uppdatera profilen efter beräkning.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Kategorisera UAM som basal</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Aktivera endast om du på ett tillförlitligt sätt har matat in alla kolhydrater. Med detta alternativ aktiverat kommer Autotune se plötsliga höjningar och rekommendera ändringar av basal-nivån.</string>
-    <string name="autotune_tune_insulin_curve_title">Justera insulinkurvan</string>
-    <string name="autotune_tune_insulin_curve_summary">Aktivera endast om du använder Free-Peak Oref. Detta alternativ kommer att justera topp och längd för DIA</string>
-    <string name="autotune_default_tune_days_title">Antal dagar med data</string>
-    <string name="autotune_circadian_ic_isf_title">Tillämpa genomsnitt för ISF och KH-kvot</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune kommer inte att justera variationer över dygnet för ISF eller KH-kvoter. Det här alternativet tillämpar bara genomsnittlig inställning över hela dygnet</string>
-    <string name="autotune_additional_log_title">Inkludera mer logginformation för felsökning</string>
-    <string name="autotune_additional_log_summary">Slå på endast om utvecklare bett dig att skicka mer logginformation för att underlätta felsökning av Autotune-plugin</string>
-    <string name="autotune_default_tune_days_summary">Antal dagar data att inkludera för Autotune (upp till 30)</string>
-    <string name="autotune_tunedprofile_name">Justerad</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Justering dagar :</string>
-    <string name="autotune_last_run">Kördes senast:</string>
-    <string name="autotune_warning">Varning :</string>
     <string name="autotune_select_profile">Välj profil att justera</string>
-    <string name="autotune_ic_warning">Vald profil har %1$d IC-värden. Autotune kommer att använda %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Vald profil har %1$d ISF-värden. Autotune kommer att använda %2$.1f %3$s/U</string>
-    <string name="autotune_error">Fel i angivet data, försök köra autotune igen eller minska antalet dagar</string>
-    <string name="autotune_error_more_days">Fel i angivet data, öka antalet dagar</string>
-    <string name="autotune_warning_during_run">Autotune-beräkning startad, det kan ta en stund</string>
-    <string name="autotune_warning_after_run">Kontrollera resultatet noggrant innan du använder det!</string>
-    <string name="autotune_partial_result">Delresultat för dag %1$d / %2$d justerat</string>
-    <string name="autotune_result">Resultat: %1$s</string>
-    <string name="autotune_param">Parameter</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Saknas:</string>
-    <string name="autotune_profile_name">Autotune-profil %1$s</string>
-    <string name="autotune_run">Kör Autotune</string>
-    <string name="autotune_check_input_profile_button">Kontrollera profilen</string>
-    <string name="autotune_compare_profile">Jämför profiler</string>
-    <string name="autotune_copy_localprofile_button">Kopiera till lokal profil</string>
-    <string name="autotune_update_input_profile_button">Uppdatera angiven profil</string>
-    <string name="autotune_revert_input_profile_button">Återställ angiven profil</string>
-    <string name="autotune_copy_local_profile_message">Skapa en ny lokal profil av denna Autotune-profil?</string>
-    <string name="autotune_update_local_profile_message">Uppdatera %1$s med Autotune-profil?</string>
-    <string name="autotune_revert_local_profile_message">Återställ %1$s med angiven profil?</string>
-    <string name="autotune_profile_invalid">Felaktig profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune kördes utan byte av profil</string>
-    <string name="autotune_run_with_autoswitch">Autotune körde och profilen byttes automatiskt</string>
-    <string name="autotune_run_with_error">Fel under senaste körning av Autotune</string>
-    <string name="autotune_run_cancelled">En annan Autotune-körning upptäcktes, körning avbruten</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
     <string name="urgent_alarm">Akut larm</string>
@@ -526,7 +480,6 @@
     <string name="limitingpercentrate">Begränsar max procent hastighet till %1$d%% pga %2$s</string>
     <string name="itmustbepositivevalue">det måste vara ett positivt värde</string>
     <string name="limitingbolus">Max bolus: %1$.1f U pga %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekräftelse</string>
     <string name="message">Meddelande</string>
@@ -538,6 +491,8 @@
     <string name="close">Stäng</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">minska %1$s med %2$s</string>
     <string name="a11y_plus_button_description">öka %1$s med %2$s</string>

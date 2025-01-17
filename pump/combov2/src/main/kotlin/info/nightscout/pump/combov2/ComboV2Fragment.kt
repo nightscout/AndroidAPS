@@ -1,6 +1,5 @@
 package info.nightscout.pump.combov2
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -116,9 +115,9 @@ class ComboV2Fragment : DaggerFragment() {
 
                         binding.combov2DriverState.setTextColor(
                             when (connectionState) {
-                                ComboV2Plugin.DriverState.Error     -> Color.RED
-                                ComboV2Plugin.DriverState.Suspended -> Color.YELLOW
-                                else                                -> Color.WHITE
+                                ComboV2Plugin.DriverState.Error     -> rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
+                                ComboV2Plugin.DriverState.Suspended -> rh.gac(context, app.aaps.core.ui.R.attr.urgentColor)
+                                else                                -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
                             }
                         )
                     }
@@ -150,17 +149,17 @@ class ComboV2Fragment : DaggerFragment() {
 
                             BatteryState.NO_BATTERY   -> {
                                 binding.combov2Battery.text = rh.gs(R.string.combov2_battery_empty_indicator)
-                                binding.combov2Battery.setTextColor(Color.RED)
+                                binding.combov2Battery.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
                             }
 
                             BatteryState.LOW_BATTERY  -> {
                                 binding.combov2Battery.text = rh.gs(R.string.combov2_battery_low_indicator)
-                                binding.combov2Battery.setTextColor(Color.YELLOW)
+                                binding.combov2Battery.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))
                             }
 
                             BatteryState.FULL_BATTERY -> {
                                 binding.combov2Battery.text = rh.gs(R.string.combov2_battery_full_indicator)
-                                binding.combov2Battery.setTextColor(Color.WHITE)
+                                binding.combov2Battery.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
                             }
                         }
                     }
@@ -175,10 +174,10 @@ class ComboV2Fragment : DaggerFragment() {
 
                         binding.combov2Reservoir.setTextColor(
                             when (reservoirLevel?.state) {
-                                null                 -> Color.WHITE
-                                ReservoirState.EMPTY -> Color.RED
-                                ReservoirState.LOW   -> Color.YELLOW
-                                ReservoirState.FULL  -> Color.WHITE
+                                null                 -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
+                                ReservoirState.EMPTY -> rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
+                                ReservoirState.LOW   -> rh.gac(context, app.aaps.core.ui.R.attr.urgentColor)
+                                ReservoirState.FULL  -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
                             }
                         )
                     }
@@ -249,17 +248,17 @@ class ComboV2Fragment : DaggerFragment() {
 
             in 0..60         -> {
                 binding.combov2LastConnection.text = rh.gs(R.string.combov2_less_than_one_minute_ago)
-                binding.combov2LastConnection.setTextColor(Color.WHITE)
+                binding.combov2LastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             }
 
             in 60..(30 * 60) -> {
                 binding.combov2LastConnection.text = rh.gs(app.aaps.core.interfaces.R.string.minago, secondsPassed / 60)
-                binding.combov2LastConnection.setTextColor(Color.WHITE)
+                binding.combov2LastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             }
 
             else             -> {
                 binding.combov2LastConnection.text = rh.gs(R.string.combov2_no_connection_for_n_mins, secondsPassed / 60)
-                binding.combov2LastConnection.setTextColor(Color.RED)
+                binding.combov2LastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
             }
         }
     }

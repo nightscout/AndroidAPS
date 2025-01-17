@@ -1,15 +1,15 @@
 package app.aaps.implementation.pump
 
 import android.widget.TextView
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.isOlderThan
-import app.aaps.database.entities.TherapyEvent
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton class WarnColorsImpl @Inject constructor(
+@Reusable
+class WarnColorsImpl @Inject constructor(
     private val rh: ResourceHelper, private val dateUtil: DateUtil
 ) : WarnColors {
 
@@ -25,7 +25,7 @@ import javax.inject.Singleton
         )
     }
 
-    override fun setColorInverse(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double) {
+    override fun setColorInverse(view: TextView?, value: Double, warnLevel: Int, urgentLevel: Int) {
         view?.setTextColor(
             rh.gac(
                 view.context, when {
@@ -37,7 +37,7 @@ import javax.inject.Singleton
         )
     }
 
-    override fun setColorByAge(view: TextView?, therapyEvent: TherapyEvent, warnThreshold: Double, urgentThreshold: Double) {
+    override fun setColorByAge(view: TextView?, therapyEvent: TE, warnThreshold: Int, urgentThreshold: Int) {
         view?.setTextColor(
             rh.gac(
                 view.context, when {

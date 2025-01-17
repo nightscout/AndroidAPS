@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Crear notificaciones de alertas de carbohidratos necesarios</string>
     <string name="ns_create_announcements_from_errors_summary">Crear notificaciones en Nightscout para diálogos de error y alertas locales (también visibles en el portal de cuidados, en los tratamientos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crear notificaciones de Nightscout para las alertas de carbohidratos necesarios</string>
-    <string name="description_ns_client">Sincroniza tus datos con Nightscout</string>
+    <string name="description_ns_client">Sincroniza tus datos con Nightscout usando la API v1</string>
     <string name="description_ns_client_v3">Sincroniza tus datos con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCLI</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">URL de Nightscout</string>
-    <string name="ns_client_url_dialog_message">Introduce tu página de Nightscout</string>
-    <string name="ns_client_secret_title">API Secret de Nightscout</string>
-    <string name="ns_client_secret_dialog_title">API Secret de Nightscout</string>
-    <string name="ns_client_secret_dialog_message">Introduce la contraseña API Secret de Nightscout (mínimo de 12 caracteres)</string>
+    <string name="ns_client_url_dialog_message">Introduce tu URL de Nightscout (por ejemplo, https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_dialog_message">Introduce API Secret de Nightscout (mínimo 12 caracteres de contraseña registrada en las variables de Nightscout)</string>
     <string name="nsclient_token_title">Token de acceso de Nightscout</string>
-    <string name="nsclient_token_dialog_title">Token de acceso de Nightscout</string>
-    <string name="nsclient_token_dialog_message">Token de acceso generado en la página de administración de NS (mínimo 17 caracteres)</string>
+    <string name="nsclient_token_dialog_message">Introduce el token de acceso a nivel de administrador generado en las herramientas de administrativas de Nightscout (mínimo 17 caracteres, ¡no tu API Secret!)</string>
     <string name="deliver_now">Lanzar ahora</string>
-    <string name="clear_queue">Borrar cola</string>
-    <string name="show_queue">Mostrar cola</string>
     <string name="queue">Cola:</string>
     <string name="status">Estado:</string>
     <string name="clear_log">Borrar log</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carga datos a Tidepool</string>
-    <string name="tidepool_upload_cgm">Carga tus datos</string>
-    <string name="tidepool_upload_bolus">Subir tratamientos (insulina, carbohidratos)</string>
-    <string name="tidepool_upload_tbr">Subir basales temporales</string>
-    <string name="tidepool_upload_profile">Subir conmutaciones de perfil, objetivos temps</string>
-    <string name="tidepool_upload_bg">Subir pruebas de glucosa</string>
     <string name="remove_all">Eliminar todos</string>
-    <string name="reset_start">Restablecer inicio</string>
     <string name="upload_now">Subir ahora</string>
     <string name="not_connected">No conectado</string>
     <string name="read_only">Sólo lectura</string>
     <string name="working">Funcionando</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -110,17 +99,21 @@
     <string name="xdrip_status_show_bgi_title">Mostrar BGI</string>
     <string name="xdrip_status_show_bgi_summary">Agregar BGI a la línea de estado</string>
     <string name="xdrip_status_settings">xDrip+ Línea de estado avanzada</string>
-    <string name="disabled_loop">Lazo desactivado</string>
+    <string name="disabled_loop">Bucle desactivado</string>
     <string name="xdrip_send_status_title">Enviar línea de estado a xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ no instalado</string>
     <string name="calibration_sent">Calibración enviada a xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Enviar datos de glucosa y tratamientos a xDrip+. La fuente de datos \"xDrip+ Sync Follower\" debe estar seleccionada y la aceptación de datos debe estar activada en Ajustes - Ajustes entre aplicaciones - Aceptar glucosa/tratamientos</string>
     <string name="xdrip_local_broadcasts_title">Activar las transmisiones a xDrip+</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Transmitir datos a la aplicación G-Watch Wear de Samsung (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexión al dispositivo Garmin (Fénix, Edge, …)</string>
-    <string name="key_garmin_settings">Ajustes de Garmin</string>
+    <string name="garmin_local_http_server_port">Puerto del servidor local HTTP</string>
+    <string name="garmin_local_http_server">Servidor local HTTP</string>
     <!--    Wear-->
     <string name="wear_shortname">RELOJ</string>
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
@@ -130,7 +123,7 @@
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
+    <string name="user_action_not_available">La acción del usuario solicitada %1$s ya no está disponible, por favor, actualiza tu tarjeta</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
     <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
     <string name="wear_action_tempt_zero_message">Objetivo Temporal Zero - ¿Cancelar el Objetivo Temporal en ejecución?</string>
@@ -143,6 +136,8 @@
     <string name="wear_settings">Ajustes del reloj</string>
     <string name="wearcontrol_title">Control desde el reloj</string>
     <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
+    <string name="wear_broadcast_data">Transmisión de datos</string>
+    <string name="wear_broadcast_data_summary">Transmitir datos a AAPS o AAPSClient</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="wear_notifysmb_title">Notificar los SMB</string>
@@ -155,6 +150,7 @@
     <string name="wear_infos_watchface">Información de esferas</string>
     <string name="wear_export_watchface">Exportar plantilla</string>
     <string name="wear_new_custom_watchface_exported">Plantilla de esfera personalizada exportada</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/es/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <string name="cwf_infos_pref_locked">Lista de preferencias bloqueadas por la esfera</string>
@@ -177,13 +173,14 @@
     <string name="no_profile">Ningún perfil cargado</string>
     <string name="aps_only">Sólo se aplica en modo APS</string>
     <string name="last_aps_result_na">¡Último resultado no disponible!</string>
-    <string name="loop_status_closed">LAZO CERRADO</string>
+    <string name="loop_status_closed">BUCLE CERRADO</string>
     <string name="loop_status_open">LAZO ABIERTO</string>
-    <string name="loop_status_disabled">LAZO DESACTIVADO</string>
+    <string name="loop_status_disabled">BUCLE DESACTIVADO</string>
     <string name="aps">APS</string>
     <string name="last_run">Última ejecución</string>
     <string name="last_enact">Último acto</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Hoy</string>
     <string name="weighted">ponderado</string>
+    <string name="full_xdrip_sync_comment">¿Sincronización completa? Puede tardar un rato y hasta que no finalice, no aparecerán los nuevos datos en xDrip+.</string>
 </resources>

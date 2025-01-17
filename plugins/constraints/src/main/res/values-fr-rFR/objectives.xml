@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">La boucle ouverte peut être utilisée pour les recommandations si vous n\'avez pas de pompe compatible ou si vous n\'êtes pas prêt à fermer la boucle.</string>
     <string name="objectives_maxbasal_objective">Compréhension de la Boucle Ouverte, y compris les propositions de débits Basal temporaires</string>
     <string name="objectives_maxbasal_gate">Partant de ce constat, décidez quel doit être le débit de base maximum, et entrez le dans la pompe et les préférences</string>
+    <string name="objectives_maxbasal">Effectuer une action pour remplir la recommandation</string>
     <string name="objectives_maxbasal_learned">Faites attention aux dispositifs de sécurité et réglez les paramètres de sécurité si nécessaire.</string>
     <string name="objectives_maxiobzero_objective">Démarrage de la boucle fermée avec le système AGB ( Arrêt pour Glycémie Basse )</string>
     <string name="objectives_maxiobzero_gate">Activez la boucle fermée avec le paramètre max IOB = 0 pendant plusieurs jours sans avoir un trop grand nombre d\'AGB (Arrêt pour Glycémie Basse)</string>
@@ -26,11 +27,8 @@
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
     <string name="objectives_smb_gate">Vous devez lire le wiki et augmenter le maxIA pour faire fonctionner les SMB ! Un bon début est maxIA = moyenne des bolus repas + 3 fois le basal le plus élevé</string>
     <string name="objectives_smb_learned">L\'utilisation de SMB est votre objectif. L\'algorithme Oref1 a été conçu pour vous aider également avec vos bolus. Vous ne devriez pas donner un bolus complet pour votre nourriture, mais seulement une partie de celui-ci et laisser AAPS vous donner le reste si nécessaire. De cette façon, vous avez plus de latitude pour les glucides mal calculés. Saviez-vous que vous pouvez définir un pourcentage à appliquer au résultat de la calculatrice de bolus pour réduire la taille du bolus ?</string>
-    <string name="objectives_dyn_isf_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, comme le plugin de Sensibilité Dynamique</string>
-    <string name="objectives_dyn_isf_gate">Assurez-vous que SMB fonctionne correctement. Activez le plugin SI Dynamique et utilisez une valeur appropriée aux besoins de votre corps. Il est conseillé de commencer par une valeur inférieure à 100% pour plus de sécurité.</string>
-    <string name="objectives_dyn_isf_learned">Le plugin de Sensibilité Dynamique est basé sur l\'idée que la dose totale d\'insuline et la glycémie actuelle affectent la sensibilité actuelle. Le plugin SI Dynamique peut ajuster la SI utilisée par l\'algorithme.</string>
     <string name="objectives_auto_objective">Activation de l\'automatisation</string>
-    <string name="objectives_auto_gate">Lisez la documentation sur le fonctionnement de l\'automatisation. Vos premières règles doivent être simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://wiki.aaps.app/fr/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Lisez la documentation sur le fonctionnement de l\'automatisation. Vos premières règles doivent être simples. Au lieu d\'executer une action, configurez seulement une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://wiki.aaps.app/fr/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">L\'automatisation peut être un bon serviteur mais un mauvais maître. Ne l\'utilisez pas de manière excessive. N\'essayez pas de remplacer l\'algorithme sous-jacent. Testez la règle avec uniquement un message avant l\'utilisation. Le résultat dépend de l\'ordre.</string>
     <string name="objectives_bgavailableinns">Glycémie disponible dans NS ou Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">État de la pompe disponible en NS ou Tidepool</string>
@@ -77,12 +75,13 @@
     <string name="unfinshed_button">Prochain non terminé</string>
     <string name="requestcode">Code requis : %1$s</string>
     <string name="objectives_hint">(Sélectionnez toutes les bonnes réponses)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#que-faire-pour-prendre-une-douche-ou-un-bain</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#ecran-d-accueil</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#ecran-d-accueil</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/fr/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>
     <string name="what_i_ve_learned">Ce que j\'ai appris :</string>
+    <string name="verify_master_password">Soyez sûr de connaitre votre mot de passe principal</string>
 </resources>

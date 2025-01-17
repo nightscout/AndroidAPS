@@ -6,7 +6,27 @@
         android:defaultValue="false"
         android:key="@string/key_heart_rate_sampling"
         android:summary="Enable heart rate sampling."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_heartRateSampling"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/heartrate_smoothing"
+        android:entryValues="@array/heartrate_smoothing_values"
+        android:key="@string/key_heart_rate_smoothing"
+        android:summary="Heart Rate smoothing"
+        android:title="@string/pref_heartRateSmoothing" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_steps_sampling"
+        android:summary="Enable Steps sampling."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_stepsSampling"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 

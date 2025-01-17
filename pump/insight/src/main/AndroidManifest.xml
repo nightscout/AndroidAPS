@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <application>
+        <activity
+            android:name="app.aaps.pump.insight.app_layer.activities.InsightPairingActivity"
+            android:exported="false"
+            android:label="@string/insight_pairing"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="app.aaps.pump.insight.app_layer.activities.InsightAlertActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:label="@string/pump_alert"
+            android:launchMode="singleInstance"
+            android:theme="@style/InsightAlertDialog" />
+        <activity
+            android:name="app.aaps.pump.insight.app_layer.activities.InsightPairingInformationActivity"
+            android:exported="false"
+            android:label="@string/pairing_information"
+            android:theme="@style/AppTheme" />
+
+        <service android:name="app.aaps.pump.insight.connection_service.InsightConnectionService" />
+        <service android:name="app.aaps.pump.insight.InsightAlertService" />
+    </application>
+
+</manifest>

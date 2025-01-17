@@ -5,6 +5,8 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_show_seconds"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/custom_pref_show_seconds"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -12,6 +14,8 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/key_show_week_number"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_weeknumber"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -19,6 +23,8 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_dark"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -27,6 +33,8 @@
         android:defaultValue="false"
         android:key="@string/key_match_divider"
         android:summary="Status bar divider background matches watchface background"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_matching_divider"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -34,14 +42,27 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/key_show_date"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_date"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="@string/key_vibrate_hourly"
-        android:title="@string/pref_vibrate_hourly"
+        android:key="@string/key_include_external"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_include_external"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_switch_external"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_switch_external"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 

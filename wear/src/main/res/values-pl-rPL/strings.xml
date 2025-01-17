@@ -2,15 +2,13 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Duży)</string>
-    <string name="label_watchface_big_chart">AAPS(DużyWykres)</string>
-    <string name="label_watchface_no_chart">AAPS(BezWykresu)</string>
     <string name="label_watchface_circle">AAPS(Koło)</string>
     <string name="label_watchface_digital_style">AAPS(StylCyfrowy)</string>
     <string name="label_watchface_custom">AAPS(niestandardowy)</string>
     <string name="label_actions_tile">AAPS(Ustawienia)</string>
     <string name="label_temp_target_tile">AAPS(Cel Tymczasowy)</string>
     <string name="label_quick_wizard_tile">AAPS(Szybki kreator)</string>
+    <string name="label_user_action_tile">AAPS(Akcja Użytkownika)</string>
     <string name="label_warning_sync">Brak danych!</string>
     <string name="label_warning_old">Stare dane!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -18,9 +16,8 @@
     <string name="msg_warning_sync">Nie otrzymano danych od %1$s! Sprawdź czy AAPS na telefonie wysyła dane do zegarka</string>
     <string name="msg_warning_old">Dane z AAPS są %1$s stare! Sprawdź swój sensor, xDrip+, NS, konfigurację AAPS i inne ustawienia!</string>
     <string name="pref_vibrate_on_bolus">Wibruj przy Bolusie</string>
-    <string name="pref_units_for_actions">Jednostki dla akcji</string>
     <string name="units_short">U</string>
-    <string name="pref_display_settings">Wyświetlanie</string>
+    <string name="pref_display_settings">Wyświetlacz</string>
     <string name="pref_graph_settings">Wykres</string>
     <string name="pref_interface_settings">Interfejs</string>
     <string name="pref_others_settings">Inne</string>
@@ -35,6 +32,8 @@
     <string name="pref_show_phone_battery">Pokaż Baterię Telefonu</string>
     <string name="pref_show_rig_battery">Pokaż Baterię Zestawu</string>
     <string name="pref_show_basal_rate">Pokaż Bazę</string>
+    <string name="pref_show_temp_target">Pokaż Cel Tymczasowy</string>
+    <string name="pref_show_reservoir_level">Pokaż poziom zbiornika</string>
     <string name="pref_show_loop_status">Pokaż Status Pętli</string>
     <string name="pref_show_bg">Pokaż glikemię</string>
     <string name="pref_show_bgi">Pokaż BGI</string>
@@ -53,15 +52,15 @@
     <string name="pref_3_hours">3 godziny</string>
     <string name="pref_4_hours">4 godziny</string>
     <string name="pref_5_hours">5 godzin</string>
+    <string name="pref_1_min">wyłączone</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Styl wprowadzania</string>
     <string name="pref_default">Domyślny</string>
     <string name="pref_quick_righty">Szybki prawy</string>
     <string name="pref_quick_lefty">Szybki lewy</string>
     <string name="pref_modern_sparse">Minimalistyczny</string>
-    <string name="pref_low">Niska</string>
-    <string name="pref_medium">Średnia</string>
-    <string name="pref_high">Wysoka</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Duże Cyfry</string>
     <string name="pref_ring_history">Historia glikemi</string>
     <string name="pref_light_ring_history">Dyskretniejsza historia</string>
@@ -94,6 +93,7 @@
     <string name="action_duration">Czas trwania akcji</string>
     <string name="action_tempt_confirmation">Żądany cel tymczasowy</string>
     <string name="action_quick_wizard_confirmation">Szybki kreator</string>
+    <string name="action_user_action_confirmation">Wymagane działanie użytkownika</string>
     <string name="action_treatment_confirmation">Wymagane leczenie</string>
     <string name="action_bolus_confirmation">Żądany bolus</string>
     <string name="action_wizard_confirmation">Żądane obliczenia</string>
@@ -115,7 +115,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Podana wartość</string>
     <string name="action_confirm">POTWIERDŹ</string>
     <string name="action_timeshift">przesunięcie czasu</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Postęp bolusa</string>
     <string name="press_to_cancel">naciśnij aby anulować</string>
     <string name="cancel_bolus">ANULUJ BOLUS</string>
@@ -152,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Pokaż tylko czas i glikemię</string>
     <string name="pref_vibrate_hourly">Wibruj co godzinę</string>
     <string name="pref_show_weeknumber">Pokaż numer tygodnia</string>
+    <string name="pref_include_external">Uwzględnij zewnętrzne widoki w szablonie</string>
+    <string name="pref_switch_external">Przełącz dane zewnętrzne na tarczy</string>
     <string name="custom_pref_show_seconds">Pokaż sekundy</string>
     <string name="digitalstyle_pref_your_style">Styl:</string>
     <string name="digitalstyle_style_none">brak stylu</string>
@@ -184,17 +185,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min temu</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Brak Statusu Pętli</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Wycisz Alarm AAPS</string>
     <string name="sending_snooze">Wysyłanie wyciszenia do AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
@@ -204,4 +199,29 @@
     <string name="old_warning">!stare!</string>
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Tętno</string>
+    <string name="pref_heartRateSmoothing">Wygładzanie tętna</string>
+    <string name="pref_stepsSampling">Włącz liczbę kroków</string>
+    <string name="tile_tempt_1">Cel tymczasowy 1</string>
+    <string name="tile_tempt_2">Cel tymczasowy 2</string>
+    <string name="tile_tempt_3">Cel tymczasowy 3</string>
+    <string name="tile_tempt_4">Cel tymczasowy 4</string>
+    <string name="tile_action_1">Akcja 1</string>
+    <string name="tile_action_2">Akcja 2</string>
+    <string name="tile_action_3">Akcja 3</string>
+    <string name="tile_action_4">Akcja 4</string>
+    <string name="datalayer_notification_title">Usługa podtrzymania warstwy danych</string>
+    <string name="datalayer_notification_text">AAPS działa na pierwszym planie. Aby ukryć powiadomienia, przejdź do opcji Dewelopera, powiadomienia aplikacji, Dozwolone aplikacje na zegarek, wybierz AAPS, wyłącz powiadomienia dotyczące kanału \"Usługa podtrzymania warstwy danych\".</string>
+    <string name="on">WŁ</string>
+    <string name="off">WYŁ</string>
+    <string name="complication_full_status">Pełny status</string>
+    <string name="complication_full_status_flipped">Pełny status (odwrócony)</string>
+    <string name="complication_blood_glucose">Glikemia</string>
+    <string name="complication_br_cob_iob">Baza, CoB &amp; IoB</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_cob_iob">CoB &amp; IoB</string>
+    <string name="complication_cob_icon">Ikona CoB</string>
+    <string name="complication_cob_detailed">Szczegółowe CoB</string>
+    <string name="complication_iob_icon">Ikona IoB</string>
+    <string name="complication_iob_detailed">Szczegółowa IoB</string>
+    <string name="complication_uploader_phone_battery">Bateria uploadera/telefonu</string>
 </resources>

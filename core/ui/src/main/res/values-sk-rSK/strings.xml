@@ -89,6 +89,7 @@
     <string name="removerecord">Odstrániť záznam</string>
     <string name="loopisdisabled">Uzavretý okruh je deaktivovaný</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Export nastavení</string>
     <string name="disableloop">Deaktivovať uzavretý okruh</string>
     <string name="enableloop">Aktivovať uzavretý okruh</string>
     <string name="resumeloop">Pokračovať v uzavretom okruhu</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">Glykémia</string>
     <string name="calibration">Kalibrácia</string>
     <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
+    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Manuálne skontrolujte skutočne podané množstvo inzulínu a sacharidov</string>
     <string name="bolus_reminder">Pripomenutie bolusu</string>
     <string name="duration_label">Trvanie</string>
     <string name="shortgramm">g</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Aktívny inzulín (IOB)</string>
     <string name="loopstatus_targets">CIELE:</string>
     <string name="loopstatus_OAPS_result">VÝSLEDOK OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f JI ( %2$.2f JI/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f JI/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f JI/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f JI/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f JI/h %2$s/%3$s\'</string>
+    <string name="nav_export">Exportovať nastavenia</string>
+    <string name="location_permission_not_granted">Povolenie na zisťovanie polohy nebolo udelené. Povoľte v nastaveniach systému Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
     <string name="wrongpin">Nesprávny PIN</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
+    <string name="careportal_settings_export">Export nastavení</string>
     <string name="careportal_note">Poznámka</string>
     <string name="careportal_question">Otázka</string>
     <string name="careportal_exercise">Pohyb</string>
     <string name="careportal_announcement_message">Oznámenie: %1$s</string>
+    <string name="careportal_settings_export_message">Export nastavení: %1$s</string>
     <string name="careportal_note_message">Poznámka : %1$s</string>
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičenie : %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Aktivita</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatizácia</string>
+    <string name="settingsexport">Export nastavení</string>
     <string name="custom">Voliteľný</string>
     <string name="loop">Uzavretý okruh</string>
     <string name="ns">NS</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">Odstrániť ošetrenia v budúcnosti</string>
     <string name="uel_export_settings">EXPORTOVAŤ NASTAVENIA</string>
     <string name="uel_import_settings">IMPORTOVAŤ NASTAVENIA</string>
+    <string name="uel_select_directory">VYBERTE PRIEČINOK</string>
     <string name="uel_reset_databases">RESETOVAŤ DATABÁZY</string>
+    <string name="uel_reset_aps_results">RESETOVAŤ VÝSLEDKY AAPS</string>
     <string name="uel_cleanup_databases">VYČISTIŤ DATABÁZU</string>
     <string name="uel_export_databases">EXPORTOVAŤ DATABÁZY</string>
     <string name="uel_import_databases">IMPORTOVAŤ DATABÁZY</string>
@@ -399,57 +413,18 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
     <string name="basalpct">Bazál %</string>
+    <string name="sensitivity">Citlivosť</string>
+    <string name="isf_for_carbs">ISF pre kalkulačku a vstrebávanie sacharidov: %1$.1f</string>
+    <string name="autosens_long">Hodnota Autosense: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Detekcia citlivosti algoritmu: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">súbor</string>
     <string name="a11y_user">používateľ</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Pomoc s možnými úpravami profilu (citlivosť, inzulíno-sacharidový pomer a bazálny dávky)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Nastavenie Autotune</string>
-    <string name="autotune_auto_title">Prepnutie profilu z Automatizácie</string>
-    <string name="autotune_auto_summary">Pokiaľ je táto voľba povolená, Autotune po výpočte automaticky aktualizuje a prepne na vstupný profil zadaný v pravidle automatizácie.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Započítavať UAM ako bazál</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Povoľte iba v prípade, že ste dôsledne zadávali všetky prijaté sacharidy. S touto možnosťou bude náhly vzostup detekovaný funkciou Autotune, použitý pre doporučovanie zmien bazálu.</string>
-    <string name="autotune_tune_insulin_curve_title">Ladiť inzulínovú krivku</string>
-    <string name="autotune_tune_insulin_curve_summary">Aktivuj iba ak používaš voliteľný vrchol. Táto možnosť má vyladiť vrchol a trvanie DIA</string>
-    <string name="autotune_default_tune_days_title">Počet dní s dátami</string>
-    <string name="autotune_circadian_ic_isf_title">Použi priemerný výsledok v cirkadiánnom IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune nebude ladiť cirkadiánne rozloženie, táto možnosť použije iba priemerné ladenie IC a ISF na váš cirkadiánný vstupní profil</string>
-    <string name="autotune_additional_log_title">Zahrnúť ďalšie informácie o protokole pre ladenie</string>
-    <string name="autotune_additional_log_summary">Zapnite, iba pokiaľ je to požadované vývojárom, aby bolo možné odoslať dalšie logy pre ladenie modulu Autotune</string>
-    <string name="autotune_default_tune_days_summary">Štandardný počet dní, z ktorých majú byť dáta spracované Autotune (až do 30)</string>
-    <string name="autotune_tunedprofile_name">Vyladené</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Ladiť dni:</string>
-    <string name="autotune_last_run">Posledné spustenie :</string>
-    <string name="autotune_warning">Upozornenie :</string>
     <string name="autotune_select_profile">Vyberte profil pre ladenie</string>
-    <string name="autotune_ic_warning">Vybraný profil má %1$d hodnôt IC. Autotune bude používať %2$.2f g/JI</string>
-    <string name="autotune_isf_warning">Vybraný profil má %1$d hodnôt ISF. Autotune bude používať %2$.1f %3$s/JI</string>
-    <string name="autotune_error">Chyba vstupných dát, skúste znova spustiť Autotune, alebo znížte počet dní</string>
-    <string name="autotune_error_more_days">Chyba vo vstupných dátach, zvýšte počet dní</string>
-    <string name="autotune_warning_during_run">Autotune spustený, prosím buďte trpezliví</string>
-    <string name="autotune_warning_after_run">Pred použitím výsledky starostlivo skontrolujte!</string>
-    <string name="autotune_partial_result">Čiastočný výsledok - vyladený deň %1$d / %2$d</string>
-    <string name="autotune_result">Výsledok: %1$s</string>
-    <string name="autotune_param">Parameter</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Chýba</string>
-    <string name="autotune_profile_name">Profil Autotune %1$s</string>
-    <string name="autotune_run">Spustiť Autotune</string>
-    <string name="autotune_check_input_profile_button">Skontrolovať vstupný profil</string>
-    <string name="autotune_compare_profile">Porovnať profily</string>
-    <string name="autotune_copy_localprofile_button">Kopírovať do miestneho profilu</string>
-    <string name="autotune_update_input_profile_button">Aktualizujte vstupný profil</string>
-    <string name="autotune_revert_input_profile_button">Vrátiť vstupný profil</string>
-    <string name="autotune_copy_local_profile_message">Vytvoriť z tohoto Autotune profilu nový miestny profil?</string>
-    <string name="autotune_update_local_profile_message">Aktualizovať profil %1$s pomocou profilu Autotune?</string>
-    <string name="autotune_revert_local_profile_message">Vrátiť profil %1$s na vstupný profil?</string>
-    <string name="autotune_profile_invalid">Neplatný profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune spustený bez prepnutia profilu</string>
-    <string name="autotune_run_with_autoswitch">Autotune spustený a profil automaticky prepnutý</string>
-    <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
-    <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>
     <string name="urgent_alarm">Urgentný alarm</string>
@@ -525,13 +500,13 @@
     <string name="password_cleared">Heslo vymazané!</string>
     <string name="pairing">Párovanie</string>
     <string name="initializing">Inicializácia ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
     <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
     <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
     <string name="limitingbolus">Bolus obmedzený na %1$.1f JI: %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrdenie</string>
     <string name="message">Správa</string>
@@ -543,6 +518,19 @@
     <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Varovanie</string>
+    <string name="export_expired">Expirované</string>
+    <string name="export_disabled">Vypnuté</string>
+    <string name="export_failed">Chyba</string>
+    <string name="export_alert">VÝSTRAHA</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Nastavenia exportované</string>
+    <string name="export_result_message_failed">Nastavenia NIE SÚ správne exportované!</string>
+    <string name="export_result_message_about_to_expire">Nastavenia exportované: heslo čoskoro vyprší. Exportujte ručne a (znovu) zadajte heslo.</string>
+    <string name="export_result_message_expired">Export nastavení zrušený: heslo vypršalo. Exportujte ručne a (znovu) zadajte heslo!</string>
+    <string name="export_result_message_disabled">Varovanie (automatika): Nie je povolený export nastavení!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
@@ -610,4 +598,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f JI</string>
     <string name="format_insulin_units">%1$.2f JI</string>
+    <string name="percent_rate_duration">Hodnota: %1$.2f%% (%2$.2f JI/h) Trvanie: %3$d min</string>
+    <string name="rate_percent_duration">Hodnota: %1$.2f JI/h (%2$.2f%%) Trvanie: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Hodnota</b>: %1$.2f%% (%2$.2f JI/h)<br><b>Trvanie</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Hodnota</b>: %1$.2f JI/h (%2$.2f%%) <br><b>Trvanie</b>: %3$d min<br>]]></string>
 </resources>

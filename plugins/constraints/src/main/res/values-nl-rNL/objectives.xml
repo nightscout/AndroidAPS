@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen, als je een pomp hebt die niet geschikt is voor AAPS of als je de loop niet wilt sluiten.</string>
     <string name="objectives_maxbasal_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basalen</string>
     <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen, beslis wat het maximale basaal mag zijn en stel dit in op de pomp</string>
+    <string name="objectives_maxbasal">Actie uitvoeren om aanbeveling uit te voeren</string>
     <string name="objectives_maxbasal_learned">Ga zorgvuldig om met de veiligheidsfuncties en pas de veiligheidsparameters aan indien nodig.</string>
     <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
     <string name="objectives_maxiobzero_gate">In closed loop draaien met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
@@ -26,12 +27,9 @@
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
     <string name="objectives_smb_learned">Het gebruik van SMB is het uiteindelijke doel. Het Oref1 algoritme is ontworpen om je ook te helpen met je bolussen. Je hoeft geen volledige bolus te geven voor jouw voeding, maar slechts een deel ervan en AAPS zal de rest geven als dat nodig is. Op deze manier heb je meer ruimte voor verkeerd berekende koolhydraten. Wist je dat je een percentage in de bolus calculator kan instellen om de hoeveelheid bolus te verminderen?</string>
-    <string name="objectives_dyn_isf_objective">Activeren van extra functies overdag, zoals de Dynamic sensitivity plugin</string>
-    <string name="objectives_dyn_isf_gate">Zorg ervoor dat SMB goed werkt. Schakel de DynamicISF plugin in en identificeer de juiste kalibratie voor het unieke karakter van uw lichaam. Om veiligheidsredenen is het raadzaam om te beginnen met een waarde die lager is dan 100%.</string>
-    <string name="objectives_dyn_isf_learned">De DynamicISF plugin is gebaseerd op het idee dat de totale insuline inname en de huidige BGI de werkelijke gevoeligheid beïnvloeden. De DynamicISF plugin kan de insuline gevoeligheidsfactor (ISF) aanpassen die door het algoritme voor jou wordt gebruikt.</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
-    <string name="objectives_auto_gate">Lees eerst de documentatie over hoe automatisering werkt. Maak daarna je eerste simpele regels, waarbij je in plaats van acties eerst gebruikt maakt van de notificaties. Wanneer je er dan zeker van bent, dat je automatisering op de goede momenten wordt geactiveerd, kan je de noticifcatie omzetten naar een echte actie. 
-(https://wiki.aaps.app/nl/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Lees de documentatie over hoe automatisering werkt. Maak daarna je eerste simpele regels, waarbij je in plaats van acties eerst gebruikt maakt van de notificaties. Wanneer je er dan zeker van bent, dat je automatisering op de goede momenten wordt geactiveerd, kan je de noticifcatie omzetten naar een echte actie. 
+(https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatisering kan een goede dienaar zijn, maar een slechte meester. Vermijdt overmatig gebruik. Probeer niet om het onderliggende algoritme te vervangen. Test de regel alleen met het bericht voor het gebruik. De uitvoering hangt af van de volgorde waarin ze staan.</string>
     <string name="objectives_bgavailableinns">BG beschikbaar in NS of Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS of Tidepool</string>
@@ -78,12 +76,13 @@
     <string name="unfinshed_button">Volgende onvoltooide</string>
     <string name="requestcode">Aanvraagcode: %1$s</string>
     <string name="objectives_hint">(controleer alle juiste antwoorden)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/nl/latest/Getting-Started/FAQ.html#wat-te-doen-tijdens-het-douchen</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/nl/latest/Getting-Started/Screenshots.html#overzicht-scherm</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/nl/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/Getting-Started/Screenshots.html#overzicht-scherm</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/nl/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Niet verbonden met het internet</string>
     <string name="failedretrievetime">Ophalen tijd mislukt</string>
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
+    <string name="verify_master_password">Verifieer dat u het masterwachtwoord kent</string>
 </resources>

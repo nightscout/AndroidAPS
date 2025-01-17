@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
-    <string name="description_ns_client">Sinhronizuje vaše podatke sa Nightscout-om</string>
     <string name="unsupported_ns_version">Nepodržana verzija Nightscout-a</string>
     <!-- NSClient -->
     <string name="ns_alarm_options">Opcije alarma</string>
@@ -10,7 +9,6 @@
     <string name="ns_alarm_stale_data_value_label">Prag za zastarele podatake [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Prag za hitno zastarele podatke [min]</string>
     <!-- Tidepool -->
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="disabled_loop">Loop Onesposobljen</string>
     <!--    DataBroadcast-->
@@ -24,7 +22,6 @@
     <string name="wizard_result">Kalk. čarobnjak:\nInsulin: %1$.2fU\nUH: %2$dg</string>
     <string name="quick_wizard_not_available">Izabrani brzi čarobnjak više nije dostupan, molimo osvežite svoju pločicu</string>
     <string name="quick_wizard_message">Brzi čarobnjak: %1$s\nInsulin: %2$.2fU\nUH: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Privremeni cilj je nepoznato podešen: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Otkazivanje pokrenutih privremenih ciljeva?</string>
     <string name="wear_action_tempt_unit_error">Različite jedinice se koriste na satu i telefonu!</string>
     <string name="wear_action_tempt_zero_message">Nulti privremeni cilj - otkazivanje pokrenutih privremenih ciljeva?</string>

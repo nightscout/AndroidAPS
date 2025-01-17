@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclient
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -8,8 +7,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventChargingState
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -17,12 +18,11 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class ReceiverDelegate @Inject constructor(
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val receiverStatusStore: ReceiverStatusStore,
     aapsSchedulers: AapsSchedulers,
     fabricPrivacy: FabricPrivacy
@@ -56,16 +56,16 @@ class ReceiverDelegate @Inject constructor(
 
     private fun onPreferenceChange(ev: EventPreferenceChange) {
         when {
-            ev.isChanged(rh.gs(R.string.key_ns_wifi)) ||
-                ev.isChanged(rh.gs(R.string.key_ns_cellular)) ||
-                ev.isChanged(rh.gs(R.string.key_ns_wifi_ssids)) ||
-                ev.isChanged(rh.gs(R.string.key_ns_allow_roaming)) -> {
+            ev.isChanged(BooleanKey.NsClientUseWifi.key) ||
+                ev.isChanged(BooleanKey.NsClientUseCellular.key) ||
+                ev.isChanged(StringKey.NsClientWifiSsids.key) ||
+                ev.isChanged(BooleanKey.NsClientUseRoaming.key)   -> {
                 receiverStatusStore.updateNetworkStatus()
                 receiverStatusStore.lastNetworkEvent?.let { onNetworkChange(it) }
             }
 
-            ev.isChanged(rh.gs(R.string.key_ns_charging)) ||
-                ev.isChanged(rh.gs(R.string.key_ns_battery))       -> {
+            ev.isChanged(BooleanKey.NsClientUseOnCharging.key) ||
+                ev.isChanged(BooleanKey.NsClientUseOnBattery.key) -> {
                 receiverStatusStore.broadcastChargingState()
             }
         }
@@ -103,12 +103,12 @@ class ReceiverDelegate @Inject constructor(
     }
 
     fun calculateStatus(ev: EventChargingState): Boolean =
-        !ev.isCharging && sp.getBoolean(R.string.key_ns_battery, true) ||
-            ev.isCharging && sp.getBoolean(R.string.key_ns_charging, true)
+        !ev.isCharging && preferences.get(BooleanKey.NsClientUseOnBattery) ||
+            ev.isCharging && preferences.get(BooleanKey.NsClientUseOnCharging)
 
     fun calculateStatus(ev: EventNetworkChange): Boolean =
-        ev.mobileConnected && sp.getBoolean(R.string.key_ns_cellular, true) && !ev.roaming ||
-            ev.mobileConnected && sp.getBoolean(R.string.key_ns_cellular, true) && ev.roaming && sp.getBoolean(R.string.key_ns_allow_roaming, true) ||
-            ev.wifiConnected && sp.getBoolean(R.string.key_ns_wifi, true) && sp.getString(R.string.key_ns_wifi_ssids, "").isEmpty() ||
-            ev.wifiConnected && sp.getBoolean(R.string.key_ns_wifi, true) && sp.getString(R.string.key_ns_wifi_ssids, "").split(";").contains(ev.ssid)
+        ev.mobileConnected && preferences.get(BooleanKey.NsClientUseCellular) && !ev.roaming ||
+            ev.mobileConnected && preferences.get(BooleanKey.NsClientUseCellular) && ev.roaming && preferences.get(BooleanKey.NsClientUseRoaming) ||
+            ev.wifiConnected && preferences.get(BooleanKey.NsClientUseWifi) && preferences.get(StringKey.NsClientWifiSsids).isEmpty() ||
+            ev.wifiConnected && preferences.get(BooleanKey.NsClientUseWifi) && preferences.get(StringKey.NsClientWifiSsids).split(";").contains(ev.ssid)
 }

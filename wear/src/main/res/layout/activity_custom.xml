@@ -77,6 +77,455 @@
         android:textSize="21px"
         android:visibility="gone" />
 
+    <!-- Views for External data 1 -->
+    <TextView
+        android:id="@+id/patient_name_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        tools:text="myName" />
+
+    <TextView
+        android:id="@+id/iob1_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        tools:text="@string/activity_IOB" />
+
+    <TextView
+        android:id="@+id/iob2_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/no_iob_u" />
+
+    <TextView
+        android:id="@+id/cob1_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:text="@string/activity_carb"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/cob2_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:text="@string/no_cob_g"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/delta_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="+/-" />
+
+    <TextView
+        android:id="@+id/avg_delta_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/abbreviation_average" />
+
+    <TextView
+        android:id="@+id/temp_target_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
+        android:id="@+id/reservoir_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
+        android:id="@+id/rig_battery_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="100%" />
+
+    <TextView
+        android:id="@+id/basalRate_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/no_tmp_basal_u_h" />
+
+    <TextView
+        android:id="@+id/bgi_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="bgi" />
+
+    <TextView
+        android:id="@+id/status_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:maxLines="1"
+        android:textSize="23px"
+        tools:text="E xU/h  IOB: x (x+x)"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/loop_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="8px"
+        android:layout_marginTop="0px"
+        android:background="@drawable/loop_grey_25"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="24px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--'" />
+
+    <ImageView
+        android:id="@+id/direction_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:orientation="vertical"
+        android:src="@drawable/ic_invalid"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/timestamp_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="left"
+        android:textColor="@color/light_grey"
+        android:textSize="25px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--'" />
+
+    <TextView
+        android:id="@+id/sgv_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:lines="1"
+        android:textColor="@color/light_grey"
+        android:textSize="74px"
+        tools:text="200"
+        android:visibility="gone" />
+
+    <!-- Views for External data 2 -->
+    <TextView
+        android:id="@+id/patient_name_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        tools:text="myName" />
+
+    <TextView
+        android:id="@+id/iob1_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        tools:text="@string/activity_IOB" />
+
+    <TextView
+        android:id="@+id/iob2_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/no_iob_u" />
+
+    <TextView
+        android:id="@+id/cob1_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:text="@string/activity_carb"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/cob2_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:text="@string/no_cob_g"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/delta_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="+/-" />
+
+    <TextView
+        android:id="@+id/avg_delta_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/abbreviation_average" />
+
+    <TextView
+        android:id="@+id/temp_target_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
+        android:id="@+id/reservoir_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
+        android:id="@+id/rig_battery_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="100%" />
+
+    <TextView
+        android:id="@+id/basalRate_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/no_tmp_basal_u_h" />
+
+    <TextView
+        android:id="@+id/bgi_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="bgi" />
+
+    <TextView
+        android:id="@+id/status_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:maxLines="1"
+        android:textSize="23px"
+        tools:text="E xU/h  IOB: x (x+x)"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/loop_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="8px"
+        android:layout_marginTop="0px"
+        android:background="@drawable/loop_grey_25"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="24px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--'" />
+
+    <ImageView
+        android:id="@+id/direction_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:orientation="vertical"
+        android:src="@drawable/ic_invalid"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/timestamp_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="left"
+        android:textColor="@color/light_grey"
+        android:textSize="25px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--'" />
+
+    <TextView
+        android:id="@+id/sgv_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:lines="1"
+        android:textColor="@color/light_grey"
+        android:textSize="74px"
+        tools:text="200"
+        android:visibility="gone" />
+    <!-- End of Views for External data -->
+
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone"
+        tools:text="myName" />
+
     <TextView
         android:id="@+id/iob1"
         android:layout_width="130px"
@@ -147,6 +596,31 @@
         android:textStyle="bold"
         tools:text="@string/abbreviation_average" />
 
+    <TextView
+        android:id="@+id/temp_target"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
+        android:id="@+id/reservoir"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
 
     <TextView
         android:id="@+id/uploader_battery"
@@ -201,6 +675,16 @@
         android:visibility="visible"
         tools:text="bgi" />
 
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:maxLines="1"
+        android:textSize="23px"
+        tools:text="E xU/h  IOB: x (x+x)"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/time"
@@ -241,7 +725,7 @@
         android:textSize="46px"
         android:visibility="gone"
         tools:text="00" />
-    <!-- minute -->
+    <!-- second -->
     <TextView
         android:id="@+id/second"
         android:layout_width="0px"
@@ -255,8 +739,6 @@
         tools:text="00" />
 
     <!-- 12h period AM / PM -->
-
-
     <TextView
         android:id="@+id/timePeriod"
         android:layout_width="0px"
@@ -334,7 +816,7 @@
         tools:text="--'" />
 
     <ImageView
-        android:id="@+id/direction2"
+        android:id="@+id/direction"
         android:layout_width="40px"
         android:layout_height="40px"
         android:layout_marginLeft="291px"
@@ -400,12 +882,5 @@
         android:rotation="60"
         android:src="@drawable/second_hand"
         tools:ignore="UseAppTint" />
-
-    <!--   FLAGs   -->
-    <View
-        android:id="@+id/AAPSv2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
 </FrameLayout>

@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="do_you_want_reset_stats">Chcete resetovať štatistiky aktivity?</string>
-    <string name="do_you_want_reset_tdd_stats">Chcete resetovať štatistiky CDD?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Chcete prepočítať štatistiky CDD?</string>
     <string name="statistics">Štatistika</string>
     <string name="calculation_in_progress">Prebieha výpočet</string>
     <string name="invalid_age">Neplatný záznam veku</string>
@@ -80,24 +80,15 @@
     <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
     <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Inzulín:</string>
     <string name="treatments_carbs_label_string">Sacharidy:</string>
-    <string name="treatments_iobtotal_label_string">Celkový IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Celková aktivita IOB:</string>
-    <string name="tempbasals_realduration_label_string">Trv:</string>
     <string name="tempbasals_netratio_label_string">Pomer:</string>
-    <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Korekcia</string>
     <string name="meal_bolus">Jedlo</string>
     <string name="prime">Plnenie</string>
-    <string name="profile_changes">Zmeny profilu</string>
-    <string name="tempt_targets">Dočasné ciele</string>
     <string name="carbs_and_bolus">Sacharidy a bolusy</string>
     <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
     <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
-    <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
-    <string name="refresheventsfromnightscout">Aktualizovať z NS</string>
     <string name="show_invalidated">Zobraziť zneplatnené</string>
     <string name="hide_invalidated">Skryť zneplatnené</string>
     <string name="careportal_remove_started_events">Odstrániť všetky záznamy AAPS spustený</string>
@@ -131,26 +122,21 @@
     <string name="a11y_only_on_watch">iba na hodinkách</string>
     <string name="a11y_only_on_phone">iba na telefóne</string>
     <string name="quickwizard_settings">Nastavenie rýchleho bolusu</string>
-    <string name="overview_edit_quickwizard_button_text">Text na tlačidle:</string>
-    <string name="overview_edit_quickwizard_carbs">Sacharidy:</string>
+    <string name="overview_edit_quickwizard_button_text">Text tlačidla</string>
     <string name="overview_edit_quickwizard_valid">Platnosť:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Pridať</string>
-    <string name="overview_quickwizard_item_edit_button">Upraviť</string>
-    <string name="overview_edit_quickwizard_show_on_device">Zobraziť záznam na zariadení:</string>
-    <string name="overview_edit_quickwizard_use_bg">Výpočet glykémie</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Výpočet bolusového IOB</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Výpočet bazálneho IOB</string>
-    <string name="overview_edit_quickwizard_use_trend">Výpočet trendu</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Výpočet superbolusu</string>
-    <string name="overview_edit_quickwizard_percentage">Percento</string>
-    <string name="device_all">Všetko</string>
-    <string name="device_phone">Telefón</string>
-    <string name="device_watch">Hodinky</string>
-    <string name="positive_only">Iba kladné</string>
-    <string name="negative_only">Iba záporné</string>
-    <string name="overview_editquickwizard_usecob">Výpočet COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Výpočet dočasného cieľa</string>
-    <string name="overview_editquickwizard_usepercentage">Percentuálny výpočet</string>
-    <string name="app_default">Predvolené aplikáciou</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Iba kladný IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Percento je príliš vysoké!</string>
     <string name="a11y_drag_and_drop_handle">Režim \"Potiahni a pusť\"</string>
+    <string name="additional_ecarbs">Pridať eSacharidy</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Použiť pre kalkuláciu:</string>
+    <string name="constraints_violation">Mimo povolený rozsah</string>
+    <string name="change_your_input">Zmeňte zadanie!</string>
+    <string name="confirm_treatment">Prosím potvrďte ošetrenie</string>
+    <string name="recalculate">Prepočítať</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Oba</item>
+        <item>Iba kladné</item>
+        <item>Iba záporné</item>
+    </string-array>
 </resources>

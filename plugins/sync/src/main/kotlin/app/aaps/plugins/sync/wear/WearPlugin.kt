@@ -1,10 +1,18 @@
 package app.aaps.plugins.sync.wear
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -15,15 +23,20 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
-import dagger.android.HasAndroidInjector
+import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -31,27 +44,27 @@ import javax.inject.Singleton
 
 @Singleton
 class WearPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
+    private val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val context: Context,
     private val dataHandlerMobile: DataHandlerMobile,
-    private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
-
+    private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(WearFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
-        .preferencesId(R.xml.pref_wear)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_wear),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val disposable = CompositeDisposable()
@@ -77,7 +90,7 @@ class WearPlugin @Inject constructor(
             .toObservable(EventOverviewBolusProgress::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventOverviewBolusProgress ->
-                           if (!event.isSMB() || sp.getBoolean("wear_notifySMB", true)) {
+                           if (!event.isSMB() || preferences.get(BooleanKey.WearNotifyOnSmb)) {
                                if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = event.percent, status = event.status)))
                            }
                        }, fabricPrivacy::logException)
@@ -97,6 +110,10 @@ class WearPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ dataHandlerMobile.resendData("EventLoopUpdateGui") }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventWearUpdateTiles::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ dataHandlerMobile.sendUserActions() }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
@@ -107,11 +124,21 @@ class WearPlugin @Inject constructor(
                                }
                            }
                        }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventMobileToWear::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                // If there is a broadcast selected (ie.
+                //  AAPSClient want pass data to AAPS
+                //  AAPSClient2 want pass data to AAPS or AAPSClient 1
+                // ) do it here as the data is prepared
+                if (config.AAPSCLIENT && preferences.get(BooleanKey.WearBroadcastData)) broadcastData(it.payload)
+            }
     }
 
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
-            val cwfAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+            val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
             val cwfName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
             val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
             val fileName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_filename, "")
@@ -136,5 +163,75 @@ class WearPlugin @Inject constructor(
         disposable.clear()
         super.onStop()
         dataLayerListenerServiceMobileHelper.stopService(context)
+    }
+
+    private fun broadcastData(payload: EventData) {
+        // Identify and update source set before broadcast
+        val client = if (config.AAPSCLIENT1) 1 else if (config.AAPSCLIENT2) 2 else throw UnsupportedOperationException()
+        var dataToSend = when (payload) {
+            is EventData.SingleBg -> payload.copy().apply { dataset = client }
+            is EventData.Status   -> payload.copy().apply { dataset = client }
+            else                  -> payload
+        }
+        broadcast(
+            Intent(Intents.AAPS_CLIENT_WEAR_DATA)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .putExtras(Bundle().apply {
+                    putInt(WearDataReceiver.CLIENT, if (config.AAPSCLIENT1) 1 else if (config.AAPSCLIENT2) 2 else throw UnsupportedOperationException())
+                    putString(WearDataReceiver.DATA, dataToSend.serialize())
+                })
+        )
+    }
+
+    private fun broadcast(intent: Intent) {
+        context.packageManager.safeQueryBroadcastReceivers(intent, 0).forEach { resolveInfo ->
+            resolveInfo.activityInfo.packageName?.let {
+                intent.setPackage(it)
+                context.sendBroadcast(intent, WearDataReceiver.PERMISSION)
+                aapsLogger.debug(LTag.WEAR, "Sending broadcast " + intent.action + " to: " + it)
+            }
+        }
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "wear_wizard_settings" && requiredKey != "wear_custom_watchface_settings" && requiredKey != "wear_general_settings") return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "wear_settings"
+            title = rh.gs(R.string.wear_settings)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearControl, summary = R.string.wearcontrol_summary, title = R.string.wearcontrol_title))
+            if (config.AAPSCLIENT)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearBroadcastData, summary = R.string.wear_broadcast_data_summary, title = R.string.wear_broadcast_data))
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "wear_wizard_settings"
+                title = rh.gs(app.aaps.core.ui.R.string.wear_wizard_settings)
+                summary = rh.gs(R.string.wear_wizard_settings_summary)
+                //dependency = rh.gs(BooleanKey.WearControl.key)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardBg, title = app.aaps.core.ui.R.string.bg_label))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardTt, title = app.aaps.core.ui.R.string.tt_label))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardTrend, title = app.aaps.core.ui.R.string.bg_trend_label))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardCob, title = app.aaps.core.ui.R.string.treatments_wizard_cob_label))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardIob, title = app.aaps.core.ui.R.string.iob_label))
+            })
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "wear_custom_watchface_settings"
+                title = rh.gs(R.string.wear_custom_watchface_settings)
+                addPreference(
+                    AdaptiveSwitchPreference(
+                        ctx = context,
+                        booleanKey = BooleanKey.WearCustomWatchfaceAuthorization,
+                        summary = R.string.wear_custom_watchface_authorization_summary,
+                        title = R.string.wear_custom_watchface_authorization_title
+                    )
+                )
+            })
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "wear_general_settings"
+                title = rh.gs(R.string.wear_general_settings)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearNotifyOnSmb, summary = R.string.wear_notifysmb_summary, title = R.string.wear_notifysmb_title))
+            })
+        }
     }
 }

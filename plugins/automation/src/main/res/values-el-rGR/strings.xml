@@ -104,8 +104,6 @@
     <string name="automation_event">Συμβάν αυτοματισμού</string>
     <string name="reorder_label">Αναδιάταξη</string>
     <string name="user_action">Ενέργεια χρήστη</string>
-    <string name="remove_automation">Αφαίρεση αυτοματισμού</string>
-    <string name="sort_automation">Ταξινόμηση αυτοματισμού</string>
     <string name="remove_selected_items">Αφαίρεση επιλεγμένων στοιχείων</string>
     <string name="count_selected">Επιλέχθηκαν %1$d</string>
     <string name="system_automation">Αυτοματισμός συστήματος</string>
@@ -116,4 +114,11 @@
     <string name="time_to_eat">Ώρα για φαγητόt!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογίστε ξανά.</string>
     <string name="time_to_bolus">Ώρα για bolus!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογισμό ξανά.</string>
     <string name="error_setting_reminder">Σφάλμα κατά τη ρύθμιση μελλοντικού συναγερμού</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Εκτέλεση Autotune</string>
+    <string name="autotune_run_without_autoswitch">Το Autotune έτρεξε χωρίς αλλαγή προφίλ</string>
+    <string name="autotune_run_with_autoswitch">Το Autotune έτρεξε έγινε αυτόματη αλλαγή προφίλ</string>
+    <string name="autotune_run_with_error">Σφάλμα κατά την τελευταία εκτέλεση του Autotune</string>
+    <string name="autotune_run_cancelled">Εντοπίστηκε μια άλλη εκτέλεση του Autotune, η εκτέλεση ακυρώθηκε</string>
+    <!--    Steps count-->
 </resources>

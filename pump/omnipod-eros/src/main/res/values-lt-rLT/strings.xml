@@ -8,7 +8,7 @@
     <string name="omnipod_eros_preferences_category_notifications">Pranešimai</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod valdymo meniu rodyti mygtuką Pulse log</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod valdymo meniu rodyti mygtuką RileyLink statistika</string>
-    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Įgalinti baterijos keitimo registravimą veiksmuose</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Įjungti baterijos keitimo registravimą veiksmuose</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Įjungtas garsas neaiškiems SMB perspėjimams</string>
@@ -65,8 +65,6 @@
     <string name="omnipod_eros_pod_management_pulse_log">Pulse žurnalas</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse žurnalas (nukopijuotas į mainų sritį)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
-    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod insulinu, kurio pakaktų 3 dienoms.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš Pod, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80 v. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Toliau</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio gaubtelio.\n<b>Pastaba:</b> padėkite RileyLink vertikalioje pozicijoje ir Pod kelių cm atstumu vienas nuo kito.</string>
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod insulinu, kurio pakaktų 3 dienoms.\n\nAtkreipkite dėmesį į du pyptelėjimus, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80 v. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Toliau</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio gaubtelio.\n<b>Pastaba:</b> padėkite RileyLink vertikalioje pozicijoje ir Pod kelių cm atstumu vienas nuo kito.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Vyksta naujo Pod susiejimas ir užpildymas.\n\nSėkmingai užsibaigus inicijavimo procesui, spauskite <b>Toliau</b>.\n\n <b>Pastaba:</b> padėkite RileyLink vertikalioje pozicijoje ir Pod kelių cm atstumu vienas nuo kito.</string>
-    <!-- Omnipod Eros - Other -->
-    <string name="omnipod_eros_uncertain">neaišku</string>
 </resources>

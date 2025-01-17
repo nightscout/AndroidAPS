@@ -22,12 +22,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.getThemeColor
 import app.aaps.core.ui.locale.LocaleHelper
+import dagger.Reusable
 import java.util.Locale
 import javax.inject.Inject
 
 /**
  * Created by adrian on 2019-12-23.
  */
+@Reusable
 class ResourceHelperImpl @Inject constructor(var context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
 
     override fun gs(@StringRes id: Int): String =

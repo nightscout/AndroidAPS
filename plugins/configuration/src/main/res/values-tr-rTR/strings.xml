@@ -19,6 +19,7 @@
     <string name="permission">Yetki</string>
     <string name="need_system_window_permission">Uygulama, bildirimler için sistem iznine ihtiyaç duyuyor</string>
     <string name="need_location_permission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
+    <string name="need_background_location_permission">Uygulamanın otomasyonlar için arka plan konum iznine ihtiyacı var</string>
     <string name="need_storage_permission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
     <string name="askforpermission">İzin için sorunuz</string>
     <string name="need_whitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
@@ -30,15 +31,13 @@
     <string name="status">Durum:</string>
     <string name="patient_name">Hasta Adı</string>
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
-    <string name="privacy_settings">Gizlilik ayarı</string>
-    <string name="privacy_summary">Uygulama çökmeleri hakkında bilgilendirilmek istiyorsanız isteğe bağlı e-posta adresi sağlayabilirsiniz. Bu otomatik bir hizmet değildir. Tehlikeli durumlarda geliştiriciler sizinle iletişime geçecektir.</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/tr/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Bu nedenle, yeni bir kullanıcı iseniz, muhtemelen en sonuncusu ile değil, AMA ile başlayabilirsiniz. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
@@ -47,8 +46,8 @@
     <string name="readstatus">Durum oku</string>
     <string name="data_choices">Veri seçenekleri</string>
     <string name="fabric_upload">Fabric Upload</string>
-    <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
-    <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
+    <string name="unattended_settings_export">Gözetimsiz Ayarlar Dışa Aktarımı</string>
+    <string name="unattended_settings_export_summary">Bunu etkinleştirmek, parolanızı telefonunuzda güvenli bir şekilde saklayacaktır</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
     <string name="request">İstek</string>
     <string name="apsmode_title">APS modu</string>
@@ -82,6 +81,8 @@
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="a11y_open_settings">ayarları aç</string>
     <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
+    <string name="expand_category">Kategoriyi genişlet</string>
+    <string name="collapse_category">Kategoriyi daralt</string>
     <!--ImportExport-->
     <string name="nav_preferences">Tercihler</string>
     <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
@@ -93,10 +94,11 @@
     <string name="check_preferences_import_btn">İçe aktarma</string>
     <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
     <string name="import_setting">Ayarları içe aktarın</string>
+    <string name="aaps_directory">AAPS dizini</string>
+    <string name="select_aaps_directory">Dışa aktarımı, yapılandırmaları vb. depolamak için AAPS dizinini seçin.</string>
     <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
     <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
     <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
-    <string name="nav_export">Dışarı aktarma ayarları</string>
     <string name="export_to">Ayarları aktar</string>
     <string name="import_from">Ayarları içe aktar</string>
     <string name="setting_imported">Ayarlar içe aktarıldı</string>
@@ -104,18 +106,20 @@
     <string name="different_password_used">Bu dosya dışa aktarılmış ve farklı bir parola ile şifrelenmiş. Dosyanın şifresini çözmek için eski parolayı bulun.</string>
     <string name="master_password_will_be_replaced">Başarılı içe aktarma işleminin sonucu olarak mevcut ana parola, eski ana parola ile DEĞİŞTİRİLECEKTİR!</string>
     <string name="exported">Tercihler dışa aktarıldı</string>
+    <string name="exported_failed">Tercihler dışa aktarılamadı!</string>
     <string name="filenotfound">Dosya bulunamadı</string>
     <string name="goto_main_try_again">Lütfen ana ekrana dönün ve tekrar deneyin.</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
     <string name="protection">Güvenlik</string>
-    <string name="master_password_missing">Ana parola belirlenmedi!\n\nLütfen Ana parolanızı Tercihler\'de belirleyin (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">Ana parola belirlenmedi!\n\nLütfen Ana parolanızı Tercihler\'de belirleyin (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Bakım</string>
     <string name="maintenance_shortname">BAKIM</string>
     <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
     <string name="database_cleanup">Veritabanı temizleme</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
+    <string name="reset_aps_results_confirm">APS sonuçlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="maintenance_settings">Bakım ayarları</string>
     <string name="maintenance_email">E-Posta alıcısı</string>
     <string name="maintenance_amount">Gönderilecek kayıt yok</string>
@@ -132,11 +136,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s önce dışa aktarıldı</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s\'de dışa aktarıldı</string>
     <string name="exported_less_than_hour_ago">bir süre önce dışa aktarıldı</string>
-    <string name="in_directory" comment="placeholder is for exported file path">dizinde: %1$s</string>
     <string name="preferences_import_list_title">İçe aktarılacak dosyayı seçin</string>
     <string name="metadata_warning_different_flavour">Sizde: %2$s varken, farklı AAPS (%1$s) türeviyle tercihler oluşturuldu.\n\nBazı ayarlar eksik veya geçersiz olabilir - içe aktardıktan sonra lütfen tercihlerinizi kontrol edin ve güncelleyin.</string>
     <string name="metadata_warning_different_device">Tercihler farklı bir cihazda oluşturuldu. Daha eski/farklı bir telefondan içe aktarıyorsanız sorun değil, ancak içe aktarılan tercihlerin doğru olduğundan emin olun!</string>
-    <string name="metadata_warning_outdated_format">Eski AAPS sürümünün güvenli olmayan eski dosya biçimini kullanıyorsunuz! Geçerli JSON formatında bir dosyanız yoksa son çare olarak kullanın.</string>
     <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçiyorsunuz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
     <string name="metadata_warning_date_format">Geçersiz tarih-saat biçimi!</string>
     <string name="metadata_warning_different_version">Uygulamanın farklı alt sürümlerinden tercihler. Yükseltmeden sonra içe aktarıyorsanız sorun değil, ancak tercihlerin hala doğru olup olmadığını içe aktarmadan sonra kontrol edin!</string>
@@ -154,8 +156,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Özel Saat arayüzünü Seçin</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada AAPS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Dosya formatı</string>
     <string name="metadata_label_created_at">Oluşturulma tarihi</string>
@@ -165,6 +165,7 @@
     <string name="metadata_label_device_model">Cihaz modelini dışa aktarma</string>
     <string name="metadata_label_encryption">Dosya şifreleme</string>
     <string name="metadata_format_new">Yeni şifrelenmiş format</string>
-    <string name="metadata_format_debug">Yeni hata ayıklama formatı (şifrelenmemiş)</string>
     <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
+    <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Dosya sistemine erişim hatası. Lütfen AAPS dizinini doğru seçin.</string>
 </resources>

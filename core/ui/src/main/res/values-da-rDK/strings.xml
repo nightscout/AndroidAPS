@@ -112,7 +112,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Kør alarm om %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus fejl. Undersøg manuelt hvor meget insulin der er givet</string>
     <string name="bolus_reminder">Boluspåminder</string>
     <string name="duration_label">Varighed</string>
     <string name="shortgramm">g</string>
@@ -400,53 +399,8 @@
     <string name="a11y_user">bruger</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Hjælp til potentielle justeringer af profil (ISF, KH-ratio og basalrater)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Autotune indstillinger</string>
-    <string name="autotune_auto_title">Automatisk profilskift</string>
-    <string name="autotune_auto_summary">Hvis aktiveret, vil Autotune automatisk opdatere og skifte til input-profil efter beregning ud fra en automatiseringsregel.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM som basal</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du har indtastet alle kulhydrater på pålidelig vis. Med denne indstilling vil pludselige stigninger set af Autotune, blive brugt til at anbefale ændringer af basal rate.</string>
-    <string name="autotune_tune_insulin_curve_title">Tilpas insulinkurven</string>
-    <string name="autotune_tune_insulin_curve_summary">Aktiver kun hvis du bruger egen peak værdi. Dette alternativ vil justere peak og DIA-varigheden</string>
-    <string name="autotune_default_tune_days_title">Antal dage med data</string>
-    <string name="autotune_circadian_ic_isf_title">Anvend gennemsnitligt resultat i døgnbaseret IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere døgnrytme variationer, denne indstilling benytter gennemsnitlige værdier til justering af IC og ISF til din døgnrytme input profil</string>
-    <string name="autotune_additional_log_title">Inkludér flere logoplysninger for fejlfinding</string>
-    <string name="autotune_additional_log_summary">Aktivér kun hvis udviklerne beder dig om det, for at sende flere logoplysninger til at hjælpe med at fejlfinde Autotune plugin</string>
-    <string name="autotune_default_tune_days_summary">Standard antal dage data der skal behandles af Autotune (op til 30)</string>
-    <string name="autotune_tunedprofile_name">Justeret</string>
-    <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Justerings dage :</string>
-    <string name="autotune_last_run">Sidst kørt :</string>
-    <string name="autotune_warning">Advarsel :</string>
     <string name="autotune_select_profile">Vælg profil, der skal justeres</string>
-    <string name="autotune_ic_warning">Autotune fungerer med kun én IC-værdi, din profil har %1$d værdier. Gennemsnitsværdi er %2$.2fg/E</string>
-    <string name="autotune_isf_warning">Autotune virker med kun én ISF-værdi, din profil har %1$d værdier. Gennemsnitlig værdi er %2$.1f%3$s/E</string>
-    <string name="autotune_error">Fejl i inputdata, prøv at køre autotune igen eller reducer antallet af dage</string>
-    <string name="autotune_error_more_days">Fejl i inputdata, øg antallet af dage</string>
-    <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
-    <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
-    <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>
-    <string name="autotune_result">Resultat: %1$s</string>
-    <string name="autotune_param">Parameter</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Mangler</string>
-    <string name="autotune_profile_name">Autotune profil %1$s</string>
-    <string name="autotune_run">Kør Autotune</string>
-    <string name="autotune_check_input_profile_button">Tjek input-profil</string>
-    <string name="autotune_compare_profile">Sammenlign profiler</string>
-    <string name="autotune_copy_localprofile_button">Kopier til lokal profil</string>
-    <string name="autotune_update_input_profile_button">Opdater input profil</string>
-    <string name="autotune_revert_input_profile_button">Gendan input profil</string>
-    <string name="autotune_copy_local_profile_message">Opret en ny lokal profil ud fra denne Autotune profil?</string>
-    <string name="autotune_update_local_profile_message">Opdater %1$s profil med Autotune profil?</string>
-    <string name="autotune_revert_local_profile_message">Gendan %1$s profil med Input-profilen?</string>
-    <string name="autotune_profile_invalid">Profil ugyldig</string>
-    <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
-    <string name="autotune_run_with_autoswitch">Autotune kørte og profilen blev automatisk skiftet</string>
-    <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
-    <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>
     <string name="urgent_alarm">Akut alarm</string>
@@ -526,7 +480,6 @@
     <string name="limitingpercentrate">Begrænser maks. procent til %1$d%% på grund af %2$s</string>
     <string name="itmustbepositivevalue">det skal være en positiv værdi</string>
     <string name="limitingbolus">Begrænser bolus til %1$.1f IE på grund af %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekræftelse</string>
     <string name="message">Besked</string>
@@ -538,6 +491,8 @@
     <string name="close">Luk</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du vil blive bedt om hovedadgangskode, som er nødvendig for at dekryptere importerede præferencer.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">fald %1$s af %2$s</string>
     <string name="a11y_plus_button_description">stigning %1$s af %2$s</string>

@@ -113,7 +113,6 @@
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
     <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
-    <string name="treatmentdeliveryerror">Bolus가 오류를 보고했습니다. 수동으로 실제 투여된 양을 확인합니다.</string>
     <string name="bolus_reminder">BOLUS 알림</string>
     <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>
@@ -403,53 +402,8 @@
     <string name="a11y_user">사용자</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">프로파일의 잠재적 조정 (ISF, 탄수화물 비율 및 basal 비율) 에 대한 도움</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Autotune 설정</string>
-    <string name="autotune_auto_title">자동 프로파일 전환</string>
-    <string name="autotune_auto_summary">옵션이 활성화되면, 자동화 규칙에서 계산한 후 Autotune이 자동으로 업데이트되고 입력 프로파일로 전환됩니다.</string>
-    <string name="autotune_categorize_uam_as_basal_title">UAM을 Basal로 분류하기</string>
-    <string name="autotune_categorize_uam_as_basal_summary">섭취한 모든 탄수화물을 안정적으로 입력한 경우에만 활성회됩니다. 이 옵션은 Autotune에 의해 표시되는 급격한 상승을 기본 속도로 변경을 권장하는 데 사용됩니다.</string>
-    <string name="autotune_tune_insulin_curve_title">인슐린 곡선 조정하기</string>
-    <string name="autotune_tune_insulin_curve_summary">사용 가능한 피크를 사용하는 경우에만 활성화됩니다. 이 옵션은 피크 및 DIA 시간을 조정합니다.</string>
-    <string name="autotune_default_tune_days_title">데이터 일 수</string>
-    <string name="autotune_circadian_ic_isf_title">일일 IC/ISF의 평균 결과 적용</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune은 매일 조정되지 않으며, 이 옵션은 주기적 입력 프로파일의 IC 및 ISF의 평균 조정에만 적용합니다.</string>
-    <string name="autotune_additional_log_title">디버깅을 위한 로그 정보를 더 포함합니다</string>
-    <string name="autotune_additional_log_summary">개발자가 Autotune 플러그인의 디버깅을 지원하기 위해 로그 정보를 더 보내도록 요청한 경우에만 활성화됩니다</string>
-    <string name="autotune_default_tune_days_summary">Autotune 에서 처리할 기본 데이터 일수 (최대 30일)</string>
-    <string name="autotune_tunedprofile_name">조정된</string>
-    <string name="autotune_profile">프로파일 :</string>
     <string name="autotune_tune_days">조정 일수 :</string>
-    <string name="autotune_last_run">최근 실행 :</string>
-    <string name="autotune_warning">경고 :</string>
     <string name="autotune_select_profile">조정할 프로파일 선택하기</string>
-    <string name="autotune_ic_warning">선택한 프로파일의 IC 값은 %1$d 입니다. Autotune은 %2$.2f g/U을 사용합니다.</string>
-    <string name="autotune_isf_warning">선택한 프로파일의 ISF 값은 %1$d 입니다. Autotune은 %2$.1f %3$s/U을 사용합니다.</string>
-    <string name="autotune_error">입력 데이터에서 오류가 발생했습니다. 다시 Autotune하거나, 일수를 줄이십시오</string>
-    <string name="autotune_error_more_days">입력 데이터에서 오류가 발생했습니다, 일수를 증가시키십시오</string>
-    <string name="autotune_warning_during_run">Autotune 계산이 시작되었습니다, 잠시 기다려 주십시오</string>
-    <string name="autotune_warning_after_run">사용하기 전에 결과를 주의 깊게 확인하세요!</string>
-    <string name="autotune_partial_result">부분 결과 날짜 %1$d / %2$d 조정됨</string>
-    <string name="autotune_result">결과: %1$s</string>
-    <string name="autotune_param">매개변수</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">누락</string>
-    <string name="autotune_profile_name">Autotune 프로파일 %1$s</string>
-    <string name="autotune_run">Autotune 실행하기</string>
-    <string name="autotune_check_input_profile_button">입력 프로파일 확인하기</string>
-    <string name="autotune_compare_profile">프로파일 비교하기</string>
-    <string name="autotune_copy_localprofile_button">로컬 프로파일로 복사하기</string>
-    <string name="autotune_update_input_profile_button">입력 프로파일 확인하기</string>
-    <string name="autotune_revert_input_profile_button">입력 프로파일 되돌리기</string>
-    <string name="autotune_copy_local_profile_message">Autotune 프로파일에서 새로운 로컬 프로파일을 생성하시겠습니까?</string>
-    <string name="autotune_update_local_profile_message">Autotune 프로파일에서 %1$s 프로파일을 업데이트 하시겠습니까?</string>
-    <string name="autotune_revert_local_profile_message">입력 프로파일과 함께 %1$s 프로파일을 되돌리시겠습니까?</string>
-    <string name="autotune_profile_invalid">프로파일이 잘못되었습니다</string>
-    <string name="autotune_run_without_autoswitch">프로파일 변경 없이 Autotune이 실행되었습니다</string>
-    <string name="autotune_run_with_autoswitch">Autotune 및 프로파일 자동 전환이 실행되었습니다</string>
-    <string name="autotune_run_with_error">마지막 Autotune 실행시 오류가 발생했습니다</string>
-    <string name="autotune_run_cancelled">Autotune의 또 다른 실행이 감지되었습니다, 실행이 취소되었습니다</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
     <string name="urgent_alarm">긴급 알람</string>
@@ -531,7 +485,6 @@
     <string name="limitingpercentrate">%2$s로 인해 최대 비율이 %1$d%%로 제한됩니다.</string>
     <string name="itmustbepositivevalue">양의 값이어야 합니다.</string>
     <string name="limitingbolus">%2$s로 인해 Bolus가 %1$.1f U로 제한됩니다.</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">확인</string>
     <string name="message">메시지</string>
@@ -543,6 +496,8 @@
     <string name="close">닫기</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">내보낸 preferences를 가져오기 위해서는 마스터 비밀번호가 필요합니다.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">%1$s을 %2$s만큼 감소하였습니다</string>
     <string name="a11y_plus_button_description">%1$s을 %2$s만큼 증가하였습니다</string>

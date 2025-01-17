@@ -20,7 +20,7 @@ class IobIconComplication : BaseComplicationProviderService() {
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
-            val iob = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MAX_FIELD_LEN_SHORT)
+            val iob = SmallestDoubleString(raw.status[0].iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MAX_FIELD_LEN_SHORT)
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                 .setShortText(ComplicationText.plainText(iob))
                 .setIcon(Icon.createWithResource(this, R.drawable.ic_ins))

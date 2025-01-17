@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Inserisci un nome task.</string>
     <string name="automation_missing_trigger">Specifica almeno un trigger.</string>
     <string name="automation_missing_action">Specifica almeno un\'azione.</string>
+    <string name="exportsettings_message">Esportazione Impostazioni: %1$s</string>
+    <string name="export_settings_short">Testo nei trattamenti:</string>
     <string name="alarm_message">Allarme: %1$s</string>
     <string name="alarm_short">Allarme:</string>
     <string name="message_short">Msg:</string>
@@ -87,6 +89,20 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Frequenza cardiaca</string>
     <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Età del sensore</string>
+    <string name="triggerSensorAgeDesc">Età del sensore %1$s %2$.1f ore</string>
+    <string name="triggerCannulaAgeLabel">Età della cannula</string>
+    <string name="triggerCannulaAgeDesc">Età della cannula %1$s %2$.1f ore</string>
+    <string name="triggerPodChangeLabel">Attivazione pod</string>
+    <string name="triggerPodChangeDesc">Pod attivato</string>
+    <string name="triggerInsulinAgeLabel">Età dell\'insulina</string>
+    <string name="triggerInsulinAgeDesc">Età dell\'insulina %1$s %2$.1f ore</string>
+    <string name="triggerPumpBatteryAgeLabel">Età della batteria del micro</string>
+    <string name="triggerPumpBatteryAgeDesc">Età batteria del micro %1$s %2$.1f ore</string>
+    <string name="triggerReservoirLevelLabel">Livello serbatoio</string>
+    <string name="triggerReservoirLevelDesc">Livello serbatoio %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Livello della batteria del micro</string>
+    <string name="triggerPumpBatteryLevelDesc">Livello della batteria del micro %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Tempo ricorrente</string>
@@ -104,8 +120,6 @@
     <string name="automation_event">Evento di automazione</string>
     <string name="reorder_label">Riordina</string>
     <string name="user_action">Azione utente</string>
-    <string name="remove_automation">Rimuovi automazione</string>
-    <string name="sort_automation">Ordina automazione</string>
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="count_selected">%1$d selezionato</string>
     <string name="system_automation">Automazione sistema</string>
@@ -116,4 +130,15 @@
     <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="error_setting_reminder">Errore nell\'impostare l\'allarme futuro</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Profilo Autotune %1$s</string>
+    <string name="autotune_run">Esegui Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune eseguito senza cambio profilo</string>
+    <string name="autotune_run_with_autoswitch">Autotune eseguito e profilo cambiato automaticamente</string>
+    <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
+    <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Conteggio Passi</string>
+    <string name="triggerStepsCountDesc">Conteggio passi per %1$s minuti %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Durata Della Misurazione</string>
 </resources>

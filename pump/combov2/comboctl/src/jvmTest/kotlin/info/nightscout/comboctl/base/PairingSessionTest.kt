@@ -448,7 +448,7 @@ class PairingSessionTest {
         val testBluetoothDevice = TestBluetoothDevice(testIO)
         val pumpIO = PumpIO(testPumpStateStore, testBluetoothDevice, onNewDisplayFrame = {}, onPacketReceiverException = {})
 
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             pumpIO.performPairing(
                 testBtFriendlyName,
                 null

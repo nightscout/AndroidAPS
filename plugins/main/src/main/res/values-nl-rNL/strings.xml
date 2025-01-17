@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Om de SMS Remote Service uit te zetten, antwoord met code %1$s.\n\nDenk er aan dat je deze alleen weer aan kunt zetten op de AAPS master smartphone.</string>
     <string name="smscommunicator_stopped_sms">De controle via SMS is uitgezet. Gebruik AAPS op de master smartphone om deze weer te aan te zetten.</string>
     <string name="smscommunicator_calibration_reply_with_code">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus mislukt</string>
+    <string name="smscommunicator_bolus_failed">Bolus is mislukt. Controleer werkelijke status voordat je een andere opdracht verzendt!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimum aantal minuten dat moet verstrijken tussen een bolus op afstand en de volgende</string>
     <string name="smscommunicator_remote_bolus_min_distance">Hoeveel minuten er ten minste moeten verstrijken tussen een bolus en de volgende</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Voor de veiligheid moet je ten minste 2 telefoonnummers toevoegen om deze instelling te kunnen bijwerken.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">DOEL</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label_warning">Uw algoritme kan een dynamische berekening van ISF leveren. De onderstaande waarden worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens of als referentiewaarde</string>
+    <string name="ic_dynamic_label_warning">Uw algoritme kan een dynamische berekening van IC leveren. De onderstaande waarden worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens of als referentiewaarde</string>
     <!-- Actions -->
     <string name="actions">Acties</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Drempelwaarde waarschuwing pompbatterijniveau [%]</string>
     <string name="statuslights_bat_critical">Drempelwaarde kritiek pompbatterijniveau [%]</string>
     <string name="statuslights_copy_ns">Kopieer instellingen van NS</string>
+    <string name="graph_scale_6h">6u</string>
+    <string name="graph_scale_12h">12u</string>
+    <string name="graph_scale_18h">18u</string>
+    <string name="graph_scale_24h">24u</string>
+    <string name="graph_long_scale_6h">6 uur</string>
+    <string name="graph_long_scale_12h">12 uur</string>
+    <string name="graph_long_scale_18h">18 uur</string>
+    <string name="graph_long_scale_24h">24 uur</string>
     <string name="a11y_graph">grafiek</string>
+    <string name="a11y_graph_scale">selecteer grafiek schaal</string>
+    <string name="a11y_graph_scale_6h">grafiek schaal 6 uur</string>
+    <string name="a11y_graph_scale_12h">grafiek schaal 12 uur</string>
+    <string name="a11y_graph_scale_18h">grafiek schaal 18 uur</string>
+    <string name="a11y_graph_scale_24h">grafiek schaal 24 uur</string>
     <string name="a11y_insulin_label">insuline</string>
     <string name="chart_menu">Grafiek menu</string>
     <string name="a11y_bg_quality">bloedglucose kwaliteit</string>
@@ -201,11 +216,8 @@
     <string name="overview_shortname">OVZ</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="overview_buttons_selection">Knoppen</string>
-    <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of open het BYODA kalibratie venster</string>
-    <string name="show_cgm_button_summary">Opent xDrip+ of BYODA, terug knop om terug te gaan naar AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom app is niet geïnstalleerd.</string>
-    <string name="dexcom_app_not_detected">Gelieve Dexcom app naar ondersteunde versie te updaten</string>
-    <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
+    <string name="show_calibration_button_summary">Verzend een kalibratie naar xDrip+ (zorg ervoor dat \'Accept Calibrations\' is ingeschakeld in xDrip+ onder Inter-App instellingen).</string>
+    <string name="show_cgm_button_summary">Opent xDrip+ of Dexcom App (je kunt de terug knop gebruiken om terug te keren naar AAPS).</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="change_your_input">Wijzig het ingegevene!</string>
@@ -226,12 +238,12 @@
     <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standaard tijdelijke streefdoelen</string>
-    <string name="eatingsoon_duration">Eet binnenkort tijdsduur</string>
-    <string name="eatingsoon_target">Eet binnenkort streefdoel</string>
-    <string name="activity_duration">Activiteit tijdsduur</string>
-    <string name="activity_target">Activiteit streefdoel</string>
-    <string name="hypo_duration">Hypo tijdsduur</string>
-    <string name="hypo_target">Hypo streefdoel</string>
+    <string name="eatingsoon_duration">Binnenkort eten tijdsduur (minuten)</string>
+    <string name="eatingsoon_target">Binnenkort eten streefwaarde</string>
+    <string name="activity_duration">Activiteit duur (minuten)</string>
+    <string name="activity_target">Activiteit streefwaarde</string>
+    <string name="hypo_duration">Hypo duur (minuten)</string>
+    <string name="hypo_target">Hypo streefwaarde</string>
     <string name="fill_bolus_title">Ontlucht/Vul standaard insuline hoeveelheden</string>
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
@@ -258,12 +270,13 @@
     <string name="overview_show_deviation_slope">Richtingscoëfficiënt afwijking</string>
     <string name="overview_show_activity">Activiteit</string>
     <string name="overview_show_bgi">Bloedglucose impact</string>
-    <string name="overview_show_sensitivity">Gevoeligheid</string>
+    <string name="overview_show_sensitivity">Gevoeligheid wijziging</string>
     <string name="overview_show_deviations">Afwijkingen</string>
     <string name="overview_show_cob">Opgenomen Koolhydraten</string>
     <string name="overview_show_iob">Opgenomen Insuline</string>
     <string name="overview_show_basals">Basalen</string>
     <string name="overview_show_abs_insulin">Absolute insuline</string>
+    <string name="overview_show_variable_sens">Variabele gevoeligheid</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -273,9 +286,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEHAND</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Klassiek weergave thema</string>
     <string name="lowres_description">Lage resolutie skin</string>
@@ -284,8 +299,10 @@
     <string name="skin">Skin</string>
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
+    <string name="overview_show_steps">Stappen</string>
+    <string name="steps_shortname">STAPPEN</string>
+    <string name="simple_mode_enabled">Eenvoudige modus ingeschakeld</string>
 </resources>

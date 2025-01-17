@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.objects.workflow.LoggingWorker
 import kotlinx.coroutines.Dispatchers
 import java.security.spec.InvalidParameterSpecException
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class UpdateGraphWorker(
             activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
         else
             rxBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.values().find { it.pass == pass } ?: throw InvalidParameterSpecException(), 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.entries.find { it.pass == pass } ?: throw InvalidParameterSpecException(), 100, null))
         return Result.success()
     }
 }

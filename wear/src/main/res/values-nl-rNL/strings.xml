@@ -2,15 +2,13 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Groot)</string>
-    <string name="label_watchface_big_chart">AAPS(GroteGrafiek)</string>
-    <string name="label_watchface_no_chart">AAPS(GeenGrafiek)</string>
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
     <string name="label_watchface_digital_style">AAPS(DigitaleStijl)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Acties)</string>
     <string name="label_temp_target_tile">AAPS(Tijdelijk Streefdoel)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
+    <string name="label_user_action_tile">AAPS(Gebruikersactie)</string>
     <string name="label_warning_sync">Geen gegevens!</string>
     <string name="label_warning_old">Oude gegevens!</string>
     <string name="label_warning_since">Sinds %1$s</string>
@@ -18,7 +16,6 @@
     <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens verstuurt naar horloge</string>
     <string name="msg_warning_old">AAPS gegevens zijn %1$s oud! Controleer je sensor, xDrip+, NS, AAPS instellingen of andere!</string>
     <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>
-    <string name="pref_units_for_actions">Eenheden voor acties</string>
     <string name="units_short">E</string>
     <string name="pref_display_settings">Scherm</string>
     <string name="pref_graph_settings">Grafiek</string>
@@ -35,6 +32,8 @@
     <string name="pref_show_phone_battery">Toon telefoonbatterij</string>
     <string name="pref_show_rig_battery">Toon rig batterij</string>
     <string name="pref_show_basal_rate">Toon basaal</string>
+    <string name="pref_show_temp_target">Toon tijdelijk doel</string>
+    <string name="pref_show_reservoir_level">Toon reservoir niveau</string>
     <string name="pref_show_loop_status">Toon loop status</string>
     <string name="pref_show_bg">Toon BG</string>
     <string name="pref_show_bgi">Toon BGI</string>
@@ -53,15 +52,15 @@
     <string name="pref_3_hours">3 uren</string>
     <string name="pref_4_hours">4 uren</string>
     <string name="pref_5_hours">5 uren</string>
+    <string name="pref_1_min">uitgeschakeld</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Invoer ontwerp</string>
     <string name="pref_default">Standaard</string>
     <string name="pref_quick_righty">Snel rechts</string>
     <string name="pref_quick_lefty">Snel links</string>
     <string name="pref_modern_sparse">Modern spaarzaam</string>
-    <string name="pref_low">Laag</string>
-    <string name="pref_medium">Middel</string>
-    <string name="pref_high">Hoog</string>
-    <string name="pref_auto">Automatisch</string>
     <string name="pref_big_numbers">Grote nummers</string>
     <string name="pref_ring_history">Ring geschiedenis</string>
     <string name="pref_light_ring_history">Lichte ring geschiedenis</string>
@@ -94,6 +93,7 @@
     <string name="action_duration">Duur</string>
     <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
     <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
+    <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
     <string name="action_treatment_confirmation">Behandeling aangevraagd</string>
     <string name="action_bolus_confirmation">Bolus aangevraagd</string>
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
@@ -115,7 +115,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Vrije hoeveelheid</string>
     <string name="action_confirm">BEVESTIGEN</string>
     <string name="action_timeshift">tijdsverschuiving</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus voortgang</string>
     <string name="press_to_cancel">druk om te annuleren</string>
     <string name="cancel_bolus">BOLUS ANNULEREN</string>
@@ -152,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Alleen tijd en BG weergeven</string>
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
     <string name="pref_show_weeknumber">Weeknummer weergeven</string>
+    <string name="pref_include_external">Externe weergaven opnemen in sjabloon</string>
+    <string name="pref_switch_external">Externe data wijzigen in watchface</string>
     <string name="custom_pref_show_seconds">Toon seconden</string>
     <string name="digitalstyle_pref_your_style">Jouw stijl:</string>
     <string name="digitalstyle_style_none">geen stijl</string>
@@ -184,17 +185,11 @@
     <string name="no_iob_u">--E</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--E/uur</string>
-    <string name="uploader_na">E: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min. geleden</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Geen Loop Status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
     <string name="snooze_alert">AAPS Sluimer Alarm</string>
     <string name="sending_snooze">Snooze versturen naar AAPS</string>
-    <string name="short_hour">u</string>
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">u</string>
@@ -204,4 +199,29 @@
     <string name="old_warning">!oud!</string>
     <string name="error">!fout!</string>
     <string name="pref_heartRateSampling">Hartslag</string>
+    <string name="pref_heartRateSmoothing">HR Vloeiend maken</string>
+    <string name="pref_stepsSampling">Stappenteller inschakelen</string>
+    <string name="tile_tempt_1">Tijdelijk Streefdoel 1</string>
+    <string name="tile_tempt_2">Tijdelijk Streefdoel 2</string>
+    <string name="tile_tempt_3">Tijdelijk Streefdoel 3</string>
+    <string name="tile_tempt_4">Tijdelijk Streefdoel 4</string>
+    <string name="tile_action_1">Actie 1</string>
+    <string name="tile_action_2">Actie 2</string>
+    <string name="tile_action_3">Actie 3</string>
+    <string name="tile_action_4">Actie 4</string>
+    <string name="datalayer_notification_title">Data Layer Voorgrond Service</string>
+    <string name="datalayer_notification_text">AAPS draait op de voorgrond. Om meldingen te verbergen ga je naar de ontwikkelaarsopties, App meldingen, Toegestane horloge apps, selecteer AAPS, schakel Data Layer Voorgrond Service Kanaal melding uit.</string>
+    <string name="on">AAN</string>
+    <string name="off">UIT</string>
+    <string name="complication_full_status">Volledige status</string>
+    <string name="complication_full_status_flipped">Volledige status (omgedraaid)</string>
+    <string name="complication_blood_glucose">Bloed glucose</string>
+    <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
+    <string name="complication_br_iob">BR &amp; IOB</string>
+    <string name="complication_cob_iob">CoB &amp; IoB</string>
+    <string name="complication_cob_icon">CoB icoon</string>
+    <string name="complication_cob_detailed">Gedetailleerde CoB</string>
+    <string name="complication_iob_icon">IoB icoon</string>
+    <string name="complication_iob_detailed">Gedetailleerde IoB</string>
+    <string name="complication_uploader_phone_battery">Uploader/Telefoon Batterij</string>
 </resources>

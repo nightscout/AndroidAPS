@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Pentru a dezactiva serviciul SMS la distanta raspundeti cu: %1$s.\n\nRetineti ca o sa il puteti reactiva doar direct de pe smartphone-ul master AAPS.</string>
     <string name="smscommunicator_stopped_sms">Serviciul SMS la distanta s-a oprit. Pentru a il reactiva, utilizati AAPS de pe smartphone-ul master.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pentru a trimite calibrarea cu %1$.2f răspundeți cu codul %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolusare eșuată</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Numarul minim de minute care trebuie sa treaca intre un bolus la distanta si urmatorul</string>
     <string name="smscommunicator_remote_bolus_min_distance">Cate minute trebuie sa treaca, cel puţin, intre un bolus si următorul</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Pentru siguranta dumneavoastra, pentru a edita aceasta preferinta trebuie sa adaugati cel putin 2 numere de telefon.</string>
@@ -201,11 +200,6 @@
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="overview_buttons_selection">Butoane</string>
-    <string name="show_calibration_button_summary">Trimite o calibrare la xDrip+ sau deschide fereastra de calibrare BYODA</string>
-    <string name="show_cgm_button_summary">Deschide xDrip+ sau BYODA, prin butoanele înapoi se revine la AAPS</string>
-    <string name="dexcom_app_not_installed">Aplicația Dexcom nu este instalată.</string>
-    <string name="dexcom_app_not_detected">Actualizați aplicația Dexcom la o versiune acceptată</string>
-    <string name="error_starting_cgm">Nu s-a putut deschide aplicația CGM. Asigurați-vă că este instalată.</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="change_your_input">Schimbați ceea ce ați introdus!</string>
@@ -226,12 +220,6 @@
     <string name="thirdcarbsincrement">Al treilea increment de carbohidrați</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Ținte-Temporare implicite</string>
-    <string name="eatingsoon_duration">durată mănânc-în-curând</string>
-    <string name="eatingsoon_target">țintă mănânc-în-curând</string>
-    <string name="activity_duration">durată activitate</string>
-    <string name="activity_target">țintă activitate</string>
-    <string name="hypo_duration">durată țintă</string>
-    <string name="hypo_target">țintă hipo</string>
     <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
@@ -259,7 +247,6 @@
     <string name="overview_show_deviation_slope">Panta deviaţiei</string>
     <string name="overview_show_activity">Activitate</string>
     <string name="overview_show_bgi">Impactul glicemiei</string>
-    <string name="overview_show_sensitivity">Sensibilitate</string>
     <string name="overview_show_deviations">Deviații</string>
     <string name="overview_show_cob">Carbohidrați activi</string>
     <string name="overview_show_iob">Insulină activă</string>
@@ -274,7 +261,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <!-- Skins -->
@@ -285,8 +271,8 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
+    <string name="overview_show_steps">Paşi</string>
 </resources>

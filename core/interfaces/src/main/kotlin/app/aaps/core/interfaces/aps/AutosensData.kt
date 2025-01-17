@@ -15,11 +15,12 @@ interface AutosensData {
 
     var time: Long
     var bg: Double
+    var sens: Double
     var pastSensitivity: String
     var deviation: Double
     var validDeviation: Boolean
     var activeCarbsList: MutableList<CarbsInPast>
-    var absorbed: Double
+    var this5MinAbsorption: Double
     var carbsFromBolus: Double
     var cob: Double
     var bgi: Double
@@ -42,6 +43,10 @@ interface AutosensData {
     var autosensResult: AutosensResult
 
     fun cloneCarbsList(): MutableList<CarbsInPast>
+
+    /**
+     * Deduct this 5 min absorption from the active carbs list from oldest to newest.
+     */
     fun deductAbsorbedCarbs()
     fun removeOldCarbs(toTime: Long, isAAPSOrWeighted: Boolean)
 }

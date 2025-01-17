@@ -198,10 +198,10 @@
 
                 </LinearLayout>
 
-                <app.aaps.core.main.graph.ActivityGraph
+                <app.aaps.core.graph.ActivityGraph
                     android:id="@+id/insulin_graph"
                     android:layout_width="match_parent"
-                    android:layout_height="100dip"
+                    android:layout_height="200dip"
                     android:layout_margin="20dp" />
 
             </LinearLayout>
@@ -212,6 +212,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/ic_dynamic_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/ic_dynamic_label_warning"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
                 <LinearLayout
                     android:id="@+id/ic_holder"
                     android:layout_width="match_parent"
@@ -219,10 +229,10 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <app.aaps.core.main.graph.IcProfileGraph
+                <app.aaps.core.graph.IcProfileGraph
                     android:id="@+id/ic_graph"
                     android:layout_width="match_parent"
-                    android:layout_height="100dip"
+                    android:layout_height="200dip"
                     android:layout_margin="20dp" />
 
             </LinearLayout>
@@ -233,6 +243,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/isf_dynamic_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/isf_dynamic_label_warning"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
                 <LinearLayout
                     android:id="@+id/isf_holder"
                     android:layout_width="match_parent"
@@ -240,10 +260,10 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <app.aaps.core.main.graph.IsfProfileGraph
+                <app.aaps.core.graph.IsfProfileGraph
                     android:id="@+id/isf_graph"
                     android:layout_width="match_parent"
-                    android:layout_height="100dip"
+                    android:layout_height="200dip"
                     android:layout_margin="20dp" />
 
             </LinearLayout>
@@ -261,10 +281,10 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <app.aaps.core.main.graph.BasalProfileGraph
+                <app.aaps.core.graph.BasalProfileGraph
                     android:id="@+id/basal_graph"
                     android:layout_width="match_parent"
-                    android:layout_height="100dip"
+                    android:layout_height="200dip"
                     android:layout_margin="20dp" />
 
             </LinearLayout>
@@ -282,10 +302,10 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <app.aaps.core.main.graph.TargetBgProfileGraph
+                <app.aaps.core.graph.TargetBgProfileGraph
                     android:id="@+id/target_graph"
                     android:layout_width="match_parent"
-                    android:layout_height="100dip"
+                    android:layout_height="200dip"
                     android:layout_margin="20dp" />
 
             </LinearLayout>

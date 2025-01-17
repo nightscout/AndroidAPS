@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom (BYODA).</string>
-    <string name="eversense">Eversense aplikace (upravená)</string>
-    <string name="description_source_eversense">Příjem glykémií z modifikované Eversense aplikace.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
     <string name="mm640g">MM640g</string>
@@ -24,16 +22,18 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
     <string name="random_bg">Náhodná glykémie</string>
     <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="do_xdrip_upload_title">Odesílat data do xDrip+</string>
-    <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
     <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
     <string name="dexcom_log_ns_sensor_change_title">Zaznamenávat výměnu senzoru do NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
     <string name="direction">směr</string>
+    <string name="bg_generation_interval_minutes">Interval generování glykémie v minutách</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Příjem glykémií z aplikace Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Příjem glykémií z aplikace Syai Tag.</string>
 </resources>

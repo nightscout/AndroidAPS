@@ -31,7 +31,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
             return true
         }
         val start = dateUtil.now() - averageHeartRateDurationMillis
-        val hrs = repository.getHeartRatesFromTime(start).blockingGet()
+        val hrs = persistenceLayer.getHeartRatesFromTime(start)
         val duration = hrs.takeUnless { it.isEmpty() }?.sumOf { hr -> hr.duration } ?: 0L
         if (duration == 0L) {
             aapsLogger.info(LTag.AUTOMATION, "HR not ready, no heart rate measured for ${friendlyDescription()}")
@@ -60,7 +60,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.main.R.drawable.ic_cp_heart_rate)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_heart_rate)
 
     override fun duplicate(): Trigger {
         return TriggerHeartRate(injector).also { o ->

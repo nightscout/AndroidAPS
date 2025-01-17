@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">Kilde</string>
     <string name="omnipod_dash_history_item_date">Dato</string>
     <string name="omnipod_dash_history_type">Type:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f IE</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f IE, CH=%2$.1f g</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth Status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresse</string>

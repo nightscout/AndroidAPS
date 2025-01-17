@@ -16,7 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
-import app.aaps.core.interfaces.extensions.runOnUiThread
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.Prefs
@@ -57,8 +57,8 @@ object PrefImportSummaryDialog {
             (rowLayout.findViewById<View>(R.id.summary_icon) as ImageView).setImageResource(metaKey.icon)
             (rowLayout.findViewById<View>(R.id.status_icon) as ImageView).setImageResource(metaEntry.status.icon)
 
-            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(app.aaps.core.interfaces.R.color.metadataTextWarning))
-            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(app.aaps.core.interfaces.R.color.metadataTextError))
+            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(app.aaps.core.ui.R.color.metadataTextWarning))
+            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(app.aaps.core.ui.R.color.metadataTextError))
 
             if (metaEntry.info != null) {
                 details.add("<b>${context.getString(metaKey.label)}</b>: ${metaEntry.value}<br/><i style=\"color:silver\">${metaEntry.info}</i>")
@@ -79,7 +79,7 @@ object PrefImportSummaryDialog {
             table.addView(rowLayout, idx++)
         }
 
-        if (details.size > 0) {
+        if (details.isNotEmpty()) {
             detailsBtn.visibility = View.VISIBLE
             detailsBtn.setOnClickListener {
                 val detailsLayout = LayoutInflater.from(context).inflate(R.layout.import_summary_details, null)

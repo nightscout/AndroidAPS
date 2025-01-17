@@ -33,7 +33,7 @@
     <string name="result">תוצאה</string>
     <string name="settings">הגדרות</string>
     <string name="statuslights">אורות חיווי</string>
-    <string name="do_ns_upload_title">טוען נתוני סוכר ל-Nightscout</string>
+    <string name="do_ns_upload_title">שלח נתוני סוכר לנייטסקאוט</string>
     <string name="configbuilder_insulin">אינסולין</string>
     <string name="value_unavailable_short">לא זמין</string>
     <string name="master_password">סיסמה ראשית</string>
@@ -51,6 +51,7 @@
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
+    <string name="tdd_old_data">נתונים ישנים</string>
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
@@ -94,7 +95,7 @@
     <string name="suspendloop">השהיית הלולאה</string>
     <string name="duration_min_label">משך [min]</string>
     <string name="notification">התראה</string>
-    <string name="noprofile">פרופיל Nightscout טרם נטען</string>
+    <string name="noprofile">פרופיל הנייטסקאוט טרם נטען</string>
     <string name="exists">קיים</string>
     <string name="notexists">לא קיים</string>
     <string name="glucose">גלוקוז</string>
@@ -112,7 +113,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
     <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
-    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="bolus_reminder">תזכורת בולוס</string>
     <string name="duration_label">משך</string>
     <string name="shortgramm">גר\'</string>
@@ -164,9 +164,12 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">ביטול בזאלי זמני נכשל</string>
     <string name="canceling_eb_failed">ביטול בולוס ממושך נכשל</string>
-    <string name="virtualpump_uploadstatus_title">העלה את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">שלח את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
     <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
+    <string name="loopstatus_targets">ערכי מטרה:</string>
+    <string name="loopstatus_OAPS_result">תוצאות OAPS:</string>
+    <string name="nav_export">ייצוא הגדרות</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
     <string name="wrongpin">קוד PIN שגוי</string>
@@ -334,7 +337,9 @@
     <string name="delete_future_treatments">מחק טיפולים עתידיים</string>
     <string name="uel_export_settings">ייצוא הגדרות</string>
     <string name="uel_import_settings">ייבוא הגדרות</string>
+    <string name="uel_select_directory">בחר תיקייה</string>
     <string name="uel_reset_databases">איפוס מסדי נתונים</string>
+    <string name="uel_reset_aps_results">איפוס תוצאות APS</string>
     <string name="uel_cleanup_databases">ניקיון מסדי נתונים</string>
     <string name="uel_export_databases">ייצוא מסדי נתונים</string>
     <string name="uel_import_databases">ייבוא מסדי נתונים</string>
@@ -396,57 +401,18 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
+    <string name="sensitivity">רגישות</string>
+    <string name="isf_for_carbs">פקטור הרגישות של המחשבון ושל ספיגת פחמימות: %1$.1f</string>
+    <string name="autosens_long">ערך Autosens: %.0f%%</string>
+    <string name="autosens_short">רגישות: %.0f%%</string>
+    <string name="algorithm_long">ערך Autosens באלגוריתם: %.0f%%</string>
+    <string name="algorithm_short">אלגו\': %.0f%%</string>
     <string name="a11y_file">קובץ</string>
     <string name="a11y_user">משתמש</string>
     <!-- Autotune -->
     <string name="autotune">כוונון אוטומטי</string>
-    <string name="autotune_description">עזרה בכיוונונים פוטנציאליים בפרופיל (ISF, יחס פחמימות ומינון בזאלי)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">הגדרות כוונון אוטומטי</string>
-    <string name="autotune_auto_title">עדכון פרופיל מאוטומציה</string>
-    <string name="autotune_auto_summary">אם מופעל, Autotune יתעדכן אוטומטית ויעבור לפרופיל קלט לאחר חישוב שהופעל ע\"י אוטומציה.</string>
-    <string name="autotune_categorize_uam_as_basal_title">סווג ארוחות לא מוכרזות כבזאלי</string>
-    <string name="autotune_categorize_uam_as_basal_summary">הפעילו רק אם הזנתם בצורה מהימנה את כל הפחמימות שנאכלו. עם אפשרות זו, עליות פתאומיות שנראות על ידי הכוונון האוטומטי ישמשו כדי להמליץ על שינויים במינון הבזאלי.</string>
-    <string name="autotune_tune_insulin_curve_title">כיוונון עקומת פעילות האינסולין</string>
-    <string name="autotune_tune_insulin_curve_summary">אפשרו רק אם אתם משתמשים בשיא חופשי. אפשרות זו תכוונן את השיא ואת משך פעילות האינסולין</string>
-    <string name="autotune_default_tune_days_title">מספר ימי נתונים</string>
-    <string name="autotune_circadian_ic_isf_title">החל תוצאה ממוצעת ב-IC/ISF הצירקדי</string>
-    <string name="autotune_circadian_ic_isf_summary">כוונון אוטומטי לא יכוונן את הווריאציות הצירקדיות, אפשרות זו תחיל רק את הכוונון הממוצע של IC ו-ISF על פרופיל הקלט הצירקדי</string>
-    <string name="autotune_additional_log_title">כלול מידע נוסף ביומן עבור דיבאגינג</string>
-    <string name="autotune_additional_log_summary">הפעל רק אם מתבקש על ידי המפתח לשלוח מידע נוסף ביומן כדי לסייע באיתור באגים של תוסף הכיוונון האוטומטי</string>
-    <string name="autotune_default_tune_days_summary">ברירת המחדל של מספר ימי הנתונים לעיבוד על ידי הכיוונון האוטומטי (עד 30)</string>
-    <string name="autotune_tunedprofile_name">מכוונן</string>
-    <string name="autotune_profile">פרופיל :</string>
     <string name="autotune_tune_days">ימי כיוונון :</string>
-    <string name="autotune_last_run">הפעלה אחרונה :</string>
-    <string name="autotune_warning">אזהרה :</string>
     <string name="autotune_select_profile">בחרו פרופיל לכוונון</string>
-    <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
-    <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
-    <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל בשנית או שנסו לצמצם את מספר הימים</string>
-    <string name="autotune_error_more_days">שגיאה בנתוני הקלט, נסו לצמצם את מספר הימים</string>
-    <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
-    <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>
-    <string name="autotune_partial_result">יום תוצאה חלקי %1$d / %2$d מכוון</string>
-    <string name="autotune_result">תוצאה: %1$s</string>
-    <string name="autotune_param">פרמטר</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">חסר</string>
-    <string name="autotune_profile_name">פרופיל אוטומטי %1$s</string>
-    <string name="autotune_run">הפעל Autotune</string>
-    <string name="autotune_check_input_profile_button">בדיקת פרופיל הקלט</string>
-    <string name="autotune_compare_profile">השוואת פרופילים</string>
-    <string name="autotune_copy_localprofile_button">העתקה אל הפרופיל המקומי שלי</string>
-    <string name="autotune_update_input_profile_button">עדכן פרופיל קלט</string>
-    <string name="autotune_revert_input_profile_button">ביטול שינויים בפרופיל הקלט</string>
-    <string name="autotune_copy_local_profile_message">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
-    <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
-    <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
-    <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
-    <string name="autotune_run_without_autoswitch">כוונון אוטומטי הופעל ללא החלפת פרופיל</string>
-    <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
-    <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
-    <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
     <string name="urgent_alarm">התראה דחופה</string>
@@ -462,6 +428,8 @@
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
+    <string name="carb_equal_zero_no_action">פחמ\' = 0. לא נעשתה פעולה!</string>
+    <string name="wizard_no_insulin_required">לא נדרש אינסולין!</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
@@ -520,13 +488,13 @@
     <string name="password_cleared">סיסמה נמחקה!</string>
     <string name="pairing">מצמד</string>
     <string name="initializing">מאתחל...</string>
+    <string name="secs" comment="second short">%1$d שניות</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
     <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
     <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
     <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">אישור</string>
     <string name="message">הודעה</string>
@@ -538,6 +506,8 @@
     <string name="close">סגור</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">הפחתת %1$s ב-%2$s</string>
     <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>

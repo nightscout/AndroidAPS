@@ -19,7 +19,7 @@ class CobIconComplication : BaseComplicationProviderService() {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                .setShortText(ComplicationText.plainText(raw.status.cob))
+                .setShortText(ComplicationText.plainText(raw.status[0].cob))
                 .setIcon(Icon.createWithResource(this, R.drawable.ic_carbs))
                 .setBurnInProtectionIcon(Icon.createWithResource(this, R.drawable.ic_carbs))
                 .setTapAction(complicationPendingIntent)

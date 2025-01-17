@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">開始</string>
+    <string name="objectives_button_verify">驗證</string>
+    <string name="nth_objective">%1$d. 目標</string>
+    <string name="objectivenotstarted">目標 %1$d 未開始</string>
+    <string name="objectivenotfinished">目標 %1$d 未完成</string>
+    <string name="objectives_0_objective">設置可視化和監控，分析基礎速率和比率</string>
+    <string name="objectives_0_gate">驗證在Nightscout中可用的血糖資料，並上傳幫浦胰島素資料</string>
+    <string name="objectives_0_learned">您已完成AAPS生態系統的基本設置。Nightscout對於AAPS運作雖然不是必需的，但對於產生報告或監控其他患者非常有用。如果您僅使用Nightscout來為自己產生報告，可以不必一直連線到NS。您可以設置僅在家庭WiFi上傳，以節省電池用量。</string>
+    <string name="objectives_openloop_objective">開環模式啟動</string>
+    <string name="objectives_openloop_gate">在開環模式下運行幾天，手動執行多次臨時基礎速率。設置和使用臨時和預設臨時目標（例如，活動或低血糖治療碳水化合物）</string>
+    <string name="objectives_openloop_learned">如果您沒有相容的幫浦或者尚未準備好閉環，開環模式裡面有一些建議可以使用。</string>
+    <string name="objectives_maxbasal_objective">了解您的開環，包括其臨時基礎速率建議</string>
+    <string name="objectives_maxbasal_gate">根據經驗，決定應設置的最大基礎速率，並在幫浦和偏好設定中設置。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
+    <string name="objectives_maxbasal">執行動作以滿足建議</string>
+    <string name="objectives_maxbasal_learned">注意安全功能，必要時調整安全參數。</string>
+    <string name="objectives_maxiobzero_objective">開始關閉循環，並啟用低血糖暫停功能</string>
+    <string name="objectives_maxiobzero_gate">在最大IOB=0的情況下運行閉環幾天，確保沒有太多低血糖發生。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
+    <string name="objectives_maxiobzero_learned">將MaxIOB設置為零可防止低血糖，且不會增加超過基礎速率的胰島素（除非IOB為負）。</string>
+    <string name="objectives_maxiob_objective">調整閉環，將最大IOB提高到0以上，並逐步降低血糖目標</string>
+    <string name="objectives_maxiob_gate">運行幾天，並至少一晚沒有低血糖警報，然後再降低血糖目標</string>
+    <string name="objectives_maxiob_learned">隨著孩子的成長，更新MaxIOB。防止系統給您超過食物能覆蓋的胰島素，設置過高的值不是一件好事。</string>
+    <string name="objectives_autosens_objective">如有需要，調整基礎速率和比率，然後啟用自動感應</string>
+    <string name="objectives_autosens_gate">成功進行一周的白天循環，並定期輸入碳水化合物。在簡單模式下，自動感應預設啟用。</string>
+    <string name="objectives_autosens_learned">如果您的自動感應結果未在100%上下波動，您的設定檔可能是錯誤的。</string>
+    <string name="objectives_smb_objective">啟用日間使用的附加功能，例如SMB</string>
+    <string name="objectives_smb_gate">您必須閱讀Wiki並提高MaxIOB以使SMB正常工作！一個好的開始是MaxIOB=平均餐前注射+3倍的每日最大基礎速率。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
+    <string name="objectives_smb_learned">使用 SMB 是你的目標，Oref1 演算法也是為了幫助你進行注射設計的。你不應該為食物注射全部的劑量，只要打一部分，剩下的由 AAPS 來補足。這樣可以留出更多空間，避免碳水估算錯誤。另外，你知道嗎？你可以設定注射計算器的百分比，來減少注射的劑量。</string>
+    <string name="objectives_auto_objective">啟用自動化</string>
+    <string name="objectives_auto_gate">閱讀有關自動化運作方式的文件。設定您的第一個簡單規則。一開始使用時，請讓 AAPS 僅顯示通知，而不是執行動作。當您確定自動化在正確的時間觸發後，將通知替換為實際動作。（https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html）</string>
+    <string name="objectives_auto_learned">自動化可以是好的僕人，但壞的主人。不要過度使用它。不要試圖替代基本算法。使用僅訊息測試規則，然後再使用它。這取決於順序。</string>
+    <string name="objectives_bgavailableinns">血糖在Nightscout或Tidepool中可用</string>
+    <string name="objectives_pumpstatusavailableinns">幫浦狀態在Nightscout或Tidepool中可用</string>
+    <string name="objectives_manualenacts">手動執行</string>
+    <string name="accomplished">已完成：%1$s</string>
+    <string name="objectives_usage_objective">學習如何控制AAPS</string>
+    <string name="objectives_usage_gate">在AAPS中執行不同操作</string>
+    <string name="objectives_usage_learned">您已學會處理AAPS的基本操作。主控件在首頁總覽螢幕上可通過點擊或長按查看，更多控件在操作螢幕上。您應該知道如何將外掛螢幕放到頂部可滾動選單，或讓它顯示在左上角的已啟用外掛列表中。</string>
+    <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁總覽左上角的配置檔名稱)</string>
+    <string name="objectives_usedisconnectpump">模擬淋浴。中斷幫浦連線1小時（長按開環）</string>
+    <string name="objectives_usereconnectpump">... 並以同樣方式重新連線</string>
+    <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按目前目標）</string>
+    <string name="objectives_useactions">在組態建置工具中勾選啟用外掛，讓他可以顯示頁籤在頂部選單</string>
+    <string name="objectives_useloop">在組態設定工具中勾選循環，顯示循環外掛的內容</string>
+    <string name="objectives_usescale">通過長按血糖圖使用縮放功能</string>
+    <string name="objectives_exam_objective">證明您的知識</string>
+    <string name="objectives_exam_gate">研究問題。每個問題有四個可能的答案。可能有不止一個正確答案。請檢查所有正確的並選擇驗證。</string>
+    <string name="objectives_exam_learned_prerequisites">您不需要成為開發人員，但需要Nightscout才能通過目標，需要相容的幫浦和電腦來第一次構建AAPS和每次更新。</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS可以離線運行。</string>
+    <string name="objectives_exam_learned_basaltest">設定檔應該被檢查和更新。更好的設定檔=更好的結果。</string>
+    <string name="objectives_exam_learned_dia">循環中的DIA意義不同（所有胰島素吸收的時間）與經典幫浦治療（大部分胰島素吸收的時間）。</string>
+    <string name="objectives_exam_learned_isf">您已學會ISF值的含義及其如何影響用於血糖修正的胰島素量。</string>
+    <string name="objectives_exam_learned_ic">您已學會IC值的含義及其如何影響覆蓋碳水化合物所需的胰島素量。</string>
+    <string name="objectives_exam_learned_hypott">低血糖臨時目標僅用於防止低血糖後的過度修正，通常這時有疊加的負IOB。應評估額外措施以防止未來再次發生這種情況。</string>
+    <string name="objectives_exam_learned_profileswitch">使用百分比不會影響目標血糖，但基礎速率、ISF和IC會調整以提供更多的胰島素（超過100%%）或更少的胰島素（低於100%%）。</string>
+    <string name="objectives_exam_learned_profileswitchtime">通過在設定檔切換中使用時間偏移，您可以將日夜節律設定檔適應不規則情況，如晚起床。</string>
+    <string name="objectives_exam_learned_profileswitch4">編輯設定檔本身不足以進行更改。您仍然需要進行設定檔切換以啟用更改。</string>
+    <string name="objectives_exam_learned_exercise">您應該在運動開始前至少1小時減少體內的胰島素量，選擇低於100%的設定檔。</string>
+    <string name="objectives_exam_learned_exercise2">在運動前至少1小時設置更高的臨時目標有助於減少體內的胰島素量。</string>
+    <string name="objectives_exam_learned_noisycgm">當您無法信任CGM值時，不應該在無人看守時使用循環。</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS必須知道幫浦未連線以正確計算IOB。</string>
+    <string name="objectives_exam_learned_insulin">知道幫浦中使用的是哪種胰島素是必要的，因為這會影響IOB計算。</string>
+    <string name="objectives_exam_learned_sensitivity">敏感性偵測是算法的一部分，允許胰島素劑量適應不同情況。</string>
+    <string name="objectives_exam_learned_objectives">您的目標進度與其他設置一起存儲，應該備份。</string>
+    <string name="objectives_exam_learned_objectives2">始終將匯出的設置和生成的APK儲存在手機之外的地方。手機可能遺失、損壞等。好的存放地點可以是任何手機可查看的雲端。在這種情況下，您可以在另一個設備上幾分鐘內恢復AAPS。好的做法是將使用的主密碼存放在安全的地方。沒有它，您的備份無用。這同樣適用於簽章密鑰（.jks文件）和構建AAPS所用的密碼。其餘的並不重要 - 它們可以隨時從互聯網上下載。</string>
+    <string name="objectives_exam_learned_wrongcarbs">如果您向AAPS輸入了錯誤的訊息或與現實不符，盡快解決。這可能導致過量注射。應該盡可能告知AAPS碳水化合物、胰島素等的最佳方式。</string>
+    <string name="objectives_exam_learned_iob">如果您分析AAPS是否對您有效，觀看IOB圖表可以給您很多有用的訊息。</string>
+    <string name="objectives_exam_learned_cob">COB計算取決於ISF和IC之間的關係。增加ISF或減少IC會導致吸收時間變長。但設定檔切換中的百分比同時改變兩個值，吸收時間不受影響。</string>
+    <string name="objectives_exam_learned_breadgrams">僅允許使用克作為碳水化合物輸入單位。</string>
+    <string name="objectives_exam_learned_ecarbs">延長碳水化合物是幫浦世界中延長注射的替代品。</string>
+    <string name="objectives_exam_learned_nsclient">遠端監控和控制是可能的，但不是所有功能都必須遠端可用。</string>
+    <string name="answerdisabledto">回答停用至：%1$s</string>
+    <string name="wronganswer">答案錯誤！</string>
+    <string name="unfinshed_button">下一個未完成</string>
+    <string name="requestcode">請求代碼：%1$s</string>
+    <string name="objectives_hint">(檢查所有正確答案)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="notconnected">未連線到互聯網</string>
+    <string name="failedretrievetime">無法獲取時間</string>
+    <string name="requirementnotmet">未滿足目標要求</string>
+    <string name="what_i_ve_learned">我學到了什麼：</string>
+    <string name="verify_master_password">驗證你的主密碼</string>
+</resources>

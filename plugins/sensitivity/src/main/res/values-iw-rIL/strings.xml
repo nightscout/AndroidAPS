@@ -9,7 +9,7 @@
     <string name="description_sensitivity_weighted_average">הרגישות מחושבת כממוצע משוקלל של ערכי הסטיות. ערכי סטיות חדשים יותר יזכו לשקלול גבוה יותר. ספיגת הפחמימות המינימלית מחושבת על בסיס נתון משך ספיגת פחמימות מקסימלי מההגדרות. אלגוריתם זה הוא המהיר ביותר במעקב אחר שינויי רגישות.</string>
     <string name="uam_disabled_oref1_not_selected">UAM מושבת מפני שהוא מסתמך על תוסף רגישות של Oref1</string>
     <string name="absorption_settings_title">הגדרות ספיגה</string>
-    <string name="absorption_max_time_title">זמן ספיגה מקסימלי של הארוחה [h]</string>
+    <string name="absorption_max_time_title">זמן ספיגה מקסימלי של הארוחה (שעות)</string>
     <string name="absorption_max_time_summary">מספר השעות בהן צפוי שכל הפחמימות מארוחה ייספגו</string>
     <string name="openapsama_autosens_period">מרווחים בשביל autosens [h]</string>
     <string name="openapsama_autosens_period_summary">מספר השעות אחורה לחישוב רגישות (זמן הספיגה של פחמימות אינו נכלל)</string>
@@ -18,6 +18,6 @@
     <string name="openapsama_autosens_max">יחס Autosens מקסימלי</string>
     <string name="openapsama_autosens_min">יחס Autosens מינימלי</string>
     <string name="openapsama_min_5m_carb_impact_summary">ערך ברירת מחדל: 3.0 (AMA) או 8.0 (SMB). זוהי הגדרת ברירת מחדל להשפעת פחמימות על הסוכר בדם ב-5 דקות. ברירת המחדל היא 3mg/dL/5min. פעולה זו משפיעה על קצב הדעיכה של פחמ\' פעילות, ועל הנחת קצב ספיגת הפחמ\' בחישוב רמות סוכר עתידיות כשהן בירידה מהירה מהצפוי או עליה איטית מהצפוי.</string>
-    <string name="absorption_cutoff_title">זמן ספיגה מקסימלי של הארוחה [h]</string>
+    <string name="absorption_cutoff_title">זמן ספיגה מקסימלי של הארוחה (שעות)</string>
     <string name="absorption_cutoff_summary">משך זמן בו כל ארוחה תחשב כנספגה. לא תהיה התחשבות בפחמימות שנותרו.</string>
 </resources>

@@ -6,18 +6,21 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.Runnable
 import javax.inject.Inject
 import kotlin.math.floor
 
 abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRes objective: Int, @StringRes gate: Int) {
 
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
 
@@ -126,6 +129,21 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
                 else      -> rh.gq(app.aaps.core.ui.R.plurals.minutes, minutes, minutes)
             }
         }
+    }
+
+    inner class UITask internal constructor(objective: Objective, @StringRes task: Int, private val spIdentifier: String, val code: (context: Context, task: UITask, callback: Runnable) -> Unit) : Task(objective, task) {
+
+        var answered: Boolean = false
+            set(value) {
+                field = value
+                sp.putBoolean("UITask_$spIdentifier", value)
+            }
+
+        init {
+            answered = sp.getBoolean("UITask_$spIdentifier", false)
+        }
+
+        override fun isCompleted(): Boolean = answered
     }
 
     inner class ExamTask internal constructor(objective: Objective, @StringRes task: Int, @StringRes val question: Int, private val spIdentifier: String) : Task(objective, task) {

@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="info.nightscout.pump.medtrum.code.PatchStep" />
+        <import type="app.aaps.pump.medtrum.code.PatchStep" />
 
         <variable
             name="viewModel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
+            type="app.aaps.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
     </data>
 
     <LinearLayout

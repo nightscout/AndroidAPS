@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">SMS 원격 기능을 비활성화려면 %1$s를 입력하고 답장하세요.\n\nAAPS 마스터폰을 통해서만 다시 활성화할 수 있습니다.</string>
     <string name="smscommunicator_stopped_sms">SMS 원격 기능이 중지되었습니다. 다시 활성화하려면 AAPS 마스터폰을 이용하세요.</string>
     <string name="smscommunicator_calibration_reply_with_code">보정값 %1$.2f을 전송하려면 %2$s 를 입력하고 답장하세요</string>
-    <string name="smscommunicator_bolus_failed">Bolus failed</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">원격 Bolus를 주입한 후 얼마간의 시간이 흐른 후에야 다음 원격 Bolus주입이 가능합니다</string>
     <string name="smscommunicator_remote_bolus_min_distance">원격 Bolus를 주입한 후 몇분이 지나야 다음 원격 Bolus 주입이 가능하게 합니까</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">안전을 위하여 이 설정을 수정하기 위해 최소 2개의 폰 번호를 추가해야합니다.</string>
@@ -201,11 +200,6 @@
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="overview_buttons_selection">버튼</string>
-    <string name="show_calibration_button_summary">xDrip+에 보정값을 전송하거나, 개방 BYODA 보정창을 엽니다</string>
-    <string name="show_cgm_button_summary">xDrip+ 또는 BYODA을 열거나 뒤로가기 버튼을 누르면 AAPS로 돌아갑니다</string>
-    <string name="dexcom_app_not_installed">Dexcom 앱이 설치되지 않았습니다.</string>
-    <string name="dexcom_app_not_detected">Dexcom앱을 지원가능한 버전으로 업데이트하세요.</string>
-    <string name="error_starting_cgm">CGM앱을 실행할 수 없습니다. 앱이 설치되어 있는지 확인하세요.</string>
     <string name="not_available_full">알수없음</string>
     <string name="constraints_violation">제한 위반</string>
     <string name="change_your_input">입력값을 변경하세요!</string>
@@ -226,12 +220,6 @@
     <string name="thirdcarbsincrement">3차 탄수화물 증분</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">임시목표 기본값</string>
-    <string name="eatingsoon_duration">식사직전 기간</string>
-    <string name="eatingsoon_target">식사직전 목표</string>
-    <string name="activity_duration">활동 기간</string>
-    <string name="activity_target">활동 목표</string>
-    <string name="hypo_duration">저혈당 기간</string>
-    <string name="hypo_target">저혈당 목표</string>
     <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="button1">버튼1</string>
     <string name="button2">버튼2</string>
@@ -258,7 +246,6 @@
     <string name="overview_show_deviation_slope">편차 기울기</string>
     <string name="overview_show_activity">활동</string>
     <string name="overview_show_bgi">BG impact</string>
-    <string name="overview_show_sensitivity">민감도</string>
     <string name="overview_show_deviations">편차</string>
     <string name="overview_show_cob">체내탄수화물양(COB)</string>
     <string name="overview_show_iob">체내인슐린양(IOB)</string>
@@ -273,7 +260,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">민감도</string>
     <string name="graph_scale">그래프 범위</string>
     <string name="graph_menu_divider_header">그래프</string>
     <!-- Skins -->
@@ -284,7 +270,6 @@
     <string name="skin">스킨</string>
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
-    <string name="send_logfiles">예상치 못한 상황 보고를 위해 오늘의 로그 파일을 개발자에게 전송합니다.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
     <string name="old_data">오래된 데이터</string>

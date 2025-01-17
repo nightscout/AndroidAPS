@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("android-module-dependencies")
 }
@@ -11,5 +11,5 @@ android {
 }
 
 dependencies {
-    api(Libs.AndroidX.core)
+    api(libs.androidx.core)
 }

@@ -6,7 +6,6 @@
     <!--    Maintenance-->
     <!-- Maintenance -->
     <!-- Custom Watchface -->
-    <!-- Permissions -->
     <!-- Maintenance -->
     <string name="metadata_label_format">Формат файлу</string>
     <string name="metadata_label_created_at">Дата створення</string>
@@ -16,6 +15,5 @@
     <string name="metadata_label_device_model">Модель пристрою, що експортується</string>
     <string name="metadata_label_encryption">Шифрування файлу</string>
     <string name="metadata_format_new">Новий метод шифрування</string>
-    <string name="metadata_format_debug">Новий формат відлагодження (без шифрування)</string>
     <string name="metadata_format_other">Невідомий формат експорту</string>
 </resources>

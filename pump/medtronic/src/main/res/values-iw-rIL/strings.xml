@@ -71,7 +71,7 @@
     <string name="medtronic_cmd_desc_get_model">אחזר דגם המשאבה</string>
     <string name="medtronic_cmd_desc_get_basal_profile">אחזר פרופיל בזאלי</string>
     <string name="medtronic_cmd_desc_set_basal_profile">הגדרת פרופיל בזאלי</string>
-    <string name="medtronic_cmd_desc_get_tbr">קבלת בזאלי זמני</string>
+    <string name="medtronic_cmd_desc_get_tbr">קבל בזאלי זמני</string>
     <string name="medtronic_cmd_desc_set_tbr">הגדרת בזאלי זמני</string>
     <string name="medtronic_cmd_desc_cancel_tbr">ביטול בזאלי זמני</string>
     <string name="medtronic_cmd_desc_set_bolus">הגדרת בולוס</string>

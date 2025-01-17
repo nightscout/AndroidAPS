@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Операция не поддерживается помпой и/или драйвером.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Операция ЕЩЕ не поддерживается помпой.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Серийный номер помпы</string>
     <string name="bolus_delivered_so_far">Подано %1$.2fед / %2$.2fед</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Нет инициализации</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Сканирование</string>
     <string name="ble_config_scan_finished">Сканирование завершено</string>
     <string name="ble_config_scan_error">Ошибка сканирования: %1$d</string>
-    <string name="ble_config_connected_never">Не было</string>
     <string name="ble_config_remove">Удалить</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth выключен</string>
-    <string name="ble_error_no_bt_adapter">Адаптер Bluetooth не найден</string>
-    <string name="ble_error_configured_pump_not_found">Сконфигурированная помпа не найдена</string>
-    <string name="ble_error_pump_unreachable">Помпа недоступна</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Не удалось подключиться к устройству BLE</string>
-    <string name="ble_error_encryption_failed">Ошибка шифрования</string>
-    <string name="ble_error_pump_found_unbonded">Найдена несопряженная помпа</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Базальные профили/настройки шаблонов не активированы в помпе. Включите их на помпе.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Базальный профиль на помпе неверен (должен быть %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Неверный тип временной скорости базала TBR на помпе (должен быть %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">На помпе задан неверный макс болюс (должен быть %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">На помпе задан неверный макс базал (должен быть %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Тип:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Никогда не подключалась</string>
-    <string name="pump_status_sleeping">Спящий режим</string>
-    <string name="pump_status_waking_up">Пробуждение</string>
-    <string name="pump_status_active">Работает</string>
-    <string name="pump_status_error_comm">Ошибка связи</string>
-    <string name="pump_status_timeout_comm">Таймаут связи</string>
-    <string name="pump_status_pump_unreachable">Помпа недоступна</string>
-    <string name="pump_status_invalid_config">Недопустимая конфигурация</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cwf_comment_background">Hintergrundbild</string>
+    <string name="cwf_comment_chart">Diagramme (BG, Basal, Vorhersage...)</string>
+    <string name="cwf_comment_cover_chart">Bild vor Graph und hinter Textfeldern</string>
+    <string name="cwf_comment_freetext1">Freitextfeld 1</string>
+    <string name="cwf_comment_freetext2">Freitextfeld 2</string>
+    <string name="cwf_comment_freetext3">Freitextfeld 3</string>
+    <string name="cwf_comment_freetext4">Freitextfeld 4</string>
+    <string name="cwf_comment_iob1">IOB Bezeichnung oder IOB Sum wenn detailliert</string>
+    <string name="cwf_comment_iob2">IOB-Summe oder (Bolus_IOB|Basal_IOB) wenn detailliert</string>
+    <string name="cwf_comment_cob1">COB-Bezeichnung</string>
+    <string name="cwf_comment_cob2">COB-Wert</string>
+    <string name="cwf_comment_delta">Kurzes BG Delta</string>
+    <string name="cwf_comment_avg_delta">Durchschnittliches BG-Delta (15min)</string>
+    <string name="cwf_comment_uploader_battery">Telefon-Akku (%)</string>
+    <string name="cwf_comment_rig_battery">Globale Loop Akku (%)</string>
+    <string name="cwf_comment_basalRate">Basalrate</string>
+    <string name="cwf_comment_bgi">BGI-Wert</string>
+    <string name="cwf_comment_time">Uhrzeit (HH:MM oder HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Stunde (HH)</string>
+    <string name="cwf_comment_minute">Minuten (MM)</string>
+    <string name="cwf_comment_second">Sekunde (SS)</string>
+    <string name="cwf_comment_timePeriod">AM oder PM</string>
+    <string name="cwf_comment_day_name">Wochentagname</string>
+    <string name="cwf_comment_day">Tag (DD)</string>
+    <string name="cwf_comment_week_number">Kalenderwoche (ww)</string>
+    <string name="cwf_comment_month">Monatsname (kurz)</string>
+    <string name="cwf_comment_loop">Loop-Status und Historie</string>
+    <string name="cwf_comment_direction">Richtungspfeil</string>
+    <string name="cwf_comment_timestamp">Minuten vor dem letzten erhaltenen BG</string>
+    <string name="cwf_comment_sgv">Blutzuckerwert</string>
+    <string name="cwf_comment_cover_plate">Titelbild vor dem Text (wählen...)</string>
+    <string name="cwf_comment_hour_hand">Bild des Stundenzeiger (Analog Uhr)</string>
+    <string name="cwf_comment_minute_hand">Bild des Minutenzeiger (Analog Uhr)</string>
+    <string name="cwf_comment_second_hand">Bild des Sekundenzeigers (Analog Uhr)</string>
+</resources>

@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s 首选项</string>
-    <string name="nav_refreshtreatments">从Nightscout刷新治疗数据</string>
     <string name="nav_exit">退出</string>
     <string name="delta">增量</string>
-    <string name="profile_label">配置文件</string>
     <string name="save">保存</string>
-    <string name="reloadprofile">重新加载配置文件</string>
-    <string name="correctionbous">矫正</string>
-    <string name="ns_upload_only">(禁用很危险) NS仅上传</string>
-    <string name="ns_upload_only_summary">NS只上传数据(禁用同步)。除非选择本地血糖数据如xDrip+否则此功能无效。使用NS网站配置文件时此功能无效。\n！！！警告！！！如果您的任何组件(AAPS，NS，xDrip+) 配置错误，禁用此选项可能导致故障和胰岛素过量。请仔细观察AAPS显示的数据是否与泵状态匹配！</string>
     <string name="wear">手表</string>
     <string name="nav_about">关于</string>
-    <string name="smscommunicator_missingphonestatepermission">缺少手机状态权限</string>
-    <string name="ns_alarm_options">报警选项</string>
-    <string name="ns_alarms">创建来自NS报警的通知</string>
-    <string name="ns_announcements">创建来自NS公告的通知</string>
-    <string name="ns_alarm_stale_data_value_label">陈旧数据阈值 [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">紧急陈旧数据阈值 [min]</string>
     <string name="sensitivity_warning">如果要打开 Autosense功能, 记住输入所有吃的碳水化合物。否则碳水化合物的偏差将被识别为错误的灵敏度变化!!</string>
-    <string name="notloadedplugins">配置文件加载不完整</string>
-    <string name="valuesnotstored">值没有被存储</string>
     <string name="invalid">无效</string>
     <string name="gradually_increase_notification_volume">逐渐增加警报和通知的音量</string>
     <string name="localalertsettings_title">本地警报</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">关闭导航栏</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
-    <string name="error_adding_treatment_title">治疗数据不完整</string>
-    <string name="error_adding_treatment_message">一个治疗 (胰岛素: %1$.2f, 碳水: %2$d, 在: %3$s)不能被添加到治疗里。请检查并手动记录是合适的。</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d 克 (%2$d h), 延迟: %3$d 分钟</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">单位</string>
-    <string name="show_removed">显示已删除</string>
-    <string name="clearqueueconfirm">清除队列? 队列中的所有数据都将丢失!</string>
-    <string name="chartmenu">图表菜单</string>
     <string name="authorizationfailed">授权失败</string>
-    <string name="copytolocalprofile_invalid">无法创建配置文件。配置文件无效。</string>
-    <string name="clear_filter">清除筛选</string>
     <string name="cannula">输注导管</string>
-    <string name="email_address">电子邮件地址</string>
-    <string name="remove_bg_readings">删除血糖读数</string>
     <string name="identification_not_set">开发模式下未设置身份识别联系方式</string>
-    <string name="a11y_dialog">会话</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">未知操作命令：</string>
     <string name="remove_selected_items">删除选中项？</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>

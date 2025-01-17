@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -19,13 +19,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.main.R
-import app.aaps.core.main.extensions.getCustomizedName
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.R
+import app.aaps.core.objects.extensions.getCustomizedName
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.ui.databinding.DialogProfileviewerBinding
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
@@ -40,7 +39,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
@@ -67,7 +66,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             time = bundle.getLong("time", 0)
-            mode = UiInteraction.Mode.values()[bundle.getInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)]
+            mode = UiInteraction.Mode.entries.toTypedArray()[bundle.getInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)]
             customProfileJson = bundle.getString("customProfile", "")
             customProfileName = bundle.getString("customProfileName", "")
             if (mode == UiInteraction.Mode.PROFILE_COMPARE)
@@ -94,20 +93,20 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         val date: String?
         when (mode) {
             UiInteraction.Mode.RUNNING_PROFILE -> {
-                val eps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
-                if (eps !is ValueWrapper.Existing) {
+                val eps = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
+                if (eps == null) {
                     dismiss()
                     return
                 }
-                profile = ProfileSealed.EPS(eps.value)
+                profile = ProfileSealed.EPS(eps, activePlugin)
                 profile2 = null
-                profileName = eps.value.originalCustomizedName
-                date = dateUtil.dateAndTimeString(eps.value.timestamp)
+                profileName = eps.originalCustomizedName
+                date = dateUtil.dateAndTimeString(eps.timestamp)
                 binding.dateLayout.visibility = View.VISIBLE
             }
 
             UiInteraction.Mode.CUSTOM_PROFILE  -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profile2 = null
                 profileName = customProfileName
                 date = ""
@@ -115,8 +114,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.PROFILE_COMPARE -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
-                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
@@ -124,8 +123,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.DB_PROFILE      -> {
-                val profileList = repository.getAllProfileSwitches().blockingGet()
-                profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0]) else null
+                val profileList = persistenceLayer.getProfileSwitches()
+                profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0], activePlugin) else null
                 profile2 = null
                 profileName = if (profileList.isNotEmpty()) profileList[0].getCustomizedName(decimalFormatter) else null
                 date = if (profileList.isNotEmpty()) dateUtil.dateAndTimeString(profileList[0].timestamp) else null

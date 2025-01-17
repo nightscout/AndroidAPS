@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
-    <string name="nav_refreshtreatments">Behandlungen von NS aktualisieren</string>
     <string name="nav_exit">Schließen</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Speichern</string>
-    <string name="reloadprofile">Profil neuladen</string>
-    <string name="correctionbous">Korr</string>
-    <string name="ns_upload_only">(DEAKTIVIEREN GEFÄHRLICH) Zu NS nur hochladen</string>
-    <string name="ns_upload_only_summary">Zu Nightscout nur hochladen (keine Synchronisation). Gilt nicht für CGM-Werte falls nicht eine lokale Quelle wie xDrip+ ausgewählt wurde. Gilt ebenfalls nicht für Profildaten, wenn ein NS-Profil genutzt wird. \n!!! WARNUNG !!! Deaktivieren dieser Option kann zu Fehlfunktionen und Insulin-Überdosierung führen, wenn eine der Komponenten (AAPS, NS, xDrip+) falsch konfiguriert ist. Achte sorgfältig darauf, ob die in AAPS angezeigten Daten mit denen der Pumpe übereinstimmen!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Über</string>
-    <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
-    <string name="ns_alarm_options">Alarm-Optionen</string>
-    <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
-    <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
-    <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
-    <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
-    <string name="valuesnotstored">Werte nicht gespeichert!</string>
     <string name="invalid">Ungültig</string>
     <string name="gradually_increase_notification_volume">Lautstärke für Alarme und Benachrichtigungen schrittweise erhöhen</string>
     <string name="localalertsettings_title">Lokale Alarme</string>
@@ -35,26 +18,14 @@
     <string name="close_navigation">Menü schließen</string>
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
-    <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
-    <string name="error_adding_treatment_message">Der Eintrag (Insulin: %1$.2f, Kohlenhydrate: %2$d, um: %3$s) konnte nicht als Behandlung gespeichert werden. Bitte überprüfe die aktuelle Liste und füge, falls notwendig, den Datensatz manuell hinzu.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Verzögerung: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s IE</string>
     <string name="unitsnosemicolon">Einheiten</string>
-    <string name="show_removed">Gelöschte anzeigen</string>
-    <string name="clearqueueconfirm">Warteschlange löschen? Alle Daten in der Warteschlange gehen verloren!</string>
-    <string name="chartmenu">Diagrammmenü</string>
     <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
-    <string name="copytolocalprofile_invalid">Profil kann nicht erstellt werden. Profil ist ungültig.</string>
-    <string name="clear_filter">Filter löschen</string>
     <string name="cannula">Kanüle</string>
-    <string name="email_address">E‐Mail‐Adresse</string>
-    <string name="remove_bg_readings">BG-Werte entfernen</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
-    <string name="a11y_dialog">Dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Unbekannter Actionbefehl:</string>
     <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
     <string name="search">Suche</string>
+    <string name="simple_mode">Einfacher Modus</string>
 </resources>

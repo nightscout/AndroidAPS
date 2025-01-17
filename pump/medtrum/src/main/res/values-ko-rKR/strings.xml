@@ -46,7 +46,6 @@
     <string name="alarm_expired">만료됨</string>
     <string name="alarm_reservoir_empty">인슐린 없음</string>
     <string name="alarm_patch_fault">Patch 결함</string>
-    <string name="alarm_patch_fault2">Patch 결함 2</string>
     <string name="alarm_base_fault">베이스 결함</string>
     <string name="alarm_battery_out">배터리 방전</string>
     <string name="alarm_no_calibration">보정 안됨</string>
@@ -101,7 +100,6 @@
     <string name="sn_input_title">시리얼 넘버</string>
     <string name="sn_input_summary">펌프 베이스의 시리얼 넘버를 입력하세요.</string>
     <string name="sn_input_invalid">유효하지 않은 시리얼 넘버!</string>
-    <string name="pump_unsupported">펌프가 테스트되지 않음: %1$d! 지원을 위해 discord 또는 github으로 연락하세요.</string>
     <string name="alarm_setting_title">알람 설정</string>
     <string name="alarm_setting_summary">선호하는 펌프 알람 설정을 선택하세요.</string>
     <string name="patch_expiration_title">Patch 만료</string>
@@ -113,4 +111,5 @@
     <string name="getting_bolus_status">Bolus 상태 가져오기</string>
     <string name="getting_temp_basal_status">임시 basal 상태 가져오기</string>
     <string name="setting_pump_settings">사용자 옵션 설정</string>
+    <!-- bolus-->
 </resources>

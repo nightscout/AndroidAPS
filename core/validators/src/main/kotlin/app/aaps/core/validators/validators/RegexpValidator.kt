@@ -7,4 +7,4 @@ import java.util.regex.Pattern
  *
  * @author Andrea Baccega <me></me>@andreabaccega.com>
  */
-open class RegexpValidator(message: String?, _regexp: String) : PatternValidator(message, Pattern.compile(_regexp))
+open class RegexpValidator(message: String?, regexp: String) : PatternValidator(message, Pattern.compile(regexp))

@@ -40,7 +40,7 @@ data class NSTemporaryTarget(
 
         companion object {
 
-            fun fromString(reason: String?) = values().firstOrNull { it.text == reason } ?: CUSTOM
+            fun fromString(reason: String?) = Reason.entries.firstOrNull { it.text == reason } ?: CUSTOM
         }
     }
 }

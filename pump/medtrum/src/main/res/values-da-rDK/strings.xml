@@ -47,7 +47,6 @@
     <string name="alarm_expired">Udløbet</string>
     <string name="alarm_reservoir_empty">Reservoir tomt</string>
     <string name="alarm_patch_fault">Patch-fejl</string>
-    <string name="alarm_patch_fault2">Patch-fejl 2</string>
     <string name="alarm_base_fault">Basisfejl</string>
     <string name="alarm_battery_out">Batteri udløbet</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
@@ -102,7 +101,6 @@
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Indtast serienummeret på din pumpebase.</string>
     <string name="sn_input_invalid">Ugyldigt serienummer!</string>
-    <string name="pump_unsupported">Utestet pumpe: %1$d! Kontakt os venligst på discord eller github for hjælp</string>
     <string name="alarm_setting_title">Alarmindstillinger</string>
     <string name="alarm_setting_summary">Vælg dine fortrukne pumpealarmindstillinger.</string>
     <string name="patch_expiration_title">Patch Udløber</string>
@@ -114,4 +112,5 @@
     <string name="getting_bolus_status">Henter bolusstatus</string>
     <string name="getting_temp_basal_status">Henter midlertidig basalstatus</string>
     <string name="setting_pump_settings">Indstiller brugerindstillinger</string>
+    <!-- bolus-->
 </resources>

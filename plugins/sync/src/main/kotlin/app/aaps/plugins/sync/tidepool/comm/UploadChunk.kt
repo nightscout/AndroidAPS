@@ -1,5 +1,9 @@
 package app.aaps.plugins.sync.tidepool.comm
 
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -8,10 +12,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
@@ -36,7 +36,7 @@ class UploadChunk @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil
 ) {
 
@@ -98,21 +98,20 @@ class UploadChunk @Inject constructor(
 
     private fun getTreatments(start: Long, end: Long): List<BaseElement> {
         val result = LinkedList<BaseElement>()
-        repository.getBolusesDataFromTimeToTime(start, end, true)
-            .blockingGet()
+        persistenceLayer.getBolusesFromTimeToTime(start, end, true)
             .forEach { bolus ->
                 result.add(BolusElement(bolus, dateUtil))
             }
-        repository.getCarbsDataFromTimeToTimeExpanded(start, end, true)
-            .blockingGet()
+        persistenceLayer.getCarbsFromTimeToTimeExpanded(start, end, true)
             .forEach { carb ->
-                result.add(WizardElement(carb, dateUtil))
+                if (carb.amount > 0.0)
+                    result.add(WizardElement(carb, dateUtil))
             }
         return result
     }
 
     private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
-        val readings = repository.compatGetTherapyEventDataFromToTime(start, end).blockingGet()
+        val readings = persistenceLayer.getTherapyEventDataFromToTime(start, end).blockingGet()
         val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil, profileUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
@@ -121,15 +120,14 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
-        val readings = repository.compatGetBgReadingsDataFromTime(start, end, true)
-            .blockingGet()
+        val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, end, true)
         val selection = SensorGlucoseElement.fromBgReadings(readings, dateUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
         return selection
     }
 
-    private fun fromTemporaryBasals(tbrList: List<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
+    private fun fromTemporaryBasals(tbrList: List<TB>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
         for (tbr in tbrList) {
             if (tbr.timestamp in start..end)
@@ -141,28 +139,28 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(start, end, true).blockingGet()
+        val temporaryBasals = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(start, end, true)
         val selection = fromTemporaryBasals(temporaryBasals, start, end)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
         return selection
     }
 
-    private fun newInstanceOrNull(ps: EffectiveProfileSwitch): ProfileElement? = try {
+    private fun newInstanceOrNull(ps: EPS): ProfileElement? = try {
         ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil, profileUtil)
     } catch (e: Throwable) {
         null
     }
 
     private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
-        val pss = repository.getEffectiveProfileSwitchDataFromTimeToTime(start, end, true).blockingGet()
+        val pss = persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
             newInstanceOrNull(ps)?.let {
                 selection.add(it)
             }
         }
-        if (selection.size > 0)
+        if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
         return selection
     }

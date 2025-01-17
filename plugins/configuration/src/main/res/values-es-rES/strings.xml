@@ -19,6 +19,7 @@
     <string name="permission">Permiso</string>
     <string name="need_system_window_permission">La aplicación necesita permisos del sistema para poder mostrar notificaciones sobre otras aplicaciones</string>
     <string name="need_location_permission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
+    <string name="need_background_location_permission">La aplicación necesita el permiso de ubicación en segundo plano para las automatizaciones</string>
     <string name="need_storage_permission">La aplicación necesita permiso de almacenamiento para poder almacenar los archivos de registro y exportar las configuraciones</string>
     <string name="askforpermission">Pedir permiso</string>
     <string name="need_whitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
@@ -30,15 +31,13 @@
     <string name="status">Estado:</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
-    <string name="privacy_settings">Ajustes de privacidad</string>
-    <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Hacer cambio de perfil</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
     <string name="setupwizard_loop_description">Presionar el botón de abajo para permitir que AAPS pueda sugerir/realizar cambios en la insulina basal</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres un nuevo usuario, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configure su RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
@@ -47,8 +46,8 @@
     <string name="readstatus">Leer estado</string>
     <string name="data_choices">Opciones de datos</string>
     <string name="fabric_upload">Reporte fallos a Fabric.io</string>
-    <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
-    <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
+    <string name="unattended_settings_export">Exportación de ajustes no atendida</string>
+    <string name="unattended_settings_export_summary">Habilitar esto almacenará tu contraseña de forma segura en tu teléfono</string>
     <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
     <string name="request">Solicitar</string>
     <string name="apsmode_title">Modo APS</string>
@@ -68,8 +67,8 @@
     <string name="configbuilder_sync">Sincronización</string>
     <string name="configbuilder_sync_description">Subida de datos y sincronización de plugins</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
-    <string name="configbuilder_loop">Lazo</string>
-    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de lazo de AAPS</string>
+    <string name="configbuilder_loop">Bucle</string>
+    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de bucle de AAPS.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
@@ -82,6 +81,8 @@
     <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="a11y_open_settings">abrir ajustes</string>
     <string name="nsclient_version_does_not_match">La versión de AAPSClient no coincide con la versión de AAPS. Por favor, actualízala.</string>
+    <string name="expand_category">Expandir categoría</string>
+    <string name="collapse_category">Contraer categoría</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferencias</string>
     <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
@@ -93,10 +94,11 @@
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
     <string name="import_setting">Importar ajustes</string>
+    <string name="aaps_directory">Directorio AAPS</string>
+    <string name="select_aaps_directory">Selecciona el directorio de AAPS para almacenar exportaciones, configuraciones, etc.</string>
     <string name="check_preferences_before_import">Por favor, comprueba los ajustes antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
     <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
-    <string name="nav_export">Exportar ajustes</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar ajustes desde</string>
     <string name="setting_imported">Ajustes importados</string>
@@ -104,18 +106,20 @@
     <string name="different_password_used">Este archivo se ha exportado y cifrado con una contraseña maestra diferente. Insertar contraseña maestra antigua para descifrar el archivo.</string>
     <string name="master_password_will_be_replaced">Como resultado de la importación correcta, la contraseña maestra actual SE SUSTITUIRÁ por la contraseña maestra antigua!</string>
     <string name="exported">Ajustes exportados</string>
+    <string name="exported_failed">¡La exportación de preferencias ha fallado!</string>
     <string name="filenotfound">Archivo no encontrado</string>
     <string name="goto_main_try_again">Por favor, vuelve a la pantalla principal e inténtalo de nuevo.</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="protection">Protección</string>
-    <string name="master_password_missing">¡La contraseña maestra no está configurada!\n\nPor favor, configure su contraseña maestra en Preferencias (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">¡La contraseña maestra no está configurada!\n\nPor favor, configure su contraseña maestra dentro de las Preferencias (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>
     <string name="description_maintenance">Accede a varias opciones de mantenimiento (p. ej. envío y borrado de registros)</string>
     <string name="database_cleanup">Limpiar base de dados</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
+    <string name="reset_aps_results_confirm">¿Realmente quieres restablecer los resultados almacenados de APS?</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo electrónico</string>
     <string name="maintenance_amount">Número de registros para enviar</string>
@@ -132,11 +136,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado hace %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado en %1$s</string>
     <string name="exported_less_than_hour_ago">exportado hace menos de una hora</string>
-    <string name="in_directory" comment="placeholder is for exported file path">en el directorio: %1$s</string>
     <string name="preferences_import_list_title">Seleccionar fichero para importar</string>
     <string name="metadata_warning_different_flavour">Las preferencias se han creado con una versión distinta de AAPS (%1$s). La versión instalada es: %2$s.\n\nAlgunos valores pueden faltar o no ser válidos después de importar, por favor, compruebe y actualice sus preferencias.</string>
     <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Esto es correcto si vas a importar tu configuración desde otro teléfono más antiguo o diferente, pero asegúrate de que las preferencias importadas son correctas</string>
-    <string name="metadata_warning_outdated_format">¡Estás usando el obsoleto formato heredado de versiones antiguas de AAPS, que no es seguro! Únicamente utilizarlo como último recurso, si no tiene una exportación en formato JSON actual.</string>
     <string name="metadata_warning_old_export">Las preferencias importadas tienen %1$s días! ¿Es posible que tengas preferencias más recientes o eligieras un archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
     <string name="metadata_warning_date_format">¡Formato de fecha/hora inválido!</string>
     <string name="metadata_warning_different_version">Preferencias de una versión menor de la aplicación. Está bien si va a importar después de la actualización, pero ¡compruebe después de la importación si las preferencias siguen siendo correctas!</string>
@@ -154,8 +156,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Seleccionar esfera por defecto</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Por favor, reinicia el teléfono o AAPS desde los ajustes del sistema \nde lo contrario AAPS no guardará registros (importante para trazar y verificar que el algoritmo está funcionando correctamente)</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato de archivo</string>
     <string name="metadata_label_created_at">Creado el</string>
@@ -165,6 +165,7 @@
     <string name="metadata_label_device_model">Exportando el modelo del dispositivo</string>
     <string name="metadata_label_encryption">Cifrado de archivos</string>
     <string name="metadata_format_new">Nuevo formato cifrado</string>
-    <string name="metadata_format_debug">Nuevo formato de depuración (sin cifrar)</string>
     <string name="metadata_format_other">Formato de exportación desconocido</string>
+    <string name="reset_aps_results">Restablecer resultados de APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Error al acceder al sistema de archivos. Selecciona el directorio de AAPS correctamente.</string>
 </resources>

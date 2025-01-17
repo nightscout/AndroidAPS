@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Innstillinger</string>
-    <string name="nav_refreshtreatments">Oppdater behandlinger fra NS</string>
     <string name="nav_exit">Avslutt</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Lagre</string>
-    <string name="reloadprofile">Last inn profil på nytt</string>
-    <string name="correctionbous">Korreksjon</string>
-    <string name="ns_upload_only">(FARLIG Å DEAKTIVERE) Kun NS opplasting</string>
-    <string name="ns_upload_only_summary">Kun NS opplasting (deaktivert sync). Ikke effektiv på SGV med mindre en lokal kilde som xDrip+ er valgt. Ikke effektiv på Profiler mens NS-Profiler brukes.\n!!! ADVARSEL !!! Deaktivering av dette alternativet kan føre til funksjonsfeil og overdosering av insulin hvis noen av dine komponenter (AAPS, NS, xDrip+) er feil konfigurert. Observer at data som vises i AAPS samsvarer med pumpestatus!</string>
     <string name="wear">Klokke</string>
     <string name="nav_about">Om</string>
-    <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
-    <string name="ns_alarm_options">Alarmvalg</string>
-    <string name="ns_alarms">Opprett varsler fra NS-alarmer</string>
-    <string name="ns_announcements">Opprett varsler fra NS-meldinger</string>
-    <string name="ns_alarm_stale_data_value_label">Advarsel ved manglende data [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Advarsel ved kritisk mangel på data [min]</string>
-    <string name="sensitivity_warning">Hvis du slår på Autosense-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil KH-avvik gi feil i sensitivitetsberegningen !!</string>
-    <string name="notloadedplugins">Ikke alle profiler ble lastet!</string>
-    <string name="valuesnotstored">Verdier ikke lagret!</string>
+    <string name="sensitivity_warning">Hvis du slår på Autosense-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil Karbo-avvik bli identifisert feil som sensitivitetsendring !!</string>
     <string name="invalid">UGYLDIG</string>
     <string name="gradually_increase_notification_volume">Øk volumet gradvis for alarmer og varsler</string>
     <string name="localalertsettings_title">Lokale varsler</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Lukk meny</string>
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
-    <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
-    <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, karbohydrater: %2$d, tid: %3$s) kunne ikke legges til Behandlinger. Vennligst kontroller og manuelt legg til en registrering der det er aktuelt.</string>
-    <string name="generated_ecarbs_note">eKarbo: %1$d g (%2$d t), forsinkelse: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s E</string>
     <string name="unitsnosemicolon">Enheter</string>
-    <string name="show_removed">Vis slettede</string>
-    <string name="clearqueueconfirm">Slett køen? All data i køen vil gå tapt!</string>
-    <string name="chartmenu">Diagram meny</string>
     <string name="authorizationfailed">Autentisering feilet</string>
-    <string name="copytolocalprofile_invalid">Klarte ikke å opprette profil. Profilen er ikke gyldig.</string>
-    <string name="clear_filter">Nullstill filtre</string>
     <string name="cannula">Kanyle</string>
-    <string name="email_address">E-postadresse</string>
-    <string name="remove_bg_readings">Fjern BS målinger</string>
     <string name="identification_not_set">Identifikasjon ikke satt i utviklermodus</string>
-    <string name="a11y_dialog">dialogvindu</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Ukjent kommando:</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="search">Søk</string>
+    <string name="simple_mode">Enkelmodus</string>
+    <string name="select">Velg</string>
+    <string name="set">Angi</string>
 </resources>

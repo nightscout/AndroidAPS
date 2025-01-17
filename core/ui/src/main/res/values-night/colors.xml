@@ -45,6 +45,10 @@
     <color name="ic_local_reset">#E93057</color>
     <color name="ic_local_save">#67E86A</color>
 
+    <!--    Toggle Buttons-->
+    <color name="toggle_button_background">#303030</color>
+    <color name="toggle_button_stroke">#8A8A8A</color>
+
     <!--    Fragments-->
     <color name="pumpStatusBackground">#505050</color>
 
@@ -233,7 +237,7 @@
     <!-- Button icons - general -->
     <color name="pod_icon_outline">#9E9E9E</color>
 
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true" >#9E9E9E</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#9E9E9E</color>
 
     <!-- Omnipod Wizard -->
     <color name="omnipod_wizard_progress_bar">#0099CC</color>
@@ -281,5 +285,21 @@
     <!-- Pod Management - Button icons -->
     <color name="ic_pod_management_rl_stats">@color/rl_board_shape</color>
     <color name="ic_pod_management_rl_stats_outline">@color/rl_icon_outline</color>
+
+    <!-- Maintenance -->
+    <color name="metadataOk">#77dd77</color>
+    <color name="metadataTextWarning">#FF8C00</color>
+    <color name="metadataTextError">#FF5555</color>
+
+    <!--    Toasts-->
+    <color name="toastBorder">#666666</color>
+    <color name="toastBase">#000000</color>
+    <color name="toastOk">#77dd77</color>
+    <color name="toastError">#ff0400</color>
+    <color name="toastWarn">#FF8C00</color>
+    <color name="toastInfo">#03A9F4</color>
+
+    <!--    Automations-->
+    <color name="actionColor">#FF8B00</color>
 
 </resources>

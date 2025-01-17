@@ -8,7 +8,7 @@
     <string name="omnipod_eros_preferences_category_notifications">Varsler</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Pulslogg knappen i Pod menyen</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
-    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Aksjoner</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Handlinger</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Lydvarsel for usikre TBR er aktivert</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for usikre SMB er aktivert</string>
@@ -41,9 +41,9 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Ingen respons fra RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Koblingen til RileyLink avbrutt</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Ingen svar fra Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Endring av basalprofil mislyktes. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod fanen og velg gjenoppta levering hvis nødvendig.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Endring av basalprofil kan ha feilet. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod fanen og velg gjenoppta levering hvis nødvendig.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Endring av basal profil mislyktes. Insulinlevering er stoppet! Velg gjenoppta levering manuelt fra Omnipod-menyen.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Endring av basalprofil mislyktes. Insulinlevering kan bli pauset! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Endring av basalprofil kan ha feilet. Insulinlevering kan bli pauset! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Endring av basalprofil mislyktes. Insulinlevering er pauset! Velg gjenoppta levering manuelt fra Omnipod-menyen.</string>
     <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere midlertidig basal. Vennligst oppdater Pod-status manuelt fra Omnipod-menyen.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Endring av midlertidig basal var mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting av midlertidig basal kan ha feilet. Hvis en midlertidig basal allerede var aktiv så er den nå avbrutt. Vennligst oppdater Pod-status manuelt fra Omnipod-menyen.</string>
@@ -67,6 +67,4 @@
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Fyll en ny Pod med nok insulin for 3 dager.\n\nLytt etter to lydsignaler fra Pod under fyllingen. Disse indikerer at minimums volum på 80E er fylt opp. Vær nøye med å tømme fyllingssprøyten helt, selv etter at du har hørt de to lydsignalene.\n\nEtter fylling av Pod, vennligst trykk <b>Neste</b>.\n\n<b>Merk:</b> vent med å fjern kanylebeskyttelsen til Pod. \n<b>Merk:</b> plasser RileyLink i en stående posisjon og legg Pod kun noen cm unna denne.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Prøver å koble opp mot den nye Pod og sette påfyllingsbolus.\n\nNår alle oppstartstrinn er utført, kan du trykke <b>Neste</b>.\n\n<b>Merk:</b> plasser RileyLink i en stående posisjon og plasser Pod maks noen centimeter unna den.</string>
-    <!-- Omnipod Eros - Other -->
-    <string name="omnipod_eros_uncertain">usikker</string>
 </resources>

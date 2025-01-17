@@ -7,11 +7,6 @@ import androidx.fragment.app.FragmentActivity
 
 class CustomWatchfaceFileContract : ActivityResultContract<Void?, Unit?>() {
 
-    companion object {
-
-        const val OUTPUT_PARAM = "custom_file"
-    }
-
     override fun parseResult(resultCode: Int, intent: Intent?): Unit? {
         return when (resultCode) {
             FragmentActivity.RESULT_OK -> Unit

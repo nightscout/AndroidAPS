@@ -26,10 +26,10 @@ class BrCobIobComplication : BaseComplicationProviderService() {
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
-            val cob = SmallestDoubleString(raw.status.cob, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MIN_FIELD_LEN_COB)
-            val iob = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(max(DisplayFormat.MIN_FIELD_LEN_IOB, DisplayFormat.MAX_FIELD_LEN_SHORT - 1 - cob.length))
+            val cob = SmallestDoubleString(raw.status[0].cob, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MIN_FIELD_LEN_COB)
+            val iob = SmallestDoubleString(raw.status[0].iobSum, SmallestDoubleString.Units.USE).minimise(max(DisplayFormat.MIN_FIELD_LEN_IOB, DisplayFormat.MAX_FIELD_LEN_SHORT - 1 - cob.length))
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                .setShortText(ComplicationText.plainText(displayFormat.basalRateSymbol() + raw.status.currentBasal))
+                .setShortText(ComplicationText.plainText(displayFormat.basalRateSymbol() + raw.status[0].currentBasal))
                 .setShortTitle(ComplicationText.plainText("$cob $iob"))
                 .setTapAction(complicationPendingIntent)
             complicationData = builder.build()

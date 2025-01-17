@@ -12,11 +12,16 @@ import androidx.wear.widget.CurvedTextView
 import androidx.wear.widget.WearableLinearLayoutManager
 import androidx.wear.widget.WearableLinearLayoutManager.LayoutCallback
 import androidx.wear.widget.WearableRecyclerView
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder
 import dagger.android.DaggerActivity
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -27,9 +32,12 @@ import kotlin.math.min
 abstract class MenuListActivity : DaggerActivity() {
 
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var elements: List<MenuItem> = listOf()
+    private var disposable = CompositeDisposable()
     protected abstract fun provideElements(): List<MenuItem>
     protected abstract fun doAction(position: String)
 
@@ -37,6 +45,21 @@ abstract class MenuListActivity : DaggerActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.actions_list_activity)
         setTitleBasedOnScreenShape(title.toString())
+        disposable += rxBus
+            .toObservable(EventUpdateSelectedWatchface::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe { event: EventUpdateSelectedWatchface ->
+                updateMenu()
+            }
+        updateMenu()
+    }
+
+    override fun onDestroy() {
+        disposable.clear()
+        super.onDestroy()
+    }
+
+    private fun updateMenu() {
         elements = provideElements()
         val customScrollingLayoutCallback = CustomScrollingLayoutCallback()
         val layoutManager = WearableLinearLayoutManager(this)
@@ -46,7 +69,7 @@ abstract class MenuListActivity : DaggerActivity() {
             layoutManager.layoutCallback = customScrollingLayoutCallback
             listView.isEdgeItemsCenteringEnabled = true
         } else {
-            // Bug in androidx.wear:wear:1.2.0 
+            // Bug in androidx.wear:wear:1.2.0
             // WearableRecyclerView setEdgeItemsCenteringEnabled requires fix for square screen
             listView.setPadding(0, 50, 0, 0)
         }
@@ -75,15 +98,9 @@ abstract class MenuListActivity : DaggerActivity() {
     class MenuAdapter(private val mDataset: List<MenuItem>, private val callback: (ItemViewHolder) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
         class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            val menuContainer: RelativeLayout
-            val actionItem: TextView
-            val actionIcon: ImageView
-
-            init {
-                menuContainer = itemView.findViewById(R.id.menu_container)
-                actionItem = itemView.findViewById(R.id.menuItemText)
-                actionIcon = itemView.findViewById(R.id.menuItemIcon)
-            }
+            val menuContainer: RelativeLayout = itemView.findViewById(R.id.menu_container)
+            val actionItem: TextView = itemView.findViewById(R.id.menuItemText)
+            val actionIcon: ImageView = itemView.findViewById(R.id.menuItemIcon)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

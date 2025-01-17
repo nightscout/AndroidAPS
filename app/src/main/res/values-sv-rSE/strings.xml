@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Inställningar för %1$s</string>
-    <string name="nav_refreshtreatments">Uppdatera behandlingar från Nightscout</string>
     <string name="nav_exit">Avsluta</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Spara</string>
-    <string name="reloadprofile">Ladda om profil</string>
-    <string name="correctionbous">Korrektion</string>
-    <string name="ns_upload_only">(INAKTIVERAD KAN MEDFÖRA FARA) NS-Endast uppladdning</string>
-    <string name="ns_upload_only_summary">NS-endast uppladdning (inaktiverad synkronisering). Påverkar inte uppladdning av BG om inte en lokal källa som xDrip+ är vald. NS-profiler kan också användas.\nVARNING! Att inaktivera detta alternativ och därmed tillåta att NS påverkar AAPS kan orsaka fel och t. o. m. insulinöverdos om någon av dina komponenter (AAPS, NS, xDrip+) inte är helt rätt konfigurerade. Övervaka noga att data som visas av AAPS överensstämmer med verkligheten!</string>
     <string name="wear">Klocka (Wear)</string>
     <string name="nav_about">Om</string>
-    <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
-    <string name="ns_alarm_options">Larminställningar</string>
-    <string name="ns_alarms">Skapa aviseringar från NS-larm</string>
-    <string name="ns_announcements">Skapa aviseringar från NS-meddelanden</string>
-    <string name="ns_alarm_stale_data_value_label">Första varning efter [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Akut varning efter [min]</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
-    <string name="notloadedplugins">Alla profiler laddades inte!</string>
-    <string name="valuesnotstored">Alla värden sparades inte!</string>
     <string name="invalid">OGILTIG</string>
     <string name="gradually_increase_notification_volume">Öka volymen gradvis för larm och aviseringar</string>
     <string name="localalertsettings_title">Lokala larm</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">Stäng menyn</string>
     <string name="remove_items">Ta bort objekt</string>
     <string name="sort_items">Sortera objekt</string>
-    <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
-    <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), fördröjd i %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Enheter</string>
-    <string name="show_removed">Visa borttagna</string>
-    <string name="clearqueueconfirm">Allt data som inte synkats kommer att kastas bort. Är du säker på att du vill tömma kön?</string>
-    <string name="chartmenu">Diagrammeny</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
-    <string name="copytolocalprofile_invalid">Kan inte att skapa profilen. Profilen är felaktig.</string>
-    <string name="clear_filter">Rensa filter</string>
     <string name="cannula">Kanyl</string>
-    <string name="email_address">E-postadress</string>
-    <string name="remove_bg_readings">Ta bort BG-värden</string>
     <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>
-    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Okänt kommando:</string>
     <string name="remove_selected_items">Ta bort valda objekt</string>
     <string name="count_selected">%1$d valda</string>
     <string name="sort_label">Sortera</string>

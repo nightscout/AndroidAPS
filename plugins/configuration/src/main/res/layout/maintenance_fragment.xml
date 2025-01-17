@@ -133,6 +133,21 @@
                     app:columnCount="2">
 
                     <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/directory"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_directory"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/aaps_directory"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
                         android:id="@+id/nav_export"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -145,7 +160,7 @@
                         app:layout_column="0"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
-                        app:layout_row="0" />
+                        app:layout_row="1" />
 
                     <app.aaps.core.ui.elements.SingleClickButton
                         android:id="@+id/nav_import"
@@ -160,7 +175,7 @@
                         app:layout_column="1"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
-                        app:layout_row="0" />
+                        app:layout_row="1" />
 
                 </androidx.gridlayout.widget.GridLayout>
 
@@ -206,6 +221,21 @@
                         android:text="@string/ue_export_to_csv"
                         android:textSize="11sp"
                         app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/nav_reset_aps_results"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_reset_database"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/reset_aps_results"
+                        android:textSize="11sp"
+                        app:layout_column="1"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="0" />

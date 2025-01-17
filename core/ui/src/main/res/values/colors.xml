@@ -45,6 +45,10 @@
     <color name="ic_local_reset">#E93057</color>
     <color name="ic_local_save">#67E86A</color>
 
+    <!--    Toggle Buttons-->
+    <color name="toggle_button_background">#E0E0E0</color>
+    <color name="toggle_button_stroke">#8A8A8A</color>
+
     <!--    Fragments-->
     <color name="pumpStatusBackground">#CCCCCC</color>
 
@@ -62,7 +66,7 @@
     <color name="examinedProfile">#FFFF5555</color>
     <color name="defaultText">#666666</color>
 
-    <!--    Datepicker-->
+    <!--    DatePicker-->
     <color name="dateTimePickerBackground">@color/white</color>
 
     <!--    Treatment-->
@@ -154,6 +158,7 @@
     <color name="devSlopePos">#FFFFFF00</color>
     <color name="devSlopeNeg">#FFFF00FF</color>
     <color name="heartRate">#FFFFFF66</color>
+    <color name="steps">#66FFB8</color>
     <color name="actionsConfirm">#F6CE22</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
@@ -237,7 +242,7 @@
     <!-- Button icons - general -->
     <color name="pod_icon_outline">#9E9E9E</color>
 
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true" >#9E9E9E</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#9E9E9E</color>
 
     <!-- Omnipod Wizard -->
     <color name="omnipod_wizard_progress_bar">#0099CC</color>
@@ -372,5 +377,8 @@
     <color name="toastError">#ff0400</color>
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
+
+    <!--    Automations-->
+    <color name="actionColor">#FF8B00</color>
 
 </resources>

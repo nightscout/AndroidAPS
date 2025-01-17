@@ -16,6 +16,8 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -33,7 +35,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.UserEntry
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.databinding.NsClientFragmentBinding
 import app.aaps.plugins.sync.databinding.NsClientLogItemBinding
@@ -100,7 +101,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
         binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
-            uel.log(if (isChecked) UserEntry.Action.NS_PAUSED else UserEntry.Action.NS_RESUME, UserEntry.Sources.NSClient)
+            uel.log(action = if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, source = Sources.NSClient)
             nsClientPlugin?.pause(isChecked)
         }
 
@@ -168,7 +169,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                                             }
                                         }
                                     )
-                                uel.log(UserEntry.Action.CLEANUP_DATABASES, UserEntry.Sources.NSClient)
+                                uel.log(action = Action.CLEANUP_DATABASES, source = Sources.NSClient)
                             }, Runnable {
                                 handler.post {
                                     nsClientPlugin?.resetToFullSync()
@@ -220,6 +221,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun updateQueue() {

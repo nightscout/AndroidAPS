@@ -2,15 +2,13 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Large)</string>
-    <string name="label_watchface_big_chart">AAPS(BigChart)</string>
-    <string name="label_watchface_no_chart">AAPS(NoChart)</string>
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Personalizzato)</string>
     <string name="label_actions_tile">AAPS(azioni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
+    <string name="label_user_action_tile">AAPS(Azione Utente)</string>
     <string name="label_warning_sync">No dati!</string>
     <string name="label_warning_old">Dati vecchi!</string>
     <string name="label_warning_since">Da %1$s</string>
@@ -18,7 +16,6 @@
     <string name="msg_warning_sync">Nessun dato ricevuto da %1$s! Controlla se AAPS sul telefono invia i dati allo smartwatch</string>
     <string name="msg_warning_old">I dati di AAPS sono vecchi di %1$s ! Controlla il tuo sensore, xDrip+, NS, la configurazione di AAPS o altro!</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
-    <string name="pref_units_for_actions">Unità per azioni</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Schermo</string>
     <string name="pref_graph_settings">Grafico</string>
@@ -35,6 +32,8 @@
     <string name="pref_show_phone_battery">Mostra batteria telefono</string>
     <string name="pref_show_rig_battery">Mostra batteria rig</string>
     <string name="pref_show_basal_rate">Mostra velocità basale</string>
+    <string name="pref_show_temp_target">Mostra Target Temporaneo</string>
+    <string name="pref_show_reservoir_level">Mostra Livello serbatoio</string>
     <string name="pref_show_loop_status">Mostra stato loop</string>
     <string name="pref_show_bg">Mostra BG</string>
     <string name="pref_show_bgi">Mostra BGI</string>
@@ -53,15 +52,15 @@
     <string name="pref_3_hours">3 ore</string>
     <string name="pref_4_hours">4 ore</string>
     <string name="pref_5_hours">5 ore</string>
+    <string name="pref_1_min">disabilitato</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Input Design</string>
     <string name="pref_default">Default</string>
     <string name="pref_quick_righty">Quick righty</string>
     <string name="pref_quick_lefty">Quick lefty</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_low">Basso</string>
-    <string name="pref_medium">Medio</string>
-    <string name="pref_high">Alto</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Numeri grandi</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
@@ -94,6 +93,7 @@
     <string name="action_duration">Durata</string>
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
+    <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
@@ -115,7 +115,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Quantità libera</string>
     <string name="action_confirm">CONFERMA</string>
     <string name="action_timeshift">timeshift</string>
-    <string name="action_bolus">Bolo</string>
     <string name="bolus_progress">Progresso bolo</string>
     <string name="press_to_cancel">premi per cancellare</string>
     <string name="cancel_bolus">CANCELLA BOLO</string>
@@ -152,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Mostra solo tempo e BG</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
+    <string name="pref_include_external">Includi viste esterne nel modello</string>
+    <string name="pref_switch_external">Cambia dati esterni in Watchface</string>
     <string name="custom_pref_show_seconds">Mostra secondi</string>
     <string name="digitalstyle_pref_your_style">Il tuo stile:</string>
     <string name="digitalstyle_style_none">nessuno stile</string>
@@ -184,17 +185,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min. fa</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Nessun stato di loop</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Avviso snooze AAPS</string>
     <string name="sending_snooze">Invio snooze ad AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
@@ -204,4 +199,29 @@
     <string name="old_warning">!vecchio!</string>
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Frequenza cardiaca</string>
+    <string name="pref_heartRateSmoothing">Smussamento HR</string>
+    <string name="pref_stepsSampling">Abilita Conteggio Passi</string>
+    <string name="tile_tempt_1">Target Temporaneo 1</string>
+    <string name="tile_tempt_2">Target Temporaneo 2</string>
+    <string name="tile_tempt_3">Target Temporaneo 3</string>
+    <string name="tile_tempt_4">Target Temporaneo 4</string>
+    <string name="tile_action_1">Azione 1</string>
+    <string name="tile_action_2">Azione 2</string>
+    <string name="tile_action_3">Azione 3</string>
+    <string name="tile_action_4">Azione 4</string>
+    <string name="datalayer_notification_title">Data Layer Foreground Service</string>
+    <string name="datalayer_notification_text">AAPS è in esecuzione in primo piano. Per nascondere le notifiche vai alle opzioni Sviluppatore, notifiche app, app ammesse, seleziona AAPS, Disattiva Data Layer Foreground Service.</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="complication_full_status">Stato Completo</string>
+    <string name="complication_full_status_flipped">Stato completo (capovolto)</string>
+    <string name="complication_blood_glucose">Glicemia</string>
+    <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_cob_iob">CoB &amp; IoB</string>
+    <string name="complication_cob_icon">Icona CoB</string>
+    <string name="complication_cob_detailed">Cob Dettagliato</string>
+    <string name="complication_iob_icon">Icona IoB</string>
+    <string name="complication_iob_detailed">IoB Dettagliato</string>
+    <string name="complication_uploader_phone_battery">Caricamento/Batteria Telefono</string>
 </resources>

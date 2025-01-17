@@ -10,6 +10,7 @@
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
     <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
+    <string name="dst_loop_disabled_error">Daylight Saving Time (DST) change occurred less than 3 hours ago. Closed loop disabled temporarily, will automatically re-enable 3 hours after DST change</string>
 
     <!-- Storage constraint -->
     <string name="storage" translatable="false">Storage constraint</string>

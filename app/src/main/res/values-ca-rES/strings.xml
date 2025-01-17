@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s configuració</string>
-    <string name="nav_refreshtreatments">Actualitzar tractaments des de NS</string>
     <string name="nav_exit">Sortir</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Perfil</string>
     <string name="save">Desar</string>
-    <string name="reloadprofile">Recarregar perfil</string>
-    <string name="correctionbous">Corr</string>
-    <string name="ns_upload_only">(PERILLÓS DESACTIVAR) Només enviar a NS</string>
-    <string name="ns_upload_only_summary">Només enviar a NS (sincronització desactivada). No efectiu amb valors de glucèmia de sensors (SGV) a menys que es seleccioni una font local com xDrip+. No efectiu en perfils si s\'utilitzen perfils d\'NS.\n!!! AVÍS!!! Desactivar aquesta opció pot causar errors de funcionament i sobredosi d\'insulina si qualsevol dels vostres components (AAPS, NS, xDrip+) no està ben configurat. Vigileu atentament que les dades mostrades per AAPS coincideixin amb l\'estat de la bomba!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Quant a</string>
-    <string name="smscommunicator_missingphonestatepermission">Falta permís d\'estat del telèfon</string>
-    <string name="ns_alarm_options">Configuració alarmes</string>
-    <string name="ns_alarms">Crear avisos a partir d\'alarmes NS</string>
-    <string name="ns_announcements">Crear avisos a partir d\'avisos d\'NS</string>
-    <string name="ns_alarm_stale_data_value_label">Umbral dades antigues [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Umbral urgent dades antigues [min]</string>
     <string name="sensitivity_warning">En activar la funció Autosens, recordeu introduir tots els carbs consumits. En cas contrari, les desviacions de carbs seran identificades erroniament com canvis de sensibilitat!!</string>
-    <string name="notloadedplugins">Falten perfils per carregar!</string>
-    <string name="valuesnotstored">Valors no desats!</string>
     <string name="invalid">NO VÀLID</string>
     <string name="gradually_increase_notification_volume">Augmentar gradualment el volum d\'alertes i avisos</string>
     <string name="localalertsettings_title">Alertes locals</string>
@@ -33,19 +16,9 @@
     <string name="enable_carbs_req_alert">Alerta si calen carbohidrats</string>
     <string name="open_navigation">Obrir navegació</string>
     <string name="close_navigation">Tancar navegació</string>
-    <string name="error_adding_treatment_title">Dades de tractament incompletes</string>
-    <string name="error_adding_treatment_message">Un tractament (insulina: %1$.2f, carbs: %2$d, a les: %3$s) no s\'ha pogut afegir al registre de tractments. Si us plau comproveu i afegiu manualment el registre com calgui.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), retard: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Unitats</string>
-    <string name="show_removed">Mostrar eliminats</string>
-    <string name="clearqueueconfirm">Buidar la cua? Totes les dades de la cua es perdran!</string>
-    <string name="chartmenu">Menú gràfica</string>
     <string name="authorizationfailed">L\'autorització ha fallat</string>
-    <string name="copytolocalprofile_invalid">No s\'ha pogut crear el perfil local. Perfil no vàlid.</string>
-    <string name="clear_filter">Netejar filtres</string>
     <string name="cannula">Cànula</string>
-    <string name="email_address">Correu electrònic</string>
     <string name="identification_not_set">Identificació no establerta al mode de desenvolupament</string>
     <!-- WEAR OS-->
 </resources>

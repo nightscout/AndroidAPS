@@ -9,7 +9,7 @@
     <string name="welcome">ברוכים הבאים</string>
     <string name="welcometosetupwizard">ברוכים הבאים לאשף ההתקנה. האשף ידריך אתכם בתהליך ההתקנה\n</string>
     <string name="end_user_license_agreement">הסכם רישיון למשתמש</string>
-    <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
+    <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותכם\\ן בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
     <string name="end_user_license_agreement_i_understand">אני מבין\\ה ומסכים\\ה</string>
     <string name="display_settings">הגדרות תצוגה</string>
     <string name="low_mark">סימון נמוך</string>
@@ -30,15 +30,12 @@
     <string name="status">סטטוס: </string>
     <string name="patient_name">שם המטופל\\ת</string>
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
-    <string name="privacy_settings">הגדרות פרטיות</string>
-    <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="profile">פרופיל</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="exitwizard">דלג על אשף ההתקנה</string>
     <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע\\לבצע שינויים במינון הבזאלי</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/he/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן יהיה להמשיך בהתקנה לאחר חיבור ההמשאבה.\n</string>
@@ -47,8 +44,6 @@
     <string name="readstatus">קרא סטטוס</string>
     <string name="data_choices">אפשרויות נתונים</string>
     <string name="fabric_upload">העלאה ל-Fabric</string>
-    <string name="allow_automated_crash_reporting">אפשר דיווח אוטומטי על קריסה ושליחת נתוני השימוש למפתחים דרך שירות fabric.io.</string>
-    <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
     <string name="request">בקשה</string>
     <string name="apsmode_title">מצב APS</string>
@@ -93,10 +88,11 @@
     <string name="check_preferences_import_btn">ייבוא</string>
     <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
     <string name="import_setting">ייבוא הגדרות</string>
+    <string name="aaps_directory">תיקיית AAPS</string>
+    <string name="select_aaps_directory">בחרו את התיקייה בה יישמרו הקבצים המיוצאים</string>
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
-    <string name="nav_export">ייצא הגדרות</string>
     <string name="export_to">ייצא הגדרות ל-</string>
     <string name="import_from">יבא הגדרות מ-</string>
     <string name="setting_imported">הגדרות מיובאות</string>
@@ -108,8 +104,8 @@
     <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
-    <string name="protection">Protection (הגנה בסיסמאות)</string>
-    <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s&#8594;%2$s)</string>
+    <string name="protection">הגנה בסיסמאות</string>
+    <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>
     <string name="maintenance_shortname">תחזוקה</string>
@@ -132,11 +128,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">יוצא ב-%1$s</string>
     <string name="exported_less_than_hour_ago">יוצא לפני פחות משעה</string>
-    <string name="in_directory" comment="placeholder is for exported file path">בספרייה: %1$s</string>
     <string name="preferences_import_list_title">בחרו קובץ לייבוא</string>
     <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s) בעוד גירסתכם %2$s. \n\n חלק מההגדרות עלולות להיות חסרות או בלתי תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
     <string name="metadata_warning_different_device">ההעדפות נוצרו במכשיר אחר. זה בסדר אם ייבאתם אותן ממכשיר ישן או שונה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_warning_outdated_format">אתם משתמשים פורמט מיושן מגרסאות ישנות של AAPS, שאינו מאובטח! השתמשו בו רק כמוצא אחרון, אם אין לכם קובץ הגדרות בפורמט העדכני, JSON.</string>
     <string name="metadata_warning_old_export">ההעדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם עדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
     <string name="metadata_warning_date_format">פורמט תאריך ושעה לא חוקי!</string>
     <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית ישנה של AAPS. זה בסדר אם ייבאתם אותן לאחר שדרוג גרסה, אך וודאו שההעדפות שהובאו נכונות!</string>
@@ -154,8 +148,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">אלגוריתם ההצפנה לא צוין או שלא נתמך!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">בחירת פני שעון מותאמים אישית</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">פורמט הקובץ</string>
     <string name="metadata_label_created_at">נוצר ב-</string>
@@ -165,6 +157,6 @@
     <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
     <string name="metadata_label_encryption">הצפנת קבצים</string>
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
-    <string name="metadata_format_debug">פורמט דיבאג חדש (בלתי מוצפן)</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
 </resources>

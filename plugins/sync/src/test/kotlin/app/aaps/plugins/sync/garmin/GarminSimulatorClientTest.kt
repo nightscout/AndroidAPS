@@ -35,7 +35,7 @@ class GarminSimulatorClientTest: TestBase() {
     fun receiveMessage() {
         val payload = "foo".toByteArray()
         assertTrue(client.awaitReady(Duration.ofSeconds(10)))
-        verify(receiver, timeout(100)).onConnect(client)
+        verify(receiver, timeout(15_000)).onConnect(client)
         val port = client.port
         val ip = Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1))
         Socket(ip, port).use { socket ->
@@ -43,7 +43,7 @@ class GarminSimulatorClientTest: TestBase() {
             socket.getOutputStream().write(payload)
             socket.getOutputStream().flush()
             val device = waitForOrFail { client.connectedDevices.firstOrNull() }
-            verify(receiver, timeout(1_000))
+            verify(receiver, timeout(15_000))
                 .onReceiveMessage(eq(client), eq(device.id), eq("SIMAPP"), eq(payload))
         }
     }
@@ -52,7 +52,7 @@ class GarminSimulatorClientTest: TestBase() {
     fun sendMessage() {
         val payload = "foo".toByteArray()
         assertTrue(client.awaitReady(Duration.ofSeconds(10)))
-        verify(receiver, timeout(100)).onConnect(client)
+        verify(receiver, timeout(15_000)).onConnect(client)
         val port = client.port
         val ip = Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1))
         val device: GarminDevice
@@ -63,6 +63,6 @@ class GarminSimulatorClientTest: TestBase() {
             app = GarminApplication(device, "SIMAPP", "T")
             client.sendMessage(app, payload)
         }
-        verify(receiver, timeout(1_000)).onSendMessage(eq(client), eq(device.id), eq(app.id), isNull())
+        verify(receiver, timeout(15_000)).onSendMessage(eq(client), eq(device.id), eq(app.id), isNull())
     }
 }

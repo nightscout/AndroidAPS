@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expirat</string>
     <string name="alarm_reservoir_empty">Rezervor gol</string>
     <string name="alarm_patch_fault">Patch defect</string>
-    <string name="alarm_patch_fault2">Patch defect 2</string>
     <string name="alarm_base_fault">Defecțiune de bază</string>
     <string name="alarm_battery_out">Baterie descărcată</string>
     <string name="alarm_no_calibration">Fără calibrare</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Număr de serie</string>
     <string name="sn_input_summary">Introdu numărul de serie al bazei pompei.</string>
     <string name="sn_input_invalid">Număr de serie invalid!</string>
-    <string name="pump_unsupported">Pompă netestată: %1$d! Te rugăm să ne contactezi pe discord sau github pentru suport.</string>
     <string name="alarm_setting_title">Setări alarmă</string>
     <string name="alarm_setting_summary">Selectează setările preferate pentru alarma pompei.</string>
     <string name="pump_warning_notification_title">Notificare la avertizarea pompei</string>
@@ -126,4 +124,5 @@
     <string name="getting_bolus_status">Se citește starea bolusului</string>
     <string name="getting_temp_basal_status">Se citește starea bazalei temporare</string>
     <string name="setting_pump_settings">Setare opțiuni utilizator</string>
+    <!-- bolus-->
 </resources>

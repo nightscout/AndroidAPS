@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">За да изключите услугата за отдалечен SMS контрол, отговорете с код %1$s.\n\nИмайте предвид, че можете да го активирате само от AAPS смартфона.</string>
     <string name="smscommunicator_stopped_sms">Отдалечен SMS контрол е изключен. Можете да го включите от AndroidAPS телефона.</string>
     <string name="smscommunicator_calibration_reply_with_code">За да изпратите калибрация %1$.2f, отговорете с код %2$s</string>
-    <string name="smscommunicator_bolus_failed">Болус отказан</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Минимално време в минути, което трябва да е изминало след отдалечен болус, преди да може да бъде доставен следващият</string>
     <string name="smscommunicator_remote_bolus_min_distance">Колко най-малко минути трябва да минат между доставката на два болуса</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">За вашата сигурност, променете тази настройка, трябва да добавите най-малко 2 телефонни номера.</string>
@@ -201,11 +200,6 @@
     <string name="overview_shortname">ОСН</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="overview_buttons_selection">Бутони</string>
-    <string name="show_calibration_button_summary">Изпрати калибрация до xDrip+ или отвори BYODA калибрационнен диалог</string>
-    <string name="show_cgm_button_summary">Отваря xDrip+ или BYODA, бутон назад те връща в AAPS</string>
-    <string name="dexcom_app_not_installed">Приложението на Dexcom не е инсталирано.</string>
-    <string name="dexcom_app_not_detected">Моля обновете Dexcom приложението до поддържана версия</string>
-    <string name="error_starting_cgm">Не може да се стартира CGM приложението. Уверете се, че е инсталирано.</string>
     <string name="not_available_full">Недостъпно</string>
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="change_your_input">Променете данните!</string>
@@ -226,12 +220,6 @@
     <string name="thirdcarbsincrement">Стойност на третия бърз бутон [гр]</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Временна цел по подразбиране</string>
-    <string name="eatingsoon_duration">Време за \"Преди хранене\"</string>
-    <string name="eatingsoon_target">Цел за \"Преди хранене\"</string>
-    <string name="activity_duration">Време за физ. активност</string>
-    <string name="activity_target">Целева КЗ при физ. активност</string>
-    <string name="hypo_duration">Продължителност на вр. цел при хипоглекимия</string>
-    <string name="hypo_target">Временна цел при хипоглекимия</string>
     <string name="fill_bolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>
@@ -258,7 +246,6 @@
     <string name="overview_show_deviation_slope">Наклон на отклонението</string>
     <string name="overview_show_activity">Активност</string>
     <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
-    <string name="overview_show_sensitivity">Чувствителност</string>
     <string name="overview_show_deviations">Отклонения</string>
     <string name="overview_show_cob">Активни въглехидрати</string>
     <string name="overview_show_iob">Действащ инсулин</string>
@@ -273,7 +260,6 @@
     <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="treatments_shortname">Леч</string>
     <string name="heartRate_shortname">СР</string>
-    <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_scale">Мащаб на графиката</string>
     <string name="graph_menu_divider_header">Графика</string>
     <!-- Skins -->
@@ -284,7 +270,6 @@
     <string name="skin">Тема</string>
     <string name="cannula_usage">употреба:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="old_data">СТАРИ ДАННИ</string>

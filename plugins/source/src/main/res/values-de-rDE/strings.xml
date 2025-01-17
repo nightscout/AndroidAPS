@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (gepatcht)</string>
-    <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense-App.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,16 +22,13 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Zufalls-BZ</string>
     <string name="description_source_random_bg">Zufalls-BZ: Generiert zufällige Blutzuckerdaten (nur im Demo-Modus)</string>
     <string name="random_bg_short">BZ</string>
-    <string name="do_xdrip_upload_title">Sende BZ-Werte zu xDrip+</string>
-    <string name="do_xdrip_upload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="bgsource_upload">BZ Upload Einstellungen</string>
     <string name="dexcom_log_ns_sensor_change_title">Speichere Sensor Wechsel in Nightscout</string>
     <string name="dexcom_log_ns_sensor_change_summary">Ereignis \"Sensorwechsel\" bei Sensorstart automatisch in NS erstellen</string>
     <string name="direction">Richtung</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

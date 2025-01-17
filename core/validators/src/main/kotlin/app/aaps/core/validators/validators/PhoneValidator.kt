@@ -8,4 +8,4 @@ import android.util.Patterns
  *
  * @author Andrea Baccega <me></me>@andreabaccega.com>
  */
-class PhoneValidator(_customErrorMessage: String?) : PatternValidator(_customErrorMessage, Patterns.PHONE)
+class PhoneValidator(customErrorMessage: String?) : PatternValidator(customErrorMessage, Patterns.PHONE)

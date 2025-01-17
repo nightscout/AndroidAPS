@@ -6,13 +6,13 @@ import android.widget.EditText
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Date
 
-class DateValidator(_customErrorMessage: String?, _format: String?) : Validator(_customErrorMessage) {
-    private val formats: Array<String> = if (_format == null || TextUtils.isEmpty(_format))
+class DateValidator(customErrorMessage: String?, format: String?) : Validator(customErrorMessage) {
+
+    private val formats: Array<String> = if (format == null || TextUtils.isEmpty(format))
         arrayOf("DefaultDate", "DefaultTime", "DefaultDateTime")
     else
-        _format.split(";").toTypedArray()
+        format.split(";").toTypedArray()
 
     @SuppressLint("SimpleDateFormat")
     override fun isValid(editText: EditText): Boolean {
@@ -36,10 +36,9 @@ class DateValidator(_customErrorMessage: String?, _format: String?) : Validator(
                     SimpleDateFormat(_format)
                 }
             }
-            var date: Date?
-            date = try {
+            var date = try {
                 format.parse(value)
-            } catch (e: ParseException) {
+            } catch (_: ParseException) {
                 return false
             }
             if (date != null) {

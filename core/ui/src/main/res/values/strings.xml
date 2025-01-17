@@ -89,6 +89,7 @@
     <string name="removerecord">Remove record</string>
     <string name="loopisdisabled">Loop is disabled</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Export Settings</string>
     <string name="disableloop">Disable loop</string>
     <string name="enableloop">Enable loop</string>
     <string name="resumeloop">Resume loop</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered amount</string>
+    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Bolus reminder</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
@@ -171,6 +172,14 @@
     <string name="iob_label">Insulin on Board (IOB)</string>
     <string name="loopstatus_targets">TARGETS:</string>
     <string name="loopstatus_OAPS_result">OAPS RESULT:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="nav_export">Export settings</string>
+    <string name="location_permission_not_granted">Location permission not granted. Allow in android settings.</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
@@ -208,10 +217,12 @@
     <string name="careportal_bgcheck">BG Check</string>
     <string name="careportal_mbg">Manual BG or Calibration</string>
     <string name="careportal_announcement">Announcement</string>
+    <string name="careportal_settings_export">Settings Export</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Exercise</string>
     <string name="careportal_announcement_message">Announcement : %1$s</string>
+    <string name="careportal_settings_export_message">Settings Export : %1$s</string>
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
@@ -244,6 +255,7 @@
     <string name="activity">Activity</string>
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
+    <string name="settingsexport">Settings Export</string>
     <string name="custom">Custom</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -351,7 +363,9 @@
     <string name="delete_future_treatments">Delete future treatments</string>
     <string name="uel_export_settings">EXPORT SETTINGS</string>
     <string name="uel_import_settings">IMPORT SETTINGS</string>
+    <string name="uel_select_directory">SELECT DIRECTORY</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
+    <string name="uel_reset_aps_results">RESET APS RESULTS</string>
     <string name="uel_cleanup_databases">CLEANUP DATABASES</string>
     <string name="uel_export_databases">EXPORT DATABASES</string>
     <string name="uel_import_databases">IMPORT DATABASES</string>
@@ -416,65 +430,20 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Sensitivity</string>
+    <string name="isf_for_carbs">ISF for Calculator and Carbs Absorption: %1$.1f</string>
+    <string name="autosens_long">Autosens Value: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens in algorithm: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">user</string>
 
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Help for potential adjustments of profile (ISF, carb ratio, and basal rates)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Autotune settings</string>
-    <string name="autotune_auto_title">Automation Switch Profile</string>
-    <string name="autotune_auto_summary">If enabled, Autotune will automatically update and switch to input profile after calculation from an automation rule.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Categorize UAM as basal</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Enable only if you have reliably entered all carbs eaten, with this option sudden rises seen by Autotune will be used to recommend changes to the basal rate.</string>
-    <string name="autotune_tune_insulin_curve_title">Tune insulin curve</string>
-    <string name="autotune_tune_insulin_curve_summary">Enable only if you use free peak. This option will tune peak and DIA durations</string>
-    <string name="autotune_default_tune_days_title">Number of days of data</string>
-    <string name="autotune_circadian_ic_isf_title">Apply average result in circadian IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune will not tune circadian variations, this option only apply the average tuning of IC and ISF to your circadian input profile</string>
-    <string name="autotune_additional_log_title">Include more log information for debugging</string>
-    <string name="autotune_additional_log_summary">Switch on only if requested by dev to send more log information to help debugging Autotune plugin</string>
-    <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to 30)</string>
-    <string name="autotune_tunedprofile_name">Tuned</string>
-    <string name="autotune_profile">Profile :</string>
     <string name="autotune_tune_days">Tune days :</string>
-    <string name="autotune_last_run">Last run :</string>
-    <string name="autotune_warning">Warning :</string>
     <string name="autotune_select_profile">Select profile to tune</string>
-    <string name="autotune_ic_warning">Selected profile has %1$d IC values. Autotune will use %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Selected profile has %1$d ISF values. Autotune will use %2$.1f %3$s/U</string>
-    <string name="autotune_error">Error in input data, try to run again autotune or reduce the number of days</string>
-    <string name="autotune_error_more_days">Error in input data, increase the number of days</string>
-    <string name="autotune_warning_during_run">Autotune calculation started, please be patient</string>
-    <string name="autotune_warning_after_run">Check the results carefully before using it!</string>
-    <string name="autotune_partial_result">Partial result day %1$d / %2$d tuned</string>
-    <string name="autotune_result">Result: %1$s</string>
-    <string name="autotune_param">Param</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Missing</string>
-    <string name="autotune_profile_name">Autotune profile %1$s</string>
-    <string name="autotune_run">Run Autotune</string>
-    <string name="autotune_check_input_profile_button">Check input profile</string>
-    <string name="autotune_compare_profile">Compare profiles</string>
-    <string name="autotune_copy_localprofile_button">Copy to local profile</string>
-    <string name="autotune_update_input_profile_button">Update input profile</string>
-    <string name="autotune_revert_input_profile_button">Revert input profile</string>
-    <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
-    <string name="autotune_update_local_profile_message">Update %1$s profile with Autotune Profile?</string>
-    <string name="autotune_revert_local_profile_message">Revert %1$s profile with Input Profile?</string>
-    <string name="autotune_profile_invalid">Profile invalid</string>
-    <string name="autotune_log_title" translatable="false">|Param|Profile|Tuned|%/Miss.\n</string>
-    <string name="autotune_log_separator" translatable="false">+------------------------------------------\n</string>
-    <string name="autotune_log_peak" translatable="false">| %1$4.4s |\t%2$d |\t%3$d |\n</string>
-    <string name="autotune_log_dia" translatable="false">| %1$4.4s |\t%2$3.1f |\t%3$3.1f |\n</string>
-    <string name="autotune_log_ic_isf" translatable="false">| %1$4.4s | %2$3.3f |\t%3$3.3f |\n</string>
-    <string name="autotune_log_basal" translatable="false">|\t%1$02.0f\t| %2$3.3f |%3$3.3f\t| %5$.0f%% / %4$d\n</string>
-    <string name="autotune_log_sum_basal"  translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
-    <string name="autotune_run_without_autoswitch">Autotune ran without profile switch</string>
-    <string name="autotune_run_with_autoswitch">Autotune ran and profile automatically switched</string>
-    <string name="autotune_run_with_error">Error during last Autotune run</string>
-    <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
+
 
     <!-- Alerts -->
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
@@ -483,7 +452,6 @@
     <string name="info">INFO</string>
 
     <!-- BolusWizard -->
-    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="bolus_advisor">Bolus advisor</string>
     <string name="bolus_advisor_message">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
 
@@ -559,6 +527,7 @@
     <string name="password_cleared">Password cleared!</string>
     <string name="pairing">Pairing</string>
     <string name="initializing">Initializing ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -566,9 +535,6 @@
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
     <string name="itmustbepositivevalue">it must be positive value</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
-
-    <!-- Locale -->
-    <string name="key_language" translatable="false">language</string>
 
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
@@ -582,6 +548,21 @@
 
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
+
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Warning</string>
+    <string name="export_expired">Expired</string>
+    <string name="export_disabled">Disabled</string>
+    <string name="export_failed">Failed</string>
+    <string name="export_alert">ALERT</string>
+
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Settings exported</string>
+    <string name="export_result_message_failed">Settings export FAILED!</string>
+    <string name="export_result_message_about_to_expire">Settings exported: password about to expire soon. Export manually and (re)enter password.</string>
+    <string name="export_result_message_expired">Settings export canceled: password expired. Export manually and (re)enter!</string>
+    <string name="export_result_message_disabled">Warning (automation): Settings export not enabled!</string>
 
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
@@ -616,7 +597,7 @@
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="about_link_urls">\n\nDocumentation:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
-    
+
     <plurals name="days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
@@ -656,5 +637,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
-
+    <string name="percent_rate_duration">Rate: %1$.2f%% (%2$.2f U/h) Duration: %3$d min</string>
+    <string name="rate_percent_duration">Rate: %1$.2f U/h (%2$.2f%%) Duration: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f%% (%2$.2f U/h)<br><b>Duration</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f U/h (%2$.2f%%) <br><b>Duration</b>: %3$d min<br>]]></string>
 </resources>

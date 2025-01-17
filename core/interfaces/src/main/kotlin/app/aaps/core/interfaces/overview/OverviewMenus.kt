@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.overview
 
-import android.content.Context
+import android.widget.Button
 import android.widget.ImageButton
 
 interface OverviewMenus {
@@ -14,14 +14,17 @@ interface OverviewMenus {
         DEV,
         BGI,
         SEN,
+        VAR_SEN,
         ACT,
         DEVSLOPE,
-        HR
+        HR,
+        STEPS
     }
 
     val setting: List<Array<Boolean>>
     fun loadGraphConfig()
-    fun setupChartMenu(context: Context, chartButton: ImageButton)
+    fun setupChartMenu(chartButton: ImageButton, scaleButton: Button)
     fun enabledTypes(graph: Int): String
     fun isEnabledIn(type: CharType): Int
+    fun scaleString(rangeToDisplay: Int): String
 }

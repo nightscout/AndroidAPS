@@ -89,6 +89,7 @@
     <string name="removerecord">Удалить запись</string>
     <string name="loopisdisabled">Цикл не работает</string>
     <string name="alarm">Оповещения об опасности</string>
+    <string name="exportsettings">Настройки экспорта</string>
     <string name="disableloop">Деактивировать цикл</string>
     <string name="enableloop">Активировать цикл</string>
     <string name="resumeloop">Возобновить цикл</string>
@@ -113,7 +114,7 @@
     <string name="bg_label">ГК</string>
     <string name="calibration">калибровка</string>
     <string name="alarminxmin">Напомнить через %1$d мин</string>
-    <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
+    <string name="treatmentdeliveryerror">Возможная ошибка подачи болюса. Проверьте количество реально поданного инсулина и углеводов</string>
     <string name="bolus_reminder">Напоминание о болюсе</string>
     <string name="duration_label">Длительность действия</string>
     <string name="shortgramm">грамм</string>
@@ -170,6 +171,14 @@
     <string name="iob_label">Активный инсулин (IOB)</string>
     <string name="loopstatus_targets">ЦЕЛИ:</string>
     <string name="loopstatus_OAPS_result">РЕЗУЛЬТАТ: OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f ед ( %2$.2f ед/ч )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f ед ( %2$.2f ед/ч)@%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f ед/ч @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f %% @%2$s</string>
+    <string name="extended_bolus_full">ПБ%1$.2f ед/ @%2$s%3$s%4$s мин</string>
+    <string name="extended_bolus_medium">%1$.2f ед/ч %2$s%3$s</string>
+    <string name="nav_export">Экспорт настроек</string>
+    <string name="location_permission_not_granted">Доступ к геолокации не предоставлен. Предоставьте в настройках Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>
@@ -200,10 +209,12 @@
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
     <string name="careportal_announcement">Оповещение</string>
+    <string name="careportal_settings_export">Экспорт настроек</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
     <string name="careportal_exercise">Нагрузка</string>
     <string name="careportal_announcement_message">Оповещение: %1$s</string>
+    <string name="careportal_settings_export_message">Экспорт настроек %1$s</string>
     <string name="careportal_note_message">Примечание: %1$s</string>
     <string name="careportal_question_message">Вопрос: %1$s</string>
     <string name="careportal_exercise_message">Нагрузка: %1$s</string>
@@ -236,6 +247,7 @@
     <string name="activity">Нагрузка</string>
     <string name="wear">Смарт-часы Wear</string>
     <string name="automation">Автоматизация</string>
+    <string name="settingsexport">Экспорт настроек</string>
     <string name="custom">Пользовательский</string>
     <string name="loop">Замкнутый цикл</string>
     <string name="ns">NS</string>
@@ -337,7 +349,9 @@
     <string name="delete_future_treatments">Удалить назначения из будущего</string>
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
+    <string name="uel_select_directory">ВЫБОР ДИРЕКТОРИИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
+    <string name="uel_reset_aps_results">СБРОС РЕЗУЛЬТАТОВ APS</string>
     <string name="uel_cleanup_databases">ОЧИСТКА ДАННЫХ</string>
     <string name="uel_export_databases">ЭКСПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>
     <string name="uel_import_databases">ИМПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>
@@ -399,57 +413,18 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
+    <string name="sensitivity">Чувствительность</string>
+    <string name="isf_for_carbs">ISF для калькулятора и усвоения углеводов: %1$.1f</string>
+    <string name="autosens_long">Значение Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens в алгоритме: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">файл</string>
     <string name="a11y_user">пользователь</string>
     <!-- Autotune -->
     <string name="autotune">Автонастройка</string>
-    <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
-    <string name="autotune_shortname">АвтТюн</string>
-    <string name="autotune_settings">Настройки Autotune</string>
-    <string name="autotune_auto_title">Профили Автонастройки </string>
-    <string name="autotune_auto_summary">При активации происходит обновление автонастройки и смена профиля на основе правила автоматизации  </string>
-    <string name="autotune_categorize_uam_as_basal_title">Классифицировать UAM как базал</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Включите, если только вы точно ввели все съеденные углеводы. С этой опцией внезапные подъемы, зафиксированные Autotune, будут использованы для рекомендаций изменения базальной скорости.</string>
-    <string name="autotune_tune_insulin_curve_title">Настройка кривой инсулина</string>
-    <string name="autotune_tune_insulin_curve_summary">Включите, если используете беспиковый. Настроит пики и DIA</string>
-    <string name="autotune_default_tune_days_title">Количество дней с данными</string>
-    <string name="autotune_circadian_ic_isf_title">Применить усредненный суточный IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune не настраивает суточные вариации, эта опция только применяет усредненные коэффициенты IC и ISF к суточному профилю</string>
-    <string name="autotune_additional_log_title">Включить больше информации логов для отладки</string>
-    <string name="autotune_additional_log_summary">Включите только если разработчик просит отправить больше информации о логах для отладки плагина Autotune</string>
-    <string name="autotune_default_tune_days_summary">Количество дней обработки данных Autotune по умолчанию (до 30)</string>
-    <string name="autotune_tunedprofile_name">Настроено</string>
-    <string name="autotune_profile">Профиль:</string>
     <string name="autotune_tune_days">Настроено дней:</string>
-    <string name="autotune_last_run">Последнее выполнение:</string>
-    <string name="autotune_warning">Внимание:</string>
     <string name="autotune_select_profile">Выберите профиль для изменения</string>
-    <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
-    <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
-    <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
-    <string name="autotune_error_more_days">Ошибка в данных, увеличьте количество дней</string>
-    <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
-    <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
-    <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d с отладкой</string>
-    <string name="autotune_result">Результат: %1$s</string>
-    <string name="autotune_param">Парам</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Отсутствует</string>
-    <string name="autotune_profile_name">Профиль автотюн %1$s</string>
-    <string name="autotune_run">Выполнить Autotune</string>
-    <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
-    <string name="autotune_compare_profile">Сравнить профили</string>
-    <string name="autotune_copy_localprofile_button">Копировать в локальный профиль</string>
-    <string name="autotune_update_input_profile_button">Обновить профиль ввода</string>
-    <string name="autotune_revert_input_profile_button">Вернуть профиль ввода</string>
-    <string name="autotune_copy_local_profile_message">Создать новый локальный профиль из этого профиля Autotune?</string>
-    <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
-    <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
-    <string name="autotune_profile_invalid">Неверный профиль</string>
-    <string name="autotune_run_without_autoswitch">Autotune выполнен без переключения профиля</string>
-    <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
-    <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
-    <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
     <string name="urgent_alarm">Сигнал тревоги</string>
@@ -525,13 +500,13 @@
     <string name="password_cleared">Пароль сброшен!</string>
     <string name="pairing">Сопряжение</string>
     <string name="initializing">инициализация...</string>
+    <string name="secs" comment="second short">%1$d с</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
     <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
     <string name="itmustbepositivevalue">величина должна быть положительной</string>
     <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Подтверждение</string>
     <string name="message">Сообщение</string>
@@ -543,6 +518,19 @@
     <string name="close">Закрыть</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Вам будет предложено ввести главный пароль, необходимый для расшифровки импортированных настроек.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Внимание</string>
+    <string name="export_expired">Срок действия истёк</string>
+    <string name="export_disabled">Отключено</string>
+    <string name="export_failed">Сбой</string>
+    <string name="export_alert">ВНИМАНИЕ</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Настройки экспортированы</string>
+    <string name="export_result_message_failed">ОШИБКА экспорта настроек!</string>
+    <string name="export_result_message_about_to_expire">Настройки были экспортированы: пароль скоро перестанет действовать. Экспортируйте их вручную и (заново) введите пароль.</string>
+    <string name="export_result_message_expired">Экспорт настроек отменен: пароль перестал действовать. Экспортируйте их вручную и введите его заново!</string>
+    <string name="export_result_message_disabled">Предупреждение (автоматизация): Экспорт настроек выключен!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
@@ -610,4 +598,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1fед</string>
     <string name="format_insulin_units">%1$.2f ед</string>
+    <string name="percent_rate_duration">Скорость: %1$.2f%% (%2$.2f U/h) Продолжительность: %3$d мин</string>
+    <string name="rate_percent_duration">Скорость: %1$.2fед/ч (%2$.2f%%) Продолжительность %3$d мин</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Скорость</b>:%1$.2f %% (%2$.2f ед/ч)<br><b> Продолжительность</b> %3$d мин<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Скорость</b>: %1$.2f ед/ч (%2$.2f%%) <br><b>Продолжительность</b>: %3$d мин<br>]]></string>
 </resources>

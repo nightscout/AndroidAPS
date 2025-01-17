@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
-    <string name="common_resultok">U redu</string>
-    <string name="pump_serial_number">Serijski broj pumpe</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nije inicijalizirano</string>
     <string name="pump_status_initialized">Inicijalizirano</string>
@@ -36,26 +34,9 @@
     <string name="ble_config_scan_scanning">Pretraživanje</string>
     <string name="ble_config_scan_finished">Skeniranje završeno</string>
     <string name="ble_config_scan_error">Pogreška skeniranja: %1$d</string>
-    <string name="ble_config_connected_never">Nikada</string>
     <string name="ble_config_remove">Ukloniti</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth onemogućen</string>
-    <string name="ble_error_no_bt_adapter">Nema Bluetooth adaptera</string>
-    <string name="ble_error_configured_pump_not_found">Konfigurirana pumpa nije pronađena</string>
-    <string name="ble_error_pump_unreachable">Pumpa nedostupna</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Povezivanje s BLE uređajem nije uspjelo</string>
-    <string name="ble_error_encryption_failed">Šifriranje nije uspjelo</string>
-    <string name="ble_error_pump_found_unbonded">Pronađena nepovezana pumpa</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Postavka bazalnih profila/uzoraka nije omogućena na pumpi. Uključite ga na pumpi.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Bazalni profil postavljen na pumpi nije točan (mora biti %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Na pumpi je postavljen pogrešan tip TBR (mora biti %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Pogrešan maksimalni bolus postavljen na pumpi (mora biti %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Pogrešno podešen maksimalni bazal na pumpi (mora biti %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_pump_unreachable">Pumpa nedostupna</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dan</item>
         <item quantity="few">%1$d dana</item>

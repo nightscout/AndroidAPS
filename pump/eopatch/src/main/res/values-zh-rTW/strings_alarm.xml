@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">儲液盒空\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a003">貼片過期\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a004">阻塞\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a005">檢查失敗\n貼片已停用。請立即更換貼片。</string>
+    <string name="string_a007">溫度不適宜\n胰島素供應或“啟動貼片”過程已停止。避免極端溫度。</string>
+    <string name="string_a016">針頭植入錯誤\n檢查旋鈕位置並點擊“重試”。</string>
+    <string name="string_a018">貼片電池錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a019">貼片電池錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a020">貼片啟動錯誤\n“啟動貼片”過程已過期。點擊“確認”以停用目前貼片。請立即更換貼片。</string>
+    <string name="string_a022">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a023">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a034">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a041">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a042">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a043">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a044">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a106">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a107">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a108">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a116">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a117">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_a118">貼片錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
+    <string name="string_b000">貼片操作壽命將於 %s 到期。請準備更換貼片。</string>
+    <string name="string_b001">胰島素中止結束\n點擊“恢復”以重新開始胰島素供應。</string>
+    <string name="string_b003">儲液盒低\n請盡快更換貼片。</string>
+    <string name="string_b005">貼片操作壽命到期\n請立即更換貼片。</string>
+    <string name="string_b006">貼片即將到期\n請立即更換貼片。</string>
+    <string name="string_b012">貼片啟動未完成\n完成“啟動貼片”過程。</string>
+    <string name="string_b018">貼片電池低\n請準備更換貼片。</string>
+</resources>

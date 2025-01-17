@@ -3,17 +3,16 @@ package app.aaps.core.interfaces.userEntry
 import android.text.Spanned
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.ColorGroup
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
+import app.aaps.core.data.model.UE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 
 interface UserEntryPresentationHelper {
 
-    @ColorRes fun colorId(colorGroup: ColorGroup): Int
+    @ColorRes fun colorId(colorGroup: Action.ColorGroup): Int
     @DrawableRes fun iconId(source: Sources): Int
     fun actionToColoredString(action: Action): Spanned
-    fun listToPresentationString(list: List<ValueWithUnit?>): String
-    fun userEntriesToCsv(userEntries: List<UserEntry>): String
+    fun listToPresentationString(list: List<ValueWithUnit>): String
+    fun userEntriesToCsv(userEntries: List<UE>): String
 }

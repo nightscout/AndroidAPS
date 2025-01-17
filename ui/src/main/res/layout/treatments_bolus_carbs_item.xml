@@ -81,6 +81,7 @@
 
             <CheckBox
                 android:id="@+id/cb_metadata_remove"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:contentDescription="@string/select_for_removal"
@@ -185,6 +186,7 @@
 
             <CheckBox
                 android:id="@+id/cb_bolus_remove"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:contentDescription="@string/select_for_removal"
@@ -278,6 +280,7 @@
 
             <CheckBox
                 android:id="@+id/cb_carbs_remove"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:contentDescription="@string/select_for_removal"

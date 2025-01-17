@@ -3,15 +3,21 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.testing.TestListenableWorkerBuilder
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -24,38 +30,47 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
+import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
+import app.aaps.implementation.queue.commands.CommandCancelTempBasal
+import app.aaps.implementation.queue.commands.CommandClearAlarms
 import app.aaps.implementation.queue.commands.CommandCustomCommand
+import app.aaps.implementation.queue.commands.CommandDeactivate
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
+import app.aaps.implementation.queue.commands.CommandLoadEvents
 import app.aaps.implementation.queue.commands.CommandLoadHistory
+import app.aaps.implementation.queue.commands.CommandReadStatus
+import app.aaps.implementation.queue.commands.CommandSMBBolus
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
+import app.aaps.implementation.queue.commands.CommandUpdateTime
 import app.aaps.shared.tests.TestBaseWithProfile
-import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
+import com.google.common.util.concurrent.ListenableFuture
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.doAnswer
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var jobName: CommandQueueName
+    @Mock lateinit var workManager: WorkManager
+    @Mock lateinit var infos: ListenableFuture<List<WorkInfo>>
 
     class CommandQueueMocked(
         injector: HasAndroidInjector,
@@ -68,48 +83,106 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         activePlugin: ActivePlugin,
         context: Context,
         sp: SP,
+        preferences: Preferences,
         config: Config,
         dateUtil: DateUtil,
-        repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
         androidPermission: AndroidPermission,
         uiInteraction: UiInteraction,
         persistenceLayer: PersistenceLayer,
-        decimalFormatter: DecimalFormatter
+        decimalFormatter: DecimalFormatter,
+        instantiator: Instantiator,
+        jobName: CommandQueueName,
+        workManager: WorkManager
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
-        androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+        activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
+        uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
 
     }
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is Command) {
+    init {
+        addInjector {
+            if (it is CommandCancelExtendedBolus) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
+                it.activePlugin = activePlugin
             }
             if (it is CommandTempBasalPercent) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandCancelTempBasal) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
                 it.rxBus = rxBus
             }
+            if (it is CommandSMBBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
             if (it is CommandCustomCommand) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandExtendedBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandLoadHistory) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
-            if (it is PumpEnactResult) {
+            if (it is CommandLoadEvents) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandReadStatus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandClearAlarms) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandDeactivate) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandUpdateTime) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is QueueWorker) {
+                it.aapsLogger = aapsLogger
+                it.queue = commandQueue
                 it.context = context
+                it.rxBus = rxBus
+                it.activePlugin = activePlugin
+                it.rh = rh
+                it.sp = sp
+                it.preferences = preferences
+                it.androidPermission = androidPermission
+                it.config = config
             }
         }
     }
@@ -119,50 +192,56 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         commandQueue = CommandQueueMocked(
-            injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository,
-            fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction, activePlugin, context,
+            sp, preferences, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
         )
-        testPumpPlugin = TestPumpPlugin(injector)
-
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
+        testPumpPlugin.connected = true
 
-        `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(repository.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(Single.just(ValueWrapper.Existing(effectiveProfileSwitch)))
-        `when`(repository.getLastBolusRecord()).thenReturn(
-            Bolus(
+        Mockito.`when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
+        Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
+        Mockito.`when`(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
+        Mockito.`when`(persistenceLayer.getNewestBolus()).thenReturn(
+            BS(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
-                type = Bolus.Type.NORMAL,
+                type = BS.Type.NORMAL,
                 amount = 0.0
             )
         )
-        `when`(profileFunction.getProfile()).thenReturn(validProfile)
+        Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = ConstraintObject(0.0, aapsLogger)
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
+        Mockito.`when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
         val carbsConstraint = ConstraintObject(0, aapsLogger)
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
+        Mockito.`when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
         val rateConstraint = ConstraintObject(0.0, aapsLogger)
-        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
+        Mockito.`when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
         val percentageConstraint = ConstraintObject(0, aapsLogger)
-        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
-        `when`(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
-        `when`(rh.gs(app.aaps.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")
-        `when`(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
+        Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
+        Mockito.`when`(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
+        Mockito.`when`(rh.gs(app.aaps.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")
+        Mockito.`when`(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
+        Mockito.`when`(workManager.getWorkInfosForUniqueWork(anyObject())).thenReturn(infos)
+        doAnswer(Answer { invocation: InvocationOnMock ->
+            Thread {
+                val work = TestListenableWorkerBuilder<QueueWorker>(context).build()
+                runBlocking { work.doWorkAndLog() }
+            }.start()
+            null
+        } as Answer<*>).`when`(workManager).enqueueUniqueWork(anyObject<String>(), anyObject<ExistingWorkPolicy>(), anyObject<OneTimeWorkRequest>())
+        Mockito.`when`(infos.get()).thenReturn(emptyList<WorkInfo>())
     }
 
     @Test
     fun commandIsPickedUp() {
-        val commandQueue = CommandQueueImplementation(
+        commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            constraintChecker, profileFunction, activePlugin, context, sp, preferences,
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
         )
         val handler = mock(Handler::class.java)
-        `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->
+        Mockito.`when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->
             (invocation.arguments[0] as Runnable).run()
             true
         }
@@ -176,7 +255,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(1)
 
         commandQueue.waitForFinishedThread()
-        Thread.sleep(1000)
+        Thread.sleep(3000)
 
         assertThat(commandQueue.size()).isEqualTo(0)
     }
@@ -268,7 +347,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = System.currentTimeMillis()
-        smb.bolusType = DetailedBolusInfo.BolusType.SMB
+        smb.bolusType = BS.Type.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
         assertThat(commandQueue.size()).isEqualTo(2)
@@ -288,7 +367,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
         val smb = DetailedBolusInfo()
-        smb.bolusType = DetailedBolusInfo.BolusType.SMB
+        smb.bolusType = BS.Type.SMB
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
@@ -303,7 +382,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // when
         val bolus = DetailedBolusInfo()
-        bolus.bolusType = DetailedBolusInfo.BolusType.SMB
+        bolus.bolusType = BS.Type.SMB
         bolus.lastKnownBolusTime = 0
         val queued: Boolean = commandQueue.bolus(bolus, null)
 

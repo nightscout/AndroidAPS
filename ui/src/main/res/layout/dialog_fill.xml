@@ -53,6 +53,7 @@
 
             <CheckBox
                 android:id="@+id/fill_catheter_change"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -60,6 +61,7 @@
 
             <CheckBox
                 android:id="@+id/fill_cartridge_change"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/careportal_insulin_cartridge_change" />

@@ -4,11 +4,10 @@
     <string name="combov2_plugin_description">Innebygd integrasjon av Accu-Chek Combo-pumper</string>
     <string name="combov2_could_not_connect">Klarte ikke å tilkoble til pumpe</string>
     <string name="combov2_not_paired">Ikke sammenkoblet til en pumpe</string>
-    <string name="combov2_pump_terminated_connection">Pumpen avsluttet tilkobling</string>
     <string name="combov2_warning">Combo advarsel</string>
     <string name="combov2_error">Combo feil</string>
     <string name="combov2_warning_4">Ring supportlinjen for oppdatering</string>
-    <string name="combov2_warning_10">Bluetooth feilet, koble til på nytt</string>
+    <string name="combov2_warning_10">Bluetoothfeil, utfør sammenkobling på nytt</string>
     <string name="combov2_error_1">Reservoaret er tomt</string>
     <string name="combov2_error_2">Batteri tomt</string>
     <string name="combov2_error_4">Tilstopping</string>
@@ -26,7 +25,7 @@
     <string name="combov2_driver_state_label">Driverstatus</string>
     <string name="combov2_current_activity_label">Nåværende aktivitet</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
-    <string name="combov2_start_pairing">Start paringen</string>
+    <string name="combov2_start_pairing">Start sammenkobling</string>
     <string name="combov2_pairing_in_progress">Kombo sammenkobling pågår</string>
     <string name="combov2_pairing_start_steps">Trinn for å etablere sammenkobling med Combo:\n\n
 1. På pumpen, navigerer til Bluetooth innstillingene\n
@@ -41,7 +40,7 @@ Hvis ingen sammenkobling etableres etter mer enn ~5 minutter:\n\n
 knappene samtidig for å avbryte parringen)\n
 3. Prøv å sammenkoble igjen</string>
     <string name="combov2_enter_pin">Skriv inn PIN</string>
-    <string name="combov2_cancel_pairing">Avbryt paringen</string>
+    <string name="combov2_cancel_pairing">Avbryt sammenkobling</string>
     <string name="combov2_pin_hint">10-sifret PIN</string>
     <string name="combov2_pairing_finished_successfully">Vellykket sammenkobling med Combo</string>
     <string name="combov2_pairing_cancelled">Sammenkobling med Combo avbrutt av brukeren</string>
@@ -108,7 +107,7 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_short_status_last_connection">Siste tilkobling: %1$d min siden</string>
     <string name="combov2_short_status_alert">Varsel: %s</string>
     <string name="combov2_short_status_last_bolus">LastBolus: %1$s E @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_temp_basal">Midl. basal: %s</string>
     <string name="combov2_short_status_reservoir">Reservoar: %d E</string>
     <string name="combov2_short_status_battery_state_empty">tom</string>
     <string name="combov2_short_status_battery_state_low">lavt</string>
@@ -116,8 +115,6 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_short_status_battery_state">Batt: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetekter og automatisk registrer bytte av insulireservoar</string>
     <string name="combov2_automatic_battery_entry">Autodetekter og automatisk registrer batteribytte</string>
-    <string name="combov2_note_reservoir_change">Bytte av insulinreservoar ble automatisk registrert av Combo driveren</string>
-    <string name="combov2_note_battery_change">Bytte av batteri ble automatisk registrert av Combo driveren</string>
     <string name="combov2_timezone_changed">Tidssone endret</string>
     <string name="combov2_datetime_changed">Dato og/eller klokkeslett endret</string>
     <string name="combov2_dst_started">Sommertid (DST) er startet</string>

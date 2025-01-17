@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.triggers.Trigger
@@ -15,6 +16,7 @@ abstract class Action(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var instantiator: Instantiator
 
     var precondition: Trigger? = null
 
@@ -27,6 +29,7 @@ abstract class Action(val injector: HasAndroidInjector) {
     var title = ""
 
     init {
+        @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
     }
 
@@ -55,6 +58,7 @@ abstract class Action(val injector: HasAndroidInjector) {
             if (dotIndex > 0) type = type.substring(dotIndex + 1)
             return when (type) {
                 ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
+                ActionSettingsExport::class.java.simpleName       -> ActionSettingsExport(injector).fromJSON(data.toString())
                 ActionCarePortalEvent::class.java.simpleName      -> ActionCarePortalEvent(injector).fromJSON(data.toString())
                 ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
                 ActionLoopDisable::class.java.simpleName          -> ActionLoopDisable(injector).fromJSON(data.toString())

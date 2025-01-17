@@ -45,7 +45,6 @@
     <string name="alarm_expired">Abgelaufen</string>
     <string name="alarm_reservoir_empty">Reservoir leer</string>
     <string name="alarm_patch_fault">Patch-Fehler</string>
-    <string name="alarm_patch_fault2">Patch-Fehler 2</string>
     <string name="alarm_base_fault">Basisfehler</string>
     <string name="alarm_battery_out">Akku leer</string>
     <string name="alarm_no_calibration">Keine Kalibrierung</string>
@@ -100,7 +99,6 @@
     <string name="sn_input_title">Seriennummer</string>
     <string name="sn_input_summary">Geben Sie die Seriennummer Ihrer Pumpenbasis ein.</string>
     <string name="sn_input_invalid">Ungültige Seriennummer!</string>
-    <string name="pump_unsupported">Pumpe nicht getestet: %1$d! Bitte kontaktiere uns aus Discorf oder github für Support</string>
     <string name="alarm_setting_title">Alarm Einstellungen</string>
     <string name="alarm_setting_summary">Wählen Sie Ihre bevorzugten Pumpen-Alarmeinstellungen.</string>
     <string name="patch_expiration_title">Patch Ablaufdatum</string>
@@ -112,4 +110,5 @@
     <string name="getting_bolus_status">Erhalte Bolus Status</string>
     <string name="getting_temp_basal_status">Erhalte temporären Basalstatus</string>
     <string name="setting_pump_settings">Benutzeroptionen einstellen</string>
+    <!-- bolus-->
 </resources>

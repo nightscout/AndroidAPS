@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">需要驗證</string>
+    <string name="biometric_description">將手指放在指紋讀取器上以驗證您的身份</string>
+    <string name="settings_protection">設定保護</string>
+    <string name="application_protection">應用程式保護</string>
+    <string name="bolus_protection">注射保護</string>
+    <string name="settings_password">設定密碼</string>
+    <string name="settings_pin">設定 PIN 碼</string>
+    <string name="application_password">應用程式密碼</string>
+    <string name="application_pin">應用程式 PIN 碼</string>
+    <string name="bolus_password">注射密碼</string>
+    <string name="bolus_pin">注射 PIN 碼</string>
+    <string name="protection_timeout_title">密碼和 PIN 碼保持時間 [秒]</string>
+    <string name="protection_timeout_summary">密碼或 PIN 碼需要重新輸入的時間</string>
+    <string name="biometric">生物識別</string>
+    <string name="custom_password">自訂密碼</string>
+    <string name="custom_pin">自訂 PIN 碼</string>
+    <string name="noprotection">無保護</string>
+    <string name="unsecure_fallback_biometric">不安全的後備</string>
+    <string name="unsecure_fallback_descriotion_biometric">為了生效，生物識別保護需要設定一個主密碼作為後備。\n\n請設定主密碼！</string>
+    <string name="password_set">密碼已設定！</string>
+    <string name="datastore_password_cleared">儲存的匯出密碼已清除!</string>
+    <string name="pin_set">PIN 碼已設定！</string>
+    <string name="password_not_set">密碼未設定</string>
+    <string name="pin_not_set">PIN 碼未設定</string>
+    <string name="password_not_changed">密碼未更改</string>
+    <string name="pin_not_changed">PIN 碼未更改</string>
+    <string name="pin_cleared">PIN 碼已清除！</string>
+    <string name="password_hint">在此輸入密碼</string>
+    <string name="pin_hint">在此輸入 PIN 碼</string>
+    <string name="master_password_not_set">未設置主密碼</string>
+    <string name="aaps_directory_not_selected">未選擇 AAPS 目錄</string>
+</resources>

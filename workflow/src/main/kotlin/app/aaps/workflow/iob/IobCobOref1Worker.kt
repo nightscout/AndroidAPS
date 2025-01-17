@@ -4,12 +4,14 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.aps.SMBDefaults
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -18,17 +20,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.extensions.target
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
@@ -44,7 +43,7 @@ class IobCobOref1Worker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -53,10 +52,11 @@ class IobCobOref1Worker(
     @Inject lateinit var config: Config
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var instantiator: Instantiator
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     class IobCobOref1WorkerData(
         val injector: HasAndroidInjector,
@@ -114,7 +114,6 @@ class IobCobOref1Worker(
                     continue  // profile not set yet
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
-                val sens = profile.getIsfMgdl(bgTime)
                 val autosensData = instantiator.provideAutosensDataObject()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
@@ -130,6 +129,7 @@ class IobCobOref1Worker(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
+                val sens = profile.getIsfMgdlForCarbs(bgTime, "iobCobOref1Worker", config, processedDeviceStatusData)
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -150,7 +150,7 @@ class IobCobOref1Worker(
 //                        try {
                         while (past < 12) {
                             val ad = autosensDataTable.valueAt(initialIndex + past)
-                            aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=" + past + " ad=" + ad?.toString() }
+                            aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=$past ad=$ad" }
                             /*
                                                             if (ad == null) {
                                                                 aapsLogger.debug(LTag.AUTOSENS, {autosensDataTable.toString()})
@@ -189,26 +189,30 @@ class IobCobOref1Worker(
                         aapsLogger.debug(LTag.AUTOSENS) { ">>>>> bucketed_data.size()=${bucketedData.size} i=$i hourAgoData=null" }
                     }
                 }
-                val recentCarbTreatments = repository.getCarbsDataFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
+                val recentCarbTreatments = persistenceLayer.getCarbsFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true)
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, sp))
+                    if (recentCarbTreatment.amount > 0) {
+                        val sens = profile.getIsfMgdlForCarbs(recentCarbTreatment.timestamp, "fromCarbs", config, processedDeviceStatusData)
+                        val ic = profile.getIc(recentCarbTreatment.timestamp)
+                        autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isOref1 = true, isAAPSOrWeighted, sens, ic, aapsLogger, dateUtil, preferences))
+                    }
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
                 // if we are absorbing carbs
                 if (previous != null && previous.cob > 0) {
                     // calculate sum of min carb impact from all active treatments
-                    val totalMinCarbsImpact = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+                    val totalMinCarbsImpact = preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)
 
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
                     val ci = max(deviation, totalMinCarbsImpact)
                     if (ci != deviation) autosensData.failOverToMinAbsorptionRate = true
-                    autosensData.absorbed = ci * profile.getIc(bgTime) / sens
+                    autosensData.this5MinAbsorption = ci * profile.getIc(bgTime) / sens
                     // and add that to the running total carbsAbsorbed
-                    autosensData.cob = max(previous.cob - autosensData.absorbed, 0.0)
+                    autosensData.cob = max(previous.cob - autosensData.this5MinAbsorption, 0.0)
                     autosensData.mealCarbs = previous.mealCarbs
                     autosensData.deductAbsorbedCarbs()
                     autosensData.usedMinCarbsImpact = totalMinCarbsImpact
@@ -219,10 +223,11 @@ class IobCobOref1Worker(
                 }
                 val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                 autosensData.removeOldCarbs(bgTime, isAAPSOrWeighted)
-                autosensData.cob += autosensData.carbsFromBolus
+                autosensData.cob = max(autosensData.cob + autosensData.carbsFromBolus, 0.0)
                 autosensData.mealCarbs += autosensData.carbsFromBolus
                 autosensData.deviation = deviation
                 autosensData.bgi = bgi
+                autosensData.sens = sens
                 autosensData.delta = delta
                 autosensData.avgDelta = avgDelta
                 autosensData.avgDeviation = avgDeviation
@@ -292,13 +297,13 @@ class IobCobOref1Worker(
 
                 // add an extra negative deviation if a high temp target is running and exercise mode is set
                 // TODO AS-FIX
-                @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
-                if (false && sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
-                    val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-                    if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
-                        autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
-                    }
-                }
+                // @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
+                // if (false && sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                //     val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                //     if (tempTarget != null && tempTarget.target() >= 100) {
+                //         autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20)
+                //     }
+                // }
 
                 // add one neutral deviation every 2 hours to help decay over long exclusion periods
                 val calendar = GregorianCalendar()

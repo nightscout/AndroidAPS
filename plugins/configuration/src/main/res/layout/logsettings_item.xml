@@ -15,6 +15,7 @@
 
     <CheckBox
         android:id="@+id/logsettings_visibility"
+        style="@style/Widget.App.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:saveEnabled="false" />

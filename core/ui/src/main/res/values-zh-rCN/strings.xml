@@ -104,7 +104,6 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
     <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
-    <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查真实输注量</string>
     <string name="bolus_reminder">大剂量提醒</string>
     <string name="duration_label">持续时间</string>
     <string name="shortgramm">克</string>
@@ -374,50 +373,8 @@
     <string name="a11y_user">用户</string>
     <!-- Autotune -->
     <string name="autotune">自动调整</string>
-    <string name="autotune_description">帮助对配置文件进行潜在调整（胰岛素敏感系数、碳水化合物系数和基础率）</string>
-    <string name="autotune_shortname">自动调整</string>
-    <string name="autotune_settings">自动调整设置</string>
-    <string name="autotune_auto_title">自动化配置开关</string>
-    <string name="autotune_auto_summary">如果启用，Autotune 将在根据自动化规则计算后自动更新并切换到输入配置文件</string>
-    <string name="autotune_categorize_uam_as_basal_title">将 UAM 归类为基础率</string>
-    <string name="autotune_categorize_uam_as_basal_summary">仅当您可靠地输入了所有摄入的碳水化合物时才启用，使用此选项Autotune观测到血糖突然上升将用于建议更改基础率</string>
-    <string name="autotune_tune_insulin_curve_title">调整胰岛素曲线</string>
-    <string name="autotune_tune_insulin_curve_summary">仅当您使用自由峰值胰岛素模型时时才启用，此选项将调整胰岛素峰值和DIA持续时间</string>
-    <string name="autotune_default_tune_days_title">数据天数</string>
-    <string name="autotune_circadian_ic_isf_title">在昼夜 IC/ISF 中应用平均结果</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune 不会调整昼夜节律变化，此选项仅将 IC 和 ISF 的平均调整应用于您的昼夜节律输入配置文件中</string>
-    <string name="autotune_additional_log_title">包含更多用于调试的日志信息</string>
-    <string name="autotune_additional_log_summary">仅当开发人员要求发送更多日志信息以帮助调试 Autotune 插件时才打开</string>
-    <string name="autotune_default_tune_days_summary">Autotune 处理数据的默认天数（最多 30 天）</string>
-    <string name="autotune_tunedprofile_name">已调整</string>
-    <string name="autotune_profile">配置文件：</string>
     <string name="autotune_tune_days">调整天数</string>
-    <string name="autotune_last_run">上一次运行</string>
-    <string name="autotune_warning">警告 :</string>
     <string name="autotune_select_profile">选择配置文件去协调</string>
-    <string name="autotune_ic_warning">选定的配置文件包含 %1$d 个 IC 值。自动调整将使用 %2$.2f g/U</string>
-    <string name="autotune_isf_warning">选定的配置文件包含 %1$d 个 ISF 值。自动调节将使用 %2$.1f %3$s/U</string>
-    <string name="autotune_error">输入数据错误，尝试再次运行自动调谐或减少天数</string>
-    <string name="autotune_warning_during_run">自动协调计算开始，请耐心等待</string>
-    <string name="autotune_warning_after_run">使用前请仔细检查结果！</string>
-    <string name="autotune_partial_result">部分结果天数 %1$d / %2$d 已调整</string>
-    <string name="autotune_result">结果: %1$s</string>
-    <string name="autotune_param">参数</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">缺失</string>
-    <string name="autotune_profile_name">自动协调配置文件 %1$s</string>
-    <string name="autotune_run">运行自动协调</string>
-    <string name="autotune_check_input_profile_button">检查输入配置</string>
-    <string name="autotune_compare_profile">比较配置文件</string>
-    <string name="autotune_copy_localprofile_button">复制到本地配置文件</string>
-    <string name="autotune_update_input_profile_button">更新输入配置文件</string>
-    <string name="autotune_revert_input_profile_button">检查输入配置</string>
-    <string name="autotune_copy_local_profile_message">从此 Autotune 配置文件创建新的本地配置文件？</string>
-    <string name="autotune_update_local_profile_message">用 Autotune 配置文件更新 %1$s 配置文件？</string>
-    <string name="autotune_revert_local_profile_message">使用输入配置文件还原 %1$s 配置文件？</string>
-    <string name="autotune_profile_invalid">配置文件无效</string>
-    <string name="autotune_run_with_error">上次 Autotune 运行期间出错</string>
-    <string name="autotune_run_cancelled">检测到另一次自动调试运行，本次运行已取消</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
     <string name="urgent_alarm">紧急报警</string>
@@ -484,7 +441,6 @@
     <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">确认</string>
     <string name="message">消息</string>
@@ -496,6 +452,8 @@
     <string name="close">关闭</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">请您输入主密码，该密码将用于解密导入的首选项配置。</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">将%1$s 减少 %2$s</string>
     <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>

@@ -1,9 +1,10 @@
 package app.aaps.plugins.aps
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.text.TextUtils
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,26 +14,23 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.aps.databinding.OpenapsFragmentBinding
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import app.aaps.plugins.aps.utils.JSONFormatter
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
+import org.apache.commons.lang3.ClassUtils
 import javax.inject.Inject
+import kotlin.reflect.full.declaredMemberProperties
 
 class OpenAPSFragment : DaggerFragment(), MenuProvider {
 
@@ -45,7 +43,6 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var jsonFormatter: JSONFormatter
 
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 503
@@ -100,15 +97,11 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           updateGUI()
-                       }, fabricPrivacy::logException)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventResetOpenAPSGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           resetGUI(it.text)
-                       }, fabricPrivacy::logException)
+            .subscribe({ resetGUI(it.text) }, fabricPrivacy::logException)
 
         updateGUI()
     }
@@ -126,48 +119,26 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     @Synchronized
     private fun updateGUI() {
         if (_binding == null) return
         val openAPSPlugin = activePlugin.activeAPS
         openAPSPlugin.lastAPSResult?.let { lastAPSResult ->
-            binding.result.text = jsonFormatter.format(lastAPSResult.json)
-            binding.request.text = lastAPSResult.toSpanned()
-        }
-        openAPSPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapter ->
-            binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapter.glucoseStatusParam)
-            binding.currenttemp.text = jsonFormatter.format(determineBasalAdapter.currentTempParam)
-            try {
-                val iobArray = JSONArray(determineBasalAdapter.iobDataParam)
-                binding.iobdata.text = TextUtils.concat(rh.gs(R.string.array_of_elements, iobArray.length()) + "\n", jsonFormatter.format(iobArray.getString(0)))
-            } catch (e: JSONException) {
-                aapsLogger.error(LTag.APS, "Unhandled exception", e)
-                @Suppress("SetTextI18n")
-                binding.iobdata.text = "JSONException see log for details"
-            }
-
-            binding.profile.text = jsonFormatter.format(determineBasalAdapter.profileParam)
-            binding.mealdata.text = jsonFormatter.format(determineBasalAdapter.mealDataParam)
-            binding.scriptdebugdata.text = determineBasalAdapter.scriptDebug.replace("\\s+".toRegex(), " ")
-            openAPSPlugin.lastAPSResult?.inputConstraints?.let {
-                binding.constraints.text = it.getReasons()
-            }
-        }
-        if (openAPSPlugin.lastAPSRun != 0L) {
+            binding.result.text = lastAPSResult.rawData().dataClassToHtml()
+            binding.request.text = lastAPSResult.resultAsSpanned()
+            binding.glucosestatus.text = lastAPSResult.glucoseStatus?.dataClassToHtml(listOf("glucose", "delta", "shortAvgDelta", "longAvgDelta"))
+            binding.currenttemp.text = lastAPSResult.currentTemp?.dataClassToHtml()
+            binding.iobdata.text = rh.gs(R.string.array_of_elements, lastAPSResult.iobData?.size) + "\n" + lastAPSResult.iob?.dataClassToHtml()
+            binding.profile.text = lastAPSResult.oapsProfile?.dataClassToHtml() ?: lastAPSResult.oapsProfileAutoIsf?.dataClassToHtml()
+            binding.mealdata.text = lastAPSResult.mealData?.dataClassToHtml()
+            binding.scriptdebugdata.text = lastAPSResult.scriptDebug?.joinToString("\n")
+            binding.constraints.text = lastAPSResult.inputConstraints?.getReasons()
+            binding.autosensdata.text = lastAPSResult.autosensResult?.dataClassToHtml()
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSPlugin.lastAPSRun)
-        }
-        openAPSPlugin.lastAutosensResult.let {
-            binding.autosensdata.text = jsonFormatter.format(it.json())
         }
         binding.swipeRefresh.isRefreshing = false
     }
-
-    private fun AutosensResult.json(): JSONObject = JSONObject()
-        .put("ratio", ratio)
-        .put("ratioLimit", ratioLimit)
-        .put("pastSensitivity", pastSensitivity)
-        .put("sensResult", sensResult)
-        .put("ratio", ratio)
 
     @Synchronized
     private fun resetGUI(text: String) {
@@ -184,4 +155,33 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         binding.lastrun.text = ""
         binding.swipeRefresh.isRefreshing = false
     }
+
+    private fun Any.dataClassToHtml(): Spanned =
+        HtmlHelper.fromHtml(
+            StringBuilder().also { sb ->
+                this::class.declaredMemberProperties.forEach { property ->
+                    property.call(this)?.let { value ->
+                        if (ClassUtils.isPrimitiveOrWrapper(value::class.java)) sb.append(property.name.bold(), ": ", value, br)
+                        if (value is StringBuilder) sb.append(property.name.bold(), ": ", value.toString(), br)
+                    }
+                }
+            }.toString()
+        )
+
+    private fun Any.dataClassToHtml(properties: List<String>): Spanned =
+        HtmlHelper.fromHtml(
+            StringBuilder().also { sb ->
+                properties.forEach { property ->
+                    this::class.declaredMemberProperties
+                        .firstOrNull { it.name == property }?.call(this)
+                        ?.let { value ->
+                            if (ClassUtils.isPrimitiveOrWrapper(value::class.java)) sb.append(property.bold(), ": ", value, br)
+                            if (value is StringBuilder) sb.append(property.bold(), ": ", value.toString(), br)
+                        }
+                }
+            }.toString()
+        )
+
+    private fun String.bold(): String = "<b>$this</b>"
+    private val br = "<br>"
 }

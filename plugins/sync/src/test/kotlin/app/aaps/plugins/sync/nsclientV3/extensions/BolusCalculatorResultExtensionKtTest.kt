@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolusWizard
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -12,7 +14,7 @@ internal class BolusCalculatorResultExtensionKtTest {
 
     @Test
     fun toBolusCalculatorResult() {
-        val bolus = BolusCalculatorResult(
+        val bolus = BCR(
             timestamp = 10000,
             isValid = true,
             targetBGLow = 110.0,
@@ -44,16 +46,16 @@ internal class BolusCalculatorResultExtensionKtTest {
             percentageCorrection = 70,
             profileName = " sss",
             note = "ddd",
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         val bolus2 = (bolus.toNSBolusWizard().convertToRemoteAndBack() as NSBolusWizard).toBolusCalculatorResult()!!
         assertThat(bolus.contentEqualsTo(bolus2)).isTrue()
-        assertThat(bolus.interfaceIdsEqualsTo(bolus2)).isTrue()
+        assertThat(bolus.ids.contentEqualsTo(bolus2.ids)).isTrue()
     }
 }

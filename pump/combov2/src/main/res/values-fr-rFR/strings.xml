@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Intégration native de la pompe Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Impossible de se connecter à la pompe</string>
     <string name="combov2_not_paired">Pompe non appairée</string>
-    <string name="combov2_pump_terminated_connection">La pompe a interrompue la connexion</string>
     <string name="combov2_warning">Avertissement combo</string>
     <string name="combov2_error">Erreur du combo</string>
     <string name="combov2_warning_4">Appel de la hotline pour une mise à jour</string>
@@ -106,8 +105,6 @@
     <string name="combov2_short_status_battery_state">Pile: %s</string>
     <string name="combov2_automatic_reservoir_entry">Détection et enregistrement automatique du changement du réservoir</string>
     <string name="combov2_automatic_battery_entry">Détection et enregistrement automatique du changement de pile</string>
-    <string name="combov2_note_reservoir_change">Changement de réservoir détecté automatiquement par le pilote ComboV2</string>
-    <string name="combov2_note_battery_change">Changement de pile détecté automatiquement par le pilote ComboV2</string>
     <string name="combov2_timezone_changed">Fuseau horaire modifié</string>
     <string name="combov2_datetime_changed">Date et/ou heure modifiée(s)</string>
     <string name="combov2_dst_started">Changement d\'heure commencé</string>

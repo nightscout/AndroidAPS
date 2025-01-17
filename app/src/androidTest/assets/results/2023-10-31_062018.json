@@ -1,0 +1,929 @@
+{
+  "algorithm": "OpenAPSSMBDynamicISFPlugin",
+  "input": {
+    "glucoseStatus": {
+      "glucose": 194.3,
+      "noise": 0,
+      "delta": 22.44,
+      "short_avgdelta": 18.72,
+      "long_avgdelta": 15.03,
+      "date": 1698729600000
+    },
+    "currenttemp": {
+      "temp": "absolute",
+      "duration": 0,
+      "rate": 0
+    },
+    "iob_data": [
+      {
+        "iob": 0.179,
+        "basaliob": 0.179,
+        "bolussnooze": 0,
+        "activity": 0.0012,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:20:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": 0.179,
+          "basaliob": 0.179,
+          "bolussnooze": 0,
+          "activity": 0.0012,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:20:16.455Z"
+        }
+      },
+      {
+        "iob": 0.172,
+        "basaliob": 0.172,
+        "bolussnooze": 0,
+        "activity": 0.0014,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:25:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": 0.146,
+          "basaliob": 0.146,
+          "bolussnooze": 0,
+          "activity": 0.0014,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:25:16.455Z"
+        }
+      },
+      {
+        "iob": 0.165,
+        "basaliob": 0.165,
+        "bolussnooze": 0,
+        "activity": 0.0015,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:30:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": 0.107,
+          "basaliob": 0.107,
+          "bolussnooze": 0,
+          "activity": 0.0014,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:30:16.455Z"
+        }
+      },
+      {
+        "iob": 0.157,
+        "basaliob": 0.157,
+        "bolussnooze": 0,
+        "activity": 0.0016,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:35:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": 0.068,
+          "basaliob": 0.068,
+          "bolussnooze": 0,
+          "activity": 0.0013,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:35:16.455Z"
+        }
+      },
+      {
+        "iob": 0.149,
+        "basaliob": 0.149,
+        "bolussnooze": 0,
+        "activity": 0.0016,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:40:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": 0.029,
+          "basaliob": 0.029,
+          "bolussnooze": 0,
+          "activity": 0.0012,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:40:16.455Z"
+        }
+      },
+      {
+        "iob": 0.141,
+        "basaliob": 0.141,
+        "bolussnooze": 0,
+        "activity": 0.0016,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:45:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.008,
+          "basaliob": -0.008,
+          "bolussnooze": 0,
+          "activity": 9.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:45:16.455Z"
+        }
+      },
+      {
+        "iob": 0.133,
+        "basaliob": 0.133,
+        "bolussnooze": 0,
+        "activity": 0.0016,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:50:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.045,
+          "basaliob": -0.045,
+          "bolussnooze": 0,
+          "activity": 7.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:50:16.455Z"
+        }
+      },
+      {
+        "iob": 0.125,
+        "basaliob": 0.125,
+        "bolussnooze": 0,
+        "activity": 0.0016,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T05:55:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.08,
+          "basaliob": -0.08,
+          "bolussnooze": 0,
+          "activity": 4.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T05:55:16.455Z"
+        }
+      },
+      {
+        "iob": 0.117,
+        "basaliob": 0.117,
+        "bolussnooze": 0,
+        "activity": 0.0015,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:00:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.114,
+          "basaliob": -0.114,
+          "bolussnooze": 0,
+          "activity": 1.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:00:16.455Z"
+        }
+      },
+      {
+        "iob": 0.11,
+        "basaliob": 0.11,
+        "bolussnooze": 0,
+        "activity": 0.0015,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:05:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.146,
+          "basaliob": -0.146,
+          "bolussnooze": 0,
+          "activity": -2.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:05:16.455Z"
+        }
+      },
+      {
+        "iob": 0.102,
+        "basaliob": 0.102,
+        "bolussnooze": 0,
+        "activity": 0.0014,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:10:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.177,
+          "basaliob": -0.177,
+          "bolussnooze": 0,
+          "activity": -6.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:10:16.455Z"
+        }
+      },
+      {
+        "iob": 0.095,
+        "basaliob": 0.095,
+        "bolussnooze": 0,
+        "activity": 0.0014,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:15:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.206,
+          "basaliob": -0.206,
+          "bolussnooze": 0,
+          "activity": -8.0E-4,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:15:16.455Z"
+        }
+      },
+      {
+        "iob": 0.089,
+        "basaliob": 0.089,
+        "bolussnooze": 0,
+        "activity": 0.0013,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:20:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.233,
+          "basaliob": -0.233,
+          "bolussnooze": 0,
+          "activity": -0.0012,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:20:16.455Z"
+        }
+      },
+      {
+        "iob": 0.082,
+        "basaliob": 0.082,
+        "bolussnooze": 0,
+        "activity": 0.0013,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:25:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.26,
+          "basaliob": -0.26,
+          "bolussnooze": 0,
+          "activity": -0.0015,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:25:16.455Z"
+        }
+      },
+      {
+        "iob": 0.076,
+        "basaliob": 0.076,
+        "bolussnooze": 0,
+        "activity": 0.0012,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:30:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.284,
+          "basaliob": -0.284,
+          "bolussnooze": 0,
+          "activity": -0.0018,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:30:16.455Z"
+        }
+      },
+      {
+        "iob": 0.07,
+        "basaliob": 0.07,
+        "bolussnooze": 0,
+        "activity": 0.0011,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:35:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.307,
+          "basaliob": -0.307,
+          "bolussnooze": 0,
+          "activity": -0.0021,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:35:16.455Z"
+        }
+      },
+      {
+        "iob": 0.065,
+        "basaliob": 0.065,
+        "bolussnooze": 0,
+        "activity": 0.0011,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:40:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.328,
+          "basaliob": -0.328,
+          "bolussnooze": 0,
+          "activity": -0.0024,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:40:16.455Z"
+        }
+      },
+      {
+        "iob": 0.06,
+        "basaliob": 0.06,
+        "bolussnooze": 0,
+        "activity": 0.001,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:45:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.347,
+          "basaliob": -0.347,
+          "bolussnooze": 0,
+          "activity": -0.0027,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:45:16.455Z"
+        }
+      },
+      {
+        "iob": 0.055,
+        "basaliob": 0.055,
+        "bolussnooze": 0,
+        "activity": 9.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:50:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.366,
+          "basaliob": -0.366,
+          "bolussnooze": 0,
+          "activity": -0.003,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:50:16.455Z"
+        }
+      },
+      {
+        "iob": 0.051,
+        "basaliob": 0.051,
+        "bolussnooze": 0,
+        "activity": 9.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T06:55:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.383,
+          "basaliob": -0.383,
+          "bolussnooze": 0,
+          "activity": -0.0032,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T06:55:16.455Z"
+        }
+      },
+      {
+        "iob": 0.046,
+        "basaliob": 0.046,
+        "bolussnooze": 0,
+        "activity": 8.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:00:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.399,
+          "basaliob": -0.399,
+          "bolussnooze": 0,
+          "activity": -0.0035,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:00:16.455Z"
+        }
+      },
+      {
+        "iob": 0.043,
+        "basaliob": 0.043,
+        "bolussnooze": 0,
+        "activity": 7.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:05:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.411,
+          "basaliob": -0.411,
+          "bolussnooze": 0,
+          "activity": -0.0037,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:05:16.455Z"
+        }
+      },
+      {
+        "iob": 0.039,
+        "basaliob": 0.039,
+        "bolussnooze": 0,
+        "activity": 7.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:10:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.423,
+          "basaliob": -0.423,
+          "bolussnooze": 0,
+          "activity": -0.0039,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:10:16.455Z"
+        }
+      },
+      {
+        "iob": 0.036,
+        "basaliob": 0.036,
+        "bolussnooze": 0,
+        "activity": 6.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:15:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.433,
+          "basaliob": -0.433,
+          "bolussnooze": 0,
+          "activity": -0.0041,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:15:16.455Z"
+        }
+      },
+      {
+        "iob": 0.033,
+        "basaliob": 0.033,
+        "bolussnooze": 0,
+        "activity": 6.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:20:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.442,
+          "basaliob": -0.442,
+          "bolussnooze": 0,
+          "activity": -0.0043,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:20:16.455Z"
+        }
+      },
+      {
+        "iob": 0.03,
+        "basaliob": 0.03,
+        "bolussnooze": 0,
+        "activity": 5.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:25:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.451,
+          "basaliob": -0.451,
+          "bolussnooze": 0,
+          "activity": -0.0045,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:25:16.455Z"
+        }
+      },
+      {
+        "iob": 0.027,
+        "basaliob": 0.027,
+        "bolussnooze": 0,
+        "activity": 5.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:30:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.459,
+          "basaliob": -0.459,
+          "bolussnooze": 0,
+          "activity": -0.0046,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:30:16.455Z"
+        }
+      },
+      {
+        "iob": 0.025,
+        "basaliob": 0.025,
+        "bolussnooze": 0,
+        "activity": 5.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:35:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.466,
+          "basaliob": -0.466,
+          "bolussnooze": 0,
+          "activity": -0.0047,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:35:16.455Z"
+        }
+      },
+      {
+        "iob": 0.023,
+        "basaliob": 0.023,
+        "bolussnooze": 0,
+        "activity": 4.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:40:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.472,
+          "basaliob": -0.472,
+          "bolussnooze": 0,
+          "activity": -0.0049,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:40:16.455Z"
+        }
+      },
+      {
+        "iob": 0.02,
+        "basaliob": 0.02,
+        "bolussnooze": 0,
+        "activity": 4.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:45:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.479,
+          "basaliob": -0.479,
+          "bolussnooze": 0,
+          "activity": -0.005,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:45:16.455Z"
+        }
+      },
+      {
+        "iob": 0.019,
+        "basaliob": 0.019,
+        "bolussnooze": 0,
+        "activity": 4.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:50:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.483,
+          "basaliob": -0.483,
+          "bolussnooze": 0,
+          "activity": -0.005,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:50:16.455Z"
+        }
+      },
+      {
+        "iob": 0.017,
+        "basaliob": 0.017,
+        "bolussnooze": 0,
+        "activity": 3.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T07:55:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.488,
+          "basaliob": -0.488,
+          "bolussnooze": 0,
+          "activity": -0.0052,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T07:55:16.455Z"
+        }
+      },
+      {
+        "iob": 0.015,
+        "basaliob": 0.015,
+        "bolussnooze": 0,
+        "activity": 3.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:00:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.493,
+          "basaliob": -0.493,
+          "bolussnooze": 0,
+          "activity": -0.0053,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:00:16.455Z"
+        }
+      },
+      {
+        "iob": 0.014,
+        "basaliob": 0.014,
+        "bolussnooze": 0,
+        "activity": 3.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:05:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.494,
+          "basaliob": -0.494,
+          "bolussnooze": 0,
+          "activity": -0.0053,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:05:16.455Z"
+        }
+      },
+      {
+        "iob": 0.013,
+        "basaliob": 0.013,
+        "bolussnooze": 0,
+        "activity": 3.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:10:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.496,
+          "basaliob": -0.496,
+          "bolussnooze": 0,
+          "activity": -0.0054,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:10:16.455Z"
+        }
+      },
+      {
+        "iob": 0.011,
+        "basaliob": 0.011,
+        "bolussnooze": 0,
+        "activity": 2.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:15:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.498,
+          "basaliob": -0.498,
+          "bolussnooze": 0,
+          "activity": -0.0055,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:15:16.455Z"
+        }
+      },
+      {
+        "iob": 0.01,
+        "basaliob": 0.01,
+        "bolussnooze": 0,
+        "activity": 2.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:20:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.498,
+          "basaliob": -0.498,
+          "bolussnooze": 0,
+          "activity": -0.0055,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:20:16.455Z"
+        }
+      },
+      {
+        "iob": 0.009,
+        "basaliob": 0.009,
+        "bolussnooze": 0,
+        "activity": 2.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:25:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.499,
+          "basaliob": -0.499,
+          "bolussnooze": 0,
+          "activity": -0.0055,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:25:16.455Z"
+        }
+      },
+      {
+        "iob": 0.008,
+        "basaliob": 0.008,
+        "bolussnooze": 0,
+        "activity": 2.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:30:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.5,
+          "basaliob": -0.5,
+          "bolussnooze": 0,
+          "activity": -0.0056,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:30:16.455Z"
+        }
+      },
+      {
+        "iob": 0.008,
+        "basaliob": 0.008,
+        "bolussnooze": 0,
+        "activity": 2.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:35:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.499,
+          "basaliob": -0.499,
+          "bolussnooze": 0,
+          "activity": -0.0056,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:35:16.455Z"
+        }
+      },
+      {
+        "iob": 0.007,
+        "basaliob": 0.007,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:40:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.5,
+          "basaliob": -0.5,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:40:16.455Z"
+        }
+      },
+      {
+        "iob": 0.006,
+        "basaliob": 0.006,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:45:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.5,
+          "basaliob": -0.5,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:45:16.455Z"
+        }
+      },
+      {
+        "iob": 0.005,
+        "basaliob": 0.005,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:50:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.501,
+          "basaliob": -0.501,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:50:16.455Z"
+        }
+      },
+      {
+        "iob": 0.005,
+        "basaliob": 0.005,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T08:55:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.5,
+          "basaliob": -0.5,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T08:55:16.455Z"
+        }
+      },
+      {
+        "iob": 0.004,
+        "basaliob": 0.004,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T09:00:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.501,
+          "basaliob": -0.501,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T09:00:16.455Z"
+        }
+      },
+      {
+        "iob": 0.004,
+        "basaliob": 0.004,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T09:05:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.5,
+          "basaliob": -0.5,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T09:05:16.455Z"
+        }
+      },
+      {
+        "iob": 0.004,
+        "basaliob": 0.004,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T09:10:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.499,
+          "basaliob": -0.499,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T09:10:16.455Z"
+        }
+      },
+      {
+        "iob": 0.003,
+        "basaliob": 0.003,
+        "bolussnooze": 0,
+        "activity": 1.0E-4,
+        "lastBolusTime": 0,
+        "time": "2023-10-31T09:15:16.455Z",
+        "iobWithZeroTemp": {
+          "iob": -0.499,
+          "basaliob": -0.499,
+          "bolussnooze": 0,
+          "activity": -0.0057,
+          "lastBolusTime": 0,
+          "time": "2023-10-31T09:15:16.455Z"
+        }
+      }
+    ],
+    "profile": {
+      "max_iob": 3,
+      "type": "current",
+      "max_daily_basal": 0.391,
+      "max_basal": 1,
+      "min_bg": 99,
+      "max_bg": 99,
+      "target_bg": 99,
+      "carb_ratio": 8.99591256442154,
+      "sens": 153.96499999999997,
+      "max_daily_safety_multiplier": 3,
+      "current_basal_safety_multiplier": 4,
+      "lgsThreshold": 65,
+      "high_temptarget_raises_sensitivity": false,
+      "low_temptarget_lowers_sensitivity": false,
+      "sensitivity_raises_target": true,
+      "resistance_lowers_target": false,
+      "adv_target_adjustments": false,
+      "exercise_mode": false,
+      "half_basal_exercise_target": 160,
+      "maxCOB": 120,
+      "skip_neutral_temps": false,
+      "remainingCarbsCap": 90,
+      "enableUAM": false,
+      "A52_risk_enable": false,
+      "SMBInterval": 3,
+      "enableSMB_with_COB": false,
+      "enableSMB_with_temptarget": false,
+      "allowSMB_with_high_temptarget": false,
+      "enableSMB_always": false,
+      "enableSMB_after_carbs": false,
+      "maxSMBBasalMinutes": 30,
+      "maxUAMSMBBasalMinutes": 30,
+      "bolus_increment": 0.1,
+      "carbsReqThreshold": 1,
+      "current_basal": 0.388,
+      "temptargetSet": false,
+      "autosens_max": 1.2,
+      "autosens_min": 0.7,
+      "out_units": "mmol\/L",
+      "variable_sens": 78.9,
+      "insulinDivisor": 75,
+      "TDD": 17.837715204761906
+    },
+    "autosens_data": {
+      "ratio": 1
+    },
+    "meal_data": {
+      "carbs": 0,
+      "mealCOB": 0,
+      "slopeFromMaxDeviation": -1.4816666666666674,
+      "slopeFromMinDeviation": 2.2498,
+      "lastBolusTime": 1698689084000,
+      "lastCarbTime": 0
+    },
+    "microBolusAllowed": false,
+    "currentTime": 1698729618193,
+    "flatBGsDetected": false,
+    "tdd1D": 20.094516666666674,
+    "tdd7D": 21.46417619047619,
+    "tddLast24H": 20.354675000000004,
+    "tddLast4H": 2.0435333333333325,
+    "tddLast8to4H": 1.812066666666666
+  },
+  "output": {
+    "temp": "absolute",
+    "bg": 194.3,
+    "tick": "+22",
+    "eventualBG": 295,
+    "targetBG": 99,
+    "insulinReq": 2.4,
+    "deliverAt": "2023-10-31T05:20:18.193Z",
+    "sensitivityRatio": 1,
+    "variable_sens": 78.9,
+    "predBGs": {
+      "IOB": [
+        194,
+        211,
+        227,
+        241,
+        253,
+        264,
+        273,
+        280,
+        286,
+        290,
+        293,
+        294,
+        294,
+        293,
+        293,
+        293,
+        292,
+        292,
+        292,
+        291,
+        291,
+        291,
+        291,
+        290,
+        290,
+        290,
+        290,
+        290,
+        289,
+        289,
+        289,
+        289,
+        289,
+        289,
+        289,
+        289,
+        289,
+        289,
+        288
+      ],
+      "ZT": [
+        194,
+        194,
+        193,
+        193,
+        192,
+        192,
+        191,
+        191,
+        191,
+        191,
+        191,
+        191,
+        192,
+        192,
+        193,
+        193
+      ]
+    },
+    "reason": "COB: 0, Dev: 6.4, BGI: 0.0, ISF: 4.4, CR: 9, Target: 5.5, minPredBG 16.0, minGuardBG 11.7, IOBpredBG 16.0; Eventual BG 16.4 >= 5.5, adj. req. rate: 5.19 to maxSafeBasal: 1, no temp, setting 1U\/hr. ",
+    "COB": 0,
+    "IOB": 0.179,
+    "duration": 30,
+    "rate": 1,
+    "timestamp": "2023-10-31T05:20:18.283Z"
+  }
+}

@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">For at deaktivere SMS fjernstyring svar med koden %1$s.\n\nHusk på, at du kun vil være i stand til at genaktivere den direkte fra AAPS-master-smartphone.</string>
     <string name="smscommunicator_stopped_sms">SMS fjernstyring stoppet. For at genaktivere det, brug AAPS på master smartphone.</string>
     <string name="smscommunicator_calibration_reply_with_code">For at sende kalibrering %1$.2f svar med kode %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus mislykkedes</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Mindste antal minutter, der skal gå mellem én fjernbolus og den næste</string>
     <string name="smscommunicator_remote_bolus_min_distance">Hvor mange minutter der mindst skal gå mellem en bolus og den næste</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Af hensyn til din sikkerhed, skal du tilføje mindst 2 telefonnumre for at redigere denne præference.</string>
@@ -201,11 +200,6 @@
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
     <string name="overview_buttons_selection">Knapper</string>
-    <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ eller åbner BYODA kalibreringsmenu</string>
-    <string name="show_cgm_button_summary">Åbner xDrip + eller BYODA, tilbage-knappen returnerer til AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom app er ikke installeret.</string>
-    <string name="dexcom_app_not_detected">Opdater venligst din Dexcom app til understøttet version</string>
-    <string name="error_starting_cgm">Kunne ikke starte CGM applikationen. Kontroller at den er installeret.</string>
     <string name="not_available_full">Ikke tilgængelig</string>
     <string name="constraints_violation">Begrænsninger overtrådt</string>
     <string name="change_your_input">Skift dit input!</string>
@@ -226,12 +220,6 @@
     <string name="thirdcarbsincrement">Tredje kulhydratstigning</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standard Midlertidige mål</string>
-    <string name="eatingsoon_duration">spiser snart varighed</string>
-    <string name="eatingsoon_target">spiser snart mål</string>
-    <string name="activity_duration">varighed af aktivitet</string>
-    <string name="activity_target">aktivitet mål</string>
-    <string name="hypo_duration">hypo varighed</string>
-    <string name="hypo_target">hypo-mål</string>
     <string name="fill_bolus_title">Fyld / Klargør standard insulinmængder</string>
     <string name="button1">Knap 1</string>
     <string name="button2">Knap 2</string>
@@ -259,7 +247,6 @@
     <string name="overview_show_deviation_slope">Afvigelses hældning</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukker virkning</string>
-    <string name="overview_show_sensitivity">Sensitivitet</string>
     <string name="overview_show_deviations">Afvigelser</string>
     <string name="overview_show_cob">Aktive kulhydrater </string>
     <string name="overview_show_iob">Aktivt insulin </string>
@@ -274,7 +261,6 @@
     <string name="devslope_shortname">AFVHÆL</string>
     <string name="treatments_shortname">BEHANDL</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
@@ -285,7 +271,6 @@
     <string name="skin">Udseende</string>
     <string name="cannula_usage">brug:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
     <string name="old_data">GAMLE DATA</string>

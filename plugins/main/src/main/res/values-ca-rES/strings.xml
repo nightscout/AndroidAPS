@@ -32,7 +32,6 @@
     <string name="smscommunicator_stops_ns_with_code">Per desactivar el Servei Remot d\'SMS contesteu amb el codi %1$s.\n\nRecordeu que només el podreu reactivar des del mòbil amb AAPS principal.</string>
     <string name="smscommunicator_stopped_sms">Servei Remot d\'SMS aturat. Per reactivar-lo, utilitzeu AAPS des del mòbil principal.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per enviar calibració %1$.2f contesteu amb el codi %2$s</string>
-    <string name="smscommunicator_bolus_failed">Error de bolus</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Mínim nr. de minuts que han de passar entre un bolus remot i el següent</string>
     <string name="smscommunicator_remote_bolus_min_distance">Quants minuts han de passar, com a mínim, entre un bolus i el següent</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Per la vostra seguretat, per editar aquesta configuració haureu d\'afegir al menys 2 nrs. de telèfon.</string>
@@ -172,11 +171,6 @@
     <string name="overview_shortname">INICI</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="overview_buttons_selection">Botons</string>
-    <string name="show_calibration_button_summary">Enviar calibració a xDrip+ o obrir diàleg de calibració de BYODA</string>
-    <string name="show_cgm_button_summary">Obre xDrip+ o Dexcom BYODA. Si prems el botó enrere, torna a AAPS</string>
-    <string name="dexcom_app_not_installed">L\'app Dexcom no està instal·lada.</string>
-    <string name="dexcom_app_not_detected">Si us plau actualitzeu l\'app Dexcom a una versió compatible</string>
-    <string name="error_starting_cgm">No s\'ha pogut iniciar l\'aplicació CGM. Assegureu-vos que està instal·lada.</string>
     <string name="not_available_full">No disponible</string>
     <string name="constraints_violation">Violació de restriccions</string>
     <string name="change_your_input">Modifiqueu les dades!</string>
@@ -197,12 +191,6 @@
     <string name="thirdcarbsincrement">3r increment de carbohidrats</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Objectius temporals per defecte</string>
-    <string name="eatingsoon_duration">Durada \"menjar aviat\"</string>
-    <string name="eatingsoon_target">Objectiu \"menjar aviat\"</string>
-    <string name="activity_duration">Durada esport</string>
-    <string name="activity_target">Objectiu esport</string>
-    <string name="hypo_duration">Durada \"hipo\"</string>
-    <string name="hypo_target">Objectiu \"hipo\"</string>
     <string name="fill_bolus_title">Encebar quantitats d\'insulina estàndard</string>
     <string name="button1">Botó 1</string>
     <string name="button2">Botó 2</string>
@@ -226,7 +214,6 @@
     <string name="overview_show_deviation_slope">Pendent de desviació</string>
     <string name="overview_show_activity">Activitat</string>
     <string name="overview_show_bgi">Impacte glucèmia</string>
-    <string name="overview_show_sensitivity">Sensibilitat</string>
     <string name="overview_show_deviations">Desviacions</string>
     <string name="overview_show_cob">Carbohidrats actius (COB)</string>
     <string name="overview_show_iob">Insulina \"a bord\" (IOB)</string>
@@ -240,7 +227,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">PENDENTDESV</string>
     <string name="treatments_shortname">TRACT</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Gràfica</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
@@ -249,7 +235,6 @@
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
     <!--    Iob-->
-    <string name="send_logfiles">Enviar logs del dia als desenvolupadors. Situació inesperada.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
     <string name="old_data">DADES ANTIGUES</string>

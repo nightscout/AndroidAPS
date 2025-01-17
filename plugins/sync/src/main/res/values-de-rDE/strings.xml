@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
     <string name="ns_create_announcements_from_errors_summary">Erstelle Nightscout-Ankündigungen für Fehler-Dialoge und lokale Alarme (auch einsehbar im Careportal unter \"Behandlungen\").</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Nightscout-Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
-    <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
     <string name="description_ns_client_v3">Synchronisiert deine Daten mit Nightscout</string>
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
@@ -23,24 +22,11 @@
     <string name="ns_malfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <!-- NSClient -->
     <string name="no_write_permission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Nightscout-Client</string>
-    <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Neustart</string>
-    <string name="ns_client_internal_title">Nightscout-Client</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
-    <string name="ns_client_url_dialog_message">Nightscout-URL eingeben</string>
-    <string name="ns_client_secret_title">Nightscout API-Key</string>
-    <string name="ns_client_secret_dialog_title">Nightscout API-Key</string>
-    <string name="ns_client_secret_dialog_message">Nightscout API-Key eingeben (min. 12 Zeichen)</string>
-    <string name="nsclient_token_title">NS-Zugangstoken</string>
-    <string name="nsclient_token_dialog_title">NS-Zugangstoken</string>
-    <string name="nsclient_token_dialog_message">Zugriffstoken der auf der NS Admin-Seite generiert wurde (min 17 Zeichen)</string>
     <string name="deliver_now">Jetzt abgeben</string>
-    <string name="clear_queue">Warteschlange leeren</string>
-    <string name="show_queue">Zeige Warteschlange</string>
     <string name="queue">Warteschlange:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Logs leeren</string>
@@ -88,18 +74,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Daten zu Tidepool hochladen</string>
-    <string name="tidepool_upload_cgm">CGM Daten hochladen</string>
-    <string name="tidepool_upload_bolus">Behandlungen (Insulin, Kohlenhydrate) hochladen</string>
-    <string name="tidepool_upload_tbr">Temporäre Basalrate hochladen</string>
-    <string name="tidepool_upload_profile">Profilwechsel und temporäre Ziele hochladen</string>
-    <string name="tidepool_upload_bg">BZ-Werte (blutig) hochladen</string>
     <string name="remove_all">Alle entfernen</string>
-    <string name="reset_start">Start zurücksetzen</string>
     <string name="upload_now">Jetzt hochladen</string>
     <string name="not_connected">Nicht verbunden</string>
     <string name="read_only">Nur lesen</string>
     <string name="working">Arbeitet</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -126,7 +105,6 @@
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Temp-Target unbekannte Voreinstellung: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
     <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - abbrechen des laufenden Temp-Targets?</string>

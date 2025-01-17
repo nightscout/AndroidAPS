@@ -3,8 +3,6 @@ package app.aaps.core.ui.toast
 import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import android.text.Html
 import android.text.Spanned
 import android.view.LayoutInflater
@@ -14,8 +12,9 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
-import app.aaps.core.ui.getThemeColor
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
+import app.aaps.core.ui.getThemeColor
 
 object ToastUtils {
 
@@ -54,8 +53,7 @@ object ToastUtils {
 
     @SuppressLint("InflateParams")
     fun graphicalToast(ctx: Context?, string: String?, @DrawableRes iconId: Int, isShort: Boolean) {
-        val mainThread = Handler(Looper.getMainLooper())
-        mainThread.post {
+        runOnUiThread {
             val toastRoot = LayoutInflater.from(ContextThemeWrapper(ctx, R.style.AppTheme)).inflate(R.layout.toast, null)
             val toastMessage = toastRoot.findViewById<TextView>(android.R.id.message)
             toastMessage.text = string
@@ -71,8 +69,7 @@ object ToastUtils {
     }
 
     fun showToastInUiThread(ctx: Context?, string: String?) {
-        val mainThread = Handler(Looper.getMainLooper())
-        mainThread.post {
+        runOnUiThread {
             val toast: Toast =
                 Toast.makeText(
                     ctx,

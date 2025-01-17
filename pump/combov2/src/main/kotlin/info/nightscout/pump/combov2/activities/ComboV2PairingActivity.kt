@@ -1,7 +1,6 @@
 package info.nightscout.pump.combov2.activities
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -20,12 +19,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.comboctl.base.BasicProgressStage
-import info.nightscout.comboctl.base.PAIRING_PIN_SIZE
-import info.nightscout.comboctl.base.PairingPIN
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
+import info.nightscout.comboctl.base.BasicProgressStage
+import info.nightscout.comboctl.base.PAIRING_PIN_SIZE
+import info.nightscout.comboctl.base.PairingPIN
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
 import info.nightscout.pump.combov2.databinding.Combov2PairingActivityBinding
@@ -97,12 +96,12 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
         // With this caller, we can cancel pairing in this case instead.
         val startPairingActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             when (result.resultCode) {
-                Activity.RESULT_CANCELED -> {
+                RESULT_CANCELED -> {
                     aapsLogger.info(LTag.PUMP, "User rejected discovery request; cancelling pairing")
                     combov2Plugin.cancelPairing()
                 }
 
-                else                     -> Unit
+                else            -> Unit
             }
         }
         combov2Plugin.customDiscoveryActivityStartCallback = { intent ->

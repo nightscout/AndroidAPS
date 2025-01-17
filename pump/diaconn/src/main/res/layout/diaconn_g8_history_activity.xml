@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="info.nightscout.pump.diaconn.activities.DiaconnG8HistoryActivity">
+    tools:context="app.aaps.pump.diaconn.activities.DiaconnG8HistoryActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/typeListLayout"
