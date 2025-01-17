@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.MainApp
 import app.aaps.R
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -94,7 +93,7 @@ class KeepAliveWorker(
     }
 
     override suspend fun doWorkAndLog(): Result {
-        aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule"))
+        aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule") + " Thread count: " + Thread.activeCount())
 
         // 15 min interval is WorkManager minimum so schedule another instances to have 5 min interval
         if (inputData.getString("schedule") == KA_0) {
@@ -169,13 +168,13 @@ class KeepAliveWorker(
     // IOB displayed in NS
     private fun checkAPS() {
         var shouldUploadStatus = false
-        if (config.NSCLIENT) return
+        if (config.AAPSCLIENT) return
         if (config.PUMPCONTROL) shouldUploadStatus = true
         else if (!loop.isEnabled() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
         else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
-            loop.buildAndStoreDeviceStatus()
+            loop.scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
         }
     }
 

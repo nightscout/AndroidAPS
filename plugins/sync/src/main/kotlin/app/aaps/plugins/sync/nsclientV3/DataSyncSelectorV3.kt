@@ -77,7 +77,7 @@ class DataSyncSelectorV3 @Inject constructor(
 
     override suspend fun doUpload() {
         rxBus.send(EventNSClientUpdateGuiStatus())
-        if ((config.NSCLIENT || preferences.get(BooleanKey.NsClientUploadData)) && !isPaused) {
+        if ((config.AAPSCLIENT || preferences.get(BooleanKey.NsClientUploadData)) && !isPaused) {
             queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
             queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
             queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)

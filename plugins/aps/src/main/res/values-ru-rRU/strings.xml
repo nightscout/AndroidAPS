@@ -66,7 +66,9 @@
     <string name="enable_smb_summary">Для ускорения действия использовать супер микро болюсы SMB вместо временного базала</string>
     <string name="enable_uam_summary">Обнаружение незапланированного приема пищи</string>
     <string name="enable_smb_always">Всегда включать супер микро болюс SMB</string>
+    <string name="enable_smb_always_summary">Включать SMB всегда, вне зависимости от активных углеводов, ВЦ или болюсов. Возможно только на источниках СК с хорошей фильтрацией данных</string>
     <string name="enable_smb_after_carbs">Включать супер микро болюс SMB после углеводов</string>
+    <string name="enable_smb_after_carbs_summary">Включать SMB на 6ч после приема пищи, даже при отсутствии активных углеводов. Возможно только на источниках СК с продвинутой фильтрацией данных</string>
     <string name="enable_smb_with_cob">Включать супер микро болюсы при активных углеводах COB</string>
     <string name="enable_smb_with_cob_summary">Включить супер микро болюс SMB, когда имеются активные углеводы COB.</string>
     <string name="enable_smb_with_temp_target">Включить супер микро болюсы SMB с временными целями</string>
@@ -120,6 +122,7 @@
     <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
     <string name="fallback_smb_no_tdd">Возврат к SMB. Недостаточно данных TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Откат к чувствительности из профиля. Недостаточно данных. Причина: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
     <string name="autotune_shortname">АвтТюн</string>
@@ -198,4 +201,7 @@
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Значение по умолчанию: 0. Линейно увеличивающийся коэффициент для ввода микроболюсов SMB сопоставляется с диапазоном гликемии [целевая ГК, целевая ГК+диапазон ГК].\nДля параметра target_bg (целевая ГК) коэффициент SMB равен минимальному коэффициенту подачи микроболюсов (smb_delivery_ratio_min), для параметра target_bg+bg_range - максимальному (smb_delivery_ratio_max).\n При нуле линейно увеличивающийся коэффициент SMB отключен; используется фиксированный коэффициент smb_delivery_ratio.</string>
     <string name="openapsama_smb_max_range_extension_summary">Значение по умолчанию: 1 Это еще один ключ безопасности OpenAPS который указывает, на какую величину можно превысить обычные 120 maxSMB/maxUAM минут. Увеличить его постепенно и с осторожностью.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Включить альтернативную активацию микроболюсов SMB при активной цели ГК выраженной целым числом</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nвключены ...\nесли активная цель(ммоль/л) имеет четную десятичную часть\nили активная цель(мг/дл) - четное число\n\nв ином случае - отключены</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Процент maxIOB выше которого SMB отключаются.\nЗначение по умолчанию: 100%\nПри значении в 100%, функция не имеет эффекта.</string>
+    <string name="openapsama_iob_threshold_percent">Пороговый процент maxIOB для SMB\n(iob_threshold_percent)</string>
 </resources>

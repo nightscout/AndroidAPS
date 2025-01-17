@@ -111,6 +111,7 @@
 
                         <CheckBox
                             android:id="@+id/show_week_days_checkbox"
+                            style="@style/Widget.App.CheckBox"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:layout_gravity="center_vertical"

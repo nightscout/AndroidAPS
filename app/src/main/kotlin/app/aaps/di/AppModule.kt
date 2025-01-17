@@ -40,7 +40,7 @@ open class AppModule {
         val plugins = allConfigs.toMutableMap()
         if (config.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (config.APS) plugins += aps.get()
-        if (!config.NSCLIENT) plugins += notNsClient.get()
+        if (!config.AAPSCLIENT) plugins += notNsClient.get()
         //if (config.isUnfinishedMode()) plugins += unfinished.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }

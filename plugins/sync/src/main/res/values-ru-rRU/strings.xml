@@ -13,6 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Создавать оповещения из напоминаний о необходимых углеводах</string>
     <string name="ns_create_announcements_from_errors_summary">Создать оповещение NS с диалогом об ошибке и оповещения на месте (также видимые в портале назначений в разделе лечение)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Создавать оповещения Nightscout из напоминаний о необходимых углеводах</string>
+    <string name="description_ns_client">Синхронизирует данные с Nightscout при помощи API v1</string>
     <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
@@ -23,10 +24,19 @@
     <string name="ns_malfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NS не имеет разрешения внести изменения. неверный API secret?</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">клиент NS</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">Адрес URL:</string>
     <string name="restart">перезапуск</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">URL-адрес Nightscout</string>
+    <string name="ns_client_url_dialog_message">Введите URL своего Nightscout (напр. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Ключ API Nightscout</string>
+    <string name="ns_client_secret_dialog_message">Введите ключ API вашего Nightscout (мин. 12 символов; пароль, записанный в переменных вашего Nightscout)</string>
+    <string name="nsclient_token_title">Код доступа Nightscout</string>
+    <string name="nsclient_token_dialog_message">Введите код доступа с уровнем привилегий admin, созданный в инструментах администратора Nightscout (мин. 17 символов, не ключ вашего API)</string>
     <string name="deliver_now">Подать сейчас</string>
     <string name="queue">очередь</string>
     <string name="status">состояние:</string>
@@ -113,6 +123,7 @@
     <string name="wizard_result">Мастер:\nИнсулин: %1$.2fед\nУгл: %2$dг</string>
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
+    <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
     <string name="wear_action_tempt_cancel_message">Отменить ВЦ?</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
     <string name="wear_action_tempt_zero_message">Нулевая врем цель - отмена?</string>
@@ -125,6 +136,8 @@
     <string name="wear_settings">Настройки смарт-часов на Wear OS</string>
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить терапию с часов.</string>
+    <string name="wear_broadcast_data">Передавать данные</string>
+    <string name="wear_broadcast_data_summary">Передавать данные в AAPS или AAPSClient</string>
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
     <string name="wear_general_settings">Общие настройки</string>
     <string name="wear_notifysmb_title">Оповещать об SMB</string>

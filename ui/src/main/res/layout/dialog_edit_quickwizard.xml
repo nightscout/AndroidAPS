@@ -72,6 +72,7 @@
 
             <CheckBox
                 android:id="@+id/device_phone_checkbox"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="10dp"
@@ -115,6 +116,7 @@
 
             <CheckBox
                 android:id="@+id/device_watch_checkbox"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="10dp"
@@ -262,6 +264,7 @@
 
                     <CheckBox
                         android:id="@+id/alarm"
+                        style="@style/Widget.App.CheckBox"
                         android:layout_width="53dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -320,6 +323,7 @@
 
                 <CheckBox
                     android:id="@+id/use_bg"
+                    style="@style/Widget.App.CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
@@ -329,6 +333,7 @@
 
                 <CheckBox
                     android:id="@+id/use_temp_target"
+                    style="@style/Widget.App.CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
@@ -346,6 +351,7 @@
 
                 <CheckBox
                     android:id="@+id/use_iob"
+                    style="@style/Widget.App.CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
@@ -356,6 +362,7 @@
 
                 <CheckBox
                     android:id="@+id/use_positive_iob_only"
+                    style="@style/Widget.App.CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
@@ -366,6 +373,7 @@
 
             <CheckBox
                 android:id="@+id/use_cob"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -376,6 +384,7 @@
 
             <CheckBox
                 android:id="@+id/use_trend_checkbox"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -408,6 +417,7 @@
 
             <CheckBox
                 android:id="@+id/use_super_bolus"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -417,6 +427,7 @@
 
             <CheckBox
                 android:id="@+id/use_ecarbs"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"

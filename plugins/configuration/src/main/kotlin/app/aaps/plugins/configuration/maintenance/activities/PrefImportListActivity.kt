@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.databinding.MaintenanceImportListActivityBinding
 import app.aaps.plugins.configuration.databinding.MaintenanceImportListItemBinding
-import app.aaps.plugins.configuration.maintenance.PrefsFileContract
 import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import javax.inject.Inject
@@ -23,6 +23,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fileListProvider: FileListProvider
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private lateinit var binding: MaintenanceImportListActivityBinding
 
@@ -49,10 +50,11 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
                 with(maintenanceImportListItemBinding) {
                     root.isClickable = true
                     maintenanceImportListItemBinding.root.setOnClickListener {
-                        val prefFile = filelistName.tag as PrefsFile
                         val i = Intent()
-
-                        i.putExtra(PrefsFileContract.OUTPUT_PARAM, prefFile)
+                        // Do not pass full file through intent. It crash on large file
+                        // val prefFile = prefFileList[filelistName.tag as Int]
+                        // i.putExtra(PrefsFileContract.OUTPUT_PARAM, prefFile)
+                        importExportPrefs.selectedImportFile = prefFileList[filelistName.tag as Int]
                         setResult(RESULT_OK, i)
                         finish()
                     }
@@ -73,7 +75,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
             val prefFile = prefFileList[position]
             with(holder.maintenanceImportListItemBinding) {
                 filelistName.text = prefFile.name
-                filelistName.tag = prefFile
+                filelistName.tag = position
 
                 metalineName.visibility = View.VISIBLE
                 metaDateTimeIcon.visibility = View.VISIBLE

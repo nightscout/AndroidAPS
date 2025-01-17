@@ -95,17 +95,12 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
         showLoading()
         commandQueue.customCommand(CmdInsulinChange(aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
-                if (result.success) {
-                    equilManager.setRunMode(RunMode.STOP)
-                    equilPumpPlugin.resetData()
-                    equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
-                    dismissLoading()
-                    startActivity(Intent(context, EquilUnPairActivity::class.java))
-                } else {
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                    dismissLoading()
-
-                }
+                if (!result.success) equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
+                equilManager.setRunMode(RunMode.STOP)
+                equilPumpPlugin.resetData()
+                equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
+                dismissLoading()
+                startActivity(Intent(context, EquilUnPairActivity::class.java))
             }
         })
     }

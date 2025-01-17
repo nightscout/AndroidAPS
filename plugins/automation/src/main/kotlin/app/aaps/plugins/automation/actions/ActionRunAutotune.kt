@@ -38,7 +38,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
 
     override fun doAction(callback: Callback) {
         val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)

@@ -38,6 +38,11 @@ abstract class BaseDialog : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<Button>(app.aaps.core.ui.R.id.ok)?.setOnClickListener {
+            // Focus is not cleared for NumberPickers
+            // when OK button is hit and min/max constraints are not applied
+            // Let's call it manually
+            (view as ViewGroup).let { group -> for (i in 0 until group.childCount) group.getChildAt(i).clearFocus() }
+            //Protect against multiple OK clicks
             synchronized(okClicked) {
                 if (okClicked.get()) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.simpleName}")

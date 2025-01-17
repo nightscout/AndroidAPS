@@ -17,20 +17,21 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
     <string name="invalid_age">Neteisingas amžiaus įrašas</string>
     <string name="invalid_weight">Neteisingas svorio įrašas</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
-    <string name="age">Amžius</string>
+    <string name="age">Laikas</string>
     <string name="weight_label">Svoris</string>
     <string name="most_common_profile">Dažniausiai naudojamas profilis:</string>
     <string name="survey_comment">Pastaba: anonimiškai bus įkelti tik tie duomenys, kurie matomi šiame ekrane. Šiai AndroidAPS instaliacijai priskirtas ID. Galite pateikti duomenis dar kartą, jei pasikeitė jūsų pagrindinis profilis. Vis dėlto leiskite jam veikti bent savaitę, kad rezultatas atsispindėtų laike normos ribose. Ačiū už palaikymą.</string>
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
     <string name="bg_meter">Matuoklis</string>
-    <string name="bg_sensor">Iš sensoriaus</string>
+    <string name="bg_sensor">Sensorius</string>
     <!-- WizardDialog -->
     <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
@@ -108,9 +109,9 @@
     <string name="motol_default_profile">Numatytasis profilis</string>
     <string name="current_profile">Dabartinis profilis</string>
     <string name="available_profile">Galimas profilis</string>
-    <string name="format_with_tdd">Amžius: %1$d BPD: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Amžius: %1$d BPD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Amžius: %1$d Svoris: %2$.0f kg</string>
+    <string name="format_with_tdd">Laikas: %1$d BPD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Laikas: %1$d BPD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Laikas: %1$d Svoris: %2$.0f kg</string>
     <string name="dpv_default_profile">Numatytasis profilis</string>
     <string name="invalid_pct">Netinkamas % įrašas</string>
     <!-- Other dialogs -->
@@ -121,6 +122,21 @@
     <string name="a11y_only_on_watch">tik laikrodyje</string>
     <string name="a11y_only_on_phone">tik telefone</string>
     <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
+    <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
     <string name="overview_edit_quickwizard_valid">Galioja:</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Procentas per aukštas!</string>
     <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
+    <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Naudota skaičiavimams:</string>
+    <string name="constraints_violation">Apribojimų pažeidimas</string>
+    <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
+    <string name="confirm_treatment">Patvirtinkite terapiją</string>
+    <string name="recalculate">Perskaičiuoti</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Abu</item>
+        <item>Tik teigiamas</item>
+        <item>Tik neigiamas</item>
+    </string-array>
 </resources>

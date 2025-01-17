@@ -71,8 +71,7 @@ class AdaptiveIntPreference(
             if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
-        if (validatorParams != null) validatorParameters = validatorParams
-        else validatorParameters = obtainValidatorParameters(attrs)
+        validatorParameters = if (validatorParams != null) validatorParams else obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             if (preferenceKey.min < 0)
@@ -81,6 +80,7 @@ class AdaptiveIntPreference(
                 editText.inputType = InputType.TYPE_CLASS_NUMBER
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
@@ -119,16 +119,16 @@ class AdaptiveIntPreference(
 
     override fun onSetInitialValue(defaultValue: Any?) {
         text = try {
-            getPersistedString(defaultValue as String?)
-        } catch (ignored: Exception) {
             getPersistedInt(preferenceKey.defaultValue).toString()
+        } catch (_: Exception) {
+            getPersistedString(defaultValue as String?)
         }
     }
 
     override fun persistString(value: String?): Boolean =
         try {
-            super.persistString(SafeParse.stringToInt(value, 0).toString())
-        } catch (ignored: Exception) {
-            false
+            super.persistInt(SafeParse.stringToInt(value))
+        } catch (_: Exception) {
+            super.persistString(SafeParse.stringToInt(value).toString())
         }
 }

@@ -413,6 +413,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazal</string>
     <string name="basalpct">Bazal %</string>
+    <string name="sensitivity">Duyarlılık</string>
+    <string name="isf_for_carbs">Hesap makinesi ve Karb. emilimi için İDF: %1$.1f</string>
+    <string name="autosens_long">Otoduyarlılık değeri: %.0f%%</string>
+    <string name="autosens_short">OD: %.0f%%</string>
+    <string name="algorithm_long">Algoritmadaki otoduyarlılık: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">dosya</string>
     <string name="a11y_user">kullanıcı</string>
     <!-- Autotune -->
@@ -586,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f Ü</string>
     <string name="format_insulin_units">%1$.2f Ü</string>
+    <string name="percent_rate_duration">Oran: %1$.2f%% (%2$.2f Ü/s) Süre: %3$d dk</string>
+    <string name="rate_percent_duration">Oran: %1$.2f Ü/s (%2$.2f%%) Süre: %3$d dk</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f%% (%2$.2f Ü/s)<br><b>Süre</b>: %3$d dk<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/s (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
 </resources>

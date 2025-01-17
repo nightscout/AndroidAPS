@@ -61,8 +61,12 @@
     <string name="pref_show_ago">顯示前</string>
     <string name="pref_show_week_number">顯示週數</string>
     <string name="pref_show_date">顯示日期</string>
+    <string name="pref_show_seconds">顯示秒數</string>
     <string name="default_custom_watchface_comment">預設錶盤，您可以點擊匯出錶盤按鈕來生成模板</string>
     <string name="default_custom_watchface_external_comment">預設錶盤包含外部視圖供追蹤者使用，您可以點擊匯出錶盤按鈕來生成模板</string>
     <string name="wear_default_watchface">預設錶盤</string>
     <string name="wear_more_watchfaces">更多錶盤</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 </resources>

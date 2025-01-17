@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -107,26 +106,29 @@ class StoreDataForDbImpl @Inject constructor(
 
     private val disposable = CompositeDisposable()
     override fun storeGlucoseValuesToDb() {
-        if (glucoseValues.isNotEmpty())
-            persistenceLayer.insertCgmSourceData(Sources.NSClient, glucoseValues, emptyList(), null)
-                .blockingGet()
-                .also { result ->
-                    glucoseValues.clear()
-                    result.updated.forEach {
-                        nsClientSource.detectSource(it)
-                        updated.inc(GV::class.java.simpleName)
+        synchronized(glucoseValues) {
+            if (glucoseValues.isNotEmpty()) {
+                persistenceLayer.insertCgmSourceData(Sources.NSClient, glucoseValues.toMutableList(), emptyList(), null)
+                    .blockingGet()
+                    .also { result ->
+                        glucoseValues.clear()
+                        result.updated.forEach {
+                            nsClientSource.detectSource(it)
+                            updated.inc(GV::class.java.simpleName)
+                        }
+                        result.inserted.forEach {
+                            nsClientSource.detectSource(it)
+                            inserted.inc(GV::class.java.simpleName)
+                        }
+                        result.updatedNsId.forEach {
+                            nsClientSource.detectSource(it)
+                            nsIdUpdated.inc(GV::class.java.simpleName)
+                        }
+                        sendLog("GlucoseValue", GV::class.java.simpleName)
                     }
-                    result.inserted.forEach {
-                        nsClientSource.detectSource(it)
-                        inserted.inc(GV::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        nsClientSource.detectSource(it)
-                        nsIdUpdated.inc(GV::class.java.simpleName)
-                    }
-                    sendLog("GlucoseValue", GV::class.java.simpleName)
-                }
-
+                glucoseValues.clear()
+            }
+        }
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("● DONE PROCESSING BG", ""))
     }
@@ -262,14 +264,6 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         synchronized(therapyEvents) {
-            if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT)
-                therapyEvents.filter { it.type == TE.Type.ANNOUNCEMENT }.forEach {
-                    if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
-                        it.note?.isNotEmpty() == true &&
-                        it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS") &&
-                        preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)
-                    ) uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
-                }
             if (therapyEvents.isNotEmpty()) {
                 disposable += persistenceLayer.syncNsTherapyEvents(therapyEvents.toMutableList())
                     .subscribeBy { result ->
@@ -442,7 +436,7 @@ class StoreDataForDbImpl @Inject constructor(
 
     override fun updateDeletedTreatmentsInDb() {
         deleteTreatment.forEach { id ->
-            if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT)
                 persistenceLayer.getBolusByNSId(id)?.let { bolus ->
                     disposable += persistenceLayer.invalidateBolus(
                         bolus.id,
@@ -455,7 +449,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("Bolus", BS::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT)
                 persistenceLayer.getCarbsByNSId(id)?.let { carb ->
                     disposable += persistenceLayer.invalidateCarbs(
                         carb.id,
@@ -468,7 +462,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("Carbs", CA::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT)
                 persistenceLayer.getTemporaryTargetByNSId(id)?.let { tt ->
                     disposable += persistenceLayer.invalidateTemporaryTarget(
                         tt.id,
@@ -481,7 +475,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("TemporaryTarget", TT::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT)
                 persistenceLayer.getTemporaryBasalByNSId(id)?.let { tb ->
                     disposable += persistenceLayer.invalidateTemporaryBasal(
                         tb.id,
@@ -494,7 +488,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("TemporaryBasal", TB::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT)
                 persistenceLayer.getEffectiveProfileSwitchByNSId(id)?.let { eps ->
                     disposable += persistenceLayer.invalidateEffectiveProfileSwitch(
                         eps.id,
@@ -507,7 +501,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT)
                 persistenceLayer.getProfileSwitchByNSId(id)?.let { ps ->
                     disposable += persistenceLayer.invalidateProfileSwitch(
                         ps.id,
@@ -532,7 +526,7 @@ class StoreDataForDbImpl @Inject constructor(
                     sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
                 }
             }
-            if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT)
                 persistenceLayer.getTherapyEventByNSId(id)?.let { te ->
                     disposable += persistenceLayer.invalidateTherapyEvent(
                         te.id,
@@ -545,7 +539,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("TherapyEvent", TE::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.AAPSCLIENT)
                 persistenceLayer.getOfflineEventByNSId(id)?.let { oe ->
                     disposable += persistenceLayer.invalidateOfflineEvent(
                         oe.id,
@@ -558,7 +552,7 @@ class StoreDataForDbImpl @Inject constructor(
                         sendLog("OfflineEvent", OE::class.java.simpleName)
                     }
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT)
                 persistenceLayer.getExtendedBolusByNSId(id)?.let { eb ->
                     disposable += persistenceLayer.invalidateExtendedBolus(
                         eb.id,

@@ -33,6 +33,7 @@
     <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>
     <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
     <string name="pref_show_temp_target">Geçici Hedefi Göster</string>
+    <string name="pref_show_reservoir_level">Rezervuar Seviyesini Göster</string>
     <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
     <string name="pref_show_bg">KŞ\'ni göster</string>
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
@@ -216,6 +217,7 @@
     <string name="complication_full_status_flipped">Tam durum (çevrilmiş)</string>
     <string name="complication_blood_glucose">Kan Şekeri</string>
     <string name="complication_br_cob_iob">Nabız, AKRB &amp; AİNS</string>
+    <string name="complication_br_iob">Nabız &amp; AiNS</string>
     <string name="complication_cob_iob">AKRB &amp; AİNS</string>
     <string name="complication_cob_icon">AKRB simgesi</string>
     <string name="complication_cob_detailed">Detaylı AKRB</string>

@@ -51,7 +51,7 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: app.aaps.core.data.ue.Action, source: Sources, listValues: List<ValueWithUnit>) {}
         override fun suspendLoop(durationInMinutes: Int, action: app.aaps.core.data.ue.Action, source: Sources, note: String?, listValues: List<ValueWithUnit>) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
-        override fun buildAndStoreDeviceStatus() {}
+        override fun scheduleBuildAndStoreDeviceStatus(reason: String) {}
         override fun entries(): Array<CharSequence> = emptyArray()
 
         override fun entryValues(): Array<CharSequence> = emptyArray()
@@ -126,7 +126,6 @@ ActionsTestBase : TestBaseWithProfile() {
             }
             if (it is ActionCarePortalEvent) {
                 it.persistenceLayer = persistenceLayer
-                it.sp = sp
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
             }

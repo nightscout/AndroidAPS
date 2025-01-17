@@ -184,6 +184,8 @@
     <string name="openapsama_bgBrake_ISF_weight_summary">C\'est le poids appliqué lors de la décélération de la glycémie et qui affaiblit la SI en réduisant la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
     <string name="openapsama_autoISF_max">Ratio max autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Ratio min autoISF\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">poids de la plage SI basse\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">poids de la plage SI haute\n(higher_ISFrange_weight)</string>
     <string name="openapsama_pp_ISF_weight">poids de la SI postprandiale\n(pp_ISF_weight)</string>
     <string name="openapsama_bgAccel_ISF_weight">Poids lorsque la glycémie accélère\n(bgAccel_ISF_weight)</string>
     <string name="openapsama_bgBrake_ISF_weight">Poids lorsque la glycémie décélère\n(bgBrake_ISF_weight)</string>

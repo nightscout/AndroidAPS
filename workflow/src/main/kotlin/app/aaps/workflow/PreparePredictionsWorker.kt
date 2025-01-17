@@ -48,7 +48,7 @@ class PreparePredictionsWorker(
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else processedDeviceStatusData.getAPSResult()
-        val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT
+        val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.AAPSCLIENT
         val menuChartSettings = overviewMenus.setting
         // align to hours
         val calendar = Calendar.getInstance().also {

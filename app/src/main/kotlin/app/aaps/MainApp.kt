@@ -9,10 +9,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
@@ -61,7 +57,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import rxdogtag2.RxDogTag
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -211,9 +206,15 @@ class MainApp : DaggerApplication() {
             sp.putBoolean("ConfigBuilder_APS_OpenAPSSMB_Enabled", true)
             preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
         }
-        // convert Double to IntString
-        if (preferences.getIfExists(IntKey.ApsDynIsfAdjustmentFactor) != null)
-            sp.putString(IntKey.ApsDynIsfAdjustmentFactor.key, preferences.get(IntKey.ApsDynIsfAdjustmentFactor).toString())
+        // convert Double to Int
+        try {
+            val dynIsf = sp.getDouble("DynISFAdjust", 0.0)
+            if (dynIsf != 0.0 && dynIsf.toInt() != preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
+                preferences.put(IntKey.ApsDynIsfAdjustmentFactor, dynIsf.toInt())
+        } catch (_: Exception) { /* ignore */
+        }
+        // Clear SmsOtpPassword if wrongly replaced
+        if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

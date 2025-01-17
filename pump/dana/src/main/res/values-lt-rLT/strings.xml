@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Susieta OK</string>
     <string name="danars_pairingtimedout">Susiejimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
-    <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump">Dana-I/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integracija su DANA Diabecare RS ir Dana-i pompomis</string>
+    <string name="description_pump_dana_rs">DANA Diabecare RS ir Dana-I pompų integracija</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
@@ -102,6 +102,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth įrenginys</string>
     <string name="danars_password_title">Pompos slaptažodis (tik v1)</string>
     <string name="danar_password_title">Pompos slaptažodis</string>
+    <string name="danar_useextended_title">Naudoti ištęstinį bolusą &gt;200%</string>
     <string name="bolusspeed">Boluso greitis</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="rs_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>

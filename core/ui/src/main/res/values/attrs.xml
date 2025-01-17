@@ -124,6 +124,7 @@
     <attr name="actionsError" format="reference|color" />
     <attr name="automationBackgroundColor" format="reference|color" />
     <attr name="automationOverlayColor" format="reference|color" />
+    <attr name="actionColor" format="reference|color" />
     <!---BG source -->
     <attr name="bgsourceError" format="reference|color" />
     <!---TDD-statistics -->

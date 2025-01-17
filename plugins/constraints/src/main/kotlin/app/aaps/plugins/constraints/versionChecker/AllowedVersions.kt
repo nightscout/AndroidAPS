@@ -9,7 +9,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class AllowedVersions {
+object AllowedVersions {
 
     fun findByApi(definition: String?, api: Int): JSONObject? {
         if (definition == null) return null

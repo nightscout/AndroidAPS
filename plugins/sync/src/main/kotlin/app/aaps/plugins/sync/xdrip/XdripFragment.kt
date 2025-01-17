@@ -105,6 +105,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Synchronized override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun updateGui() {

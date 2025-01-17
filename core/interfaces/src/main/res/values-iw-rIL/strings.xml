@@ -59,6 +59,7 @@
     <string name="pref_show_ago">הצג עבר</string>
     <string name="pref_show_week_number">הצג מספר שבוע</string>
     <string name="pref_show_date">הצג תאריך</string>
+    <string name="pref_show_seconds">הצג שניות</string>
     <string name="default_custom_watchface_comment">ברירת המחדל של פני השעון, ניתן ללחוץ על כפתור ייצוא פני שעון כדי ליצור תבנית</string>
     <string name="wear_default_watchface">ברירת מחדל פני שעון</string>
     <string name="wear_more_watchfaces">עוד פני שעון</string>

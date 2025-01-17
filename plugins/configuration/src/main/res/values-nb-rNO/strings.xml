@@ -81,6 +81,8 @@
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basalinnstillinger fra din profil over til pumpen og overskrive verdiene som er lagret i pumpen. Sjekk at du har riktige basalverdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basalverdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="a11y_open_settings">åpne innstillinger</string>
     <string name="nsclient_version_does_not_match">AAPSClient-versjonen samsvarer ikke med AAPS-versjonen. Vennligst oppdater.</string>
+    <string name="expand_category">Utvid kategori</string>
+    <string name="collapse_category">Kollaps kategori</string>
     <!--ImportExport-->
     <string name="nav_preferences">Innstillinger</string>
     <string name="password_preferences_encrypt_prompt">Du må angi et hovedpassord som vil bli brukt til å kryptere dine eksporterte innstillinger. Husk dette!</string>

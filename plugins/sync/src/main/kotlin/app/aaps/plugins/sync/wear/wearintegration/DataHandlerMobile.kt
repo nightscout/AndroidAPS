@@ -1079,8 +1079,10 @@ class DataHandlerMobile @Inject constructor(
                 processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
             //bgi
-            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("DataHandlerMobile $caller"))
-            bgiString = "" + (if (bgi >= 0) "+" else "") + decimalFormatter.to1Decimal(bgi)
+            if (glucoseStatusProvider.glucoseStatusData != null) {
+                val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("DataHandlerMobile $caller"))
+                bgiString = "" + (if (bgi >= 0) "+" else "") + decimalFormatter.to1Decimal(bgi)
+            }
             status = generateStatusString(profile)
         }
 
@@ -1103,7 +1105,7 @@ class DataHandlerMobile @Inject constructor(
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed =
                 if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
-                else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
+                else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
                 else 0.0
 
             if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {

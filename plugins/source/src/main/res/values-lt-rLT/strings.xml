@@ -29,6 +29,11 @@
     <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
     <string name="direction">kryptis</string>
+    <string name="bg_generation_interval_minutes">KG generavimo intervalas minutėmis</string>
     <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Gauti KG duomenis iš Ottai</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Gauti KG duomenis iš Syai Tag</string>
 </resources>
