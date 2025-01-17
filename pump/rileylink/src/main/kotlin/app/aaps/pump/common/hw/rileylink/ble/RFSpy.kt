@@ -191,15 +191,17 @@ class RFSpy @Inject constructor(
     }
 
     // The caller has to know how long the RFSpy will be busy with what was sent to it.
-    private fun writeToData(command: RileyLinkCommand, responseTimeout_ms: Int): RFSpyResponse {
+    private fun writeToData(command: RileyLinkCommand, responseTimeout_ms: Int): RFSpyResponse? {
         val bytes = command.getRaw()
         val rawResponse = writeToDataRaw(bytes, responseTimeout_ms)
 
-        val resp = RFSpyResponse(command, rawResponse!!)
         if (rawResponse == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: No response from RileyLink")
             notConnectedCount++
-        } else if (resp.wasInterrupted()) {
+            return null
+        }
+        val resp = RFSpyResponse(command, rawResponse)
+        if (resp.wasInterrupted()) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted")
         } else if (resp.wasTimeout()) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout")
@@ -227,7 +229,7 @@ class RFSpy @Inject constructor(
     @JvmOverloads fun transmitThenReceive(
         pkt: RadioPacket, sendChannel: Byte, repeatCount: Byte, delay_ms: Byte,
         listenChannel: Byte, timeout_ms: Int, retryCount: Byte, extendPreamble_ms: Int? = null
-    ): RFSpyResponse {
+    ): RFSpyResponse? {
         val sendDelay = repeatCount * delay_ms
         val receiveDelay = timeout_ms * (retryCount + 1)
 
@@ -255,7 +257,7 @@ class RFSpy @Inject constructor(
         rxBus.send(EventRefreshOverview("RL battery level updated", false))
     }
 
-    private fun updateRegister(reg: CC111XRegister, `val`: Int): RFSpyResponse {
+    private fun updateRegister(reg: CC111XRegister, `val`: Int): RFSpyResponse? {
         return writeToData(UpdateRegister(reg, `val`.toByte()), EXPECTED_MAX_BLUETOOTH_LATENCY_MS)
     }
 
@@ -353,10 +355,10 @@ class RFSpy @Inject constructor(
         return resp
     }
 
-    fun setRileyLinkEncoding(encoding: RileyLinkEncodingType): RFSpyResponse {
+    fun setRileyLinkEncoding(encoding: RileyLinkEncodingType): RFSpyResponse? {
         val resp = writeToData(SetHardwareEncoding(encoding), EXPECTED_MAX_BLUETOOTH_LATENCY_MS)
 
-        if (resp.isOK()) {
+        if (resp?.isOK() == true) {
             reader.setRileyLinkEncodingType(encoding)
             rileyLinkUtil.encoding = encoding
         }

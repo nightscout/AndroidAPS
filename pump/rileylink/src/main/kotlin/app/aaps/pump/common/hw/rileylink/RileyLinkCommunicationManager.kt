@@ -85,16 +85,16 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
 
         val showPumpMessages = true
         if (showPumpMessages) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Sent:" + shortHexString(msg!!.getTxData()))
+            aapsLogger.info(LTag.PUMPBTCOMM, "Sent:" + shortHexString(msg.getTxData()))
         }
 
         val rfSpyResponse = rfspy.transmitThenReceive(
-            RadioPacket(rileyLinkUtil, msg!!.getTxData()),
+            RadioPacket(rileyLinkUtil, msg.getTxData()),
             0.toByte(), repeatCount.toByte(), 0.toByte(), 0.toByte(), timeout_ms, retryCount.toByte(), extendPreamble_ms
         )
 
-        val radioResponse = rfSpyResponse.getRadioResponse(injector)
-        val response = createResponseMessage(radioResponse!!.getPayload())
+        val radioResponse = rfSpyResponse?.getRadioResponse(injector) ?: throw RileyLinkCommunicationException(RileyLinkBLEError.Interrupted, null)
+        val response = createResponseMessage(radioResponse.getPayload())
 
         if (response!!.isValid()) {
             // Mark this as the last time we heard from the pump.
@@ -166,7 +166,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
                 RadioPacket(rileyLinkUtil, pumpMsgContent), 0.toByte(), 200.toByte(),
                 0.toByte(), 0.toByte(), 25000, 0.toByte()
             )
-            aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + shortHexString(resp.raw))
+            aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + shortHexString(resp?.raw))
 
             // FIXME wakeUp successful !!!!!!!!!!!!!!!!!!
             nextWakeUpRequired = System.currentTimeMillis() + (receiverDeviceAwakeForMinutes.toLong() * 60 * 1000)
@@ -239,9 +239,9 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
                     RadioPacket(rileyLinkUtil, pumpMsgContent), 0.toByte(), 0.toByte(),
                     0.toByte(), 0.toByte(), 1250, 0.toByte()
                 )
-                if (resp.wasTimeout()) {
+                if (resp?.wasTimeout() == true) {
                     aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "scanForPump: Failed to find pump at frequency %.3f", frequencies[i]))
-                } else if (resp.looksLikeRadioPacket()) {
+                } else if (resp?.looksLikeRadioPacket() == true) {
                     val radioResponse = RadioResponse(injector)
 
                     try {
@@ -261,7 +261,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
                         trial.rssiList.add(-99)
                     }
                 } else {
-                    aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: raw response is " + shortHexString(resp.raw))
+                    aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: raw response is " + shortHexString(resp?.raw))
                     trial.rssiList.add(-99)
                 }
                 trial.tries++
@@ -320,9 +320,9 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
         val pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData)
         val pkt = RadioPacket(rileyLinkUtil, pumpMsgContent)
         val resp = rfspy.transmitThenReceive(pkt, 0.toByte(), 0.toByte(), 0.toByte(), 0.toByte(), SCAN_TIMEOUT, 0.toByte())
-        if (resp.wasTimeout()) {
+        if (resp?.wasTimeout() == true) {
             aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "tune_tryFrequency: no pump response at frequency %.3f", freqMHz))
-        } else if (resp.looksLikeRadioPacket()) {
+        } else if (resp?.looksLikeRadioPacket() == true) {
             val radioResponse = RadioResponse(injector)
             try {
                 radioResponse.init(resp.raw)

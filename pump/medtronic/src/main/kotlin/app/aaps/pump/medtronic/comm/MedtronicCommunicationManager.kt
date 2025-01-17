@@ -130,10 +130,10 @@ class MedtronicCommunicationManager @Inject constructor(
         val rfSpyResponse = rfspy.transmitThenReceive(
             RadioPacket(rileyLinkUtil, pumpMsgContent), 0.toByte(), 200.toByte(), 0.toByte(), 0.toByte(), 25000, 0.toByte()
         )
-        aapsLogger.info(LTag.PUMPCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse.raw))
-        if (rfSpyResponse.wasTimeout()) {
+        aapsLogger.info(LTag.PUMPCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse?.raw))
+        if (rfSpyResponse?.wasTimeout() == true) {
             aapsLogger.error(LTag.PUMPCOMM, "isDeviceReachable. Failed to find pump (timeout).")
-        } else if (rfSpyResponse.looksLikeRadioPacket()) {
+        } else if (rfSpyResponse?.looksLikeRadioPacket() == true) {
             val radioResponse = RadioResponse(injector)
             try {
                 radioResponse.init(rfSpyResponse.raw)
@@ -186,7 +186,7 @@ class MedtronicCommunicationManager @Inject constructor(
                 )
             }
         } else {
-            aapsLogger.warn(LTag.PUMPCOMM, "isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.raw))
+            aapsLogger.warn(LTag.PUMPCOMM, "isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse?.raw))
         }
         return false
     }
