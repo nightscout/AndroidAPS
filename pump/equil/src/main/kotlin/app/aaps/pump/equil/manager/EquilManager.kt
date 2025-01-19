@@ -38,6 +38,7 @@ import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
+import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.events.EventEquilInsulinChanged
 import app.aaps.pump.equil.events.EventEquilModeChanged
@@ -763,7 +764,7 @@ class EquilManager @Inject constructor(
         rxBus.send(EventEquilDataChanged())
     }
 
-    fun decodeData(data: ByteArray) {
+    fun decodeData(data: ByteArray,saveData:Boolean) {
         var year = data[11].toInt() and 0xFF
         year = year + 2000
         val month = data[12].toInt() and 0xff
@@ -788,16 +789,22 @@ class EquilManager @Inject constructor(
                 errorTips,
                 Notification.NORMAL, app.aaps.core.ui.R.raw.alarm
             )
-            val time = System.currentTimeMillis()
-            val equilHistoryRecord = EquilHistoryRecord(
-                EquilHistoryRecord.EventType.EQUIL_ALARM,
-                time,
-                getSerialNumber()!!
-            )
-            equilHistoryRecord.resolvedAt = System.currentTimeMillis()
-            equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
-            equilHistoryRecord.note = errorTips
-            equilHistoryRecordDao.insert(equilHistoryRecord)
+            if(saveData){
+                val time = System.currentTimeMillis()
+                val equilHistoryRecord = EquilHistoryRecord(
+                    EquilHistoryRecord.EventType.EQUIL_ALARM,
+                    time,
+                    getSerialNumber()!!
+                )
+                equilHistoryRecord.resolvedAt = System.currentTimeMillis()
+                equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
+                equilHistoryRecord.note = errorTips
+                equilHistoryRecordDao.insert(equilHistoryRecord)
+            }
+
+        }
+        if (!TextUtils.isEmpty(errorTips)){
+            rxBus.send(EventEquilAlarm(errorTips))
         }
         aapsLogger.debug(
             LTag.PUMPCOMM, "decodeData historyIndex {} errorTips {} port:{} level:{} " +
