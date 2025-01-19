@@ -33,7 +33,7 @@ import javax.inject.Inject
  */
 abstract class RileyLinkCommunicationManager<T : RLMessage> {
 
-    private val SCAN_TIMEOUT = 1500
+    @Suppress("PrivatePropertyName")
     private val ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000 // 10 minutes
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -55,32 +55,15 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
                 // Might still be zero, but that's fine.
             }
             val minutesAgo: Double = (System.currentTimeMillis() - field) / (1000.0 * 60.0)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Last good pump communication was " + minutesAgo + " minutes ago.")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Last good pump communication was $minutesAgo minutes ago.")
             return field
         }
 
     private var nextWakeUpRequired = 0L
     private var timeoutCount = 0
 
-    // All pump communications go through this function.
     @Throws(RileyLinkCommunicationException::class)
-    protected open fun sendAndListen(msg: T, timeout_ms: Int): T {
-        return sendAndListen(msg, timeout_ms, null)
-    }
-
-    @Throws(RileyLinkCommunicationException::class)
-    private fun sendAndListen(msg: T, timeout_ms: Int, extendPreamble_ms: Int?): T {
-        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms)
-    }
-
-    // For backward compatibility
-    @Throws(RileyLinkCommunicationException::class)
-    private fun sendAndListen(msg: T, timeout_ms: Int, repeatCount: Int, extendPreamble_ms: Int?): T {
-        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms)
-    }
-
-    @Throws(RileyLinkCommunicationException::class)
-    protected open fun sendAndListen(msg: T, timeout_ms: Int, repeatCount: Int, retryCount: Int, extendPreamble_ms: Int?): T {
+    protected open fun sendAndListen(msg: T, timeoutMs: Int, repeatCount: Int = 0, retryCount: Int = 0, extendPreambleMs: Int = 0): T {
         // internal flag
 
         val showPumpMessages = true
@@ -90,13 +73,13 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
 
         val rfSpyResponse = rfspy.transmitThenReceive(
             RadioPacket(rileyLinkUtil, msg.getTxData()),
-            0.toByte(), repeatCount.toByte(), 0.toByte(), 0.toByte(), timeout_ms, retryCount.toByte(), extendPreamble_ms
+            0.toByte(), repeatCount.toByte(), 0.toByte(), 0.toByte(), timeoutMs, retryCount.toByte(), extendPreambleMs
         )
 
         val radioResponse = rfSpyResponse?.getRadioResponse(injector) ?: throw RileyLinkCommunicationException(RileyLinkBLEError.Interrupted, null)
         val response = createResponseMessage(radioResponse.getPayload())
 
-        if (response!!.isValid()) {
+        if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
             rememberLastGoodDeviceCommunicationTime()
         } else {
@@ -108,7 +91,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
             )
 
             if (rfSpyResponse.wasTimeout()) {
-                if (rileyLinkServiceData.targetDevice!!.tuneUpEnabled) {
+                if (rileyLinkServiceData.targetDevice.tuneUpEnabled) {
                     timeoutCount++
 
                     val diff = System.currentTimeMillis() - getPumpDevice().lastConnectionTimeMillis
@@ -129,7 +112,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
         }
 
         if (showPumpMessages) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Received:" + shortHexString(rfSpyResponse.getRadioResponse(injector)!!.getPayload()))
+            aapsLogger.info(LTag.PUMPBTCOMM, "Received:" + shortHexString(rfSpyResponse.getRadioResponse(injector).getPayload()))
         }
 
         return response
@@ -149,7 +132,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
 
     // FIXME change wakeup
     // TODO we might need to fix this. Maybe make pump awake for shorter time (battery factor for pump) - Andy
-    fun wakeUp(duration_minutes: Int, force: Boolean) {
+    fun wakeUp(@Suppress("unused") durationMinutes: Int, force: Boolean) {
         // If it has been longer than n minutes, do wakeup. Otherwise assume pump is still awake.
         // **** FIXME: this wakeup doesn't seem to work well... must revisit
         // receiverDeviceAwakeForMinutes = duration_minutes;
@@ -193,7 +176,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
     }
 
     fun tuneForDevice(): Double {
-        return scanForDevice(rileyLinkServiceData.rileyLinkTargetFrequency!!.scanFrequencies)
+        return scanForDevice(rileyLinkServiceData.rileyLinkTargetFrequency.scanFrequencies)
     }
 
     /**
@@ -205,13 +188,10 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
      * @return
      */
     fun isValidFrequency(frequency: Double): Boolean {
-        val scanFrequencies = rileyLinkServiceData.rileyLinkTargetFrequency!!.scanFrequencies
+        val scanFrequencies = rileyLinkServiceData.rileyLinkTargetFrequency.scanFrequencies
 
-        if (scanFrequencies.size == 1) {
-            return isSame(scanFrequencies[0], frequency)
-        } else {
-            return (scanFrequencies[0] <= frequency && scanFrequencies[scanFrequencies.size - 1] >= frequency)
-        }
+        return if (scanFrequencies.size == 1) isSame(scanFrequencies[0], frequency)
+        else (scanFrequencies[0] <= frequency && scanFrequencies[scanFrequencies.size - 1] >= frequency)
     }
 
     /**
@@ -233,7 +213,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
             rfspy.setBaseFrequency(frequencies[i])
 
             var sumRSSI = 0
-            for (j in 0 until tries) {
+            (0 until tries).forEach { j ->
                 val pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData)
                 val resp = rfspy.transmitThenReceive(
                     RadioPacket(rileyLinkUtil, pumpMsgContent), 0.toByte(), 0.toByte(),
@@ -256,7 +236,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
                             aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to parse radio response: " + shortHexString(resp.raw))
                             trial.rssiList.add(-99)
                         }
-                    } catch (rle: RileyLinkCommunicationException) {
+                    } catch (_: RileyLinkCommunicationException) {
                         aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to decode radio response: " + shortHexString(resp.raw))
                         trial.rssiList.add(-99)
                     }
@@ -279,7 +259,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
         val stringBuilder = StringBuilder("Scan results:\n")
 
         for (k in results.trials.indices) {
-            val one = results.trials.get(k)
+            val one = results.trials[k]
 
             stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", k, one.frequencyMHz, one.averageRSSI.toString() + ", RSSIs =" + one.rssiList))
         }
@@ -288,7 +268,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
 
         results.sort() // sorts in ascending order
 
-        val bestTrial = results.trials.get(results.trials.size - 1)
+        val bestTrial = results.trials[results.trials.size - 1]
         results.bestFrequencyMHz = bestTrial.frequencyMHz
         if (bestTrial.successes > 0) {
             rfspy.setBaseFrequency(results.bestFrequencyMHz)
@@ -302,101 +282,13 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
 
     private fun calculateRssi(rssiIn: Int): Int {
         val rssiOffset = 73
-        var outRssi = 0
-        if (rssiIn >= 128) {
-            outRssi = ((rssiIn - 256) / 2) - rssiOffset
-        } else {
-            outRssi = (rssiIn / 2) - rssiOffset
-        }
-
+        val outRssi =
+            if (rssiIn >= 128) ((rssiIn - 256) / 2) - rssiOffset
+            else (rssiIn / 2) - rssiOffset
         return outRssi
     }
 
     abstract fun createPumpMessageContent(type: RLMessageType): ByteArray
-
-    private fun tune_tryFrequency(freqMHz: Double): Int {
-        rfspy.setBaseFrequency(freqMHz)
-        // T msg = makeRLMessage(RLMessageType.ReadSimpleData);
-        val pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData)
-        val pkt = RadioPacket(rileyLinkUtil, pumpMsgContent)
-        val resp = rfspy.transmitThenReceive(pkt, 0.toByte(), 0.toByte(), 0.toByte(), 0.toByte(), SCAN_TIMEOUT, 0.toByte())
-        if (resp?.wasTimeout() == true) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "tune_tryFrequency: no pump response at frequency %.3f", freqMHz))
-        } else if (resp?.looksLikeRadioPacket() == true) {
-            val radioResponse = RadioResponse(injector)
-            try {
-                radioResponse.init(resp.raw)
-
-                if (radioResponse.isValid()) {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "tune_tryFrequency: saw response level %d at frequency %.3f", radioResponse.rssi, freqMHz))
-                    return calculateRssi(radioResponse.rssi)
-                } else {
-                    aapsLogger.warn(
-                        LTag.PUMPBTCOMM, "tune_tryFrequency: invalid radio response:"
-                            + shortHexString(radioResponse.getPayload())
-                    )
-                }
-            } catch (_: RileyLinkCommunicationException) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to decode radio response: " + shortHexString(resp.raw))
-            }
-        }
-
-        return 0
-    }
-
-    fun quickTuneForPump(startFrequencyMHz: Double): Double {
-        var betterFrequency = startFrequencyMHz
-        var stepsize = 0.05
-        for (tries in 0..3) {
-            val evenBetterFrequency = quickTunePumpStep(betterFrequency, stepsize)
-            if (evenBetterFrequency == 0.0) {
-                // could not see the pump at all.
-                // Try again at larger step size
-                stepsize += 0.05
-            } else {
-                if ((evenBetterFrequency * 100).toInt() == (betterFrequency * 100).toInt()) {
-                    // value did not change, so we're done.
-                    break
-                }
-                betterFrequency = evenBetterFrequency // and go again.
-            }
-        }
-        if (betterFrequency == 0.0) {
-            // we've failed... caller should try a full scan for pump
-            aapsLogger.error(LTag.PUMPBTCOMM, "quickTuneForPump: failed to find pump")
-        } else {
-            rfspy.setBaseFrequency(betterFrequency)
-            if (betterFrequency != startFrequencyMHz) {
-                aapsLogger.info(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "quickTuneForPump: new frequency is %.3fMHz", betterFrequency))
-            } else {
-                aapsLogger.info(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "quickTuneForPump: pump frequency is the same: %.3fMHz", startFrequencyMHz))
-            }
-        }
-        return betterFrequency
-    }
-
-    private fun quickTunePumpStep(startFrequencyMHz: Double, stepSizeMHz: Double): Double {
-        aapsLogger.info(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Doing quick radio tune for receiver (%s)", receiverDeviceID))
-        wakeUp(false)
-        val startRssi = tune_tryFrequency(startFrequencyMHz)
-        val lowerFrequency = startFrequencyMHz - stepSizeMHz
-        val lowerRssi = tune_tryFrequency(lowerFrequency)
-        val higherFrequency = startFrequencyMHz + stepSizeMHz
-        val higherRssi = tune_tryFrequency(higherFrequency)
-
-        if ((higherRssi.toDouble() == 0.0) && (lowerRssi.toDouble() == 0.0) && (startRssi.toDouble() == 0.0)) {
-            // we can't see the pump at all...
-            return 0.0
-        }
-        if (higherRssi > startRssi) {
-            // need to move higher
-            return higherFrequency
-        } else if (lowerRssi > startRssi) {
-            // need to move lower.
-            return lowerFrequency
-        }
-        return startFrequencyMHz
-    }
 
     protected fun rememberLastGoodDeviceCommunicationTime() {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis()

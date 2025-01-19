@@ -180,12 +180,13 @@ class RileyLinkBLE @Inject constructor(
             aapsLogger.error(LTag.PUMPBTCOMM, "Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter?.address)
         else {
             if (gattDebugEnabled) aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.")
-            val deviceName = bluetoothConnectionGatt?.device?.name
-            // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
-            if (StringUtils.isNotEmpty(deviceName)) sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName!!)
-            else sp.remove(RileyLinkConst.Prefs.RileyLinkName)
-            rileyLinkServiceData.rileyLinkName = deviceName
-            rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt?.device?.address
+            bluetoothConnectionGatt?.device?.name?.let { deviceName ->
+                // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
+                if (StringUtils.isNotEmpty(deviceName)) sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName)
+                else sp.remove(RileyLinkConst.Prefs.RileyLinkName)
+                rileyLinkServiceData.rileyLinkName = deviceName
+                rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt?.device?.address
+            }
         }
     }
 
@@ -223,21 +224,23 @@ class RileyLinkBLE @Inject constructor(
                 // TODO: 11/07/2016 UI update for user
                 // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
             } else {
-                val chara = bluetoothConnectionGatt?.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
-                // Tell Android that we want the notifications
-                bluetoothConnectionGatt?.setCharacteristicNotification(chara, true)
-                val list = chara.descriptors
-                if (list.isNotEmpty()) {
-                    if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
-                    // Tell the remote device to send the notifications
-                    mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt!!, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-                    mCurrentOperation?.execute(this)
-                    when {
-                        mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                        mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
-                        else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
-                    }
-                } else return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
+                bluetoothConnectionGatt?.let { bluetoothConnectionGatt ->
+                    val chara = bluetoothConnectionGatt.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
+                    // Tell Android that we want the notifications
+                    bluetoothConnectionGatt.setCharacteristicNotification(chara, true)
+                    val list = chara.descriptors
+                    if (list.isNotEmpty()) {
+                        if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
+                        // Tell the remote device to send the notifications
+                        mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+                        mCurrentOperation?.execute(this)
+                        when {
+                            mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                            mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+                            else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                        }
+                    } else return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
+                }
             }
             mCurrentOperation = null
             gattOperationSema.release()
@@ -246,7 +249,7 @@ class RileyLinkBLE @Inject constructor(
     }
 
     // call from main
-    fun writeCharacteristicBlocking(serviceUUID: UUID?, charaUUID: UUID?, value: ByteArray?): BLECommOperationResult {
+    fun writeCharacteristicBlocking(serviceUUID: UUID, charaUUID: UUID, value: ByteArray): BLECommOperationResult {
         val retValue = BLECommOperationResult()
         if (bluetoothConnectionGatt == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeCharacteristic_blocking: not configured!")
@@ -268,13 +271,15 @@ class RileyLinkBLE @Inject constructor(
                 // TODO: 11/07/2016 UI update for user
                 // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
             } else {
-                val chara = bluetoothConnectionGatt?.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NOT_CONFIGURED }
-                mCurrentOperation = CharacteristicWriteOperation(aapsLogger, bluetoothConnectionGatt!!, chara, value!!)
-                mCurrentOperation?.execute(this)
-                when {
-                    mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                    mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
-                    else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                bluetoothConnectionGatt?.let { bluetoothConnectionGatt ->
+                    val chara = bluetoothConnectionGatt.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NOT_CONFIGURED }
+                    mCurrentOperation = CharacteristicWriteOperation(aapsLogger, bluetoothConnectionGatt, chara, value)
+                    mCurrentOperation?.execute(this)
+                    when {
+                        mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                        mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+                        else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                    }
                 }
             }
             mCurrentOperation = null

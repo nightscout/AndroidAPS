@@ -11,9 +11,7 @@ import org.apache.commons.lang3.NotImplementedException
  */
 class RadioPacket(private val rileyLinkUtil: RileyLinkUtil, val pkt: ByteArray) {
 
-    private fun getWithCRC(): ByteArray {
-        return concat(pkt, CRC.crc8(pkt))
-    }
+    private fun getWithCRC(): ByteArray = concat(pkt, CRC.crc8(pkt))
 
     fun getEncoded(): ByteArray {
         when (rileyLinkUtil.encoding) {
@@ -25,7 +23,7 @@ class RadioPacket(private val rileyLinkUtil: RileyLinkUtil, val pkt: ByteArray) 
             RileyLinkEncodingType.FourByteSixByteLocal     -> {
                 val withCRC = getWithCRC()
 
-                val encoded = rileyLinkUtil.encoding4b6b!!.encode4b6b(withCRC)
+                val encoded = rileyLinkUtil.encoding4b6b.encode4b6b(withCRC)
                 return concat(encoded, 0.toByte())
             }
 
@@ -33,7 +31,7 @@ class RadioPacket(private val rileyLinkUtil: RileyLinkUtil, val pkt: ByteArray) 
                 return getWithCRC()
             }
 
-            else                                           -> throw NotImplementedException(("Encoding not supported: " + rileyLinkUtil!!.encoding.toString()))
+            else                                           -> throw NotImplementedException(("Encoding not supported: " + rileyLinkUtil.encoding.toString()))
         }
     }
 }

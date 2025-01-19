@@ -17,6 +17,7 @@ enum class RileyLinkFirmwareVersion(val familyMembers: List<RileyLinkFirmwareVer
 
     override fun toString(): String = FIRMWARE_IDENTIFICATION_PREFIX + name
 
+    @Suppress("SpellCheckingInspection")
     companion object {
 
         private const val FIRMWARE_IDENTIFICATION_PREFIX = "subg_rfspy "

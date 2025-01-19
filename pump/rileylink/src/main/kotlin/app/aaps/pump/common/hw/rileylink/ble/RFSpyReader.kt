@@ -31,13 +31,13 @@ class RFSpyReader internal constructor(private val aapsLogger: AAPSLogger, priva
     }
 
     // This timeout must be coordinated with the length of the RFSpy radio operation or Bad Things Happen.
-    fun poll(timeout_ms: Int): ByteArray? {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "${ThreadUtil.sig()}Entering poll at t==${SystemClock.uptimeMillis()}, timeout is $timeout_ms mDataQueue size is ${mDataQueue.size}")
+    fun poll(timeoutMs: Int): ByteArray? {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "${ThreadUtil.sig()}Entering poll at t==${SystemClock.uptimeMillis()}, timeout is $timeoutMs mDataQueue size is ${mDataQueue.size}")
         if (mDataQueue.isEmpty()) {
             try {
                 // block until timeout or data available.
                 // returns null if timeout.
-                val dataFromQueue = mDataQueue.poll(timeout_ms.toLong(), TimeUnit.MILLISECONDS)
+                val dataFromQueue = mDataQueue.poll(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
                 if (dataFromQueue != null)
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Got data [${ByteUtil.shortHexString(dataFromQueue)}] at t==${SystemClock.uptimeMillis()}")
                 else
@@ -61,22 +61,23 @@ class RFSpyReader internal constructor(private val aapsLogger: AAPSLogger, priva
         executor.execute {
             val serviceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO)
             val radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA)
-            var result: BLECommOperationResult
             while (true) {
                 try {
                     acquireCount++
                     waitForRadioData.acquire()
                     aapsLogger.debug(LTag.PUMPBTCOMM, "${ThreadUtil.sig()}waitForRadioData acquired (count=$acquireCount) at t=${SystemClock.uptimeMillis()}")
                     SystemClock.sleep(100)
-                    result = rileyLinkBle.readCharacteristicBlocking(serviceUUID, radioDataUUID)
+                    var result = rileyLinkBle.readCharacteristicBlocking(serviceUUID, radioDataUUID)
                     SystemClock.sleep(100)
                     if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
                         if (stopAtNull) {
                             // only data up to the first null is valid
-                            for (i in result.value!!.indices) {
-                                if (result.value!![i].toInt() == 0) {
-                                    result.value = ByteUtil.substring(result.value!!, 0, i)
-                                    break
+                            result.value?.let { resultValue ->
+                                for (i in resultValue.indices) {
+                                    if (resultValue[i].toInt() == 0) {
+                                        result.value = ByteUtil.substring(resultValue, 0, i)
+                                        break
+                                    }
                                 }
                             }
                         }

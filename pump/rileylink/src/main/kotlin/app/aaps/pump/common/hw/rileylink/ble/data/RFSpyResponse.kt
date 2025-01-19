@@ -15,21 +15,19 @@ class RFSpyResponse(private val command: RileyLinkCommand?, var raw: ByteArray) 
     // 0xdd == success
     // 0x11 == invalidParam
     // 0x22 == unknownCommand
-    protected var radioResponse: RadioResponse? = null
+    var radioResponse: RadioResponse? = null
 
-    fun getRadioResponse(injector: HasAndroidInjector): RadioResponse? {
+    fun getRadioResponse(injector: HasAndroidInjector): RadioResponse {
         if (looksLikeRadioPacket()) {
             radioResponse = RadioResponse(injector, command)
-            radioResponse!!.init(raw)
+            radioResponse?.init(raw)
         } else {
             radioResponse = RadioResponse(injector)
         }
-        return radioResponse
+        return radioResponse ?: throw IllegalStateException()
     }
 
-    fun wasNoResponseFromRileyLink(): Boolean {
-        return raw.size == 0
-    }
+    fun wasNoResponseFromRileyLink(): Boolean = raw.isEmpty()
 
     fun wasTimeout(): Boolean {
         if ((raw.size == 1) || (raw.size == 2)) {

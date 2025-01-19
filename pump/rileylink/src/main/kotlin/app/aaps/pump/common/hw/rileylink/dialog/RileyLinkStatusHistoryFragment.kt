@@ -46,11 +46,7 @@ class RileyLinkStatusHistoryFragment : DaggerFragment() {
 
     private fun refreshData() {
         binding.historyList.adapter =
-            RecyclerViewAdapter(rileyLinkUtil.rileyLinkHistory
-                                    ?.filter { isValidItem(it) }
-                                    ?.sortedWith(RLHistoryItem.Comparator())
-                                    ?: ArrayList()
-            )
+            RecyclerViewAdapter(rileyLinkUtil.rileyLinkHistory.filter { isValidItem(it) }.sortedWith(RLHistoryItem.Comparator()))
     }
 
     private fun isValidItem(item: RLHistoryItem): Boolean =

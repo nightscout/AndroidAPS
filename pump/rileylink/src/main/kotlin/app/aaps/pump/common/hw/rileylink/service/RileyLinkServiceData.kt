@@ -34,7 +34,7 @@ class RileyLinkServiceData @Inject constructor(
 
     // here we have "compatibility level" version
     var firmwareVersion: RileyLinkFirmwareVersionBase? = null
-    var rileyLinkTargetFrequency: RileyLinkTargetFrequency? = null
+    var rileyLinkTargetFrequency: RileyLinkTargetFrequency = RileyLinkTargetFrequency.NotSet
     var rileyLinkAddress: String? = null
     var rileyLinkName: String? = null
     var batteryLevel: Int? = null
@@ -52,7 +52,7 @@ class RileyLinkServiceData @Inject constructor(
     var isOrange = false
     var versionOrangeFirmware: String? = null
     var versionOrangeHardware: String? = null
-    var targetDevice: RileyLinkTargetDevice? = null
+    lateinit var targetDevice: RileyLinkTargetDevice
 
     // Medtronic Pump
     var pumpID: String? = null
@@ -69,7 +69,7 @@ class RileyLinkServiceData @Inject constructor(
         lastServiceStateChange = System.currentTimeMillis()
         rileyLinkError = errorCode
         aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "RileyLink State Changed: $newState - Error State: ${errorCode?.name}"))
-        rileyLinkUtil.rileyLinkHistory.add(RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice!!))
-        rxBus.send(EventRileyLinkDeviceStatusChange(targetDevice!!, newState, errorCode))
+        rileyLinkUtil.rileyLinkHistory.add(RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice))
+        rxBus.send(EventRileyLinkDeviceStatusChange(targetDevice, newState, errorCode))
     }
 }

@@ -288,7 +288,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
             }
             viewHolder.deviceName.text = deviceName
             viewHolder.deviceAddress.text = device.address
-            return view!!
+            return view as View
         }
     }
 

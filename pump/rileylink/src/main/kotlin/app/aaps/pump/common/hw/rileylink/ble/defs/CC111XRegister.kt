@@ -3,6 +3,7 @@ package app.aaps.pump.common.hw.rileylink.ble.defs
 /**
  * Created by andy on 21/05/2018.
  */
+@Suppress("EnumEntryName", "unused", "SpellCheckingInspection")
 enum class CC111XRegister(val value: Byte) {
 
     sync1(0x00),

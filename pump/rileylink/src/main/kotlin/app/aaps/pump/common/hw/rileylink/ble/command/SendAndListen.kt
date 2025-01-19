@@ -16,13 +16,9 @@ class SendAndListen(
     val listenChannel: Byte,
     val timeoutMs: Int,
     val retryCount: Byte,
-    var preambleExtensionMs: Int? = 0,
+    var preambleExtensionMs: Int = 0,
     val packetToSend: RadioPacket
 ) : RileyLinkCommand() {
-
-    init {
-        if (preambleExtensionMs == null) preambleExtensionMs = 0
-    }
 
     override fun getCommandType(): RileyLinkCommandType {
         return RileyLinkCommandType.SendAndListen
@@ -59,7 +55,7 @@ class SendAndListen(
         bytes.add(retryCount)
 
         if (isPacketV2) { // 2.x (and probably higher versions) support preamble extension
-            val preambleBuf = ByteBuffer.allocate(4).putInt(preambleExtensionMs!!).array()
+            val preambleBuf = ByteBuffer.allocate(4).putInt(preambleExtensionMs).array()
             bytes.add(preambleBuf[2])
             bytes.add(preambleBuf[3])
         }

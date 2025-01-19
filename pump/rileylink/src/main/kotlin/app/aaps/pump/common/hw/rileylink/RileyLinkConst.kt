@@ -3,6 +3,7 @@ package app.aaps.pump.common.hw.rileylink
 /**
  * Created by andy on 16/05/2018.
  */
+@Suppress("ConstPropertyName")
 object RileyLinkConst {
 
     const val PREFIX: String = "AAPS.RileyLink."

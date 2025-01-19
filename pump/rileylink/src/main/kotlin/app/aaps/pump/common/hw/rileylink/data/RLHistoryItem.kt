@@ -12,12 +12,12 @@ import org.joda.time.LocalDateTime
 /**
  * Created by andy on 5/19/18.
  */
-open class RLHistoryItem(val dateTime: LocalDateTime = LocalDateTime(), val source: RLHistoryItemSource, val targetDevice: RileyLinkTargetDevice) {
+open class RLHistoryItem(val dateTime: LocalDateTime = LocalDateTime(), val source: RLHistoryItemSource, @Suppress("unused") val targetDevice: RileyLinkTargetDevice) {
 
-    var serviceState: RileyLinkServiceState? = null
+    var serviceState: RileyLinkServiceState = RileyLinkServiceState.NotStarted
     var errorCode: RileyLinkError? = null
 
-    var pumpDeviceState: PumpDeviceState? = null
+    var pumpDeviceState: PumpDeviceState = PumpDeviceState.NeverContacted
 
     constructor(serviceState: RileyLinkServiceState, errorCode: RileyLinkError?, targetDevice: RileyLinkTargetDevice) : this(source = RLHistoryItemSource.RileyLink, targetDevice = targetDevice) {
         this.serviceState = serviceState
@@ -30,10 +30,10 @@ open class RLHistoryItem(val dateTime: LocalDateTime = LocalDateTime(), val sour
 
     open fun getDescription(rh: ResourceHelper): String {
         return when (this.source) {
-            RLHistoryItemSource.RileyLink     -> "State: " + rh.gs(serviceState!!.resourceId) +
+            RLHistoryItemSource.RileyLink     -> "State: " + rh.gs(serviceState.resourceId) +
                 if (this.errorCode == null) "" else ", Error Code: $errorCode"
 
-            RLHistoryItemSource.MedtronicPump -> rh.gs(pumpDeviceState!!.stringResource())
+            RLHistoryItemSource.MedtronicPump -> rh.gs(pumpDeviceState.stringResource())
             else                              -> "Unknown Description"
         }
     }

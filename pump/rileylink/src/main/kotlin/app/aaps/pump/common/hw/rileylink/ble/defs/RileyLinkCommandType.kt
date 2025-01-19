@@ -3,6 +3,7 @@ package app.aaps.pump.common.hw.rileylink.ble.defs
 /**
  * Created by andy on 22/05/2018.
  */
+@Suppress("unused")
 enum class RileyLinkCommandType(val code: Byte) {
 
     GetState(1),  //

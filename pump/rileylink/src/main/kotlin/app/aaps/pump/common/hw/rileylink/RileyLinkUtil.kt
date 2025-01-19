@@ -28,7 +28,7 @@ class RileyLinkUtil @Inject constructor(
                 encoding4b6b = Encoding4b6bGeoff(aapsLogger)
         }
 
-    var encoding4b6b: Encoding4b6b? = null
+    var encoding4b6b: Encoding4b6b = Encoding4b6bGeoff(aapsLogger)
 
     fun sendBroadcastMessage(message: String?, context: Context) {
         val intent = Intent(message)

@@ -14,16 +14,6 @@ abstract class Encoding4b6bAbstract : Encoding4b6b {
     @Throws(RileyLinkCommunicationException::class)
     abstract override fun decode4b6b(data: ByteArray): ByteArray
 
-    protected fun convertUnsigned(x: Byte): Short {
-        var ss = x.toShort()
-
-        if (ss < 0) {
-            ss = (ss + 256).toShort()
-        }
-
-        return ss
-    }
-
     fun writeError(aapsLogger: AAPSLogger, raw: ByteArray, errorData: String?) {
         aapsLogger.error(
             String.format(

@@ -18,9 +18,7 @@ class FrequencyTrial {
             count++
         }
         averageRSSI =
-            if (count != 0) {
-                val avg = sum / (count * 1.0)
-                avg * -1
-            } else -99.0
+            if (count != 0) -sum / count.toDouble()
+            else -99.0
     }
 }

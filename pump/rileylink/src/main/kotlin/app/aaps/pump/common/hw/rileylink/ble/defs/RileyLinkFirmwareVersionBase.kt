@@ -1,6 +1,8 @@
 package app.aaps.pump.common.hw.rileylink.ble.defs
 
+@Suppress("EnumEntryName")
 enum class RileyLinkFirmwareVersionBase(val major: Int?, val minor: Int?, val versionKey: String) {
+
     Version_0_0(0, 0, "0.0"), // just for defaulting
     Version_0_9(0, 9, "0.9"),
     Version_1_0(1, 0, "1.0"),

@@ -54,21 +54,19 @@ class RFSpy @Inject constructor(
     private val rileyLinkUtil: RileyLinkUtil
 ) {
 
-    private val radioServiceUUID: UUID? = UUID.fromString(GattAttributes.SERVICE_RADIO)
-    private val radioDataUUID: UUID? = UUID.fromString(GattAttributes.CHARA_RADIO_DATA)
-    private val radioVersionUUID: UUID? = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION)
-    private val batteryServiceUUID: UUID? = UUID.fromString(GattAttributes.SERVICE_BATTERY)
-    private val batteryLevelUUID: UUID? = UUID.fromString(GattAttributes.CHARA_BATTERY_LEVEL)
-    @JvmField var notConnectedCount: Int = 0
+    private val radioServiceUUID: UUID = UUID.fromString(GattAttributes.SERVICE_RADIO)
+    private val radioDataUUID: UUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA)
+    private val radioVersionUUID: UUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION)
+    private val batteryServiceUUID: UUID = UUID.fromString(GattAttributes.SERVICE_BATTERY)
+    private val batteryLevelUUID: UUID = UUID.fromString(GattAttributes.CHARA_BATTERY_LEVEL)
+    var notConnectedCount: Int = 0
 
     private var reader: RFSpyReader = RFSpyReader(aapsLogger, rileyLinkBle)
     private var bleVersion: String? = null // We don't use it so no need of sophisticated logic
     private var currentFrequencyMHz: Double? = null
     private var nextBatteryCheck: Long = 0
 
-    fun getBLEVersionCached(): String {
-        return bleVersion!!
-    }
+    fun getBLEVersionCached(): String = bleVersion ?: "UNKNOWN"
 
     // Call this after the RL services are discovered.
     // Starts an async task to read when data is available
@@ -83,7 +81,7 @@ class RFSpy @Inject constructor(
         bleVersion = getVersion()
         val cc1110Version = getCC1110Version()
         rileyLinkServiceData.versionCC110 = cc1110Version
-        rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, bleVersion!!, cc1110Version)
+        rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, getBLEVersionCached(), cc1110Version)
 
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
@@ -103,12 +101,14 @@ class RFSpy @Inject constructor(
     fun retrieveBatteryLevel(): Int? {
         val result = rileyLinkBle.readCharacteristicBlocking(batteryServiceUUID, batteryLevelUUID)
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            if (ArrayUtils.isNotEmpty(result.value)) {
-                val value = result.value!![0].toInt()
-                aapsLogger.debug(LTag.PUMPBTCOMM, "getBatteryLevel response received: " + value)
-                return value
-            } else {
-                aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel received an empty result. Value: " + result.value)
+            result.value?.let {
+                if (ArrayUtils.isNotEmpty(it)) {
+                    val value = it[0].toInt()
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "getBatteryLevel response received: $value")
+                    return value
+                } else {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel received an empty result. Value: $it")
+                }
             }
         } else {
             aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel failed with code: " + result.resultCode)
@@ -122,7 +122,7 @@ class RFSpy @Inject constructor(
         val result = rileyLinkBle.readCharacteristicBlocking(radioServiceUUID, radioVersionUUID)
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
             val version = fromBytes(result.value)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE Version: " + version)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE Version: $version")
             return version
         } else {
             aapsLogger.error(LTag.PUMPBTCOMM, "getVersion failed with code: " + result.resultCode)
@@ -133,7 +133,7 @@ class RFSpy @Inject constructor(
     private fun getCC1110Version(): String? {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version. Get Version - Start")
 
-        for (i in 0..4) {
+        (0..4).forEach { i ->
             // We have to call raw version of communication to get firmware version
             // So that we can adjust other commands accordingly afterwords
 
@@ -158,7 +158,7 @@ class RFSpy @Inject constructor(
         return null
     }
 
-    private fun writeToDataRaw(bytes: ByteArray, responseTimeout_ms: Int): ByteArray? {
+    private fun writeToDataRaw(bytes: ByteArray, responseTimeoutMs: Int): ByteArray? {
         SystemClock.sleep(100)
         // FIXME drain read queue?
         var junkInBuffer = reader.poll(0)
@@ -187,13 +187,13 @@ class RFSpy @Inject constructor(
 
         SystemClock.sleep(100)
 
-        return reader.poll(responseTimeout_ms)
+        return reader.poll(responseTimeoutMs)
     }
 
     // The caller has to know how long the RFSpy will be busy with what was sent to it.
-    private fun writeToData(command: RileyLinkCommand, responseTimeout_ms: Int): RFSpyResponse? {
+    private fun writeToData(command: RileyLinkCommand, responseTimeoutMs: Int): RFSpyResponse? {
         val bytes = command.getRaw()
-        val rawResponse = writeToDataRaw(bytes, responseTimeout_ms)
+        val rawResponse = writeToDataRaw(bytes, responseTimeoutMs)
 
         if (rawResponse == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: No response from RileyLink")
@@ -227,15 +227,15 @@ class RFSpy @Inject constructor(
     }
 
     @JvmOverloads fun transmitThenReceive(
-        pkt: RadioPacket, sendChannel: Byte, repeatCount: Byte, delay_ms: Byte,
-        listenChannel: Byte, timeout_ms: Int, retryCount: Byte, extendPreamble_ms: Int? = null
+        pkt: RadioPacket, sendChannel: Byte, repeatCount: Byte, delayMs: Byte,
+        listenChannel: Byte, timeoutMs: Int, retryCount: Byte, extendPreambleMs: Int = 0
     ): RFSpyResponse? {
-        val sendDelay = repeatCount * delay_ms
-        val receiveDelay = timeout_ms * (retryCount + 1)
+        val sendDelay = repeatCount * delayMs
+        val receiveDelay = timeoutMs * (retryCount + 1)
 
         val command = SendAndListen(
-            rileyLinkServiceData, sendChannel, repeatCount, delay_ms.toInt(), listenChannel, timeout_ms,
-            retryCount, extendPreamble_ms, pkt
+            rileyLinkServiceData, sendChannel, repeatCount, delayMs.toInt(), listenChannel, timeoutMs,
+            retryCount, extendPreambleMs, pkt
         )
 
         val rfSpyResponse = writeToData(command, sendDelay + receiveDelay + EXPECTED_MAX_BLUETOOTH_LATENCY_MS)
@@ -270,12 +270,12 @@ class RFSpy @Inject constructor(
 
         this.currentFrequencyMHz = freqMHz
 
-        configureRadioForRegion(rileyLinkServiceData.rileyLinkTargetFrequency!!)
+        configureRadioForRegion(rileyLinkServiceData.rileyLinkTargetFrequency)
     }
 
     private fun configureRadioForRegion(frequency: RileyLinkTargetFrequency) {
         // we update registers only on first run, or if region changed
-        aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkTargetFrequency: " + frequency)
+        aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkTargetFrequency: $frequency")
 
         when (frequency) {
             RileyLinkTargetFrequency.MedtronicWorldWide -> {
@@ -345,14 +345,13 @@ class RFSpy @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "Set Encoding for Medtronic: " + encoding.name)
     }
 
-    private fun setPreamble(preamble: Int): RFSpyResponse? {
-        var resp: RFSpyResponse? = null
+    private fun setPreamble(@Suppress("SameParameterValue") preamble: Int): RFSpyResponse? {
         try {
-            resp = writeToData(SetPreamble(rileyLinkServiceData, preamble), EXPECTED_MAX_BLUETOOTH_LATENCY_MS)
+            return writeToData(SetPreamble(rileyLinkServiceData, preamble), EXPECTED_MAX_BLUETOOTH_LATENCY_MS)
         } catch (e: Exception) {
             aapsLogger.error("Failed to set preamble", e)
         }
-        return resp
+        return null
     }
 
     fun setRileyLinkEncoding(encoding: RileyLinkEncodingType): RFSpyResponse? {
@@ -366,6 +365,7 @@ class RFSpy @Inject constructor(
         return resp
     }
 
+    @Suppress("SpellCheckingInspection", "LocalVariableName")
     private fun setRXFilterMode(mode: RXFilterMode) {
         val drate_e = 0x9.toByte() // exponent of symbol rate (16kbps)
         val chanbw = mode.value
@@ -377,13 +377,13 @@ class RFSpy @Inject constructor(
      * Reset RileyLink Configuration (set all updateRegisters)
      */
     fun resetRileyLinkConfiguration() {
-        if (this.currentFrequencyMHz != null) this.setBaseFrequency(this.currentFrequencyMHz!!)
+        currentFrequencyMHz?.let { setBaseFrequency(it) }
     }
 
     companion object {
 
-        private val DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS = 30 * 60 * 1000L // 30 minutes;
-        private val LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS = 10 * 60 * 1000L // 10 minutes;
+        private const val DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS = 30 * 60 * 1000L // 30 minutes;
+        private const val LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS = 10 * 60 * 1000L // 10 minutes;
         private const val LOW_BATTERY_PERCENTAGE_THRESHOLD = 20
         private const val RILEYLINK_FREQ_XTAL: Long = 24000000
         private const val EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500 // 1500

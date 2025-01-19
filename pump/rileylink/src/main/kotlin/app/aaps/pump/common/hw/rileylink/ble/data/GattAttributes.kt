@@ -6,6 +6,7 @@ import java.util.UUID
 /**
  * Created by geoff on 5/21/16.
  */
+@Suppress("SpellCheckingInspection")
 object GattAttributes {
 
     // NOTE: these uuid strings must be lower case!
@@ -23,17 +24,17 @@ object GattAttributes {
     var SERVICE_G_ATTR: String = PREFIX + "1801" + SUFFIX
 
     // Battery Service
-    @JvmField var SERVICE_BATTERY: String = PREFIX + "180f" + SUFFIX // Battery
-    @JvmField var CHARA_BATTERY_LEVEL: String = PREFIX + "2a19" + SUFFIX
+    var SERVICE_BATTERY: String = PREFIX + "180f" + SUFFIX // Battery
+    var CHARA_BATTERY_LEVEL: String = PREFIX + "2a19" + SUFFIX
 
     // RileyLink Radio Service
-    @JvmField var SERVICE_RADIO: String = "0235733b-99c5-4197-b856-69219c2a3845"
-    @JvmField var CHARA_RADIO_DATA: String = "c842e849-5028-42e2-867c-016adada9155"
-    @JvmField var CHARA_RADIO_RESPONSE_COUNT: String = "6e6c7910-b89e-43a5-a0fe-50c5e2b81f4a"
-    @JvmField var CHARA_RADIO_TIMER_TICK: String = "6e6c7910-b89e-43a5-78af-50c5e2b86f7e"
-    @JvmField var CHARA_RADIO_CUSTOM_NAME: String = "d93b2af0-1e28-11e4-8c21-0800200c9a66"
-    @JvmField var CHARA_RADIO_VERSION: String = "30d99dc9-7c91-4295-a051-0a104d238cf2"
-    @JvmField var CHARA_RADIO_LED_MODE: String = "c6d84241-f1a7-4f9c-a25f-fce16732f14e"
+    var SERVICE_RADIO: String = "0235733b-99c5-4197-b856-69219c2a3845"
+    var CHARA_RADIO_DATA: String = "c842e849-5028-42e2-867c-016adada9155"
+    var CHARA_RADIO_RESPONSE_COUNT: String = "6e6c7910-b89e-43a5-a0fe-50c5e2b81f4a"
+    var CHARA_RADIO_TIMER_TICK: String = "6e6c7910-b89e-43a5-78af-50c5e2b86f7e"
+    var CHARA_RADIO_CUSTOM_NAME: String = "d93b2af0-1e28-11e4-8c21-0800200c9a66"
+    var CHARA_RADIO_VERSION: String = "30d99dc9-7c91-4295-a051-0a104d238cf2"
+    var CHARA_RADIO_LED_MODE: String = "c6d84241-f1a7-4f9c-a25f-fce16732f14e"
 
     // Secure DFU Service (Orange 1.5 - 3.2)
     var SERVICE_DFU: String = "0000fe59-0000-1000-8000-00805f9b34fb"
@@ -48,17 +49,16 @@ object GattAttributes {
     var SERVICE_RADIO_ORANGE: String = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
     var CHARA_NOTIFICATION_ORANGE: String = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 
-    private val attributes: MutableMap<String?, String?>
+    private val attributes = HashMap<String?, String?>()
     private val attributesRileyLinkSpecific: MutableMap<String?, String?>
 
     // table of names for uuids
     init {
-        attributes = HashMap<String?, String?>()
 
         attributes.put(SERVICE_GA, "Generic Access")
         attributes.put(CHARA_GA_NAME, "Device Name") //
         attributes.put(CHARA_GA_APPEARANCE, "Appearance") //
-        attributes.put(CHARA_GA_PPCP, "Peripheral Preffered Connection Parameters")
+        attributes.put(CHARA_GA_PPCP, "Peripheral Preferred Connection Parameters")
         attributes.put(CHARA_GA_CAR, "Central Address Resolution")
 
         attributes.put(SERVICE_G_ATTR, "Generic Attribute")
@@ -100,11 +100,11 @@ object GattAttributes {
     }
 
     fun lookup(uuid: String?, defaultName: String? = uuid): String? {
-        val name = attributes.get(uuid)
+        val name = attributes[uuid]
         return if (name == null) defaultName else name
     }
 
-    // we check for specific UUID (Radio ones, because thoose seem to be unique
+    // we check for specific UUID (Radio ones, because those seem to be unique
     fun isRileyLink(uuid: UUID): Boolean {
         return attributesRileyLinkSpecific.containsKey(uuid.toString())
     }

@@ -21,9 +21,9 @@ import javax.inject.Inject
 /**
  * Created by geoff on 5/30/16.
  */
-class RadioResponse(injector: HasAndroidInjector) {
+class RadioResponse(injector: HasAndroidInjector, var command: RileyLinkCommand? = null) {
 
-    @JvmField var rssi: Int = 0
+    var rssi: Int = 0
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
@@ -33,21 +33,15 @@ class RadioResponse(injector: HasAndroidInjector) {
     private var responseNumber = 0
     private var decodedPayload: ByteArray = ByteArray(0)
     private var receivedCRC: Byte = 0
-    private var command: RileyLinkCommand? = null
 
     init {
         injector.androidInjector().inject(this)
     }
 
-    constructor(injector: HasAndroidInjector, command: RileyLinkCommand? /* , byte[] raw */) : this(injector) {
-        this.command = command
-        // init(raw);
-    }
-
     fun isValid(): Boolean {
         // We should check for all listening commands, but only one is actually used
 
-        if (command != null && command!!.getCommandType() != RileyLinkCommandType.SendAndListen) {
+        if (command?.getCommandType() != RileyLinkCommandType.SendAndListen) {
             return true
         }
 
@@ -82,9 +76,7 @@ class RadioResponse(injector: HasAndroidInjector) {
             // well, for non-radio commands we shouldn't even reach this point
             // but getVersion is kind of exception
 
-            if (command != null &&  //
-                command!!.getCommandType() != RileyLinkCommandType.SendAndListen
-            ) {
+            if (command?.getCommandType() != RileyLinkCommandType.SendAndListen) {
                 decodedOK = true
                 decodedPayload = encodedPayload
                 return
@@ -97,24 +89,22 @@ class RadioResponse(injector: HasAndroidInjector) {
                 }
 
                 RileyLinkEncodingType.FourByteSixByteLocal                                       -> {
-                    val decodeThis = rileyLinkUtil.encoding4b6b!!.decode4b6b(encodedPayload)
+                    rileyLinkUtil.encoding4b6b.decode4b6b(encodedPayload).let { decodeThis ->
+                        if (decodeThis.size > 2) {
+                            decodedOK = true
 
-                    if (decodeThis != null && decodeThis.size > 2) {
-                        decodedOK = true
-
-                        decodedPayload = substring(decodeThis, 0, decodeThis.size - 1)
-                        receivedCRC = decodeThis[decodeThis.size - 1]
-                        val calculatedCRC = CRC.crc8(decodedPayload)
-                        if (receivedCRC != calculatedCRC) {
-                            aapsLogger.error(
-                                LTag.PUMPBTCOMM, String.format(
-                                    "RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
-                                    calculatedCRC, receivedCRC
+                            decodedPayload = substring(decodeThis, 0, decodeThis.size - 1)
+                            receivedCRC = decodeThis[decodeThis.size - 1]
+                            val calculatedCRC = CRC.crc8(decodedPayload)
+                            if (receivedCRC != calculatedCRC) {
+                                aapsLogger.error(
+                                    LTag.PUMPBTCOMM, String.format(
+                                        "RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
+                                        calculatedCRC, receivedCRC
+                                    )
                                 )
-                            )
-                        }
-                    } else {
-                        throw RileyLinkCommunicationException(RileyLinkBLEError.TooShortOrNullResponse, null)
+                            }
+                        } else throw RileyLinkCommunicationException(RileyLinkBLEError.TooShortOrNullResponse, null)
                     }
                 }
 

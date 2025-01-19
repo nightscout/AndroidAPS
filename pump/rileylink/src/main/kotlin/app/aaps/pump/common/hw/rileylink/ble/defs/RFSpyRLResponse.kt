@@ -19,13 +19,6 @@ enum class RFSpyRLResponse(val value: Byte) {
 
     companion object {
 
-        fun fromByte(input: Byte): RFSpyRLResponse? {
-            for (type in entries) {
-                if (type.value == input) {
-                    return type
-                }
-            }
-            return null
-        }
+        fun fromByte(input: Byte): RFSpyRLResponse? = entries.find { it.value == input }
     }
 }
