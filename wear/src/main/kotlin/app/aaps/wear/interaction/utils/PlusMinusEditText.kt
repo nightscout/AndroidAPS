@@ -103,7 +103,6 @@ class PlusMinusEditText @JvmOverloads constructor(
                 value = maxValue
             } else {
                 value = minValue
-                stopUpdating()
             }
         }
         updateEditText()

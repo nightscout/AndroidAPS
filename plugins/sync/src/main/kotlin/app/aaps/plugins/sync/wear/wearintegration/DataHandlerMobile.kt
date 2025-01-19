@@ -93,6 +93,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.min
 
 @Singleton
@@ -630,11 +631,16 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleBolusPreCheck(command: EventData.ActionBolusPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, aapsLogger)).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
+        val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
+        var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
         val pump = activePlugin.activePump
         if (insulinAfterConstraints > 0 && (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected)) {
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
+        }
+        // Handle negative carbs constraint
+        if (carbsAfterConstraints < 0) {
+            if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
         }
         var message = ""
         message += rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short) + "\n"
@@ -655,14 +661,19 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
         val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
+        val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
+        var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
+        // Handle negative carbs constraint
+        if (carbsAfterConstraints < 0) {
+            if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
+        }
         var message = rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
             "\n" + rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(app.aaps.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
-        if (carbsAfterConstraints - command.carbs != 0) {
+        if (carbsAfterConstraints != command.carbs) {
             message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         }
-        if (carbsAfterConstraints <= 0) {
+        if (carbsAfterConstraints == 0) {
             sendError(rh.gs(app.aaps.core.ui.R.string.carb_equal_zero_no_action))
             return
         }
@@ -1389,7 +1400,7 @@ class DataHandlerMobile @Inject constructor(
         detailedBolusInfo.carbsTimestamp = carbsTime
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
         detailedBolusInfo.notes = notes
-        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs != 0.0) {
 
             val action = when {
                 amount == 0.0     -> Action.CARBS
