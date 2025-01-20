@@ -183,4 +183,24 @@
     <string name="today">Hoy</string>
     <string name="weighted">ponderado</string>
     <string name="full_xdrip_sync_comment">¿Sincronización completa? Puede tardar un rato y hasta que no finalice, no aparecerán los nuevos datos en xDrip+.</string>
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient no es compatible con esta acción</string>
+    <string name="wear_action_loop_state_requires_duration">Esta acción requiere una duración</string>
+    <string name="wear_action_loop_state_pump_suspended">¡La bomba está suspendida!</string>
+    <string name="wear_action_loop_state_profile_invalid">¡Perfil inválido!</string>
+    <string name="wear_action_loop_state_unauthorized">Por favor, inténtalo de nuevo.</string>
+    <string name="wear_action_loop_state_invalid">Etado del lazo solicitado inválido</string>
+    <string name="wear_action_loop_state_title">ESTADO DEL LAZO</string>
+    <string name="wear_action_loop_state_changed">%1$s</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuración: %2$d min</string>
+    <string name="wear_action_loop_state_now_closed">Cerrado</string>
+    <string name="wear_action_loop_state_now_lgs">LGS</string>
+    <string name="wear_action_loop_state_now_open">Abierto</string>
+    <string name="wear_action_loop_state_now_suspended">Suspendido</string>
+    <string name="wear_action_loop_state_now_resumed">Reanudado</string>
+    <string name="wear_action_loop_state_now_disabled">Desactivado</string>
+    <string name="wear_action_loop_state_now_enabled">Habilitado</string>
+    <string name="wear_action_loop_state_now_superbolus">Superbolo</string>
+    <string name="wear_action_loop_state_now_invalid">Inválido</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Bomba desconectada</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Bomba reconectada</string>
 </resources>
