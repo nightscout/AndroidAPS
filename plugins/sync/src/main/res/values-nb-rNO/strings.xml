@@ -202,5 +202,5 @@
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Ugyldig</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpe frakoblet</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Pumpen tilkoblet igjen</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Koble til pumpen igjen</string>
 </resources>
