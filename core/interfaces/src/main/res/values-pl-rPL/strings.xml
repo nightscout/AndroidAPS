@@ -61,6 +61,7 @@
     <string name="pref_show_ago">Pokaż Aktualność</string>
     <string name="pref_show_week_number">Pokaż numer tygodnia</string>
     <string name="pref_show_date">Pokaż Datę</string>
+    <string name="pref_show_seconds">Pokazuj Sekundy</string>
     <string name="default_custom_watchface_comment">Domyślna tarcza, możesz kliknąć na EXPORTUJ TARCZĘ aby wygenerować szablon</string>
     <string name="default_custom_watchface_external_comment">Domyślna tarcza zegarka, w tym zewnętrzne podglądy dla obserwujących. Możesz kliknąć na przycisk EKSPORT TARCZY aby wygenerować szablon</string>
     <string name="wear_default_watchface">Domyślna Tarcza</string>

@@ -116,7 +116,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bekræftelsesbip</string>
     <string name="omnipod_common_preferences_category_notifications">Notifikationer</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Lyd for usikre TBR-meddelelser aktiveret</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Lyd for usikre TBR-meddelelser aktiveret</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Lyd for usikre bolus notifikationer aktiveret</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv pod</string>

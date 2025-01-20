@@ -111,8 +111,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Звук за потвърждение</string>
     <string name="omnipod_common_preferences_category_notifications">Известия</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Сигнал при неясни TBR известия, разрешен</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Звук за
-         активирани несигурни SMB известия</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Сигнал при неясни болус известия, разрешен</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Няма активен под</string>

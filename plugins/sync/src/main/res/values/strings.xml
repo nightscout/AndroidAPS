@@ -221,4 +221,27 @@
     <string name="weighted">weighted</string>
     <string name="full_xdrip_sync_comment">Full synchronization? It may take a while and until it is finished you\'ll not see new data in xDrip+.</string>
 
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient is not supported for this action</string>
+    <string name="wear_action_loop_state_requires_duration">This action requires duration</string>
+    <string name="wear_action_loop_state_pump_suspended">Pump is suspended!</string>
+    <string name="wear_action_loop_state_profile_invalid">Profile is invalid!</string>
+    <string name="wear_action_loop_state_unauthorized">Please try again.</string>
+    <string name="wear_action_loop_state_invalid">Invalid loop state requested</string>
+
+    <string name="wear_action_loop_state_title">LOOP STATE</string>
+    <string name="wear_action_loop_state_changed">%1$s</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuration: %2$d min</string>
+
+    <string name="wear_action_loop_state_now_closed">Closed</string>
+    <string name="wear_action_loop_state_now_lgs">LGS</string>
+    <string name="wear_action_loop_state_now_open">Open</string>
+    <string name="wear_action_loop_state_now_suspended">Suspended</string>
+    <string name="wear_action_loop_state_now_resumed">Resumed</string>
+    <string name="wear_action_loop_state_now_disabled">Disabled</string>
+    <string name="wear_action_loop_state_now_enabled">Enabled</string>
+    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
+    <string name="wear_action_loop_state_now_invalid">Invalid</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Pump disconnected</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Pump reconnected</string>
+
 </resources>

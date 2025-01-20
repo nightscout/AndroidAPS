@@ -233,6 +233,24 @@
         </service>
 
         <service
+            android:name=".complications.BrComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_br"
+            android:label="@string/complication_br"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
             android:name=".complications.CobIobComplication"
             android:exported="true"
             android:icon="@drawable/ic_cob_iob"
@@ -456,6 +474,20 @@
                 android:resource="@drawable/user_action_tiles" />
         </service>
 
+        <service
+            android:name=".tile.LoopStateTileService"
+            android:exported="true"
+            android:label="@string/label_loop_state_title"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/loop_states_tile" />
+        </service>
+
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
 
         <activity
@@ -523,6 +555,10 @@
 
         <activity
             android:name=".interaction.actions.BackgroundActionActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".interaction.actions.LoopStateTimedActivity"
             android:exported="true" />
 
         <activity

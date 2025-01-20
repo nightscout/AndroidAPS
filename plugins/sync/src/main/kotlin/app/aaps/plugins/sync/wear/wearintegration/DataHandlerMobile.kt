@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BCR
@@ -18,6 +19,7 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -27,7 +29,9 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -52,10 +56,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.EventData.LoopStatesList.AvailableLoopState
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -93,6 +99,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.min
 
 @Singleton
@@ -125,7 +132,8 @@ class DataHandlerMobile @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val persistenceLayer: PersistenceLayer,
     private val importExportPrefs: ImportExportPrefs,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val configBuilder: ConfigBuilder
 ) {
 
     @Inject lateinit var automation: Automation
@@ -195,6 +203,27 @@ class DataHandlerMobile @Inject constructor(
                                    )
                                )
                            )
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.LoopStatesRequest::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "LoopStatesRequest received from ${it.sourceNodeId}")
+                           handleAvailableLoopStates()
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.LoopStateSelected::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "LoopStateSelected received from ${it.sourceNodeId}")
+                           handleLoopStateSelected(it)
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.LoopStateConfirmed::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "LoopStateSelected received from ${it.sourceNodeId}")
+                           handleLoopStateConfirmed(it)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionTddStatus::class.java)
@@ -630,11 +659,16 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleBolusPreCheck(command: EventData.ActionBolusPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, aapsLogger)).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
+        val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
+        var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
         val pump = activePlugin.activePump
         if (insulinAfterConstraints > 0 && (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected)) {
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
+        }
+        // Handle negative carbs constraint
+        if (carbsAfterConstraints < 0) {
+            if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
         }
         var message = ""
         message += rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short) + "\n"
@@ -655,14 +689,19 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
         val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
+        val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
+        var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
+        // Handle negative carbs constraint
+        if (carbsAfterConstraints < 0) {
+            if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
+        }
         var message = rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
             "\n" + rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(app.aaps.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
-        if (carbsAfterConstraints - command.carbs != 0) {
+        if (carbsAfterConstraints != command.carbs) {
             message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         }
-        if (carbsAfterConstraints <= 0) {
+        if (carbsAfterConstraints == 0) {
             sendError(rh.gs(app.aaps.core.ui.R.string.carb_equal_zero_no_action))
             return
         }
@@ -854,6 +893,252 @@ class DataHandlerMobile @Inject constructor(
         }
     }
 
+    // To make sure WearOS-sent loop state change is constrained
+    private var lastAuthorizedLoopStateChangeTS: Long? = null
+    private var lastLoopStates: List<AvailableLoopState>? = null
+
+    private fun handleAvailableLoopStates() {
+        // See LoopDialog for states list building logic
+        if (config.AAPSCLIENT) return
+
+        val pump = activePlugin.activePump
+        val pumpDescription = pump.pumpDescription
+        if (pump.isSuspended()) return
+        if (!profileFunction.isProfileValid("WearDataHandler_LoopChangeState")) return
+
+        val disconnectDurs = arrayListOf<Int>()
+        if (pumpDescription.tempDurationStep15mAllowed)
+            disconnectDurs.add(15)
+        if (pumpDescription.tempDurationStep30mAllowed)
+            disconnectDurs.add(30)
+        for (i in listOf(1, 2, 3))
+            disconnectDurs.add(i * 60)
+
+        val open = AvailableLoopState(AvailableLoopState.LoopState.LOOP_OPEN)
+        val lgs = AvailableLoopState(AvailableLoopState.LoopState.LOOP_LGS)
+        val closed = AvailableLoopState(AvailableLoopState.LoopState.LOOP_CLOSED)
+        val disable = AvailableLoopState(AvailableLoopState.LoopState.LOOP_DISABLE)
+        val enable = AvailableLoopState(AvailableLoopState.LoopState.LOOP_ENABLE)
+        val suspend = AvailableLoopState(AvailableLoopState.LoopState.LOOP_SUSPEND, listOf(1, 2, 3, 10).map { it * 60 })
+        val disconnect = AvailableLoopState(AvailableLoopState.LoopState.PUMP_DISCONNECT, disconnectDurs)
+        val resume = AvailableLoopState(AvailableLoopState.LoopState.LOOP_RESUME)
+        val reconnect = AvailableLoopState(AvailableLoopState.LoopState.PUMP_RECONNECT)
+
+        val states = arrayListOf<AvailableLoopState>()
+        var currentState = when {
+            loop.isDisconnected -> {
+                // Pump disconnected => Pump disconnect again + Pump reconnect
+                states.addAll(listOf(disconnect, reconnect))
+                AvailableLoopState(AvailableLoopState.LoopState.PUMP_DISCONNECT)
+            }
+            !loop.isEnabled() -> {
+                // Disabled => Pump disconnect + Loop enable
+                states.addAll(listOf(disconnect, enable))
+                disable
+            }
+            loop.isSuspended -> {
+                // Suspended => Resume + Suspend again
+                states.addAll(listOf(resume, suspend))
+                AvailableLoopState(AvailableLoopState.LoopState.LOOP_SUSPEND)
+            }
+            else -> {
+                // Some loop is enabled => Pump disconnect + Modes + Suspend + Disable
+                states.add(disconnect)
+                val mode = when (ApsMode.fromString(preferences.get(StringKey.LoopApsMode))) {
+                    ApsMode.CLOSED -> {
+                        states.addAll(listOf(lgs, open))
+                        closed
+                    }
+                    ApsMode.LGS -> {
+                        if (constraintChecker.isClosedLoopAllowed().value()) states.add(closed)
+                        states.add(open)
+                        lgs
+                    }
+                    ApsMode.OPEN -> {
+                        if (activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) == true) states.add(closed)
+                        if (constraintChecker.isLgsAllowed().value()) states.add(lgs)
+                        open
+                    }
+                    else -> AvailableLoopState(AvailableLoopState.LoopState.LOOP_UNKNOWN)
+                }
+                states.addAll(listOf(suspend, disable))
+                mode
+            }
+        }
+        if (loop.isSuperBolus) currentState = AvailableLoopState(AvailableLoopState.LoopState.SUPERBOLUS)
+        lastAuthorizedLoopStateChangeTS = System.currentTimeMillis()
+        lastLoopStates = states
+        rxBus.send(EventMobileToWear(
+            EventData.LoopStatesList(lastAuthorizedLoopStateChangeTS!!, states, currentState)
+        ))
+    }
+
+    private fun handleLoopStateSelected(action: EventData.LoopStateSelected) {
+        if (action.timeStamp != lastAuthorizedLoopStateChangeTS) return sendError(rh.gs(R.string.wear_action_loop_state_unauthorized))
+        val newState = lastLoopStates?.elementAtOrNull(action.index) ?: return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
+        val nDuration = action.duration ?: 0
+        rxBus.send(EventMobileToWear(
+            EventData.ConfirmAction(
+                rh.gs(R.string.wear_action_loop_state_title),
+                when (newState.state) {
+                    AvailableLoopState.LoopState.LOOP_CLOSED     ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_closed))
+
+                    AvailableLoopState.LoopState.LOOP_LGS        ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_lgs))
+
+                    AvailableLoopState.LoopState.LOOP_OPEN       ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_open))
+
+                    AvailableLoopState.LoopState.LOOP_RESUME     ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_resumed))
+
+                    AvailableLoopState.LoopState.LOOP_ENABLE     ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_enabled))
+
+                    AvailableLoopState.LoopState.LOOP_DISABLE    ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_disabled))
+
+                    AvailableLoopState.LoopState.PUMP_RECONNECT  ->
+                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_pump_reconnected))
+
+                    AvailableLoopState.LoopState.SUPERBOLUS      -> rh.gs(
+                        R.string.wear_action_loop_state_changed,
+                        rh.gs(R.string.wear_action_loop_state_now_superbolus)
+                    )
+
+                    AvailableLoopState.LoopState.LOOP_UNKNOWN    -> rh.gs(
+                        R.string.wear_action_loop_state_changed,
+                        rh.gs(R.string.wear_action_loop_state_now_invalid)
+                    )
+
+                    AvailableLoopState.LoopState.LOOP_SUSPEND    -> rh.gs(
+                        R.string.wear_action_loop_state_changed_with_duration,
+                        rh.gs(R.string.wear_action_loop_state_now_suspended),
+                        nDuration
+                    )
+
+                    AvailableLoopState.LoopState.PUMP_DISCONNECT -> rh.gs(
+                        R.string.wear_action_loop_state_changed_with_duration,
+                        rh.gs(R.string.wear_action_loop_state_now_pump_disconnected),
+                        nDuration
+                    )
+                },
+                EventData.LoopStateConfirmed(action.timeStamp, action.index, action.duration)
+            )
+        ))
+    }
+
+    private fun handleLoopStateConfirmed(action: EventData.LoopStateConfirmed) {
+        if (action.timeStamp != lastAuthorizedLoopStateChangeTS) return sendError(rh.gs(R.string.wear_action_loop_state_unauthorized))
+        lastAuthorizedLoopStateChangeTS = null
+        val newState = lastLoopStates?.elementAtOrNull(action.index) ?: return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
+        lastLoopStates = null
+
+        val nDuration = action.duration ?: 0
+        val durationValid = action.duration != null && action.duration!! > 0
+        when (newState.state) {
+            AvailableLoopState.LoopState.LOOP_CLOSED -> {
+                uel.log(Action.CLOSED_LOOP_MODE, Sources.Wear)
+                preferences.put(StringKey.LoopApsMode, ApsMode.CLOSED.name)
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.LOOP_LGS -> {
+                uel.log(Action.LGS_LOOP_MODE, Sources.Wear)
+                preferences.put(StringKey.LoopApsMode, ApsMode.LGS.name)
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.LOOP_OPEN -> {
+                uel.log(Action.OPEN_LOOP_MODE, Sources.Wear)
+                preferences.put(StringKey.LoopApsMode, ApsMode.OPEN.name)
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend))) // why in LoopDialog?
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.LOOP_ENABLE -> {
+                (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
+                (loop as PluginBase).setFragmentVisible(PluginType.LOOP, true)
+                configBuilder.storeSettings("EnablingLoop")
+                disposable += persistenceLayer.cancelCurrentOfflineEvent(
+                    dateUtil.now(),
+                    Action.LOOP_ENABLED,
+                    Sources.Wear
+                ).subscribe()
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.LOOP_DISABLE -> {
+                (loop as PluginBase).setPluginEnabled(PluginType.LOOP, false)
+                (loop as PluginBase).setFragmentVisible(PluginType.LOOP, false)
+                configBuilder.storeSettings("DisablingLoop")
+                commandQueue.cancelTempBasal(true, object : Callback() {
+                    override fun run() {
+                        if (!result.success) sendError(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error))
+                    }
+                })
+                disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
+                    offlineEvent = OE(timestamp = dateUtil.now(), duration = T.days(365).msecs(), reason = OE.Reason.DISABLE_LOOP),
+                    action = Action.LOOP_DISABLED,
+                    source = Sources.Wear,
+                    note = null,
+                    listValues = listOf()
+                ).subscribe()
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.PUMP_RECONNECT, AvailableLoopState.LoopState.LOOP_RESUME -> {
+                disposable += persistenceLayer.cancelCurrentOfflineEvent(
+                    dateUtil.now(),
+                    if (newState.state == AvailableLoopState.LoopState.PUMP_RECONNECT)
+                        Action.RECONNECT
+                    else
+                        Action.RESUME,
+                    Sources.Wear
+                ).subscribe()
+                commandQueue.cancelTempBasal(true, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            sendError(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error))
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                        }
+                    }
+                })
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.LOOP_SUSPEND -> {
+                if (!durationValid) return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
+                loop.suspendLoop(
+                    nDuration,
+                    Action.SUSPEND,
+                    Sources.Wear,
+                    listValues = listOf(ValueWithUnit.Hour(nDuration / 60))
+                )
+                rxBus.send(EventRefreshOverview("wear_loop_state"))
+            }
+            AvailableLoopState.LoopState.PUMP_DISCONNECT -> {
+                if (!durationValid) return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
+                profileFunction.getProfile()?.let { profile ->
+                    loop.goToZeroTemp(
+                        nDuration,
+                        profile,
+                        OE.Reason.DISCONNECT_PUMP,
+                        Action.DISCONNECT,
+                        Sources.Wear,
+                        listValues = listOf(
+                            if (nDuration >= 60)
+                                ValueWithUnit.Hour(nDuration / 60)
+                            else
+                                ValueWithUnit.Minute(nDuration)
+                        )
+                    )
+                    rxBus.send(EventRefreshOverview("wear_loop_state"))
+                }
+            }
+            AvailableLoopState.LoopState.LOOP_UNKNOWN, AvailableLoopState.LoopState.SUPERBOLUS -> {
+                return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
+            }
+        }
+    }
+
     private fun QuickWizardEntry.toWear(): EventData.QuickWizard.QuickWizardEntry =
         EventData.QuickWizard.QuickWizardEntry(
             guid = guid(),
@@ -903,6 +1188,7 @@ class DataHandlerMobile @Inject constructor(
         // Status
         // Keep status last. Wear start refreshing after status received
         sendStatus(from)
+        handleAvailableLoopStates()
     }
 
     private fun AutomationEvent.toWear(now: Long): EventData.UserAction.UserActionEntry =
@@ -1389,7 +1675,7 @@ class DataHandlerMobile @Inject constructor(
         detailedBolusInfo.carbsTimestamp = carbsTime
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
         detailedBolusInfo.notes = notes
-        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs != 0.0) {
 
             val action = when {
                 amount == 0.0     -> Action.CARBS

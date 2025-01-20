@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Dźwięki potwierdzenia</string>
     <string name="omnipod_common_preferences_category_notifications">Powiadomienia</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Dźwięk dla powiadomień o niepewnych TBR włączony</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Dźwięk dla powiadomień o niepewnych SMB włączony</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Dźwięk dla powiadomień o niepewnych bolusach włączony</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Brak akt. Poda</string>
