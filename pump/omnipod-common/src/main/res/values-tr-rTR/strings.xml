@@ -117,8 +117,9 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Onay Bipleri</string>
     <string name="omnipod_common_preferences_category_notifications">Bildirimler</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO bildirimleri için sesi etkinleştir</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için sesi etkinleştir</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için ses etkinleştirildi</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Belirsiz bolus bildirimleri için sesi etkinleştir</string>
+    <string name="omnipod_dash_use_bonding">Android 15+ işletim sisteminde BT cihazı eşleştirme (Pixel telefonlar için geçici çözüm)</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Aktif Pod Yok</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Kurulum devam ediyor (Pod aktivasyonu bekleniyor)</string>

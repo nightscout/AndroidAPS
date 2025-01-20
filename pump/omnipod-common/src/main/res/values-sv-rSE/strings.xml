@@ -111,7 +111,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bekräftelsepip</string>
     <string name="omnipod_common_preferences_category_notifications">Aviseringar</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Ljud ifall AAPS är osäker om temp basal aktiverades</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Ljud ifall AAPS är osäker om SMB leverades</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Ljud ifall AAPS är osäker om bolus levererades</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv pod</string>
