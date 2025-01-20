@@ -17,7 +17,7 @@ class DisplayFormat @Inject internal constructor() {
         const val MAX_FIELD_LEN_LONG = 22 // this is found out empirical, for TYPE_LONG_TEXT
         const val MAX_FIELD_LEN_SHORT = 7 // according to Wear OS docs for TYPE_SHORT_TEXT
         const val MIN_FIELD_LEN_COB = 3 // since carbs are usually 0..99g
-        const val MIN_FIELD_LEN_IOB = 4 // IoB can range from like .1U to 99U
+        const val MIN_FIELD_LEN_IOB = 3 // IoB can range from like .1U to 99U
     }
 
     @Inject lateinit var sp: SP
