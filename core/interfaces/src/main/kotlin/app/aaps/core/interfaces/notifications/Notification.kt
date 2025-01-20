@@ -142,6 +142,8 @@ open class Notification {
         const val MASTER_PASSWORD_NOT_SET = 90
         const val DYN_ISF_FALLBACK = 91
         const val AAPS_DIR_NOT_SELECTED = 92
+        const val EQUIL_ALARM = 93
+        const val EQUIL_ALARM_INSULIN = 94
 
         const val USER_MESSAGE = 1000
 

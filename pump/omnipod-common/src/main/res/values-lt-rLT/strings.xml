@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Patvirtinimo signalai</string>
     <string name="omnipod_common_preferences_category_notifications">Pranešimai</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Įjungtas garsas        neaiškiems SMB perspėjimams</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Įjungtas garsas neaiškiems bolusų perspėjimams</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nėra aktyvaus Pod</string>

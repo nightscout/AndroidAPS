@@ -27,6 +27,11 @@
             android:key="@string/key_omnipod_common_tbr_beeps_enabled"
             android:title="@string/omnipod_common_preferences_tbr_beeps_enabled" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_dash_use_bonding"
+            android:title="@string/omnipod_dash_use_bonding" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

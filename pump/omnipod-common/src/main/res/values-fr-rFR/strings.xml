@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bips de confirmation</string>
     <string name="omnipod_common_preferences_category_notifications">Notifications</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Son pour les notifications DBT incertains activé</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Son pour les notifications SMB incertains activé</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Son pour les notifications bolus incertains activé</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Pas de Pod actif</string>

@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.dash.driver.comm.exceptions.BusyException
 import app.aaps.pump.omnipod.dash.driver.comm.exceptions.ConnectException
@@ -49,7 +50,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val podState: OmnipodDashPodStateManager,
-    private val config: Config
+    private val config: Config,
+    private val sp: SP
 ) : OmnipodDashBleManager {
 
     private val busy = AtomicBoolean(false)
@@ -148,7 +150,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val podDevice = bluetoothAdapter?.getRemoteDevice(podAddress)
                     ?: throw ConnectException("Bluetooth not available")
 
-                if (podDevice.bondState == BluetoothDevice.BOND_NONE) {
+                if (podDevice.bondState == BluetoothDevice.BOND_NONE && sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_dash_use_bonding, false)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                         val result = podDevice.createBond()
                         aapsLogger.debug(LTag.PUMPBTCOMM, "Bonding with pod resulted $result")
@@ -275,7 +277,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
     override fun removeBond() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_dash_use_bonding, false) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 val device = bluetoothAdapter?.getRemoteDevice(podState.bluetoothAddress) ?: throw IllegalStateException("MAC address not found")
                 // At time of writing (2021-12-06), the removeBond method
                 // is inexplicably still marked with @hide, so we must use

@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Звуковые сигналы подтверждения</string>
     <string name="omnipod_common_preferences_category_notifications">Уведомления</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Звук для неопределенных уведомлений TBR включен</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Звук для неопределенных SMB уведомлений включен</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Звук для неопределенных уведомлений болюса включен</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Нет активных Pod</string>
