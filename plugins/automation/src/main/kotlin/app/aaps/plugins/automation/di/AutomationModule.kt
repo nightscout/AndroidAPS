@@ -36,6 +36,7 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
+import app.aaps.plugins.automation.triggers.TriggerBgAcceWeight
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
 import app.aaps.plugins.automation.triggers.TriggerCannulaAge
@@ -45,6 +46,7 @@ import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
 import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
+import app.aaps.plugins.automation.triggers.TriggerIobTH
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerPodChange
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
@@ -109,6 +111,8 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerTimeRangeInjector(): TriggerTimeRange
     @ContributesAndroidInjector abstract fun triggerWifiSsidInjector(): TriggerWifiSsid
     @ContributesAndroidInjector abstract fun triggerStepsCountInjector(): TriggerStepsCount
+    @ContributesAndroidInjector abstract fun triggerBgAcceWeightInjector(): TriggerBgAcceWeight
+    @ContributesAndroidInjector abstract fun triggerIonTHWeightInjector(): TriggerIobTH
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
     @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
