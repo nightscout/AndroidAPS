@@ -3,6 +3,7 @@ package app.aaps.wear.di
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.complications.BaseComplicationProviderService
 import app.aaps.wear.complications.BrIobComplication
+import app.aaps.wear.complications.BrComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
@@ -40,6 +41,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesBaseComplicationProviderService(): BaseComplicationProviderService
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication
     @ContributesAndroidInjector abstract fun contributesBrIobComplication(): BrIobComplication
+    @ContributesAndroidInjector abstract fun contributesBrComplication(): BrComplication
     @ContributesAndroidInjector abstract fun contributesCobDetailedComplication(): CobDetailedComplication
     @ContributesAndroidInjector abstract fun contributesCobIconComplication(): CobIconComplication
     @ContributesAndroidInjector abstract fun contributesCobIobComplication(): CobIobComplication
