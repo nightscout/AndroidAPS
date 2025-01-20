@@ -224,4 +224,7 @@
     <string name="complication_iob_icon">Icono IOB</string>
     <string name="complication_iob_detailed">IOB detallado</string>
     <string name="complication_uploader_phone_battery">Batería de teléfono que sube los datos</string>
+    <string name="status_loop_state">Estado del lazo</string>
+    <string name="label_loop_state_title">AAPS(Estado del lazo)</string>
+    <string name="action_loop_state_selected">Estado del lazo solicitado</string>
 </resources>
