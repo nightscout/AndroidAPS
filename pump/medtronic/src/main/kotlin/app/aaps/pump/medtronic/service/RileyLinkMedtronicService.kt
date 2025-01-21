@@ -126,7 +126,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
 
     /* private functions */ // PumpInterface - REMOVE
     val isInitialized: Boolean
-        get() = rileyLinkServiceData.rileyLinkServiceState.isReady
+        get() = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
     override fun verifyConfiguration(forceRileyLinkAddressRenewal: Boolean): Boolean {
         return try {
@@ -251,7 +251,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 rileyLinkAddressChanged = false
             }
             if (encodingChanged) {
-                changeRileyLinkEncoding(encodingType)
+                changeRileyLinkEncoding(encodingType!!)
                 encodingChanged = false
             }
         }
@@ -269,7 +269,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
         val value = sp.getString(key, defaultValue)
         valueDouble = try {
             value.toDouble()
-        } catch (ex: Exception) {
+        } catch (_: Exception) {
             aapsLogger.error("Error parsing setting: %s, value found %s", key, value)
             defaultValueDouble
         }

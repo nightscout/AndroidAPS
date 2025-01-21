@@ -279,9 +279,9 @@ class MedtronicPumpPlugin @Inject constructor(
         if (displayConnectionMessages) aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::isBusy")
         if (isServiceSet) {
             if (isBusy) return true
-            if (this.busyTimestamps.size > 0) {
+            if (this.busyTimestamps.isNotEmpty()) {
                 clearBusyQueue()
-                return this.busyTimestamps.size > 0
+                return this.busyTimestamps.isNotEmpty()
             }
         }
         return false
@@ -342,7 +342,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "RileyLink unreachable.")
                 return false
             }
-            return rileyLinkMedtronicService?.deviceCommunicationManager?.isDeviceReachable != true
+            return rileyLinkMedtronicService?.deviceCommunicationManager?.isDeviceReachable() != true
         }
 
     private fun refreshAnyStatusThatNeedsToBeRefreshed() {
@@ -978,7 +978,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     return 0L
                 }
                 lastPumpEntryTime
-            } catch (ex: Exception) {
+            } catch (_x: Exception) {
                 aapsLogger.warn(LTag.PUMP, "Saved LastPumpHistoryEntry was invalid.")
                 0L
             }
@@ -1220,7 +1220,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
             }
 
-            null                                                  -> {
+            null                                                  -> { // do nothing
 
             }
         }

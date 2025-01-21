@@ -64,11 +64,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public void initRileyLinkServiceData() {
-        rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
-        rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
+        rileyLinkServiceData.setTargetDevice(RileyLinkTargetDevice.Omnipod);
+        rileyLinkServiceData.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Omnipod);
 
-        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
-        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
+        rileyLinkServiceData.setRileyLinkAddress(sp.getString(RileyLinkConst.Prefs.INSTANCE.getRileyLinkAddress(), ""));
+        rileyLinkServiceData.setRileyLinkName(sp.getString(RileyLinkConst.Prefs.INSTANCE.getRileyLinkName(), ""));
 
         rfSpy.startReader();
 
@@ -101,7 +101,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         try {
             errorDescription = null;
 
-            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.INSTANCE.getRileyLinkAddress(), "");
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: no address");
@@ -119,7 +119,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                 }
             }
 
-            rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
+            rileyLinkServiceData.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Omnipod);
 
             reconfigureService(forceRileyLinkAddressRenewal);
 

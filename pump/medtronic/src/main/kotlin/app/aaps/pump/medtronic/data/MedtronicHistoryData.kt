@@ -211,7 +211,7 @@ class MedtronicHistoryData @Inject constructor(
         var dt: LocalDateTime? = null
         try {
             dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime)
-        } catch (ex: Exception) {
+        } catch (_: Exception) {
             aapsLogger.error("Problem decoding date from last record: $pheLast")
         }
         if (dt != null) {

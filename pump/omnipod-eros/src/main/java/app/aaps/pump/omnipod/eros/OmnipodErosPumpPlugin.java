@@ -663,7 +663,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     public int getBatteryLevel() {
         if (aapsOmnipodErosManager.isShowRileyLinkBatteryLevel()) {
-            return Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0);
+            return Optional.ofNullable(rileyLinkServiceData.getBatteryLevel()).orElse(0);
         }
 
         return 0;
@@ -1118,7 +1118,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         try {
             aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
 
-            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(injector, commandType));
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(commandType));
 
             return supplier.get();
         } finally {
