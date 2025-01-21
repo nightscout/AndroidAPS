@@ -1,11 +1,11 @@
 package app.aaps.core.keys
 
-interface DoublePreferenceKey : PreferenceKey {
+interface DoublePreferenceKey : PreferenceKey, DoubleNonPreferenceKey {
 
     /**
      * Default value if not changed from preferences
      */
-    val defaultValue: Double
+    override val defaultValue: Double
 
     /**
      *  Minimal allowed value

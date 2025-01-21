@@ -16,7 +16,6 @@ open class RLHistoryItem(val dateTime: LocalDateTime = LocalDateTime(), val sour
 
     var serviceState: RileyLinkServiceState = RileyLinkServiceState.NotStarted
     var errorCode: RileyLinkError? = null
-
     var pumpDeviceState: PumpDeviceState = PumpDeviceState.NeverContacted
 
     constructor(serviceState: RileyLinkServiceState, errorCode: RileyLinkError?, targetDevice: RileyLinkTargetDevice) : this(source = RLHistoryItemSource.RileyLink, targetDevice = targetDevice) {

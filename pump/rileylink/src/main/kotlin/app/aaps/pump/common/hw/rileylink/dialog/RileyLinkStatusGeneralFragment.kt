@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.common.hw.rileylink.R
 import app.aaps.pump.common.hw.rileylink.databinding.RileylinkStatusGeneralBinding
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -21,10 +21,9 @@ class RileyLinkStatusGeneralFragment : DaggerFragment() {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
 
     private var _binding: RileylinkStatusGeneralBinding? = null
 
@@ -49,7 +48,7 @@ class RileyLinkStatusGeneralFragment : DaggerFragment() {
         binding.connectionStatus.text = rh.gs(rileyLinkServiceData.rileyLinkServiceState.resourceId)
         binding.configuredRileyLinkAddress.text = rileyLinkServiceData.rileyLinkAddress ?: EMPTY
         binding.configuredRileyLinkName.text = rileyLinkServiceData.rileyLinkName ?: EMPTY
-        if (sp.getBoolean(rh.gs(R.string.key_riley_link_show_battery_level), false)) {
+        if (preferences.get(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel)) {
             binding.batteryLevelRow.visibility = View.VISIBLE
             val batteryLevel = rileyLinkServiceData.batteryLevel
             binding.batteryLevel.text = batteryLevel?.let { rh.gs(R.string.rileylink_battery_level_value, it) } ?: EMPTY
@@ -70,7 +69,7 @@ class RileyLinkStatusGeneralFragment : DaggerFragment() {
         }
         val rileyLinkPumpDevice = activePlugin.activePump as RileyLinkPumpDevice
         val rileyLinkPumpInfo = rileyLinkPumpDevice.pumpInfo
-        targetDevice?.resourceId?.let { binding.deviceType.setText(it) }
+        binding.deviceType.setText(targetDevice.resourceId)
         if (targetDevice == RileyLinkTargetDevice.MedtronicPump) {
             binding.connectedDeviceDetails.visibility = View.VISIBLE
             binding.configuredDeviceModel.text = activePlugin.activePump.pumpDescription.pumpType.description

@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.core.utils.pump.ThreadUtil
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
@@ -32,6 +32,8 @@ import app.aaps.pump.common.hw.rileylink.ble.operations.CharacteristicWriteOpera
 import app.aaps.pump.common.hw.rileylink.ble.operations.DescriptorWriteOperation
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import org.apache.commons.lang3.StringUtils
 import java.util.Locale
@@ -50,7 +52,7 @@ class RileyLinkBLE @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val rileyLinkUtil: RileyLinkUtil,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val orangeLink: OrangeLinkImpl,
     private val config: Config
 ) {
@@ -140,7 +142,7 @@ class RileyLinkBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address: $rileyLinkAddress")
         // Must verify that this is a valid MAC, or crash.
         //macAddress = RileyLinkAddress;
-        val useScanning = sp.getBoolean(RileyLinkConst.Prefs.OrangeUseScanning, false)
+        val useScanning = preferences.get(RileylinkBooleanPreferenceKey.OrangeUseScanning)
         if (useScanning) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Start scan for OrangeLink device.")
             orangeLink.startScan()
@@ -153,7 +155,7 @@ class RileyLinkBLE @Inject constructor(
     }
 
     fun connectGatt() {
-        val useScanning = sp.getBoolean(RileyLinkConst.Prefs.OrangeUseScanning, false)
+        val useScanning = preferences.get(RileylinkBooleanPreferenceKey.OrangeUseScanning)
         if (useScanning) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Start scan for OrangeLink device.")
             orangeLink.startScan()
@@ -182,8 +184,8 @@ class RileyLinkBLE @Inject constructor(
             if (gattDebugEnabled) aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.")
             bluetoothConnectionGatt?.device?.name?.let { deviceName ->
                 // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
-                if (StringUtils.isNotEmpty(deviceName)) sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName)
-                else sp.remove(RileyLinkConst.Prefs.RileyLinkName)
+                if (StringUtils.isNotEmpty(deviceName)) preferences.put(RileyLinkStringKey.Name, deviceName)
+                else preferences.remove(RileyLinkStringKey.Name)
                 rileyLinkServiceData.rileyLinkName = deviceName
                 rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt?.device?.address
             }

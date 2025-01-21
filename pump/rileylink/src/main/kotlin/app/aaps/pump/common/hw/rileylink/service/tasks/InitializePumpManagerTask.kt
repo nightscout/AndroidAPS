@@ -4,13 +4,14 @@ import android.content.Context
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import kotlin.math.roundToLong
 class InitializePumpManagerTask(injector: HasAndroidInjector, private val context: Context) : ServiceTask(injector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
 
@@ -31,7 +32,7 @@ class InitializePumpManagerTask(injector: HasAndroidInjector, private val contex
 
         var lastGoodFrequency: Double
         if (rileyLinkServiceData.lastGoodFrequency == null) {
-            lastGoodFrequency = sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
+            lastGoodFrequency = preferences.get(RileyLinkDoubleKey.LastGoodDeviceFrequency)
             lastGoodFrequency = (lastGoodFrequency * 1000.0).roundToLong() / 1000.0
             rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency
         } else lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: 0.0

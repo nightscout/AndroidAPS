@@ -8,6 +8,7 @@ import app.aaps.core.keys.BooleanNonPreferenceKey
 import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoubleComposedNonPreferenceKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.DoubleNonPreferenceKey
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
@@ -82,10 +83,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun get(key: DoublePreferenceKey): Double = sp.getDouble(key.key, key.defaultValue)
 
+    override fun get(key: DoubleNonPreferenceKey): Double = sp.getDouble(key.key, key.defaultValue)
+
     override fun getIfExists(key: DoublePreferenceKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
 
-    override fun put(key: DoublePreferenceKey, value: Double) {
+    override fun put(key: DoubleNonPreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
     }
 

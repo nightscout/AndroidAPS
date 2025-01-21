@@ -77,10 +77,10 @@ import app.aaps.core.keys.Preferences;
 import app.aaps.core.utils.DateTimeUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
-import app.aaps.pump.common.hw.rileylink.RileyLinkConst;
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey;
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType;
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod;
@@ -130,7 +130,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
-    private final HasAndroidInjector injector;
     private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
@@ -145,6 +144,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final FabricPrivacy fabricPrivacy;
     private final ResourceHelper rh;
     private final SP sp;
+    private final Preferences preferences;
     private final DateUtil dateUtil;
     @NonNull private final PumpDescription pumpDescription;
     @NonNull private final ServiceConnection serviceConnection;
@@ -206,7 +206,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                         .description(R.string.omnipod_eros_pump_description),
                 Collections.emptyList(),
                 aapsLogger, rh, preferences, commandQueue);
-        this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
@@ -214,6 +213,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.fabricPrivacy = fabricPrivacy;
         this.rh = rh;
         this.sp = sp;
+        this.preferences = preferences;
         this.dateUtil = dateUtil;
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
@@ -305,8 +305,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
         podStateManager.loadPodState();
 
-        lastConnectionTimeMillis = sp.getLong(
-                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+        lastConnectionTimeMillis = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime);
 
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);

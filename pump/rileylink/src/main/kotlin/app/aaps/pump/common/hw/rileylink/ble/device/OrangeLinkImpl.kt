@@ -11,9 +11,7 @@ import android.os.HandlerThread
 import android.os.Message
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.utils.pump.ByteUtil
-import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkBLE
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
@@ -25,9 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class OrangeLinkImpl @Inject constructor(
     var aapsLogger: AAPSLogger,
-    var rileyLinkServiceData: RileyLinkServiceData,
-    var rileyLinkUtil: RileyLinkUtil,
-    var sp: SP
+    var rileyLinkServiceData: RileyLinkServiceData
 ) {
 
     lateinit var rileyLinkBLE: RileyLinkBLE

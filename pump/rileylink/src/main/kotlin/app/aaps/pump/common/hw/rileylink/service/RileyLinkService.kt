@@ -10,15 +10,15 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.common.hw.rileylink.RileyLinkCommunicationManager
-import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.RFSpy
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkBLE
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import java.util.Locale
@@ -31,7 +31,7 @@ import javax.inject.Inject
 abstract class RileyLinkService : DaggerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
@@ -140,11 +140,11 @@ abstract class RileyLinkService : DaggerService() {
     fun doTuneUpDevice() {
         rileyLinkServiceData.setServiceState(RileyLinkServiceState.TuneUpDevice)
         setPumpDeviceState(PumpDeviceState.Sleeping)
-        val lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
+        val lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: preferences.get(RileyLinkDoubleKey.LastGoodDeviceFrequency)
         val newFrequency = deviceCommunicationManager.tuneForDevice()
         if (newFrequency != 0.0 && newFrequency != lastGoodFrequency) {
             aapsLogger.info(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Saving new pump frequency of %.3f MHz", newFrequency))
-            sp.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, newFrequency)
+            preferences.put(RileyLinkDoubleKey.LastGoodDeviceFrequency, newFrequency)
             rileyLinkServiceData.lastGoodFrequency = newFrequency
             rileyLinkServiceData.tuneUpDone = true
             rileyLinkServiceData.lastTuneUpTime = System.currentTimeMillis()

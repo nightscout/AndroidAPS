@@ -6,13 +6,11 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.StringUtil.fromBytes
 import app.aaps.core.utils.pump.ByteUtil.concat
 import app.aaps.core.utils.pump.ByteUtil.shortHexString
 import app.aaps.core.utils.pump.ThreadUtil.sig
-import app.aaps.pump.common.hw.rileylink.R
-import app.aaps.pump.common.hw.rileylink.RileyLinkConst.Prefs.Encoding
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.command.RileyLinkCommand
 import app.aaps.pump.common.hw.rileylink.ble.command.SendAndListen
@@ -30,6 +28,7 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersionBase
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
 import app.aaps.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import org.apache.commons.lang3.ArrayUtils
 import java.lang.Exception
@@ -47,7 +46,7 @@ import kotlin.math.pow
 class RFSpy @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rileyLinkBle: RileyLinkBLE,
     private val rileyLinkServiceData: RileyLinkServiceData,
@@ -333,11 +332,8 @@ class RFSpy @Inject constructor(
 
         if (rileyLinkServiceData.firmwareVersion?.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher) == true
         ) {
-            if (sp.getString(Encoding, "None")
-                == rh.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink)
-            ) {
+            if (preferences.get(RileyLinkStringPreferenceKey.Encoding) == RileyLinkEncodingType.FourByteSixByteRileyLink.key)
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink
-            }
         }
 
         setRileyLinkEncoding(encoding)

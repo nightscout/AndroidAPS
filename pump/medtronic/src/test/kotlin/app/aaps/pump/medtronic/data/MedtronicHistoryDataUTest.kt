@@ -4,9 +4,6 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.DateTimeUtil
-import com.google.gson.Gson
-import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
 import app.aaps.pump.medtronic.MedtronicTestBase
 import app.aaps.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -15,6 +12,9 @@ import app.aaps.pump.medtronic.data.dto.TempBasalPair
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.util.MedtronicUtil
+import com.google.gson.Gson
+import com.google.gson.internal.LinkedTreeMap
+import com.google.gson.reflect.TypeToken
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -38,10 +38,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
     @Test
     fun createTBRProcessList() {
 
-        val unitToTest = MedtronicHistoryData(
-            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil
-        )
+        val unitToTest = MedtronicHistoryData(aapsLogger, preferences, rh, medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil)
 
         val gson = Gson()
 
@@ -78,13 +75,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
     @Test
     fun createTBRProcessList_SpecialCase() {
 
-        val unitToTest = MedtronicHistoryData(
-            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder,
-            medtronicPumpStatus,
-            pumpSync,
-            pumpSyncStorage, uiInteraction, profileUtil
-        )
+        val unitToTest = MedtronicHistoryData(aapsLogger, preferences, rh, medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil)
 
         val gson = Gson()
 
@@ -121,13 +112,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
     @Test
     fun processBgReceived_WithMgdl() {
 
-        val unitToTest = MedtronicHistoryData(
-            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder,
-            medtronicPumpStatus,
-            pumpSync,
-            pumpSyncStorage, uiInteraction, profileUtil
-        )
+        val unitToTest = MedtronicHistoryData(aapsLogger, preferences, rh, medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil)
 
         val glucoseMgdl = 175
 
@@ -154,13 +139,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
     @Test
     fun processBgReceived_WithMmol() {
 
-        val unitToTest = MedtronicHistoryData(
-            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder,
-            medtronicPumpStatus,
-            pumpSync,
-            pumpSyncStorage, uiInteraction, profileUtil
-        )
+        val unitToTest = MedtronicHistoryData(aapsLogger, preferences, rh, medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil)
         val glucoseMgdl = 180
         val glucoseMmol = 10.0
 

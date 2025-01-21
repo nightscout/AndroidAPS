@@ -10,11 +10,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.tasks.DiscoverGattServicesTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.InitializePumpManagerTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTask
@@ -27,7 +28,7 @@ import javax.inject.Inject
 class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
@@ -119,7 +120,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
             }
 
             RileyLinkConst.Intents.RileyLinkNewAddressSet -> {
-                val rileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
+                val rileylinkBLEAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
                 if (rileylinkBLEAddress == "") aapsLogger.error("No Rileylink BLE Address saved in app")
                 else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
                 true
@@ -153,7 +154,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
     private fun processTuneUpBroadcasts(action: String): Boolean =
         if (broadcastIdentifiers["TuneUp"]?.contains(action) == true) {
-            if (rileyLinkServiceData.targetDevice?.tuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
+            if (rileyLinkServiceData.targetDevice.tuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
             true
         } else false
 }

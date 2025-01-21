@@ -12,12 +12,14 @@
     <string name="pump_status_invalid_config">Invalid configuration</string>
 
     <!-- RL keys -->
-    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
-    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
     <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
-    <string name="key_rileylink_name" translatable="false">pref_rileylink_name</string>
     <string name="key_riley_link_show_battery_level" translatable="false">pref_riley_link_show_reported_battery_level</string>
-    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+
+
+    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Encoding</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Encoding</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
 
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Scan</string>

@@ -4,8 +4,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round.isSame
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.pump.ByteUtil.shortHexString
 import app.aaps.pump.common.hw.rileylink.ble.RFSpy
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
@@ -17,6 +17,7 @@ import app.aaps.pump.common.hw.rileylink.ble.data.RadioResponse
 import app.aaps.pump.common.hw.rileylink.ble.defs.RLMessageType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
@@ -37,7 +38,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
     private val ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000 // 10 minutes
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
     @Inject lateinit var rfspy: RFSpy
@@ -51,7 +52,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
         get() {
             // If we have a value of zero, we need to load from prefs.
             if (field == 0L) {
-                field = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L)
+                field = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime)
                 // Might still be zero, but that's fine.
             }
             val minutesAgo: Double = (System.currentTimeMillis() - field) / (1000.0 * 60.0)
@@ -293,7 +294,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage> {
     protected fun rememberLastGoodDeviceCommunicationTime() {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis()
 
-        sp.putLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime)
+        preferences.put(RileyLinkLongKey.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime)
 
         getPumpDevice().setLastCommunicationToNow()
     }

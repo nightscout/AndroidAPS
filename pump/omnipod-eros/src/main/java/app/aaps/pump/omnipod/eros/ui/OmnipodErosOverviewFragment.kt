@@ -375,7 +375,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             }
         }
 
-        if (errors.isEmpty) {
+        if (errors.isEmpty()) {
             podInfoBinding.errors.text = PLACEHOLDER
             podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {

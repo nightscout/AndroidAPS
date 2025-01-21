@@ -30,7 +30,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.pump.common.hw.rileylink.R
@@ -39,6 +39,8 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.databinding.RileyLinkBleConfigActivityBinding
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
 import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import javax.inject.Inject
@@ -46,7 +48,7 @@ import javax.inject.Inject
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
     @Inject lateinit var activePlugin: ActivePlugin
@@ -87,8 +89,8 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
 
             val bleAddress = view.findViewById<TextView>(R.id.riley_link_ble_config_scan_item_device_address)?.text.toString()
             val deviceName = view.findViewById<TextView>(R.id.riley_link_ble_config_scan_item_device_name)?.text.toString()
-            sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress)
-            sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName)
+            preferences.put(RileyLinkStringPreferenceKey.MacAddress, bleAddress)
+            preferences.put(RileyLinkStringKey.Name, deviceName)
             val rileyLinkPump = activePlugin.activePump as RileyLinkPumpDevice
             rileyLinkPump.rileyLinkService?.verifyConfiguration(true) // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
             rileyLinkPump.triggerPumpConfigurationChangedEvent()
@@ -112,15 +114,15 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
                 rh.gs(R.string.riley_link_ble_config_remove_riley_link_confirmation),
                 Runnable {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this@RileyLinkBLEConfigActivity)
-                    sp.remove(RileyLinkConst.Prefs.RileyLinkAddress)
-                    sp.remove(RileyLinkConst.Prefs.RileyLinkName)
+                    preferences.remove(RileyLinkStringPreferenceKey.MacAddress)
+                    preferences.remove(RileyLinkStringKey.Name)
                     updateCurrentlySelectedRileyLink()
                 })
         }
     }
 
     private fun updateCurrentlySelectedRileyLink() {
-        val address = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
+        val address = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
         if (StringUtils.isEmpty(address)) {
             binding.rileyLinkBleConfigCurrentlySelectedRileyLinkName.setText(R.string.riley_link_ble_config_no_riley_link_selected)
             binding.rileyLinkBleConfigCurrentlySelectedRileyLinkAddress.visibility = View.GONE
@@ -128,7 +130,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
         } else {
             binding.rileyLinkBleConfigCurrentlySelectedRileyLinkAddress.visibility = View.VISIBLE
             binding.rileyLinkBleConfigButtonRemoveRileyLink.visibility = View.VISIBLE
-            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkName.text = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "RileyLink (?)")
+            binding.rileyLinkBleConfigCurrentlySelectedRileyLinkName.text = preferences.get(RileyLinkStringKey.Name)
             binding.rileyLinkBleConfigCurrentlySelectedRileyLinkAddress.text = address
         }
     }
@@ -282,7 +284,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
             var deviceName = device.name
             if (StringUtils.isBlank(deviceName)) deviceName = "RileyLink (?)"
             deviceName += " [" + rileyLinkDevices[device] + "]"
-            val currentlySelectedAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
+            val currentlySelectedAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
             if (currentlySelectedAddress == device.address) {
                 deviceName += " (" + resources.getString(R.string.riley_link_ble_config_scan_selected) + ")"
             }

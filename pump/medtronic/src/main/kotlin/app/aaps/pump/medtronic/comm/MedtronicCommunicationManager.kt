@@ -7,11 +7,11 @@ import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.pump.common.hw.rileylink.RileyLinkCommunicationManager
-import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
 import app.aaps.pump.common.hw.rileylink.ble.data.RadioPacket
 import app.aaps.pump.common.hw.rileylink.ble.data.RadioResponse
 import app.aaps.pump.common.hw.rileylink.ble.defs.RLMessageType
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtronic.comm.history.RawHistoryPage
@@ -76,9 +76,7 @@ class MedtronicCommunicationManager @Inject constructor(
     @Inject
     fun onInit() {
         // we can't do this in the constructor, as sp only gets injected after the constructor has returned
-        medtronicPumpStatus.previousConnection = sp.getLong(
-            RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L
-        )
+        medtronicPumpStatus.previousConnection = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime)
     }
 
     override fun createResponseMessage(payload: ByteArray): PumpMessage {

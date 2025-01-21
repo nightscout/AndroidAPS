@@ -163,6 +163,16 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
+     * @param key [DoubleNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: DoubleNonPreferenceKey): Double
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
      * @param key [DoublePreferenceKey] enum
      * @return value
      */
@@ -179,10 +189,10 @@ interface Preferences {
     /**
      * Update [Double] value in [android.content.SharedPreferences]
      *
-     * @param key [DoublePreferenceKey] enum
+     * @param key [DoubleNonPreferenceKey] enum
      * @param value value
      */
-    fun put(key: DoublePreferenceKey, value: Double)
+    fun put(key: DoubleNonPreferenceKey, value: Double)
 
     /**
      * Get [String] value from [android.content.SharedPreferences]
