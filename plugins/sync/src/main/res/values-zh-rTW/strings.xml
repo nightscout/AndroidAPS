@@ -183,4 +183,24 @@
     <string name="today">今天</string>
     <string name="weighted">加權</string>
     <string name="full_xdrip_sync_comment">完全同步？這可能需要一段時間，直到完成前您都不會看到新的資料在 xDrip+ 上。</string>
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient不支援此操作</string>
+    <string name="wear_action_loop_state_requires_duration">此操作需要持續一段時間</string>
+    <string name="wear_action_loop_state_pump_suspended">幫浦已暫停！</string>
+    <string name="wear_action_loop_state_profile_invalid">設定檔無效！</string>
+    <string name="wear_action_loop_state_unauthorized">請再試一次。</string>
+    <string name="wear_action_loop_state_invalid">請求的循環狀態無效</string>
+    <string name="wear_action_loop_state_title">循環狀態</string>
+    <string name="wear_action_loop_state_changed">%1$s</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\n時長：%2$d 分鐘</string>
+    <string name="wear_action_loop_state_now_closed">已關閉</string>
+    <string name="wear_action_loop_state_now_lgs">LGS</string>
+    <string name="wear_action_loop_state_now_open">已開啟</string>
+    <string name="wear_action_loop_state_now_suspended">已暫停</string>
+    <string name="wear_action_loop_state_now_resumed">已恢復</string>
+    <string name="wear_action_loop_state_now_disabled">已停用</string>
+    <string name="wear_action_loop_state_now_enabled">已啟用</string>
+    <string name="wear_action_loop_state_now_superbolus">超級注射</string>
+    <string name="wear_action_loop_state_now_invalid">無效</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">幫浦已中斷連線</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">幫浦已重新連線</string>
 </resources>
