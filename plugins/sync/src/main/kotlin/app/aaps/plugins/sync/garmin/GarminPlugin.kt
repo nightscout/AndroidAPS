@@ -20,7 +20,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
@@ -72,7 +75,21 @@ class GarminPlugin @Inject constructor(
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
-    var garminMessenger: GarminMessenger? = null
+    @VisibleForTesting
+    var garminMessengerField: GarminMessenger? = null
+    val garminMessenger: GarminMessenger
+        get() {
+            return synchronized(this) {
+                garminMessengerField ?: createGarminMessenger().also { garminMessengerField = it }
+            }
+        }
+
+    private fun resetGarminMessenger() {
+        synchronized(this) {
+            garminMessengerField?.dispose()
+            garminMessengerField = null
+        }
+    }
 
     /** Garmin ConnectIQ application id for native communication. Phone pushes values. */
     private val glucoseAppIds = mapOf(
@@ -96,25 +113,29 @@ class GarminPlugin @Inject constructor(
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
-    private val garminAapsKey get() = sp.getString("garmin_aaps_key", "")
+    private val garminAapsKey get() = preferences.get(StringKey.GarminRequestKey) ?: ""
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
             "communication_debug_mode"                                           -> setupGarminMessenger()
             BooleanKey.GarminLocalHttpServer.key, IntKey.GarminLocalHttpPort.key -> setupHttpServer()
-            "garmin_aaps_key"                                                    -> sendPhoneAppMessage()
+            StringKey.GarminRequestKey.key                                       -> sendPhoneAppMessage()
         }
     }
 
     private fun setupGarminMessenger() {
+        resetGarminMessenger()
+        createGarminMessenger()
+    }
+
+    private fun createGarminMessenger(): GarminMessenger {
         val enableDebug = sp.getBoolean("communication_ciq_debug_mode", false)
-        garminMessenger?.dispose()
-        garminMessenger = null
         aapsLogger.info(LTag.GARMIN, "initialize IQ messenger in debug=$enableDebug")
-        garminMessenger = GarminMessenger(
-            aapsLogger, context, glucoseAppIds, { _, _ -> },
-            true, enableDebug
-        ).also { disposable.add(it) }
+        return GarminMessenger(
+            aapsLogger, context, glucoseAppIds, { _, _ -> }, true, enableDebug
+        ).also {
+            disposable.add(it)
+        }
     }
 
     override fun onStart() {
@@ -195,11 +216,11 @@ class GarminPlugin @Inject constructor(
     }
 
     private fun sendPhoneAppMessage(device: GarminDevice) {
-        garminMessenger?.sendMessage(device, getGlucoseMessage())
+        garminMessenger.sendMessage(device, getGlucoseMessage())
     }
 
     private fun sendPhoneAppMessage() {
-        garminMessenger?.sendMessage(getGlucoseMessage())
+        garminMessenger.sendMessage(getGlucoseMessage())
     }
 
     @VisibleForTesting
@@ -465,6 +486,12 @@ class GarminPlugin @Inject constructor(
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GarminLocalHttpServer, title = R.string.garmin_local_http_server))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.GarminLocalHttpPort, title = R.string.garmin_local_http_server_port))
+            addPreference(AdaptiveStringPreference(
+                ctx = context,
+                stringKey = StringKey.GarminRequestKey,
+                title = R.string.garmin_request_key,
+                summary = R.string.garmin_request_key_summary,
+                validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)))
         }
     }
 }
