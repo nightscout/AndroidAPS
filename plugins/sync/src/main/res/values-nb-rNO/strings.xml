@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">Ugyldig</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpe frakoblet</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Koble til pumpen igjen</string>
+    <string name="garmin_request_key">Be om nøkkel</string>
+    <string name="garmin_request_key_summary">Valgfri nøkkel for å sikre HTTP-kommunikasjon mellom Garmin-enhet og AAPS.</string>
 </resources>
