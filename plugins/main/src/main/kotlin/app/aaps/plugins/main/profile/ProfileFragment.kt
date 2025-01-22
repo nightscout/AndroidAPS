@@ -76,7 +76,7 @@ class ProfileFragment : DaggerFragment() {
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
+            binding.insulinGraph.show(activePlugin.activeInsulin, it.iCfg)
         }
     }
 
@@ -84,7 +84,7 @@ class ProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            profilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
+            //profilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
             profilePlugin.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }
@@ -120,7 +120,7 @@ class ProfileFragment : DaggerFragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-        binding.diaLabel.labelFor = binding.dia.editTextId
+        //binding.diaLabel.labelFor = binding.dia.editTextId
         binding.unlock.setOnClickListener { queryProtection() }
 
         val profiles = profilePlugin.profile?.getProfileList() ?: ArrayList()
@@ -143,8 +143,8 @@ class ProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.profileList.filters = arrayOf()
         binding.profileList.setText(currentProfile.name)
-        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
-        binding.dia.tag = "LP_DIA"
+        //binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
+        //binding.dia.tag = "LP_DIA"
         TimeListEdit(
             requireContext(),
             aapsLogger,
