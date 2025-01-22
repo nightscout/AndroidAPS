@@ -225,4 +225,7 @@
     <string name="complication_iob_icon">Ikona IOB</string>
     <string name="complication_iob_detailed">Detailný IOB</string>
     <string name="complication_uploader_phone_battery">Batéria telefónu/uploadera</string>
+    <string name="status_loop_state">Stav uzavretého okruhu</string>
+    <string name="label_loop_state_title">AAPS (Stav uzavretého okruhu)</string>
+    <string name="action_loop_state_selected">Požadovaný stav uzavretého okruhu</string>
 </resources>
