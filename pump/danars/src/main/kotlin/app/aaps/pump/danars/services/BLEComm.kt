@@ -215,7 +215,7 @@ class BLEComm @Inject internal constructor(
         preferences.getIfExists(DanaStringKey.DanaMacAddress)?.let { address ->
             bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
                 try {
-                    device::class.java.getMethod("removeBond").invoke(device)
+                    device.javaClass.getMethod("removeBond").invoke(device)
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "Removing bond has been failed. ${e.message}")
                 }

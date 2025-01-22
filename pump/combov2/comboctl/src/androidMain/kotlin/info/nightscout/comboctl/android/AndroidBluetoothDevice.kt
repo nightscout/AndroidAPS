@@ -32,6 +32,7 @@ class AndroidBluetoothDevice(
     private val systemBluetoothAdapter: SystemBluetoothAdapter,
     override val address: BluetoothAddress
 ) : BluetoothDevice(Dispatchers.IO) {
+
     private var systemBluetoothSocket: SystemBluetoothSocket? = null
     private var inputStream: InputStream? = null
     private var outputStream: OutputStream? = null
@@ -80,7 +81,7 @@ class AndroidBluetoothDevice(
                 } else {
                     logger(LogLevel.DEBUG) {
                         "Previous attempt to establish an RFCOMM client connection to the Combo failed with" +
-                        "exception \"$previousException\"; trying again (this is attempt #${attemptNumber + 1} of 5)"
+                            "exception \"$previousException\"; trying again (this is attempt #${attemptNumber + 1} of 5)"
                     }
                 }
 
@@ -162,7 +163,7 @@ class AndroidBluetoothDevice(
             // At time of writing (2021-12-06), the removeBond method
             // is inexplicably still marked with @hide, so we must use
             // reflection to get to it and unpair this device.
-            val removeBondMethod = device::class.java.getMethod("removeBond")
+            val removeBondMethod = device.javaClass.getMethod("removeBond")
             removeBondMethod.invoke(device)
         } catch (t: Throwable) {
             logger(LogLevel.ERROR) { "Unpairing device with address $address failed with error $t" }

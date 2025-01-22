@@ -77,12 +77,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     }
     */
                 when (session.sendCommand(cmd)) {
-                    is CommandSendErrorSending    -> {
+                    is CommandSendErrorSending -> {
                         emitter.tryOnError(CouldNotSendCommandException())
                         return@create
                     }
 
-                    is CommandSendSuccess         ->
+                    is CommandSendSuccess ->
                         emitter.onNext(PodEvent.CommandSent(cmd))
 
                     is CommandSendErrorConfirming ->
@@ -277,12 +277,16 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
     override fun removeBond() {
         try {
-            if (sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_dash_use_bonding, false) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_dash_use_bonding, false) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 val device = bluetoothAdapter?.getRemoteDevice(podState.bluetoothAddress) ?: throw IllegalStateException("MAC address not found")
                 // At time of writing (2021-12-06), the removeBond method
                 // is inexplicably still marked with @hide, so we must use
                 // reflection to get to it and unpair this device.
-                val removeBondMethod = device::class.java.getMethod("removeBond")
+                val removeBondMethod = device.javaClass.getMethod("removeBond")
                 val result = removeBondMethod.invoke(device)
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Remove bond resulted $result")
             }
