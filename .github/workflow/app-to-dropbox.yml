@@ -1,0 +1,91 @@
+name: 1. Build app version to Dropbox
+
+on:
+  # push:
+  #  branches: [ "master" ]
+  # pull_request:
+  #  branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+     branch:
+        description: "Select branch"
+        required: true
+        default: "master"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'gradle'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # Run Build Project
+    - name: Build with Gradle
+      run: ./gradlew app:assembleFullRelease
+    
+    # Setup build tool version variable
+    - name: Setup build tool version variable
+      shell: bash
+      run: |
+        BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+        echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
+        echo Last build tool version is: $BUILD_TOOL_VERSION
+
+    # Sign APK File
+    - name: Sign APK
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: app/build/outputs/apk/full/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+      env:
+        # override default build-tools version (29.0.3) -- optional
+        # BUILD_TOOLS_VERSION: "35.0.2"
+        BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+
+    # Rename file
+    - name: Rename file
+      run: |
+          PROJECT_NAME="AAPS"
+          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+          VERSION=$(grep 'const val appVersion' buildSrc/src/main/kotlin/Versions.kt | awk -F'"' '{print $2}' )
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          BRANCH=${{ github.event.inputs.branch }}
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          original_file="app/build/outputs/apk/full/release/app-full-release-unsigned-signed.apk"
+          new_file="app/build/outputs/apk/full/release/${PROJECT_NAME}-${VERSION}_${BRANCH}-app-full-release.apk"
+
+          if [ -f "$original_file" ]; then
+            mv "$original_file" "$new_file"
+            echo "File has been renamed to: $new_file"
+          else
+            echo "Original file not found: $original_file"
+            exit 1
+          fi
+
+    # Dropbox Upload
+    - name: Upload to Dropbox
+      uses: Lewuathe/dropbox-github-action@v1
+      with:
+        dropbox-app-key: ${{ secrets.DROPBOX_APP_KEY }}
+        dropbox-app-secret: ${{ secrets.DROPBOX_APP_SECRET }}
+        dropbox-refresh-token: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+        source-path: "app/build/outputs/apk/full/release/${PROJECT_NAME}-${VERSION}_${BRANCH}-app-full-release.apk"
+        target-path: "/${PROJECT_NAME}-${VERSION}_${BRANCH}-app-full-release-${{ github.run_number }}.apk"
+        # source-path: <Path to local file in the github action container space>
+        # target-path: <Path to the file in the Dropbox. That is supposed to be under the app folder>

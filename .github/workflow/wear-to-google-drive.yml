@@ -1,0 +1,154 @@
+name: 4. Build wear version to Google Drive
+
+on:
+  # push:
+  #  branches: [ "master" ]
+  # pull_request:
+  #  branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+     branch:
+        description: "Select branch"
+        required: true
+        default: "master"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'gradle'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # Run Build Project
+    - name: Build with Gradle
+      run: ./gradlew wear:assembleFullRelease
+    
+    # Setup build tool version variable
+    - name: Setup build tool version variable
+      shell: bash
+      run: |
+        BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+        echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
+        echo Last build tool version is: $BUILD_TOOL_VERSION
+
+    # Sign APK File
+    - name: Sign APK
+      uses: r0adkll/sign-android-release@v1
+      id: sign_wear
+      with:
+        releaseDirectory: wear/build/outputs/apk/full/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+      env:
+        # override default build-tools version (29.0.3) -- optional
+        # BUILD_TOOLS_VERSION: "35.0.2"
+        BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+
+    # Rename file
+    - name: Rename file
+      run: |
+          PROJECT_NAME="AAPS"
+          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+          VERSION=$(grep 'const val appVersion' buildSrc/src/main/kotlin/Versions.kt | awk -F'"' '{print $2}' )
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          BRANCH=${{ github.event.inputs.branch }}
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          original_file="wear/build/outputs/apk/full/release/wear-full-release-unsigned-signed.apk"
+          new_file="wear/build/outputs/apk/full/release/${PROJECT_NAME}-${VERSION}_${BRANCH}-wear-full-release.apk"
+
+          if [ -f "$original_file" ]; then
+            mv "$original_file" "$new_file"
+            echo "File has been renamed to: $new_file"
+          else
+            echo "Original file not found: $original_file"
+            exit 1
+          fi
+
+    # Decode and save client_secret.json
+    - name: Decode and save client_secret.json
+      run: |
+        echo "${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}" | base64 --decode > client_secret.json
+
+    # Upload APK to Google Drive
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install google-api-python-client google-auth google-auth-httplib2 google-auth-oauthlib
+
+    - name: Upload APK to Google Drive
+      env:
+        GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+        RUN_NUMBER: ${{ github.run_number }}
+      run: |
+        python <<EOF
+        import os  # Import module for os functions
+        from google.oauth2.credentials import Credentials
+        from googleapiclient.discovery import build
+        from googleapiclient.http import MediaFileUpload        
+
+        # Google API Credentials
+        CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+        CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+        REFRESH_TOKEN = os.getenv("GOOGLE_REFRESH_TOKEN")        
+        
+        # File and path information
+        PROJECT_NAME = os.getenv('PROJECT_NAME')
+        VERSION = os.getenv('VERSION')
+        BRANCH = os.getenv('BRANCH')
+        FOLDER_ID = os.getenv('GOOGLE_DRIVE_FOLDER_ID', '')
+        RUN_NUMBER = os.getenv('RUN_NUMBER', '0')
+        print(f"Projectname: {PROJECT_NAME}")
+        print(f"Version: {VERSION}")
+        print(f"Branch: {BRANCH}")
+        FILE_NAME_LOCAL = f"{PROJECT_NAME}-{VERSION}_{BRANCH}-wear-full-release.apk"
+        FILE_NAME_GOOGLE_DRIVE = f"{PROJECT_NAME}-{VERSION}_{BRANCH}-wear-full-release-{RUN_NUMBER}.apk"
+        FILE_PATH = os.path.join('wear/build/outputs/apk/full/release/', FILE_NAME_LOCAL)
+        print(f"Filename: {FILE_NAME_LOCAL}")
+        print(f"Filename with path: {FILE_PATH}")
+        print(f"Filename_Google_Drive: {FILE_NAME_GOOGLE_DRIVE}")
+
+        # Authenticate with OAuth2 Refresh Token
+        creds = Credentials(
+            None,
+            refresh_token=REFRESH_TOKEN,
+            client_id=CLIENT_ID,
+            client_secret=CLIENT_SECRET,
+            token_uri="https://oauth2.googleapis.com/token"
+        )
+
+        # Connect to Google Drive API
+        service = build("drive", "v3", credentials=creds)
+
+        # Define file metadata on Google Drive
+        file_metadata = {
+            'name': FILE_NAME_GOOGLE_DRIVE,       # name of the file in Google Drive
+            'parents': [FOLDER_ID],  # destination folder on Google Drive
+        }
+        media = MediaFileUpload(FILE_PATH, mimetype='application/vnd.android.package-archive')
+
+        # Upload the file
+        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        print(f"File uploaded successfully with file name: {FILE_NAME_GOOGLE_DRIVE}")
+        EOF
