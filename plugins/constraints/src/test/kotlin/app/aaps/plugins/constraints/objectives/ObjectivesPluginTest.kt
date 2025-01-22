@@ -2,7 +2,6 @@ package app.aaps.plugins.constraints.objectives
 
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -20,7 +19,6 @@ import org.mockito.Mockito.`when`
 class ObjectivesPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var dateUtil: DateUtil
 
@@ -29,7 +27,6 @@ class ObjectivesPluginTest : TestBase() {
     private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is Objective) {
-                it.sp = sp
                 it.preferences = preferences
                 it.rh = rh
                 it.dateUtil = dateUtil

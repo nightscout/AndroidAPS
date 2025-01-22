@@ -82,7 +82,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     init {
         addInjector {
             if (it is Objective) {
-                it.sp = sp
                 it.preferences = preferences
                 it.dateUtil = dateUtil
             }
