@@ -20,7 +20,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.insulin.databinding.InsulinFragmentBinding
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -87,11 +89,71 @@ class InsulinFragment : DaggerFragment() {
         }
         insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
 
+        processVisibility(0)
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                processVisibility(tab.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
         binding.insulinTemplate.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             selectedTemplate = insulinFromTemplate(insulinPlugin.insulinTemplateList()[position].toString())
             currentInsulin.setPeak(selectedTemplate.peak)
             currentInsulin.setDia(selectedTemplate.dia)
             insulinPlugin.isEdited = false
+            build()
+        }
+        binding.insulinAdd.setOnClickListener {
+            if (insulinPlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
+            } else {
+                insulinPlugin.addNewInsulin(
+                    ICfg(
+                        insulinLabel = "",              // Let plugin propose a new unique name from template
+                        peak = selectedTemplate.peak,
+                        dia = selectedTemplate.dia
+                    )
+                )
+                insulinPlugin.isEdited = true
+                build()
+            }
+        }
+        binding.insulinRemove.setOnClickListener {
+            if (insulinPlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
+            } else {
+                if (insulinPlugin.currentInsulinIndex != insulinPlugin.defaultInsulinIndex) {
+                    insulinPlugin.removeCurrentInsulin(activity)
+                    insulinPlugin.isEdited = false
+                }
+                build()
+            }
+        }
+        binding.reset.setOnClickListener {
+            insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
+            insulinPlugin.isEdited = false
+            build()
+        }
+        binding.save.setOnClickListener {
+            if (!insulinPlugin.isValidEditState(activity)) {
+                return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
+            }
+            uel.log(
+                action = Action.STORE_INSULIN, source = Sources.Insulin,
+                value = ValueWithUnit.SimpleString(insulinPlugin.currentInsulin().insulinLabel)
+            )
+            insulinPlugin.insulins[insulinPlugin.currentInsulinIndex] = currentInsulin
+            aapsLogger.debug("XXXXX Save ${insulinPlugin.insulins[insulinPlugin.currentInsulinIndex]}")
+            insulinPlugin.storeSettings()
+            insulinPlugin.isEdited = false
+            build()
+        }
+        binding.autoName.setOnClickListener {
+            binding.name.setText(insulinPlugin.createNewInsulinLabel(currentInsulin, includingCurrent = false))
+            insulinPlugin.isEdited = true
             build()
         }
 
@@ -148,42 +210,10 @@ class InsulinFragment : DaggerFragment() {
         } else {
             binding.reset.visibility = View.GONE
         }
-
-        when (selectedTemplate) {
-            Insulin.InsulinType.OREF_FREE_PEAK -> binding.peakLayout.isEnabled = true
-            else                               -> binding.peakLayout.isEnabled = false
-        }
-
         binding.graph.show(activePlugin.activeInsulin, currentInsulin)
     }
 
     fun build() {
-        binding.insulinAdd.setOnClickListener {
-            if (insulinPlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
-            } else {
-                insulinPlugin.addNewInsulin(
-                    ICfg(
-                        insulinLabel = "",              // Let plugin propose a new unique name from template
-                        peak = selectedTemplate.peak,
-                        dia = selectedTemplate.dia
-                    )
-                )
-                insulinPlugin.isEdited = true
-                build()
-            }
-        }
-        binding.insulinRemove.setOnClickListener {
-            if (insulinPlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
-            } else {
-                if (insulinPlugin.currentInsulinIndex != insulinPlugin.defaultInsulinIndex) {
-                    insulinPlugin.removeCurrentInsulin(activity)
-                    insulinPlugin.isEdited = false
-                }
-                build()
-            }
-        }
         binding.insulinTemplate.setText(rh.gs(Insulin.InsulinType.fromPeak(currentInsulin.peak).label), false)
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentInsulin.insulinLabel)
@@ -204,25 +234,6 @@ class InsulinFragment : DaggerFragment() {
         binding.peak.setParams(currentInsulin.getPeak().toDouble(), minPeak, maxPeak, 1.0, DecimalFormat("0"), false, null, textWatch)
         binding.dia.setParams(currentInsulin.getDia(), hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
 
-        binding.reset.setOnClickListener {
-            insulinPlugin.currentInsulin = insulinPlugin.currentInsulin()!!.deepClone()
-            insulinPlugin.isEdited = false
-            build()
-        }
-        binding.save.setOnClickListener {
-            if (!insulinPlugin.isValidEditState(activity)) {
-                return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
-            }
-            uel.log(
-                action = Action.STORE_INSULIN, source = Sources.Insulin,
-                value = ValueWithUnit.SimpleString(insulinPlugin.currentInsulin()?.insulinLabel ?: "")
-            )
-            insulinPlugin.insulins[insulinPlugin.currentInsulinIndex] = currentInsulin
-            aapsLogger.debug("XXXXX Save ${insulinPlugin.insulins[insulinPlugin.currentInsulinIndex]}")
-            insulinPlugin.storeSettings()
-            insulinPlugin.isEdited = false
-            build()
-        }
         updateGUI()
     }
 
@@ -231,5 +242,10 @@ class InsulinFragment : DaggerFragment() {
     fun doEdit() {
         insulinPlugin.isEdited = true
         updateGUI()
+    }
+
+    private fun processVisibility(position: Int) {
+        binding.insulinPlaceholder.visibility = (position == 0).toVisibility()
+        binding.profilePlaceholder.visibility = (position == 1).toVisibility()
     }
 }

@@ -72,7 +72,6 @@ class InsulinPlugin @Inject constructor(
             return if (dia >= hardLimits.minDia() && dia <= hardLimits.maxDia()) {
                 dia
             } else {
-                sendShortDiaNotification(dia)
                 if (dia < hardLimits.minDia())
                     hardLimits.minDia()
                 else
@@ -85,7 +84,6 @@ class InsulinPlugin @Inject constructor(
             return if (peak >= hardLimits.minPeak() && dia <= hardLimits.maxPeak()) {
                 peak.toInt()
             } else {
-                sendShortDiaNotification(peak)
                 if (peak < hardLimits.minPeak())
                     hardLimits.minPeak().toInt()
                 else
@@ -100,13 +98,22 @@ class InsulinPlugin @Inject constructor(
     val numOfInsulins get() = insulins.size
     var isEdited: Boolean = false
 
+    fun insulinTemplateList(): ArrayList<CharSequence> {
+        val ret = ArrayList<CharSequence>()
+        ret.add(rh.gs(Insulin.InsulinType.OREF_RAPID_ACTING.label))
+        ret.add(rh.gs(Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.label))
+        ret.add(rh.gs(Insulin.InsulinType.OREF_LYUMJEV.label))
+        ret.add(rh.gs(Insulin.InsulinType.OREF_FREE_PEAK.label))
+        return ret
+    }
+
     fun sendShortDiaNotification(dia: Double) {
+        // Todo Check if we need this kind of function to send notification
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {
             lastWarned = System.currentTimeMillis()
             uiInteraction.addNotification(Notification.SHORT_DIA, String.format(notificationPattern, dia, hardLimits.minDia()), Notification.URGENT)
         }
     }
-
     private val notificationPattern: String
         get() = rh.gs(R.string.dia_too_short)
 
@@ -126,15 +133,6 @@ class InsulinPlugin @Inject constructor(
         return ret
     }
 
-    fun insulinTemplateList(): ArrayList<CharSequence> {
-        val ret = ArrayList<CharSequence>()
-        ret.add(rh.gs(Insulin.InsulinType.OREF_RAPID_ACTING.label))
-        ret.add(rh.gs(Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.label))
-        ret.add(rh.gs(Insulin.InsulinType.OREF_LYUMJEV.label))
-        ret.add(rh.gs(Insulin.InsulinType.OREF_FREE_PEAK.label))
-        return ret
-    }
-
     fun addNewInsulin(template: ICfg, autoName: Boolean = false) {
         if (autoName)
             template.insulinLabel = createNewInsulinLabel(template)
@@ -143,17 +141,17 @@ class InsulinPlugin @Inject constructor(
                 peak = template.peak,
                 insulinEndTime = template.insulinEndTime
             )
-        insulins.add(newInsulin        )
-        uel.log(Action.NEW_INSULIN, Sources.Insulin)
+        insulins.add(newInsulin)
+        uel.log(Action.NEW_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(newInsulin.insulinLabel))
         currentInsulinIndex = insulins.size - 1
         currentInsulin = newInsulin.deepClone()
         storeSettings()
     }
 
-
-
     fun removeCurrentInsulin(activity: FragmentActivity?) {
-        val insulinRemoved = currentInsulin()?.insulinLabel ?:"No Name"
+        // activity included to include PopUp or Toast when Remove can't be done (default insulin or insulin used within profile
+        // Todo include Remove authorization and message
+        val insulinRemoved = currentInsulin().insulinLabel
         insulins.removeAt(currentInsulinIndex)
         uel.log(Action.INSULIN_REMOVED, Sources.Insulin, value = ValueWithUnit.SimpleString(insulinRemoved))
         currentInsulinIndex = defaultInsulinIndex
@@ -161,16 +159,15 @@ class InsulinPlugin @Inject constructor(
         storeSettings()
     }
 
-    fun createNewInsulinLabel(iCfg: ICfg): String {
+    fun createNewInsulinLabel(iCfg: ICfg, includingCurrent: Boolean = true): String {
         val template = Insulin.InsulinType.fromPeak(iCfg.peak)
         var insulinLabel = when (template) {
-            Insulin.InsulinType.OREF_FREE_PEAK -> "${rh.gs(template.label)}_${template.peak}_${template.dia}"
-            else                               -> "${rh.gs(template.label)}_${template.dia}"
+            Insulin.InsulinType.OREF_FREE_PEAK -> "${rh.gs(template.label)}_${iCfg.getPeak()}_${iCfg.getDia()}"
+            else                               -> "${rh.gs(template.label)}_${iCfg.getDia()}"
         }
-
-        if (insulinLabelAlreadyExists(insulinLabel, 10000)) {
+        if (insulinLabelAlreadyExists(insulinLabel, if (includingCurrent) 10000  else currentInsulinIndex)) {
             for (i in 1..10000) {
-                if (!insulinLabelAlreadyExists("${insulinLabel}_$i", 10000)) {
+                if (!insulinLabelAlreadyExists("${insulinLabel}_$i", if (includingCurrent) 10000  else currentInsulinIndex)) {
                     insulinLabel = "${insulinLabel}_$i"
                     break
                 }
@@ -248,7 +245,7 @@ class InsulinPlugin @Inject constructor(
     }
 
     override val iCfg: ICfg
-        get() = insulins[defaultInsulinIndex]      // ICfg(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
+        get() = insulins[defaultInsulinIndex]
 
     @Synchronized
     override fun configuration(): JSONObject {
