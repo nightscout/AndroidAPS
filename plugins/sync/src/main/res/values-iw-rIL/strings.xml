@@ -182,4 +182,6 @@
     <string name="today">היום</string>
     <string name="weighted">משוקלל</string>
     <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>
+    <string name="garmin_request_key">בקש מפתח</string>
+    <string name="garmin_request_key_summary">מפתח אופציונלי לצורך אבטחת תקשורת HTTP בין מכשירי Garmin ו-Androidaps.</string>
 </resources>
