@@ -27,7 +27,7 @@ class ConnectionEstablisherXX(
         }
         if (forPairing && bluetoothDevice.bondState != BluetoothDevice.BOND_NONE) {
             try {
-                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond", null)
+                val removeBond = bluetoothDevice.javaClass.getMethod("removeBond")
                 removeBond.invoke(bluetoothDevice, null)
             } catch (e: ReflectiveOperationException) {
                 if (!isInterrupted) callback.onConnectionFail(e, 0)

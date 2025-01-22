@@ -162,7 +162,7 @@ class AndroidBluetoothDevice(
             // At time of writing (2021-12-06), the removeBond method
             // is inexplicably still marked with @hide, so we must use
             // reflection to get to it and unpair this device.
-            val removeBondMethod = device::class.java.getMethod("removeBond")
+            val removeBondMethod = device.javaClass.getMethod("removeBond")
             removeBondMethod.invoke(device)
         } catch (t: Throwable) {
             logger(LogLevel.ERROR) { "Unpairing device with address $address failed with error $t" }
