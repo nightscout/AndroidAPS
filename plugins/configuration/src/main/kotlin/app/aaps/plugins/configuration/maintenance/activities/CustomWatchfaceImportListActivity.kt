@@ -22,8 +22,8 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R

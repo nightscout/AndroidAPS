@@ -1,4 +1,4 @@
-package app.aaps.core.keys
+package app.aaps.core.keys.interfaces
 
 interface Preferences {
 
@@ -27,7 +27,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences]
      *
-     * @param key [BooleanNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
      * @return value
      */
     fun get(key: BooleanNonPreferenceKey): Boolean
@@ -35,7 +35,7 @@ interface Preferences {
     /**
      * Get [Boolean] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [BooleanNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
      * @return value or null
      */
     fun getIfExists(key: BooleanNonPreferenceKey): Boolean?
@@ -43,7 +43,7 @@ interface Preferences {
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [BooleanNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
      * @param value value
      */
     fun put(key: BooleanNonPreferenceKey, value: Boolean)
@@ -53,7 +53,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [BooleanPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanPreferenceKey] enum
      * @return value
      */
     fun get(key: BooleanPreferenceKey): Boolean
@@ -61,7 +61,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences]
      * *
-     * @param key [BooleanComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value
      */
@@ -70,7 +70,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [BooleanComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value or null
      */
@@ -79,7 +79,7 @@ interface Preferences {
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [BooleanComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @param value value
      */
@@ -124,7 +124,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences]
      * *
-     * @param key [StringComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value
      */
@@ -133,7 +133,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [StringComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value or null
      */
@@ -142,7 +142,7 @@ interface Preferences {
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [StringComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @param value value
      */
@@ -151,7 +151,7 @@ interface Preferences {
     /**
      * Remove value from [android.content.SharedPreferences]
      *
-     * @param key [PreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.PreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      */
     fun remove(key: StringComposedNonPreferenceKey, vararg arguments: Any)
@@ -163,7 +163,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [DoubleNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoubleNonPreferenceKey] enum
      * @return value
      */
     fun get(key: DoubleNonPreferenceKey): Double
@@ -173,7 +173,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [DoublePreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoublePreferenceKey] enum
      * @return value
      */
     fun get(key: DoublePreferenceKey): Double
@@ -181,7 +181,7 @@ interface Preferences {
     /**
      * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [DoublePreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoublePreferenceKey] enum
      * @return value or null
      */
     fun getIfExists(key: DoublePreferenceKey): Double?
@@ -189,7 +189,7 @@ interface Preferences {
     /**
      * Update [Double] value in [android.content.SharedPreferences]
      *
-     * @param key [DoubleNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoubleNonPreferenceKey] enum
      * @param value value
      */
     fun put(key: DoubleNonPreferenceKey, value: Double)
@@ -197,7 +197,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences]
      * *
-     * @param key [DoubleComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value
      */
@@ -206,7 +206,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [DoubleComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value or null
      */
@@ -215,7 +215,7 @@ interface Preferences {
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [DoubleComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @param value value
      */
@@ -256,7 +256,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [IntNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
      * @return value
      */
     fun get(key: IntNonPreferenceKey): Int
@@ -264,7 +264,7 @@ interface Preferences {
     /**
      * Get [Int] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [IntNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
      * @return value or null
      */
     fun getIfExists(key: IntNonPreferenceKey): Int?
@@ -272,7 +272,7 @@ interface Preferences {
     /**
      * Update [Int] value in [android.content.SharedPreferences]
      *
-     * @param key [IntNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
      * @param value value
      */
     fun put(key: IntNonPreferenceKey, value: Int)
@@ -280,7 +280,7 @@ interface Preferences {
     /**
      * Increment [Int] value in [android.content.SharedPreferences]
      *
-     * @param key [IntNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
      * @param value value
      */
     fun inc(key: IntNonPreferenceKey)
@@ -290,7 +290,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [IntPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.IntPreferenceKey] enum
      * @return value
      */
     fun get(key: IntPreferenceKey): Int
@@ -302,7 +302,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [LongNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
      * @return value
      */
     fun get(key: LongNonPreferenceKey): Long
@@ -310,7 +310,7 @@ interface Preferences {
     /**
      * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [LongNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
      * @return value or null
      */
     fun getIfExists(key: LongNonPreferenceKey): Long?
@@ -318,7 +318,7 @@ interface Preferences {
     /**
      * Update [Long] value in [android.content.SharedPreferences]
      *
-     * @param key [LongNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
      * @param value value
      */
     fun put(key: LongNonPreferenceKey, value: Long)
@@ -328,7 +328,7 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [LongPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongPreferenceKey] enum
      * @return value
      */
     fun get(key: LongPreferenceKey): Long
@@ -336,7 +336,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences]
      * *
-     * @param key [LongComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value
      */
@@ -345,7 +345,7 @@ interface Preferences {
     /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [LongComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @return value or null
      */
@@ -354,7 +354,7 @@ interface Preferences {
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [LongComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      * @param value value
      */
@@ -363,7 +363,7 @@ interface Preferences {
     /**
      * Remove value from [android.content.SharedPreferences]
      *
-     * @param key [LongComposedNonPreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
      */
     fun remove(key: LongComposedNonPreferenceKey, vararg arguments: Any)
@@ -373,7 +373,7 @@ interface Preferences {
     /**
      * Remove value from [android.content.SharedPreferences]
      *
-     * @param key [PreferenceKey] enum
+     * @param key [app.aaps.core.keys.interfaces.PreferenceKey] enum
      */
     fun remove(key: NonPreferenceKey)
 
@@ -384,23 +384,23 @@ interface Preferences {
     fun isUnitDependent(key: String): Boolean
 
     /**
-     * Find [NonPreferenceKey] definition
+     * Find [app.aaps.core.keys.interfaces.NonPreferenceKey] definition
      * @param key string representation of key
-     * @return [NonPreferenceKey]
+     * @return [app.aaps.core.keys.interfaces.NonPreferenceKey]
      */
     fun get(key: String): NonPreferenceKey
 
     /**
-     * Find [NonPreferenceKey] definition
+     * Find [app.aaps.core.keys.interfaces.NonPreferenceKey] definition
      * @param key string representation of key
-     * @return [NonPreferenceKey] or null
+     * @return [app.aaps.core.keys.interfaces.NonPreferenceKey] or null
      */
     fun getIfExists(key: String): NonPreferenceKey?
 
     /**
-     * Find all [PreferenceKey] which have `dependency` or `negativeDependency`
+     * Find all [app.aaps.core.keys.interfaces.PreferenceKey] which have `dependency` or `negativeDependency`
      * @param key string representation of key
-     * @return list of [PreferenceKey]
+     * @return list of [app.aaps.core.keys.interfaces.PreferenceKey]
      */
     fun getDependingOn(key: String): List<PreferenceKey>
 

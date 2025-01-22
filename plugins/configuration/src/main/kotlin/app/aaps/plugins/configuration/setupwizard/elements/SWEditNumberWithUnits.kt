@@ -10,7 +10,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.UnitDoublePreferenceKey
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.elements.NumberPicker
 import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat

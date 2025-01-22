@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.extensions.toVisibility
 import dagger.android.HasAndroidInjector

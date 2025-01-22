@@ -1,5 +1,8 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntentPreferenceKey
+
 enum class IntentKey(
     override val key: String,
     override val defaultedBySM: Boolean = false,

@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.SwitchPreference
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 

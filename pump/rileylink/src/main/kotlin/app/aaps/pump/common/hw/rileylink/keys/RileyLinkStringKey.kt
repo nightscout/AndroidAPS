@@ -1,6 +1,6 @@
 package app.aaps.pump.common.hw.rileylink.keys
 
-import app.aaps.core.keys.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 
 enum class RileyLinkStringKey(
     override val key: String,

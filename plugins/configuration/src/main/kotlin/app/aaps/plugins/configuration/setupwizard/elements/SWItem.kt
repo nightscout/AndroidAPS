@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.keys.PreferenceKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringNonPreferenceKey
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.PreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture

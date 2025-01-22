@@ -33,12 +33,12 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntentKey
-import app.aaps.core.keys.LongComposedNonPreferenceKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.validators.preferences.AdaptiveClickPreference

@@ -73,7 +73,7 @@ import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
-import app.aaps.core.keys.Preferences;
+import app.aaps.core.keys.interfaces.Preferences;
 import app.aaps.core.utils.DateTimeUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;

@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus

@@ -1,6 +1,6 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 
 enum class DanaBooleanKey(
     override val key: String,

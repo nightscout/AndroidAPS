@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewNotificationItemBinding
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification

@@ -1,6 +1,6 @@
 package app.aaps.plugins.constraints.objectives.keys
 
-import app.aaps.core.keys.LongComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
 
 enum class ObjectivesLongComposedKey(
     override val key: String,

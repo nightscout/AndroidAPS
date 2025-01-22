@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.protection
 
 import android.content.Context
 import androidx.annotation.StringRes
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 
 interface PasswordCheck {
 

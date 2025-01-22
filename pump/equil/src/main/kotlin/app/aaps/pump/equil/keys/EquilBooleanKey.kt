@@ -1,6 +1,6 @@
 package app.aaps.pump.equil.keys
 
-import app.aaps.core.keys.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 
 enum class EquilBooleanKey(
     override val key: String,

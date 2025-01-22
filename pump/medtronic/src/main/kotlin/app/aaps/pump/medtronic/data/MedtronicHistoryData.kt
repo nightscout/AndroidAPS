@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.LongNonPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.StringUtil
 import app.aaps.pump.common.sync.PumpDbEntry

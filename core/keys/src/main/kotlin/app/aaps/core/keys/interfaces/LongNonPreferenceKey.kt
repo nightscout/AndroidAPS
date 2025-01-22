@@ -1,4 +1,4 @@
-package app.aaps.core.keys
+package app.aaps.core.keys.interfaces
 
 interface LongNonPreferenceKey : NonPreferenceKey {
 

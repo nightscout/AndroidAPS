@@ -1,12 +1,12 @@
 package app.aaps.core.objects.extensions
 
-import app.aaps.core.keys.BooleanNonPreferenceKey
-import app.aaps.core.keys.DoublePreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
-import app.aaps.core.keys.LongPreferenceKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringNonPreferenceKey
-import app.aaps.core.keys.UnitDoublePreferenceKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.LongPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import org.json.JSONObject
 
 fun JSONObject.put(key: IntPreferenceKey, preferences: Preferences): JSONObject =

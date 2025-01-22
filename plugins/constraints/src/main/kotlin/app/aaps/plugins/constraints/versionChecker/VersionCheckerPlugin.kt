@@ -12,9 +12,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.keys.LongComposedNonPreferenceKey
-import app.aaps.core.keys.LongNonPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

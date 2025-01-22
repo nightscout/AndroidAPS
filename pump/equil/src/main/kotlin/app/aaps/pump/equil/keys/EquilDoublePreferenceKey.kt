@@ -1,7 +1,7 @@
 package app.aaps.pump.equil.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
 
 enum class EquilDoublePreferenceKey(
     override val key: String,

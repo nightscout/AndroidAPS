@@ -1,11 +1,12 @@
 package app.aaps.pump.equil.keys
 
-import app.aaps.core.keys.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 
 enum class EquilStringKey(
     override val key: String,
     override val defaultValue: String
 ) : StringNonPreferenceKey {
+
     Devices("key_equil_devices", ""),
     Password("key_equil_password", ""),
     PairPassword("key_equil_pair_password", ""),

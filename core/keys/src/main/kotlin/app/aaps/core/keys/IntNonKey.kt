@@ -1,5 +1,7 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+
 @Suppress("SpellCheckingInspection")
 enum class IntNonKey(
     override val key: String,

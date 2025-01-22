@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.core.utils.pump.ThreadUtil
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst

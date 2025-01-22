@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.openhumans.delegates
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.openhumans.OpenHumansState
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import javax.inject.Inject

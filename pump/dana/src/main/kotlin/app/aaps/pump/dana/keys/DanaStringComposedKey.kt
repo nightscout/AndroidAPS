@@ -1,6 +1,6 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.StringComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 
 enum class DanaStringComposedKey(
     override val key: String,

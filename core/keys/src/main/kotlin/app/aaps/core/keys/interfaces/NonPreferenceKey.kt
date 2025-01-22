@@ -1,4 +1,4 @@
-package app.aaps.core.keys
+package app.aaps.core.keys.interfaces
 
 /**
  * Defines shared preference encapsulation that works inside a module without preferences UI

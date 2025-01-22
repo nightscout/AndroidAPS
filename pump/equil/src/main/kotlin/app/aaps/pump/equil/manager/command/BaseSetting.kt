@@ -2,7 +2,7 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilManager

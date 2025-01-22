@@ -40,7 +40,7 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.insight.app_layer.Service
 import app.aaps.pump.insight.app_layer.history.StartReadingHistoryMessage
 import app.aaps.pump.insight.app_layer.history.StopReadingHistoryMessage

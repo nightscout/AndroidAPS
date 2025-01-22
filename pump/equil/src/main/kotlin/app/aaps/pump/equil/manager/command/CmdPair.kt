@@ -3,7 +3,7 @@ package app.aaps.pump.equil.manager.command
 import android.util.Log
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.AESUtil

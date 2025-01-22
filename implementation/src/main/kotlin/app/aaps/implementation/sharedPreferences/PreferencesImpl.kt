@@ -8,35 +8,36 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.BooleanComposedNonPreferenceKey
+import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.BooleanNonPreferenceKey
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.DoubleComposedNonPreferenceKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.DoubleNonPreferenceKey
-import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
-import app.aaps.core.keys.IntNonPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.LongComposedKey
-import app.aaps.core.keys.LongComposedNonPreferenceKey
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.LongNonPreferenceKey
-import app.aaps.core.keys.LongPreferenceKey
-import app.aaps.core.keys.NonPreferenceKey
-import app.aaps.core.keys.PreferenceKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringComposedNonPreferenceKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.keys.StringNonPreferenceKey
-import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.keys.UnitDoublePreferenceKey
+import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongPreferenceKey
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.PreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import dagger.Lazy
 import java.util.Locale
 import javax.inject.Inject
@@ -62,17 +63,18 @@ class PreferencesImpl @Inject constructor(
 
     private val prefsList: MutableList<Class<out NonPreferenceKey>> =
         mutableListOf(
+            BooleanComposedKey::class.java,
             BooleanKey::class.java,
             BooleanNonKey::class.java,
+            DoubleKey::class.java,
+            IntentKey::class.java,
             IntKey::class.java,
             IntNonKey::class.java,
-            LongNonKey::class.java,
             LongComposedKey::class.java,
-            DoubleKey::class.java,
-            UnitDoubleKey::class.java,
+            LongNonKey::class.java,
             StringKey::class.java,
             StringNonKey::class.java,
-            IntentKey::class.java,
+            UnitDoubleKey::class.java,
         )
 
     private fun isHidden(key: PreferenceKey): Boolean =

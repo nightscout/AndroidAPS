@@ -1,5 +1,7 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+
 enum class BooleanKey(
     override val key: String,
     override val defaultValue: Boolean,

@@ -1,7 +1,7 @@
 package app.aaps.pump.medtronic.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
 
 enum class MedtronicIntPreferenceKey(
     override val key: String,

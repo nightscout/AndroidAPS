@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.openhumans.delegates
 
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import javax.inject.Inject
 import javax.inject.Singleton

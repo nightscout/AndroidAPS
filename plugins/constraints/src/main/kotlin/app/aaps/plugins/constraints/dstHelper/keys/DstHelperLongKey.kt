@@ -1,6 +1,6 @@
 package app.aaps.plugins.constraints.dstHelper.keys
 
-import app.aaps.core.keys.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 
 enum class DstHelperLongKey(
     override val key: String,

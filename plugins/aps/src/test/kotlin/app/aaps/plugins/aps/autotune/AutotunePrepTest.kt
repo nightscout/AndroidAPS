@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
@@ -233,7 +233,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 )
             )
         }
-        if (boluses.isEmpty())  //Add at least one insulin treatment for tests to avoid return null in categorization
+        if (boluses.isEmpty)  //Add at least one insulin treatment for tests to avoid return null in categorization
             boluses.add(
                 BS(
                     timestamp = startDayTime,

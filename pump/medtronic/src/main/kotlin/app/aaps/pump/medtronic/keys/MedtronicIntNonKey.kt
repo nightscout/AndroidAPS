@@ -1,6 +1,6 @@
 package app.aaps.pump.medtronic.keys
 
-import app.aaps.core.keys.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 
 enum class MedtronicIntNonKey(
     override val key: String,

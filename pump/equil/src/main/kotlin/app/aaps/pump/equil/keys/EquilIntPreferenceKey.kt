@@ -1,7 +1,7 @@
 package app.aaps.pump.equil.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
 
 enum class EquilIntPreferenceKey(
     override val key: String,
@@ -19,5 +19,5 @@ enum class EquilIntPreferenceKey(
     override val hideParentScreenIfHidden: Boolean = false
 ) : IntPreferenceKey {
 
-    EquilTone("key_equil_tone", 3, 0 ,3),
+    EquilTone("key_equil_tone", 3, 0, 3),
 }

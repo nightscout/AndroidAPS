@@ -1,6 +1,6 @@
 package app.aaps.pump.common.hw.rileylink.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 
 enum class RileylinkBooleanPreferenceKey(
     override val key: String,

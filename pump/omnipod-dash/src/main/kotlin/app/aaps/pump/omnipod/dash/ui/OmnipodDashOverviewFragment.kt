@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
@@ -443,7 +443,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             } ?: PLACEHOLDER
         }
 
-        if (errors.isEmpty()) {
+        if (errors.isEmpty) {
             podInfoBinding.errors.text = PLACEHOLDER
             podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {

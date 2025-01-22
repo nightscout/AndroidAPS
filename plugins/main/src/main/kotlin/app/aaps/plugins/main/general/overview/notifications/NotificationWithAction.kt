@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject

@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
