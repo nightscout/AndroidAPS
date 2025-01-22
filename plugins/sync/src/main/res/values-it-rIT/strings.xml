@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">Non valido</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Micro disconnesso</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Micro riconnesso</string>
+    <string name="garmin_request_key">Chiave Richiesta</string>
+    <string name="garmin_request_key_summary">Chiave opzionale per proteggere la comunicazione HTTP tra il dispositivo Garmin e AAPS.</string>
 </resources>
