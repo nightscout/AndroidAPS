@@ -58,7 +58,11 @@ class ActivityGraph : GraphView {
         secondScale.maxY = 1.0
         gridLabelRenderer.verticalLabelsSecondScaleColor = Color.MAGENTA
     }
-    fun show(insulin: Insulin, iCfg: ICfg) {
+    fun show(insulin: Insulin, iCfg: ICfg?) {
+        if (iCfg == null) {
+            show(insulin)
+            return
+        }
         removeAllSeries()
         val dia = iCfg.getDia()
         mSecondScale = null

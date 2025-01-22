@@ -25,19 +25,19 @@ class InsulinLyumjevPlugin @Inject constructor(
 ) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_LYUMJEV
-    override val friendlyName get(): String = rh.gs(R.string.lyumjev)
+    override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.lyumjev)
 
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
 
-    override fun commentStandardText(): String = rh.gs(R.string.lyumjev)
+    override fun commentStandardText(): String = rh.gs(app.aaps.core.interfaces.R.string.lyumjev)
 
     override val peak = 45
 
     init {
         pluginDescription
             .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
-            .pluginName(R.string.lyumjev)
+            .pluginName(app.aaps.core.interfaces.R.string.lyumjev)
             .description(R.string.description_insulin_lyumjev)
     }
 }

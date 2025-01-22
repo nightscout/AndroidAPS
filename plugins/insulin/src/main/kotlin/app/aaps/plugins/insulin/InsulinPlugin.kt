@@ -5,9 +5,13 @@ import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -17,11 +21,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.toast.ToastUtils
-import dagger.Provides
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -45,7 +47,8 @@ class InsulinPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     val config: Config,
     val hardLimits: HardLimits,
-    val uiInteraction: UiInteraction
+    val uiInteraction: UiInteraction,
+    val uel: UserEntryLogger
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.INSULIN)
@@ -90,9 +93,10 @@ class InsulinPlugin @Inject constructor(
             }
         }
 
-    private var insulins: ArrayList<ICfg> = ArrayList()
-    private var defaultInsulinIndex = 0
+    var insulins: ArrayList<ICfg> = ArrayList()
+    var defaultInsulinIndex = 0
     var currentInsulinIndex = 0
+    lateinit var currentInsulin: ICfg
     val numOfInsulins get() = insulins.size
     var isEdited: Boolean = false
 
@@ -122,6 +126,59 @@ class InsulinPlugin @Inject constructor(
         return ret
     }
 
+    fun insulinTemplateList(): ArrayList<CharSequence> {
+        val ret = ArrayList<CharSequence>()
+        ret.add(rh.gs(Insulin.InsulinType.OREF_RAPID_ACTING.label))
+        ret.add(rh.gs(Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.label))
+        ret.add(rh.gs(Insulin.InsulinType.OREF_LYUMJEV.label))
+        ret.add(rh.gs(Insulin.InsulinType.OREF_FREE_PEAK.label))
+        return ret
+    }
+
+    fun addNewInsulin(template: ICfg, autoName: Boolean = false) {
+        if (autoName)
+            template.insulinLabel = createNewInsulinLabel(template)
+        val newInsulin = ICfg(
+                insulinLabel = template.insulinLabel,
+                peak = template.peak,
+                insulinEndTime = template.insulinEndTime
+            )
+        insulins.add(newInsulin        )
+        uel.log(Action.NEW_INSULIN, Sources.Insulin)
+        currentInsulinIndex = insulins.size - 1
+        currentInsulin = newInsulin.deepClone()
+        storeSettings()
+    }
+
+
+
+    fun removeCurrentInsulin(activity: FragmentActivity?) {
+        val insulinRemoved = currentInsulin()?.insulinLabel ?:"No Name"
+        insulins.removeAt(currentInsulinIndex)
+        uel.log(Action.INSULIN_REMOVED, Sources.Insulin, value = ValueWithUnit.SimpleString(insulinRemoved))
+        currentInsulinIndex = defaultInsulinIndex
+        currentInsulin = currentInsulin().deepClone()
+        storeSettings()
+    }
+
+    fun createNewInsulinLabel(iCfg: ICfg): String {
+        val template = Insulin.InsulinType.fromPeak(iCfg.peak)
+        var insulinLabel = when (template) {
+            Insulin.InsulinType.OREF_FREE_PEAK -> "${rh.gs(template.label)}_${template.peak}_${template.dia}"
+            else                               -> "${rh.gs(template.label)}_${template.dia}"
+        }
+
+        if (insulinLabelAlreadyExists(insulinLabel, 10000)) {
+            for (i in 1..10000) {
+                if (!insulinLabelAlreadyExists("${insulinLabel}_$i", 10000)) {
+                    insulinLabel = "${insulinLabel}_$i"
+                    break
+                }
+            }
+        }
+        return insulinLabel
+    }
+
     override fun onStart() {
         super.onStart()
         loadSettings()
@@ -130,6 +187,7 @@ class InsulinPlugin @Inject constructor(
     @Synchronized
     fun loadSettings() {
         val jsonString = sp.getString(app.aaps.core.utils.R.string.key_insulin_configuration, "")
+        aapsLogger.debug("XXXXX Load Settings $jsonString")
         try {
             JSONObject(jsonString).let {
                 applyConfiguration(it)
@@ -141,6 +199,7 @@ class InsulinPlugin @Inject constructor(
 
     @Synchronized
     fun storeSettings() {
+        aapsLogger.debug("XXXXX store Settings ${configuration()}")
         sp.putString(app.aaps.core.utils.R.string.key_insulin_configuration, configuration().toString())
     }
 
@@ -191,6 +250,7 @@ class InsulinPlugin @Inject constructor(
     override val iCfg: ICfg
         get() = insulins[defaultInsulinIndex]      // ICfg(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
 
+    @Synchronized
     override fun configuration(): JSONObject {
         val json = JSONObject()
         val jsonArray = JSONArray()
@@ -201,15 +261,16 @@ class InsulinPlugin @Inject constructor(
                 //
             }
         }
-        json.put("insulins", jsonArray.toString())
+        json.put("insulins", jsonArray)
         json.put("default_insulin", defaultInsulinIndex)
         json.put("current_insulin", currentInsulinIndex)
         return json
     }
 
     override fun applyConfiguration(configuration: JSONObject) {
+        insulins.clear()
         configuration.optJSONArray("insulins")?.let {
-            for (index in 0 until (it.length() - 1)) {
+            for (index in 0 until (it.length())) {
                 try {
                     val o = it.getJSONObject(index)
                     insulins.add(fromJson(o))
@@ -238,29 +299,35 @@ class InsulinPlugin @Inject constructor(
     }
 
     @Synchronized
-    fun isValidEditState(activity: FragmentActivity?): Boolean {
-        with(insulins[currentInsulinIndex]) {
+    fun isValidEditState(activity: FragmentActivity?, verbose: Boolean = true): Boolean {
+        with(currentInsulin) {
             if (insulinEndTime < hardLimits.minDia() || dia > hardLimits.maxDia()) {
-                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_dia), dia))
+                if (verbose)
+                    ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_dia), dia))
                 return false
             }
             if (peak < hardLimits.minPeak() || dia > hardLimits.maxPeak()) {
-                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_peak), peak))
+                if (verbose)
+                    ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_peak), peak))
                 return false
             }
             if (insulinLabel.isEmpty()) {
-                ToastUtils.errorToast(activity, rh.gs(R.string.missing_insulin_name))
+                if (verbose)
+                    ToastUtils.errorToast(activity, rh.gs(R.string.missing_insulin_name))
                 return false
             }
             // Check Inulin name is unique and insulin parameters is unique
-            insulins.forEach {
-                if (it.hashCode() != this.hashCode()) {
-                    if (it.insulinLabel == insulinLabel) {
-                        ToastUtils.errorToast(activity, rh.gs(R.string.insulin_name_exists, insulinLabel))
-                        return false
-                    }
-                    if (isEqual(it)) {
-                        ToastUtils.errorToast(activity, rh.gs(R.string.insulin_duplicated, it.insulinLabel))
+            if (insulinLabelAlreadyExists(this.insulinLabel, currentInsulinIndex)) {
+                if (verbose)
+                    ToastUtils.errorToast(activity, rh.gs(R.string.insulin_name_exists, insulinLabel))
+                return false
+            }
+
+            insulins.forEachIndexed { index, iCfg ->
+                if (index != currentInsulinIndex) {
+                    if (isEqual(iCfg)) {
+                        if (verbose)
+                            ToastUtils.errorToast(activity, rh.gs(R.string.insulin_duplicated, iCfg.insulinLabel))
                         return false
                     }
                 }
@@ -269,5 +336,16 @@ class InsulinPlugin @Inject constructor(
         return true
     }
 
-    fun currentInsulin(): ICfg? = if (numOfInsulins > 0 && currentInsulinIndex < numOfInsulins) insulins[currentInsulinIndex] else null
+    private fun insulinLabelAlreadyExists(insulinLabel: String, currentIndex: Int): Boolean {
+        insulins.forEachIndexed { index, iCfg ->
+            if (index != currentIndex) {
+                if (iCfg.insulinLabel == insulinLabel) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun currentInsulin(): ICfg = insulins[currentInsulinIndex]
 }

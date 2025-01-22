@@ -27,7 +27,7 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
 ) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_RAPID_ACTING
-    override val friendlyName get(): String = rh.gs(R.string.rapid_acting_oref)
+    override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.rapid_acting_oref)
 
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
@@ -38,7 +38,7 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
 
     init {
         pluginDescription
-            .pluginName(R.string.rapid_acting_oref)
+            .pluginName(app.aaps.core.interfaces.R.string.rapid_acting_oref)
             .description(R.string.description_insulin_rapid)
             .setDefault()
             .enableByDefault(true)

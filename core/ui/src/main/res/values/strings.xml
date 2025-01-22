@@ -164,6 +164,7 @@
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="insulin_shortname">INS</string>
     <string name="select_insulin">Select Insulin to Edit</string>
+    <string name="insulin_template">Insulin Template</string>
     <string name="dia">DIA</string>
     <string name="peak">Peak</string>
     <string name="ic_short">IC</string>

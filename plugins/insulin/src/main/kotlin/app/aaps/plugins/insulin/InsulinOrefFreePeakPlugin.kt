@@ -39,7 +39,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 
-    override val friendlyName get(): String = rh.gs(R.string.free_peak_oref)
+    override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.free_peak_oref)
 
     override fun configuration(): JSONObject =
         JSONObject()
@@ -60,7 +60,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     init {
         pluginDescription
             .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
-            .pluginName(R.string.free_peak_oref)
+            .pluginName(app.aaps.core.interfaces.R.string.free_peak_oref)
             .preferencesId(PluginDescription.PREFERENCE_SCREEN)
             .description(R.string.description_insulin_free_peak)
     }
