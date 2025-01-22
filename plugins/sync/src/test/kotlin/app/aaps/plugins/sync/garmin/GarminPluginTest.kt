@@ -254,7 +254,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun requestHandler_KeyRequired() {
-        gp.garminMessenger = mock(GarminMessenger::class.java)
+        gp.garminMessengerField = mock(GarminMessenger::class.java)
 
         `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
         val uri = createUri(emptyMap())
@@ -286,7 +286,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun onConnectDevice() {
-        gp.garminMessenger = mock(GarminMessenger::class.java)
+        gp.garminMessengerField = mock(GarminMessenger::class.java)
         `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
         val device = GarminDevice(mock(), 1, "Edge")
         gp.onConnectDevice(device)

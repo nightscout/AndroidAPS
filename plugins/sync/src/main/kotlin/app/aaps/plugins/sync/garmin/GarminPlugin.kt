@@ -75,7 +75,8 @@ class GarminPlugin @Inject constructor(
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
-    private var garminMessengerField: GarminMessenger? = null
+    @VisibleForTesting
+    var garminMessengerField: GarminMessenger? = null
     val garminMessenger: GarminMessenger
         get() {
             return synchronized(this) {
