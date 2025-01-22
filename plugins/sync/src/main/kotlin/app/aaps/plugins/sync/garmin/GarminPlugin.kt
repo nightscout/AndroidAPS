@@ -20,7 +20,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
@@ -96,13 +99,13 @@ class GarminPlugin @Inject constructor(
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
-    private val garminAapsKey get() = sp.getString("garmin_aaps_key", "")
+    private val garminAapsKey get() = preferences.get(StringKey.GarminRequestKey) ?: ""
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
             "communication_debug_mode"                                           -> setupGarminMessenger()
             BooleanKey.GarminLocalHttpServer.key, IntKey.GarminLocalHttpPort.key -> setupHttpServer()
-            "garmin_aaps_key"                                                    -> sendPhoneAppMessage()
+            StringKey.GarminRequestKey.key                                       -> sendPhoneAppMessage()
         }
     }
 
@@ -465,6 +468,12 @@ class GarminPlugin @Inject constructor(
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GarminLocalHttpServer, title = R.string.garmin_local_http_server))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.GarminLocalHttpPort, title = R.string.garmin_local_http_server_port))
+            addPreference(AdaptiveStringPreference(
+                ctx = context,
+                stringKey = StringKey.GarminRequestKey,
+                title = R.string.garmin_request_key,
+                summary = R.string.garmin_request_key_summary,
+                validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)))
         }
     }
 }
