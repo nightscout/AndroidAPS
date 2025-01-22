@@ -243,5 +243,7 @@
     <string name="wear_action_loop_state_now_invalid">Invalid</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pump disconnected</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Pump reconnected</string>
+    <string name="garmin_request_key">Request Key</string>
+    <string name="garmin_request_key_summary">Optional key to secure HTTP communication between Garmin device and AAPS.</string>
 
 </resources>
