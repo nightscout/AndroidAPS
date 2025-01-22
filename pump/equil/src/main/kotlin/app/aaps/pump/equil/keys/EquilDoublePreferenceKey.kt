@@ -3,7 +3,7 @@ package app.aaps.pump.equil.keys
 import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoublePreferenceKey
 
-enum class EquilDoubleKey(
+enum class EquilDoublePreferenceKey(
     override val key: String,
     override val defaultValue: Double,
     override val min: Double,

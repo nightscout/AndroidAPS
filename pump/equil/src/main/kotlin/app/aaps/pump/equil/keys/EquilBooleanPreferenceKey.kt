@@ -1,13 +1,10 @@
 package app.aaps.pump.equil.keys
 
 import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
 
-enum class EquilIntKey(
+enum class EquilBooleanPreferenceKey(
     override val key: String,
-    override val defaultValue: Int,
-    override val min: Int,
-    override val max: Int,
+    override val defaultValue: Boolean,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -17,7 +14,8 @@ enum class EquilIntKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : IntPreferenceKey {
+) : BooleanPreferenceKey {
 
-    EquilTone("key_equil_tone", 3, 0 ,3),
+    EquilAlarmBattery("key_equil_alarm_battery", true),
+    EquilAlarmInsulin("key_equil_alarm_insulin", true),
 }

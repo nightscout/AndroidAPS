@@ -82,7 +82,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
 
     private fun setModel() {
         showLoading()
-        commandQueue.customCommand(CmdModelSet(RunMode.RUN.command, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdModelSet(RunMode.RUN.command, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "setModel result====" + result.success + "====")
@@ -100,7 +100,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
 
     private fun getCurrentInsulin() {
         showLoading()
-        commandQueue.customCommand(CmdInsulinGet(aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdInsulinGet(aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {

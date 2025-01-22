@@ -38,7 +38,7 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         desc.layoutParams = params
         layout.addView(desc)
 
-        // Get if there is already value in SP
+        // Get if there is already value in Preferences
         val previousValue = preferences.get(preference as StringPreferenceKey)
         radioGroup = RadioGroup(context)
         radioGroup?.clearCheck()

@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.Preferences
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
@@ -31,7 +30,6 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var activePlugin: ActivePlugin
