@@ -1,7 +1,7 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.LongPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.LongPreferenceKey
 
 enum class DanaLongKey(
     override val key: String,

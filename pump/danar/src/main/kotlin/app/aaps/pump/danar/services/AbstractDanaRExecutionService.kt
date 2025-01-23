@@ -30,7 +30,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils.errorToast
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R

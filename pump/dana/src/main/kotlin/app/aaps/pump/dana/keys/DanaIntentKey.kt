@@ -1,7 +1,7 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntentPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntentPreferenceKey
 
 enum class DanaIntentKey(
     override val key: String,

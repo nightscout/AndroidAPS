@@ -73,7 +73,7 @@ import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
-import app.aaps.core.keys.Preferences;
+import app.aaps.core.keys.interfaces.Preferences;
 import app.aaps.core.utils.DateTimeUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
@@ -83,6 +83,8 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey;
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType;
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey;
+import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey;
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod;
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange;
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep;
@@ -346,10 +348,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED)) ||
-                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED)) ||
-                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED)) ||
-                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED)) ||
+                    if (event.isChanged(OmnipodBooleanPreferenceKey.BasalBeepsEnabled.getKey()) ||
+                            event.isChanged(OmnipodBooleanPreferenceKey.BolusBeepsEnabled.getKey()) ||
+                            event.isChanged(OmnipodBooleanPreferenceKey.TbrBeepsEnabled.getKey()) ||
+                            event.isChanged(OmnipodBooleanPreferenceKey.SmbBeepsEnabled.getKey()) ||
                             event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED)) ||
                             event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED)) ||
                             event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED)) ||
@@ -361,10 +363,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                             event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED)) ||
                             event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED))) {
                         aapsOmnipodErosManager.reloadSettings();
-                    } else if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED)) ||
+                    } else if (event.isChanged(OmnipodBooleanPreferenceKey.ExpirationReminder.getKey()) ||
                             event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN)) ||
-                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED)) ||
-                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS))) {
+                            event.isChanged(OmnipodBooleanPreferenceKey.LowReservoirAlert.getKey()) ||
+                            event.isChanged(OmnipodIntPreferenceKey.LowReservoirAlertUnits.getKey())) {
                         if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }

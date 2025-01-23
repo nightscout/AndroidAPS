@@ -16,11 +16,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
@@ -66,21 +68,81 @@ class GarminPlugin @Inject constructor(
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
-    ownPreferences = emptyList(),
+    ownPreferences = listOf(GarminStringKey::class.java, GarminBooleanKey::class.java, GarminIntKey::class.java),
     aapsLogger, resourceHelper, preferences
 ) {
 
     enum class GarminStringKey(
         override val key: String,
-        override val defaultValue: String
-    ) : StringNonPreferenceKey {
+        override val defaultValue: String,
+        override val defaultedBySM: Boolean = false,
+        override val showInApsMode: Boolean = true,
+        override val showInNsClientMode: Boolean = true,
+        override val showInPumpControlMode: Boolean = true,
+        override val dependency: BooleanPreferenceKey? = null,
+        override val negativeDependency: BooleanPreferenceKey? = null,
+        override val hideParentScreenIfHidden: Boolean = false,
+        override val isPassword: Boolean = false,
+        override val isPin: Boolean = false
+    ) : StringPreferenceKey {
 
-        AapsKey("garmin_aaps_key", ""),
+        RequestKey(key = "garmin_aaps_key", defaultValue = ""),
+    }
+
+    enum class GarminBooleanKey(
+        override val key: String,
+        override val defaultValue: Boolean,
+        override val calculatedDefaultValue: Boolean = false,
+        override val defaultedBySM: Boolean = false,
+        override val showInApsMode: Boolean = true,
+        override val showInNsClientMode: Boolean = true,
+        override val showInPumpControlMode: Boolean = true,
+        override val dependency: BooleanPreferenceKey? = null,
+        override val negativeDependency: BooleanPreferenceKey? = null,
+        override val hideParentScreenIfHidden: Boolean = false,
+        override val engineeringModeOnly: Boolean = false
+    ) : BooleanPreferenceKey {
+
+        LocalHttpServer("communication_http", false, defaultedBySM = true, hideParentScreenIfHidden = true),
+    }
+
+    enum class GarminIntKey(
+        override val key: String,
+        override val defaultValue: Int,
+        override val min: Int,
+        override val max: Int,
+        override val defaultedBySM: Boolean = false,
+        override val calculatedDefaultValue: Boolean = false,
+        override val showInApsMode: Boolean = true,
+        override val showInNsClientMode: Boolean = true,
+        override val showInPumpControlMode: Boolean = true,
+        override val dependency: BooleanPreferenceKey? = null,
+        override val negativeDependency: BooleanPreferenceKey? = null,
+        override val hideParentScreenIfHidden: Boolean = false,
+        override val engineeringModeOnly: Boolean = false
+    ) : IntPreferenceKey {
+
+        LocalHttpPort("communication_http_port", 28891, 1001, 65535, defaultedBySM = true, hideParentScreenIfHidden = true),
     }
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
-    var garminMessenger: GarminMessenger? = null
+
+    @VisibleForTesting
+    var garminMessengerField: GarminMessenger? = null
+    val garminMessenger: GarminMessenger
+        get() {
+            return synchronized(this) {
+                garminMessengerField ?: createGarminMessenger().also { garminMessengerField = it }
+            }
+        }
+
+    private fun resetGarminMessenger() {
+        synchronized(this) {
+            garminMessengerField?.dispose()
+            garminMessengerField = null
+        }
+    }
 
     /** Garmin ConnectIQ application id for native communication. Phone pushes values. */
     private val glucoseAppIds = mapOf(
@@ -104,25 +166,29 @@ class GarminPlugin @Inject constructor(
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
-    private val garminAapsKey get() = preferences.get(GarminStringKey.AapsKey)
+    private val garminAapsKey get() = preferences.get(GarminStringKey.RequestKey)
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
-            "communication_debug_mode"                                           -> setupGarminMessenger()
-            BooleanKey.GarminLocalHttpServer.key, IntKey.GarminLocalHttpPort.key -> setupHttpServer()
-            GarminStringKey.AapsKey.key                                          -> sendPhoneAppMessage()
+            "communication_ciq_debug_mode"                                       -> setupGarminMessenger()
+            GarminBooleanKey.LocalHttpServer.key, GarminIntKey.LocalHttpPort.key -> setupHttpServer()
+            GarminStringKey.RequestKey.key                                       -> sendPhoneAppMessage()
         }
     }
 
     private fun setupGarminMessenger() {
-        val enableDebug = false //sp.getBoolean("communication_ciq_debug_mode", false)
-        garminMessenger?.dispose()
-        garminMessenger = null
+        resetGarminMessenger()
+        createGarminMessenger()
+    }
+
+    private fun createGarminMessenger(): GarminMessenger {
+        val enableDebug = false // sp.getBoolean("communication_ciq_debug_mode", false)
         aapsLogger.info(LTag.GARMIN, "initialize IQ messenger in debug=$enableDebug")
-        garminMessenger = GarminMessenger(
-            aapsLogger, context, glucoseAppIds, { _, _ -> },
-            true, enableDebug
-        ).also { disposable.add(it) }
+        return GarminMessenger(
+            aapsLogger, context, glucoseAppIds, { _, _ -> }, true, enableDebug
+        ).also {
+            disposable.add(it)
+        }
     }
 
     override fun onStart() {
@@ -151,8 +217,8 @@ class GarminPlugin @Inject constructor(
 
     @VisibleForTesting
     fun setupHttpServer(wait: Duration) {
-        if (preferences.get(BooleanKey.GarminLocalHttpServer)) {
-            val port = preferences.get(IntKey.GarminLocalHttpPort)
+        if (preferences.get(GarminBooleanKey.LocalHttpServer)) {
+            val port = preferences.get(GarminIntKey.LocalHttpPort)
             if (server != null && server?.port == port) return
             aapsLogger.info(LTag.GARMIN, "starting HTTP server on $port")
             server?.close()
@@ -203,11 +269,11 @@ class GarminPlugin @Inject constructor(
     }
 
     private fun sendPhoneAppMessage(device: GarminDevice) {
-        garminMessenger?.sendMessage(device, getGlucoseMessage())
+        garminMessenger.sendMessage(device, getGlucoseMessage())
     }
 
     private fun sendPhoneAppMessage() {
-        garminMessenger?.sendMessage(getGlucoseMessage())
+        garminMessenger.sendMessage(getGlucoseMessage())
     }
 
     @VisibleForTesting
@@ -471,8 +537,17 @@ class GarminPlugin @Inject constructor(
             key = "garmin_settings"
             title = rh.gs(R.string.garmin)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GarminLocalHttpServer, title = R.string.garmin_local_http_server))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.GarminLocalHttpPort, title = R.string.garmin_local_http_server_port))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = GarminBooleanKey.LocalHttpServer, title = R.string.garmin_local_http_server))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = GarminIntKey.LocalHttpPort, title = R.string.garmin_local_http_server_port))
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context,
+                    stringKey = GarminStringKey.RequestKey,
+                    title = R.string.garmin_request_key,
+                    summary = R.string.garmin_request_key_summary,
+                    validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)
+                )
+            )
         }
     }
 }

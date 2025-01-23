@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 
 class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOBUTTON) {
@@ -38,7 +38,7 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         desc.layoutParams = params
         layout.addView(desc)
 
-        // Get if there is already value in SP
+        // Get if there is already value in Preferences
         val previousValue = preferences.get(preference as StringPreferenceKey)
         radioGroup = RadioGroup(context)
         radioGroup?.clearCheck()

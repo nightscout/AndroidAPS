@@ -26,12 +26,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.BooleanComposedNonPreferenceKey
-import app.aaps.core.keys.DoubleComposedNonPreferenceKey
-import app.aaps.core.keys.IntNonPreferenceKey
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -422,7 +422,7 @@ class ProfilePlugin @Inject constructor(
 
     fun removeCurrentProfile() {
         profiles.removeAt(currentProfileIndex)
-        if (profiles.isEmpty()) addNewProfile()
+        if (profiles.isEmpty) addNewProfile()
         currentProfileIndex = 0
         createAndStoreConvertedProfile()
         storeSettings(timestamp = dateUtil.now())

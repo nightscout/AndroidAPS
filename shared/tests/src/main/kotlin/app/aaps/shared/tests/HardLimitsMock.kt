@@ -2,8 +2,8 @@ package app.aaps.shared.tests
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min

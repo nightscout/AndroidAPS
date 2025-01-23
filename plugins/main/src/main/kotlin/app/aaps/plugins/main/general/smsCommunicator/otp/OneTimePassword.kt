@@ -4,9 +4,9 @@ import android.util.Base64
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
 import java.net.URLEncoder

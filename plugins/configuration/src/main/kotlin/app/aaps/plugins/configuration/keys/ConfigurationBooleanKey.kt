@@ -1,6 +1,6 @@
 package app.aaps.plugins.configuration.keys
 
-import app.aaps.core.keys.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 
 enum class ConfigurationBooleanKey(
     override val key: String,

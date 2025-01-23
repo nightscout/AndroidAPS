@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.utils.Round.isSame
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.pump.ByteUtil.shortHexString
 import app.aaps.pump.common.hw.rileylink.ble.RFSpy
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException

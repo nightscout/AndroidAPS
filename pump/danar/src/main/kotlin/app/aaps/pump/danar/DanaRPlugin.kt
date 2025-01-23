@@ -40,7 +40,7 @@ import app.aaps.core.interfaces.utils.Round.ceilTo
 import app.aaps.core.interfaces.utils.Round.floorTo
 import app.aaps.core.interfaces.utils.Round.roundTo
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -385,7 +385,16 @@ class DanaRPlugin @Inject constructor(
             key = "danar_settings"
             title = rh.gs(app.aaps.pump.dana.R.string.danar_pump_settings)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListPreference(ctx = context, stringKey = DanaStringKey.DanaRName, title = app.aaps.pump.dana.R.string.danar_bt_name_title, dialogTitle = app.aaps.pump.dana.R.string.danar_bt_name_title, entries = entries, entryValues = entries))
+            addPreference(
+                AdaptiveListPreference(
+                    ctx = context,
+                    stringKey = DanaStringKey.DanaRName,
+                    title = app.aaps.pump.dana.R.string.danar_bt_name_title,
+                    dialogTitle = app.aaps.pump.dana.R.string.danar_bt_name_title,
+                    entries = entries,
+                    entryValues = entries
+                )
+            )
             addPreference(
                 AdaptiveIntPreference(
                     ctx = context, intKey = DanaIntKey.DanaRPassword, title = app.aaps.pump.dana.R.string.danar_password_title,
@@ -396,7 +405,16 @@ class DanaRPlugin @Inject constructor(
                     )
                 )
             )
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.DanaBolusSpeed, title = app.aaps.pump.dana.R.string.bolusspeed, dialogTitle = app.aaps.pump.dana.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(
+                AdaptiveListIntPreference(
+                    ctx = context,
+                    intKey = DanaIntKey.DanaBolusSpeed,
+                    title = app.aaps.pump.dana.R.string.bolusspeed,
+                    dialogTitle = app.aaps.pump.dana.R.string.bolusspeed,
+                    entries = speedEntries,
+                    entryValues = speedValues
+                )
+            )
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRUseExtended, title = app.aaps.pump.dana.R.string.danar_useextended_title))
         }
     }

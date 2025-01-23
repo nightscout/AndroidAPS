@@ -30,8 +30,8 @@ import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.NonPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.common.data.PumpStatus
 import app.aaps.pump.common.defs.PumpDriverState
 import app.aaps.pump.common.sync.PumpSyncEntriesCreator
@@ -319,7 +319,7 @@ abstract class PumpPluginAbstract protected constructor(
         rxBus.send(EventCustomActionsChanged())
     }
 
-    override fun manufacturer(): ManufacturerType = pumpType.manufacturer() ?: ManufacturerType.AAPS
+    override fun manufacturer(): ManufacturerType = pumpType.manufacturer()
     override fun model(): PumpType = pumpType
     override fun canHandleDST(): Boolean = false
 

@@ -23,9 +23,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
@@ -52,7 +52,7 @@ class EquilFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var blePreCheck: BlePreCheck
@@ -255,7 +255,7 @@ class EquilFragment : DaggerFragment() {
             tempMode = RunMode.SUSPEND
         }
         showLoading()
-        commandQueue.customCommand(CmdModelSet(tempMode.command, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdModelSet(tempMode.command, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 dismissLoading()
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)

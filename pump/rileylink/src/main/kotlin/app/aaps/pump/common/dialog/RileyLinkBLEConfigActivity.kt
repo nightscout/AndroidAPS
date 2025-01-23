@@ -30,7 +30,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.pump.common.hw.rileylink.R

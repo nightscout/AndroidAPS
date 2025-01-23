@@ -24,9 +24,9 @@ import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.LongNonPreferenceKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator

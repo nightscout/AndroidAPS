@@ -1,4 +1,4 @@
-package app.aaps.core.keys
+package app.aaps.core.keys.interfaces
 
 import java.util.Locale
 
@@ -7,7 +7,7 @@ import java.util.Locale
  *
  * Final key is composed as key + String.format(Locale.ENGLISH, format, *arguments)
  */
-interface StringComposedNonPreferenceKey : NonPreferenceKey {
+interface DoubleComposedNonPreferenceKey : NonPreferenceKey {
 
     /**
      * Key is used as prefix for recognizing the preference
@@ -24,7 +24,7 @@ interface StringComposedNonPreferenceKey : NonPreferenceKey {
     /**
      * Default value
      */
-    val defaultValue: String
+    val defaultValue: Double
 
     /**
      * Compose final key from arguments

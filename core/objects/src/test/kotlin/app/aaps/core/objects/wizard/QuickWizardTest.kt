@@ -2,8 +2,8 @@ package app.aaps.core.objects.wizard
 
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

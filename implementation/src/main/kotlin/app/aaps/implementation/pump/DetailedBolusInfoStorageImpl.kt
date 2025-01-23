@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javax.inject.Inject

@@ -31,8 +31,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay

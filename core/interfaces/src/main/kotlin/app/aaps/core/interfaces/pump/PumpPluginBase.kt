@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.NonPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 
 /**
  * Add command queue to [PluginBaseWithPreferences]

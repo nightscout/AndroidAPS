@@ -27,9 +27,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.persistence.CompatDBHelper

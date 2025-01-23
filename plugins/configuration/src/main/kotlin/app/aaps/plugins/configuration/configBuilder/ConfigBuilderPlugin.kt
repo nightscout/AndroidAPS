@@ -37,7 +37,7 @@ import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R

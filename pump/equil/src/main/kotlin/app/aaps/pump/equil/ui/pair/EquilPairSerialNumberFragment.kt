@@ -39,6 +39,7 @@ import app.aaps.pump.equil.R
 import app.aaps.pump.equil.ble.GattAttributes
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.Utils
 import app.aaps.pump.equil.manager.command.CmdDevicesOldGet
 import app.aaps.pump.equil.manager.command.CmdPair
@@ -113,7 +114,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
 
             }
         }
-        equilPasswordText.setText(sp.getString(rh.gs(R.string.key_equil_pair_password), ""))
+        equilPasswordText.setText(preferences.get(EquilStringKey.PairPassword))
         equilPasswordText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -152,7 +153,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 if (validateNumber(serialNumber) && validate(password)) {
                     val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(equilPasswordText.windowToken, 0)
-                    sp.putString(rh.gs(R.string.key_equil_pair_password), password)
+                    preferences.put(EquilStringKey.PairPassword, password)
                     buttonPair.isClickable = false
                     buttonPair.alpha = 0.3f
                     textTips.visibility = View.INVISIBLE
@@ -272,7 +273,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
 
     fun getVersion(scanResult: BluetoothDevice) {
         // CmdDevicesOldGet
-        var cmdDevicesOldGet = CmdDevicesOldGet(scanResult.address.toString(), aapsLogger, sp, equilManager)
+        var cmdDevicesOldGet = CmdDevicesOldGet(scanResult.address.toString(), aapsLogger, preferences, equilManager)
         commandQueue.customCommand(cmdDevicesOldGet, object : Callback() {
             override fun run() {
                 if (activity == null) return
@@ -314,7 +315,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         equilManager.setActivationProgress(ActivationProgress.PRIMING)
         equilManager.setBluetoothConnectionState(BluetoothConnectionState.CONNECTED)
         aapsLogger.debug(LTag.PUMPCOMM, "result====${scanResult.name}===${scanResult.address}")
-        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success + "===" + result.enacted)
@@ -353,7 +354,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     }
 
     private fun pumpSettings(address: String, serialNumber: String) {
-        commandQueue.customCommand(CmdSettingSet(null, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdSettingSet(null, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {

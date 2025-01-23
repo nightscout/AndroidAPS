@@ -45,10 +45,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.IntNonPreferenceKey
-import app.aaps.core.keys.LongNonPreferenceKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -162,7 +162,8 @@ class ComboV2Plugin @Inject constructor(
     enum class ComboIntKey(
         override val key: String,
         override val defaultValue: Int
-    ): IntNonPreferenceKey {
+    ) : IntNonPreferenceKey {
+
         KeyResponseAddress("combov2-key-response-address-key", 0),
         TbrPercentage("combov2-tbr-percentage", 0),
         TbrDuration("combov2-tbr-duration", 0),
@@ -173,7 +174,8 @@ class ComboV2Plugin @Inject constructor(
     enum class ComboLongKey(
         override val key: String,
         override val defaultValue: Long
-    ) : LongNonPreferenceKey{
+    ) : LongNonPreferenceKey {
+
         TbrTimestamp("combov2-tbr-timestamp", 0),
     }
 
@@ -1151,7 +1153,7 @@ class ComboV2Plugin @Inject constructor(
 
                 // Rethrowing to finish coroutine cancellation.
                 throw e
-            } catch (e: ComboCtlPump.BolusCancelledByUserException) {
+            } catch (_: ComboCtlPump.BolusCancelledByUserException) {
                 aapsLogger.info(LTag.PUMP, "Bolus cancelled via Combo CMD_CANCEL_BOLUS command")
 
                 // This exception is thrown when the bolus is cancelled
@@ -1161,13 +1163,13 @@ class ComboV2Plugin @Inject constructor(
                 // error, hence the "success = true".
 
                 reportFinishedBolus(R.string.combov2_bolus_cancelled, pumpEnactResult, succeeded = true)
-            } catch (e: ComboCtlPump.BolusNotDeliveredException) {
+            } catch (_: ComboCtlPump.BolusNotDeliveredException) {
                 aapsLogger.error(LTag.PUMP, "Bolus not delivered")
                 reportFinishedBolus(R.string.combov2_bolus_not_delivered, pumpEnactResult, succeeded = false)
-            } catch (e: ComboCtlPump.UnaccountedBolusDetectedException) {
+            } catch (_: ComboCtlPump.UnaccountedBolusDetectedException) {
                 aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected")
                 reportFinishedBolus(R.string.combov2_unaccounted_bolus_detected_cancelling_bolus, pumpEnactResult, succeeded = false)
-            } catch (e: ComboCtlPump.InsufficientInsulinAvailableException) {
+            } catch (_: ComboCtlPump.InsufficientInsulinAvailableException) {
                 aapsLogger.error(LTag.PUMP, "Insufficient insulin in reservoir")
                 reportFinishedBolus(R.string.combov2_insufficient_insulin_in_reservoir, pumpEnactResult, succeeded = false)
             } catch (e: Exception) {

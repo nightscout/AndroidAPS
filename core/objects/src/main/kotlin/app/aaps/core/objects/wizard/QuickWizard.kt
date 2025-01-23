@@ -1,7 +1,7 @@
 package app.aaps.core.objects.wizard
 
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject

@@ -10,7 +10,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice

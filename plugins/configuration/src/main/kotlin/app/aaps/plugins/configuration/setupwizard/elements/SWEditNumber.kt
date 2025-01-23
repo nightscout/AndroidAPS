@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.ui.elements.NumberPicker
 import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat

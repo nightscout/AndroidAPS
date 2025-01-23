@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.ListPreference
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 

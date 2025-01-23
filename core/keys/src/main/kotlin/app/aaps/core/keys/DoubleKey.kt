@@ -1,5 +1,8 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
+
 enum class DoubleKey(
     override val key: String,
     override val defaultValue: Double,

@@ -13,8 +13,8 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.R
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.extensions.runOnUiThread

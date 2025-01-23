@@ -47,8 +47,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntentKey
-import app.aaps.core.keys.LongNonPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort

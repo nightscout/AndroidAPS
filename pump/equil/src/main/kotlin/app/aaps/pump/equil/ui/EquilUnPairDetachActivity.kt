@@ -15,8 +15,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
@@ -35,7 +35,7 @@ import javax.inject.Inject
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var context: Context
@@ -93,7 +93,7 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun changeInsulin() {
         showLoading()
-        commandQueue.customCommand(CmdInsulinChange(aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdInsulinChange(aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (!result.success) equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 equilManager.setRunMode(RunMode.STOP)

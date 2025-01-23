@@ -35,7 +35,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor

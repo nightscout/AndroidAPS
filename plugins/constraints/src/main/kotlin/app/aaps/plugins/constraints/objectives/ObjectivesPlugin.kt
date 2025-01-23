@@ -11,13 +11,15 @@ import app.aaps.core.interfaces.constraints.Objectives.Companion.MAXIOB_ZERO_CL_
 import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
+import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
@@ -38,16 +40,17 @@ class ObjectivesPlugin @Inject constructor(
     private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val preferences: Preferences
-) : PluginBase(
-    PluginDescription()
+    preferences: Preferences
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives),
-    aapsLogger, rh
+    ownPreferences = listOf(ObjectivesBooleanComposedKey::class.java, ObjectivesLongComposedKey::class.java),
+    aapsLogger, rh, preferences
 ), PluginConstraints, Objectives {
 
     var objectives: MutableList<Objective> = ArrayList()

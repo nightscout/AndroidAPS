@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 
 class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING) {

@@ -1,23 +1,22 @@
 package app.aaps.pump.equil.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
 
-enum class EquilIntKey(
+enum class EquilDoublePreferenceKey(
     override val key: String,
-    override val defaultValue: Int,
-    override val min: Int,
-    override val max: Int,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
+    override val defaultValue: Double,
+    override val min: Double,
+    override val max: Double,
     override val defaultedBySM: Boolean = false,
+    override val calculatedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : IntPreferenceKey {
+) : DoublePreferenceKey {
 
-    EquilTone("key_equil_tone", 3, 0 ,3),
+    EquilMaxBolus("equil_maxbolus", 10.0, 0.1, 25.0),
 }

@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R

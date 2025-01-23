@@ -32,7 +32,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R

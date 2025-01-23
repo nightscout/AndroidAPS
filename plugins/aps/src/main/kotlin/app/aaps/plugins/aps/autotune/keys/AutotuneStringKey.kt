@@ -1,6 +1,6 @@
 package app.aaps.plugins.aps.autotune.keys
 
-import app.aaps.core.keys.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 
 enum class AutotuneStringKey(
     override val key: String,

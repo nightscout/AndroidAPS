@@ -29,7 +29,7 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
@@ -215,7 +215,7 @@ class BLEComm @Inject internal constructor(
         preferences.getIfExists(DanaStringKey.DanaMacAddress)?.let { address ->
             bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
                 try {
-                    device::class.java.getMethod("removeBond").invoke(device)
+                    device.javaClass.getMethod("removeBond").invoke(device)
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "Removing bond has been failed. ${e.message}")
                 }

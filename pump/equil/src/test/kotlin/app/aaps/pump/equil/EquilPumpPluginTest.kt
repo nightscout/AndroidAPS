@@ -25,7 +25,7 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
         Mockito.`when`(rh.gs(anyInt())).thenReturn("")
         equilPumpPlugin =
             EquilPumpPlugin(
-                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, sp,
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context,
                 fabricPrivacy, dateUtil, pumpSync, equilManager, decimalFormatter, instantiator
             )
     }

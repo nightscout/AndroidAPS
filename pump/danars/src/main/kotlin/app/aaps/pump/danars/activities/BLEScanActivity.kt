@@ -23,7 +23,7 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeEnable

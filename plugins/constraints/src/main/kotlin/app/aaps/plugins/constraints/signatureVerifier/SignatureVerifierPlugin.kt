@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.signatureVerifier.keys.SignatureVerifierLongKey
 import org.spongycastle.util.encoders.Hex

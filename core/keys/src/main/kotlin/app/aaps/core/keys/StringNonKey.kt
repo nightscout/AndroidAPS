@@ -1,5 +1,7 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+
 enum class StringNonKey(
     override val key: String,
     override val defaultValue: String,

@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
