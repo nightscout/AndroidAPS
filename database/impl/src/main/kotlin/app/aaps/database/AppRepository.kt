@@ -715,10 +715,6 @@ class AppRepository @Inject internal constructor(
         database.totalDailyDoseDao.findByTimestamp(timestamp, InterfaceIDs.PumpType.CACHE)
             .subscribeOn(Schedulers.io())
 
-    fun insertTotalDailyDose(tdd: TotalDailyDose) {
-        Schedulers.io().scheduleDirect { database.totalDailyDoseDao.insert(tdd) }
-    }
-
     // OFFLINE EVENT
     fun findOfflineEventByNSId(nsId: String): OfflineEvent? =
         database.offlineEventDao.findByNSId(nsId)
