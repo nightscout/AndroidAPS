@@ -5,6 +5,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -29,12 +30,12 @@ fun PS.getCustomizedName(decimalFormatter: DecimalFormatter): String {
 /**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName
  */
-fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, insulinPlugin: Insulin, defaultUnits: String? = null): PureProfile? {
+fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin: ActivePlugin, defaultUnits: String? = null): PureProfile? {
     try {
         val txtUnits = JsonHelper.safeGetStringAllowNull(jsonObject, "units", defaultUnits) ?: return null
         val units = GlucoseUnit.fromText(txtUnits)
         val iCfg = JsonHelper.safeGetStringAllowNull(jsonObject, "icfg", null)?.let {
-            insulinPlugin.fromJson(JSONObject(it))
+            activePlugin.activeInsulin.fromJson(JSONObject(it))
         } ?:return null
         val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))

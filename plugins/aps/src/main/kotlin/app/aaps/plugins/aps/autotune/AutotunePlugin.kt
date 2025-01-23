@@ -421,16 +421,16 @@ class AutotunePlugin @Inject constructor(
             val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
             var localInsulin = LocalInsulin("PumpInsulin", pumpPeak, pumpDia)
             selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
-            val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil, activePlugin.activeInsulin) }
+            val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil, activePlugin) }
                 ?: return
             pumpProfile = ATProfile(ProfileSealed.Pure(value = profile, activePlugin = null), localInsulin, injector).also { it.profileName = selectedProfile }
             val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
             val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
             localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
             val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
-            val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil, activePlugin.activeInsulin) }
+            val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil, activePlugin) }
                 ?: return
-            val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil, activePlugin.activeInsulin) }
+            val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil, activePlugin) }
                 ?: return
             tunedProfile = ATProfile(ProfileSealed.Pure(value = tuned, activePlugin = null), localInsulin, injector).also { atProfile ->
                 atProfile.profileName = tunedProfileName

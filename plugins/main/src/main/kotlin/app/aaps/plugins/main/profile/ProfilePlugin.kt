@@ -172,7 +172,7 @@ class ProfilePlugin @Inject constructor(
             profile.put("timezone", TimeZone.getDefault().id)
         }
         val defaultUnits = JsonHelper.safeGetStringAllowNull(profile, "units", null)
-        return pureProfileFromJson(profile, dateUtil, activePlugin.activeInsulin, defaultUnits)
+        return pureProfileFromJson(profile, dateUtil, activePlugin, defaultUnits)
     }
 
     @Synchronized

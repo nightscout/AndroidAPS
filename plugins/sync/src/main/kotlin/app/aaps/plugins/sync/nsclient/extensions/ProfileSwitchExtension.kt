@@ -76,7 +76,7 @@ fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlug
             val profilePlugin = activePlugin.activeProfileSource
             val store = profilePlugin.profile ?: return null
             store.getSpecificProfile(profileName) ?: return null
-        } else pureProfileFromJson(JSONObject(profileJson), dateUtil, activePlugin.activeInsulin) ?: return null
+        } else pureProfileFromJson(JSONObject(profileJson), dateUtil, activePlugin) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return PS(

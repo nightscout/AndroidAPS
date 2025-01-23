@@ -78,7 +78,7 @@ class ProfileStoreObject(
                 profile = cachedObjects[profileName]
                 if (profile == null) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
-                        profile = pureProfileFromJson(profileObject, dateUtil, activePlugin.activeInsulin, units)
+                        profile = pureProfileFromJson(profileObject, dateUtil, activePlugin, units)
                         profile?.let { cachedObjects[profileName] = profile }
                     }
                 }

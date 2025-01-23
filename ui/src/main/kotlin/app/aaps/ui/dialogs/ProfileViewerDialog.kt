@@ -106,7 +106,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.CUSTOM_PROFILE  -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil, activePlugin.activeInsulin)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil, activePlugin)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profile2 = null
                 profileName = customProfileName
                 date = ""
@@ -114,8 +114,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.PROFILE_COMPARE -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil, activePlugin.activeInsulin)?.let { ProfileSealed.Pure(it, activePlugin) }
-                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil, activePlugin.activeInsulin)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil, activePlugin)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil, activePlugin)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""

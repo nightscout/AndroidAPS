@@ -62,7 +62,7 @@ class DefaultProfile @Inject constructor(
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("units", units.asText)
-        return pureProfileFromJson(profile, dateUtil, activePlugin.activeInsulin)
+        return pureProfileFromJson(profile, dateUtil, activePlugin)
     }
 
     init {

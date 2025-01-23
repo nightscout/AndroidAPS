@@ -16,7 +16,7 @@ import java.security.InvalidParameterException
 
 fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUtil): PS? {
     val pureProfile =
-        profileJson?.let { pureProfileFromJson(it, dateUtil, activePlugin.activeInsulin) ?: return null }
+        profileJson?.let { pureProfileFromJson(it, dateUtil, activePlugin) ?: return null }
             ?: activePlugin.activeProfileSource.profile?.getSpecificProfile(profile) ?: return null
 
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)

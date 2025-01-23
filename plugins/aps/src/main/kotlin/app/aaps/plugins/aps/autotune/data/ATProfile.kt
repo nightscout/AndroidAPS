@@ -173,7 +173,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         } catch (e: JSONException) {
             aapsLogger.error(LTag.CORE, e.stackTraceToString())
         }
-        return pureProfileFromJson(json, dateUtil, activePlugin.activeInsulin, profile.units.asText)
+        return pureProfileFromJson(json, dateUtil, activePlugin, profile.units.asText)
     }
 
     fun profileStore(circadian: Boolean = false): ProfileStore? {
