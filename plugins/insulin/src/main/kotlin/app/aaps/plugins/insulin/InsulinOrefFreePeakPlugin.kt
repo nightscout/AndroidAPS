@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -40,6 +41,9 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 
     override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.free_peak_oref)
+    override fun getOrCreateInsulin(iCfg: ICfg) = ICfg("Free Peak Oref", dia, peak)
+
+    override fun getInsulin(insulinLabel: String)= ICfg("Free Peak Oref", dia, peak)
 
     override fun configuration(): JSONObject =
         JSONObject()

@@ -33,10 +33,11 @@ interface Insulin : ConfigExportImport {
     val dia: Double
     val peak: Int
 
+    fun insulinList() = ArrayList<CharSequence>()
+    fun getOrCreateInsulin(iCfg: ICfg): ICfg
+    fun getInsulin(insulinLabel: String): ICfg
     fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob
-
     fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob
-
     fun fromJson(json: JSONObject): ICfg =
         ICfg(
             insulinLabel = json.optString("insulinLabel", ""),

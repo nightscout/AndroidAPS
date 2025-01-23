@@ -26,6 +26,8 @@ class InsulinLyumjevPlugin @Inject constructor(
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_LYUMJEV
     override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.lyumjev)
+    override fun getOrCreateInsulin(iCfg: ICfg) = ICfg("Lyumjev", dia, peak)
+    override fun getInsulin(insulinLabel: String)= ICfg("Lyumjev", dia, peak)
 
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}

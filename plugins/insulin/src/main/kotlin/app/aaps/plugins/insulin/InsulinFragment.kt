@@ -87,6 +87,11 @@ class InsulinFragment : DaggerFragment() {
                 build()
             }
         }
+        if (insulinPlugin.numOfInsulins == 0)
+            insulinPlugin.addNewInsulin(
+                ICfg("", selectedTemplate.dia, selectedTemplate.peak),
+                autoName = true
+            )
         insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
 
         processVisibility(0)
@@ -146,7 +151,6 @@ class InsulinFragment : DaggerFragment() {
                 value = ValueWithUnit.SimpleString(insulinPlugin.currentInsulin().insulinLabel)
             )
             insulinPlugin.insulins[insulinPlugin.currentInsulinIndex] = currentInsulin
-            aapsLogger.debug("XXXXX Save ${insulinPlugin.insulins[insulinPlugin.currentInsulinIndex]}")
             insulinPlugin.storeSettings()
             insulinPlugin.isEdited = false
             build()

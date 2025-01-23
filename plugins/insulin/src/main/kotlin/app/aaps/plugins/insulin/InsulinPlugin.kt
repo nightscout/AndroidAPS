@@ -11,6 +11,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -64,7 +65,6 @@ class InsulinPlugin @Inject constructor(
 
     override val id = Insulin.InsulinType.UNKNOWN
     override var friendlyName: String = "Insulin"
-    private var lastWarned: Long = 0
 
     override val dia
         get(): Double {
@@ -90,13 +90,59 @@ class InsulinPlugin @Inject constructor(
                     hardLimits.maxDia().toInt()
             }
         }
+    override val iCfg: ICfg
+        get() = insulins[defaultInsulinIndex]
 
+    lateinit var currentInsulin: ICfg
+    private var lastWarned: Long = 0
     var insulins: ArrayList<ICfg> = ArrayList()
     var defaultInsulinIndex = 0
     var currentInsulinIndex = 0
-    lateinit var currentInsulin: ICfg
     val numOfInsulins get() = insulins.size
     var isEdited: Boolean = false
+    val userDefinedDia: Double
+        get() {
+            val profile = profileFunction.getProfile()
+            return profile?.dia ?: hardLimits.minDia()
+        }
+    val userDefinedPeak: Double
+        get() {
+            val profile = profileFunction.getProfile()
+            return profile?.insulinProfile?.peak?.toDouble() ?: hardLimits.minPeak()
+        }
+
+    override fun onStart() {
+        super.onStart()
+        loadSettings()
+    }
+
+    override fun insulinList(): ArrayList<CharSequence> {
+        val ret = ArrayList<CharSequence>()
+        insulins.forEach { ret.add(it.insulinLabel) }
+        return ret
+    }
+
+    override fun getOrCreateInsulin(iCfg: ICfg): ICfg {
+        // First Check insulin with hardlimits, and set default value if not consistent
+        if (iCfg.getPeak() < hardLimits.minPeak() || iCfg.getPeak() > hardLimits.maxPeak())
+            iCfg.peak = insulins[defaultInsulinIndex].peak
+        if (iCfg.getDia() < hardLimits.minDia() || iCfg.getDia() > hardLimits.maxDia())
+            iCfg.insulinEndTime = insulins[defaultInsulinIndex].insulinEndTime
+        insulins.forEach {
+            if (iCfg.isEqual(it))
+                return it
+        }
+        return addNewInsulin(iCfg, true)
+    }
+
+    override fun getInsulin(insulinLabel: String): ICfg {
+        insulins.forEach {
+            if (it.insulinLabel == insulinLabel)
+                return it
+        }
+        aapsLogger.debug(LTag.APS, "Insulin $insulinLabel not found, return default insulin ${insulins[defaultInsulinIndex].insulinLabel}")
+        return insulins[defaultInsulinIndex]
+    }
 
     fun insulinTemplateList(): ArrayList<CharSequence> {
         val ret = ArrayList<CharSequence>()
@@ -117,23 +163,8 @@ class InsulinPlugin @Inject constructor(
     private val notificationPattern: String
         get() = rh.gs(R.string.dia_too_short)
 
-    val userDefinedDia: Double
-        get() {
-            val profile = profileFunction.getProfile()
-            return profile?.dia ?: hardLimits.minDia()
-        }
-    val userDefinedPeak: Double
-        get() {
-            val profile = profileFunction.getProfile()
-            return profile?.insulinProfile?.peak?.toDouble() ?: hardLimits.minPeak()
-        }
-    fun insulinList(): ArrayList<CharSequence> {
-        val ret = ArrayList<CharSequence>()
-        insulins.forEach { ret.add(it.insulinLabel) }
-        return ret
-    }
 
-    fun addNewInsulin(template: ICfg, autoName: Boolean = false) {
+    fun addNewInsulin(template: ICfg, autoName: Boolean = false): ICfg {
         if (autoName)
             template.insulinLabel = createNewInsulinLabel(template)
         val newInsulin = ICfg(
@@ -146,6 +177,7 @@ class InsulinPlugin @Inject constructor(
         currentInsulinIndex = insulins.size - 1
         currentInsulin = newInsulin.deepClone()
         storeSettings()
+        return newInsulin
     }
 
     fun removeCurrentInsulin(activity: FragmentActivity?) {
@@ -176,15 +208,10 @@ class InsulinPlugin @Inject constructor(
         return insulinLabel
     }
 
-    override fun onStart() {
-        super.onStart()
-        loadSettings()
-    }
 
     @Synchronized
     fun loadSettings() {
         val jsonString = sp.getString(app.aaps.core.utils.R.string.key_insulin_configuration, "")
-        aapsLogger.debug("XXXXX Load Settings $jsonString")
         try {
             JSONObject(jsonString).let {
                 applyConfiguration(it)
@@ -196,7 +223,6 @@ class InsulinPlugin @Inject constructor(
 
     @Synchronized
     fun storeSettings() {
-        aapsLogger.debug("XXXXX store Settings ${configuration()}")
         sp.putString(app.aaps.core.utils.R.string.key_insulin_configuration, configuration().toString())
     }
 
@@ -207,6 +233,8 @@ class InsulinPlugin @Inject constructor(
     override fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob {
         assert(dia != 0.0)
         assert(peak != 0)
+        return iobCalc(bolus, time, peak.toDouble(), dia)
+        /*
         val result = Iob()
         if (bolus.amount != 0.0) {
             val bolusTime = bolus.timestamp
@@ -223,6 +251,7 @@ class InsulinPlugin @Inject constructor(
             }
         }
         return result
+         */
     }
 
     private fun iobCalc(bolus: BS, time: Long, peak: Double, dia: Double): Iob {
@@ -243,9 +272,6 @@ class InsulinPlugin @Inject constructor(
         }
         return result
     }
-
-    override val iCfg: ICfg
-        get() = insulins[defaultInsulinIndex]
 
     @Synchronized
     override fun configuration(): JSONObject {
