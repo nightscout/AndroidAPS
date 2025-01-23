@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">Inválido</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Bomba desconectada</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Bomba reconectada</string>
+    <string name="garmin_request_key">Solicitar clave</string>
+    <string name="garmin_request_key_summary">Clave opcional para securizar la comunicación HTTP entre el dispositivo Garmin y AAPS.</string>
 </resources>
