@@ -334,6 +334,14 @@ interface Preferences {
     fun get(key: LongPreferenceKey): Long
 
     /**
+     * Increment [Long] value in [android.content.SharedPreferences]
+     *
+     * @param key [LongNonPreferenceKey] enum
+     * @param value value
+     */
+    fun inc(key: LongNonPreferenceKey)
+
+    /**
      * Get [String] value from [android.content.SharedPreferences]
      * *
      * @param key [LongComposedNonPreferenceKey] enum

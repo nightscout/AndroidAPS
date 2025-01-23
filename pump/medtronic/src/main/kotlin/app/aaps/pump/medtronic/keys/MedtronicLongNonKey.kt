@@ -7,6 +7,9 @@ enum class MedtronicLongNonKey(
     override val defaultValue: Long,
 ) : LongNonPreferenceKey {
 
+    TbrsSet("medtronic_tbrs_set", 0),
+    SmbBoluses("medtronic_smb_boluses_delivered", 0),
+    StandardBoluses("medtronic_std_boluses_delivered", 0),
     FirstPumpUse("medtronic_first_pump_use", 0),
     LastGoodPumpCommunicationTime("medtronic_lastGoodPumpCommunicationTime", 0L),
     LastPumpHistoryEntry("medtronic_pump_history_entry", 0L),

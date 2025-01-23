@@ -123,7 +123,7 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun inc(key: IntNonPreferenceKey) {
-        sp.putInt(key.key, get(key) + 1)
+        sp.incInt(key.key)
     }
 
     override fun get(key: IntPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
@@ -138,6 +138,10 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun get(key: LongPreferenceKey): Long = sp.getLong(key.key, key.defaultValue)
+
+    override fun inc(key: LongNonPreferenceKey) {
+        sp.incLong(key.key)
+    }
 
     override fun remove(key: NonPreferenceKey) {
         sp.remove(key.key)

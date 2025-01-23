@@ -93,7 +93,6 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.keys.MedtronicBooleanPreferenceKey
-import app.aaps.pump.medtronic.keys.MedtronicIntNonKey
 import app.aaps.pump.medtronic.keys.MedtronicIntPreferenceKey
 import app.aaps.pump.medtronic.keys.MedtronicLongNonKey
 import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
@@ -150,7 +149,7 @@ class MedtronicPumpPlugin @Inject constructor(
     ownPreferences = listOf(
         RileylinkBooleanPreferenceKey::class.java, RileyLinkDoubleKey::class.java, RileyLinkIntentPreferenceKey::class.java,
         RileyLinkLongKey::class.java, RileyLinkStringKey::class.java, RileyLinkStringPreferenceKey::class.java,
-        MedtronicBooleanPreferenceKey::class.java, MedtronicIntNonKey::class.java, MedtronicIntPreferenceKey::class.java,
+        MedtronicBooleanPreferenceKey::class.java, MedtronicIntPreferenceKey::class.java,
         MedtronicLongNonKey::class.java, MedtronicStringPreferenceKey::class.java
     ),
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
@@ -675,7 +674,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits = medtronicPumpStatus.reservoirRemainingUnits - detailedBolusInfo.insulin
-                preferences.inc(if (detailedBolusInfo.bolusType === BS.Type.SMB) MedtronicIntNonKey.SmbBoluses else MedtronicIntNonKey.StandardBoluses)
+                preferences.inc(if (detailedBolusInfo.bolusType === BS.Type.SMB) MedtronicLongNonKey.SmbBoluses else MedtronicLongNonKey.StandardBoluses)
 
                 // calculate time for bolus and set driver to busy for that time
                 val bolusTime = (detailedBolusInfo.insulin * 42.0).toInt()
@@ -787,7 +786,7 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.runningTBRWithTemp = tempData
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
-            preferences.inc(MedtronicIntNonKey.TbrsSet)
+            preferences.inc(MedtronicLongNonKey.TbrsSet)
             finishAction("TBR")
             instantiator.providePumpEnactResult().success(true).enacted(true) //
                 .absolute(absoluteRate).duration(durationInMinutes)
