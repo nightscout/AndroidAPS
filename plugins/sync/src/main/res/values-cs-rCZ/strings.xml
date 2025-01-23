@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">Neplatný</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpa odpojena</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Pumpa byla znovu připojena</string>
+    <string name="garmin_request_key">Vyžadovaný klíč</string>
+    <string name="garmin_request_key_summary">Volitelný klíč pro zabezpečení HTTP komunikace mezi zařízením Garmin a AAPS.</string>
 </resources>
