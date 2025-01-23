@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">無效</string>
     <string name="wear_action_loop_state_now_pump_disconnected">幫浦已中斷連線</string>
     <string name="wear_action_loop_state_now_pump_reconnected">幫浦已重新連線</string>
+    <string name="garmin_request_key">請求金鑰</string>
+    <string name="garmin_request_key_summary">可選金鑰，用來加密 Garmin 裝置與 AAPS 的 HTTP 通訊。</string>
 </resources>
