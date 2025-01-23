@@ -173,7 +173,7 @@ class AutotunePrep @Inject constructor(
                 log("No Carbs entries")
             //return null
         }
-        if (autotuneIob.boluses.isEmpty) {
+        if (autotuneIob.boluses.isEmpty()) {
             //aapsLogger.debug(LTag.AUTOTUNE, "No treatment received")
             if (verbose)
                 log("No treatment received")

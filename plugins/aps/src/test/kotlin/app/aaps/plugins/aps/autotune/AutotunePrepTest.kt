@@ -233,7 +233,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 )
             )
         }
-        if (boluses.isEmpty)  //Add at least one insulin treatment for tests to avoid return null in categorization
+        if (boluses.isEmpty())  //Add at least one insulin treatment for tests to avoid return null in categorization
             boluses.add(
                 BS(
                     timestamp = startDayTime,

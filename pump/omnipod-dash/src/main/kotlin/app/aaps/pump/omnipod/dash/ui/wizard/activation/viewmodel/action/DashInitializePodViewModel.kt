@@ -8,7 +8,9 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
@@ -28,6 +30,7 @@ class DashInitializePodViewModel @Inject constructor(
     instantiator: Instantiator,
     logger: AAPSLogger,
     private val sp: SP,
+    private val preferences: Preferences,
     private val podStateManager: OmnipodDashPodStateManager,
     private val rh: ResourceHelper,
     private val history: DashHistory,
@@ -43,7 +46,7 @@ class DashInitializePodViewModel @Inject constructor(
 
     override fun doExecuteAction(): Single<PumpEnactResult> =
         Single.create { source ->
-            val lowReservoirAlertEnabled = sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
+            val lowReservoirAlertEnabled = preferences.get(OmnipodBooleanPreferenceKey.LowReservoirAlert)
             val lowReservoirAlertUnits = sp.getInt(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_units, 10)
             val lowReservoirAlertTrigger = if (lowReservoirAlertEnabled) {
                 AlertTrigger.ReservoirVolumeTrigger((lowReservoirAlertUnits * 10).toShort())
