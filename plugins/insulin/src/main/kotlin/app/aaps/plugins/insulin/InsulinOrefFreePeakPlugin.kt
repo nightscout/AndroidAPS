@@ -39,7 +39,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 ) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
-
+    override fun setDefault(iCfg: ICfg?) { }
     override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.free_peak_oref)
     override fun getOrCreateInsulin(iCfg: ICfg) = ICfg("Free Peak Oref", dia, peak)
 

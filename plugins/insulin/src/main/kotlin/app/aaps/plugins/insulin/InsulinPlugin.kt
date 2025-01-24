@@ -90,6 +90,15 @@ class InsulinPlugin @Inject constructor(
                     hardLimits.maxDia().toInt()
             }
         }
+
+    override fun setDefault(insulin: ICfg?) {
+        insulins.forEachIndexed { index, iCfg ->
+            if(iCfg.isEqual(insulin))
+                defaultInsulinIndex = index
+        }
+        currentInsulinIndex = defaultInsulinIndex
+    }
+
     override val iCfg: ICfg
         get() = insulins[defaultInsulinIndex]
 

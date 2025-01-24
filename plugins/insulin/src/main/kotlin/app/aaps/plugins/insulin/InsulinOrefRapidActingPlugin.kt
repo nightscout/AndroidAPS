@@ -29,7 +29,7 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_RAPID_ACTING
     override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.rapid_acting_oref)
-
+    override fun setDefault(iCfg: ICfg?) { }
     override fun getOrCreateInsulin(iCfg: ICfg) = ICfg("Rapid Acting Oref", dia, peak)
 
     override fun getInsulin(insulinLabel: String)= ICfg("Rapid Acting Oref", dia, peak)

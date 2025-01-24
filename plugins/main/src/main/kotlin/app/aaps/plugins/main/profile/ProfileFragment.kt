@@ -347,7 +347,16 @@ class ProfileFragment : DaggerFragment() {
             if (loop.isDisconnected) {
                 activity?.let { activity -> OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected)) }
             } else {
-                uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+                if (insulinPlugin.iCfg.isEqual(profilePlugin.currentProfile()?.iCfg))
+                    uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+                else
+                    activity?.let { activity ->
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.change_default_insulin), rh.gs(R.string.change_default_insulin_message),
+                            Runnable {
+                                uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+                                insulinPlugin.setDefault(profilePlugin.currentProfile()?.iCfg)
+                            })
+                    }
             }
         }
 

@@ -166,6 +166,8 @@
     <string name="basal_short">BAS</string>
     <string name="isf_dynamic_label_warning">Your algorithm can provide dynamic calculation of ISF. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
     <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below cen be used only as a fallback in case of missing data or as a reference value only</string>
+    <string name="change_default_insulin">Change Default Insulin</string>
+    <string name="change_default_insulin_message">This profile is defined with another insulin than previous one. This should be done during a reservoir change or if you want to update insulin parameter\nAfter profile switch, default insulin will be updated</string>
 
     <!-- Actions -->
     <string name="actions">Actions</string>

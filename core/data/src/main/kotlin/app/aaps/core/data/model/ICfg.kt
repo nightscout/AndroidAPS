@@ -7,14 +7,17 @@ data class ICfg(
 ) {
     constructor(insulinLabel: String, dia: Double, peak: Int) : this(insulinLabel, (dia * 3600 * 1000).toLong(), (peak * 60000).toLong())
 
-    fun isEqual(iCfg: ICfg) : Boolean {
+    fun isEqual(iCfg: ICfg?) : Boolean {
         //if (insulinLabel != iCfg.insulinLabel)
         //    return false
-        if (insulinEndTime != iCfg.insulinEndTime)
-            return false
-        if (peak != iCfg.peak)
-            return false
-        return true
+        iCfg?.let { iCfg ->
+            if (insulinEndTime != iCfg.insulinEndTime)
+                return false
+            if (peak != iCfg.peak)
+                return false
+            return true
+        }
+        return false
     }
 
     fun getDia(): Double = insulinEndTime / 3600.0 / 1000.0
