@@ -53,7 +53,7 @@ interface UiInteraction {
 
     fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int? = null, name: String? = null)
     fun runLoopDialog(fragmentManager: FragmentManager, showOkCancel: Int)
-    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null)
+    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null, insulinName: String? = null)
     fun runTempBasalDialog(fragmentManager: FragmentManager)
     fun runTreatmentDialog(fragmentManager: FragmentManager)
     fun runInsulinDialog(fragmentManager: FragmentManager)

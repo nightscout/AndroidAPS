@@ -504,7 +504,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     protectionCheck.queryProtection(
                         activity,
                         ProtectionCheck.Protection.BOLUS,
-                        UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager) })
+                        UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager, insulinName =  activePlugin.activeInsulin.iCfg.insulinLabel) })
             }
 
         }
