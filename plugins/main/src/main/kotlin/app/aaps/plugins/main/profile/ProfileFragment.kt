@@ -135,7 +135,7 @@ class ProfileFragment : DaggerFragment() {
         val aps = activePlugin.activeAPS
         binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
         binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
-        binding.insulinList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        binding.insulinList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             val insulin = insulinPlugin.getInsulin(binding.insulinList.text.toString())
             profilePlugin.currentProfile()?.iCfg = insulin
             profilePlugin.currentProfile()?.dia = insulin.getDia()
