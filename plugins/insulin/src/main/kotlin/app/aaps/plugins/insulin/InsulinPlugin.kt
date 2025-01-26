@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.toast.ToastUtils
 import org.json.JSONArray
@@ -305,7 +306,7 @@ class InsulinPlugin @Inject constructor(
             for (index in 0 until (it.length())) {
                 try {
                     val o = it.getJSONObject(index)
-                    insulins.add(fromJson(o))
+                    insulins.add(ICfg.fromJson(o))
 
                 } catch (e: Exception) {
                     //

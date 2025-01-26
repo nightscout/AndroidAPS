@@ -2,6 +2,7 @@ package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
@@ -37,7 +38,7 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin
         val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
         val iCfg = JsonHelper.safeGetStringAllowNull(jsonObject, "icfg", null)?.let {
-            activePlugin.activeInsulin.fromJson(JSONObject(it))
+            ICfg.fromJson(JSONObject(it))
         } ?:activePlugin.activeInsulin.iCfg.also { it.setDia(dia) }
 
         val isfBlocks = blockFromJsonArray(jsonObject.getJSONArray("sens"), dateUtil) ?: return null

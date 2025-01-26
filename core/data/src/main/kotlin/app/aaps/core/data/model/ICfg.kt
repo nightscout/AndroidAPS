@@ -5,6 +5,7 @@ data class ICfg(
     var insulinEndTime: Long, // DIA before [milliseconds]
     var peak: Long // [milliseconds]
 ) {
+
     constructor(insulinLabel: String, dia: Double, peak: Int) : this(insulinLabel, (dia * 3600 * 1000).toLong(), (peak * 60000).toLong())
 
     fun isEqual(iCfg: ICfg?) : Boolean {
@@ -33,4 +34,6 @@ data class ICfg(
     }
 
     fun deepClone(): ICfg = ICfg(insulinLabel, insulinEndTime, peak)
+
+    companion object;
 }

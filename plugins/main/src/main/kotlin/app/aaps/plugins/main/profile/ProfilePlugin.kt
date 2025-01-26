@@ -3,6 +3,7 @@ package app.aaps.plugins.main.profile
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -28,6 +29,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -220,7 +222,7 @@ class ProfilePlugin @Inject constructor(
                     ProfileSource.SingleProfile(
                         name = name,
                         mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
-                        iCfg = activePlugin.activeInsulin.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg",activePlugin.activeInsulin.iCfg.toJson().toString()))),
+                        iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", activePlugin.activeInsulin.iCfg.toJson().toString()))),
                         dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
                         ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
                         isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),

@@ -38,12 +38,6 @@ interface Insulin : ConfigExportImport {
     fun getInsulin(insulinLabel: String): ICfg
     fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob
     fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob
-    fun fromJson(json: JSONObject): ICfg =
-        ICfg(
-            insulinLabel = json.optString("insulinLabel", ""),
-            insulinEndTime = json.optLong("insulinEndTime", 6 * 3600 * 1000),
-            peak = json.optLong("peak")
-        )
 
     val iCfg: ICfg
 }
