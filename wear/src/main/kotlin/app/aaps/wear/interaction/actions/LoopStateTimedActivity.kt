@@ -65,7 +65,7 @@ class LoopStateTimedActivity : ViewSelectorActivity() {
                 val title = if (isHours)
                     getString(R.string.action_duration_h)
                 else
-                    getString(R.string.action_duration)
+                    getString(app.aaps.core.ui.R.string.duration_min_label)
                 editDuration = PlusMinusEditText(
                     viewAdapter,
                     minValue.toDouble(), minValue.toDouble(),
