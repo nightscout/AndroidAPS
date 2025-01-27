@@ -772,7 +772,7 @@ class DataHandlerMobile @Inject constructor(
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Percentage"))
         }
-        if (command.timeShift < -23 || command.timeShift > 23) {
+        if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
         }
         val profileName = profileFunction.getProfileName()
@@ -1764,7 +1764,7 @@ class DataHandlerMobile @Inject constructor(
         //check for validity
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE)
             return
-        if (command.timeShift < -23 || command.timeShift > 23)
+        if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT)
             return
         profileFunction.getProfile() ?: return
         //send profile to pump
