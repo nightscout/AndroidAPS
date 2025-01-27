@@ -26,6 +26,7 @@ import app.aaps.core.objects.extensions.lowTargetBlockValueBySeconds
 import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.extensions.shiftTargetBlock
 import app.aaps.core.objects.extensions.targetBlockValueBySeconds
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.R
 import app.aaps.core.utils.MidnightUtils
 import org.json.JSONArray
@@ -318,6 +319,7 @@ sealed class ProfileSealed(
             icBlocks = icBlocks.shiftBlock(100.0 / percentage, timeshift),
             targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
             glucoseUnit = units,
+            iCfg = iCfg,
             dia = when (this) {
                 is PS   -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
                 is EPS  -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
@@ -330,6 +332,7 @@ sealed class ProfileSealed(
         val o = JSONObject()
         o.put("units", units.asText)
         o.put("dia", dia)
+        o.put("icfg", iCfg.toJson())
         o.put("timezone", dateUtil.timeZoneByOffset(utcOffset).id ?: "UTC")
         // SENS
         val sens = JSONArray()

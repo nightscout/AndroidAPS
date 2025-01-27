@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.profile
 
 import androidx.fragment.app.FragmentActivity
+import app.aaps.core.data.model.ICfg
 import org.json.JSONArray
 
 interface ProfileSource {
@@ -11,6 +12,7 @@ interface ProfileSource {
     class SingleProfile(
         var name: String,
         var mgdl: Boolean,
+        var iCfg: ICfg,
         var dia: Double,
         var ic: JSONArray,
         var isf: JSONArray,
@@ -23,6 +25,7 @@ interface ProfileSource {
             SingleProfile(
                 name = name,
                 mgdl = mgdl,
+                iCfg = iCfg.deepClone(),
                 dia = dia,
                 ic = JSONArray(ic.toString()),
                 isf = JSONArray(isf.toString()),

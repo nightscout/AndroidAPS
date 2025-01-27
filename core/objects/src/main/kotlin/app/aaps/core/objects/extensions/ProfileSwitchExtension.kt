@@ -2,6 +2,7 @@ package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.PureProfile
@@ -34,6 +35,9 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
         val units = GlucoseUnit.fromText(txtUnits)
         val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
+        val iCfg = JsonHelper.safeGetStringAllowNull(jsonObject, "icfg", null)?.let {
+            ICfg.fromJson(JSONObject(it))
+        } ?: return null
 
         val isfBlocks = blockFromJsonArray(jsonObject.getJSONArray("sens"), dateUtil) ?: return null
         val icBlocks = blockFromJsonArray(jsonObject.getJSONArray("carbratio"), dateUtil)
@@ -51,7 +55,8 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
             targetBlocks = targetBlocks,
             glucoseUnit = units,
             timeZone = timezone,
-            dia = dia
+            dia = dia,
+            iCfg = iCfg
         )
     } catch (ignored: Exception) {
         return null

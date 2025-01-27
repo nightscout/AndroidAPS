@@ -1,11 +1,14 @@
 package app.aaps.ui.defaultProfile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
@@ -19,7 +22,8 @@ import kotlin.math.abs
 @Singleton
 class DefaultProfile @Inject constructor(
     private val dateUtil: DateUtil,
-    private val profileUtil: ProfileUtil
+    private val profileUtil: ProfileUtil,
+    private val activePlugin: ActivePlugin
 ) {
 
     private var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
@@ -53,7 +57,8 @@ class DefaultProfile @Inject constructor(
         } else if (age > 18) {
             return null
         }
-        profile.put("dia", 5.0)
+        profile.put("dia", activePlugin.activeInsulin.iCfg.getDia())
+        profile.put("icfg", activePlugin.activeInsulin.iCfg.toJson())
         profile.put("carbs_hr", 20) // not used
         profile.put("delay", 5.0) // not used
         profile.put("timezone", TimeZone.getDefault().id)
