@@ -775,7 +775,7 @@ class DataHandlerMobile @Inject constructor(
         if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
         }
-        val profileName = profileFunction.getProfileName()
+        val profileName = profileFunction.getOriginalProfileName()
         val message = rh.gs(R.string.profile_message, profileName, command.timeShift, command.percentage)
         rxBus.send(
             EventMobileToWear(
