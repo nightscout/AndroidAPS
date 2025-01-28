@@ -110,7 +110,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         if (config.AAPSCLIENT) {
-            if(preferences.get(BooleanKey.SmsAllowRemoteCommands)) {
+            if (preferences.get(BooleanKey.SmsAllowRemoteCommands)) {
                 binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
             } else {
                 binding.recordOnly.isChecked = true

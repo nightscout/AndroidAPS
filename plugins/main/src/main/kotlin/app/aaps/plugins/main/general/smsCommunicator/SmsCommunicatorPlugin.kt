@@ -24,6 +24,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -129,52 +130,16 @@ class SmsCommunicatorPlugin @Inject constructor(
     aapsLogger, rh
 ), SmsCommunicator {
 
+    @Inject lateinit var automation: Automation
+
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
     @Volatile var messageToConfirm: AuthRequest? = null
     @Volatile var lastRemoteBolusTime: Long = 0
     override var messages = ArrayList<Sms>()
 
-    // BOLUS 1.2
-    // BOLUS 1.2 MEAL
-    // BOLUS 1.2 CARBS 12
-    // BOLUS 1.2 CARBS 12 21:37
-    // BOLUS 1.2 CARBS 12 21:37 ALARM
-    // BOLUS 1.2 CARBS 12 1:37 ALARM
-    // BOLUS 1.2 CARBS 12 0:3 ALARM
-    // BOLUS 1
-    // BOLUS 0.05
-    //
-    // BONUS 1
-    // BOLUS 1.2 CARBS 12 0:3 AARM
-    // BOLUS 1.2 CARBS 1:37 ALARM 12
-    //
-    // ^BOLUS\s+(\d+(?:.\d+)?)(\s((MEAL|CARBS\s(\d+)(\s((\d{1,2}:\d{1,2}(\sALARM)?)))?))?)?$
-    // better: ^BOLUS\s+(\d+(?:.\d+)?)\s*(?:(MEAL)|(?:CARBS\s+(\d+)(?:\s*(\d{1,2}:\d{1,2})(?:\s*ALARM)?)?)?)?$
-    //
-    //
-    // offset:
-    // todo: introduce named groups
-    // ^BOLUS\s+(\d+(?:.\d+)?)\s*(?:(MEAL)|(?:CARBS\s+(\d+)(?:\s*((?:\d{1,2}:\d{1,2})|(?:\+\d{1,2}))(?:\s*ALARM)?)?)?)?$
-    // BOLUS 1.2
-    // BOLUS 1.2 MEAL
-    // BOLUS 1.2 CARBS 12
-    // BOLUS 1.2 CARBS 12 21:37
-    // BOLUS 1.2 CARBS 12 21:37 ALARM
-    // BOLUS 1.2 CARBS 12 1:37 ALARM
-    // BOLUS 1.2 CARBS 12 0:3 ALARM
-    // BOLUS 1
-    // BOLUS 0.05
-    // BOLUS 1.2 CARBS 12 +37 ALARM
-    //
-    // BONUS 1
-    // BOLUS 1.2 CARBS 12 0:3 AARM
-    // BOLUS 1.2 CARBS 1:37 ALARM 12
-    // BOLUS 1.2 CARBS 12 +1:37 ALARM
-    // BOLUS 1.2 CARBS 12 -0:3 ALARM
-    // BOLUS 1.2 CARBS 12 -3 ALARM
-    // BOLUS 1.2 CARBS 12 37 ALARM
-
+    private val CARBS_PATTERN = Pattern.compile("CARBS\\s+(\\d+)(?:\\s*(?:(\\d{1,2}:\\d{2}(?:AM|PM)?)|(\\+\\d{1,2}))(\\s*ALARM)?)?$")
+    private val BOLUSCARBS_PATTERN = Pattern.compile("BOLUSCARBS\\s+(\\d+(?:\\.\\d+)?)\\s+(\\d+)(?:\\s*(?:(\\d{1,2}:\\d{2}(?:AM|PM)?)|(\\+\\d{1,2}))(\\s*ALARM)?)?$")
 
     private val commands = mapOf(
         "BG" to "BG",
@@ -182,8 +147,8 @@ class SmsCommunicatorPlugin @Inject constructor(
         "AAPSCLIENT" to "AAPSCLIENT RESTART",
         "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
         "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
-        "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL\nBOLUS 1.2 CARBS 12\nBOLUS 1.2 CARBS 12 21:37\n",
-            //+ "BOLUS 1.2 CARBS 12 21:37 ALARM",
+        "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL\n",
+        "BOLUSCARBS" to "BOLUSCARBS 1.2 12\nBOLUSCARBS 1.2 12 21:37\nBOLUSCARBS 1.2 12 +15 ALARM\n",
         "EXTENDED" to "EXTENDED STOP/CANCEL\nEXTENDED 2 120",
         "CAL" to "CAL 5.6",
         "PROFILE" to "PROFILE STATUS/LIST\nPROFILE 1\nPROFILE 2 30",
@@ -309,16 +274,10 @@ class SmsCommunicatorPlugin @Inject constructor(
             rxBus.send(EventSmsCommunicatorUpdateGui())
             return
         }
-        val pump = activePlugin.activePump
         messages.add(receivedSms)
         aapsLogger.debug(LTag.SMS, receivedSms.toString())
         val divided = receivedSms.text.trim().split(Regex("\\s+")).toTypedArray()
         val remoteCommandsAllowed = preferences.get(BooleanKey.SmsAllowRemoteCommands)
-
-        val minDistance =
-            if (areMoreNumbers(preferences.get(StringKey.SmsAllowedNumbers)))
-                T.mins(preferences.get(IntKey.SmsRemoteBolusDistance).toLong()).msecs()
-            else Constants.remoteBolusMinDistance
 
         if (divided.isNotEmpty() && isCommand(divided[0].uppercase(Locale.getDefault()), receivedSms.phoneNumber)) {
             when (divided[0].uppercase(Locale.getDefault())) {
@@ -356,16 +315,18 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
                 "BOLUS"      ->
-                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
-                    else if (commandQueue.bolusInQueue()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_another_bolus_in_queue)))
-                    else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)))
-                    else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.pumpsuspended)))
+                    if (!validateBolusCommand(receivedSms)) return
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+
+                "BOLUSCARBS" ->
+                    if (!validateBolusCommand(receivedSms)) return
+                    else if (divided.size >= 3 && divided.size <= 5) processBOLUSCARBS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
                 "CARBS"      ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
-                    else if (divided.size == 2 || divided.size == 3) processCARBS(divided, receivedSms)
+                    else if (divided.size >= 2 && divided.size <= 4) processCARBS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
                 "CAL"        ->
@@ -399,6 +360,32 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
         }
         rxBus.send(EventSmsCommunicatorUpdateGui())
+    }
+
+    private fun validateBolusCommand(receivedSms: Sms): Boolean {
+        val pump = activePlugin.activePump
+        val minDistance =
+            if (areMoreNumbers(preferences.get(StringKey.SmsAllowedNumbers)))
+                T.mins(preferences.get(IntKey.SmsRemoteBolusDistance).toLong()).msecs()
+            else Constants.remoteBolusMinDistance
+
+        if (!preferences.get(BooleanKey.SmsAllowRemoteCommands)) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
+            return false
+        }
+        if (commandQueue.bolusInQueue()) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_another_bolus_in_queue)))
+            return false
+        }
+        if (dateUtil.now() - lastRemoteBolusTime < minDistance) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)))
+            return false
+        }
+        if (pump.isSuspended()) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.pumpsuspended)))
+            return false
+        }
+        return true
     }
 
     private fun processBG(receivedSms: Sms) {
@@ -970,20 +957,18 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
         var bolus = SafeParse.stringToDouble(divided[1])
-        val isMeal = divided.size == 3 && divided[2].equals("MEAL", ignoreCase = true)
-        val carbsPresent = divided.size == 3 && divided[2].equals("CARBS", ignoreCase = true)
-
+        val isMeal = divided.size > 2 && divided[2].equals("MEAL", ignoreCase = true)
         bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()
-        // if (divided.size == 3 && !isMeal) {
-        //     sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
-        // } else
-        if (bolus > 0.0) {
-            val iob = iobCobCalculator.calculateIobFromBolus().round().iob + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
+        if (divided.size == 3 && !isMeal) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+        } else if (bolus > 0.0) {
             val passCode = generatePassCode()
+            val iob = iobCobCalculator.calculateIobFromBolus().round().iob + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
             val reply = if (isMeal)
                 rh.gs(R.string.smscommunicator_meal_bolus_reply_with_code, bolus, passCode, iob)
             else
                 rh.gs(R.string.smscommunicator_bolus_reply_with_code, bolus, passCode, iob)
+
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, bolus) {
                 override fun run() {
@@ -1047,8 +1032,85 @@ class SmsCommunicatorPlugin @Inject constructor(
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+    }
 
+    private fun parseTimeOrOffset(timeStr: String?, offset: String?): Long {
+        return when {
+            timeStr != null -> toTodayTime(timeStr.uppercase(Locale.getDefault()))
+            offset != null  -> dateUtil.now() + T.mins(SafeParse.stringToInt(offset).toLong()).msecs()
+            else            -> dateUtil.now()
+        }
+    }
 
+    private fun clampBolus(amount: Double): Double {
+        return constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
+    }
+
+    private fun clampCarbs(amount: Int): Int {
+        return constraintChecker.applyCarbsConstraints(ConstraintObject(amount, aapsLogger)).value()
+    }
+
+    private fun processBOLUSCARBS(divided: Array<String>, receivedSms: Sms) {
+        val matcher = BOLUSCARBS_PATTERN.matcher(receivedSms.text)
+
+        if (!matcher.matches()) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+            return
+        }
+
+        val bolus = clampBolus(SafeParse.stringToDouble(divided[1]))
+        val carbs = clampCarbs(SafeParse.stringToInt(divided[2]))
+        val carbsTime = parseTimeOrOffset(matcher.group(3), matcher.group(4))
+        val currentTime = dateUtil.now()
+        val offsetMin = SafeParse.stringToLong(matcher.group(4))
+        val useAlarm = divided.size == 5
+
+        if (bolus > 0 && carbs > 0) {
+            val iob = iobCobCalculator.calculateIobFromBolus().round().iob +
+                iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
+
+            val passCode = generatePassCode()
+            val reply = rh.gs(
+                R.string.smscommunicator_boluscarbs_reply_with_code,
+                bolus, carbs, matcher.group(4) ?: dateUtil.timeString(carbsTime), passCode, iob
+            )
+
+            receivedSms.processed = true
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode,
+                                           object : SmsAction(pumpCommand = true, bolus, carbs, currentTime, carbsTime) {
+                                               override fun run() {
+                                                   val detailedBolusInfo = DetailedBolusInfo()
+                                                   detailedBolusInfo.insulin = aDouble()
+                                                   detailedBolusInfo.carbs = anInteger().toDouble()
+                                                   detailedBolusInfo.timestamp = aLong()
+                                                   detailedBolusInfo.carbsTimestamp = secondLong()
+
+                                                   commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                                                       override fun run() {
+                                                           if (result.success) {
+                                                               val replyText = rh.gs(
+                                                                   R.string.smscommunicator_boluscarbs_delivered,
+                                                                   result.bolusDelivered, anInteger()
+                                                               )
+                                                               sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                                               uel.log(Action.BOLUS, Sources.SMS, replyText)
+                                                               if (useAlarm && carbs > 0 && offsetMin > 0) {
+                                                                   automation.scheduleTimeToEatReminder(T.mins(offsetMin).secs().toInt())
+                                                               }
+                                                           } else {
+                                                               var replyText = rh.gs(R.string.smscommunicator_boluscarbs_failed)
+                                                               replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                                                               sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                                               uel.log(Action.BOLUS, Sources.SMS, replyText)
+                                                           }
+                                                       }
+                                                   })
+                                               }
+                                           }
+            )
+        } else {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+        }
     }
 
     private fun toTodayTime(hhColonMm: String): Long {
@@ -1071,26 +1133,39 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
-        var grams = SafeParse.stringToInt(divided[1])
+        val matcher = CARBS_PATTERN.matcher(receivedSms.text)
+        if (!matcher.matches()) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+            return
+        }
+
+        var carbs = SafeParse.stringToInt(matcher.group(1))
+        var targetTime: String? = matcher.group(2)
+        val offsetMin = SafeParse.stringToLong(matcher.group(3))
+        val useAlarm = matcher.group(4) != null
         var time = dateUtil.now()
-        if (divided.size > 2) {
-            time = toTodayTime(divided[2].uppercase(Locale.getDefault()))
+
+        if (targetTime != null) {
+            time = toTodayTime(targetTime.uppercase(Locale.getDefault()))
             if (time == 0L) {
                 sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
                 return
             }
+        } else if (offsetMin > 0) {
+            time = dateUtil.now() + T.mins(offsetMin).msecs()
         }
-        grams = constraintChecker.applyCarbsConstraints(ConstraintObject(grams, aapsLogger)).value()
-        if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+
+        carbs = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
+        if (carbs == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         else {
             val passCode = generatePassCode()
-            val reply = rh.gs(R.string.smscommunicator_carbs_reply_with_code, grams, dateUtil.timeString(time), passCode)
+            val reply = rh.gs(R.string.smscommunicator_carbs_reply_with_code, carbs, matcher.group(3) ?: dateUtil.timeString(time), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, grams, time) {
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, carbs, time) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
-                    detailedBolusInfo.timestamp = secondLong()
+                    detailedBolusInfo.timestamp = aLong()
                     commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
                             if (result.success) {
@@ -1112,6 +1187,10 @@ class SmsCommunicatorPlugin @Inject constructor(
                             }
                         }
                     })
+
+                    if (useAlarm && carbs > 0 && offsetMin > 0) {
+                        automation.scheduleTimeToEatReminder(T.mins(offsetMin).secs().toInt())
+                    }
                 }
             })
         }

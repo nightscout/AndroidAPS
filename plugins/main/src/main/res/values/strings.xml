@@ -45,6 +45,9 @@
     <string name="smscommunicator_remote_bolus_min_distance">How many minutes must elapse, at least, between one bolus and the next</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="smscommunicator_boluscarbs_reply_with_code">To deliver bolus %1$.2fU and enter %2$dg at %3$s reply with code %4$s. Current IOB is %5$.2fU</string>
+    <string name="smscommunicator_boluscarbs_delivered">Bolus %1$.2fU delivered and carbs %2$dg entered successfully</string>
+    <string name="smscommunicator_boluscarbs_failed">Bolus and carbs failed</string>
     <string name="smscommunicator_meal_bolus_delivered">Meal Bolus %1$.2f U delivered successfully</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s for %2$d minutes</string>
     <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>

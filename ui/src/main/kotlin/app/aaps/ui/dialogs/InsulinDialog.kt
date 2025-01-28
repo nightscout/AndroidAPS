@@ -133,7 +133,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             // If SmsAllowRemoteCommands is True and valid phone number is provided. then user might use either SMS command or record only.
             // Hardcode record_only option otherwise
             val allowSms = preferences.get(BooleanKey.SmsAllowRemoteCommands)
-            if(allowSms) {
+            if (allowSms) {
                 binding.recordOnly.isEnabled = !preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
                 binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
             } else {

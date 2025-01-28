@@ -291,11 +291,13 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattCritical, title = R.string.statuslights_bat_critical))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageWarning, title = R.string.statuslights_bage_warning))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageCritical, title = R.string.statuslights_bage_critical))
-                addPreference(AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
-                                                      onPreferenceClickListener = {
-                                                          nsSettingStatus.copyStatusLightsNsSettings(context)
-                                                          true
-                                                      }))
+                addPreference(
+                    AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
+                                            onPreferenceClickListener = {
+                                                nsSettingStatus.copyStatusLightsNsSettings(context)
+                                                true
+                                            })
+                )
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
 
