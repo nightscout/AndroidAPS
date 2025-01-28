@@ -61,8 +61,12 @@
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="pref_show_week_number">Rodyti savaitės numerį</string>
     <string name="pref_show_date">Rodyti datą</string>
+    <string name="pref_show_seconds">Rodyti sekundes</string>
     <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
     <string name="default_custom_watchface_external_comment">Numatytasis laikrodžio ciferblatas, įskaitant peržiūrą sekėjams. Galite spustelėti mygtuką EKSPORTUOTI CIFERBLATĄ, kad sugeneruotumėte šabloną</string>
     <string name="wear_default_watchface">Numatytasis ekranas</string>
     <string name="wear_more_watchfaces">Daugiau ciferblatų</string>
+    <string name="temp_basal_absolute_rate">%1$.2f V/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 </resources>

@@ -153,6 +153,8 @@
     <string name="dia_short">İES</string>
     <string name="target_short">HDF</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label_warning">Algoritmanız İDF\'nizi dinamik olarak hesaplayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda bir geri dönüş olarak veya yalnızca bir referans değeri olarak kullanılabilir</string>
+    <string name="ic_dynamic_label_warning">Algoritmanız IC\'nizi dinamik olarak hesaplayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda bir geri dönüş olarak veya yalnızca bir referans değeri olarak kullanılabilir</string>
     <!-- Actions -->
     <string name="actions">Eylemler</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
@@ -215,8 +217,7 @@
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="overview_buttons_selection">Butonlar</string>
     <string name="show_calibration_button_summary">xDrip+\'a kalibrasyon gönderir (xDrip+\'ta Inter-App ayarları altında \"Kalibrasyonları Kabul Et\" seçeneğinin etkinleştirildiğinden emin olun).</string>
-    <string name="show_cgm_button_summary">xDrip+ uygulamasını açar (AAPS\'e dönmek için geri butonunu kullanabilirsiniz).</string>
-    <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
+    <string name="show_cgm_button_summary">xDrip+ veya Dexcom uygulamasını açar (AAPS\'e dönmek için geri butonunu kullanabilirsiniz).</string>
     <string name="not_available_full">Mevcut değil</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
     <string name="change_your_input">Girişinizi değiştirin!</string>

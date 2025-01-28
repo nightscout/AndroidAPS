@@ -200,7 +200,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
-    <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
     <string name="not_available_full">Nicht verfügbar</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
     <string name="change_your_input">Ändere deine Eingabe!</string>

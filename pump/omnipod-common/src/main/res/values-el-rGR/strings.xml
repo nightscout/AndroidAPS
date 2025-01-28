@@ -116,8 +116,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Ήχοι Επιβεβαίωσης</string>
     <string name="omnipod_common_preferences_category_notifications">Ειδοποιήσεις</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Ήχος για αβέβαιες ειδοποιήσεις TBR ενεργοποιημένος</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Ήχος για
-        αβέβαιες ειδοποιήσεις SMB ενεργοποιημένος</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Ήχος για αβέβαιες ειδοποιήσεις bolus ενεργοποιημένος</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Χωρίς Ενεργό Pod</string>

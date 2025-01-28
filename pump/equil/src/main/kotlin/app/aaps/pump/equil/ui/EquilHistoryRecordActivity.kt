@@ -386,7 +386,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
                         * Utils.decodeSpeedToUS(record.largeRate)
                 )
                 val t = (abs(time - time2) / 1000.0)
-                aapsLogger.debug(LTag.PUMPCOMM, "time===$t===$format3")
+//                aapsLogger.debug(LTag.PUMPCOMM, "time===$t===$format3")
                 arrayList.add(ItemModel(format2, format3, ItemModel.TYPE_BOLUS, time2))
                 record = null
             }

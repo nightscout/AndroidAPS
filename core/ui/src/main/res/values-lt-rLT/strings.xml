@@ -166,7 +166,7 @@
     <string name="isf_short">JIF</string>
     <string name="canceling_tbr_failed">Laikinos bazės atšaukti nepavyko</string>
     <string name="canceling_eb_failed">Ištęsto boluso atšaukti nepavyko</string>
-    <string name="virtualpump_uploadstatus_title">Įkelti pompos statusą į NS arba Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Pompos statusas perduodamas į NS arba Tidepool</string>
     <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <string name="loopstatus_targets">TIKSLAI:</string>
@@ -239,7 +239,7 @@
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
     <string name="glucosetype_finger">Iš piršto</string>
-    <string name="glucosetype_sensor">Iš sensoriaus</string>
+    <string name="glucosetype_sensor">Sensorius</string>
     <string name="manual">Rankiniu būdu</string>
     <string name="unknown">nežinoma</string>
     <string name="eatingsoon">Netrukus valgysiu</string>
@@ -413,6 +413,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
+    <string name="sensitivity">Jautrumas insulinui</string>
+    <string name="isf_for_carbs">JIF skaičiuotuvui ir AV įsisavinimui: %1$.1f</string>
+    <string name="autosens_long">Autosens vertė: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens algoritme: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">failas</string>
     <string name="a11y_user">naudotojas</string>
     <!-- Autotune -->
@@ -511,7 +517,7 @@
     <string name="no">Ne</string>
     <string name="close">Uždaryti</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas dešifruojant importuotus nustatymus.</string>
+    <string name="password_preferences_decrypt_prompt">Turėsite įrašyti slaptažodį, kuris bus naudojamas dešifruojant importuotus nustatymus.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
     <string name="export_warning">Įspėjimas</string>

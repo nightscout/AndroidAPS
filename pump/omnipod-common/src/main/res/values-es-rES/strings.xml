@@ -117,9 +117,9 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Sonido de Confirmación</string>
     <string name="omnipod_common_preferences_category_notifications">Notificaciones</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sonido para notificaciones TBR inciertas habilitadas</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sonido para
-        notificaciones SMB inciertas activadas</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sonido de notificaciones de SMB inciertos habilitado</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sonido para notificaciones de bolo incierto activadas</string>
+    <string name="omnipod_dash_use_bonding">Emparejamiento de dispositivo BT en Android 15+ (solución alternativa para teléfonos Pixel)</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ningún Pod Activo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuración en curso (esperando para activar el Pod)</string>

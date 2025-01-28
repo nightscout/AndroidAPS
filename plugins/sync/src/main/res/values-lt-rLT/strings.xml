@@ -13,8 +13,8 @@
     <string name="ns_create_announcements_from_carbs_req_title">Kurti pranešimus apie būtinų angliavandenių įspėjimus</string>
     <string name="ns_create_announcements_from_errors_summary">Kurti Nightscout pranešimus apie klaidas ir vietinius perspėjimus (matomus Terapijoje)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Kurti NS pranešimus apie būtinų angliavandenių įspėjimus</string>
-    <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout naudojant v1 API</string>
-    <string name="description_ns_client_v3">Sinchronizuoja duomenis su Nightscout naudojant V3 API</string>
+    <string name="description_ns_client">Sinchronizuoti duomenis su Nightscout naudojant v1 API</string>
+    <string name="description_ns_client_v3">Sinchronizuoti duomenis su Nightscout naudojant V3 API</string>
     <string name="blocked_by_charging">Užblokuota dėl įkrovimo parinkčių</string>
     <string name="blocked_by_connectivity">Užblokuota dėl ryšio parinkčių</string>
     <string name="no_connectivity">Nėra ryšio</string>
@@ -84,7 +84,7 @@
     <string name="title_tidepool_dev_servers">Naudoti integracijos (test) serverius</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Perduoda duomenis į Tidepool</string>
+    <string name="description_tidepool">Sinchronizuoti duomenis su Tidepool</string>
     <string name="remove_all">Pašalinti visus</string>
     <string name="upload_now">Įkelti dabar</string>
     <string name="not_connected">Neprisijungta</string>

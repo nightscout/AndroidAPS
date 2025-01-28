@@ -27,12 +27,12 @@ class CmdSettingSet(
         val equilCmd = byteArrayOf(0x01, 0x05)
         val useTime = Utils.intToBytes(0)
         val autoCloseTime = Utils.intToBytes(0)
-        val lowAlarmByte = Utils.intToTwoBytes(bolusThresholdStep)
+        val lowAlarmByte = Utils.intToTwoBytes(1600)
         val fastBolus = Utils.intToTwoBytes(0)
         val occlusion = Utils.intToTwoBytes(2800)
         val insulinUnit = Utils.intToTwoBytes(8)
         val basalThreshold = Utils.intToTwoBytes(240)
-        val bolusThreshold = Utils.intToTwoBytes(1600)
+        val bolusThreshold = Utils.intToTwoBytes(bolusThresholdStep)
         val data = Utils.concat(
             indexByte, equilCmd, useTime, autoCloseTime,
             lowAlarmByte, fastBolus,

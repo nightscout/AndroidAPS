@@ -1263,9 +1263,9 @@ interface PersistenceLayer {
     fun getCalculatedTotalDailyDose(timestamp: Long): TDD?
 
     /**
-     * Insert new record to database
+     * Insert or update record
      */
-    fun insertTotalDailyDose(totalDailyDose: TDD)
+    fun insertOrUpdateCachedTotalDailyDose(totalDailyDose: TDD): Single<TransactionResult<TDD>>
 
     /**
      * Insert or update if exists record

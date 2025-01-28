@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Potvrdzovacie pípnutia</string>
     <string name="omnipod_common_preferences_category_notifications">Notifikácie</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Zvuk upozornenia pre neistý dočasný bazál povolený</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Zvuk upozornenia pre neistý SMB povolený</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Zvuk upozornenia pre neistý bolus povolený</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Žiadny aktívny Pod</string>

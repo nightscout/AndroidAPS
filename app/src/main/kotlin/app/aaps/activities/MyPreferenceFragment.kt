@@ -152,7 +152,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addAlertScreen(rootKey)
             addPreferencesIfEnabled(maintenancePlugin, rootKey)
         }
-        initSummary(preferenceScreen, pluginName != null)
+        try {
+            initSummary(preferenceScreen, pluginName != null)
+        } catch (_: Exception) {
+            throw Exception("Error in onCreatePreferences pluginName=$pluginName customPreference=$customPreference rootKey=$rootKey filter=$filter")
+        }
         preprocessPreferences()
         if (filter != "") updateFilterVisibility(filter, preferenceScreen)
     }

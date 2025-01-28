@@ -217,8 +217,7 @@
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
     <string name="overview_buttons_selection">Boutons</string>
     <string name="show_calibration_button_summary">Envoie une calibration à xDrip+ (assurez-vous que \'Accepter les étalonnages\' est activé dans xDrip+ dans les paramètres Inter-App).</string>
-    <string name="show_cgm_button_summary">Ouvre xDrip+ (vous pouvez utiliser le bouton Retour pour retourner à AAPS).</string>
-    <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
+    <string name="show_cgm_button_summary">Ouvre xDrip+ ou Dexcom app (vous pouvez utiliser le bouton Retour pour retourner à AAPS).</string>
     <string name="not_available_full">Non disponible</string>
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="change_your_input">Changez vos entrées !</string>

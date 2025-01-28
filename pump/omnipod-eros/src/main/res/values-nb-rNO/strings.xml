@@ -10,9 +10,9 @@
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Handlinger</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Lydvarsel for usikre TBR er aktivert</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for usikre SMB er aktivert</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Lydvarsel for usikre bolus er aktivert</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Lydvarsel for ubekreftet midlertidig basal</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for ubekreftet SMB</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Lydvarsel for ubekreftet bolus</string>
     <!-- Omnipod Eros - History -->
     <string name="omnipod_eros_history_title">Pod historikk</string>
     <string name="omnipod_eros_history_item_description">Beskrivelse</string>

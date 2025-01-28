@@ -216,11 +216,8 @@
     <string name="overview_shortname">主頁</string>
     <string name="description_overview">顯示目前循環狀態和最常用操作的按鈕</string>
     <string name="overview_buttons_selection">按鈕</string>
-    <string name="show_calibration_button_summary">以下是翻譯成台灣繁體中文的結果：
-
-發送校準到 xDrip+（請確保在 xDrip+ 的設定中啟用「接受校準」功能）。</string>
-    <string name="show_cgm_button_summary">開啟 xDrip+（您可以使用返回按鈕返回 AAPS）。</string>
-    <string name="error_starting_cgm">無法啟動CGM應用。請確保其已安裝。</string>
+    <string name="show_calibration_button_summary">發送校準到 xDrip+（請確保在 xDrip+ 的設定中啟用「接受校準」功能）。</string>
+    <string name="show_cgm_button_summary">打開 xDrip+ 或 Dexcom 應用程式（您可以使用返回鍵回到 AAPS）。</string>
     <string name="not_available_full">不可用</string>
     <string name="constraints_violation">約束違反</string>
     <string name="change_your_input">更改您的輸入！</string>

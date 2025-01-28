@@ -13,12 +13,14 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.ui.wizard.deactivation.viewmodel.action.DeactivatePodViewModel
+import app.aaps.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class DashDeactivatePodViewModel @Inject constructor(
     private val podStateManager: OmnipodDashPodStateManager,
+    private val bleManager: OmnipodDashBleManager,
     private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
     instantiator: Instantiator,
@@ -38,6 +40,7 @@ class DashDeactivatePodViewModel @Inject constructor(
     }
 
     override fun discardPod() {
+        bleManager.removeBond()
         podStateManager.reset()
         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
     }
