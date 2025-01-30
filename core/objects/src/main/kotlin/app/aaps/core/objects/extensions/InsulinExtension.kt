@@ -6,10 +6,10 @@ import org.json.JSONObject
 fun ICfg.toJson(): JSONObject = JSONObject()
     .put("insulinLabel", insulinLabel)
     .put("insulinEndTime", insulinEndTime)
-    .put("peak", insulinPeakTime)
+    .put("insulinPeakTime", insulinPeakTime)
 
 fun ICfg.Companion.fromJson(json: JSONObject): ICfg = ICfg(
     insulinLabel = json.optString("insulinLabel", ""),
-    insulinEndTime = json.optLong("insulinEndTime", 6 * 3600 * 1000),
-    insulinPeakTime = json.optLong("peak")
+    insulinEndTime = json.optLong("insulinEndTime"),
+    insulinPeakTime = json.optLong("insulinPeakTime")
 )

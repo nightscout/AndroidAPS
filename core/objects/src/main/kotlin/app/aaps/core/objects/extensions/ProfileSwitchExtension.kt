@@ -35,9 +35,7 @@ fun pureProfileFromJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits
         val units = GlucoseUnit.fromText(txtUnits)
         val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
         val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
-        val iCfg = JsonHelper.safeGetStringAllowNull(jsonObject, "icfg", null)?.let {
-            ICfg.fromJson(JSONObject(it))
-        } ?: return null
+        val iCfg = JsonHelper.safeGetJSONObject(jsonObject, "icfg", null)?.let { ICfg.fromJson(it) } ?: return null
 
         val isfBlocks = blockFromJsonArray(jsonObject.getJSONArray("sens"), dateUtil) ?: return null
         val icBlocks = blockFromJsonArray(jsonObject.getJSONArray("carbratio"), dateUtil)
