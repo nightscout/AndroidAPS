@@ -280,7 +280,7 @@
     <!-- AAPSClient sms related settings-->
     <string name="sms_receiver_number_dialog">If number is provided, insulin and calculator buttons will be able to send SMS command to inject bolus. Note that you still need to confirm it and reply with security token/code. Note that you need to enabled SMS control of AAPS phone to use this function.</string>
     <string name="client_allow_sms">Allow AAPSClient to send SMS with bolus command</string>
-    <string name="client_allow_sms_warning">"Use this functionality with caution. Before enabling make sure that IOB and BG is synchronized between AAPS and AAPSClient. Some users reported issue with that. Use it at your own risk, every time you shall check IOB and BG before issuing a bolus. You can do that by sending 'BG' command."</string>
+    <string name="client_allow_sms_warning">"Use this functionality with caution. Before enabling make sure that IOB and BG is synchronized between AAPS and AAPSClient.Use it at your own risk, every time you shall check IOB and BG before issuing a bolus. You can do that by sending 'BG' command. If this function is enabled then Treatment, Insulin and Calculator options will send SMS commands. Carbs button is NOT affected."</string>
 
     <!--  OverviewMenu-->
     <string name="key_graph_config" translatable="false">graphconfig</string>

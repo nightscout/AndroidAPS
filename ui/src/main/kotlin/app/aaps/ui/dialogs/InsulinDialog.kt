@@ -223,7 +223,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             else if (sendSMS)
-                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_request_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
 
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(

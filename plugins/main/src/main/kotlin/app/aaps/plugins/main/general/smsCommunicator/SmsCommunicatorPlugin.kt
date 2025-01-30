@@ -1065,7 +1065,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val offsetMin = SafeParse.stringToLong(matcher.group(4))
         val useAlarm = divided.size == 5
 
-        if (bolus > 0 && carbs > 0) {
+        if (bolus > 0 || carbs > 0) {
             val iob = iobCobCalculator.calculateIobFromBolus().round().iob +
                 iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
 
@@ -1092,6 +1092,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                                    R.string.smscommunicator_boluscarbs_delivered,
                                                                    result.bolusDelivered, anInteger()
                                                                )
+                                                               lastRemoteBolusTime = dateUtil.now()
                                                                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                                                uel.log(Action.BOLUS, Sources.SMS, replyText)
                                                                if (useAlarm && carbs > 0 && offsetMin > 0) {

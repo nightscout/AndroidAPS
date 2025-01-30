@@ -11,7 +11,7 @@ object Constants {
     const val notificationID = 556677
 
     // SMS COMMUNICATOR
-    const val remoteBolusMinDistance = 15 * 60 * 1000L
+    const val remoteBolusMinDistance = 5 * 60 * 1000L
 
     // Circadian Percentage Profile
     const val CPP_MIN_PERCENTAGE = 30

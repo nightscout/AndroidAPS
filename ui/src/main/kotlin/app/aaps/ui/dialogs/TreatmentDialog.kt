@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.smsCommunicator.formatBolusCarbsCommand
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
@@ -166,12 +167,6 @@ class TreatmentDialog : DialogFragmentWithDate() {
             )
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if (sendSMS)
-                actions.add(
-                    rh.gs(
-                        app.aaps.core.ui.R.string.sms_bolus_notification
-                    ).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
-                )
 
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
@@ -187,6 +182,12 @@ class TreatmentDialog : DialogFragmentWithDate() {
             if (carbsAfterConstraints != carbs)
                 actions.add(rh.gs(R.string.carbs_constraint_applied).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         }
+        if (sendSMS && !recordOnlyChecked)
+            actions.add(
+                rh.gs(
+                    app.aaps.core.ui.R.string.sms_request_notification
+                ).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
+            )
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
@@ -201,17 +202,17 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    if (recordOnlyChecked || sendSMS) {
+
+                    if (sendSMS)
+                        smsCommunicator.sendSMS(Sms(phoneNumber, formatBolusCarbsCommand(detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt())))
+                    else if (recordOnlyChecked) {
                         if (detailedBolusInfo.insulin > 0)
-                            if (sendSMS)
-                                smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
-                            else
-                                disposable += persistenceLayer.insertOrUpdateBolus(
-                                    bolus = detailedBolusInfo.createBolus(),
-                                    action = action,
-                                    source = Sources.TreatmentDialog,
-                                    note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
-                                ).subscribe()
+                            disposable += persistenceLayer.insertOrUpdateBolus(
+                                bolus = detailedBolusInfo.createBolus(),
+                                action = action,
+                                source = Sources.TreatmentDialog,
+                                note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
+                            ).subscribe()
                         if (detailedBolusInfo.carbs > 0)
                             disposable += persistenceLayer.insertOrUpdateCarbs(
                                 carbs = detailedBolusInfo.createCarbs(),
