@@ -31,8 +31,8 @@
     <string name="direction">方向</string>
     <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
     <!-- Patched Ottai App -->
-    <string name="ottai_app">歐泰(Ottai)</string>
-    <string name="description_source_patched_ottai_app">從歐泰應用程式接收血糖資料。</string>
+    <string name="ottai_app">歐態（Ottai）</string>
+    <string name="description_source_patched_ottai_app">從歐態應用程式接收血糖資料。</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai Tag</string>
     <string name="description_source_patched_syai_tag_app">從 Syai Tag 應用程式接收血糖資料。</string>
