@@ -24,7 +24,7 @@ abstract class AbstractBgSourcePlugin(
         parent.addPreference(category)
         category.apply {
             key = "bg_source_upload_settings"
-            title = rh.gs(R.string.bgsource_upload)
+            title = rh.gs(R.string.bgsource_settings)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))
         }
