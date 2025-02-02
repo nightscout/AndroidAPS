@@ -27,7 +27,7 @@
     <string name="random_bg_short">BS</string>
     <string name="bgsource_upload">Innstillinger for opplasting av BS</string>
     <string name="dexcom_log_ns_sensor_change_title">Aksepter sensorbytte fra lokal kringkasting</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Bytte av CGM-sensor\" i helseportal ved mottak av sensorstart fra lokal kringkasting automatisk</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Bytte av CGM-sensor\" i helseportal automatisk ved mottak av sensorbytte fra lokal kringkasting</string>
     <string name="direction">retning</string>
     <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
     <!-- Patched Ottai App -->
