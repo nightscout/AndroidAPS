@@ -1051,7 +1051,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processBOLUSCARBS(divided: Array<String>, receivedSms: Sms) {
-        val matcher = BOLUSCARBS_PATTERN.matcher(receivedSms.text)
+        val matcher = BOLUSCARBS_PATTERN.matcher(receivedSms.text.uppercase())
 
         if (!matcher.matches()) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
@@ -1065,7 +1065,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val offsetMin = SafeParse.stringToLong(matcher.group(4))
         val useAlarm = divided.size == 5
 
-        if (bolus > 0 || carbs > 0) {
+        if (bolus > 0) {
             val iob = iobCobCalculator.calculateIobFromBolus().round().iob +
                 iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
 
@@ -1088,15 +1088,20 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                                        override fun run() {
                                                            if (result.success) {
-                                                               val replyText = rh.gs(
-                                                                   R.string.smscommunicator_boluscarbs_delivered,
-                                                                   result.bolusDelivered, anInteger()
-                                                               )
-                                                               lastRemoteBolusTime = dateUtil.now()
-                                                               sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                                               uel.log(Action.BOLUS, Sources.SMS, replyText)
-                                                               if (useAlarm && carbs > 0 && offsetMin > 0) {
-                                                                   automation.scheduleTimeToEatReminder(T.mins(offsetMin).secs().toInt())
+                                                               // If bolusDelivered > 0 is ugly workaround for double callback call.
+                                                               // Since commandqueue will call it twice, once with only carbs set and another time with insulin and carbs.
+                                                               // For some reason it handles carbs and insulin separately, but we want to perform code below only once.
+                                                               if (result.bolusDelivered > 0.0) {
+                                                                   val replyText = rh.gs(
+                                                                       R.string.smscommunicator_boluscarbs_delivered,
+                                                                       result.bolusDelivered, anInteger()
+                                                                   )
+                                                                   lastRemoteBolusTime = dateUtil.now()
+                                                                   sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                                                   uel.log(Action.BOLUS, Sources.SMS, replyText)
+                                                                   if (useAlarm && carbs > 0 && offsetMin > 0) {
+                                                                       automation.scheduleTimeToEatReminder(T.mins(offsetMin).secs().toInt())
+                                                                   }
                                                                }
                                                            } else {
                                                                var replyText = rh.gs(R.string.smscommunicator_boluscarbs_failed)
@@ -1134,7 +1139,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
-        val matcher = CARBS_PATTERN.matcher(receivedSms.text)
+        val matcher = CARBS_PATTERN.matcher(receivedSms.text.uppercase())
         if (!matcher.matches()) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             return
