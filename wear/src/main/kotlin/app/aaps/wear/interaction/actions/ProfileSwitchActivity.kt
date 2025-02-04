@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionProfileSwitchPreCheck
 import app.aaps.core.interfaces.utils.SafeParse
@@ -48,7 +49,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 val initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
-                editTimeshift = PlusMinusEditText(viewAdapter, initValue, -23.0, 23.0, 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
+                editTimeshift = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
                 container.addView(view)
                 view.requestFocus()
                 view
