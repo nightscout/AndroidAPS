@@ -25,6 +25,9 @@
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
     <string name="random_bg_short">BS</string>
+    <string name="bgsource_settings">Innstillinger for BS-kilde</string>
+    <string name="bgsource_log_sensor_change_title">Aksepter sensorstart</string>
+    <string name="bgsource_log_sensor_change_summary">Opprett hendelsen \"Bytte av CGM-sensor\" i helseportal automatisk ved mottak av sensorstart fra BS-kildens lokal kringkasting</string>
     <string name="direction">retning</string>
     <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
     <!-- Patched Ottai App -->
