@@ -123,7 +123,7 @@ class XdripSourcePlugin @Inject constructor(
                 newSensorStartTime != null &&
                 abs(newSensorStartTime - lastStoredSensorStartTime) <= 300_000) {
                 aapsLogger.debug(LTag.BGSOURCE, "Sensor start time is within 5 minutes range, skipping update.")
-                lastStoredSensorStartTime
+                null
                 } else {
                     newSensorStartTime
                 }
