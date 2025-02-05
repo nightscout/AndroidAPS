@@ -29,7 +29,7 @@ class ActionSetIobTH(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_iobth
 
     override fun doAction(callback: Callback) {
-        val currentIobTH:Double = sp.getDouble(R.string.key_iobTH_percent, 100.0)
+        val currentIobTH:Int = sp.getInt(R.string.iob_threshold_percent, 100)
         if (currentIobTH != new_iobTH.value) {
             uel.log(
                 app.aaps.core.data.ue.Action.IOB_TH_SET,
@@ -37,7 +37,7 @@ class ActionSetIobTH(injector: HasAndroidInjector) : Action(injector) {
                 title + ": " + rh.gs(R.string.automate_set_iobTH_percent, new_iobTH.value.toInt()),
                 ValueWithUnit.Percent(new_iobTH.value.toInt())
             )
-            sp.putDouble(R.string.key_iobTH_percent, new_iobTH.value)
+            sp.putInt(R.string.iob_threshold_percent, new_iobTH.value)
             callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.weight_new)).run()
         } else {
             callback.result(instantiator.providePumpEnactResult().success(false).comment(R.string.weight_old)).run()
@@ -65,7 +65,7 @@ class ActionSetIobTH(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        new_iobTH.value = JsonHelper.safeGetDouble(o, "percentage")
+        new_iobTH.value = JsonHelper.safeGetInt(o, "percentage")
         return this
     }
 

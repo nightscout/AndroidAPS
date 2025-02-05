@@ -19,10 +19,10 @@ class ActionAutoisfDisable(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_autoisf_disabled
 
     override fun doAction(callback: Callback) {
-        val currentAutoisfStatus: Boolean = sp.getBoolean(R.string.key_enable_autoISF, false)
+        val currentAutoisfStatus: Boolean = sp.getBoolean(R.string.enable_autoISF, false)
         if (currentAutoisfStatus) {
             uel.log(app.aaps.core.data.ue.Action.AUTOISF_DISABLED, Sources.Automation, title)
-            sp.putBoolean(R.string.key_enable_autoISF, false)
+            sp.putBoolean(R.string.enable_autoISF, false)
             callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.autoisf_disabled)).run()
         } else {
             callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.autoisf_alreadydisabled)).run()

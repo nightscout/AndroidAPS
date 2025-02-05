@@ -27,14 +27,14 @@ class ActionSetAcceWeight(injector: HasAndroidInjector) : Action(injector) {
     var new_weight = InputWeight( )
 
     override fun doAction(callback: Callback) {
-        val currentAcceWeight:Double = sp.getDouble(R.string.key_bgAccel_ISF_weight, 0.0)
+        val currentAcceWeight:Double = sp.getDouble(R.string.bgAccel_ISF_weight, 0.0)
         if (currentAcceWeight != new_weight.value) {
             uel.log(
                 app.aaps.core.data.ue.Action.ACCE_WEIGHT_SET,
                 Sources.Automation,
                 title + ": " + rh.gs(R.string.automate_set_acce_weight, new_weight.value)
             )
-            sp.putDouble(R.string.key_bgAccel_ISF_weight, new_weight.value)
+            sp.putDouble(R.string.bgAccel_ISF_weight, new_weight.value)
             callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.weight_new)).run()
         } else {
             callback.result(instantiator.providePumpEnactResult().success(false).comment(R.string.weight_old)).run()
