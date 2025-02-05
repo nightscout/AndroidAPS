@@ -140,7 +140,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Ingen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsförskjutning: %1$d\nProcent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Målen gäller endast i APS-läge!</string>
     <string name="no_history">Inget historiskt data!</string>
     <string name="temp_target">Tillfälligt målvärde</string>
