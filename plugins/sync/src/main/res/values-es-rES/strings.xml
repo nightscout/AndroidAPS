@@ -162,7 +162,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Sin cambio de perfil activo</string>
-    <string name="profile_message">Perfil:\n\nAjuste de tiempo: %1$d\nPorcentaje: %2$d%%\"</string>
+    <string name="profile_message">Perfil: %1$s\nCambio de hora: %2$d h\nPorcentaje: %3$d%%</string>
     <string name="target_only_aps_mode">¡Los objetivos sólo se aplican en modo APS!</string>
     <string name="no_history">No hay datos históricos</string>
     <string name="temp_target">Objetivo temporal</string>
@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">Inválido</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Bomba desconectada</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Bomba reconectada</string>
+    <string name="garmin_request_key">Solicitar clave</string>
+    <string name="garmin_request_key_summary">Clave opcional para securizar la comunicación HTTP entre el dispositivo Garmin y AAPS.</string>
 </resources>

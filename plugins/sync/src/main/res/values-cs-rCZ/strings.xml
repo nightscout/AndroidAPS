@@ -162,7 +162,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Není nastaven žádný aktivní profil!</string>
-    <string name="profile_message">Profil:\n\nPosunutí: %1$d\nProcento: %2$d%%\"</string>
+    <string name="profile_message">Profil: %1$s\nPosunutí: %2$d h\nProcento: %3$d%%</string>
     <string name="target_only_aps_mode">Cíle se použijí pouze v režimu APS!</string>
     <string name="no_history">Žádné údaje o historii!</string>
     <string name="temp_target">Dočasný cíl</string>
@@ -203,4 +203,6 @@
     <string name="wear_action_loop_state_now_invalid">Neplatný</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpa odpojena</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Pumpa byla znovu připojena</string>
+    <string name="garmin_request_key">Vyžadovaný klíč</string>
+    <string name="garmin_request_key_summary">Volitelný klíč pro zabezpečení HTTP komunikace mezi zařízením Garmin a AAPS.</string>
 </resources>

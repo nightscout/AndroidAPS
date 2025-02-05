@@ -161,7 +161,7 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
-    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$d\אחוזים: %2$d%%</string>
+    <string name="profile_message">פרופיל: %1$s\nהיסט זמן: %2$d שע\'\nאחוז: %3$d%%</string>
     <string name="target_only_aps_mode">ערכי מטרה חלים רק במצב APS!</string>
     <string name="no_history">אין נתוני עבר!</string>
     <string name="temp_target">ערכי מטרה זמניים</string>
@@ -182,4 +182,7 @@
     <string name="today">היום</string>
     <string name="weighted">משוקלל</string>
     <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>
+    <string name="wear_action_loop_state_pump_suspended">המשאבה מושהית!</string>
+    <string name="garmin_request_key">בקש מפתח</string>
+    <string name="garmin_request_key_summary">מפתח אופציונלי לצורך אבטחת תקשורת HTTP בין מכשירי Garmin ו-Androidaps.</string>
 </resources>

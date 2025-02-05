@@ -25,9 +25,6 @@
     <string name="random_bg">Случайные значения ГК</string>
     <string name="description_source_random_bg">Генерировать случайные данные ГК (только демо-режим)</string>
     <string name="random_bg_short">ГК</string>
-    <string name="bgsource_upload">Параметры загрузки СК</string>
-    <string name="dexcom_log_ns_sensor_change_title">Вносить запись о замене сенсора в NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
     <string name="direction">направление</string>
     <string name="bg_generation_interval_minutes">Интервал генерации ГК в мин</string>
     <!-- Patched Ottai App -->

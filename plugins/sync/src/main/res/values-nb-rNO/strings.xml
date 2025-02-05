@@ -162,7 +162,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d\nProsent: %2$d%%</string>
+    <string name="profile_message">Profil: %1$s\nTidsforskyving: %2$d t\nProsent: %3$d%%</string>
     <string name="target_only_aps_mode">Mål gjelder bare i APS-modus!</string>
     <string name="no_history">Ingen historikkdata!</string>
     <string name="temp_target">Midlertidig mål</string>
@@ -202,5 +202,7 @@
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Ugyldig</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpe frakoblet</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Pumpen tilkoblet igjen</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Koble til pumpen igjen</string>
+    <string name="garmin_request_key">Be om nøkkel</string>
+    <string name="garmin_request_key_summary">Valgfri nøkkel for å sikre HTTP-kommunikasjon mellom Garmin-enhet og AAPS.</string>
 </resources>

@@ -139,7 +139,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">ω</string>
     <string name="no_active_profile">Μη ενεργή αλλαγή προφίλ!</string>
-    <string name="profile_message">Προφίλ:\n\nΧρονική μετατόπιση: %1$d\nΠοσοστό: %2$d%%\"</string>
     <string name="target_only_aps_mode">Οι στόχοι ισχύουν μόνο στη λειτουργία APS!</string>
     <string name="no_history">Δεν υπάρχουν ιστορικά δεδομένα!</string>
     <string name="temp_target">Προσωρινός Στόχος</string>

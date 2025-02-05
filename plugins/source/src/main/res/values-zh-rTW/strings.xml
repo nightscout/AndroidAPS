@@ -25,14 +25,14 @@
     <string name="random_bg">隨機血糖值</string>
     <string name="description_source_random_bg">生成隨機血糖資料（僅限演示模式）</string>
     <string name="random_bg_short">血糖值</string>
-    <string name="bgsource_upload">血糖資料上傳設置</string>
-    <string name="dexcom_log_ns_sensor_change_title">紀錄傳感器更換到 NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">在傳感器啟動時自動在 NS 中建立「傳感器更換」事件</string>
+    <string name="bgsource_settings">血糖資料來源設定</string>
+    <string name="bgsource_log_sensor_change_title">接受傳感器啟動</string>
+    <string name="bgsource_log_sensor_change_summary">在收到來自血糖資料來源的本地廣播傳感器啟動時，自動在「照護入口」建立「CGM 傳感器植入」事件</string>
     <string name="direction">方向</string>
     <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
     <!-- Patched Ottai App -->
-    <string name="ottai_app">歐泰(Ottai)</string>
-    <string name="description_source_patched_ottai_app">從歐泰應用程式接收血糖資料。</string>
+    <string name="ottai_app">歐態（Ottai）</string>
+    <string name="description_source_patched_ottai_app">從歐態應用程式接收血糖資料。</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai Tag</string>
     <string name="description_source_patched_syai_tag_app">從 Syai Tag 應用程式接收血糖資料。</string>

@@ -25,9 +25,9 @@
     <string name="random_bg">Náhodná glykémie</string>
     <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
-    <string name="dexcom_log_ns_sensor_change_title">Zaznamenávat výměnu senzoru do NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
+    <string name="bgsource_settings">Nastavení zdroje glykémie</string>
+    <string name="bgsource_log_sensor_change_title">Přijmout spuštění senzoru</string>
+    <string name="bgsource_log_sensor_change_summary">Automaticky vytvořit událost „Výměna senzoru“ v části Péče při spuštění senzoru ze zdroje glykémie pomocí lokálního odesílání dat</string>
     <string name="direction">směr</string>
     <string name="bg_generation_interval_minutes">Interval generování glykémie v minutách</string>
     <!-- Patched Ottai App -->
