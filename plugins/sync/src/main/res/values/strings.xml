@@ -199,7 +199,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">No active profile switch!</string>
-    <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
+    <string name="profile_message">Profile: %1$s\nTimeshift: %2$d h\nPercentage: %3$d%%</string>
     <string name="target_only_aps_mode">Targets only apply in APS mode!</string>
     <string name="no_history">No history data!</string>
     <string name="temp_target">Temp Target</string>

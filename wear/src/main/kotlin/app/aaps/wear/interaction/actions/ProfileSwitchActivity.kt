@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionProfileSwitchPreCheck
 import app.aaps.core.interfaces.utils.SafeParse
@@ -30,7 +31,6 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
             finish()
             return
         }
-        if (timeshift < 0) timeshift += 24
         setAdapter(MyGridViewPagerAdapter())
     }
 
@@ -48,8 +48,8 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                var initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
-                editTimeshift = PlusMinusEditText(viewAdapter, initValue, 0.0, 23.0, 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
+                val initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
+                editTimeshift = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -58,8 +58,8 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
             1    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                var initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
-                editPercentage = PlusMinusEditText(viewAdapter, initValue, 30.0, 250.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
+                val initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, 30.0, 250.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
                 container.addView(view)
                 view
             }
