@@ -162,7 +162,6 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="profile_message">Profil:\n\nZaman Kayması: %1$d\nYüzde: %2$d%%\"</string>
     <string name="target_only_aps_mode">Hedefler yalnızca APS modunda uygulanır!</string>
     <string name="no_history">Geçmiş verisi yok!</string>
     <string name="temp_target">Geçici Hedef</string>
