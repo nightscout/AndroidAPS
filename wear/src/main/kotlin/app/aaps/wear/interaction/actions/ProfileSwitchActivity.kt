@@ -21,13 +21,16 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
 
     var editPercentage: PlusMinusEditText? = null
     var editTimeshift: PlusMinusEditText? = null
+    var editDuration: PlusMinusEditText? = null
     var percentage = -1
     var timeshift = -25
+    var duration = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         percentage = intent.extras?.getInt("percentage", -1) ?: -1
         timeshift = intent.extras?.getInt("timeshift", -25) ?: -25
-        if (percentage == -1 || timeshift == -25) {
+        duration = intent.extras?.getInt("duration", -1) ?: -1
+        if (percentage == -1 || timeshift == -25 || duration == -1) {
             finish()
             return
         }
@@ -41,7 +44,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
 
     private inner class MyGridViewPagerAdapter : GridPagerAdapterNonDeprecated() {
 
-        override fun getColumnCount(arg0: Int): Int = 3
+        override fun getColumnCount(arg0: Int): Int = 4
         override fun getRowCount(): Int = 1
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
@@ -64,13 +67,22 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 view
             }
 
+            2   -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
+                val initValue = SafeParse.stringToDouble(editDuration?.editText?.text.toString(), duration.toDouble())
+                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, getString(R.string.action_duration))
+                container.addView(view)
+                view
+            }
+
             else -> {
                 val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
                     // check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
-                    val ps = ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift?.editText?.text.toString()), SafeParse.stringToInt(editPercentage?.editText?.text.toString()))
+                    val ps = ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift?.editText?.text.toString()), SafeParse.stringToInt(editPercentage?.editText?.text.toString()), SafeParse.stringToInt(editDuration?.editText?.text.toString()))
                     rxBus.send(EventWearToMobile(ps))
                     showToast(this@ProfileSwitchActivity, R.string.action_profile_switch_confirmation)
                     finishAffinity()

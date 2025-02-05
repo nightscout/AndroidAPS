@@ -113,6 +113,7 @@ class DataHandlerWear @Inject constructor(
                     putExtras(Bundle().also { bundle ->
                         bundle.putInt("percentage", event.percentage)
                         bundle.putInt("timeshift", event.timeShift)
+                        bundle.putInt("duration", event.duration / 60_000)
                     })
                 })
             }

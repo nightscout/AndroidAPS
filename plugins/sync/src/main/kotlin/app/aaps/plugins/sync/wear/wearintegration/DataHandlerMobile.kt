@@ -755,7 +755,7 @@ class DataHandlerMobile @Inject constructor(
         val activeProfileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
         if (activeProfileSwitch != null) { // read CPP values
             rxBus.send(
-                EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.originalTimeshift).hours().toInt(), activeProfileSwitch.originalPercentage))
+                EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.originalTimeshift).hours().toInt(), activeProfileSwitch.originalPercentage, activeProfileSwitch.originalDuration.toInt()))
             )
         } else {
             sendError(rh.gs(R.string.no_active_profile))
@@ -775,13 +775,16 @@ class DataHandlerMobile @Inject constructor(
         if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
         }
+        if (command.duration < 0 || command.duration > Constants.MAX_PROFILE_SWITCH_DURATION) {
+            sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Duration"))
+        }
         val profileName = profileFunction.getOriginalProfileName()
-        val message = rh.gs(R.string.profile_message, profileName, command.timeShift, command.percentage)
+        val message = rh.gs(R.string.profile_message, profileName, command.timeShift, command.percentage, command.duration)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage)
+                    returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage, command.duration)
                 )
             )
         )
@@ -1766,18 +1769,21 @@ class DataHandlerMobile @Inject constructor(
             return
         if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT)
             return
+        if (command.duration < 0 || command.duration > Constants.MAX_PROFILE_SWITCH_DURATION)
+            return
         profileFunction.getProfile() ?: return
         //send profile to pump
         profileFunction.createProfileSwitch(
-            durationInMinutes = 0,
+            durationInMinutes = command.duration,
             percentage = command.percentage,
             timeShiftInHours = command.timeShift,
             action = Action.PROFILE_SWITCH,
             source = Sources.Wear,
-            listValues = listOf(
+            listValues = listOfNotNull(
                 ValueWithUnit.Percent(command.percentage),
-                ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 }
-            ).filterNotNull()
+                ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 },
+                ValueWithUnit.Minute(command.duration)
+            )
         )
     }
 
