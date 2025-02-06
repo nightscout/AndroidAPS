@@ -24,13 +24,12 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
     var editDuration: PlusMinusEditText? = null
     var percentage = -1
     var timeshift = -25
-    var duration = -1
+    var duration = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         percentage = intent.extras?.getInt("percentage", -1) ?: -1
         timeshift = intent.extras?.getInt("timeshift", -25) ?: -25
-        duration = intent.extras?.getInt("duration", -1) ?: -1
-        if (percentage == -1 || timeshift == -25 || duration == -1) {
+        if (percentage == -1 || timeshift == -25) {
             finish()
             return
         }
@@ -62,7 +61,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 val initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
-                editPercentage = PlusMinusEditText(viewAdapter, initValue, 30.0, 250.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
                 container.addView(view)
                 view
             }
@@ -70,7 +69,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
             2   -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                val initValue = SafeParse.stringToDouble(editDuration?.editText?.text.toString(), duration.toDouble())
+                val initValue = SafeParse.stringToDouble(editDuration?.editText?.text.toString(), duration)
                 editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, getString(R.string.action_duration))
                 container.addView(view)
                 view
