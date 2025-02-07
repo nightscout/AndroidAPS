@@ -137,7 +137,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val smb_delivery_ratio_min; get() = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin)
     private val smb_delivery_ratio_max; get() = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax)
     private val smb_delivery_ratio_bg_range
-        get() = if (preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange) < 10.0) preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange) * GlucoseUnit.MMOLL_TO_MGDL else preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)
+        get() = if (preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange) < 10.0) preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange) * GlucoseUnit.MMOLL_TO_MGDL else preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)
     val smbMaxRangeExtension; get() = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)
     private val enableSMB_EvenOn_OddOff_always; get() = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget) // for profile target
     val iobThresholdPercent; get() = preferences.get(IntKey.ApsAutoIsfIobThPercent)
@@ -383,7 +383,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             smb_delivery_ratio = smb_delivery_ratio,
             smb_delivery_ratio_min = smb_delivery_ratio_min,
             smb_delivery_ratio_max = smb_delivery_ratio_max,
-            smb_delivery_ratio_bg_range = smb_delivery_ratio_bg_range,
+            smb_delivery_ratio_bg_range = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange),   //smb_delivery_ratio_bg_range was always in mg/dL
             smb_max_range_extension = smbMaxRangeExtension,
             enableSMB_EvenOn_OddOff_always = enableSMB_EvenOn_OddOff_always,
             iob_threshold_percent = iobThresholdPercent,
@@ -1009,14 +1009,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
                     addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAutoIsfSmbDeliveryRatio, dialogMessage = R.string.openapsama_smb_delivery_ratio_summary, title = R.string.openapsama_smb_delivery_ratio))
                     addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAutoIsfSmbDeliveryRatioMin, dialogMessage = R.string.openapsama_smb_delivery_ratio_min_summary, title = R.string.openapsama_smb_delivery_ratio_min))
                     addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAutoIsfSmbDeliveryRatioMax, dialogMessage = R.string.openapsama_smb_delivery_ratio_max_summary, title = R.string.openapsama_smb_delivery_ratio_max))
-                    addPreference(
-                        AdaptiveUnitPreference(
-                            ctx = context,
-                            unitKey = UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange,
-                            dialogMessage = R.string.openapsama_smb_delivery_ratio_bg_range_summary,
-                            title = R.string.openapsama_smb_delivery_ratio_bg_range
-                        )
-                    )
+                    addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange, dialogMessage = R.string.openapsama_smb_delivery_ratio_bg_range_summary, title = R.string.openapsama_smb_delivery_ratio_bg_range))
                     addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAutoIsfSmbMaxRangeExtension, dialogMessage = R.string.openapsama_smb_max_range_extension_summary, title = R.string.openapsama_smb_max_range_extension))
                     addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsAutoIsfSmbOnEvenTarget, summary = R.string.enableSMB_EvenOn_OddOff_always_summary, title = R.string.enableSMB_EvenOn_OddOff_always))
                 })
