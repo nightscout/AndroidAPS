@@ -6,28 +6,10 @@
     <string name="omnipod_eros_pump_description">Pump integration for Omnipod Eros (the older model with a transparent needle cap). Requires a RileyLink device with at least firmware version 2.0.</string>
     <string name="omnipod_eros_frequency" translatable="false">Omnipod (433.91 MHz)</string>
 
-    <!-- Omnipod Eros - Keys -->
-    <string name="key_omnipod_eros_pod_state" translatable="false">AAPS.Omnipod.pod_state</string>
-    <string name="key_omnipod_eros_current_bolus" translatable="false">AAPS.Omnipod.current_bolus</string>
-    <string name="key_omnipod_eros_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
-    <string name="key_omnipod_eros_riley_link_stats_button_enabled" translatable="false">AAPS.Omnipod.rileylink_stats_button_enabled</string>
-    <string name="key_omnipod_eros_battery_change_logging_enabled" translatable="false">AAPS.Omnipod.enable_battery_change_logging</string>
-    <string name="key_omnipod_eros_notification_uncertain_tbr_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_tbr_sound_enabled</string>
-    <string name="key_omnipod_eros_notification_uncertain_smb_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_smb_sound_enabled</string>
-    <string name="key_omnipod_eros_notification_uncertain_bolus_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_bolus_sound_enabled</string>
-    <string name="key_omnipod_eros_tbrs_set" translatable="false">AAPS.Omnipod.tbrs_set</string>
-    <string name="key_omnipod_eros_std_boluses_delivered" translatable="false">AAPS.Omnipod.std_boluses_delivered</string>
-    <string name="key_omnipod_eros_smb_boluses_delivered" translatable="false">AAPS.Omnipod.smb_boluses_delivered</string>
-    <string name="key_common_preferences_category_confirmation_beeps_settings" translatable="false">common_preferences_category_confirmation_beeps_settings</string>
-    <string name="key_omnipod_eros_preferences_category_notifications_settings" translatable="false">omnipod_eros_preferences_category_notifications_settings</string>
-    <string name="key_omnipod_common_preferences_category_other_settings" translatable="false">omnipod_common_preferences_category_other_settings</string>
-    <string name="key_omnipod_preference_category_rileylink_settings" translatable="false">omnipod_preference_category_rileylink_settings</string>
-
     <!-- Omnipod Eros - Overview -->
     <string name="omnipod_eros_overview_firmware_version_value" translatable="false">PM %1$s / PI %2$s</string>
 
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notifications</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Show Pulse Log button in Pod Management menu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Show RileyLink Stats button in Pod Management menu</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Enable battery change logging in Actions</string>

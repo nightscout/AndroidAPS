@@ -5,9 +5,6 @@
     <string name="omnipod_dash_name_short" translatable="false">Dash</string>
     <string name="omnipod_dash_pump_description">Pump integration for Omnipod Dash (the new, Bluetooth-enabled model with a blue needle cap).</string>
 
-    <!-- Omnipod Dash - Keys -->
-    <string name="key_omnipod_dash_pod_state" translatable="false">AAPS.OmnipodDash.pod_state</string>
-
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod History</string>
     <string name="omnipod_dash_history_item_description">Description</string>

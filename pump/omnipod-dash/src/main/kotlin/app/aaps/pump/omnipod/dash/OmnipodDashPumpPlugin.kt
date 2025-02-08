@@ -41,7 +41,6 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -81,6 +80,7 @@ import app.aaps.pump.omnipod.dash.history.data.BolusType
 import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.keys.DashBooleanPreferenceKey
+import app.aaps.pump.omnipod.dash.keys.DashStringNonPreferenceKey
 import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
@@ -107,7 +107,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     commandQueue: CommandQueue,
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
@@ -130,7 +129,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         .description(R.string.omnipod_dash_pump_description),
     ownPreferences = listOf(
         OmnipodBooleanPreferenceKey::class.java, OmnipodIntPreferenceKey::class.java,
-        DashBooleanPreferenceKey::class.java
+        DashBooleanPreferenceKey::class.java, DashStringNonPreferenceKey::class.java
     ),
     aapsLogger, rh, preferences, commandQueue
 ),
@@ -495,12 +494,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 {
-                    if (it.isChanged(rh.gs(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled)) ||
+                    if (it.isChanged(OmnipodBooleanPreferenceKey.ExpirationReminder.key) ||
                         it.isChanged(OmnipodIntPreferenceKey.ExpirationReminderHours.key) ||
                         it.isChanged(OmnipodBooleanPreferenceKey.ExpirationAlarm.key) ||
                         it.isChanged(OmnipodIntPreferenceKey.ExpirationAlarmHours.key) ||
                         it.isChanged(OmnipodBooleanPreferenceKey.LowReservoirAlert.key) ||
-                        it.isChanged(rh.gs(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_units))
+                        it.isChanged(OmnipodIntPreferenceKey.LowReservoirAlertUnits.key)
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
                     }
@@ -946,7 +945,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         preferences.get(OmnipodBooleanPreferenceKey.BasalBeepsEnabled)
 
     private fun hasBolusErrorBeepEnabled(): Boolean =
-        preferences.get(DashBooleanPreferenceKey.SoundUncertainBolusNotification)
+        preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification)
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (!podStateManager.tempBasalActive &&
@@ -1221,7 +1220,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val expirationAlarmEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationAlarm)
         val expirationAlarmHours = preferences.get(OmnipodIntPreferenceKey.ExpirationAlarmHours)
         val lowReservoirAlertEnabled = preferences.get(OmnipodBooleanPreferenceKey.LowReservoirAlert)
-        val lowReservoirAlertUnits = sp.getInt(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_units, 10)
+        val lowReservoirAlertUnits = preferences.get(OmnipodIntPreferenceKey.LowReservoirAlertUnits)
 
         when {
             podStateManager.sameAlertSettings(
@@ -1583,8 +1582,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun soundEnabledForNotificationType(notificationType: Int): Boolean =
         when (notificationType) {
-            Notification.OMNIPOD_TBR_ALERTS    -> preferences.get(DashBooleanPreferenceKey.SoundUncertainTbrNotification)
-            Notification.OMNIPOD_UNCERTAIN_SMB -> preferences.get(DashBooleanPreferenceKey.SoundUncertainSmbNotification)
+            Notification.OMNIPOD_TBR_ALERTS    -> preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification)
+            Notification.OMNIPOD_UNCERTAIN_SMB -> preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification)
             Notification.OMNIPOD_POD_SUSPENDED -> preferences.get(DashBooleanPreferenceKey.SoundDeliverySuspendedNotification)
             else                               -> true
         }
@@ -1700,21 +1699,21 @@ class OmnipodDashPumpPlugin @Inject constructor(
             addPreference(
                 AdaptiveSwitchPreference(
                     ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.SoundUncertainTbrNotification,
+                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
                     title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_tbr_sound_enabled
                 )
             )
             addPreference(
                 AdaptiveSwitchPreference(
                     ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.SoundUncertainSmbNotification,
+                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
                     title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_smb_sound_enabled
                 )
             )
             addPreference(
                 AdaptiveSwitchPreference(
                     ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.SoundUncertainBolusNotification,
+                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
                     title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_bolus_sound_enabled
                 )
             )

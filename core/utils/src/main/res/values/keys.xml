@@ -2,10 +2,5 @@
 <resources>
     <!--    Keys-->
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
-    <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
-    <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
-    <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
-    <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
 
 </resources>

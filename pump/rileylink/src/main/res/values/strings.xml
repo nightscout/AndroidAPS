@@ -11,11 +11,6 @@
     <string name="pump_status_pump_unreachable">Pump unreachable</string>
     <string name="pump_status_invalid_config">Invalid configuration</string>
 
-    <!-- RL keys -->
-    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
-    <string name="key_riley_link_show_battery_level" translatable="false">pref_riley_link_show_reported_battery_level</string>
-
-
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Encoding</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Encoding</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
@@ -101,7 +96,6 @@
     </plurals>
     <string name="orange_use_scanning_level">Use Scanning</string>
     <string name="orange_use_scanning_level_summary">Scan before connecting to OrangeLink, it should improve connections (can also be used with other RileyLink clones, if needed)</string>
-    <string name="key_orange_use_scanning" translatable="false">pref_orange_use_scanning</string>
     <string name="rileylink_configuration">RileyLink Configuration</string>
 
 </resources>

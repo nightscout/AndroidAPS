@@ -15,6 +15,7 @@ enum class OmnipodBooleanPreferenceKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
 ) : BooleanPreferenceKey {
+
     BolusBeepsEnabled("AAPS.Omnipod.bolus_beeps_enabled", true),
     SmbBeepsEnabled("AAPS.Omnipod.smb_beeps_enabled", true),
     BasalBeepsEnabled("AAPS.Omnipod.basal_beeps_enabled", false),
@@ -22,4 +23,8 @@ enum class OmnipodBooleanPreferenceKey(
     ExpirationReminder("AAPS.Omnipod.expiration_reminder_enabled", true),
     ExpirationAlarm("AAPS.Omnipod.expiration_alarm_enabled", true),
     LowReservoirAlert("AAPS.Omnipod.low_reservoir_alert_enabled", true),
+    SoundUncertainTbrNotification("AAPS.Omnipod.notification_uncertain_tbr_sound_enabled", true),
+    SoundUncertainSmbNotification("AAPS.Omnipod.notification_uncertain_smb_sound_enabled", true),
+    SoundUncertainBolusNotification("AAPS.Omnipod.notification_uncertain_bolus_sound_enabled", true),
+    AutomaticallyAcknowledgeAlerts("AAPS.Omnipod.automatically_acknowledge_alerts_enabled", false),
 }

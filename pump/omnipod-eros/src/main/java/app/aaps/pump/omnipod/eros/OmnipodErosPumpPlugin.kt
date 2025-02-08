@@ -10,6 +10,9 @@ import android.os.IBinder
 import android.os.SystemClock
 import android.text.TextUtils
 import android.text.format.DateFormat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -49,7 +52,6 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -57,12 +59,18 @@ import app.aaps.core.interfaces.utils.Round.isSame
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.DateTimeUtil.getTimeInFutureFromMinutes
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.common.defs.TempBasalPair
+import app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkIntentPreferenceKey
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
@@ -75,7 +83,6 @@ import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
 import app.aaps.pump.omnipod.eros.data.RLHistoryItemOmnipod
-import app.aaps.pump.omnipod.eros.definition.OmnipodErosStorageKeys
 import app.aaps.pump.omnipod.eros.driver.communication.action.service.ExpirationReminderBuilder
 import app.aaps.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoRecentPulseLog
 import app.aaps.pump.omnipod.eros.driver.definition.ActivationProgress
@@ -90,6 +97,9 @@ import app.aaps.pump.omnipod.eros.event.EventOmnipodErosTbrChanged
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered
 import app.aaps.pump.omnipod.eros.extensions.fromJsonString
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryDatabase
+import app.aaps.pump.omnipod.eros.keys.ErosBooleanPreferenceKey
+import app.aaps.pump.omnipod.eros.keys.ErosLongNonPreferenceKey
+import app.aaps.pump.omnipod.eros.keys.ErosStringNonPreferenceKey
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import app.aaps.pump.omnipod.eros.queue.command.CommandReadPulseLog
@@ -125,7 +135,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val sp: SP,
     private val podStateManager: ErosPodStateManager,
     private val aapsOmnipodErosManager: AapsOmnipodErosManager,
     private val fabricPrivacy: FabricPrivacy,
@@ -147,7 +156,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
         .pluginName(R.string.omnipod_eros_name)
         .shortName(R.string.omnipod_eros_name_short)
-        .preferencesId(R.xml.omnipod_eros_preferences)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.omnipod_eros_pump_description),
     ownPreferences = listOf(),
     aapsLogger, rh, preferences, commandQueue
@@ -275,20 +284,20 @@ class OmnipodErosPumpPlugin @Inject constructor(
                                event.isChanged(OmnipodBooleanPreferenceKey.BolusBeepsEnabled.key) ||
                                event.isChanged(OmnipodBooleanPreferenceKey.TbrBeepsEnabled.key) ||
                                event.isChanged(OmnipodBooleanPreferenceKey.SmbBeepsEnabled.key) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED)) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED))
+                               event.isChanged(ErosBooleanPreferenceKey.ShowSuspendDeliveryButton.key) ||
+                               event.isChanged(ErosBooleanPreferenceKey.ShowPulseLogButton.key) ||
+                               event.isChanged(ErosBooleanPreferenceKey.ShowRileyLinkStatsButton.key) ||
+                               event.isChanged(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel.key) ||
+                               event.isChanged(ErosBooleanPreferenceKey.BatteryChangeLogging.key) ||
+                               event.isChanged(ErosBooleanPreferenceKey.TimeChangeEnabled.key) ||
+                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification.key) ||
+                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification.key) ||
+                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification.key) ||
+                               event.isChanged(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts.key)
                            ) {
                                aapsOmnipodErosManager.reloadSettings()
                            } else if (event.isChanged(OmnipodBooleanPreferenceKey.ExpirationReminder.key) ||
-                               event.isChanged(rh.gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN)) ||
+                               event.isChanged(OmnipodIntPreferenceKey.ExpirationAlarmHours.key) ||
                                event.isChanged(OmnipodBooleanPreferenceKey.LowReservoirAlert.key) ||
                                event.isChanged(OmnipodIntPreferenceKey.LowReservoirAlertUnits.key)
                            ) {
@@ -305,15 +314,15 @@ class OmnipodErosPumpPlugin @Inject constructor(
                            // If so, add it to history
                            // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
                            // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
-                           if (sp.contains(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS)) {
-                               val activeBolusString = sp.getString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, "")
+                           if (preferences.getIfExists(ErosStringNonPreferenceKey.ActiveBolus) != null) {
+                               val activeBolusString = preferences.get(ErosStringNonPreferenceKey.ActiveBolus)
                                aapsLogger.warn(LTag.PUMP, "Found active bolus in SP: {}. Adding Treatment.", activeBolusString)
                                try {
                                    aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo().fromJsonString(activeBolusString))
                                } catch (ex: Exception) {
                                    aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex)
                                }
-                               sp.remove(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS)
+                               preferences.remove(ErosStringNonPreferenceKey.ActiveBolus)
                            }
                        }, fabricPrivacy::logException)
     }
@@ -506,8 +515,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             // When no Pod is active, return true here in order to prevent AAPS from setting a profile
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
             true
-        }
-        else podStateManager.basalSchedule == AapsOmnipodErosManager.mapProfileToBasalSchedule(profile)
+        } else podStateManager.basalSchedule == AapsOmnipodErosManager.mapProfileToBasalSchedule(profile)
 
     override fun lastDataTime(): Long = if (podStateManager.isPodInitialized) podStateManager.lastSuccessfulCommunication.millis else 0
 
@@ -571,7 +579,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success)
 
         if (result.success) {
-            incrementStatistics(OmnipodErosStorageKeys.Statistics.TBRS_SET)
+            preferences.inc(ErosLongNonPreferenceKey.TbrsSet)
         }
 
         return result
@@ -767,12 +775,12 @@ class OmnipodErosPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Setting time, requestedByUser={}", requestedByUser)
         var result: PumpEnactResult =
             if (requestedByUser || aapsOmnipodErosManager.isTimeChangeEventEnabled) {
-            executeCommand<PumpEnactResult>(OmnipodCommandType.SET_TIME, Supplier { aapsOmnipodErosManager.setTime(!requestedByUser) })!!
-        } else {
-            // Even if automatically changing the time is disabled, we still want to at least do a GetStatus request,
-            // in order to update the Pod's activation time, which we need for calculating the time on the Pod
-            getPodStatus()
-        }
+                executeCommand<PumpEnactResult>(OmnipodCommandType.SET_TIME, Supplier { aapsOmnipodErosManager.setTime(!requestedByUser) })!!
+            } else {
+                // Even if automatically changing the time is disabled, we still want to at least do a GetStatus request,
+                // in order to update the Pod's activation time, which we need for calculating the time on the Pod
+                getPodStatus()
+            }
 
         if (result.success) {
             this.hasTimeDateOrTimeZoneChanged = false
@@ -900,7 +908,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
     override fun isBatteryChangeLoggingEnabled(): Boolean = aapsOmnipodErosManager.isBatteryChangeLoggingEnabled
 
-
     private fun initializeAfterRileyLinkConnection() {
         if (podStateManager.getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
             var success = false
@@ -929,12 +936,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
         val result: PumpEnactResult = executeCommand<PumpEnactResult>(OmnipodCommandType.SET_BOLUS, Supplier { aapsOmnipodErosManager.bolus(detailedBolusInfo) })!!
 
         if (result.success) {
-            incrementStatistics(
-                if (detailedBolusInfo.bolusType == BS.Type.SMB)
-                    OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
-                else
-                    OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED
-            )
+            if (detailedBolusInfo.bolusType == BS.Type.SMB)
+                preferences.inc(ErosLongNonPreferenceKey.SmbsDelivered)
+            else
+                preferences.inc(ErosLongNonPreferenceKey.BolusesDelivered)
         }
 
         return result
@@ -970,12 +975,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return true
     }
 
-    private fun incrementStatistics(statsKey: Int) {
-        var currentCount = sp.getLong(statsKey, 0L)
-        currentCount++
-        sp.putLong(statsKey, currentCount)
-    }
-
     private fun readTBR(): PumpState.TemporaryBasal? {
         return pumpSync.expectedPumpState().temporaryBasal
     }
@@ -986,6 +985,193 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
     override fun clearAllTables() {
         erosHistoryDatabase.clearAllTables()
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val rileyLinkCategory = PreferenceCategory(context)
+        parent.addPreference(rileyLinkCategory)
+        rileyLinkCategory.apply {
+            key = "omnipod_eros_riley_link"
+            title = rh.gs(R.string.omnipod_eros_preferences_category_riley_link)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = RileyLinkIntentPreferenceKey.MacAddressSelector, title = app.aaps.pump.common.hw.rileylink.R.string.rileylink_configuration,
+                    intent = Intent(context, RileyLinkBLEConfigActivity::class.java)
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = RileylinkBooleanPreferenceKey.OrangeUseScanning,
+                    title = app.aaps.pump.common.hw.rileylink.R.string.orange_use_scanning_level,
+                    summary = app.aaps.pump.common.hw.rileylink.R.string.orange_use_scanning_level_summary
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel,
+                    title = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level,
+                    summary = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level_summary
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = ErosBooleanPreferenceKey.BatteryChangeLogging,
+                    title = R.string.omnipod_eros_preferences_battery_change_logging_enabled,
+                    summary = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level_summary
+                )
+            )
+        }
+        val beepCategory = PreferenceCategory(context)
+        parent.addPreference(beepCategory)
+        beepCategory.apply {
+            key = "omnipod_eros_beeps"
+            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_confirmation_beeps)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_bolus_beeps_enabled
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_basal_beeps_enabled
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_smb_beeps_enabled
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_tbr_beeps_enabled
+                )
+            )
+        }
+        val alertsCategory = PreferenceCategory(context)
+        parent.addPreference(alertsCategory)
+        alertsCategory.apply {
+            key = "omnipod_eros_alerts"
+            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_alerts)
+            initialExpandedChildrenCount = 0
+
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.ExpirationReminder,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled,
+                    summary = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled_summary
+                )
+            )
+            addPreference(
+                AdaptiveIntPreference(
+                    ctx = context,
+                    intKey = OmnipodIntPreferenceKey.ExpirationAlarmHours,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_hours_before_shutdown
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.LowReservoirAlert,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_enabled
+                )
+            )
+            addPreference(
+                AdaptiveIntPreference(
+                    ctx = context,
+                    intKey = OmnipodIntPreferenceKey.LowReservoirAlertUnits,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_units
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_automatically_silence_alerts
+                )
+            )
+            val notificationsCategory = PreferenceCategory(context)
+            parent.addPreference(notificationsCategory)
+            notificationsCategory.apply {
+                key = "omnipod_eros_notifications"
+                title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_notifications)
+                initialExpandedChildrenCount = 0
+
+                addPreference(
+                    AdaptiveSwitchPreference(
+                        ctx = context,
+                        booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
+                        title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_tbr_sound_enabled
+                    )
+                )
+                addPreference(
+                    AdaptiveSwitchPreference(
+                        ctx = context,
+                        booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
+                        title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_smb_sound_enabled
+                    )
+                )
+                addPreference(
+                    AdaptiveSwitchPreference(
+                        ctx = context,
+                        booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
+                        title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_bolus_sound_enabled
+                    )
+                )
+            }
+
+        }
+        val otherCategory = PreferenceCategory(context)
+        parent.addPreference(otherCategory)
+        otherCategory.apply {
+            key = "omnipod_eros_other_settings"
+            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_other)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = ErosBooleanPreferenceKey.ShowSuspendDeliveryButton,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_suspend_delivery_button_enabled
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = ErosBooleanPreferenceKey.ShowPulseLogButton,
+                    title = R.string.omnipod_eros_preferences_pulse_log_button_enabled
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = ErosBooleanPreferenceKey.ShowRileyLinkStatsButton,
+                    title = R.string.omnipod_eros_preferences_riley_link_stats_button_enabled
+                )
+            )
+            addPreference(
+                AdaptiveSwitchPreference(
+                    ctx = context,
+                    booleanKey = ErosBooleanPreferenceKey.TimeChangeEnabled,
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_time_change_enabled
+                )
+            )
+        }
+
     }
 
     companion object {
