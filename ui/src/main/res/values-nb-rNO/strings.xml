@@ -134,6 +134,9 @@
     <string name="change_your_input">Endre dine inndata!</string>
     <string name="confirm_treatment">Bekreft behandling</string>
     <string name="recalculate">Rekalkuler</string>
+    <!--    Widget-->
+    <string name="use_black_color">Bruk svart farge</string>
+    <string name="widget_configuration">Widget konfigurasjon</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Begge</item>
         <item>Kun positiv</item>
