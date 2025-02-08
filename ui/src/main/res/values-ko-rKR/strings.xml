@@ -123,4 +123,5 @@
     <string name="quickwizard_settings">빠른마법사 설정</string>
     <string name="overview_edit_quickwizard_valid">유효한:</string>
     <string name="a11y_drag_and_drop_handle">드래그 앤 드롭 핸들</string>
+    <!--    Widget-->
 </resources>
