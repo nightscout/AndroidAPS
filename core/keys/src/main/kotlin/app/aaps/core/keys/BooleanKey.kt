@@ -113,4 +113,8 @@ enum class BooleanKey(
     WearCustomWatchfaceAuthorization(key = "wear_custom_watchface_autorization", defaultValue = false),
     WearNotifyOnSmb(key = "wear_notifySMB", defaultValue = true),
     WearBroadcastData(key = "wear_broadcast_data", defaultValue = false),
+    WizardCalculationVisible("wizard_calculation_visible", defaultValue = false),
+    WizardCorrectionPercent("wizard_correction_percent", defaultValue = false),
+    WizardIncludeCob("wizard_include_cob", defaultValue = false),
+    WizardIncludeTrend("wizard_include_trend_bg", defaultValue = false),
 }

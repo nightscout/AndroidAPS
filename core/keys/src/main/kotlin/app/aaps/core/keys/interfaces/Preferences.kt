@@ -272,6 +272,15 @@ interface Preferences {
     /**
      * Update [Int] value in [android.content.SharedPreferences]
      *
+     * @param key [app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: IntComposedNonPreferenceKey, vararg arguments: Any, value: Int)
+
+    /**
+     * Update [Int] value in [android.content.SharedPreferences]
+     *
      * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
      * @param value value
      */
@@ -284,6 +293,15 @@ interface Preferences {
      * @param value value
      */
     fun inc(key: IntNonPreferenceKey)
+
+    /**
+     * Get [Int] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: IntComposedNonPreferenceKey, vararg arguments: Any): Int
 
     /**
      * Get [Int] value from [android.content.SharedPreferences]
@@ -342,7 +360,7 @@ interface Preferences {
     fun inc(key: LongNonPreferenceKey)
 
     /**
-     * Get [String] value from [android.content.SharedPreferences]
+     * Get [Long] value from [android.content.SharedPreferences]
      * *
      * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
@@ -351,7 +369,7 @@ interface Preferences {
     fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long
 
     /**
-     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
      *
      * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format
@@ -360,7 +378,7 @@ interface Preferences {
     fun getIfExists(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long?
 
     /**
-     * Update [String] value in [android.content.SharedPreferences]
+     * Update [Long] value in [android.content.SharedPreferences]
      *
      * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
      * @param arguments arguments to compose final key using String::format

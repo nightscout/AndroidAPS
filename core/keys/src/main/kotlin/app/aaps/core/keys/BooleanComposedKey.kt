@@ -8,5 +8,6 @@ enum class BooleanComposedKey(
     override val defaultValue: Boolean
 ) : BooleanComposedNonPreferenceKey {
 
-    Log("log_", "%s", false)
+    Log("log_", "%s", false),
+    WidgetUseBlack("appwidget_use_black_", "%d", false),
 }

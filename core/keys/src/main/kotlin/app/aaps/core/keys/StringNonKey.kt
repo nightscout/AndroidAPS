@@ -14,5 +14,6 @@ enum class StringNonKey(
     BolusInfoStorage(key = "key_bolus_storage", defaultValue = ""),
     ActivePumpType(key = "active_pump_type", defaultValue = ""),
     ActivePumpSerialNumber(key = "active_pump_serial_number", defaultValue = ""),
-    SmsOtpSecret("smscommunicator_otp_secret", ""), // Move to StringNonKey
+    SmsOtpSecret("smscommunicator_otp_secret", defaultValue = ""),
+    TotalBaseBasal("TBB", defaultValue = "10.00")
 }

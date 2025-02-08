@@ -53,4 +53,5 @@ enum class StringKey(
     TidepoolUsername("tidepool_username", ""),
     TidepoolPassword("tidepool_password", "", isPassword = true),
     TidepoolTestLogin(key = "tidepool_test_login", ""),
+
 }

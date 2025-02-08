@@ -12,6 +12,7 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.IntentKey
@@ -26,6 +27,7 @@ import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
@@ -69,6 +71,7 @@ class PreferencesImpl @Inject constructor(
             DoubleKey::class.java,
             IntentKey::class.java,
             IntKey::class.java,
+            IntComposedKey::class.java,
             IntNonKey::class.java,
             LongComposedKey::class.java,
             LongNonKey::class.java,
@@ -168,6 +171,13 @@ class PreferencesImpl @Inject constructor(
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
         else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
+
+    override fun get(key: IntComposedNonPreferenceKey, vararg arguments: Any): Int =
+        sp.getInt(key.composeKey(*arguments), key.defaultValue)
+
+    override fun put(key: IntComposedNonPreferenceKey, vararg arguments: Any, value: Int) {
+        sp.putInt(key.composeKey(*arguments), value)
+    }
 
     override fun get(key: LongNonPreferenceKey): Long =
         sp.getLong(key.key, key.defaultValue)
