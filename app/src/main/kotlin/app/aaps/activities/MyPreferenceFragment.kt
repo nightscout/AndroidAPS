@@ -306,8 +306,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         for (plugin in activePlugin.getPluginsList()) pref.key?.let { plugin.updatePreferenceSummary(pref) }
     }
 
-    private fun initSummary(p: Preference, isSinglePreference: Boolean) {
-        p.isIconSpaceReserved = false // remove extra spacing on left after migration to androidx
+    private fun initSummary(p: Preference?, isSinglePreference: Boolean) {
+        p?.isIconSpaceReserved = false // remove extra spacing on left after migration to androidx
         // expand single plugin preference by default
         if (p is PreferenceScreen && isSinglePreference && p.size > 0 && p.getPreference(0) is PreferenceCategory)
             (p.getPreference(0) as PreferenceCategory).initialExpandedChildrenCount = Int.MAX_VALUE

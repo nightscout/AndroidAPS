@@ -15,7 +15,6 @@
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
-    <string name="bgsource_upload">血糖上传设置</string>
     <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
 </resources>

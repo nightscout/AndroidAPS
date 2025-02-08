@@ -71,10 +71,10 @@
     <string name="enable_smb_after_carbs_summary">Aktiver SMB i 6 timer etter inntak av karbohydrater, selv med 0 COB. Bare mulig med en BS-kilde som støtter avansert filtrering av data</string>
     <string name="enable_smb_with_cob">Aktiver SMB med COB</string>
     <string name="enable_smb_with_cob_summary">Aktiver SMB når COB (karbohydrater ombord) er aktiv.</string>
-    <string name="enable_smb_with_temp_target">Aktiver SMB med lav midlertidig målverdi</string>
-    <string name="enable_smb_with_temp_target_summary">Aktiver SMB når en lav midlertidig målverdi er aktivert (spise snart, 5,5 mmol/l eller lavere)</string>
-    <string name="enable_smb_with_high_temp_target">Aktiver SMB ved høy midlertidig målverdi</string>
-    <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er en høy aktiv midlertidig målverdi (aktivitet, over 5,5 mmol/l)</string>
+    <string name="enable_smb_with_temp_target">Aktiver SMB ved lavt midlertidig mål</string>
+    <string name="enable_smb_with_temp_target_summary">Aktiver SMB når et lavt midlertidig mål er aktivt (under eller lik 5,5 mmol/l)</string>
+    <string name="enable_smb_with_high_temp_target">Aktiver SMB ved høyt midlertidig mål</string>
+    <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når et høyt midlertidig mål er aktivt (over 5,5 mmol/l). Anbefalt av for å kunne stoppe SMB ved aktivitet.</string>
     <string name="smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maks minutter</string>
     <string name="uam_smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB ved UAM</string>

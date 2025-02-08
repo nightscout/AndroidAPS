@@ -140,7 +140,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
-    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Ziele gelten nur im APS-Modus!</string>
     <string name="no_history">Keine Verlaufsdaten!</string>
     <string name="temp_target">Temporäres Ziel</string>

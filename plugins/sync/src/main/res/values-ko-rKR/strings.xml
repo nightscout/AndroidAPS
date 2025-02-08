@@ -139,7 +139,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">활성화된 프로파일 스위치가 없습니다!</string>
-    <string name="profile_message">프로파일:\n\n시간 변화: %1$d\n백분율: %2$d%%\"</string>
     <string name="target_only_aps_mode">목표는 APS 모드에서만 적용 가능합니다!</string>
     <string name="no_history">기록이 없습니다!</string>
     <string name="temp_target">임시 목표</string>
