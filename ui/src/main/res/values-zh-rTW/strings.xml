@@ -134,6 +134,7 @@
     <string name="change_your_input">更改您的輸入！</string>
     <string name="confirm_treatment">請確認治療</string>
     <string name="recalculate">重新計算</string>
+    <!--    Widget-->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>兩者皆是</item>
         <item>僅正值</item>
