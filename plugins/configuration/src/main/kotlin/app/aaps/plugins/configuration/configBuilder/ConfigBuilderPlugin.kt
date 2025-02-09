@@ -101,11 +101,11 @@ class ConfigBuilderPlugin @Inject constructor(
     private fun savePref(p: PluginBase, type: PluginType) {
         // val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
         // sp.putBoolean(settingEnabled, p.isEnabled())
-        preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, type.name, p.javaClass.simpleName, value = p.isEnabled())
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + ConfigurationBooleanComposedKey.ConfigBuilderEnabled.composeKey(type.name, p.javaClass.simpleName) + ":" + p.isEnabled())
+        preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, type.name + "_" + p.javaClass.simpleName, value = p.isEnabled())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + ConfigurationBooleanComposedKey.ConfigBuilderEnabled.composeKey(type.name + "_" + p.javaClass.simpleName) + ":" + p.isEnabled())
         val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
         //sp.putBoolean(settingVisible, p.isFragmentVisible())
-        preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, type.name, p.javaClass.simpleName, value = p.isFragmentVisible())
+        preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, type.name + "_" + p.javaClass.simpleName, value = p.isFragmentVisible())
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible())
     }
 
@@ -121,20 +121,20 @@ class ConfigBuilderPlugin @Inject constructor(
     private fun loadPref(p: PluginBase, type: PluginType) {
         // val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
         // if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false))
-        val existing = preferences.getIfExists(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, type.name, p.javaClass.simpleName)
+        val existing = preferences.getIfExists(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, type.name + "_" + p.javaClass.simpleName)
         if (existing != null) p.setPluginEnabled(type, existing)
         else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + ConfigurationBooleanComposedKey.ConfigBuilderEnabled.composeKey(type.name, p.javaClass.simpleName) + ":" + p.isEnabled(type))
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + ConfigurationBooleanComposedKey.ConfigBuilderEnabled.composeKey(type.name + "_" + p.javaClass.simpleName) + ":" + p.isEnabled(type))
         //val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
         //if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false))
-        val existingVisible = preferences.getIfExists(ConfigurationBooleanComposedKey.ConfigBuilderVisible, type.name, p.javaClass.simpleName)
+        val existingVisible = preferences.getIfExists(ConfigurationBooleanComposedKey.ConfigBuilderVisible, type.name + "_" + p.javaClass.simpleName)
         if (existingVisible != null) p.setFragmentVisible(type, existingVisible)
         else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
             p.setFragmentVisible(type, true)
         }
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + ConfigurationBooleanComposedKey.ConfigBuilderVisible.composeKey(type.name, p.javaClass.simpleName) + ":" + p.isFragmentVisible())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + ConfigurationBooleanComposedKey.ConfigBuilderVisible.composeKey(type.name + "_" + p.javaClass.simpleName) + ":" + p.isFragmentVisible())
     }
 
     fun logPluginStatus() {

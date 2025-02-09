@@ -54,4 +54,6 @@ enum class StringKey(
     TidepoolPassword("tidepool_password", "", isPassword = true),
     TidepoolTestLogin(key = "tidepool_test_login", ""),
 
+    PumpCommonBolusStorage("pump_sync_storage_bolus", ""),
+    PumpCommonTbrStorage("pump_sync_storage_tbr", ""),
 }

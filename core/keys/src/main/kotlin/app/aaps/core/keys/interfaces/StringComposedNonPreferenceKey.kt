@@ -7,7 +7,7 @@ import java.util.Locale
  *
  * Final key is composed as key + String.format(Locale.ENGLISH, format, *arguments)
  */
-interface StringComposedNonPreferenceKey : NonPreferenceKey {
+interface StringComposedNonPreferenceKey : NonPreferenceKey, ComposedKey {
 
     /**
      * Key is used as prefix for recognizing the preference
@@ -19,7 +19,7 @@ interface StringComposedNonPreferenceKey : NonPreferenceKey {
     /**
      * String used to format vararg
      */
-    val format: String
+    override val format: String
 
     /**
      * Default value

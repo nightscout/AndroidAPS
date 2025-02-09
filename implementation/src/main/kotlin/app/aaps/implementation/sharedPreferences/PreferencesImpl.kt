@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
@@ -24,6 +25,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.ComposedKey
 import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
@@ -270,6 +272,22 @@ class PreferencesImpl @Inject constructor(
     override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {
         if (clazz !in prefsList) prefsList.add(clazz)
     }
+
+    override fun allMatchingStrings(key: ComposedKey): List<String> =
+        mutableListOf<String>().also {
+            assert(key.format == "%s")
+            val keys: Map<String, *> = sp.getAll()
+            for ((singleKey, _) in keys)
+                if (singleKey.startsWith(key.key)) it.add(singleKey.split(key.key)[1])
+        }
+
+    override fun allMatchingInts(key: ComposedKey): List<Int> =
+        mutableListOf<Int>().also {
+            assert(key.format == "%d")
+            val keys: Map<String, *> = sp.getAll()
+            for ((singleKey, _) in keys)
+                if (singleKey.startsWith(key.key)) it.add(SafeParse.stringToInt(singleKey.split(key.key)[1]))
+        }
 
     private fun calculatedDefaultValue(key: IntPreferenceKey): Int =
         if (key.calculatedDefaultValue)

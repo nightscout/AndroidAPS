@@ -82,7 +82,7 @@ class ProfilePlugin @Inject constructor(
         override val defaultValue: Boolean
     ) : BooleanComposedNonPreferenceKey {
 
-        LocalProfileNumbered(Constants.LOCAL_PROFILE, "_%d_%s", false),
+        LocalProfileNumberedMgdl(Constants.LOCAL_PROFILE + "_mgdl_", "%d", false),
     }
 
     enum class ProfileIntKey(
@@ -99,8 +99,12 @@ class ProfilePlugin @Inject constructor(
         override val defaultValue: String
     ) : StringComposedNonPreferenceKey {
 
-        LocalProfileNumbered(Constants.LOCAL_PROFILE, "_%d_%s", DEFAULT_ARRAY),
-        LocalProfileNumberedName(Constants.LOCAL_PROFILE, "_%d_%s", Constants.LOCAL_PROFILE + "0"),
+        LocalProfileNumberedIsf(Constants.LOCAL_PROFILE + "_isf_", "%d", DEFAULT_ARRAY),
+        LocalProfileNumberedIc(Constants.LOCAL_PROFILE + "_ic_", "%d", DEFAULT_ARRAY),
+        LocalProfileNumberedBasal(Constants.LOCAL_PROFILE + "_basal_", "%d", DEFAULT_ARRAY),
+        LocalProfileNumberedTargetLow(Constants.LOCAL_PROFILE + "_targetlow_", "%d", DEFAULT_ARRAY),
+        LocalProfileNumberedTargetHigh(Constants.LOCAL_PROFILE + "_targethigh_", "%d", DEFAULT_ARRAY),
+        LocalProfileNumberedName(Constants.LOCAL_PROFILE + "_name_", "%d", Constants.LOCAL_PROFILE + "0"),
     }
 
     enum class ProfileComposedDoubleKey(
@@ -109,7 +113,7 @@ class ProfilePlugin @Inject constructor(
         override val defaultValue: Double
     ) : DoubleComposedNonPreferenceKey {
 
-        LocalProfileNumbered(Constants.LOCAL_PROFILE, "_%d_%s", Constants.defaultDIA),
+        LocalProfileNumberedDia(Constants.LOCAL_PROFILE + "_dia_", "%d", Constants.defaultDIA),
     }
 
     private var rawProfile: ProfileStore? = null
@@ -218,14 +222,14 @@ class ProfilePlugin @Inject constructor(
     override fun storeSettings(activity: FragmentActivity?, timestamp: Long) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, "name", value = name)
-                preferences.put(ProfileComposedBooleanKey.LocalProfileNumbered, i, "mgdl", value = mgdl)
-                preferences.put(ProfileComposedDoubleKey.LocalProfileNumbered, i, "dia", value = dia)
-                preferences.put(ProfileComposedStringKey.LocalProfileNumbered, i, "ic", value = ic.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumbered, i, "isf", value = isf.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumbered, i, "basal", value = basal.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumbered, i, "targetlow", value = targetLow.toString())
-                preferences.put(ProfileComposedStringKey.LocalProfileNumbered, i, "targethigh", value = targetHigh.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
+                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
+                preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, i, value = dia)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i, value = targetLow.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i, value = targetHigh.toString())
             }
         }
         preferences.put(ProfileIntKey.AmountOfProfiles, numOfProfiles)
@@ -249,19 +253,19 @@ class ProfilePlugin @Inject constructor(
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
         for (i in 0 until numOfProfiles) {
-            val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i, "name")
+            val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
             if (isExistingName(name)) continue
             try {
                 profiles.add(
                     ProfileSource.SingleProfile(
                         name = name,
-                        mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumbered, i, "mgdl"),
-                        dia = preferences.get(ProfileComposedDoubleKey.LocalProfileNumbered, i, "dia"),
-                        ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumbered, i, "ic")),
-                        isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumbered, i, "isf")),
-                        basal = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumbered, i, "basal")),
-                        targetLow = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumbered, i, "targetlow")),
-                        targetHigh = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumbered, i, "targethigh"))
+                        mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
+                        dia = preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, i),
+                        ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
+                        isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),
+                        basal = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)),
+                        targetLow = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)),
+                        targetHigh = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i))
                     )
                 )
             } catch (e: JSONException) {

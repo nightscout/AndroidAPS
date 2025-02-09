@@ -8,7 +8,7 @@ enum class ObjectivesLongComposedKey(
     override val defaultValue: Long
 ) : LongComposedNonPreferenceKey {
 
-    Started("Objectives_", "%s_started", 0L),
-    Accomplished("Objectives_", "%s_accomplished", 0L),
+    Started("Objectives_started_", "%s", 0L),
+    Accomplished("Objectives_accomplished_", "%s", 0L),
     DisabledTo("DisabledTo_", "%s", 0L),
 }

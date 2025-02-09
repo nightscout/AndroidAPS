@@ -15,7 +15,7 @@ object LocaleHelper {
         else PreferenceManager.getDefaultSharedPreferences(context).getString("language", "default")
             ?: "default"
     // injection not possible because of use in attachBaseContext
-    //SP.getString(R.string.key_language, Locale.getDefault().language)
+    //preferences.get(R.string.key_language, Locale.getDefault().language)
 
     fun currentLocale(context: Context): Locale {
         val language = selectedLanguage(context)

@@ -435,4 +435,16 @@ interface Preferences {
      * Called from PluginBase::init
      */
     fun registerPreferences(clazz: Class<out NonPreferenceKey>)
+
+    /**
+     * List all stored preferences formatters
+     * Note: only single formatting "%s" parameter is supported
+     */
+    fun allMatchingStrings(key: ComposedKey): List<String>
+
+    /**
+     * List all stored preferences formatters
+     * Note: only single formatting "%d" parameter is supported
+     */
+    fun allMatchingInts(key: ComposedKey): List<Int>
 }

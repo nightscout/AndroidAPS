@@ -442,9 +442,9 @@ public class AapsOmnipodErosManager {
         // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
         try {
             preferences.put(ErosStringNonPreferenceKey.ActiveBolus, DetailedBolusInfoExtensionKt.toJsonString(detailedBolusInfo));
-            aapsLogger.debug(LTag.PUMP, "Stored active bolus to SP for recovery");
+            aapsLogger.debug(LTag.PUMP, "Stored active bolus to preferences for recovery");
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);
+            aapsLogger.error(LTag.PUMP, "Failed to store active bolus to preferences", ex);
         }
 
         // Bolus is already updated in Pod state. If this was an SMB, it could be that

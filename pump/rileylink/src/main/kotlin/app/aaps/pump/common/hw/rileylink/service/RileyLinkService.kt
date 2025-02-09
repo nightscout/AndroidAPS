@@ -118,7 +118,7 @@ abstract class RileyLinkService : DaggerService() {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnecting from old RL (${rileyLinkServiceData.rileyLinkAddress}), reconnecting to new: $deviceAddress")
                 rileyLinkBLE.disconnect()
                 // need to shut down listening thread too?
-                // SP.putString(MedtronicConst.Prefs.RileyLinkAddress, deviceAddress);
+                // preferences.put(MedtronicConst.Prefs.RileyLinkAddress, deviceAddress);
                 rileyLinkServiceData.rileyLinkAddress = deviceAddress
                 rileyLinkBLE.findRileyLink(deviceAddress)
                 true

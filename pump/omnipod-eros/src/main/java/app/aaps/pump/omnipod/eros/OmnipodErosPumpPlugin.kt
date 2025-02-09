@@ -316,7 +316,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                            // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
                            if (preferences.getIfExists(ErosStringNonPreferenceKey.ActiveBolus) != null) {
                                val activeBolusString = preferences.get(ErosStringNonPreferenceKey.ActiveBolus)
-                               aapsLogger.warn(LTag.PUMP, "Found active bolus in SP: {}. Adding Treatment.", activeBolusString)
+                               aapsLogger.warn(LTag.PUMP, "Found active bolus in preferences: {}. Adding Treatment.", activeBolusString)
                                try {
                                    aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo().fromJsonString(activeBolusString))
                                } catch (ex: Exception) {
