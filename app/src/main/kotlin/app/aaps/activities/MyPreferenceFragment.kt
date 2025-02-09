@@ -25,18 +25,17 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
-import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.NONE
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.dialogs.OKDialog
@@ -66,7 +65,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
@@ -179,7 +177,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
-        checkForBiometricFallback(key)
+        checkForBiometricFallback(preferences.get(key) as PreferenceKey)
 
         preprocessCustomVisibility(preferenceScreen)
         updatePrefSummary(findPreference(key))
@@ -199,11 +197,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
     }
 
-    private fun checkForBiometricFallback(key: String) {
+    private fun checkForBiometricFallback(key: PreferenceKey) {
         // Biometric protection activated without set master password
-        if ((IntKey.ProtectionTypeSettings.key == key || IntKey.ProtectionTypeApplication.key == key || IntKey.ProtectionTypeBolus.key == key) &&
+        if ((IntKey.ProtectionTypeSettings == key || IntKey.ProtectionTypeApplication == key || IntKey.ProtectionTypeBolus == key) &&
             preferences.get(StringKey.ProtectionMasterPassword) == "" &&
-            sp.getInt(key, NONE.ordinal) == BIOMETRIC.ordinal
+            preferences.get(key as IntKey) == BIOMETRIC.ordinal
         ) {
             activity?.let {
                 val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
@@ -216,7 +214,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         val isBiometricActivated = preferences.get(IntKey.ProtectionTypeSettings) == BIOMETRIC.ordinal ||
             preferences.get(IntKey.ProtectionTypeApplication) == BIOMETRIC.ordinal ||
             preferences.get(IntKey.ProtectionTypeBolus) == BIOMETRIC.ordinal
-        if (StringKey.ProtectionMasterPassword.key == key && sp.getString(key, "") == "" && isBiometricActivated) {
+        if (StringKey.ProtectionMasterPassword == key && preferences.get(key as StringKey) == "" && isBiometricActivated) {
             activity?.let {
                 val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
                 val message = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_descriotion_biometric)
@@ -290,7 +288,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
 
             is StringPreferenceKey -> {
-                val value = sp.getString(pref.key, "")
+                val value = preferences.get(pref as StringPreferenceKey)
                 when {
                     // We use Preference and custom editor instead of EditTextPreference
                     // to hash password while it is saved and never have to show it, even hashed
