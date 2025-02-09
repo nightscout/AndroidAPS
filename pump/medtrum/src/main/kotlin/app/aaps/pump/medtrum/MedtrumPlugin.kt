@@ -63,8 +63,12 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
+import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
+import app.aaps.pump.medtrum.keys.MedtrumIntNonKey
+import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
 import app.aaps.pump.medtrum.ui.MedtrumOverviewFragment
 import app.aaps.pump.medtrum.util.MedtrumSnUtil
@@ -103,7 +107,10 @@ import kotlin.math.min
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.medtrum_pump_description),
-    ownPreferences = listOf(MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java),
+    ownPreferences = listOf(
+        MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java,
+        MedtrumIntNonKey::class.java, MedtrumLongNonKey::class.java, MedtrumStringNonKey::class.java, MedtrumDoubleNonKey::class.java
+    ),
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Medtrum {
 
@@ -454,7 +461,7 @@ import kotlin.math.min
     }
 
     override fun serialNumber(): String {
-        // Load from SP here, because this value will be get before pump is initialized
+        // Load from preferences here, because this value will be get before pump is initialized
         return medtrumPump.pumpSNFromSP.toString(radix = 16)
     }
 
