@@ -68,6 +68,16 @@ interface Preferences {
     fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean
 
     /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param defaultValue alternative default value
+     * @return value
+     */
+    fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, defaultValue: Boolean): Boolean
+
+    /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
      * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum

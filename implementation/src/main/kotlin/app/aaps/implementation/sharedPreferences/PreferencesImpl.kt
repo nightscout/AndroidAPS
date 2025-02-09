@@ -252,6 +252,9 @@ class PreferencesImpl @Inject constructor(
     override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean =
         sp.getBoolean(key.composeKey(*arguments), key.defaultValue)
 
+    override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, defaultValue: Boolean): Boolean =
+        sp.getBoolean(key.composeKey(*arguments), defaultValue)
+
     override fun getIfExists(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean? =
         if (sp.contains(key.composeKey(*arguments))) sp.getBoolean(key.composeKey(*arguments), key.defaultValue) else null
 

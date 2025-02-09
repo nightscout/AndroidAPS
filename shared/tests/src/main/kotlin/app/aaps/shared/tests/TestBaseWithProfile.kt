@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -65,7 +64,6 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var context: DaggerApplication
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
     @Mock lateinit var theme: Resources.Theme
