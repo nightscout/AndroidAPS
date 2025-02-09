@@ -39,6 +39,10 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.profile.keys.ProfileComposedBooleanKey
+import app.aaps.plugins.main.profile.keys.ProfileComposedDoubleKey
+import app.aaps.plugins.main.profile.keys.ProfileComposedStringKey
+import app.aaps.plugins.main.profile.keys.ProfileIntKey
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -72,55 +76,17 @@ class ProfilePlugin @Inject constructor(
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)
         .setDefault(),
-    ownPreferences = listOf(ProfileComposedStringKey::class.java, ProfileComposedDoubleKey::class.java, ProfileComposedBooleanKey::class.java, ProfileIntKey::class.java),
+    ownPreferences = listOf(
+        ProfileComposedStringKey::class.java, ProfileComposedDoubleKey::class.java, ProfileComposedBooleanKey::class.java, ProfileIntKey::class.java
+    ),
     aapsLogger, rh, preferences
 ), ProfileSource {
-
-    enum class ProfileComposedBooleanKey(
-        override val key: String,
-        override val format: String,
-        override val defaultValue: Boolean
-    ) : BooleanComposedNonPreferenceKey {
-
-        LocalProfileNumberedMgdl(Constants.LOCAL_PROFILE + "_mgdl_", "%d", false),
-    }
-
-    enum class ProfileIntKey(
-        override val key: String,
-        override val defaultValue: Int
-    ) : IntNonPreferenceKey {
-
-        AmountOfProfiles(Constants.LOCAL_PROFILE + "_profile", 0),
-    }
-
-    enum class ProfileComposedStringKey(
-        override val key: String,
-        override val format: String,
-        override val defaultValue: String
-    ) : StringComposedNonPreferenceKey {
-
-        LocalProfileNumberedIsf(Constants.LOCAL_PROFILE + "_isf_", "%d", DEFAULT_ARRAY),
-        LocalProfileNumberedIc(Constants.LOCAL_PROFILE + "_ic_", "%d", DEFAULT_ARRAY),
-        LocalProfileNumberedBasal(Constants.LOCAL_PROFILE + "_basal_", "%d", DEFAULT_ARRAY),
-        LocalProfileNumberedTargetLow(Constants.LOCAL_PROFILE + "_targetlow_", "%d", DEFAULT_ARRAY),
-        LocalProfileNumberedTargetHigh(Constants.LOCAL_PROFILE + "_targethigh_", "%d", DEFAULT_ARRAY),
-        LocalProfileNumberedName(Constants.LOCAL_PROFILE + "_name_", "%d", Constants.LOCAL_PROFILE + "0"),
-    }
-
-    enum class ProfileComposedDoubleKey(
-        override val key: String,
-        override val format: String,
-        override val defaultValue: Double
-    ) : DoubleComposedNonPreferenceKey {
-
-        LocalProfileNumberedDia(Constants.LOCAL_PROFILE + "_dia_", "%d", Constants.defaultDIA),
-    }
 
     private var rawProfile: ProfileStore? = null
 
     companion object {
 
-        private const val DEFAULT_ARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
+        const val DEFAULT_ARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
     }
 
     override fun onStart() {

@@ -95,7 +95,7 @@ class EquilPumpPlugin @Inject constructor(
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.equil_pump_description),
     ownPreferences = listOf(
-        EquilIntPreferenceKey::class.java, EquilDoublePreferenceKey::class.java, EquilBooleanPreferenceKey::class.java,
+        EquilBooleanKey::class.java, EquilBooleanPreferenceKey::class.java, EquilDoublePreferenceKey::class.java, EquilIntPreferenceKey::class.java,
         EquilStringKey::class.java
     ),
     aapsLogger, rh, preferences, commandQueue

@@ -179,11 +179,10 @@ class PreferencesImpl @Inject constructor(
             .filterIsInstance<UnitDoublePreferenceKey>()
             .any { it.key == key }
 
-    override fun get(key: String): NonPreferenceKey =
+    override fun get(key: String): NonPreferenceKey? =
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
-            ?: error("Key $key not found")
 
     override fun getIfExists(key: String): NonPreferenceKey? =
         prefsList
@@ -248,4 +247,14 @@ class PreferencesImpl @Inject constructor(
             for ((singleKey, _) in keys)
                 if (singleKey.startsWith(key.key)) it.add(SafeParse.stringToInt(singleKey.split(key.key)[1]))
         }
+
+    override fun isRegisteredKey(key: String): Boolean {
+        prefsList
+            .flatMap { it.enumConstants!!.asIterable() }
+            .forEach {
+                if (it.key == key) return true
+                if (it is ComposedKey && key.startsWith(it.key)) return true
+            }
+        return false
+    }
 }

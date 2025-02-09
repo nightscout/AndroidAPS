@@ -86,7 +86,7 @@ import kotlin.system.exitProcess
 
 @Reusable
 class ImportExportPrefsImpl @Inject constructor(
-    private var log: AAPSLogger,
+    private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
     private val preferences: Preferences,
@@ -281,21 +281,24 @@ class ImportExportPrefsImpl @Inject constructor(
             val entries: MutableMap<String, String> = mutableMapOf()
             for ((key, value) in sp.getAll()) {
                 entries[key] = value.toString()
+                if (!preferences.isRegisteredKey(key)) {
+                    aapsLogger.warn(LTag.CORE, "Unregistered key: $key $value")
+                }
             }
             val prefs = Prefs(entries, prepareMetadata(context))
             encryptedPrefsFormat.savePreferences(newFile, prefs, password)
             resultOk = true // Assuming export was executed successfully (or it would have thrown an exception)
 
         } catch (e: FileNotFoundException) {
-            log.error(LTag.CORE, "Unhandled exception: file not found", e)
+            aapsLogger.error(LTag.CORE, "Unhandled exception: file not found", e)
         } catch (e: IOException) {
-            log.error(LTag.CORE, "Unhandled exception: IO exception", e)
+            aapsLogger.error(LTag.CORE, "Unhandled exception: IO exception", e)
         } catch (e: PrefFileNotFoundError) {
-            log.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
+            aapsLogger.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
         } catch (e: PrefIOError) {
-            log.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
+            aapsLogger.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
         }
-        log.debug(LTag.CORE, "savePreferences: $resultOk")
+        aapsLogger.debug(LTag.CORE, "savePreferences: $resultOk")
         return resultOk
     }
 
@@ -342,7 +345,7 @@ class ImportExportPrefsImpl @Inject constructor(
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            log.error(LTag.CORE, "Internal android framework exception", e)
+            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
         }
     }
 
@@ -358,7 +361,7 @@ class ImportExportPrefsImpl @Inject constructor(
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            log.error(LTag.CORE, "Internal android framework exception", e)
+            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
         }
     }
 
@@ -414,9 +417,9 @@ class ImportExportPrefsImpl @Inject constructor(
 
             } catch (e: PrefFileNotFoundError) {
                 ToastUtils.errorToast(activity, rh.gs(R.string.filenotfound) + " " + importFile)
-                log.error(LTag.CORE, "Unhandled exception", e)
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
             } catch (e: PrefIOError) {
-                log.error(LTag.CORE, "Unhandled exception", e)
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ToastUtils.errorToast(activity, e.message)
             }
         }
@@ -437,7 +440,7 @@ class ImportExportPrefsImpl @Inject constructor(
         preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         OKDialog.show(context, rh.gs(R.string.setting_imported), rh.gs(R.string.restartingapp)) {
             uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
-            log.debug(LTag.CORE, "Exiting")
+            aapsLogger.debug(LTag.CORE, "Exiting")
             rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {
                 context.finish()

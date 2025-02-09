@@ -422,9 +422,9 @@ interface Preferences {
     /**
      * Find [app.aaps.core.keys.interfaces.NonPreferenceKey] definition
      * @param key string representation of key
-     * @return [app.aaps.core.keys.interfaces.NonPreferenceKey]
+     * @return [app.aaps.core.keys.interfaces.NonPreferenceKey] or null for [ComposedKey]
      */
-    fun get(key: String): NonPreferenceKey
+    fun get(key: String): NonPreferenceKey?
 
     /**
      * Find [app.aaps.core.keys.interfaces.NonPreferenceKey] definition
@@ -457,4 +457,12 @@ interface Preferences {
      * Note: only single formatting "%d" parameter is supported
      */
     fun allMatchingInts(key: ComposedKey): List<Int>
+
+    /**
+     * Check if the key string looks like a valid registered key
+     * ie it does match exactly
+     * or has a valid registered prefix
+     * @return true if registered
+     */
+    fun isRegisteredKey(key: String): Boolean
 }

@@ -150,8 +150,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         try {
             initSummary(preferenceScreen, pluginName != null)
-        } catch (_: Exception) {
-            throw Exception("Error in onCreatePreferences pluginName=$pluginName customPreference=$customPreference rootKey=$rootKey filter=$filter")
+        } catch (e: Exception) {
+            throw Exception("Error in onCreatePreferences pluginName=$pluginName customPreference=$customPreference rootKey=$rootKey filter=$filter", e)
         }
         preprocessPreferences()
         if (filter != "") updateFilterVisibility(filter, preferenceScreen)
@@ -177,7 +177,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
-        checkForBiometricFallback(preferences.get(key) as PreferenceKey)
+        checkForBiometricFallback(preferences.get(key) as PreferenceKey?)
 
         preprocessCustomVisibility(preferenceScreen)
         updatePrefSummary(findPreference(key))
@@ -197,7 +197,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
     }
 
-    private fun checkForBiometricFallback(key: PreferenceKey) {
+    private fun checkForBiometricFallback(key: PreferenceKey?) {
         // Biometric protection activated without set master password
         if ((IntKey.ProtectionTypeSettings == key || IntKey.ProtectionTypeApplication == key || IntKey.ProtectionTypeBolus == key) &&
             preferences.get(StringKey.ProtectionMasterPassword) == "" &&
@@ -288,7 +288,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
 
             is StringPreferenceKey -> {
-                val value = preferences.get(pref as StringPreferenceKey)
+                val value = preferences.get(keyDefinition)
                 when {
                     // We use Preference and custom editor instead of EditTextPreference
                     // to hash password while it is saved and never have to show it, even hashed

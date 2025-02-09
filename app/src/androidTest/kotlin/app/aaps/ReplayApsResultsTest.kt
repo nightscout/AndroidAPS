@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
@@ -57,7 +56,6 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
     @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMB
     @Inject lateinit var determineBasalAutoISF: DetermineBasalAutoISF
-    @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var preferences: Preferences
 
@@ -610,7 +608,7 @@ class ReplayApsResultsTest @Inject constructor() {
         JSONAssert.assertEquals(
             "Error in file $filename",
             output.toString(),
-            result?.json()?.apply {
+            result.json()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
             }.toString(),
