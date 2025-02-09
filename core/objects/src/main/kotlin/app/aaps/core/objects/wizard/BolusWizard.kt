@@ -542,14 +542,13 @@ class BolusWizard @Inject constructor(
                             override fun run() {
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                                } else if (useAlarm && carbs > 0 && carbTime > 0) {
+                                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                                 }
                             }
                         })
                     }
                     bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
-                }
-                if (useAlarm && carbs > 0 && carbTime > 0) {
-                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                 }
             }
             if (quickWizardEntry != null) {
