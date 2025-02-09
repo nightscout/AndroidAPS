@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
+    implementation(project(":core:validators"))
     implementation(project(":pump:pump-common"))
     testImplementation(project(":shared:tests"))
 

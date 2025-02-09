@@ -141,8 +141,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
         insightPlugin = InsightPlugin(
-            aapsLogger, rh, preferences, commandQueue, rxBus, sp, profileFunction,
-            context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
+            aapsLogger, rh, preferences, commandQueue, rxBus, profileFunction,
+            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
         )
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
