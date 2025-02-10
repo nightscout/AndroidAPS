@@ -11,9 +11,9 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.plugins.sync.garmin.GarminPlugin.GarminBooleanKey
-import app.aaps.plugins.sync.garmin.GarminPlugin.GarminIntKey
-import app.aaps.plugins.sync.garmin.GarminPlugin.GarminStringKey
+import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
+import app.aaps.plugins.sync.garmin.keys.GarminIntKey
+import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterEach
