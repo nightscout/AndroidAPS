@@ -21,10 +21,10 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.R
+import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -47,16 +47,6 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil
 ) : LocalAlertUtils {
-
-    // Local preferences
-    enum class LocalAlertLongKey(
-        override val key: String,
-        override val defaultValue: Long
-    ) : LongNonPreferenceKey {
-
-        NextPumpDisconnectedAlarm("nextPumpDisconnectedAlarm", 0L),
-        NextMissedReadingsAlarm("nextMissedReadingsAlarm", 0L)
-    }
 
     init {
         preferences.registerPreferences(LocalAlertLongKey::class.java)

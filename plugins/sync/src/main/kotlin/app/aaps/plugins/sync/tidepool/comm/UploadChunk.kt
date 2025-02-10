@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
 import app.aaps.plugins.sync.tidepool.elements.BloodGlucoseElement
@@ -21,6 +20,7 @@ import app.aaps.plugins.sync.tidepool.elements.ProfileElement
 import app.aaps.plugins.sync.tidepool.elements.SensorGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.WizardElement
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
+import app.aaps.plugins.sync.tidepool.keys.TidepoolLongKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import java.util.LinkedList
 import javax.inject.Inject
@@ -81,13 +81,13 @@ class UploadChunk @Inject constructor(
     }
 
     fun getLastEnd(): Long {
-        val result = preferences.get(TidepoolPlugin.TidepoolLongKey.LastEnd)
+        val result = preferences.get(TidepoolLongKey.LastEnd)
         return max(result, dateUtil.now() - T.months(2).msecs())
     }
 
     fun setLastEnd(time: Long) {
         if (time > getLastEnd()) {
-            preferences.put(TidepoolPlugin.TidepoolLongKey.LastEnd, time)
+            preferences.put(TidepoolLongKey.LastEnd, time)
             val friendlyEnd = dateUtil.dateAndTimeString(time)
             rxBus.send(EventTidepoolStatus(("Marking uploaded data up to $friendlyEnd")))
             aapsLogger.debug(LTag.TIDEPOOL, "Updating last end to: " + dateUtil.dateAndTimeString(time))

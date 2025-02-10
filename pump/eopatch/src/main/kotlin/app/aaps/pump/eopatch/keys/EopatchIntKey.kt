@@ -16,7 +16,8 @@ enum class EopatchIntKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     LowReservoirReminder("eopatch_low_reservoir_reminders", 10),

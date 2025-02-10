@@ -16,7 +16,8 @@ enum class InsightIntKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     MinRecoveryDuration("insight_min_recovery_duration", 5),

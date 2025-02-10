@@ -15,7 +15,8 @@ enum class EquilDoublePreferenceKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val exportable: Boolean = true,
+    override val hideParentScreenIfHidden: Boolean = false,
 ) : DoublePreferenceKey {
 
     EquilMaxBolus("equil_maxbolus", 10.0, 0.1, 25.0),

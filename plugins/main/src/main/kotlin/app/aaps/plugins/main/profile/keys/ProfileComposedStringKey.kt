@@ -7,7 +7,8 @@ import app.aaps.plugins.main.profile.ProfilePlugin.Companion.DEFAULT_ARRAY
 enum class ProfileComposedStringKey(
     override val key: String,
     override val format: String,
-    override val defaultValue: String
+    override val defaultValue: String,
+    override val exportable: Boolean = true
 ) : StringComposedNonPreferenceKey {
 
     LocalProfileNumberedIsf(Constants.LOCAL_PROFILE + "_isf_", "%d", DEFAULT_ARRAY),

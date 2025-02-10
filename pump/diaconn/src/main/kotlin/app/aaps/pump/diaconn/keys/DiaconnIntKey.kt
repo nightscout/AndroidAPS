@@ -16,7 +16,8 @@ enum class DiaconnIntKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     BolusSpeed("g8_bolusspeed", 5),

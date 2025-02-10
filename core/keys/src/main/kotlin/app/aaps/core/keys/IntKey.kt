@@ -16,7 +16,8 @@ enum class IntKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val engineeringModeOnly: Boolean = false
+    override val engineeringModeOnly: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     OverviewCarbsButtonIncrement1("carbs_button_increment_1", 5, -50, 50, defaultedBySM = true),

@@ -123,7 +123,7 @@ class DanaRPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           if (it.isChanged(DanaBooleanKey.DanaRUseExtended.key)) {
+                           if (it.isChanged(DanaBooleanKey.UseExtended.key)) {
                                if (pumpSync.expectedPumpState().extendedBolus != null) {
                                    executionService?.extendedBolusStop()
                                }
@@ -147,7 +147,7 @@ class DanaRPlugin @Inject constructor(
         get() = rh.gs(app.aaps.pump.dana.R.string.danarpump)
     override val isFakingTempsByExtendedBoluses: Boolean
         // Pump interface
-        get() = preferences.get(DanaBooleanKey.DanaRUseExtended)
+        get() = preferences.get(DanaBooleanKey.UseExtended)
 
     override fun isInitialized(): Boolean {
         return danaPump.lastConnection > 0 && danaPump.isExtendedBolusEnabled && danaPump.maxBasal > 0 && danaPump.isPasswordOK
@@ -215,8 +215,8 @@ class DanaRPlugin @Inject constructor(
         absoluteRateReq = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRateReq, aapsLogger), profile).value()
         var doTempOff = baseBasalRate - absoluteRateReq == 0.0 && absoluteRateReq >= 0.10
         val doLowTemp = absoluteRateReq < baseBasalRate || absoluteRateReq < 0.10
-        val doHighTemp = absoluteRateReq > baseBasalRate && !preferences.get(DanaBooleanKey.DanaRUseExtended)
-        val doExtendedTemp = absoluteRateReq > baseBasalRate && preferences.get(DanaBooleanKey.DanaRUseExtended)
+        val doHighTemp = absoluteRateReq > baseBasalRate && !preferences.get(DanaBooleanKey.UseExtended)
+        val doExtendedTemp = absoluteRateReq > baseBasalRate && preferences.get(DanaBooleanKey.UseExtended)
         var percentRate = (absoluteRateReq / baseBasalRate * 100).toInt()
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRateReq < 0.10) percentRate = 0
@@ -229,7 +229,7 @@ class DanaRPlugin @Inject constructor(
         if (percentRate == 100) doTempOff = true
         if (doTempOff) {
             // If extended in progress
-            if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.DanaRUseExtended)) {
+            if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping extended bolus (doTempOff)")
                 return cancelExtendedBolus()
             }
@@ -244,7 +244,7 @@ class DanaRPlugin @Inject constructor(
         }
         if (doLowTemp || doHighTemp) {
             // If extended in progress
-            if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.DanaRUseExtended)) {
+            if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)")
                 result = cancelExtendedBolus()
                 if (!result.success) {
@@ -325,7 +325,7 @@ class DanaRPlugin @Inject constructor(
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (danaPump.isTempBasalInProgress) return cancelRealTempBasal()
-        if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.DanaRUseExtended)) {
+        if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
             return cancelExtendedBolus()
         }
         val result = instantiator.providePumpEnactResult()
@@ -388,7 +388,7 @@ class DanaRPlugin @Inject constructor(
             addPreference(
                 AdaptiveListPreference(
                     ctx = context,
-                    stringKey = DanaStringKey.DanaRName,
+                    stringKey = DanaStringKey.RName,
                     title = app.aaps.pump.dana.R.string.danar_bt_name_title,
                     dialogTitle = app.aaps.pump.dana.R.string.danar_bt_name_title,
                     entries = entries,
@@ -397,7 +397,7 @@ class DanaRPlugin @Inject constructor(
             )
             addPreference(
                 AdaptiveIntPreference(
-                    ctx = context, intKey = DanaIntKey.DanaRPassword, title = app.aaps.pump.dana.R.string.danar_password_title,
+                    ctx = context, intKey = DanaIntKey.Password, title = app.aaps.pump.dana.R.string.danar_password_title,
                     validatorParams = DefaultEditTextValidator.Parameters(
                         testType = EditTextValidator.TEST_REGEXP,
                         customRegexp = rh.gs(app.aaps.core.validators.R.string.fourdigitnumber),
@@ -408,14 +408,14 @@ class DanaRPlugin @Inject constructor(
             addPreference(
                 AdaptiveListIntPreference(
                     ctx = context,
-                    intKey = DanaIntKey.DanaBolusSpeed,
+                    intKey = DanaIntKey.BolusSpeed,
                     title = app.aaps.pump.dana.R.string.bolusspeed,
                     dialogTitle = app.aaps.pump.dana.R.string.bolusspeed,
                     entries = speedEntries,
                     entryValues = speedValues
                 )
             )
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRUseExtended, title = app.aaps.pump.dana.R.string.danar_useextended_title))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.UseExtended, title = app.aaps.pump.dana.R.string.danar_useextended_title))
         }
     }
 }

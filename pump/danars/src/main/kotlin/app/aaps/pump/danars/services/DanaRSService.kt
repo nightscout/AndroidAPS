@@ -289,7 +289,7 @@ class DanaRSService : DaggerService() {
         if (!isConnected) return false
         if (BolusProgressData.stopPressed) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.startingbolus)))
-        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
+        val preferencesSpeed = preferences.get(DanaIntKey.BolusSpeed)
         danaPump.bolusDone = false
         danaPump.bolusingTreatment = t
         danaPump.bolusAmountToBeDelivered = insulin

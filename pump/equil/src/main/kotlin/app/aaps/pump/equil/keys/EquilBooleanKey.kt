@@ -4,7 +4,8 @@ import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 
 enum class EquilBooleanKey(
     override val key: String,
-    override val defaultValue: Boolean
+    override val defaultValue: Boolean,
+    override val exportable: Boolean = true
 ) : BooleanNonPreferenceKey {
 
     BasalSet("key_equil_basal_set", false),

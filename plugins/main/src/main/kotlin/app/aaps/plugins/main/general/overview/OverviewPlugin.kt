@@ -36,9 +36,7 @@ import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.validators.preferences.AdaptiveClickPreference
@@ -48,6 +46,7 @@ import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
@@ -85,24 +84,9 @@ class OverviewPlugin @Inject constructor(
         .shortName(R.string.overview_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_overview),
-    ownPreferences = listOf(OverviewComposedLongKey::class.java, OverviewStringKey::class.java),
+    ownPreferences = listOf(OverviewStringKey::class.java),
     aapsLogger, rh, preferences
 ), Overview {
-
-    enum class OverviewComposedLongKey(
-        override val key: String,
-        override val format: String,
-        override val defaultValue: Long
-    ) : LongComposedNonPreferenceKey
-
-    @Suppress("SpellCheckingInspection")
-    enum class OverviewStringKey(
-        override val key: String,
-        override val defaultValue: String
-    ) : StringNonPreferenceKey {
-
-        GraphConfig("graphconfig", "")
-    }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 

@@ -13,9 +13,9 @@ enum class ComboBooleanKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
-
 
     AutomaticReservoirEntry("combov2_automatic_reservoir_entry", true),
     AutomaticBatteryEntry("combov2_automatic_battery_entry", true),

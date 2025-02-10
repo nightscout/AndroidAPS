@@ -12,10 +12,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
-import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerComposedLongKey
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,27 +40,6 @@ class VersionCheckerPlugin @Inject constructor(
     ownPreferences = listOf(VersionCheckerLongKey::class.java, VersionCheckerComposedLongKey::class.java),
     aapsLogger, rh, preferences
 ), PluginConstraints {
-
-    @Suppress("SpellCheckingInspection")
-    enum class VersionCheckerLongKey(
-        override val key: String,
-        override val defaultValue: Long,
-    ) : LongNonPreferenceKey {
-
-        LastWarningTimestamp("last_versionchecker_plugin_warning_timestamp", 0L),
-        LastSuccessfulVersionCheck("last_successful_version_check_timestamp", 0L),
-        LastExpiredWarning("last_expired_version_checker_warning", 0L),
-        LastVersionCheckWarning("last_versionchecker_warning", 0L),
-    }
-
-    enum class VersionCheckerComposedLongKey(
-        override val key: String,
-        override val format: String,
-        override val defaultValue: Long,
-    ) : LongComposedNonPreferenceKey {
-
-        AppExpiration("app_expiration_", "%s", 0L),
-    }
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
         RELEASE(30, 60, 90),

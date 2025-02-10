@@ -16,8 +16,9 @@ enum class DanaLongKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : LongPreferenceKey {
 
-    DanaRsLastClearKeyRequest("rs_last_clear_key_request", 0),
+    LastClearKeyRequest("rs_last_clear_key_request", 0),
 }

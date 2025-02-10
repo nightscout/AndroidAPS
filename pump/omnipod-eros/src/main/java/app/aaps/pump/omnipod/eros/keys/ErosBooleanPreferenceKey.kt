@@ -14,7 +14,8 @@ enum class ErosBooleanPreferenceKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     BatteryChangeLogging("AAPS.Omnipod.enable_battery_change_logging", false, dependency = RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel),

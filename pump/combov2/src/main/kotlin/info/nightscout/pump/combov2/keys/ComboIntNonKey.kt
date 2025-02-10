@@ -4,7 +4,8 @@ import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 
 enum class ComboIntNonKey(
     override val key: String,
-    override val defaultValue: Int
+    override val defaultValue: Int,
+    override val exportable: Boolean = true
 ) : IntNonPreferenceKey {
 
     KeyResponseAddress("combov2-key-response-address-key", 0),

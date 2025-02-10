@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerComposedLongKey
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import dagger.Lazy
 import dagger.Reusable
 import java.io.IOException
@@ -33,13 +35,13 @@ class VersionCheckerUtilsImpl @Inject constructor(
 
     override fun triggerCheckVersion() {
 
-        if (preferences.getIfExists(VersionCheckerPlugin.VersionCheckerLongKey.LastSuccessfulVersionCheck) == null) {
+        if (preferences.getIfExists(VersionCheckerLongKey.LastSuccessfulVersionCheck) == null) {
             // On a new installation, set it as 30 days old in order to warn that there is a new version.
             setLastCheckTimestamp(dateUtil.now() - TimeUnit.DAYS.toMillis(30))
         }
 
         // If we are good, only check once every day.
-        if (dateUtil.now() > preferences.get(VersionCheckerPlugin.VersionCheckerLongKey.LastSuccessfulVersionCheck) + CHECK_EVERY) {
+        if (dateUtil.now() > preferences.get(VersionCheckerLongKey.LastSuccessfulVersionCheck) + CHECK_EVERY) {
             checkVersion()
         }
     }
@@ -54,11 +56,11 @@ class VersionCheckerUtilsImpl @Inject constructor(
 
                     // App expiration
                     if (newVersionByApi || config.get().isDev()) {
-                        var endDate = preferences.get(VersionCheckerPlugin.VersionCheckerComposedLongKey.AppExpiration, config.get().VERSION_NAME)
+                        var endDate = preferences.get(VersionCheckerComposedLongKey.AppExpiration, config.get().VERSION_NAME)
                         AllowedVersions.findByVersion(definition, config.get().VERSION_NAME)?.let { expirationJson ->
                             AllowedVersions.endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
                                 endDate = ed + T.days(1).msecs()
-                                preferences.put(VersionCheckerPlugin.VersionCheckerComposedLongKey.AppExpiration, config.get().VERSION_NAME, value = endDate)
+                                preferences.put(VersionCheckerComposedLongKey.AppExpiration, config.get().VERSION_NAME, value = endDate)
                             }
                         }
                         if (endDate != 0L) onExpireDateDetected(config.get().VERSION_NAME, dateUtil.dateString(endDate))
@@ -123,26 +125,26 @@ class VersionCheckerUtilsImpl @Inject constructor(
 
     private fun onNewVersionDetected(currentVersion: String, newVersion: String?): Boolean {
         val now = dateUtil.now()
-        if (now > preferences.get(VersionCheckerPlugin.VersionCheckerLongKey.LastVersionCheckWarning) + WARN_EVERY) {
+        if (now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
             uiInteraction.addNotification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
-            preferences.put(VersionCheckerPlugin.VersionCheckerLongKey.LastVersionCheckWarning, now)
+            preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
         }
         return true
     }
 
     private fun onExpireDateDetected(currentVersion: String, endDate: String?) {
         val now = dateUtil.now()
-        if (now > preferences.get(VersionCheckerPlugin.VersionCheckerLongKey.LastExpiredWarning) + WARN_EVERY) {
+        if (now > preferences.get(VersionCheckerLongKey.LastExpiredWarning) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, endDate))
             uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)
-            preferences.put(VersionCheckerPlugin.VersionCheckerLongKey.LastExpiredWarning, now)
+            preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
         }
     }
 
     private fun setLastCheckTimestamp(timestamp: Long) {
         aapsLogger.debug(LTag.CORE, "Setting key_last_successful_version_check_timestamp ${dateUtil.dateAndTimeAndSecondsString(timestamp)}")
-        preferences.put(VersionCheckerPlugin.VersionCheckerLongKey.LastSuccessfulVersionCheck, timestamp)
+        preferences.put(VersionCheckerLongKey.LastSuccessfulVersionCheck, timestamp)
     }
 
     private fun String?.toNumberList() =

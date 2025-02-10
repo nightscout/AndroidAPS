@@ -55,10 +55,7 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
-import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
@@ -86,6 +83,9 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
@@ -134,43 +134,6 @@ class NSClientV3Plugin @Inject constructor(
     ownPreferences = listOf(NsclientBooleanKey::class.java, NsclientStringKey::class.java, NsclientLongKey::class.java),
     aapsLogger, rh, preferences
 ) {
-
-    enum class NsclientBooleanKey(
-        override val key: String,
-        override val defaultValue: Boolean
-    ) : BooleanNonPreferenceKey {
-
-        NsPaused("ns_client_paused", false)
-    }
-
-    enum class NsclientStringKey(
-        override val key: String,
-        override val defaultValue: String
-    ) : StringNonPreferenceKey {
-
-        V3LastModified("ns_client_v3_last_modified", Json.encodeToString(LastModified.serializer(), LastModified(LastModified.Collections())))
-    }
-
-    enum class NsclientLongKey(
-        override val key: String,
-        override val defaultValue: Long
-    ) : LongNonPreferenceKey {
-
-        BolusLastSyncedId("ns_bolus_last_synced_id", 0L),
-        CarbsLastSyncedId("ns_carbs_last_synced_id", 0L),
-        BolusCalculatorLastSyncedId("ns_bolus_calculator_result_last_synced_id", 0L),
-        TemporaryTargetLastSyncedId("ns_temporary_target_last_sync", 0L),
-        FoodLastSyncedId("ns_food_last_sync", 0L),
-        GlucoseValueLastSyncedId("ns_glucose_value_last_sync", 0L),
-        TherapyEventLastSyncedId("ns_therapy_event_last_sync", 0L),
-        DeviceStatusLastSyncedId("ns_device_status_last_synced_id", 0L),
-        TemporaryBasalLastSyncedId("ns_temporary_basal_last_synced_id", 0L),
-        ExtendedBolusLastSyncedId("ns_extended_bolus_last_synced_id", 0L),
-        ProfileSwitchLastSyncedId("ns_profile_switch_last_synced_id", 0L),
-        EffectiveProfileSwitchLastSyncedId("ns_effective_profile_switch_last_synced_id", 0L),
-        OfflineEventLastSyncedId("ns_offline_event_last_synced_id", 0L),
-        ProfileStoreLastSyncedId("ns_profile_store_last_synced_timestamp", 0L),
-    }
 
     @Suppress("PrivatePropertyName")
     private val JOB_NAME: String = this::class.java.simpleName

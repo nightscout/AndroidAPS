@@ -49,7 +49,7 @@ import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -159,8 +159,8 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        preferences.put(NSClientV3Plugin.NsclientBooleanKey.NsPaused, newState)
-        rxBus.send(EventPreferenceChange(NSClientV3Plugin.NsclientBooleanKey.NsPaused.key))
+        preferences.put(NsclientBooleanKey.NsPaused, newState)
+        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override val address: String get() = nsClientService?.nsURL ?: ""

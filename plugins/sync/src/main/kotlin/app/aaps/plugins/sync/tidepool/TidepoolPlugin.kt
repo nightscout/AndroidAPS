@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -42,6 +41,7 @@ import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
+import app.aaps.plugins.sync.tidepool.keys.TidepoolLongKey
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -73,14 +73,6 @@ class TidepoolPlugin @Inject constructor(
     ownPreferences = listOf(TidepoolLongKey::class.java),
     aapsLogger, rh, preferences
 ) {
-
-    enum class TidepoolLongKey(
-        override val key: String,
-        override val defaultValue: Long
-    ) : LongNonPreferenceKey {
-
-        LastEnd("tidepool_last_end", 0L)
-    }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 

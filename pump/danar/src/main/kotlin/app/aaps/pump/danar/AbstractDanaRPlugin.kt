@@ -98,13 +98,13 @@ abstract class AbstractDanaRPlugin protected constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { event: EventPreferenceChange ->
-                if (event.isChanged(DanaStringKey.DanaRName.key)) {
+                if (event.isChanged(DanaStringKey.RName.key)) {
                     danaPump.reset()
                     pumpSync.connectNewPump(true)
                     commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
                 }
             }
-        danaPump.serialNumber = preferences.get(DanaStringKey.DanaRName) // fill at start to allow password reset
+        danaPump.serialNumber = preferences.get(DanaStringKey.RName) // fill at start to allow password reset
     }
 
     override fun onStop() {
@@ -264,12 +264,12 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .duration(danaPump.extendedBolusRemainingMinutes)
                 .absolute(danaPump.extendedBolusAbsoluteRate)
                 .isPercent(false)
-            if (!preferences.get(DanaBooleanKey.DanaRUseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
+            if (!preferences.get(DanaBooleanKey.UseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
             pumpSync.syncExtendedBolusWithPumpId(
                 danaPump.extendedBolusStart,
                 danaPump.extendedBolusAmount,
                 danaPump.extendedBolusDuration,
-                preferences.get(DanaBooleanKey.DanaRUseExtended),
+                preferences.get(DanaBooleanKey.UseExtended),
                 danaPump.extendedBolusStart,
                 pumpDescription.pumpType,
                 serialNumber()

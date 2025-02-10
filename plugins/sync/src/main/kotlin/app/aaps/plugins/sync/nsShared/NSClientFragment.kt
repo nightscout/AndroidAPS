@@ -41,7 +41,7 @@ import app.aaps.plugins.sync.databinding.NsClientLogItemBinding
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -100,7 +100,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.paused.isChecked = preferences.get(NSClientV3Plugin.NsclientBooleanKey.NsPaused)
+        binding.paused.isChecked = preferences.get(NsclientBooleanKey.NsPaused)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
             uel.log(action = if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, source = Sources.NSClient)
             nsClientPlugin?.pause(isChecked)
@@ -232,7 +232,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     private fun updateStatus() {
         if (_binding == null) return
-        binding.paused.isChecked = preferences.get(NSClientV3Plugin.NsclientBooleanKey.NsPaused)
+        binding.paused.isChecked = preferences.get(NsclientBooleanKey.NsPaused)
         binding.url.text = nsClientPlugin?.address
         binding.status.text = nsClientPlugin?.status
     }

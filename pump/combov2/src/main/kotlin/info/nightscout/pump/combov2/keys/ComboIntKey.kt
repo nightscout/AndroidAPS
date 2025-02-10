@@ -16,7 +16,8 @@ enum class ComboIntKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     DiscoveryDuration("combov2_bt_discovery_duration", defaultValue = 300, min = 30, max = 300),

@@ -21,8 +21,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.source.keys.IntelligoLongKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,14 +49,6 @@ class IntelligoPlugin @Inject constructor(
     ownPreferences = listOf(IntelligoLongKey::class.java),
     aapsLogger, resourceHelper, preferences
 ), BgSource {
-
-    enum class IntelligoLongKey(
-        override val key: String,
-        override val defaultValue: Long
-    ) : LongNonPreferenceKey {
-
-        LastProcessedTimestamp("last_processed_glunovo_timestamp", 0)
-    }
 
     private var handler: Handler? = null
     private var refreshLoop: Runnable

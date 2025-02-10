@@ -4,7 +4,8 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 
 enum class MedtrumLongNonKey(
     override val key: String,
-    override val defaultValue: Long
+    override val defaultValue: Long,
+    override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
     SessionToken("medtrum_session_token", defaultValue = 0L),

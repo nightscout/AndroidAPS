@@ -14,7 +14,8 @@ enum class StringKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
-    override val isPin: Boolean = false
+    override val isPin: Boolean = false,
+    override val exportable: Boolean = true
 ) : StringPreferenceKey {
 
     GeneralUnits("units", "mg/dl"),

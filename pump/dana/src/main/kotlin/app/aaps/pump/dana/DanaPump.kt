@@ -386,11 +386,11 @@ class DanaPump @Inject constructor(
     }
 
     val isPasswordOK: Boolean
-        get() = password == preferences.get(DanaIntKey.DanaRPassword)
+        get() = password == preferences.get(DanaIntKey.Password)
 
     val isRSPasswordOK: Boolean
         get() = rsPassword.equals(
-            preferences.get(DanaStringKey.DanaRsPassword),
+            preferences.get(DanaStringKey.Password),
             ignoreCase = true
         ) || ignoreUserPassword
 

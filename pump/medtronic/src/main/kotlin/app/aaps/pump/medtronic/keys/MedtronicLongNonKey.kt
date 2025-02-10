@@ -5,6 +5,7 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 enum class MedtronicLongNonKey(
     override val key: String,
     override val defaultValue: Long,
+    override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
     TbrsSet("medtronic_tbrs_set", 0),

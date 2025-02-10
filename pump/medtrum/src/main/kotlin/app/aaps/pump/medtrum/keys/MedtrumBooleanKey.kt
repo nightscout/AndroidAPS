@@ -13,7 +13,8 @@ enum class MedtrumBooleanKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     MedtrumWarningNotification("pump_warning_notification", true),

@@ -2459,24 +2459,24 @@ class ComboV2Plugin @Inject constructor(
             )
             addPreference(
                 AdaptiveIntentPreference(
-                    ctx = context, intentKey = ComboIntentKey.UnpairPump, title = R.string.combov2_unpair_pump_title, summary = R.string.combov2_unpair_pump_summary,
-                    onPreferenceClickListener = { preference ->
+                    ctx = context, intentKey = ComboIntentKey.UnpairPump, title = R.string.combov2_unpair_pump_title, summary = R.string.combov2_unpair_pump_summary
+                ).apply {
+                    onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
                         OKDialog.showConfirmation(preference.context, "Confirm pump unpairing", "Do you really want to unpair the pump?", ok = Runnable { unpair() })
                         false
                     }
-                )
+                }
             )
             addPreference(AdaptiveIntPreference(ctx = context, intKey = ComboIntKey.DiscoveryDuration, title = R.string.combov2_discovery_duration))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticReservoirEntry, title = R.string.combov2_automatic_reservoir_entry))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticBatteryEntry, title = R.string.combov2_automatic_battery_entry))
             addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context, booleanKey = ComboBooleanKey.VerboseLogging, title = R.string.combov2_verbose_logging,
-                    onPreferenceChangeListener = { _, newValue ->
+                AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.VerboseLogging, title = R.string.combov2_verbose_logging).apply {
+                    onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                         updateComboCtlLogLevel(newValue as Boolean)
                         true
                     }
-                )
+                }
             )
         }
     }

@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -114,29 +115,29 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     override fun resetToNextFullSync() {
-        preferences.remove(XdripPlugin.XdripLongKey.GlucoseValueLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.TemporaryBasalLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.TemporaryTargetLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.ExtendedBolusLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.FoodLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.BolusLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.CarbsLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.BolusCalculatorLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.TherapyEventLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.ProfileSwitchLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.EffectiveProfileSwitchLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.OfflineEventLastSyncedId)
-        preferences.remove(XdripPlugin.XdripLongKey.ProfileStoreLastSyncedId)
+        preferences.remove(XdripLongKey.GlucoseValueLastSyncedId)
+        preferences.remove(XdripLongKey.TemporaryBasalLastSyncedId)
+        preferences.remove(XdripLongKey.TemporaryTargetLastSyncedId)
+        preferences.remove(XdripLongKey.ExtendedBolusLastSyncedId)
+        preferences.remove(XdripLongKey.FoodLastSyncedId)
+        preferences.remove(XdripLongKey.BolusLastSyncedId)
+        preferences.remove(XdripLongKey.CarbsLastSyncedId)
+        preferences.remove(XdripLongKey.BolusCalculatorLastSyncedId)
+        preferences.remove(XdripLongKey.TherapyEventLastSyncedId)
+        preferences.remove(XdripLongKey.ProfileSwitchLastSyncedId)
+        preferences.remove(XdripLongKey.EffectiveProfileSwitchLastSyncedId)
+        preferences.remove(XdripLongKey.OfflineEventLastSyncedId)
+        preferences.remove(XdripLongKey.ProfileStoreLastSyncedId)
 
         val lastDeviceStatusDbId = persistenceLayer.getLastDeviceStatusId()
-        if (lastDeviceStatusDbId != null) preferences.put(XdripPlugin.XdripLongKey.DeviceStatusLastSyncedId, lastDeviceStatusDbId)
-        else preferences.remove(XdripPlugin.XdripLongKey.DeviceStatusLastSyncedId)
+        if (lastDeviceStatusDbId != null) preferences.put(XdripLongKey.DeviceStatusLastSyncedId, lastDeviceStatusDbId)
+        else preferences.remove(XdripLongKey.DeviceStatusLastSyncedId)
     }
 
     private fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.GlucoseValueLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.GlucoseValueLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting GlucoseValue data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.GlucoseValueLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.GlucoseValueLastSyncedId, lastSynced)
         }
     }
 
@@ -145,9 +146,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastGlucoseValueId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.GlucoseValueLastSyncedId)
+            var startId = preferences.get(XdripLongKey.GlucoseValueLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.GlucoseValueLastSyncedId, 0)
+                preferences.put(XdripLongKey.GlucoseValueLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.gvsRemaining = lastDbId - startId
@@ -185,9 +186,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastBolusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.BolusLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.BolusLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting Bolus data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.BolusLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.BolusLastSyncedId, lastSynced)
         }
     }
 
@@ -196,9 +197,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastBolusId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.BolusLastSyncedId)
+            var startId = preferences.get(XdripLongKey.BolusLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.BolusLastSyncedId, 0)
+                preferences.put(XdripLongKey.BolusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.bolusesRemaining = lastDbId - startId
@@ -215,9 +216,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.CarbsLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.CarbsLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting Carbs data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.CarbsLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.CarbsLastSyncedId, lastSynced)
         }
     }
 
@@ -226,9 +227,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastCarbsId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.CarbsLastSyncedId)
+            var startId = preferences.get(XdripLongKey.CarbsLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.CarbsLastSyncedId, 0)
+                preferences.put(XdripLongKey.CarbsLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.carbsRemaining = lastDbId - startId
@@ -245,9 +246,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.BolusCalculatorLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.BolusCalculatorLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting BolusCalculatorResult data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.BolusCalculatorLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.BolusCalculatorLastSyncedId, lastSynced)
         }
     }
 
@@ -256,9 +257,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastBolusCalculatorResultId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.BolusCalculatorLastSyncedId)
+            var startId = preferences.get(XdripLongKey.BolusCalculatorLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.BolusCalculatorLastSyncedId, 0)
+                preferences.put(XdripLongKey.BolusCalculatorLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.bcrRemaining = lastDbId - startId
@@ -275,9 +276,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.TemporaryTargetLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.TemporaryTargetLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting TemporaryTarget data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.TemporaryTargetLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.TemporaryTargetLastSyncedId, lastSynced)
         }
     }
 
@@ -286,9 +287,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastTemporaryTargetId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.TemporaryTargetLastSyncedId)
+            var startId = preferences.get(XdripLongKey.TemporaryTargetLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.TemporaryTargetLastSyncedId, 0)
+                preferences.put(XdripLongKey.TemporaryTargetLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.ttsRemaining = lastDbId - startId
@@ -305,9 +306,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastFoodIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.FoodLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.FoodLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting Food data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.FoodLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.FoodLastSyncedId, lastSynced)
         }
     }
 
@@ -316,9 +317,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastFoodId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.FoodLastSyncedId)
+            var startId = preferences.get(XdripLongKey.FoodLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.FoodLastSyncedId, 0)
+                preferences.put(XdripLongKey.FoodLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.foodsRemaining = lastDbId - startId
@@ -334,9 +335,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.TherapyEventLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.TherapyEventLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting TherapyEvents data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.TherapyEventLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.TherapyEventLastSyncedId, lastSynced)
         }
     }
 
@@ -345,9 +346,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastTherapyEventId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.TherapyEventLastSyncedId)
+            var startId = preferences.get(XdripLongKey.TherapyEventLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.TherapyEventLastSyncedId, 0)
+                preferences.put(XdripLongKey.TherapyEventLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.tesRemaining = lastDbId - startId
@@ -364,9 +365,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.DeviceStatusLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.DeviceStatusLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting DeviceStatus data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.DeviceStatusLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.DeviceStatusLastSyncedId, lastSynced)
         }
     }
 
@@ -374,9 +375,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastDeviceStatusId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.DeviceStatusLastSyncedId)
+            var startId = preferences.get(XdripLongKey.DeviceStatusLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.DeviceStatusLastSyncedId, 0)
+                preferences.put(XdripLongKey.DeviceStatusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.dssRemaining = lastDbId - startId
@@ -390,9 +391,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.TemporaryBasalLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.TemporaryBasalLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting TemporaryBasal data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.TemporaryBasalLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.TemporaryBasalLastSyncedId, lastSynced)
         }
     }
 
@@ -401,9 +402,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastTemporaryBasalId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.TemporaryBasalLastSyncedId)
+            var startId = preferences.get(XdripLongKey.TemporaryBasalLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.TemporaryBasalLastSyncedId, 0)
+                preferences.put(XdripLongKey.TemporaryBasalLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.tbrsRemaining = lastDbId - startId
@@ -420,9 +421,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.ExtendedBolusLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.ExtendedBolusLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting ExtendedBolus data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.ExtendedBolusLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.ExtendedBolusLastSyncedId, lastSynced)
         }
     }
 
@@ -431,9 +432,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastExtendedBolusId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.ExtendedBolusLastSyncedId)
+            var startId = preferences.get(XdripLongKey.ExtendedBolusLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.ExtendedBolusLastSyncedId, 0)
+                preferences.put(XdripLongKey.ExtendedBolusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.ebsRemaining = lastDbId - startId
@@ -453,9 +454,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.ProfileSwitchLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.ProfileSwitchLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting ProfileSwitch data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.ProfileSwitchLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.ProfileSwitchLastSyncedId, lastSynced)
         }
     }
 
@@ -464,9 +465,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastProfileSwitchId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.ProfileSwitchLastSyncedId)
+            var startId = preferences.get(XdripLongKey.ProfileSwitchLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.ProfileSwitchLastSyncedId, 0)
+                preferences.put(XdripLongKey.ProfileSwitchLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.pssRemaining = lastDbId - startId
@@ -483,9 +484,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.EffectiveProfileSwitchLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.EffectiveProfileSwitchLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting EffectiveProfileSwitch data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.EffectiveProfileSwitchLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.EffectiveProfileSwitchLastSyncedId, lastSynced)
         }
     }
 
@@ -494,9 +495,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.EffectiveProfileSwitchLastSyncedId)
+            var startId = preferences.get(XdripLongKey.EffectiveProfileSwitchLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.EffectiveProfileSwitchLastSyncedId, 0)
+                preferences.put(XdripLongKey.EffectiveProfileSwitchLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.epssRemaining = lastDbId - startId
@@ -513,9 +514,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(XdripPlugin.XdripLongKey.OfflineEventLastSyncedId)) {
+        if (lastSynced > preferences.get(XdripLongKey.OfflineEventLastSyncedId)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting OfflineEvent data sync from $lastSynced")
-            preferences.put(XdripPlugin.XdripLongKey.OfflineEventLastSyncedId, lastSynced)
+            preferences.put(XdripLongKey.OfflineEventLastSyncedId, lastSynced)
         }
     }
 
@@ -524,9 +525,9 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastDbId = persistenceLayer.getLastOfflineEventId() ?: 0L
         while (true) {
             if (!isEnabled) return
-            var startId = preferences.get(XdripPlugin.XdripLongKey.OfflineEventLastSyncedId)
+            var startId = preferences.get(XdripLongKey.OfflineEventLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(XdripPlugin.XdripLongKey.OfflineEventLastSyncedId, 0)
+                preferences.put(XdripLongKey.OfflineEventLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.oesRemaining = lastDbId - startId
@@ -543,16 +544,16 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     }
 
     private fun confirmLastProfileStore(lastSynced: Long) {
-        preferences.put(XdripPlugin.XdripLongKey.ProfileStoreLastSyncedId, lastSynced)
+        preferences.put(XdripLongKey.ProfileStoreLastSyncedId, lastSynced)
     }
 
     override fun profileReceived(timestamp: Long) {
-        preferences.put(XdripPlugin.XdripLongKey.ProfileStoreLastSyncedId, timestamp)
+        preferences.put(XdripLongKey.ProfileStoreLastSyncedId, timestamp)
     }
 
     private fun processChangedProfileStore() {
         if (!isEnabled) return
-        val lastSync = preferences.get(XdripPlugin.XdripLongKey.ProfileStoreLastSyncedId)
+        val lastSync = preferences.get(XdripLongKey.ProfileStoreLastSyncedId)
         val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {

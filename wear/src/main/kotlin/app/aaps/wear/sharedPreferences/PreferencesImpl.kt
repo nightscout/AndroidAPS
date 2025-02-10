@@ -248,7 +248,7 @@ class PreferencesImpl @Inject constructor(
                 if (singleKey.startsWith(key.key)) it.add(SafeParse.stringToInt(singleKey.split(key.key)[1]))
         }
 
-    override fun isRegisteredKey(key: String): Boolean {
+    override fun isExportableKey(key: String): Boolean {
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
             .forEach {

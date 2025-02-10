@@ -29,6 +29,7 @@ import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -117,7 +118,7 @@ class NSClientV3Service : DaggerService() {
         val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
         if (!nsClientV3Plugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("● WS", nsClientV3Plugin.blockingReason))
-        } else if (preferences.get(NSClientV3Plugin.NsclientBooleanKey.NsPaused)) {
+        } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● WS", "paused"))
         } else {
             try {

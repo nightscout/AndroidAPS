@@ -13,7 +13,8 @@ enum class MedtronicBooleanPreferenceKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val exportable: Boolean = true,
+    override val hideParentScreenIfHidden: Boolean = false,
 ) : BooleanPreferenceKey {
 
     SetNeutralTemp("set_neutral_temps", true),

@@ -33,14 +33,14 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
+import app.aaps.plugins.sync.openhumans.keys.OhLongKey
+import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import app.aaps.plugins.sync.openhumans.ui.OHFragment
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -86,28 +86,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),
     aapsLogger, rh, preferences
 ) {
-
-    @Suppress("SpellCheckingInspection")
-    enum class OhStringKey(
-        override val key: String,
-        override val defaultValue: String
-    ) : StringNonPreferenceKey {
-
-        AppId("openhumans_appid", ""),
-        AccessToken("openhumans_access_token", ""),
-        RefreshToken("openhumans_refresh_token", ""),
-        ProjectMemberId("openhumans_project_member_id", ""),
-    }
-
-    enum class OhLongKey(
-        override val key: String,
-        override val defaultValue: Long
-    ) : LongNonPreferenceKey {
-
-        Counter("openhumans_counter", 1),
-        ExpiresAt("openhumans_expires_at", 0),
-        UploadOffset("openhumans_upload_offset", 0),
-    }
 
     private var openHumansState by stateDelegate
     private var uploadCounter by counterDelegate

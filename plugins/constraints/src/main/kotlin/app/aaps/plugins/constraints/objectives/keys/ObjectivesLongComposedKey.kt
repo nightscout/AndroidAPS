@@ -5,7 +5,8 @@ import app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey
 enum class ObjectivesLongComposedKey(
     override val key: String,
     override val format: String,
-    override val defaultValue: Long
+    override val defaultValue: Long,
+    override val exportable: Boolean = true
 ) : LongComposedNonPreferenceKey {
 
     Started("Objectives_started_", "%s", 0L),

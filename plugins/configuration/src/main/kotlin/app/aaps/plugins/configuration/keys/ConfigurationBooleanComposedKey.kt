@@ -6,6 +6,7 @@ enum class ConfigurationBooleanComposedKey(
     override val key: String,
     override val format: String,
     override val defaultValue: Boolean,
+    override val exportable: Boolean = true
 ) : BooleanComposedNonPreferenceKey {
 
     ConfigBuilderEnabled(key = "ConfigBuilder_Enabled_", format = "%s", defaultValue = false),

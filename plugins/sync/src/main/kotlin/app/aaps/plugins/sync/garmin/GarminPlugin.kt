@@ -16,15 +16,15 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
-import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
+import app.aaps.plugins.sync.garmin.keys.GarminIntKey
+import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -71,59 +71,6 @@ class GarminPlugin @Inject constructor(
     ownPreferences = listOf(GarminStringKey::class.java, GarminBooleanKey::class.java, GarminIntKey::class.java),
     aapsLogger, resourceHelper, preferences
 ) {
-
-    enum class GarminStringKey(
-        override val key: String,
-        override val defaultValue: String,
-        override val defaultedBySM: Boolean = false,
-        override val showInApsMode: Boolean = true,
-        override val showInNsClientMode: Boolean = true,
-        override val showInPumpControlMode: Boolean = true,
-        override val dependency: BooleanPreferenceKey? = null,
-        override val negativeDependency: BooleanPreferenceKey? = null,
-        override val hideParentScreenIfHidden: Boolean = false,
-        override val isPassword: Boolean = false,
-        override val isPin: Boolean = false
-    ) : StringPreferenceKey {
-
-        RequestKey(key = "garmin_aaps_key", defaultValue = ""),
-    }
-
-    enum class GarminBooleanKey(
-        override val key: String,
-        override val defaultValue: Boolean,
-        override val calculatedDefaultValue: Boolean = false,
-        override val defaultedBySM: Boolean = false,
-        override val showInApsMode: Boolean = true,
-        override val showInNsClientMode: Boolean = true,
-        override val showInPumpControlMode: Boolean = true,
-        override val dependency: BooleanPreferenceKey? = null,
-        override val negativeDependency: BooleanPreferenceKey? = null,
-        override val hideParentScreenIfHidden: Boolean = false,
-        override val engineeringModeOnly: Boolean = false
-    ) : BooleanPreferenceKey {
-
-        LocalHttpServer("communication_http", false, defaultedBySM = true, hideParentScreenIfHidden = true),
-    }
-
-    enum class GarminIntKey(
-        override val key: String,
-        override val defaultValue: Int,
-        override val min: Int,
-        override val max: Int,
-        override val defaultedBySM: Boolean = false,
-        override val calculatedDefaultValue: Boolean = false,
-        override val showInApsMode: Boolean = true,
-        override val showInNsClientMode: Boolean = true,
-        override val showInPumpControlMode: Boolean = true,
-        override val dependency: BooleanPreferenceKey? = null,
-        override val negativeDependency: BooleanPreferenceKey? = null,
-        override val hideParentScreenIfHidden: Boolean = false,
-        override val engineeringModeOnly: Boolean = false
-    ) : IntPreferenceKey {
-
-        LocalHttpPort("communication_http_port", 28891, 1001, 65535, defaultedBySM = true, hideParentScreenIfHidden = true),
-    }
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null

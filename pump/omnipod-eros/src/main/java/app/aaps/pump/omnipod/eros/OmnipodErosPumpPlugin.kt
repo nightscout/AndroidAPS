@@ -158,7 +158,9 @@ class OmnipodErosPumpPlugin @Inject constructor(
         .shortName(R.string.omnipod_eros_name_short)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.omnipod_eros_pump_description),
-    ownPreferences = listOf(),
+    ownPreferences = listOf(
+        ErosBooleanPreferenceKey::class.java, ErosLongNonPreferenceKey::class.java, ErosStringNonPreferenceKey::class.java
+    ),
     aapsLogger, rh, preferences, commandQueue
 ), Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
 

@@ -117,10 +117,10 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
-        `when`(preferences.get(DanaStringKey.DanaRsName)).thenReturn("")
-        `when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.RsName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
         // R
-        `when`(preferences.get(DanaStringKey.DanaRName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.RName)).thenReturn("")
 
         //SafetyPlugin
         constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger)

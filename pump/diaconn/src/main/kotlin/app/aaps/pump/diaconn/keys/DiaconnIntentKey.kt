@@ -11,7 +11,8 @@ enum class DiaconnIntentKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 
     BtSelector(key = "diaconn_bt_selector")

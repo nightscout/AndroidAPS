@@ -288,7 +288,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.REFILL              -> {
-                if (preferences.get(DanaBooleanKey.DanaRsLogInsulinChange)) {
+                if (preferences.get(DanaBooleanKey.LogInsulinChange)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = TE.Type.INSULIN_CHANGE,
@@ -336,7 +336,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.PRIME_CANNULA       -> {
-                if (preferences.get(DanaBooleanKey.DanaRsLogCannulaChange)) {
+                if (preferences.get(DanaBooleanKey.LogCannulaChange)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = TE.Type.CANNULA_CHANGE,

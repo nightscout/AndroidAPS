@@ -5,7 +5,8 @@ import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 
 enum class MedtrumIntNonKey(
     override val key: String,
-    override val defaultValue: Int
+    override val defaultValue: Int,
+    override val exportable: Boolean = true
 ) : IntNonPreferenceKey {
 
     PumpState("pump_state", defaultValue = MedtrumPumpState.NONE.state.toInt()),

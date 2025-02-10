@@ -55,8 +55,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @BeforeEach
     fun prepareMocks() {
-        Mockito.`when`(preferences.get(DanaStringKey.DanaRsName)).thenReturn("")
-        Mockito.`when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
+        Mockito.`when`(preferences.get(DanaStringKey.RsName)).thenReturn("")
+        Mockito.`when`(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
         Mockito.`when`(rh.gs(eq(app.aaps.core.ui.R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
         Mockito.`when`(rh.gs(eq(app.aaps.core.ui.R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 

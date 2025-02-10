@@ -16,7 +16,8 @@ enum class MedtronicIntPreferenceKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     MaxBasal("pref_medtronic_max_basal", 35, min = 1, max = 35),

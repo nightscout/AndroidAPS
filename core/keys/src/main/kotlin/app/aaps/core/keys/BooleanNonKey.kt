@@ -5,7 +5,8 @@ import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 @Suppress("SpellCheckingInspection")
 enum class BooleanNonKey(
     override val key: String,
-    override val defaultValue: Boolean
+    override val defaultValue: Boolean,
+    override val exportable: Boolean = true
 ) : BooleanNonPreferenceKey {
 
     SetupWizardIUnderstand("I_understand", false),

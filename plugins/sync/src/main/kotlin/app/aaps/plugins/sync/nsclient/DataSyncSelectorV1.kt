@@ -18,7 +18,8 @@ import app.aaps.core.utils.waitMillis
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsShared.extensions.onlyNsIdAdded
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -72,7 +73,7 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private val queueCounter = QueueCounter()
-    private val isPaused get() = preferences.get(NSClientV3Plugin.NsclientBooleanKey.NsPaused)
+    private val isPaused get() = preferences.get(NsclientBooleanKey.NsPaused)
 
     override fun queueSize(): Long = queueCounter.size()
 
@@ -91,19 +92,19 @@ class DataSyncSelectorV1 @Inject constructor(
         }
         rxBus.send(EventNSClientUpdateGuiStatus())
         if (preferences.get(BooleanKey.NsClientUploadData) && !isPaused) {
-            queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.BolusLastSyncedId)
-            queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.CarbsLastSyncedId)
-            queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.BolusCalculatorLastSyncedId)
-            queueCounter.ttsRemaining = (persistenceLayer.getLastTemporaryTargetId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.TemporaryTargetLastSyncedId)
-            queueCounter.foodsRemaining = (persistenceLayer.getLastFoodId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.FoodLastSyncedId)
-            queueCounter.gvsRemaining = (persistenceLayer.getLastGlucoseValueId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.GlucoseValueLastSyncedId)
-            queueCounter.tesRemaining = (persistenceLayer.getLastTherapyEventId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.TherapyEventLastSyncedId)
-            queueCounter.dssRemaining = (persistenceLayer.getLastDeviceStatusId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId)
-            queueCounter.tbrsRemaining = (persistenceLayer.getLastTemporaryBasalId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.TemporaryBasalLastSyncedId)
-            queueCounter.ebsRemaining = (persistenceLayer.getLastExtendedBolusId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.ExtendedBolusLastSyncedId)
-            queueCounter.pssRemaining = (persistenceLayer.getLastProfileSwitchId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.ProfileSwitchLastSyncedId)
-            queueCounter.epssRemaining = (persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
-            queueCounter.oesRemaining = (persistenceLayer.getLastOfflineEventId() ?: 0L) - preferences.get(NSClientV3Plugin.NsclientLongKey.OfflineEventLastSyncedId)
+            queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - preferences.get(NsclientLongKey.BolusLastSyncedId)
+            queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - preferences.get(NsclientLongKey.CarbsLastSyncedId)
+            queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)
+            queueCounter.ttsRemaining = (persistenceLayer.getLastTemporaryTargetId() ?: 0L) - preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)
+            queueCounter.foodsRemaining = (persistenceLayer.getLastFoodId() ?: 0L) - preferences.get(NsclientLongKey.FoodLastSyncedId)
+            queueCounter.gvsRemaining = (persistenceLayer.getLastGlucoseValueId() ?: 0L) - preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)
+            queueCounter.tesRemaining = (persistenceLayer.getLastTherapyEventId() ?: 0L) - preferences.get(NsclientLongKey.TherapyEventLastSyncedId)
+            queueCounter.dssRemaining = (persistenceLayer.getLastDeviceStatusId() ?: 0L) - preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)
+            queueCounter.tbrsRemaining = (persistenceLayer.getLastTemporaryBasalId() ?: 0L) - preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)
+            queueCounter.ebsRemaining = (persistenceLayer.getLastExtendedBolusId() ?: 0L) - preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)
+            queueCounter.pssRemaining = (persistenceLayer.getLastProfileSwitchId() ?: 0L) - preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)
+            queueCounter.epssRemaining = (persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L) - preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
+            queueCounter.oesRemaining = (persistenceLayer.getLastOfflineEventId() ?: 0L) - preferences.get(NsclientLongKey.OfflineEventLastSyncedId)
             rxBus.send(EventNSClientUpdateGuiQueue())
             val boluses = scope.async { processChangedBoluses() }
             val carbs = scope.async { processChangedCarbs() }
@@ -140,28 +141,28 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     override fun resetToNextFullSync() {
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.GlucoseValueLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.TemporaryBasalLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.TemporaryTargetLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.ExtendedBolusLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.FoodLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.BolusLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.CarbsLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.BolusCalculatorLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.TherapyEventLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.ProfileSwitchLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.OfflineEventLastSyncedId)
-        preferences.remove(NSClientV3Plugin.NsclientLongKey.ProfileStoreLastSyncedId)
+        preferences.remove(NsclientLongKey.GlucoseValueLastSyncedId)
+        preferences.remove(NsclientLongKey.TemporaryBasalLastSyncedId)
+        preferences.remove(NsclientLongKey.TemporaryTargetLastSyncedId)
+        preferences.remove(NsclientLongKey.ExtendedBolusLastSyncedId)
+        preferences.remove(NsclientLongKey.FoodLastSyncedId)
+        preferences.remove(NsclientLongKey.BolusLastSyncedId)
+        preferences.remove(NsclientLongKey.CarbsLastSyncedId)
+        preferences.remove(NsclientLongKey.BolusCalculatorLastSyncedId)
+        preferences.remove(NsclientLongKey.TherapyEventLastSyncedId)
+        preferences.remove(NsclientLongKey.ProfileSwitchLastSyncedId)
+        preferences.remove(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
+        preferences.remove(NsclientLongKey.OfflineEventLastSyncedId)
+        preferences.remove(NsclientLongKey.ProfileStoreLastSyncedId)
 
         val lastDeviceStatusDbId = persistenceLayer.getLastDeviceStatusId()
-        if (lastDeviceStatusDbId != null) preferences.put(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId, lastDeviceStatusDbId)
-        else preferences.remove(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId)
+        if (lastDeviceStatusDbId != null) preferences.put(NsclientLongKey.DeviceStatusLastSyncedId, lastDeviceStatusDbId)
+        else preferences.remove(NsclientLongKey.DeviceStatusLastSyncedId)
     }
 
     private fun confirmLastBolusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.BolusLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.BolusLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.BolusLastSyncedId)) {
+            preferences.put(NsclientLongKey.BolusLastSyncedId, lastSynced)
         }
     }
 
@@ -170,9 +171,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastBolusId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.BolusLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.BolusLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.BolusLastSyncedId, 0)
+                preferences.put(NsclientLongKey.BolusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.bolusesRemaining = lastDbId - startId
@@ -208,8 +209,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.CarbsLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.CarbsLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.CarbsLastSyncedId)) {
+            preferences.put(NsclientLongKey.CarbsLastSyncedId, lastSynced)
         }
     }
 
@@ -218,9 +219,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastCarbsId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.CarbsLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.CarbsLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.CarbsLastSyncedId, 0)
+                preferences.put(NsclientLongKey.CarbsLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.carbsRemaining = lastDbId - startId
@@ -256,8 +257,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.BolusCalculatorLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.BolusCalculatorLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)) {
+            preferences.put(NsclientLongKey.BolusCalculatorLastSyncedId, lastSynced)
         }
     }
 
@@ -266,9 +267,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastBolusCalculatorResultId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.BolusCalculatorLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.BolusCalculatorLastSyncedId, 0)
+                preferences.put(NsclientLongKey.BolusCalculatorLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.bcrRemaining = lastDbId - startId
@@ -304,8 +305,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.TemporaryTargetLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.TemporaryTargetLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)) {
+            preferences.put(NsclientLongKey.TemporaryTargetLastSyncedId, lastSynced)
         }
     }
 
@@ -314,9 +315,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastTemporaryTargetId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.TemporaryTargetLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.TemporaryTargetLastSyncedId, 0)
+                preferences.put(NsclientLongKey.TemporaryTargetLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.ttsRemaining = lastDbId - startId
@@ -352,8 +353,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastFoodIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.FoodLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.FoodLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.FoodLastSyncedId)) {
+            preferences.put(NsclientLongKey.FoodLastSyncedId, lastSynced)
         }
     }
 
@@ -362,9 +363,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastFoodId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.FoodLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.FoodLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.FoodLastSyncedId, 0)
+                preferences.put(NsclientLongKey.FoodLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.foodsRemaining = lastDbId - startId
@@ -400,8 +401,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.GlucoseValueLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.GlucoseValueLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)) {
+            preferences.put(NsclientLongKey.GlucoseValueLastSyncedId, lastSynced)
         }
     }
 
@@ -410,9 +411,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastGlucoseValueId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.GlucoseValueLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.GlucoseValueLastSyncedId, 0)
+                preferences.put(NsclientLongKey.GlucoseValueLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.gvsRemaining = lastDbId - startId
@@ -450,8 +451,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.TherapyEventLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.TherapyEventLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.TherapyEventLastSyncedId)) {
+            preferences.put(NsclientLongKey.TherapyEventLastSyncedId, lastSynced)
         }
     }
 
@@ -460,9 +461,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastTherapyEventId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.TherapyEventLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.TherapyEventLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.TherapyEventLastSyncedId, 0)
+                preferences.put(NsclientLongKey.TherapyEventLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.tesRemaining = lastDbId - startId
@@ -498,8 +499,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)) {
+            preferences.put(NsclientLongKey.DeviceStatusLastSyncedId, lastSynced)
         }
     }
 
@@ -508,9 +509,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastDeviceStatusId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.DeviceStatusLastSyncedId, 0)
+                preferences.put(NsclientLongKey.DeviceStatusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.dssRemaining = lastDbId - startId
@@ -529,8 +530,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.TemporaryBasalLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.TemporaryBasalLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)) {
+            preferences.put(NsclientLongKey.TemporaryBasalLastSyncedId, lastSynced)
         }
     }
 
@@ -539,9 +540,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastTemporaryBasalId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.TemporaryBasalLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.TemporaryBasalLastSyncedId, 0)
+                preferences.put(NsclientLongKey.TemporaryBasalLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.tbrsRemaining = lastDbId - startId
@@ -580,8 +581,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.ExtendedBolusLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.ExtendedBolusLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)) {
+            preferences.put(NsclientLongKey.ExtendedBolusLastSyncedId, lastSynced)
         }
     }
 
@@ -590,9 +591,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastExtendedBolusId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.ExtendedBolusLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.ExtendedBolusLastSyncedId, 0)
+                preferences.put(NsclientLongKey.ExtendedBolusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.ebsRemaining = lastDbId - startId
@@ -631,8 +632,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.ProfileSwitchLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.ProfileSwitchLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)) {
+            preferences.put(NsclientLongKey.ProfileSwitchLastSyncedId, lastSynced)
         }
     }
 
@@ -641,9 +642,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastProfileSwitchId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.ProfileSwitchLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.ProfileSwitchLastSyncedId, 0)
+                preferences.put(NsclientLongKey.ProfileSwitchLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.pssRemaining = lastDbId - startId
@@ -679,8 +680,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.EffectiveProfileSwitchLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.EffectiveProfileSwitchLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)) {
+            preferences.put(NsclientLongKey.EffectiveProfileSwitchLastSyncedId, lastSynced)
         }
     }
 
@@ -689,9 +690,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.EffectiveProfileSwitchLastSyncedId, 0)
+                preferences.put(NsclientLongKey.EffectiveProfileSwitchLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.epssRemaining = lastDbId - startId
@@ -727,8 +728,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
-        if (lastSynced > preferences.get(NSClientV3Plugin.NsclientLongKey.OfflineEventLastSyncedId)) {
-            preferences.put(NSClientV3Plugin.NsclientLongKey.OfflineEventLastSyncedId, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.OfflineEventLastSyncedId)) {
+            preferences.put(NsclientLongKey.OfflineEventLastSyncedId, lastSynced)
         }
     }
 
@@ -737,9 +738,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastOfflineEventId() ?: 0L
-            var startId = preferences.get(NSClientV3Plugin.NsclientLongKey.OfflineEventLastSyncedId)
+            var startId = preferences.get(NsclientLongKey.OfflineEventLastSyncedId)
             if (startId > lastDbId) {
-                preferences.put(NSClientV3Plugin.NsclientLongKey.OfflineEventLastSyncedId, 0)
+                preferences.put(NsclientLongKey.OfflineEventLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.oesRemaining = lastDbId - startId
@@ -775,16 +776,16 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastProfileStore(lastSynced: Long) {
-        preferences.put(NSClientV3Plugin.NsclientLongKey.ProfileStoreLastSyncedId, lastSynced)
+        preferences.put(NsclientLongKey.ProfileStoreLastSyncedId, lastSynced)
     }
 
     override fun profileReceived(timestamp: Long) {
-        preferences.put(NSClientV3Plugin.NsclientLongKey.ProfileStoreLastSyncedId, timestamp)
+        preferences.put(NsclientLongKey.ProfileStoreLastSyncedId, timestamp)
     }
 
     private suspend fun processChangedProfileStore() {
         if (isPaused) return
-        val lastSync = preferences.get(NSClientV3Plugin.NsclientLongKey.ProfileStoreLastSyncedId)
+        val lastSync = preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)
         val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {

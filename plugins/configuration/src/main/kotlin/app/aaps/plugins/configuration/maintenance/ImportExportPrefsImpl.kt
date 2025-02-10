@@ -280,10 +280,10 @@ class ImportExportPrefsImpl @Inject constructor(
         try {
             val entries: MutableMap<String, String> = mutableMapOf()
             for ((key, value) in sp.getAll()) {
-                entries[key] = value.toString()
-                if (!preferences.isRegisteredKey(key)) {
-                    aapsLogger.warn(LTag.CORE, "Unregistered key: $key $value")
-                }
+                if (preferences.isExportableKey(key))
+                    entries[key] = value.toString()
+                else
+                    aapsLogger.warn(LTag.CORE, "Not exportable key: $key $value")
             }
             val prefs = Prefs(entries, prepareMetadata(context))
             encryptedPrefsFormat.savePreferences(newFile, prefs, password)

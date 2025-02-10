@@ -13,7 +13,8 @@ enum class RileylinkBooleanPreferenceKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false
+    override val engineeringModeOnly: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     OrangeUseScanning("pref_orange_use_scanning", false),

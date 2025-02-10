@@ -32,8 +32,8 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepareMocks() {
-        `when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
-        `when`(preferences.get(DanaStringKey.DanaRName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.RName)).thenReturn("")
         `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")

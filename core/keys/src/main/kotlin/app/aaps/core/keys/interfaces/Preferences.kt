@@ -459,10 +459,10 @@ interface Preferences {
     fun allMatchingInts(key: ComposedKey): List<Int>
 
     /**
-     * Check if the key string looks like a valid registered key
+     * Check if the key string looks like a valid registered key and is set exportable
      * ie it does match exactly
      * or has a valid registered prefix
-     * @return true if registered
+     * @return true if exportable key
      */
-    fun isRegisteredKey(key: String): Boolean
+    fun isExportableKey(key: String): Boolean
 }

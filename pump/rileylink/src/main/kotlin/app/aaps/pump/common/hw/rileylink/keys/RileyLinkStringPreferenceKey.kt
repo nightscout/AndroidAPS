@@ -14,7 +14,8 @@ enum class RileyLinkStringPreferenceKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
-    override val isPin: Boolean = false
+    override val isPin: Boolean = false,
+    override val exportable: Boolean = true
 ) : StringPreferenceKey {
 
     MacAddress("pref_rileylink_mac_address", ""),

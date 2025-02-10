@@ -14,12 +14,12 @@ enum class DanaStringKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
-    override val isPin: Boolean = false
+    override val isPin: Boolean = false,
+    override val exportable: Boolean = true
 ) : StringPreferenceKey {
 
-    DanaRName("danar_bt_name", ""),
-
-    DanaRsName("danars_name", ""),
-    DanaMacAddress("danars_address", ""),
-    DanaRsPassword("danars_password", ""),
+    RName("danar_bt_name", ""),
+    RsName("danars_name", ""),
+    MacAddress("danars_address", ""),
+    Password("danars_password", ""),
 }

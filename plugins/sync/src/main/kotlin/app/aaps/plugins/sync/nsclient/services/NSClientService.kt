@@ -46,7 +46,7 @@ import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import app.aaps.plugins.sync.nsclient.workers.NSClientMbgWorker
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
@@ -142,7 +142,7 @@ class NSClientService : DaggerService() {
             .subscribe({ event: EventPreferenceChange ->
                            if (event.isChanged(StringKey.NsClientUrl.key) ||
                                event.isChanged(StringKey.NsClientApiSecret.key) ||
-                               event.isChanged(NSClientV3Plugin.NsclientBooleanKey.NsPaused.key)
+                               event.isChanged(NsclientBooleanKey.NsPaused.key)
                            ) {
                                latestDateInReceivedData = 0
                                destroy()
@@ -255,7 +255,7 @@ class NSClientService : DaggerService() {
         if (!nsClientPlugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("● NSCLIENT", nsClientPlugin.blockingReason))
             rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason))
-        } else if (preferences.get(NSClientV3Plugin.NsclientBooleanKey.NsPaused)) {
+        } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● NSCLIENT", "paused"))
             rxBus.send(EventNSClientStatus("Paused"))
         } else if (!nsEnabled) {

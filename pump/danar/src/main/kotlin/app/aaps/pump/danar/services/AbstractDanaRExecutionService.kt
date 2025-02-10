@@ -163,7 +163,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     }
 
     protected fun getBTSocketForSelectedPump() {
-        mDevName = preferences.get(DanaStringKey.DanaRName)
+        mDevName = preferences.get(DanaStringKey.RName)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             val bluetoothAdapter = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
             if (bluetoothAdapter != null) {

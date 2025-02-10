@@ -9,4 +9,9 @@ interface NonPreferenceKey {
      * Associated [android.content.SharedPreferences] key
      */
     val key: String
+
+    /**
+     * If true, this preference is exported
+     */
+    val exportable: Boolean
 }

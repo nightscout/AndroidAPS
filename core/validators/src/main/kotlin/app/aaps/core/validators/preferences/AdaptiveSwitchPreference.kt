@@ -15,8 +15,7 @@ class AdaptiveSwitchPreference(
     attrs: AttributeSet? = null,
     booleanKey: BooleanPreferenceKey?,
     @StringRes summary: Int? = null,
-    @StringRes title: Int?,
-    onPreferenceChangeListener: OnPreferenceChangeListener? = null
+    @StringRes title: Int?
 ) : SwitchPreference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
@@ -55,7 +54,6 @@ class AdaptiveSwitchPreference(
                 isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue)
-        onPreferenceChangeListener?.let { this.onPreferenceChangeListener = it }
     }
 
     override fun onAttached() {

@@ -13,7 +13,8 @@ enum class BooleanKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val engineeringModeOnly: Boolean = false
+    override val engineeringModeOnly: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     GeneralSimpleMode("simple_mode", true),

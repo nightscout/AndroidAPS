@@ -6,11 +6,12 @@ enum class DanaStringComposedKey(
     override val key: String,
     override val format: String = "%s",
     override val defaultValue: String,
+    override val exportable: Boolean = true
 ) : StringComposedNonPreferenceKey {
 
-    DanaRsParingKey(key = "danars_pairing_key_", defaultValue = ""),
-    DanaRsV3RandomParingKey(key = "danars_v3_randompairing_key_", defaultValue = ""),
-    DanaRsV3ParingKey(key = "danars_v3_pairing_key_", defaultValue = ""),
-    DanaRsV3RandomSyncKey(key = "danars_v3_randomsync_key_", defaultValue = ""),
-    DanaRsBle5PairingKey(key = "dana_ble5_pairingkey", defaultValue = ""),
+    ParingKey(key = "danars_pairing_key_", defaultValue = ""),
+    V3RandomParingKey(key = "danars_v3_randompairing_key_", defaultValue = ""),
+    V3ParingKey(key = "danars_v3_pairing_key_", defaultValue = ""),
+    V3RandomSyncKey(key = "danars_v3_randomsync_key_", defaultValue = ""),
+    Ble5PairingKey(key = "dana_ble5_pairingkey", defaultValue = ""),
 }

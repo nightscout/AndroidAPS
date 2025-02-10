@@ -22,6 +22,7 @@ import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
+import app.aaps.plugins.sync.tidepool.keys.TidepoolLongKey
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -85,7 +86,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
             }
 
             ID_MENU_FULL_SYNC  -> {
-                preferences.put(TidepoolPlugin.TidepoolLongKey.LastEnd, 0)
+                preferences.put(TidepoolLongKey.LastEnd, 0)
                 true
             }
 
