@@ -171,12 +171,9 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         persistence.putString("complication_$complicationId", getProviderCanonicalName())
         persistence.putBoolean("complication_" + complicationId + "_since", usesSinceField())
         persistence.addToSet(Persistence.KEY_COMPLICATIONS, "complication_$complicationId")
-        val messageFilter = IntentFilter(INTENT_NEW_DATA)
         messageReceiver = MessageReceiver()
         localBroadcastManager = LocalBroadcastManager.getInstance(this)
-        messageReceiver?.let { localBroadcastManager?.registerReceiver(it, messageFilter) }
         rxBus.send(EventWearToMobile(ActionResendData("BaseComplicationProviderService")))
-        checkIfUpdateNeeded()
     }
 
     /*
@@ -211,28 +208,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
 
         // by each render we clear stale flag to ensure it is re-rendered at next refresh detection round
         persistence.putBoolean(Persistence.KEY_STALE_REPORTED, false)
-        val complicationData: ComplicationData? = when {
-            wearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS -> {
-                // no new data arrived - probably configuration or connection error
-                val infoToast = getTapWarningSinceIntent(
-                    applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_SYNC, persistence.whenDataUpdated()
-                )
-                buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated())
-            }
-
-            wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS     -> {
-                // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
-                val infoToast = getTapWarningSinceIntent(
-                    applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.singleBg[0].timeStamp
-                )
-                buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.singleBg[0].timeStamp)
-            }
-
-            else                                                                 -> {
-                // data is up-to-date, we can render standard complication
-                buildComplicationData(dataType, raw, complicationPendingIntent)
-            }
-        }
+        val complicationData: ComplicationData? = buildComplicationData(dataType, raw, complicationPendingIntent)
         if (complicationData != null) {
             complicationManager.updateComplicationData(complicationId, complicationData)
         } else {
@@ -258,17 +234,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Schedule check for field update
      */
-    private fun checkIfUpdateNeeded() {
-        aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(Persistence.KEY_COMPLICATIONS, ""))
-        inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS) {
-            if (wearUtil.isBelowRateLimit("complication-checkIfUpdateNeeded", 5)) {
-                aapsLogger.warn(LTag.WEAR, "Checking if update needed")
-                requestUpdateIfSinceChanged()
-                // We reschedule need for check - to make sure next check will Inevitable go in next 15s
-                checkIfUpdateNeeded()
-            }
-        }
-    }
 
     /*
      * Check if displayed since field (field that shows how old, in minutes, is reading)
@@ -306,16 +271,9 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      */
     private fun requestUpdate(providers: Set<String>) {
         for (provider in providers) {
-            aapsLogger.warn(LTag.WEAR, "Pending update of $provider")
-            // We wait with updating allowing all request, from various sources, to arrive
-            inevitable.task("update-req-$provider", 700) {
-                if (wearUtil.isBelowRateLimit("update-req-$provider", 2)) {
-                    aapsLogger.warn(LTag.WEAR, "Requesting update of $provider")
-                    val componentName = ComponentName(applicationContext, provider)
-                    val providerUpdateRequester = ProviderUpdateRequester(applicationContext, componentName)
-                    providerUpdateRequester.requestUpdateAll()
-                }
-            }
+            val componentName = ComponentName(applicationContext, provider)
+            val providerUpdateRequester = ProviderUpdateRequester(applicationContext, componentName)
+            providerUpdateRequester.requestUpdateAll()
         }
     }
 
@@ -367,7 +325,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     private fun updateAll() {
         val complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS)
         if (complications.isNotEmpty()) {
-            checkIfUpdateNeeded()
             // We request all active providers
             requestUpdate(activeProviderClasses)
         }

@@ -79,8 +79,15 @@ class DisplayFormat @Inject internal constructor() {
     }
 
     fun longGlucoseLine(raw: RawDisplayData, dataSet: Int): String {
+        raw.singleBg[dataSet].timeStamp
         val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg[dataSet].deltaDetailed else raw.singleBg[dataSet].delta
         return raw.singleBg[dataSet].sgvString + raw.singleBg[dataSet].slopeArrow + " " + deltaSymbol() + SmallestDoubleString(rawDelta).minimise(8) + " (" + shortTimeSince(raw.singleBg[dataSet].timeStamp) + ")"
+    }
+
+    fun longGlucoseLine2(raw: RawDisplayData, dataSet: Int): String {
+        raw.singleBg[dataSet].timeStamp
+        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg[dataSet].deltaDetailed else raw.singleBg[dataSet].delta
+        return raw.singleBg[dataSet].sgvString + raw.singleBg[dataSet].slopeArrow + " " + deltaSymbol() + SmallestDoubleString(rawDelta).minimise(8) + " (^1)"
     }
 
     fun longDetailsLine(raw: RawDisplayData, dataSet: Int): String {
