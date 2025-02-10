@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:validators"))
     implementation(project(":pump:combov2:comboctl"))
 
     api(libs.androidx.lifecycle.viewmodel)

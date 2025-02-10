@@ -17,6 +17,7 @@ class AdaptiveIntentPreference(
     intent: Intent? = null,
     @StringRes summary: Int? = null,
     @StringRes title: Int? = null,
+    onPreferenceClickListener: OnPreferenceClickListener? = null
 ) : Preference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
@@ -51,6 +52,7 @@ class AdaptiveIntentPreference(
             if (preferences.get(it))
                 isVisible = false
         }
+        onPreferenceClickListener?.let { this.onPreferenceClickListener = it }
     }
 
     override fun onAttached() {
