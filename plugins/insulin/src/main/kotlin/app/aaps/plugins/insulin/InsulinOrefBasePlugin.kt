@@ -37,7 +37,7 @@ abstract class InsulinOrefBasePlugin(
     PluginDescription()
         .mainType(PluginType.INSULIN)
         .fragmentClass(InsulinFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_insulin)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
         .shortName(R.string.insulin_shortname)
         .visibleByDefault(false)
         .neverVisible(config.AAPSCLIENT),
@@ -55,6 +55,7 @@ abstract class InsulinOrefBasePlugin(
                 hardLimits.minDia()
             }
         }
+    override fun setDefault(iCfg: ICfg?) { }
 
     open fun sendShortDiaNotification(dia: Double) {
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {
@@ -72,7 +73,15 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: hardLimits.minDia()
         }
 
+   override fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob {
+        return iobCalcForTreatment(bolus, time, iCfg.getPeak(), iCfg.getDia())
+    }
+
     override fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob {
+        return iobCalcForTreatment(bolus, time, peak, dia)
+    }
+
+    private fun iobCalcForTreatment(bolus: BS, time: Long, peak: Int, dia: Double): Iob {
         assert(dia != 0.0)
         assert(peak != 0)
         val result = Iob()
