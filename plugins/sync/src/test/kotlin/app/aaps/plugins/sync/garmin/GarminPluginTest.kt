@@ -8,7 +8,9 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth
@@ -66,6 +68,10 @@ class GarminPluginTest : TestBaseWithProfile() {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPrefs
                 it.config = config
+            }
+            if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
             }
         }
     }
@@ -236,7 +242,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun requestHandler_KeyRequiredAndProvided() {
-        `when`(sp.getString("garmin_aaps_key", "")).thenReturn("foo")
+        `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
         val uri = createUri(mapOf("key" to "foo"))
         val handler = gp.requestHandler { u: URI -> assertEquals(uri, u); "OK" }
         assertEquals(
@@ -248,9 +254,9 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun requestHandler_KeyRequired() {
-        gp.garminMessenger = mock(GarminMessenger::class.java)
+        gp.garminMessengerField = mock(GarminMessenger::class.java)
 
-        `when`(sp.getString("garmin_aaps_key", "")).thenReturn("foo")
+        `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
         val uri = createUri(emptyMap())
         val handler = gp.requestHandler { u: URI -> assertEquals(uri, u); "OK" }
         assertEquals(
@@ -280,8 +286,8 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun onConnectDevice() {
-        gp.garminMessenger = mock(GarminMessenger::class.java)
-        `when`(sp.getString("garmin_aaps_key", "")).thenReturn("foo")
+        gp.garminMessengerField = mock(GarminMessenger::class.java)
+        `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
         val device = GarminDevice(mock(), 1, "Edge")
         gp.onConnectDevice(device)
 

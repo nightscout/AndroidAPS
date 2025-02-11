@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.SeekBar
 import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.DaggerActivity
 import app.aaps.ui.databinding.WidgetConfigureBinding
+import dagger.android.DaggerActivity
 import javax.inject.Inject
 
 /**
@@ -23,9 +23,6 @@ class WidgetConfigureActivity : DaggerActivity() {
     }
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private var value = 0
-
-    private lateinit var binding: WidgetConfigureBinding
 
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
@@ -34,25 +31,31 @@ class WidgetConfigureActivity : DaggerActivity() {
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED)
 
-        binding = WidgetConfigureBinding.inflate(layoutInflater)
+        val binding = WidgetConfigureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                // Make sure we pass back the original appWidgetId
-                val resultValue = Intent()
-                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                setResult(RESULT_OK, resultValue)
-                finish()
-            }
-
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                value = progress
-                saveTitlePref(appWidgetId, value)
+                // Write the prefix to the SharedPreferences object for this widget
+                sp.putInt(PREF_PREFIX_KEY + appWidgetId, progress)
                 Widget.updateWidget(this@WidgetConfigureActivity, "WidgetConfigure")
             }
         })
+
+        binding.closeLayout.close.setOnClickListener {
+            // Make sure we pass back the original appWidgetId
+            val resultValue = Intent()
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            setResult(RESULT_OK, resultValue)
+            finish()
+        }
+
+        binding.useBlack.setOnCheckedChangeListener { _, value ->
+            sp.putBoolean(PREF_PREFIX_KEY + "use_black_$appWidgetId", value)
+            Widget.updateWidget(this@WidgetConfigureActivity, "WidgetConfigure")
+        }
 
         // Find the widget id from the intent.
         appWidgetId = intent.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID) ?: AppWidgetManager.INVALID_APPWIDGET_ID
@@ -63,15 +66,7 @@ class WidgetConfigureActivity : DaggerActivity() {
             return
         }
 
-        binding.seekBar.progress = loadTitlePref(appWidgetId)
+        binding.seekBar.progress = sp.getInt(PREF_PREFIX_KEY + appWidgetId, 25)
+        binding.useBlack.isChecked = sp.getBoolean(PREF_PREFIX_KEY + "use_black_$appWidgetId", false)
     }
-
-    // Write the prefix to the SharedPreferences object for this widget
-    fun saveTitlePref(appWidgetId: Int, value: Int) {
-        sp.putInt(PREF_PREFIX_KEY + appWidgetId, value)
-    }
-
-    // Read the prefix from the SharedPreferences object for this widget.
-    // If there is no preference saved, get the default from a resource
-    private fun loadTitlePref(appWidgetId: Int): Int = sp.getInt(PREF_PREFIX_KEY + appWidgetId, 25)
 }

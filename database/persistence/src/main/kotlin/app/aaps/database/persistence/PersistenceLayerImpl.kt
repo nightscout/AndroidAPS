@@ -47,6 +47,7 @@ import app.aaps.database.transactions.InsertIfNewByTimestampTherapyEventTransact
 import app.aaps.database.transactions.InsertOrUpdateApsResultTransaction
 import app.aaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import app.aaps.database.transactions.InsertOrUpdateBolusTransaction
+import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransaction
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitch
@@ -1709,10 +1710,25 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getCalculatedTotalDailyDose(timestamp: Long): TDD? =
         repository.getCalculatedTotalDailyDose(timestamp).map { it.fromDb() }.blockingGet()
 
-    override fun insertTotalDailyDose(totalDailyDose: TDD) {
-        repository.insertTotalDailyDose(totalDailyDose.toDb())
-        aapsLogger.debug(LTag.DATABASE, "Inserted TDD $totalDailyDose")
-    }
+    override fun insertOrUpdateCachedTotalDailyDose(totalDailyDose: TDD): Single<PersistenceLayer.TransactionResult<TDD>> =
+        repository.runTransactionForResult(InsertOrUpdateCachedTotalDailyDoseTransaction(totalDailyDose.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose $it") }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TDD>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                result.notUpdated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Not updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
 
     override fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): Single<PersistenceLayer.TransactionResult<TDD>> =
         repository.runTransactionForResult(SyncPumpTotalDailyDoseTransaction(totalDailyDose.toDb()))

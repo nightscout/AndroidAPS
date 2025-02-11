@@ -25,9 +25,6 @@
     <string name="random_bg">Atsitiktinė glikemija</string>
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
     <string name="random_bg_short">AG</string>
-    <string name="bgsource_upload">Glikemijos perdavimo nustatymai</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
     <string name="direction">kryptis</string>
     <string name="bg_generation_interval_minutes">KG generavimo intervalas minutėmis</string>
     <!-- Patched Ottai App -->

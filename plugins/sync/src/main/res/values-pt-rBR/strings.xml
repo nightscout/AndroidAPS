@@ -139,7 +139,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nenhum perfil ativo definido!</string>
-    <string name="profile_message">Perfil:\n\nFuso: %1$d\nPorcentagem: %2$d%%\"</string>
     <string name="target_only_aps_mode">Alvos só se aplicam no modo APS!</string>
     <string name="no_history">Nenhum dado no histórico!</string>
     <string name="temp_target">Alvos Temporários</string>

@@ -162,7 +162,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">val</string>
     <string name="no_active_profile">Neparinktas aktyvus profilis!</string>
-    <string name="profile_message">Profilis:\n\nLaiko perstūmimas: %1$\nProcentai: %2$d%%\"</string>
     <string name="target_only_aps_mode">Tikslai galioja tik APS režime!</string>
     <string name="no_history">Nėra istorijos!</string>
     <string name="temp_target">Laikinas tikslas</string>

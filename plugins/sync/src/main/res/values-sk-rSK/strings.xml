@@ -162,7 +162,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
-    <string name="profile_message">Profil:\n\nPosunutie: %1$d\nPercento: %2$d%%\"</string>
     <string name="target_only_aps_mode">Ciele sa použijú iba v režime APS!</string>
     <string name="no_history">Žiadne údaje o histórii!</string>
     <string name="temp_target">Dočasný cieľ</string>
@@ -183,4 +182,24 @@
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
     <string name="full_xdrip_sync_comment">Úplná synchronizácia? Môže to chvíľu trvať a kým neskončí, neuvidíte nové dáta v xDrip+.</string>
+    <string name="wear_action_loop_state_no_nsclient">Táto akcia nie je u AAPSClient podporovaná</string>
+    <string name="wear_action_loop_state_requires_duration">Táto akcia vyžaduje dobu trvania</string>
+    <string name="wear_action_loop_state_pump_suspended">Pumpa je pozastavená!</string>
+    <string name="wear_action_loop_state_profile_invalid">Neplatný profil!</string>
+    <string name="wear_action_loop_state_unauthorized">Prosím, skúste to znova.</string>
+    <string name="wear_action_loop_state_invalid">Neplatná požiadavka na stav uzavretého okruhu</string>
+    <string name="wear_action_loop_state_title">STAV UZAVRETÉHO OKRUHU</string>
+    <string name="wear_action_loop_state_changed">%1$s</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\nTrvanie: %2$d min</string>
+    <string name="wear_action_loop_state_now_closed">Uzavretý</string>
+    <string name="wear_action_loop_state_now_lgs">LGS</string>
+    <string name="wear_action_loop_state_now_open">Otvorený</string>
+    <string name="wear_action_loop_state_now_suspended">Pozastavený</string>
+    <string name="wear_action_loop_state_now_resumed">Obnovený</string>
+    <string name="wear_action_loop_state_now_disabled">Vypnutý</string>
+    <string name="wear_action_loop_state_now_enabled">Povolené</string>
+    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
+    <string name="wear_action_loop_state_now_invalid">Neplatný</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Pumpa odpojená</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Pumpa bola znovu pripojená</string>
 </resources>
