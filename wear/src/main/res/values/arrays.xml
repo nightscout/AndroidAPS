@@ -72,6 +72,7 @@
         <item>@string/menu_carb</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_tempt</item>
+        <item>@string/status_profile_switch</item>
         <item>@string/tile_none</item>
     </string-array>
 
@@ -82,6 +83,7 @@
         <item>carbs</item>
         <item>ecarbs</item>
         <item>temp_target</item>
+        <item>profile_switch</item>
         <item>none</item>
     </string-array>
 
