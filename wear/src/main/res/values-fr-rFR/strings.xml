@@ -225,7 +225,7 @@
     <string name="complication_iob_icon">Icône IA</string>
     <string name="complication_iob_detailed">IA détaillée</string>
     <string name="complication_uploader_phone_battery">Batterie téléphone</string>
-    <string name="status_loop_state">État de la boucle</string>
+    <string name="status_loop_state">État boucle</string>
     <string name="label_loop_state_title">AAPS (État boucle)</string>
     <string name="action_loop_state_selected">État boucle demandé</string>
 </resources>
