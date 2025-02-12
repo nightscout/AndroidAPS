@@ -3,6 +3,7 @@ package app.aaps.plugins.main.profile
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -29,6 +30,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -176,6 +178,7 @@ class ProfilePlugin @Inject constructor(
                 val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
                 sp.putString(localProfileNumbered + "name", name)
                 sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
+                //sp.putString(localProfileNumbered + "icfg", iCfg.toJson().toString())
                 sp.putDouble(localProfileNumbered + "dia", dia)
                 sp.putString(localProfileNumbered + "ic", ic.toString())
                 sp.putString(localProfileNumbered + "isf", isf.toString())

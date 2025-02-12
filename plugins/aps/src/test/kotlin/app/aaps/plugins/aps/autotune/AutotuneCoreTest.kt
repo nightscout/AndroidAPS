@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
@@ -119,6 +120,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 targetBlocks = targetBlocks,
                 glucoseUnit = units,
                 timeZone = timezone,
+                iCfg = ICfg("", peak, dia),
                 dia = dia
             )
             return ATProfile(ProfileSealed.Pure(pure, activePlugin), localInsulin, injector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }

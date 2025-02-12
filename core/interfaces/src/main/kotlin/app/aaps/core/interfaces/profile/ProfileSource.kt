@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.profile
 
 import androidx.fragment.app.FragmentActivity
+import app.aaps.core.data.model.ICfg
 import org.json.JSONArray
 
 interface ProfileSource {

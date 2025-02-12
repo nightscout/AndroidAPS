@@ -4,6 +4,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.model.data.Block
@@ -190,6 +191,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 targetBlocks = targetBlocks,
                 glucoseUnit = units,
                 timeZone = timezone,
+                iCfg = ICfg("", peak, dia),
                 dia = dia
             )
             return ATProfile(ProfileSealed.Pure(pure, activePlugin), localInsulin, injector).also { it.dateUtil = dateUtil }

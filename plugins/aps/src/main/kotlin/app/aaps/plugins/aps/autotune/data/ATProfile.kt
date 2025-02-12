@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -110,6 +111,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("name", profileName)
             json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
             json.put("dia", dia)
+            json.put("icfg", ICfg("", peak, dia))
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
                 "curve",
                 "ultra-rapid"
@@ -161,6 +163,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     fun data(circadian: Boolean = false): PureProfile? {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
+            json.put("icfg", ICfg("", peak, dia))
             json.put("dia", dia)
             if (circadian) {
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
