@@ -134,6 +134,7 @@
     <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
     <string name="recalculate">Perskaičiuoti</string>
+    <!--    Widget-->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Abu</item>
         <item>Tik teigiamas</item>

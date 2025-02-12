@@ -161,7 +161,7 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
-    <string name="profile_message">פרופיל: %1$s\nהיסט זמן: %2$d שע\'\nאחוז: %3$d%%</string>
+    <string name="profile_message">פרופיל: %1$s\nהיסט זמן: %2$d שע\'\nאחוז: %3$d%%\nמשך: %4$d דק\'</string>
     <string name="target_only_aps_mode">ערכי מטרה חלים רק במצב APS!</string>
     <string name="no_history">אין נתוני עבר!</string>
     <string name="temp_target">ערכי מטרה זמניים</string>

@@ -123,4 +123,5 @@
     <string name="quickwizard_settings">Ρυθμίσεις QuickWizard</string>
     <string name="overview_edit_quickwizard_valid">Έγκυρο:</string>
     <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
+    <!--    Widget-->
 </resources>
