@@ -338,7 +338,7 @@ class BolusWizard @Inject constructor(
     }
 
     private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null): Spanned {
-        var phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
+        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
@@ -433,6 +433,14 @@ class BolusWizard @Inject constructor(
     }
 
     private fun bolusAdvisorProcessing(ctx: Context) {
+        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
+        if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
+            // Bolus advisor is not supported because automation.scheduleAutomationEventEatReminder() can't be set on AAPSClient phone.
+            // In order to do so AAPSClient phone would need to wait in pooling for bolus confirmation message. I don't want to block app on that.
+            OKDialog.show(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), rh.gs(app.aaps.core.ui.R.string.bolus_advisor_not_supported))
+            return
+        }
+
         val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
         OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
@@ -550,7 +558,7 @@ class BolusWizard @Inject constructor(
                                 ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
                             ).filterNotNull()
                         )
-                        var phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
+                        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
                         if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
                             rh.gs(app.aaps.core.ui.R.string.sms_request_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                             smsCommunicator.sendSMS(Sms(phoneNumber, formatBolusCarbsCommand(insulin, this@BolusWizard.carbs, this@BolusWizard.carbTime.toString(), useAlarm)))
