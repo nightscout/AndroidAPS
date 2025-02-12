@@ -1723,6 +1723,10 @@ class PersistenceLayerImpl @Inject constructor(
                     aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
                     transactionResult.updated.add(it.fromDb())
                 }
+                result.notUpdated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Not updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
                 transactionResult
             }
 

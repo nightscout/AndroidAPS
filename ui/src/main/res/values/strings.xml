@@ -156,6 +156,10 @@
     <string name="confirm_treatment">Please confirm treatment</string>
     <string name="recalculate">Recalculate</string>
 
+    <!--    Widget-->
+    <string name="use_black_color">Use black color</string>
+    <string name="widget_configuration">Widget configuration</string>
+
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Both</item>
         <item>Positive only</item>

@@ -18,13 +18,20 @@ class InsertOrUpdateCachedTotalDailyDoseTransaction(
         if (current == null) {
             database.totalDailyDoseDao.insertNewEntry(tdd)
             result.inserted.add(tdd)
-        } else {
+        } else if (
+            current.basalAmount != tdd.basalAmount ||
+            current.bolusAmount != tdd.bolusAmount ||
+            current.totalAmount != tdd.totalAmount ||
+            current.carbs != tdd.carbs
+        ){
             current.basalAmount = tdd.basalAmount
             current.bolusAmount = tdd.bolusAmount
             current.totalAmount = tdd.totalAmount
             current.carbs = tdd.carbs
             database.totalDailyDoseDao.updateExistingEntry(current)
             result.updated.add(current)
+        } else {
+            result.notUpdated.add(current)
         }
 
         return result
@@ -34,5 +41,6 @@ class InsertOrUpdateCachedTotalDailyDoseTransaction(
 
         val inserted = mutableListOf<TotalDailyDose>()
         val updated = mutableListOf<TotalDailyDose>()
+        val notUpdated = mutableListOf<TotalDailyDose>()
     }
 }

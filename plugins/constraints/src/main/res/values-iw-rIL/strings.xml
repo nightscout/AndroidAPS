@@ -11,7 +11,7 @@
     <string name="old_version">גרסה ישנה</string>
     <string name="very_old_version">גרסה ישנה מאוד</string>
     <string name="application_expired">תוקף האפליקציה פג</string>
-    <string name="new_version_warning">בדיקה לגרסא חדשה של המערכת לא בוצעה מזה לפחות %1$d ימים! שנמוך למצב \'השהיה עקב ערך סוכר נמוך\' תתבצע לאחר %2$d ימים והלולאה תושבת אחרי %3$d ימים. חברו את המכשיר לרשת האינטרנט!</string>
+    <string name="new_version_warning">גרסה חדשה לא נבדקה במשך לפחות %1$d ימים! שנמוך למצב \'השהיה עקב ערך סוכר נמוך\' תתבצע לאחר %2$d ימים והלולאה תושבת לאחר %3$d ימים. חברו מחדש את המכשיר לרשת האינטרנט!</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה שאינה בתוקף. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
     <string name="version_expire">תוקפה של גרסה %1$s תפוג ב-%2$s</string>

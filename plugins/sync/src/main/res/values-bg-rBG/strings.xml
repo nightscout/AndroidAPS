@@ -139,7 +139,6 @@
     <string name="grams_short">гр.</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Не е настроен активен профил!</string>
-    <string name="profile_message">Профил:\n\nОтместване във времето: %1$d\nПроцент: %2$d%%\"</string>
     <string name="target_only_aps_mode">Целите се прилагат само в режим АПС!</string>
     <string name="no_history">Няма хронология!</string>
     <string name="temp_target">Временна цел</string>

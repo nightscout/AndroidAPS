@@ -218,10 +218,14 @@
     <string name="complication_blood_glucose">血糖</string>
     <string name="complication_br_cob_iob">BR、CoB及IoB</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_br">基礎率</string>
     <string name="complication_cob_iob">BR、CoB及IoB</string>
     <string name="complication_cob_icon">CoB圖示</string>
     <string name="complication_cob_detailed">CoB 詳細</string>
     <string name="complication_iob_icon">IoB圖示</string>
     <string name="complication_iob_detailed">IoB詳細</string>
     <string name="complication_uploader_phone_battery">Uploader/顯示手機電池</string>
+    <string name="status_loop_state">循環狀態</string>
+    <string name="label_loop_state_title">AAPS（循環狀態）</string>
+    <string name="action_loop_state_selected">請求的循環狀態</string>
 </resources>
