@@ -355,7 +355,7 @@ class BolusWizard @Inject constructor(
             actions.add(
                 rh.gs(app.aaps.core.ui.R.string.cobvsiob) + ": " + rh.gs(
                     app.aaps.core.ui.R.string.formatsignedinsulinunits,
-                    insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG
+                    -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
                 ).formatColor(
                     context, rh, app.aaps.core.ui.R.attr
                         .cobAlertColor
@@ -470,7 +470,7 @@ class BolusWizard @Inject constructor(
         }
         if (useCob) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_cob, cob, insulinFromCOB)
         if (useBg) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_bg, insulinFromBG)
-        if (includeBolusIOB) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_iob, insulinFromBolusIOB + insulinFromBasalIOB)
+        if (includeBolusIOB) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_iob, -insulinFromBolusIOB - insulinFromBasalIOB)
         if (useTrend) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_trend, insulinFromTrend)
         if (useSuperBolus) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_superbolus, insulinFromSuperBolus)
         if (percentageCorrection != 100) {
