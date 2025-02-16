@@ -153,8 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Il tuo algoritmo può fornire il calcolo dinamico di ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
-    <string name="ic_dynamic_label">Il tuo algoritmo può fornire il calcolo dinamico di ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="isf_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="ic_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'IC. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
     <!-- Actions -->
     <string name="actions">Azioni</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
@@ -217,8 +217,7 @@
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="overview_buttons_selection">Tasti</string>
     <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ (assicurati che \'Accetta calibrazioni\' sia abilitata in xDrip+ nelle impostazioni Inter-App).</string>
-    <string name="show_cgm_button_summary">Apri xDrip+ (usa il tasto indietro per tornare ad AAPS).</string>
-    <string name="error_starting_cgm">Impossibile avviare l\'applicazione CGM. Assicurati che sia installata.</string>
+    <string name="show_cgm_button_summary">Apri xDrip+ o l\'app Dexcom (puoi usare il tasto indietro per tornare ad AAPS).</string>
     <string name="not_available_full">Non disponibile</string>
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="change_your_input">Cambia il tuo input!</string>

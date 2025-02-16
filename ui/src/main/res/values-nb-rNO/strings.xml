@@ -73,7 +73,7 @@
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="a11y_current_bg">nåværende blodsukker</string>
-    <string name="carb_time_label">Karbo-tid</string>
+    <string name="carb_time_label">Karbotid</string>
     <string name="a11y_set_carb_timer">angi nedtellingsalarm for karbo</string>
     <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
@@ -134,6 +134,9 @@
     <string name="change_your_input">Endre dine inndata!</string>
     <string name="confirm_treatment">Bekreft behandling</string>
     <string name="recalculate">Rekalkuler</string>
+    <!--    Widget-->
+    <string name="use_black_color">Bruk svart farge</string>
+    <string name="widget_configuration">Widget konfigurasjon</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Begge</item>
         <item>Kun positiv</item>

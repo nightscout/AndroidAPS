@@ -153,8 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de ISF. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
-    <string name="ic_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de IC. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
+    <string name="isf_dynamic_label_warning">El algoritmo puede proporcionar un cálculo dinámico del ISF. Los valores mostrados se pueden utilizar sólo como alternativa en caso de que falten datos o como valor de referencia</string>
+    <string name="ic_dynamic_label_warning">Su algoritmo puede proporcionar un cálculo dinámico de IC. Los valores mostrados se pueden utilizar sólo como alternativa en caso de que falten datos o como valor de referencia</string>
     <!-- Actions -->
     <string name="actions">Acciones</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
@@ -217,8 +217,7 @@
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="overview_buttons_selection">Botones</string>
     <string name="show_calibration_button_summary">Envía una calibración a xDrip+ (asegúrate de que \'Aceptar Calibraciones\' está activado en xDrip+ bajo la opción \'Ajustes entre aplicaciones\').</string>
-    <string name="show_cgm_button_summary">Abre xDrip+ (puedes usar el botón atrás para volver a AAPS).</string>
-    <string name="error_starting_cgm">No se pudo iniciar la aplicación CGM. Asegúrate de que está instalada.</string>
+    <string name="show_cgm_button_summary">Abre xDrip+ o la aplicación de Dexcom (puedes usar el botón atrás para volver a AAPS).</string>
     <string name="not_available_full">No disponible</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="change_your_input">¡Cambiar datos!</string>

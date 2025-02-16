@@ -103,7 +103,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 activity = requireActivity(),
                 parent = binding.categories
             )
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             configBuilder.createViewsForPlugins(
                 title = R.string.configbuilder_bgsource,
                 description = R.string.configbuilder_bgsource_description,

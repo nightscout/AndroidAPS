@@ -78,12 +78,14 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             val suggested = openAPSData.suggested
             if (enacted != null && openAPSData.clockEnacted != openAPSData.clockSuggested) string
                 .append("<b>")
+                .append("Enacted: </br>")
                 .append(dateUtil.minAgo(rh, openAPSData.clockEnacted))
                 .append("</b> ")
                 .append(enacted.reason)
                 .append("<br>")
             if (suggested != null) string
                 .append("<b>")
+                .append("Suggested: </br>")
                 .append(dateUtil.minAgo(rh, openAPSData.clockSuggested))
                 .append("</b> ")
                 .append(suggested.reason)

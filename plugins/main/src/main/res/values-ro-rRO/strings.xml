@@ -200,7 +200,6 @@
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="overview_buttons_selection">Butoane</string>
-    <string name="error_starting_cgm">Nu s-a putut deschide aplicația CGM. Asigurați-vă că este instalată.</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="change_your_input">Schimbați ceea ce ați introdus!</string>

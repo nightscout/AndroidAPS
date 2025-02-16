@@ -111,7 +111,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">확인 신호음</string>
     <string name="omnipod_common_preferences_category_notifications">알림</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">불확실한 TBR 알림 소리 활성화</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">불확실한 SMB 알림 소리 활성화</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">불확실한 볼루스 알림 소리 활성화</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">활성화된 Pod 없음</string>
@@ -157,7 +156,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">활성화된 Pod 없음</string>
     <string name="omnipod_common_short_status_last_connection">마지막 연결: %1$d 분 전</string>
-    <string name="omnipod_common_short_status_last_bolus">마지막 bolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">임시: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">확장: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">잔여 인슐린 양: %1$s U</string>

@@ -289,7 +289,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
-        if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
+        if (!config.AAPSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
             if (smsCommunicator.isEnabled())
                 androidPermission.notifyForSMSPermissions(this)
@@ -494,7 +494,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
         activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
-        if (!config.NSCLIENT && !config.PUMPCONTROL)
+        if (!config.AAPSCLIENT && !config.PUMPCONTROL)
             activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
         fabricPrivacy.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
@@ -518,12 +518,17 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun passwordResetCheck(context: Context) {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
         if (fh?.exists() == true) {
-            val sn = activePlugin.activePump.serialNumber()
-            preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(sn))
-            fh.delete()
-            // Also clear any stored password
-            exportPasswordDataStore.clearPasswordDataStore(context)
-            ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
+            Thread {
+                // Wait for virtual pump. SN is not available immediately
+                while (activePlugin.activePump.serialNumber().isEmpty()) {
+                    Thread.sleep(100)
+                }
+                preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(activePlugin.activePump.serialNumber()))
+                fh.delete()
+                // Also clear any stored password
+                exportPasswordDataStore.clearPasswordDataStore(context)
+                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
+            }.start()
         }
     }
 

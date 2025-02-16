@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.toSpanned
+import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -168,7 +169,7 @@ class MaintenanceFragment : DaggerFragment() {
             uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
-                importExportPrefs.importSharedPreferences(this)
+                importExportPrefs.importSharedPreferences(activity as FragmentActivity)
             }
         }
         binding.directory.setOnClickListener {

@@ -153,8 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ע\' מטרה</string>
     <string name="basal_short">בזאלי</string>
-    <string name="isf_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של רגישות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
-    <string name="ic_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של יחס פחמימות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
     <!-- Actions -->
     <string name="actions">פעולות</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
@@ -217,8 +215,7 @@
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="overview_buttons_selection">מקשים</string>
     <string name="show_calibration_button_summary">שולח כיולים לאפליקציית xDrip+ (אנא ודאו ש\"קבל טיפולים\" מופעל בהגדרות xDrip+ תחת \"הגדרות לשיתוף פעולה בין אפליקציות\").</string>
-    <string name="show_cgm_button_summary">פותח את xDrip או את דקסקום, לחיצה על אחורה מחזירה ל-AAPS).</string>
-    <string name="error_starting_cgm">לא ניתן היה להפעיל את יישום סנסור. וודא שהוא מותקן.</string>
+    <string name="show_cgm_button_summary">פותח את xDrip או את אפליקציית דקסקום (לחיצה על אחורה מחזירה ל-AAPS).</string>
     <string name="not_available_full">לא זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
     <string name="change_your_input">שנה קלט!</string>

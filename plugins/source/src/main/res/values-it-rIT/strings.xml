@@ -25,9 +25,9 @@
     <string name="random_bg">BG casuale</string>
     <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
     <string name="random_bg_short">BG</string>
-    <string name="bgsource_upload">Impostazioni caricamento BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registra cambio sensore in NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Crea evento \"Cambio Sensore\" in NS all\'avvio del sensore</string>
+    <string name="bgsource_settings">Impostazioni sorgente glicemia</string>
+    <string name="bgsource_log_sensor_change_title">Accetta avvio sensore</string>
+    <string name="bgsource_log_sensor_change_summary">Crea evento \"CGM Sensore Inserito\" in Careportal automaticamente all\'avvio del sensore ricevuto dalla trasmissione locale sorgente BG</string>
     <string name="direction">direzione</string>
     <string name="bg_generation_interval_minutes">Minuti intervallo generazione glicemia</string>
     <!-- Patched Ottai App -->

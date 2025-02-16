@@ -111,8 +111,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Звук за потвърждение</string>
     <string name="omnipod_common_preferences_category_notifications">Известия</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Сигнал при неясни TBR известия, разрешен</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Звук за
-         активирани несигурни SMB известия</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Сигнал при неясни болус известия, разрешен</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Няма активен под</string>
@@ -158,7 +156,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Няма активен под</string>
     <string name="omnipod_common_short_status_last_connection">Последно свързване: преди %1$d минути</string>
-    <string name="omnipod_common_short_status_last_bolus">Болус: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Врем базал: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Удължен: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Рез.: %1$sU</string>

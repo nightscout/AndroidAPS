@@ -24,7 +24,7 @@
     <string name="settingextendedbolus">Ištęsto boluso nustatymas</string>
     <string name="stoppingextendedbolus">Stabdomas ištęstas bolusas</string>
     <string name="updatingbasalrates">Bazė naujinama</string>
-    <string name="description_pump_diaconn_g8">Pompos integracija su Diaconn G8 Pompomis</string>
+    <string name="description_pump_diaconn_g8">Diaconn G8 pompos integracija</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>

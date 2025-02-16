@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Звуковые сигналы подтверждения</string>
     <string name="omnipod_common_preferences_category_notifications">Уведомления</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Звук для неопределенных уведомлений TBR включен</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Звук для неопределенных SMB уведомлений включен</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Звук для неопределенных уведомлений болюса включен</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Нет активных Pod</string>
@@ -164,7 +163,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Нет активных Pod</string>
     <string name="omnipod_common_short_status_last_connection">Предыдущее соединение: %1$d мин. назад</string>
-    <string name="omnipod_common_short_status_last_bolus">Предыдущий болюс: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">Предыдущий болюс: %1$s ед. @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Временн %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Пролонгированный: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Резервуар: %1$sед</string>

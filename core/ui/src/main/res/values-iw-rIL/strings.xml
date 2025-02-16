@@ -401,6 +401,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
+    <string name="sensitivity">רגישות</string>
+    <string name="isf_for_carbs">פקטור הרגישות של המחשבון ושל ספיגת פחמימות: %1$.1f</string>
+    <string name="autosens_long">ערך Autosens: %.0f%%</string>
+    <string name="autosens_short">רגישות: %.0f%%</string>
+    <string name="algorithm_long">ערך Autosens באלגוריתם: %.0f%%</string>
+    <string name="algorithm_short">אלגו\': %.0f%%</string>
     <string name="a11y_file">קובץ</string>
     <string name="a11y_user">משתמש</string>
     <!-- Autotune -->
@@ -502,6 +508,8 @@
     <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
     <!-- <unattended_export> -->
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">הגדרות יוצאו</string>
+    <string name="export_result_message_failed">יצוא ההגדרות נכשל!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">הפחתת %1$s ב-%2$s</string>
     <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>

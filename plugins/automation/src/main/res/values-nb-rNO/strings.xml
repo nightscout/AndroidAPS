@@ -137,4 +137,8 @@
     <string name="autotune_run_with_autoswitch">Autotune utført og profil ble automatisk skiftet ut</string>
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Antall skritt</string>
+    <string name="triggerStepsCountDesc">Antall skritt per %1$s minutter %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Varighet for måling</string>
 </resources>

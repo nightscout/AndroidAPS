@@ -79,7 +79,7 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Užpildykite Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inicijuoti Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Prijunkite Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Paruoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir priklijuokite Pod infuzijos vietoje.\n\nJei kaniulė iššoko, paspauskite <b>Atšaukti</b> ir pakeiskite Pod.\n\nSpauskite <b>Toliau</b>, norėdami įvesti kaniulę ir pradėti leisti insuliną.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Paruoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir priklijuokite Pod infuzijos vietoje.\n\nJei kaniulė iššoko, paspauskite <b>Atšaukti</b> ir pakeiskite Pod.\n\nSpauskite <b>Toliau</b>, norėdami įvesti kaniulę.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Kai paspausite <b>OK</b>, kaniulė bus įvesta. Įsitikinkite, kad Pod pritvirtinote infuzijos vietoje.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Įvesti kaniulę</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Nustatomas pradinis bazės profilis ir įvedama kaniulė.\n\nKai kaniulė bus sėkmingai įvesta, spauskite <b>Toliau</b>.</string>
@@ -87,7 +87,7 @@
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Naujasis Pod yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė buvo tinkamai įvesta, jei taip nėra, pakeiskite Pod.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktyvuoti Pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Spustelėkite<b>Toliau</b>, kad deaktyvuotumėte Pod.\n\n<b>Pastaba:</b> Tai sustabdys insulino leidimą ir išjungs Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Spustelėkite<b>Toliau</b>, kad deaktyvuotumėte Pod.\n\n<b>Pastaba:</b> Tai sustabdys insulino tiekimą ir išjungs Pod.</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod deaktyvuojamas</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Pod deaktyvuojamas.\n\nKai veiksmas bus sėkmingai baigtas, spauskite <b>Toliau</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktyvuotas</string>
@@ -117,7 +117,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Patvirtinimo signalai</string>
     <string name="omnipod_common_preferences_category_notifications">Pranešimai</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Įjungtas garsas        neaiškiems SMB perspėjimams</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Įjungtas garsas neaiškiems bolusų perspėjimams</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nėra aktyvaus Pod</string>
@@ -164,7 +163,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Nėra aktyvaus Pod</string>
     <string name="omnipod_common_short_status_last_connection">Pask. prijung: prieš %1$d min</string>
-    <string name="omnipod_common_short_status_last_bolus">PaskBolusas: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">Pask. bolusas: %1$s V @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Laik.bazė: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Ištęstas: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Rezerv: %1$svv</string>

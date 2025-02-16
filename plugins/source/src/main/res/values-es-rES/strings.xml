@@ -25,9 +25,9 @@
     <string name="random_bg">Glucosa aleatoria</string>
     <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
     <string name="random_bg_short">BG</string>
-    <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registro de cambio de sensor en Nightscout</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
+    <string name="bgsource_settings">Configuración de Origen de Glucosa</string>
+    <string name="bgsource_log_sensor_change_title">Aceptar inicio de sensor</string>
+    <string name="bgsource_log_sensor_change_summary">Crear evento \"Inserción de sensor\" en el Portal de Cuidados automátciamente al recibir un inicio de sensor desde una fuente de origen de glucosa de transmisión local</string>
     <string name="direction">dirección</string>
     <string name="bg_generation_interval_minutes">Intervalo de generación de BG en minutos</string>
     <!-- Patched Ottai App -->

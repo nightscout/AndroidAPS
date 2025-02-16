@@ -120,4 +120,5 @@
     <string name="autotune_run_with_autoswitch">Стартиране на Autotune и автоматична смяна на профила</string>
     <string name="autotune_run_with_error">Възникна грешка по време на последното стартиране на Autotune</string>
     <string name="autotune_run_cancelled">Друго стартиране на Autotune е засечено, текущото е отказано</string>
+    <!--    Steps count-->
 </resources>

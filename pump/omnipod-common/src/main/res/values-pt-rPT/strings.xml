@@ -111,8 +111,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Beeps de Confirmação</string>
     <string name="omnipod_common_preferences_category_notifications">Notificações</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Som activado para notificações DBT incerto</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Som ativado para
-        notificações incertas de SMB</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Som activado para notificações de bolús incerto</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nenhum Pod Activo</string>
@@ -158,7 +156,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Nenhum Pod Activo</string>
     <string name="omnipod_common_short_status_last_connection">ÚltimaLig: %1$d min. atrás</string>
-    <string name="omnipod_common_short_status_last_bolus">ÚltimoBólus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Estendido: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Reserv: %1$sU</string>

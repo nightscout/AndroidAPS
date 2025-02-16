@@ -134,6 +134,7 @@
     <string name="change_your_input">Wijzig de invoer!</string>
     <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
     <string name="recalculate">Herberekenen</string>
+    <!--    Widget-->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Beide</item>
         <item>Alleen positief</item>

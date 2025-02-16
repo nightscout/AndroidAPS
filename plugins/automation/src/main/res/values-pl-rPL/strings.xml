@@ -137,4 +137,5 @@
     <string name="autotune_run_with_autoswitch">W wyniku uruchomienia Autotune profil został automatycznie przełączony</string>
     <string name="autotune_run_with_error">Błąd podczas ostatniego uruchomienia Autotune</string>
     <string name="autotune_run_cancelled">Wykryto Autotune w toku, anulowano próbę kolejnego uruchomienia</string>
+    <!--    Steps count-->
 </resources>

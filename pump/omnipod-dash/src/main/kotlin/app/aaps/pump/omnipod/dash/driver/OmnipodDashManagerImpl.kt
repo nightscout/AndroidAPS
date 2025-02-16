@@ -458,7 +458,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
             val userExpiryReminderEnabled = userConfiguredExpirationReminderHours != null && userConfiguredExpirationReminderHours > 0
             val userExpiryReminderDelay = podLifeLeft.minus(
-                Duration.ofHours(userConfiguredExpirationReminderHours ?: MAX_POD_LIFETIME.toHours() + 1)
+                Duration.ofHours(userConfiguredExpirationReminderHours ?: (MAX_POD_LIFETIME.toHours() + 1))
             )
             if (userExpiryReminderDelay.isNegative) {
                 logger.warn(
@@ -688,7 +688,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setNonce(NONCE)
                     .build(),
                 DefaultStatusResponse::class
-            )
+            ).doOnComplete { bleManager.removeBond() }
         }
 
     override fun deactivatePod(): Observable<PodEvent> {

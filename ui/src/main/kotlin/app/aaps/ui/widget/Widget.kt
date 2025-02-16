@@ -114,13 +114,19 @@ class Widget : AppWidgetProvider() {
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         val views = RemoteViews(context.packageName, R.layout.widget_layout)
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
+        val useBlack = sp.getBoolean(WidgetConfigureActivity.PREF_PREFIX_KEY + "use_black_$appWidgetId", false)
 
         // Create an Intent to launch MainActivity when clicked
         val intent = Intent(context, uiInteraction.mainActivity).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
-        views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
+        if (config.APS || useBlack)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
+        else if (config.AAPSCLIENT1)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0xE8, 0xC5, 0x0C))
+        else if (config.AAPSCLIENT2)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0x0F, 0xBB, 0xE0))
 
         handler.post {
             if (config.appInitialized) {
@@ -276,12 +282,33 @@ class Widget : AppWidgetProvider() {
 
     private fun updateSensitivity(views: RemoteViews) {
         val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Widget", aapsLogger, dateUtil)
+        val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
         if (constraintChecker.isAutosensModeEnabled().value())
-            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
+            views.setImageViewResource(
+                R.id.sensitivity_icon,
+                lastAutosensRatio?.let {
+                    when {
+                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_as_above
+                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_as_below
+                        else     -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+                    }
+                }
+                    ?: app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+            )
         else
-            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.objects.R.drawable.ic_x_swap_vert)
+            views.setImageViewResource(
+                R.id.sensitivity_icon,
+                lastAutosensRatio?.let {
+                    when {
+                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_above
+                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_below
+                        else     -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
+                    }
+                }
+                    ?: app.aaps.core.objects.R.drawable.ic_x_swap_vert
+            )
         views.setTextViewText(R.id.sensitivity, lastAutosensData?.let {
-            String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
+            rh.gs(app.aaps.core.ui.R.string.autosens_short, it.autosensResult.ratio * 100)
         } ?: "")
 
         // Show variable sensitivity
@@ -289,17 +316,20 @@ class Widget : AppWidgetProvider() {
         val isfMgdl = profileFunction.getProfile()?.getProfileIsfMgdl()
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
-            else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
+            else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
             else 0.0
         val ratioUsed = request?.autosensResult?.ratio ?: 1.0
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
-            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "%.0f%%\n", ratioUsed * 100) else ""
-            text += String.format(
-                Locale.getDefault(), "%1$.1f→%2$.1f",
-                profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
-                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+            val overViewText: ArrayList<String> = ArrayList()
+            if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) overViewText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_short,ratioUsed * 100))
+            overViewText.add(
+                String.format(
+                    Locale.getDefault(), "%1$.1f→%2$.1f",
+                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+                )
             )
-            views.setTextViewText(R.id.variable_sensitivity, text)
+            views.setTextViewText(R.id.variable_sensitivity, overViewText.joinToString("\n"))
             views.setViewVisibility(R.id.variable_sensitivity, View.VISIBLE)
         } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
     }

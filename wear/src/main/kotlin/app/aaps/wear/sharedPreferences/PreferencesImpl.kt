@@ -9,10 +9,12 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.LongPreferenceKey
+import app.aaps.core.keys.NonPreferenceKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.String2PreferenceKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.UnitDoublePreferenceKey
@@ -29,7 +31,7 @@ class PreferencesImpl @Inject constructor(
     override val nsclientMode: Boolean = false
     override val pumpControlMode: Boolean = false
 
-    private val prefsList: MutableList<Class<out PreferenceKey>> =
+    private val prefsList: MutableList<Class<out NonPreferenceKey>> =
         mutableListOf(
             BooleanKey::class.java,
             IntKey::class.java,
@@ -48,12 +50,14 @@ class PreferencesImpl @Inject constructor(
         sp.putBoolean(key.key, value)
     }
 
+    override fun get(key: StringNonPreferenceKey): String = sp.getString(key.key, key.defaultValue)
+
     override fun get(key: StringPreferenceKey): String = sp.getString(key.key, key.defaultValue)
 
-    override fun getIfExists(key: StringPreferenceKey): String? =
+    override fun getIfExists(key: StringNonPreferenceKey): String? =
         if (sp.contains(key.key)) sp.getString(key.key, key.defaultValue) else null
 
-    override fun put(key: StringPreferenceKey, value: String) {
+    override fun put(key: StringNonPreferenceKey, value: String) {
         sp.putString(key.key, value)
     }
 
@@ -104,7 +108,7 @@ class PreferencesImpl @Inject constructor(
         sp.putLong(key.key, value)
     }
 
-    override fun remove(key: PreferenceKey) {
+    override fun remove(key: NonPreferenceKey) {
         sp.remove(key.key)
     }
 
@@ -118,13 +122,13 @@ class PreferencesImpl @Inject constructor(
             .filterIsInstance<UnitDoublePreferenceKey>()
             .any { it.key == key }
 
-    override fun get(key: String): PreferenceKey =
+    override fun get(key: String): NonPreferenceKey =
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
             ?: error("Key $key not found")
 
-    override fun getIfExists(key: String): PreferenceKey? =
+    override fun getIfExists(key: String): NonPreferenceKey? =
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
@@ -132,11 +136,16 @@ class PreferencesImpl @Inject constructor(
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
             prefsList.forEach { clazz ->
-                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && it.dependency!!.key == key || it.negativeDependency != null && it.negativeDependency!!.key == key })
+                if (PreferenceKey::class.java.isAssignableFrom(clazz))
+                    clazz.enumConstants!!.filter {
+                        (it as PreferenceKey).dependency != null && it.dependency!!.key == key || it.negativeDependency != null && it.negativeDependency!!.key == key
+                    }.forEach {
+                        list.add(it as PreferenceKey)
+                    }
             }
         }
 
-    override fun registerPreferences(clazz: Class<out PreferenceKey>) {
+    override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {
         if (clazz !in prefsList) prefsList.add(clazz)
     }
 }

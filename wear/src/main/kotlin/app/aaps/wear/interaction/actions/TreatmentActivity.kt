@@ -62,8 +62,8 @@ class TreatmentActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val view = viewAdapter.root
                 val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
-                var initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
-                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs))
+                val initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, -maxCarbs, maxCarbs, stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs))
                 container.addView(view)
                 view
             }

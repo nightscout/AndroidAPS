@@ -47,6 +47,7 @@
 
             <CheckBox
                 android:id="@+id/record_only"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"

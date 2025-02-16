@@ -126,7 +126,6 @@ ActionsTestBase : TestBaseWithProfile() {
             }
             if (it is ActionCarePortalEvent) {
                 it.persistenceLayer = persistenceLayer
-                it.sp = sp
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
             }

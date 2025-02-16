@@ -88,7 +88,7 @@ class SWDefinition @Inject constructor(
             when {
                 config.APS -> swDefinitionFull()
                 config.PUMPCONTROL -> swDefinitionPumpControl()
-                config.NSCLIENT -> swDefinitionNSClient()
+                config.AAPSCLIENT  -> swDefinitionNSClient()
             }
         }
         return screens

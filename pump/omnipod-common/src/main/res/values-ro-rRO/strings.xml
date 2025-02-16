@@ -116,8 +116,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Beep-uri de confirmare</string>
     <string name="omnipod_common_preferences_category_notifications">Notificări</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări RBT incerte activat</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru
-        notificări SMB incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sunet pentru notificări bolus incert activat</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Niciun Pod activ</string>
@@ -164,7 +162,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Niciun Pod activ</string>
     <string name="omnipod_common_short_status_last_connection">UltimaConexiune: acum %1$d min</string>
-    <string name="omnipod_common_short_status_last_bolus">UltimulBolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">BazalaTemporara: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">BolusExtins: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Rezervor: %1$sU</string>

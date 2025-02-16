@@ -13,7 +13,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
     testImplementation("org.json:json:20230618")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.14.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.15.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("joda-time:joda-time:2.13.0")
     testImplementation("com.google.truth:truth:1.1.5")
@@ -24,8 +24,8 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.6.1")
     androidTestImplementation("com.google.truth:truth:1.1.5")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
-    androidTestImplementation("org.mockito:mockito-core:5.14.2")
-    androidTestImplementation("org.mockito:mockito-android:5.14.2")
+    androidTestImplementation("org.mockito:mockito-core:5.15.2")
+    androidTestImplementation("org.mockito:mockito-android:5.15.2")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 }
 

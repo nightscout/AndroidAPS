@@ -62,8 +62,8 @@
     <string name="ns_receive_carbs_summary">Aksepter karbohydrater angitt med NS eller AAPSClient</string>
     <string name="ns_receive_therapy_events">Motta behandlingshendelser</string>
     <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller AAPSClient</string>
-    <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
-    <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
+    <string name="ns_receive_cgm">Motta/tilbakefyll BS-data</string>
+    <string name="ns_receive_cgm_summary">Aksepter BS-data fra Nightscout</string>
     <string name="ns_sync_slow">Reduser opplastingshastighet</string>
     <string name="ns_alarm_options">Alarmvalg</string>
     <string name="ns_alarms">Opprett varsler fra NS-alarmer</string>
@@ -162,7 +162,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d\nProsent: %2$d%%</string>
+    <string name="profile_message">Profil: %1$s\nTidsforskyving: %2$d t\nProsent: %3$d%%\nVarighet: %4$d min</string>
     <string name="target_only_aps_mode">Mål gjelder bare i APS-modus!</string>
     <string name="no_history">Ingen historikkdata!</string>
     <string name="temp_target">Midlertidig mål</string>
@@ -183,4 +183,26 @@
     <string name="today">Idag</string>
     <string name="weighted">vektlagt</string>
     <string name="full_xdrip_sync_comment">Full synkronisering? Det kan ta en stund og før den er ferdig vil du ikke se nye data i xDrip+.</string>
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient støttes ikke for denne handlingen</string>
+    <string name="wear_action_loop_state_requires_duration">Denne handlingen krever varighet</string>
+    <string name="wear_action_loop_state_pump_suspended">Pumpen er pauset!</string>
+    <string name="wear_action_loop_state_profile_invalid">Ugyldig profil!</string>
+    <string name="wear_action_loop_state_unauthorized">Vennligst prøv igjen.</string>
+    <string name="wear_action_loop_state_invalid">Ugyldig loop-status forespurt</string>
+    <string name="wear_action_loop_state_title">LOOP-STATUS</string>
+    <string name="wear_action_loop_state_changed">%1$s</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\nVarighet: %2$d min</string>
+    <string name="wear_action_loop_state_now_closed">Lukket</string>
+    <string name="wear_action_loop_state_now_lgs">Stopp ved lavt BS</string>
+    <string name="wear_action_loop_state_now_open">Åpen</string>
+    <string name="wear_action_loop_state_now_suspended">Pauset</string>
+    <string name="wear_action_loop_state_now_resumed">Gjenoppta</string>
+    <string name="wear_action_loop_state_now_disabled">Deaktivert</string>
+    <string name="wear_action_loop_state_now_enabled">Aktivert</string>
+    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
+    <string name="wear_action_loop_state_now_invalid">Ugyldig</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Pumpe frakoblet</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Koble til pumpen igjen</string>
+    <string name="garmin_request_key">Be om nøkkel</string>
+    <string name="garmin_request_key_summary">Valgfri nøkkel for å sikre HTTP-kommunikasjon mellom Garmin-enhet og AAPS.</string>
 </resources>

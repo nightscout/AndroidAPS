@@ -153,8 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CEL</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Twój algorytm może dostarczyć dynamiczne obliczenia ISF. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych</string>
-    <string name="ic_dynamic_label">Twój algorytm może dostarczyć dynamiczne obliczenia IC. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
@@ -217,8 +215,6 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ (upewnij się, że \'Akceptuj kalibracje\' są włączone w xDrip+ w sekcji \'Ustawienia innych aplikacji\').</string>
-    <string name="show_cgm_button_summary">Otwiera xDrip+ (możesz wrócić do AAPS androidowym przyciskiem \"cofnij\").</string>
-    <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
     <string name="not_available_full">Niedostępne</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="change_your_input">Zmień wprowadzone dane!</string>

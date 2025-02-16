@@ -162,7 +162,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">u</string>
     <string name="no_active_profile">Geen actieve profielwissel!</string>
-    <string name="profile_message">Profiel:\n\nTijdverschuiving: %1$d\nPercentage: %2$d%%\"</string>
     <string name="target_only_aps_mode">Streefdoelen zijn alleen van toepassing in de APS modus!</string>
     <string name="no_history">Geen geschiedenisgegevens!</string>
     <string name="temp_target">Tijdelijk streefdoel</string>

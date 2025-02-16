@@ -14,9 +14,9 @@
     <string name="key_omnipod_common_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
     <string name="key_omnipod_common_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
     <string name="key_omnipod_common_automatically_silence_alerts_enabled" translatable="false">AAPS.Omnipod.automatically_acknowledge_alerts_enabled</string>
+    <string name="key_omnipod_dash_use_bonding" translatable="false">AAPS.Omnipod.Dash.use_bonding</string>
     <string name="key_common_preferences_category_alerts_settings" translatable="false">common_preferences_category_alerts</string>
-    <string name="key_omnipod_common_preferences_category_notifications_settings"
-        translatable="false">common_preferences_category_notifications_settings</string>
+    <string name="key_omnipod_common_preferences_category_notifications_settings" translatable="false">common_preferences_category_notifications_settings</string>
     <string name="key_omnipod_common_notification_uncertain_tbr_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_tbr_sound_enabled</string>
     <string name="key_omnipod_common_notification_uncertain_smb_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_smb_sound_enabled</string>
     <string name="key_omnipod_common_notification_uncertain_bolus_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_bolus_sound_enabled</string>
@@ -144,9 +144,9 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Confirmation Beeps</string>
     <string name="omnipod_common_preferences_category_notifications">Notifications</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sound for
-        uncertain SMB notifications enabled</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
+    <string name="omnipod_dash_use_bonding">Bond BT device on Android 15+ (Pixel phones workaround)</string>
 
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">No Active Pod</string>
@@ -196,7 +196,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">No Active Pod</string>
     <string name="omnipod_common_short_status_last_connection">LastConn: %1$d min ago</string>
-    <string name="omnipod_common_short_status_last_bolus">LastBolus: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">LastBolus: %1$s U @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Extended: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Reserv: %1$sU</string>

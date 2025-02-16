@@ -39,7 +39,8 @@ enum class StringKey(
     AutomationLocation("location", "PASSIVE", hideParentScreenIfHidden = true),
 
     SmsAllowedNumbers("smscommunicator_allowednumbers", ""),
-    SmsOtpPassword("smscommunicator_otp_password", "", dependency = BooleanKey.SmsAllowRemoteCommands),
+    SmsOtpPassword("smscommunicator_otp_password", "", dependency = BooleanKey.SmsAllowRemoteCommands, isPassword = true),
+    SmsOtpSecret("smscommunicator_otp_secret", ""), // Move to StringNonKey
 
     VirtualPumpType("virtualpump_type", "Generic AAPS"),
 
@@ -50,4 +51,5 @@ enum class StringKey(
     TidepoolUsername("tidepool_username", ""),
     TidepoolPassword("tidepool_password", "", isPassword = true),
     TidepoolTestLogin(key = "tidepool_test_login", ""),
+    GarminRequestKey(key = "garmin_aaps_key", defaultValue = ""),
 }

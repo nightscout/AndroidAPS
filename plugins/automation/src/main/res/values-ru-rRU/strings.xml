@@ -137,4 +137,8 @@
     <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Количество шагов</string>
+    <string name="triggerStepsCountDesc">Количество шагов за %1$s минут %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Продолжительность измерения</string>
 </resources>

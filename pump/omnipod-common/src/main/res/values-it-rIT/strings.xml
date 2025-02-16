@@ -117,8 +117,9 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">BIP di conferma</string>
     <string name="omnipod_common_preferences_category_notifications">Notifiche</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Suono notifiche TBR incerto abilitato</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Suono notifiche SMB incerto abilitato</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Suono notifiche TBR incerto abilitato</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Suono notifiche bolo incerto abilitato</string>
+    <string name="omnipod_dash_use_bonding">Bond dispositivo BT su Android 15+ (workaround per telefoni Pixel)</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nessun pod attivo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configurazione in corso (attesa attivazione pod)</string>
@@ -164,7 +165,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Nessun pod attivo</string>
     <string name="omnipod_common_short_status_last_connection">Ultima conn.: %1$d min fa</string>
-    <string name="omnipod_common_short_status_last_bolus">Ultimo bolo: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">Ultimo Bolo: %1$sU @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Esteso: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Serb: %1$sU</string>

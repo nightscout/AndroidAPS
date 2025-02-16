@@ -140,4 +140,10 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
+
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Steps Count</string>
+    <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
+
 </resources>

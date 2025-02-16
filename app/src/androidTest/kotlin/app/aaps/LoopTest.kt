@@ -110,7 +110,7 @@ class LoopTest @Inject constructor() {
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
 
         // Set Profile in ProfilePlugin
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData))
+        nsIncomingDataProcessor.processProfile(JSONObject(profileData), false)
         assertThat(activePlugin.activeProfileSource.profile).isNotNull()
 
         // Create a profile switch

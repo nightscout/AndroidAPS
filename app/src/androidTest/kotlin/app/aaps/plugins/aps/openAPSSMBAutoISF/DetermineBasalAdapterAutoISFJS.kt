@@ -109,7 +109,7 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         val rhino = Context.enter()
         val scope: Scriptable = rhino.initStandardObjects()
         // Turn off optimization to make Rhino Android compatible
-        rhino.optimizationLevel = -1
+        rhino.isInterpretedMode = true
         try {
 
             //register logger callback for console.log and console.error
@@ -273,7 +273,7 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         this.profile.put("smb_delivery_ratio", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio))
         this.profile.put("smb_delivery_ratio_min", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin))
         this.profile.put("smb_delivery_ratio_max", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax))
-        this.profile.put("smb_delivery_ratio_bg_range", preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange))
+        this.profile.put("smb_delivery_ratio_bg_range", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange))
         this.profile.put("smb_max_range_extension", preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension))
         //this.profile.put("enableSMB_EvenOn_OddOff", preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)) // TT
         this.profile.put("enableSMB_EvenOn_OddOff_always", preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)) // profile

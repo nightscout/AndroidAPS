@@ -163,8 +163,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Your algorithm can provide dynamic calculation of ISF. Values below are used only as a fallback in case of missing data</string>
-    <string name="ic_dynamic_label">Your algorithm can provide dynamic calculation of IC. Values below are used only as a fallback in case of missing data</string>
+    <string name="isf_dynamic_label_warning">Your algorithm can provide dynamic calculation of ISF. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
+    <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below cen be used only as a fallback in case of missing data or as a reference value only</string>
 
     <!-- Actions -->
     <string name="actions">Actions</string>
@@ -229,8 +229,7 @@
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="overview_buttons_selection">Buttons</string>
     <string name="show_calibration_button_summary">Sends a calibration to xDrip+ (ensure \'Accept Calibrations\' is enabled in xDrip+ under Inter-App settings).</string>
-    <string name="show_cgm_button_summary">Opens xDrip+ (you can use back button to return to AAPS).</string>
-    <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
+    <string name="show_cgm_button_summary">Opens xDrip+ or Dexcom App (you can use back button to return to AAPS).</string>
     <string name="not_available_full">Not available</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="change_your_input">Change your input!</string>

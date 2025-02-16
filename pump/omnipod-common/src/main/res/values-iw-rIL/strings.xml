@@ -116,7 +116,6 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">צפצופי אימות</string>
     <string name="omnipod_common_preferences_category_notifications">התראות</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ודאי מאופשרת</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">התראת צליל של SMB לא ודאי מאופשרת</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ודאי מאופשרת</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">אין פוד פעיל</string>
@@ -163,7 +162,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">אין פוד פעיל</string>
     <string name="omnipod_common_short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
-    <string name="omnipod_common_short_status_last_bolus">בולוס אחרון: %1$s ב-%2$s</string>
     <string name="omnipod_common_short_status_temp_basal">בזאלי זמני: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">ממושך: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">מכל: %1$s יח\'</string>

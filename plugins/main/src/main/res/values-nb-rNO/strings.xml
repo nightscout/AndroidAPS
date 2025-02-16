@@ -153,8 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">MÅL</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Algoritmen din kan gi dynamisk beregning av ISF. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data</string>
-    <string name="ic_dynamic_label">Algoritmen din kan gi dynamisk beregning av IK. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data</string>
+    <string name="isf_dynamic_label_warning">Algoritmen din kan gi dynamisk beregning av ISF. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data eller bare som en referanseverdi</string>
+    <string name="ic_dynamic_label_warning">Algoritmen din kan gi dynamisk beregning av IK. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data eller bare som en referanseverdi</string>
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
@@ -217,8 +217,7 @@
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="overview_buttons_selection">Knapper</string>
     <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ (sørg for at \'Aksepter kalibrering\' er aktivert i xDrip+ under Innstillinger mellom apper).</string>
-    <string name="show_cgm_button_summary">Åpner xDrip+ (du kan bruke tilbake-knappen for å gå tilbake til AAPS).</string>
-    <string name="error_starting_cgm">Kunne ikke starte CGM-programmet. Kontroller at det er installert.</string>
+    <string name="show_cgm_button_summary">Åpner xDrip+ eller Dexcom-appen (du kan bruke tilbake-knappen for å gå tilbake til AAPS).</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="change_your_input">Endre dine inndata!</string>
@@ -276,8 +275,8 @@
     <string name="overview_show_cob">Aktive KH (COB)</string>
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
     <string name="overview_show_basals">Basaler</string>
-    <string name="overview_show_abs_insulin">Absolutt insulinmengde</string>
-    <string name="overview_show_variable_sens">Variabel sensitivitet</string>
+    <string name="overview_show_abs_insulin">Absolutt insulin</string>
+    <string name="overview_show_variable_sens">Dynamisk ISF</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">AVVIK</string>
@@ -288,7 +287,7 @@
     <string name="treatments_shortname">BEH</string>
     <string name="heartRate_shortname">PULS</string>
     <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
+    <string name="variable_sensitivity_shortname">DISF</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="temp_basal_overview_short_name">M:</string>
