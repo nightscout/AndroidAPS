@@ -23,6 +23,8 @@ class ConfigImpl @Inject constructor(
     override val PUMPDRIVERS = BuildConfig.FLAVOR == "full" || BuildConfig.FLAVOR == "pumpcontrol"
     override val FLAVOR = BuildConfig.FLAVOR
     override val VERSION_NAME = BuildConfig.VERSION_NAME
+    override val HEAD = BuildConfig.HEAD
+    override val COMMITTED = BuildConfig.COMMITTED.toBoolean()
     override val BUILD_VERSION = BuildConfig.BUILDVERSION
     override val REMOTE: String = BuildConfig.REMOTE
     override val BUILD_TYPE: String = BuildConfig.BUILD_TYPE
