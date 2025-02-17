@@ -162,7 +162,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">沒有活動的設定檔切換！</string>
-    <string name="profile_message">設定檔: %1$s\n時間偏移: %2$d h\n百分比: %3$d%%</string>
+    <string name="profile_message">設定檔：%1$s\n時間偏移：%2$d 小時\n百分比：%3$d%%\n持續時間：%4$d 分鐘</string>
     <string name="target_only_aps_mode">目標僅適用於 APS 模式！</string>
     <string name="no_history">無歷史資料！</string>
     <string name="temp_target">臨時目標</string>

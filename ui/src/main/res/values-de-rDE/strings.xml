@@ -123,4 +123,5 @@
     <string name="quickwizard_settings">QuickWizard-Einstellungen</string>
     <string name="overview_edit_quickwizard_valid">Gültigkeit:</string>
     <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
+    <!--    Widget-->
 </resources>

@@ -162,7 +162,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Není nastaven žádný aktivní profil!</string>
-    <string name="profile_message">Profil: %1$s\nPosunutí: %2$d h\nProcento: %3$d%%</string>
+    <string name="profile_message">Profil: %1$s\nPosunutí: %2$d h\nProcento: %3$d%%\nTrvání: %4$d min</string>
     <string name="target_only_aps_mode">Cíle se použijí pouze v režimu APS!</string>
     <string name="no_history">Žádné údaje o historii!</string>
     <string name="temp_target">Dočasný cíl</string>

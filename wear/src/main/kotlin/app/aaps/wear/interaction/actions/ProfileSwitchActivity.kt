@@ -21,8 +21,10 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
 
     var editPercentage: PlusMinusEditText? = null
     var editTimeshift: PlusMinusEditText? = null
+    var editDuration: PlusMinusEditText? = null
     var percentage = -1
     var timeshift = -25
+    var duration = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         percentage = intent.extras?.getInt("percentage", -1) ?: -1
@@ -41,7 +43,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
 
     private inner class MyGridViewPagerAdapter : GridPagerAdapterNonDeprecated() {
 
-        override fun getColumnCount(arg0: Int): Int = 3
+        override fun getColumnCount(arg0: Int): Int = 4
         override fun getRowCount(): Int = 1
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
@@ -59,7 +61,16 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 val initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
-                editPercentage = PlusMinusEditText(viewAdapter, initValue, 30.0, 250.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
+                container.addView(view)
+                view
+            }
+
+            2   -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
+                val initValue = SafeParse.stringToDouble(editDuration?.editText?.text.toString(), duration)
+                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, getString(R.string.action_duration))
                 container.addView(view)
                 view
             }
@@ -70,7 +81,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 confirmButton.setOnClickListener {
                     // check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
-                    val ps = ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift?.editText?.text.toString()), SafeParse.stringToInt(editPercentage?.editText?.text.toString()))
+                    val ps = ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift?.editText?.text.toString()), SafeParse.stringToInt(editPercentage?.editText?.text.toString()), SafeParse.stringToInt(editDuration?.editText?.text.toString()))
                     rxBus.send(EventWearToMobile(ps))
                     showToast(this@ProfileSwitchActivity, R.string.action_profile_switch_confirmation)
                     finishAffinity()

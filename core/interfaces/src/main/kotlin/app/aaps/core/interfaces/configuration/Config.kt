@@ -12,6 +12,8 @@ interface Config {
     val PUMPDRIVERS: Boolean
     val FLAVOR: String
     val VERSION_NAME: String
+    val HEAD: String
+    val COMMITTED: Boolean
     val BUILD_VERSION: String
     val REMOTE: String
     val BUILD_TYPE: String

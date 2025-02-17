@@ -123,4 +123,5 @@
     <string name="quickwizard_settings">Configurações Assistente Rápido</string>
     <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="a11y_drag_and_drop_handle">arraste e solte aqui</string>
+    <!--    Widget-->
 </resources>
