@@ -262,6 +262,7 @@
     <string name="button3">Button 3</string>
     <string name="prefs_range_title">Range for visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
+    <string name="very_low_mark">VERY LOW mark</string>
     <string name="low_mark">LOW mark</string>
     <string name="high_mark">HIGH mark</string>
     <string name="very_high_mark">VERY HIGH mark</string>

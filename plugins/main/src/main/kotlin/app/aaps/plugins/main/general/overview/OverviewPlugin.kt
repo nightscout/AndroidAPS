@@ -148,6 +148,7 @@ class OverviewPlugin @Inject constructor(
             .put(UnitDoubleKey.OverviewActivityTarget, preferences)
             .put(IntKey.OverviewHypoDuration, preferences)
             .put(UnitDoubleKey.OverviewHypoTarget, preferences)
+            .put(UnitDoubleKey.OverviewVeryLowMark, preferences)
             .put(UnitDoubleKey.OverviewLowMark, preferences)
             .put(UnitDoubleKey.OverviewHighMark, preferences)
             .put(UnitDoubleKey.OverviewVeryHighMark, preferences)
@@ -179,6 +180,7 @@ class OverviewPlugin @Inject constructor(
             .store(UnitDoubleKey.OverviewActivityTarget, preferences)
             .store(IntKey.OverviewHypoDuration, preferences)
             .store(UnitDoubleKey.OverviewHypoTarget, preferences)
+            .store(UnitDoubleKey.OverviewVeryLowMark, preferences)
             .store(UnitDoubleKey.OverviewLowMark, preferences)
             .store(UnitDoubleKey.OverviewHighMark, preferences)
             .store(UnitDoubleKey.OverviewVeryHighMark, preferences)
@@ -260,6 +262,7 @@ class OverviewPlugin @Inject constructor(
                 key = "range_settings"
                 summary = rh.gs(R.string.prefs_range_summary)
                 title = rh.gs(R.string.prefs_range_title)
+                addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewVeryLowMark, title = R.string.very_low_mark))
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewLowMark, title = R.string.low_mark))
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewHighMark, title = R.string.high_mark))
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewVeryHighMark, title = R.string.very_high_mark))

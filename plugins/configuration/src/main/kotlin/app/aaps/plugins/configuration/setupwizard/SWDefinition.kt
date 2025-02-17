@@ -134,6 +134,14 @@ class SWDefinition @Inject constructor(
         get() = SWScreen(injector, R.string.display_settings)
             .skippable(false)
             .add(
+                SWEditNumberWithUnits(injector, UnitDoubleKey.OverviewVeryLowMark.defaultValue * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
+                    .preference(UnitDoubleKey.OverviewVeryLowMark)
+                    .updateDelay(5)
+                    .label(R.string.very_low_mark)
+                    .comment(R.string.very_low_mark_comment)
+            )
+            .add(SWBreak(injector))
+            .add(
                 SWEditNumberWithUnits(injector, UnitDoubleKey.OverviewLowMark.defaultValue * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
                     .preference(UnitDoubleKey.OverviewLowMark)
                     .updateDelay(5)

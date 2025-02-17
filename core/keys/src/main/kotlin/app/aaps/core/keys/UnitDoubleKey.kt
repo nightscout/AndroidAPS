@@ -17,6 +17,7 @@ enum class UnitDoubleKey(
     OverviewEatingSoonTarget("eatingsoon_target", 90.0, 72, 160, defaultedBySM = true),
     OverviewActivityTarget("activity_target", 140.0, 108, 180, defaultedBySM = true),
     OverviewHypoTarget("hypo_target", 160.0, 108, 180, defaultedBySM = true),
+    OverviewVeryLowMark("very_low_mark", 55.0, 40, 80, showInNsClientMode = false),
     OverviewLowMark("low_mark", 72.0, 25, 160, showInNsClientMode = false, hideParentScreenIfHidden = true),
     OverviewHighMark("high_mark", 180.0, 90, 250, showInNsClientMode = false),
     OverviewVeryHighMark("very_high_mark", 400.0, 200, 400, showInNsClientMode = false),

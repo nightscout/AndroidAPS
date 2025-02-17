@@ -34,10 +34,12 @@ class InMemoryGlucoseValueDataPoint(
     @ColorInt
     override fun color(context: Context?): Int {
         val units = profileFunction.getUnits()
+        val veryLowLine = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
         val lowLine = preferences.get(UnitDoubleKey.OverviewLowMark)
         val highLine = preferences.get(UnitDoubleKey.OverviewHighMark)
         val veryHighLine = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val color = when {
+            valueToUnits(units) < veryLowLine  -> rh.gac(context, app.aaps.core.ui.R.attr.bgVeryLow)
             valueToUnits(units) < lowLine  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
             valueToUnits(units) > veryHighLine -> rh.gac(context, app.aaps.core.ui.R.attr.veryHighColor)
             valueToUnits(units) > highLine -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)

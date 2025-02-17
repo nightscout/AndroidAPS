@@ -21,6 +21,13 @@ interface LastBgData {
     fun lastBg(): InMemoryGlucoseValue?
 
     /**
+     * Is last value below display very low target?
+     *
+     * @return true if below
+     */
+    fun isVeryLow(): Boolean
+
+    /**
      * Is last value below display low target?
      *
      * @return true if below

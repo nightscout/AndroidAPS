@@ -87,6 +87,7 @@
     <attr name="cgmDexColor" format="reference|color" />
     <attr name="cgmXdripColor" format="reference|color" />
     <!---BG color-->
+    <attr name="bgVeryLow" format="reference|color" />
     <attr name="bgLow" format="reference|color" />
     <attr name="highColor" format="reference|color" />
     <attr name="veryHighColor" format="reference|color" />
