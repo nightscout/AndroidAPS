@@ -72,10 +72,10 @@ class WizardInfoDialog : DaggerDialogFragment() {
         binding.cobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, data.cobInsulin)
         binding.cobCheckbox.isChecked = data.wasCOBUsed
         // Bolus IOB
-        binding.bolusIobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, data.bolusIOB)
+        binding.bolusIobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, -data.bolusIOB)
         binding.bolusIobCheckbox.isChecked = data.wasBolusIOBUsed
         // Basal IOB
-        binding.basalIobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, data.basalIOB)
+        binding.basalIobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, -data.basalIOB)
         binding.basalIobCheckbox.isChecked = data.wasBasalIOBUsed
         // Superbolus
         binding.sbInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, data.superbolusInsulin)
