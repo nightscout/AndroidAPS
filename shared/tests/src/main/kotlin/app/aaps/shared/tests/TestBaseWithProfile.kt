@@ -102,10 +102,10 @@ open class TestBaseWithProfile : TestBase() {
 
     @BeforeEach
     fun prepareMock() {
-        validProfileJSON = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
+        validProfileJSON = "{\"icfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000},\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        invalidProfileJSON = "{\"dia\":\"1\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
+        invalidProfileJSON = "{\"icfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000},\"dia\":\"1\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         preferenceManager = PreferenceManager(context)
@@ -135,7 +135,7 @@ open class TestBaseWithProfile : TestBase() {
             originalPercentage = 100,
             originalDuration = 0,
             originalEnd = 0,
-            iCfg = ICfg("", 0, 0)
+            iCfg = ICfg("", 18000000, 4500000)
         )
 
         Mockito.`when`(rh.gs(R.string.ok)).thenReturn("OK")
