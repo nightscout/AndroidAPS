@@ -144,6 +144,8 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     private var lastBolusDateTime = DateTime(0)
     private var lastConnectedTimestamp = System.currentTimeMillis()
 
+    private var manualDisconnect = false
+
     val lastConnected: Long
         get() = if (connectionStatus != ApexBluetooth.Status.CONNECTED) {
             lastConnectedTimestamp
@@ -340,19 +342,19 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
 
         val doseRaw = (dose / 0.025).toInt()
-        if (dose % 0.025 > 0.001) aapsLogger.warn(LTag.PUMPCOMM, "[extendedBolus caller=$caller] Bolus dose is not aligned to 0.025U steps! Rounded down.")
+        if (dose % 0.025 > 0.001) aapsLogger.warn(LTag.PUMPCOMM, "[temporaryBasal caller=$caller] Bolus dose is not aligned to 0.025U steps! Rounded down.")
 
         val durationRaw = durationMinutes / 15
-        if (durationMinutes % 15 > 0) aapsLogger.warn(LTag.PUMPCOMM, "[extendedBolus caller=$caller] Bolus duration is not aligned to 15 minute steps! Rounded down.")
+        if (durationMinutes % 15 > 0) aapsLogger.warn(LTag.PUMPCOMM, "[temporaryBasal caller=$caller] Bolus duration is not aligned to 15 minute steps! Rounded down.")
 
-        val response = executeWithResponse(TemporaryBasal(apexDeviceInfo, true, doseRaw, durationRaw))
+        val response = executeWithResponse(TemporaryBasal(apexDeviceInfo, true, durationRaw, doseRaw))
         if (response == null) {
-            aapsLogger.error(LTag.PUMPCOMM, "[extendedBolus caller=$caller] Timed out while trying to communicate with the pump")
+            aapsLogger.error(LTag.PUMPCOMM, "[temporaryBasal caller=$caller] Timed out while trying to communicate with the pump")
             return false
         }
 
         if (response.code != CommandResponse.Code.Accepted) {
-            aapsLogger.error(LTag.PUMPCOMM, "[caller=$caller] Failed to begin extended bolus: ${response.code.name}")
+            aapsLogger.error(LTag.PUMPCOMM, "[caller=$caller] Failed to start temporary basal: ${response.code.name}")
             return false
         }
 
@@ -856,10 +858,13 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     }
 
     fun startConnection() {
-        if (apexDeviceInfo.serialNumber.isNotEmpty()) apexBluetooth.connect()
+        if (apexDeviceInfo.serialNumber.isEmpty()) return
+        manualDisconnect = false
+        apexBluetooth.connect()
     }
 
     fun disconnect() {
+        manualDisconnect = true
         if (apexBluetooth.status != ApexBluetooth.Status.DISCONNECTED) apexBluetooth.disconnect()
     }
 
@@ -911,13 +916,19 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         if (isDisconnectLoopRunning) return
         isDisconnectLoopRunning = true
         Thread {
-            while (connectionStatus != ApexBluetooth.Status.CONNECTED) {
+            while (connectionStatus != ApexBluetooth.Status.CONNECTED && !manualDisconnect) {
                 if (connectionStatus == ApexBluetooth.Status.DISCONNECTED) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Starting connection loop")
                     startConnection()
                 }
                 SystemClock.sleep(250)
             }
+
+            if (manualDisconnect) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Manual disconnect detected!")
+                disconnect()
+            }
+
             aapsLogger.debug(LTag.PUMPCOMM, "Exiting")
             isDisconnectLoopRunning = false
         }.start()
@@ -945,7 +956,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                 aapsLogger.error(LTag.PUMP, "Pump unreachable!")
             }
 
-        spawnLoop()
+        if (!manualDisconnect) spawnLoop()
         pump.gettingReady = true
     }.start()
 

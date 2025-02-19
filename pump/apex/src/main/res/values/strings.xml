@@ -83,4 +83,5 @@
     <string name="status_label">Pump status</string>
     <string name="getting_pump_status">GET STATUS</string>
     <string name="getting_boluses">GET BOLUS</string>
+    <string name="suspend">Suspend</string>
 </resources>
