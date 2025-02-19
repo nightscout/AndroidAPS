@@ -1,6 +1,6 @@
 package app.aaps.core.data.pump.defs
 
-class PumpDescription {
+open class PumpDescription {
 
     var pumpType = PumpType.GENERIC_AAPS
     var isBolusCapable = false
