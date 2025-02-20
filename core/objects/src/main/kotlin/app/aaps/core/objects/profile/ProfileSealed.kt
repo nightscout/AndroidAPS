@@ -236,6 +236,9 @@ sealed class ProfileSealed(
     override val dia: Double
         get() = iCfg.insulinEndTime / 1000.0 / 60.0 / 60.0
 
+    override val insulinProfile: ICfg
+        get() = iCfg
+
     override val timeshift: Int
         get() = ts
 
@@ -318,6 +321,7 @@ sealed class ProfileSealed(
             icBlocks = icBlocks.shiftBlock(100.0 / percentage, timeshift),
             targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
             glucoseUnit = units,
+            iCfg = iCfg,
             dia = when (this) {
                 is PS   -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
                 is EPS  -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0

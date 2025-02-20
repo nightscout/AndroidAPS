@@ -162,7 +162,13 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="select_insulin">Select Insulin to Edit</string>
+    <string name="select_pump_insulin">Select Pump Insulin</string>
+    <string name="select_pen_insulin">Select Insulin</string>
+    <string name="insulin_template">Insulin Template</string>
     <string name="dia">DIA</string>
+    <string name="peak">Peak</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Canceling of temporary basal failed</string>
@@ -387,6 +393,10 @@
     <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
     <string name="uel_loop_change">LOOP CHANGED</string>
     <string name="uel_loop_removed">LOOP REMOVED</string>
+    <string name="uel_new_insulin">NEW INSULIN</string>
+    <string name="uel_clone_insulin">CLONE INSULIN</string>
+    <string name="uel_store_insulin">STORE INSULIN</string>
+    <string name="uel_insulin_removed">INSULIN REMOVED</string>
     <string name="uel_other">OTHER</string>
 
     <!-- HardLimits -->
@@ -396,6 +406,8 @@
     <string name="temp_target_high_target">Temporary target top value</string>
     <string name="temp_target_value">Temporary target value</string>
     <string name="profile_dia">Profile DIA value</string>
+    <string name="insulin_dia">Insulin DIA value</string>
+    <string name="insulin_peak">Insulin Peak value</string>
     <string name="profile_sensitivity_value">Profile sensitivity value</string>
     <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
     <string name="current_basal_value">Current basal value</string>

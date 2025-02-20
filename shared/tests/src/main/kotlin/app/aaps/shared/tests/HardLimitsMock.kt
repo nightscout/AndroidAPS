@@ -67,6 +67,8 @@ import kotlin.math.min
     override fun maxDia(): Double = MAX_DIA[loadAge()]
     override fun minIC(): Double = MIN_IC[loadAge()]
     override fun maxIC(): Double = MAX_IC[loadAge()]
+    override fun minPeak(): Double = 35.0
+    override fun maxPeak(): Double = 120.0
 
     // safety checks
     override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =

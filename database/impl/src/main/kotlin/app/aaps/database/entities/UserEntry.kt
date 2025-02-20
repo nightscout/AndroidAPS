@@ -37,6 +37,9 @@ data class UserEntry(
         EXTENDED_CARBS,
         TEMP_BASAL,
         TT,
+        NEW_INSULIN,
+        CLONE_INSULIN,
+        STORE_INSULIN,
         NEW_PROFILE,
         CLONE_PROFILE,
         STORE_PROFILE,
@@ -75,6 +78,7 @@ data class UserEntry(
         CAREPORTAL_REMOVED,
         EXTENDED_BOLUS_REMOVED,
         FOOD_REMOVED,
+        INSULIN_REMOVED,
         PROFILE_REMOVED,
         PROFILE_SWITCH_REMOVED,
         RESTART_EVENTS_REMOVED,
@@ -153,6 +157,7 @@ data class UserEntry(
         Glunovo,
         Intelligo,
         Xdrip,
+        Insulin,            //From Insulin plugin
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin
         Maintenance,        //From Maintenance plugin
