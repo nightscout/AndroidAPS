@@ -14,14 +14,15 @@ import androidx.lifecycle.Lifecycle
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.databinding.TidepoolFragmentBinding
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
+import app.aaps.plugins.sync.tidepool.keys.TidepoolLongKey
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -32,7 +33,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var tidepoolUploader: TidepoolUploader
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rh: ResourceHelper
@@ -85,7 +86,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
             }
 
             ID_MENU_FULL_SYNC  -> {
-                sp.putLong(R.string.key_tidepool_last_end, 0)
+                preferences.put(TidepoolLongKey.LastEnd, 0)
                 true
             }
 

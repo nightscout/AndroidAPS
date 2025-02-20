@@ -25,19 +25,20 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.databinding.DiaconnG8BlescannerActivityBinding
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import java.util.UUID
 import javax.inject.Inject
 
 class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
@@ -104,14 +105,14 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
                 .build()
 
             bluetoothLeScanner?.startScan(filters, settings, mBleScanCallback)
-        } catch (ignored: IllegalStateException) {
+        } catch (_: IllegalStateException) {
         } // ignore BT not on
 
     @SuppressLint("MissingPermission")
     private fun stopScan() =
         try {
             bluetoothLeScanner?.stopScan(mBleScanCallback)
-        } catch (ignored: IllegalStateException) {
+        } catch (_: IllegalStateException) {
         } // ignore BT not on
 
     private fun addBleDevice(device: BluetoothDevice?) {
@@ -172,8 +173,8 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
             @SuppressLint("MissingPermission")
             override fun onClick(v: View) {
-                sp.putString(R.string.key_diaconn_g8_address, item.device.address)
-                sp.putString(R.string.key_diaconn_g8_name, name.text.toString())
+                preferences.put(DiaconnStringNonKey.Address, item.device.address)
+                preferences.put(DiaconnStringNonKey.Name, name.text.toString())
                 item.device.createBond()
                 rxBus.send(EventDiaconnG8DeviceChange())
                 finish()
@@ -206,7 +207,7 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         private fun stringEquals(arg1: String, arg2: String): Boolean {
             return try {
                 arg1 == arg2
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 false
             }
         }

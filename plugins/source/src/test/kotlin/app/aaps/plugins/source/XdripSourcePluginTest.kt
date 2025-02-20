@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.BundleMock

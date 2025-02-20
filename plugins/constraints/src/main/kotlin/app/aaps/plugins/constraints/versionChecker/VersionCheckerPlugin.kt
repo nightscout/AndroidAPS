@@ -6,15 +6,16 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerComposedLongKey
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,22 +23,22 @@ import kotlin.math.roundToInt
 
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
-    private val sp: SP,
-    rh: ResourceHelper,
-    private val versionCheckerUtils: VersionCheckerUtils,
-    val rxBus: RxBus,
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    private val versionCheckerUtils: VersionCheckerUtils,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.version_checker),
-    aapsLogger, rh
+    ownPreferences = listOf(VersionCheckerLongKey::class.java, VersionCheckerComposedLongKey::class.java),
+    aapsLogger, rh, preferences
 ), PluginConstraints {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
@@ -63,7 +64,7 @@ class VersionCheckerPlugin @Inject constructor(
         versionCheckerUtils.triggerCheckVersion()
         if (lastCheckOlderThan(gracePeriod.veryOld.daysToMillis()))
             value.set(false, rh.gs(R.string.very_old_version), this)
-        val endDate = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        val endDate = preferences.get(VersionCheckerComposedLongKey.AppExpiration, config.VERSION_NAME)
         if (endDate != 0L && dateUtil.now() > endDate)
             value.set(false, rh.gs(R.string.application_expired), this)
         return value
@@ -78,29 +79,29 @@ class VersionCheckerPlugin @Inject constructor(
     private fun checkWarning() {
         val now = dateUtil.now()
 
-        if (!sp.contains(R.string.key_last_versionchecker_plugin_warning_timestamp)) {
-            sp.putLong(R.string.key_last_versionchecker_plugin_warning_timestamp, now)
+        if (preferences.getIfExists(VersionCheckerLongKey.LastWarningTimestamp) == null) {
+            preferences.put(VersionCheckerLongKey.LastWarningTimestamp, now)
             return
         }
 
         if (lastCheckOlderThan(gracePeriod.warning.daysToMillis()) && shouldWarnAgain()) {
             // store last notification time
-            sp.putLong(R.string.key_last_versionchecker_plugin_warning_timestamp, now)
+            preferences.put(VersionCheckerLongKey.LastWarningTimestamp, now)
 
             //notify
             val message = rh.gs(
                 R.string.new_version_warning,
-                ((now - sp.getLong(R.string.key_last_successful_version_check_timestamp, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
+                ((now - preferences.get(VersionCheckerLongKey.LastSuccessfulVersionCheck)) / 1L.daysToMillis().toDouble()).roundToInt(),
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
             uiInteraction.addNotification(Notification.OLD_VERSION, message, Notification.NORMAL)
         }
 
-        val endDate = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        val endDate = preferences.get(VersionCheckerComposedLongKey.AppExpiration, config.VERSION_NAME)
         if (endDate != 0L && dateUtil.now() > endDate && shouldWarnAgain()) {
             // store last notification time
-            sp.putLong(R.string.key_last_versionchecker_plugin_warning_timestamp, now)
+            preferences.put(VersionCheckerLongKey.LastWarningTimestamp, now)
 
             //notify
             uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
@@ -108,10 +109,10 @@ class VersionCheckerPlugin @Inject constructor(
     }
 
     private fun shouldWarnAgain() =
-        dateUtil.now() > sp.getLong(R.string.key_last_versionchecker_plugin_warning_timestamp, 0) + WARN_EVERY
+        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastWarningTimestamp) + WARN_EVERY
 
     private fun lastCheckOlderThan(gracePeriod: Long): Boolean =
-        dateUtil.now() > sp.getLong(R.string.key_last_successful_version_check_timestamp, 0) + gracePeriod
+        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastSuccessfulVersionCheck) + gracePeriod
 
     private fun Long.daysToMillis() = TimeUnit.DAYS.toMillis(this)
 }

@@ -2,7 +2,7 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilManager
@@ -15,9 +15,9 @@ import java.security.MessageDigest
 class CmdUnPair(
     name: String, val password: String,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseCmd(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseCmd(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     var sn: String?
     var randomPassword: ByteArray? = null

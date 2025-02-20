@@ -43,8 +43,9 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.iobCalc
@@ -135,7 +136,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                                overviewData.reset()
                                rxBus.send(EventNewHistoryData(0, false))
                            }
-                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay))) {
+                           if (event.isChanged(IntNonKey.RangeToDisplay.key)) {
                                overviewData.initRange()
                                calculationWorkflow.runOnScaleChanged(this, overviewData)
                                rxBus.send(EventNewHistoryData(0, false))

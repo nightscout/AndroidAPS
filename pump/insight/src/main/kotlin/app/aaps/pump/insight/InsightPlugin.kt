@@ -8,6 +8,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -15,7 +18,6 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -38,9 +40,13 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.insight.app_layer.Service
+import app.aaps.pump.insight.app_layer.activities.InsightPairingInformationActivity
 import app.aaps.pump.insight.app_layer.history.StartReadingHistoryMessage
 import app.aaps.pump.insight.app_layer.history.StopReadingHistoryMessage
 import app.aaps.pump.insight.app_layer.history.history_events.*
@@ -68,6 +74,11 @@ import app.aaps.pump.insight.events.EventLocalInsightUpdateGUI
 import app.aaps.pump.insight.exceptions.InsightException
 import app.aaps.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import app.aaps.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCancelException
+import app.aaps.pump.insight.keys.InsightBooleanKey
+import app.aaps.pump.insight.keys.InsightDoubleNonKey
+import app.aaps.pump.insight.keys.InsightIntKey
+import app.aaps.pump.insight.keys.InsightIntentKey
+import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
 import org.json.JSONException
@@ -82,28 +93,31 @@ import kotlin.math.roundToLong
 @Singleton
 class InsightPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
     rh: ResourceHelper,
-    private val sp: SP,
+    preferences: Preferences,
     commandQueue: CommandQueue,
+    private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val context: Context,
-    config: Config,
     private val dateUtil: DateUtil,
     private val insightDbHelper: InsightDbHelper,
     private val pumpSync: PumpSync,
     private val insightDatabase: InsightDatabase,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_insight_128)
         .pluginName(R.string.insight_local)
         .shortName(R.string.insightpump_shortname)
         .mainType(PluginType.PUMP)
         .description(R.string.description_pump_insight_local)
         .fragmentClass(InsightFragment::class.java.name)
-        .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
-    aapsLogger, rh, commandQueue
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+    ownPreferences = listOf(
+        InsightIntentKey::class.java, InsightBooleanKey::class.java, InsightIntKey::class.java,
+        InsightLongNonKey::class.java, InsightDoubleNonKey::class.java,
+    ),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Insight, PluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
@@ -163,8 +177,8 @@ class InsightPlugin @Inject constructor(
         context.bindService(Intent(context, InsightConnectionService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         context.bindService(Intent(context, InsightAlertService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         createNotificationChannel()
-        lastBolusTimestamp = sp.getLong(R.string.key_insight_last_bolus_timestamp, 0L)
-        lastBolusAmount = sp.getDouble(R.string.key_insight_last_bolus_amount, 0.0)
+        lastBolusTimestamp = preferences.get(InsightLongNonKey.LastBolusTimestamp)
+        lastBolusAmount = preferences.get(InsightDoubleNonKey.LastBolusAmount)
     }
 
     private fun createNotificationChannel() {
@@ -380,7 +394,7 @@ class InsightPlugin @Inject constructor(
                 this.profileBlocks = profileBlocks
                 try {
                     fetchStatus()
-                } catch (ignored: Exception) {
+                } catch (_: Exception) {
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
@@ -449,11 +463,7 @@ class InsightPlugin @Inject constructor(
                         bolusMessage.duration = 0
                         bolusMessage.extendedAmount = 0.0
                         bolusMessage.immediateAmount = insulin
-                        bolusMessage.disableVibration =
-                            sp.getBoolean(
-                                if (detailedBolusInfo.bolusType === BS.Type.SMB) R.string.key_insight_disable_vibration_auto else R.string.key_insight_disable_vibration,
-                                false
-                            )
+                        bolusMessage.disableVibration = preferences.get(if (detailedBolusInfo.bolusType === BS.Type.SMB) InsightBooleanKey.DisableVibrationAuto else InsightBooleanKey.DisableVibration)
                         bolusID = service.requestMessage(bolusMessage).await().bolusId
                         bolusCancelled = false
                     }
@@ -577,9 +587,8 @@ class InsightPlugin @Inject constructor(
                         val cancelTBRResult = cancelTempBasalOnly()
                         if (cancelTBRResult.success) {
                             val ebResult = setExtendedBolusOnly(
-                                (absoluteRate - baseBasalRate) / 60.0
-                                    * durationInMinutes.toDouble(), durationInMinutes,
-                                sp.getBoolean(R.string.key_insight_disable_vibration_auto, false)
+                                (absoluteRate - baseBasalRate) / 60.0 * durationInMinutes.toDouble(), durationInMinutes,
+                                preferences.get(InsightBooleanKey.DisableVibrationAuto)
                             )
                             if (ebResult.success) {
                                 result.success(true)
@@ -656,7 +665,7 @@ class InsightPlugin @Inject constructor(
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         var result = cancelExtendedBolusOnly()
-        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_insight_disable_vibration, false))
+        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes, preferences.get(InsightBooleanKey.DisableVibration))
         try {
             fetchStatus()
             readHistory()
@@ -736,7 +745,7 @@ class InsightPlugin @Inject constructor(
                 confirmAlert(AlertType.WARNING_36)
                 alertService?.ignore(null)
                 result.comment(app.aaps.core.ui.R.string.virtualpump_resultok)
-            } catch (e: NoActiveTBRToCancelException) {
+            } catch (_: NoActiveTBRToCancelException) {
                 result.success(true)
                 result.comment(app.aaps.core.ui.R.string.virtualpump_resultok)
             } catch (e: AppLayerErrorException) {
@@ -992,7 +1001,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean
-        get() = sp.getBoolean(R.string.key_insight_enable_tbr_emulation, false)
+        get() = preferences.get(InsightBooleanKey.EnableTbrEmulation)
 
     override fun loadTDDs(): PumpEnactResult {
         return instantiator.providePumpEnactResult().success(true)
@@ -1140,7 +1149,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun processCannulaFilledEvent(event: CannulaFilledEvent) {
-        if (!sp.getBoolean(R.string.key_insight_log_site_changes, false)) return
+        if (!preferences.get(InsightBooleanKey.LogSiteChanges)) return
         val timestamp = parseDate(
             event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond
@@ -1167,7 +1176,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun processTubeFilledEvent(event: TubeFilledEvent) {
-        if (!sp.getBoolean(R.string.key_insight_log_tube_changes, false)) return
+        if (!preferences.get(InsightBooleanKey.LogTubeChanges)) return
         val timestamp = parseDate(
             event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond
@@ -1177,7 +1186,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun processSniffingDoneEvent(event: SniffingDoneEvent) {
-        if (!sp.getBoolean(R.string.key_insight_log_reservoir_changes, false)) return
+        if (!preferences.get(InsightBooleanKey.LogReservoirChanges)) return
         val timestamp = parseDate(
             event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond
@@ -1186,7 +1195,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun processPowerUpEvent(event: PowerUpEvent) {
-        if (!sp.getBoolean(R.string.key_insight_log_battery_changes, false)) return
+        if (!preferences.get(InsightBooleanKey.LogBatteryChanges)) return
         val timestamp = parseDate(
             event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond
@@ -1209,17 +1218,17 @@ class InsightPlugin @Inject constructor(
             OperatingMode.STARTED -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpStarted
                 pumpStartedEvents.add(pumpID)
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(R.string.pump_started))
+                if (preferences.get(InsightBooleanKey.LogOperatingModeChanges)) logNote(timestamp, rh.gs(R.string.pump_started))
             }
 
             OperatingMode.STOPPED -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpStopped
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(R.string.pump_stopped))
+                if (preferences.get(InsightBooleanKey.LogOperatingModeChanges)) logNote(timestamp, rh.gs(R.string.pump_stopped))
             }
 
             OperatingMode.PAUSED  -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpPaused
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(app.aaps.core.ui.R.string.pump_paused))
+                if (preferences.get(InsightBooleanKey.LogOperatingModeChanges)) logNote(timestamp, rh.gs(app.aaps.core.ui.R.string.pump_paused))
             }
 
             else                  -> Unit
@@ -1360,9 +1369,9 @@ class InsightPlugin @Inject constructor(
                     pumpSerial = serial
                 )
                 lastBolusTimestamp = insightBolusID.timestamp
-                sp.putLong(R.string.key_insight_last_bolus_timestamp, lastBolusTimestamp)
+                preferences.put(InsightLongNonKey.LastBolusTimestamp, lastBolusTimestamp)
                 lastBolusAmount = event.immediateAmount
-                sp.putDouble(R.string.key_insight_last_bolus_amount, lastBolusAmount)
+                preferences.put(InsightDoubleNonKey.LastBolusAmount, lastBolusAmount)
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
                 if (event.duration > 0 && profileFunction.getProfile(insightBolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
@@ -1379,7 +1388,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun processOccurrenceOfAlertEvent(event: OccurrenceOfAlertEvent) {
-        if (!sp.getBoolean(R.string.key_insight_log_alerts, false)) return
+        if (!preferences.get(InsightBooleanKey.LogAlerts)) return
         val timestamp = parseDate(
             event.eventYear, event.eventMonth, event.eventDay,
             event.eventHour, event.eventMinute, event.eventSecond
@@ -1578,6 +1587,39 @@ class InsightPlugin @Inject constructor(
 
     override fun clearAllTables() {
         insightDatabase.clearAllTables()
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        // val speedEntries = arrayOf<CharSequence>("12 s/U", "30 s/U", "60 s/U")
+        // val speedValues = arrayOf<CharSequence>("0", "1", "2")
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "insight_settings"
+            title = rh.gs(R.string.insight_local)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = InsightIntentKey.InsightPairing, title = R.string.insight_pairing,
+                    intent = Intent().setComponent(ComponentName(context, InsightPairingInformationActivity::class.java)),
+                )
+            )
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogReservoirChanges, title = R.string.log_reservoir_changes))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogTubeChanges, title = R.string.log_tube_changes))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogSiteChanges, title = R.string.log_site_changes))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogBatteryChanges, title = R.string.log_battery_changes))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogOperatingModeChanges, title = R.string.log_operating_mode_changes))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogAlerts, title = R.string.log_alerts))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.EnableTbrEmulation, title = R.string.enable_tbr_emulation, summary = R.string.enable_tbr_emulation_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.DisableVibration, title = R.string.disable_vibration, summary = R.string.disable_vibration_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.DisableVibrationAuto, title = R.string.disable_vibration_auto, summary = R.string.disable_vibration_auto_summary))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = InsightIntKey.MinRecoveryDuration, title = R.string.min_recovery_duration))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = InsightIntKey.MaxRecoveryDuration, title = R.string.max_recovery_duration))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = InsightIntKey.DisconnectDelay, title = R.string.disconnect_delay))
+        }
     }
 
     companion object {

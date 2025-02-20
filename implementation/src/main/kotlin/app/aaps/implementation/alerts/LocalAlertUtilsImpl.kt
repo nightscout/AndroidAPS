@@ -17,14 +17,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventNewNotification
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.R
+import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -37,7 +37,6 @@ import kotlin.math.min
 @Singleton
 class LocalAlertUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
@@ -48,6 +47,10 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil
 ) : LocalAlertUtils {
+
+    init {
+        preferences.registerPreferences(LocalAlertLongKey::class.java)
+    }
 
     private val disposable = CompositeDisposable()
 
@@ -61,11 +64,11 @@ class LocalAlertUtilsImpl @Inject constructor(
 
     override fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
         val alarmTimeoutExpired = isAlarmTimeoutExpired(lastConnection, pumpUnreachableThreshold())
-        val nextAlarmOccurrenceReached = sp.getLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, 0L) < dateUtil.now()
+        val nextAlarmOccurrenceReached = preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm) < dateUtil.now()
         if (config.APS && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
             if (preferences.get(BooleanKey.AlertPumpUnreachable)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: true")
-                sp.putLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, dateUtil.now() + pumpUnreachableThreshold())
+                preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, dateUtil.now() + pumpUnreachableThreshold())
                 rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).also { it.soundId = R.raw.alarm }))
                 if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
                     disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
@@ -95,21 +98,21 @@ class LocalAlertUtilsImpl @Inject constructor(
      * Call only at startup!
      */
     override fun preSnoozeAlarms() {
-        if (sp.getLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, 0L) < dateUtil.now()) {
-            sp.putLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, dateUtil.now() + 5 * 60 * 1000)
+        if (preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()) {
+            preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, dateUtil.now() + 5 * 60 * 1000)
         }
-        if (sp.getLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, 0L) < dateUtil.now()) {
-            sp.putLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, dateUtil.now() + 5 * 60 * 1000)
+        if (preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm) < dateUtil.now()) {
+            preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, dateUtil.now() + 5 * 60 * 1000)
         }
     }
 
     override fun shortenSnoozeInterval() { //shortens alarm times in case of setting changes or future data
-        var nextMissedReadingsAlarm = sp.getLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, 0L)
+        var nextMissedReadingsAlarm = preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm)
         nextMissedReadingsAlarm = min(dateUtil.now() + missedReadingsThreshold(), nextMissedReadingsAlarm)
-        sp.putLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, nextMissedReadingsAlarm)
-        var nextPumpDisconnectedAlarm = sp.getLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, 0L)
+        preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, nextMissedReadingsAlarm)
+        var nextPumpDisconnectedAlarm = preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)
         nextPumpDisconnectedAlarm = min(dateUtil.now() + pumpUnreachableThreshold(), nextPumpDisconnectedAlarm)
-        sp.putLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, nextPumpDisconnectedAlarm)
+        preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, nextPumpDisconnectedAlarm)
     }
 
     override fun reportPumpStatusRead() {
@@ -118,8 +121,8 @@ class LocalAlertUtilsImpl @Inject constructor(
         if (profile != null) {
             val lastConnection = pump.lastDataTime()
             val earliestAlarmTime = lastConnection + pumpUnreachableThreshold()
-            if (sp.getLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, 0L) < earliestAlarmTime) {
-                sp.putLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, earliestAlarmTime)
+            if (preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm) < earliestAlarmTime) {
+                preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, earliestAlarmTime)
             }
         }
     }
@@ -128,11 +131,11 @@ class LocalAlertUtilsImpl @Inject constructor(
         val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
         if (preferences.get(BooleanKey.AlertMissedBgReading)
             && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
-            && sp.getLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, 0L) < dateUtil.now()
+            && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()
         ) {
             val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(R.string.missed_bg_readings), Notification.URGENT)
             n.soundId = R.raw.alarm
-            sp.putLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, dateUtil.now() + missedReadingsThreshold())
+            preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, dateUtil.now() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
             if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(

@@ -2,7 +2,7 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilCmdModel
@@ -17,9 +17,9 @@ import java.util.Locale
 class CmdDevicesOldGet(
     var address: String,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     private var firmwareVersion = 0f
 
@@ -88,7 +88,7 @@ class CmdDevicesOldGet(
                 isEnd = true
                 response = EquilResponse(createTime)
                 rspIndex = intValue
-                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex)
+                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====$intValue====$rspIndex")
                 return list
             } catch (e: Exception) {
                 response = EquilResponse(createTime)
@@ -108,7 +108,7 @@ class CmdDevicesOldGet(
             response = EquilResponse(createTime)
             config = true
             rspIndex = intValue
-            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex)
+            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====$intValue====$rspIndex")
             return list
         } catch (e: Exception) {
             e.printStackTrace()

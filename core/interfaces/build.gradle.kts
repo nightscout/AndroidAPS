@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
+    implementation(project(":core:keys"))
 
 
     api(libs.androidx.appcompat)

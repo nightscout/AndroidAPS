@@ -6,8 +6,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -45,9 +47,13 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -65,6 +71,12 @@ import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
 import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
+import info.nightscout.pump.combov2.keys.ComboBooleanKey
+import info.nightscout.pump.combov2.keys.ComboIntKey
+import info.nightscout.pump.combov2.keys.ComboIntNonKey
+import info.nightscout.pump.combov2.keys.ComboIntentKey
+import info.nightscout.pump.combov2.keys.ComboLongNonKey
+import info.nightscout.pump.combov2.keys.ComboStringNonKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -91,6 +103,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.joda.time.DateTime
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -109,6 +122,7 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val context: Context,
     private val rxBus: RxBus,
@@ -123,15 +137,19 @@ class ComboV2Plugin @Inject constructor(
     private val instantiator: Instantiator
 ) :
     PumpPluginBase(
-        PluginDescription()
+        pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(ComboV2Fragment::class.java.name)
             .pluginIcon(R.drawable.ic_combov2)
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
-            .preferencesId(R.xml.pref_combov2),
-        aapsLogger, rh, commandQueue
+            .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+        ownPreferences = listOf(
+            ComboIntentKey::class.java, ComboIntKey::class.java, ComboBooleanKey::class.java,
+            ComboStringNonKey::class.java, ComboIntNonKey::class.java, ComboLongNonKey::class.java
+        ),
+        aapsLogger, rh, preferences, commandQueue
     ), Pump, PluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines
@@ -444,22 +462,6 @@ class ComboV2Plugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val verboseLoggingPreference = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_combov2_verbose_logging))
-        verboseLoggingPreference?.setOnPreferenceChangeListener { _, newValue ->
-            updateComboCtlLogLevel(newValue as Boolean)
-            true
-        }
-
-        val unpairPumpPreference: Preference? = preferenceFragment.findPreference(rh.gs(R.string.key_combov2_unpair_pump))
-        unpairPumpPreference?.setOnPreferenceClickListener {
-            preferenceFragment.context?.let { ctx ->
-                OKDialog.showConfirmation(ctx, "Confirm pump unpairing", "Do you really want to unpair the pump?", ok = Runnable {
-                    unpair()
-                })
-            }
-            false
-        }
-
         // Setup coroutine to enable/disable the pair and unpair
         // preferences depending on the pairing state.
         preferenceFragment.run {
@@ -472,10 +474,8 @@ class ComboV2Plugin @Inject constructor(
             // recreates the fragment.
             lifecycle.coroutineScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    val pairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_pair_with_pump))
-                    val unpairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_unpair_pump))
-
-                    pairPref?.intent = Intent(activity, ComboV2PairingActivity::class.java)
+                    val pairPref: Preference? = findPreference(ComboIntentKey.PairWithPump.key)
+                    val unpairPref: Preference? = findPreference(ComboIntentKey.UnpairPump.key)
 
                     val isInitiallyPaired = pairedStateUIFlow.value
                     pairPref?.isEnabled = !isInitiallyPaired
@@ -969,7 +969,7 @@ class ComboV2Plugin @Inject constructor(
         pumpStatus?.availableUnitsInReservoir?.let { newLevel ->
             _reservoirLevel?.let { currentLevel ->
                 aapsLogger.debug(LTag.PUMP, "Current/new reservoir levels: $currentLevel / $newLevel")
-                if (sp.getBoolean(R.string.key_combov2_automatic_reservoir_entry, true) && (newLevel > currentLevel)) {
+                if (preferences.get(ComboBooleanKey.AutomaticReservoirEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
@@ -993,7 +993,7 @@ class ComboV2Plugin @Inject constructor(
 
             _batteryLevel?.let { currentLevel ->
                 aapsLogger.debug(LTag.PUMP, "Current/new battery levels: $currentLevel / $newLevel")
-                if (sp.getBoolean(R.string.key_combov2_automatic_battery_entry, true) && (newLevel > currentLevel)) {
+                if (preferences.get(ComboBooleanKey.AutomaticBatteryEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
@@ -1108,7 +1108,7 @@ class ComboV2Plugin @Inject constructor(
 
                 // Rethrowing to finish coroutine cancellation.
                 throw e
-            } catch (e: ComboCtlPump.BolusCancelledByUserException) {
+            } catch (_: ComboCtlPump.BolusCancelledByUserException) {
                 aapsLogger.info(LTag.PUMP, "Bolus cancelled via Combo CMD_CANCEL_BOLUS command")
 
                 // This exception is thrown when the bolus is cancelled
@@ -1118,13 +1118,13 @@ class ComboV2Plugin @Inject constructor(
                 // error, hence the "success = true".
 
                 reportFinishedBolus(R.string.combov2_bolus_cancelled, pumpEnactResult, succeeded = true)
-            } catch (e: ComboCtlPump.BolusNotDeliveredException) {
+            } catch (_: ComboCtlPump.BolusNotDeliveredException) {
                 aapsLogger.error(LTag.PUMP, "Bolus not delivered")
                 reportFinishedBolus(R.string.combov2_bolus_not_delivered, pumpEnactResult, succeeded = false)
-            } catch (e: ComboCtlPump.UnaccountedBolusDetectedException) {
+            } catch (_: ComboCtlPump.UnaccountedBolusDetectedException) {
                 aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected")
                 reportFinishedBolus(R.string.combov2_unaccounted_bolus_detected_cancelling_bolus, pumpEnactResult, succeeded = false)
-            } catch (e: ComboCtlPump.InsufficientInsulinAvailableException) {
+            } catch (_: ComboCtlPump.InsufficientInsulinAvailableException) {
                 aapsLogger.error(LTag.PUMP, "Insufficient insulin in reservoir")
                 reportFinishedBolus(R.string.combov2_insufficient_insulin_in_reservoir, pumpEnactResult, succeeded = false)
             } catch (e: Exception) {
@@ -1479,7 +1479,7 @@ class ComboV2Plugin @Inject constructor(
             val localBolusTimestamp = it.timestamp.toLocalDateTime(TimeZone.currentSystemDefault())
             lines += rh.gs(
                 R.string.combov2_short_status_last_bolus, decimalFormatter.to2Decimal(it.bolusAmount.cctlBolusToIU()),
-                String.format("%02d:%02d", localBolusTimestamp.hour, localBolusTimestamp.minute)
+                String.format(Locale.getDefault(), "%02d:%02d", localBolusTimestamp.hour, localBolusTimestamp.minute)
             )
         }
 
@@ -1644,7 +1644,7 @@ class ComboV2Plugin @Inject constructor(
     private var pairingPINChannel: Channel<PairingPIN>? = null
 
     fun startPairing() {
-        val discoveryDuration = sp.getInt(R.string.key_combov2_discovery_duration, 300)
+        val discoveryDuration = preferences.get(ComboIntKey.DiscoveryDuration)
 
         val newPINChannel = Channel<PairingPIN>(capacity = Channel.RENDEZVOUS)
         pairingPINChannel = newPINChannel
@@ -2103,6 +2103,7 @@ class ComboV2Plugin @Inject constructor(
             is ComboCtlPump.Event.UnknownTbrDetected   -> {
                 // Inform about this unknown TBR that was observed (and automatically aborted).
                 val remainingDurationString = String.format(
+                    Locale.getDefault(),
                     "%02d:%02d",
                     event.remainingTbrDurationInMinutes / 60,
                     event.remainingTbrDurationInMinutes % 60
@@ -2220,7 +2221,7 @@ class ComboV2Plugin @Inject constructor(
     private fun isPaired() = pairedStateUIFlow.value
 
     private fun updateComboCtlLogLevel() =
-        updateComboCtlLogLevel(sp.getBoolean(R.string.key_combov2_verbose_logging, false))
+        updateComboCtlLogLevel(preferences.get(ComboBooleanKey.VerboseLogging))
 
     private fun updateComboCtlLogLevel(enableVerbose: Boolean) {
         aapsLogger.debug(LTag.PUMP, "${if (enableVerbose) "Enabling" else "Disabling"} verbose logging")
@@ -2440,4 +2441,43 @@ class ComboV2Plugin @Inject constructor(
 
             else                     -> false
         }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "combov2_settings"
+            title = rh.gs(R.string.combov2_title)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = ComboIntentKey.PairWithPump, title = R.string.combov2_pair_with_pump_title, summary = R.string.combov2_pair_with_pump_summary,
+                    intent = Intent(context, ComboV2PairingActivity::class.java)
+                )
+            )
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = ComboIntentKey.UnpairPump, title = R.string.combov2_unpair_pump_title, summary = R.string.combov2_unpair_pump_summary
+                ).apply {
+                    onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
+                        OKDialog.showConfirmation(preference.context, "Confirm pump unpairing", "Do you really want to unpair the pump?", ok = Runnable { unpair() })
+                        false
+                    }
+                }
+            )
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = ComboIntKey.DiscoveryDuration, title = R.string.combov2_discovery_duration))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticReservoirEntry, title = R.string.combov2_automatic_reservoir_entry))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticBatteryEntry, title = R.string.combov2_automatic_battery_entry))
+            addPreference(
+                AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.VerboseLogging, title = R.string.combov2_verbose_logging).apply {
+                    onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+                        updateComboCtlLogLevel(newValue as Boolean)
+                        true
+                    }
+                }
+            )
+        }
+    }
 }

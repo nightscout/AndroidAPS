@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
@@ -34,7 +35,6 @@ import app.aaps.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import app.aaps.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import app.aaps.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
 import dagger.android.HasAndroidInjector
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -194,9 +194,9 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         binding.buttonPulseLog.visibility = pulseLogButtonEnabled.toVisibility()
 
         binding.buttonRileylinkStats.visibility = aapsOmnipodManager.isRileylinkStatsButtonEnabled.toVisibility()
-        binding.waitingForRlLayout.visibility = (!rileyLinkServiceData.rileyLinkServiceState.isReady).toVisibility()
+        binding.waitingForRlLayout.visibility = (!rileyLinkServiceData.rileyLinkServiceState.isReady()).toVisibility()
 
-        if (rileyLinkServiceData.rileyLinkServiceState.isReady) {
+        if (rileyLinkServiceData.rileyLinkServiceState.isReady()) {
             binding.buttonActivatePod.isEnabled = !podStateManager.isPodActivationCompleted
             binding.buttonDeactivatePod.isEnabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 

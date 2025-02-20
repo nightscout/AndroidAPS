@@ -1,21 +1,15 @@
 package app.aaps.pump.equil.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 
 enum class EquilBooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
-) : BooleanPreferenceKey {
+    override val exportable: Boolean = true
+) : BooleanNonPreferenceKey {
 
-    EquilAlarmBattery("key_equil_alarm_battery", true),
-    EquilAlarmInsulin("key_equil_alarm_insulin", true),
+    BasalSet("key_equil_basal_set", false),
+    AlarmBattery10("key_equil_alarm_battery_10", false),
+    AlarmInsulin10("key_equil_alarm_insulin_10", false),
+    AlarmInsulin5("key_equil_alarm_insulin_5", false),
 }

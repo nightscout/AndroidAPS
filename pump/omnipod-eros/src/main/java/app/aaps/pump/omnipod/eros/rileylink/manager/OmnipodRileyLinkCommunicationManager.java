@@ -85,10 +85,6 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         // We don't use PumpDeviceState in the Omnipod driver
     }
 
-    @Override protected OmnipodPacket sendAndListen(OmnipodPacket msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms) throws RileyLinkCommunicationException {
-        return super.sendAndListen(msg, timeout_ms, repeatCount, retryCount, extendPreamble_ms);
-    }
-
     public <T extends MessageBlock> T sendCommand(Class<T> responseClass, ErosPodStateManager podStateManager, MessageBlock command) {
         return sendCommand(responseClass, podStateManager, command, true);
     }

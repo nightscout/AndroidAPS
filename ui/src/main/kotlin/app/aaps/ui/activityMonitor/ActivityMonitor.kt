@@ -14,9 +14,9 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.R
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,30 +25,30 @@ import javax.inject.Singleton
 class ActivityMonitor @Inject constructor(
     private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val dateUtil: DateUtil
 ) : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityPaused(activity: Activity) {
         val name = activity.javaClass.simpleName
-        val resumed = sp.getLong("Monitor_" + name + "_" + "resumed", 0)
+        val resumed = preferences.get(LongComposedKey.ActivityMonitorResumed, name)
         if (resumed == 0L) {
             aapsLogger.debug(LTag.UI, "onActivityPaused: $name resumed == 0")
             return
         }
         val elapsed = dateUtil.now() - resumed
-        val total = sp.getLong("Monitor_" + name + "_total", 0)
+        val total = preferences.get(LongComposedKey.ActivityMonitorTotal, name)
         if (total == 0L) {
-            sp.putLong("Monitor_" + name + "_start", dateUtil.now())
+            preferences.put(LongComposedKey.ActivityMonitorStart, name, value = dateUtil.now())
         }
-        sp.putLong("Monitor_" + name + "_total", total + elapsed)
+        preferences.put(LongComposedKey.ActivityMonitorTotal, name, value = total + elapsed)
         aapsLogger.debug(LTag.UI, "onActivityPaused: $name elapsed=$elapsed total=${total + elapsed}")
     }
 
     override fun onActivityResumed(activity: Activity) {
         val name = activity.javaClass.simpleName
         aapsLogger.debug(LTag.UI, "onActivityResumed: $name")
-        sp.putLong("Monitor_" + name + "_" + "resumed", dateUtil.now())
+        preferences.put(LongComposedKey.ActivityMonitorResumed, name, value = dateUtil.now())
     }
 
     override fun onActivityStarted(activity: Activity) {
@@ -87,34 +87,30 @@ class ActivityMonitor @Inject constructor(
                 }
             )
 
-            val keys: Map<String, *> = sp.getAll()
-            for ((key, value) in keys)
-                if (key.startsWith("Monitor") && key.endsWith("total")) {
-                    val v = if (value is Long) value else SafeParse.stringToLong(value as String)
-                    val activity = key.split("_")[1].replace("Activity", "")
-                    val duration = dateUtil.niceTimeScalar(v, rh)
-                    val start = sp.getLong(key.replace("total", "start"), 0)
-                    val days = T.msecs(dateUtil.now() - start).days()
-                    layout.addView(
-                        TableRow(context).also { row ->
-                            val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
-                            row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-                            row.gravity = Gravity.CENTER_HORIZONTAL
-                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = activity })
-                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = duration })
-                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(app.aaps.core.interfaces.R.string.in_days, days.toDouble()) })
-                        }
-                    )
-                }
+            preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).forEach { activityName ->
+                val v = preferences.get(LongComposedKey.ActivityMonitorTotal, activityName)
+                val activity = activityName.replace("Activity", "")
+                val duration = dateUtil.niceTimeScalar(v, rh)
+                val start = preferences.get(LongComposedKey.ActivityMonitorStart, activityName)
+                val days = T.msecs(dateUtil.now() - start).days()
+                layout.addView(
+                    TableRow(context).also { row ->
+                        val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
+                        row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+                        row.gravity = Gravity.CENTER_HORIZONTAL
+                        row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = activity })
+                        row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = duration })
+                        row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(app.aaps.core.interfaces.R.string.in_days, days.toDouble()) })
+                    }
+                )
+            }
         }
 
     fun reset() {
-        val keys: Map<String, *> = sp.getAll()
-        for ((key, _) in keys)
-            if (key.startsWith("Monitor") && key.endsWith("total")) {
-                sp.remove(key)
-                sp.remove(key.replace("total", "start"))
-                sp.remove(key.replace("total", "resumed"))
-            }
+        preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).forEach { activityName ->
+            preferences.remove(LongComposedKey.ActivityMonitorTotal, activityName)
+            preferences.remove(LongComposedKey.ActivityMonitorStart, activityName)
+            preferences.remove(LongComposedKey.ActivityMonitorResumed, activityName)
+        }
     }
 }

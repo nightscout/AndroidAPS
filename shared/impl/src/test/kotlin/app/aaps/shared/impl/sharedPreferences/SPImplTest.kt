@@ -162,20 +162,4 @@ class SPImplTest {
         sut.putString(someResource, "a")
         assertThat(sut.getLong(someResource, 1L)).isEqualTo(1L)
     }
-
-    @Test
-    fun incLong() {
-        sut.incLong(someResource)
-        assertThat(sut.getLong(someResource, 3L)).isEqualTo(1L)
-        sut.incLong(someResource)
-        assertThat(sut.getLong(someResource, 3L)).isEqualTo(2L)
-    }
-
-    @Test
-    fun incInt() {
-        sut.incInt(someResource)
-        assertThat(sut.getInt(someResource, 3)).isEqualTo(1)
-        sut.incInt(someResource)
-        assertThat(sut.getInt(someResource, 3)).isEqualTo(2)
-    }
 }

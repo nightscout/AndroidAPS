@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Disabled;
  * Created by andy on 6/16/18.
  */
 //@RunWith(PowerMockRunner.class)
-//@PrepareForTest({ DatabaseHelper.class, DateUtil.class, SP.class })
+//@PrepareForTest({ DatabaseHelper.class, DateUtil.class, Preferences.class })
 @Disabled
 class BasalProfileUTest {
 /*

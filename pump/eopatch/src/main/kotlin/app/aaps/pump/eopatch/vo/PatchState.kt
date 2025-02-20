@@ -1,11 +1,11 @@
 package app.aaps.pump.eopatch.vo
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.AppConstant
 import app.aaps.pump.eopatch.GsonHelper
-import app.aaps.pump.eopatch.code.SettingKeys
 import app.aaps.pump.eopatch.core.code.BolusType
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
+import app.aaps.pump.eopatch.keys.EopatchStringNonKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.io.Serializable
@@ -307,9 +307,9 @@ class PatchState : IPreference<PatchState> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP) {
+    override fun flush(preferences: Preferences) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
-        sp.putString(SettingKeys.PATCH_STATE, jsonStr)
+        preferences.put(EopatchStringNonKey.PatchState, jsonStr)
         subject.onNext(this)
     }
 

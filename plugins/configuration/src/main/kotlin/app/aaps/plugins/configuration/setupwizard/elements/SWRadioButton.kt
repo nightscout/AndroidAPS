@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 
 class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOBUTTON) {
@@ -37,8 +38,8 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         desc.layoutParams = params
         layout.addView(desc)
 
-        // Get if there is already value in SP
-        val previousValue = preferences.get(preference)
+        // Get if there is already value in Preferences
+        val previousValue = preferences.get(preference as StringPreferenceKey)
         radioGroup = RadioGroup(context)
         radioGroup?.clearCheck()
         radioGroup?.orientation = LinearLayout.VERTICAL
@@ -59,7 +60,7 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         super.generateDialog(layout)
     }
 
-    fun preference(preference: String): SWRadioButton {
+    fun preference(preference: StringPreferenceKey): SWRadioButton {
         this.preference = preference
         return this
     }

@@ -17,6 +17,7 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:libraries"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
@@ -28,6 +29,7 @@ dependencies {
     api(libs.io.reactivex.rxjava3.rxandroid)
     api(libs.com.polidea.rxandroidble3)
     api(libs.com.jakewharton.rx3.replaying.share)
+    implementation(project(":core:validators"))
 
     kapt(libs.com.google.dagger.compiler)
     kapt(libs.com.google.dagger.android.processor)

@@ -5,10 +5,9 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
-import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.driver.comm.Id
 import app.aaps.pump.omnipod.dash.driver.comm.pair.PairResult
 import app.aaps.pump.omnipod.dash.driver.comm.session.EapSqn
@@ -24,6 +23,7 @@ import app.aaps.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import app.aaps.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.dash.driver.pod.response.VersionResponse
+import app.aaps.pump.omnipod.dash.keys.DashStringNonPreferenceKey
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -42,8 +42,8 @@ import javax.inject.Singleton
 @Singleton
 class OmnipodDashPodStateManagerImpl @Inject constructor(
     private val logger: AAPSLogger,
-    private val sharedPreferences: SP,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val preferences: Preferences
 ) : OmnipodDashPodStateManager {
 
     private var podState: PodState
@@ -530,7 +530,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     "lastResponse=$lastStatusResponseReceived " +
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
-            @Suppress("KotlinConstantConditions")
             when {
                 createdRealtime <= podState.lastStatusResponseReceived &&
                     sequence == podState.sequenceNumberOfLastProgrammingCommand ->
@@ -709,19 +708,16 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             logger.debug(LTag.PUMPCOMM, "Storing Pod state: ${Gson().toJson(cleanPodState)}")
 
             val serialized = Gson().toJson(podState)
-            sharedPreferences.putString(R.string.key_omnipod_dash_pod_state, serialized)
+            preferences.put(DashStringNonPreferenceKey.PodState, serialized)
         } catch (ex: Exception) {
             logger.error(LTag.PUMPCOMM, "Failed to store Pod state", ex)
         }
     }
 
     private fun load(): PodState {
-        if (sharedPreferences.contains(R.string.key_omnipod_dash_pod_state)) {
+        if (preferences.getIfExists(DashStringNonPreferenceKey.PodState) != null) {
             try {
-                return Gson().fromJson(
-                    sharedPreferences.getString(R.string.key_omnipod_dash_pod_state, ""),
-                    PodState::class.java
-                )
+                return Gson().fromJson(preferences.get(DashStringNonPreferenceKey.PodState), PodState::class.java)
             } catch (ex: Exception) {
                 logger.error(LTag.PUMPCOMM, "Failed to deserialize Pod state", ex)
             }

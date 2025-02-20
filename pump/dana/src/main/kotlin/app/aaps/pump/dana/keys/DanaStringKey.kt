@@ -1,7 +1,7 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 
 enum class DanaStringKey(
     override val key: String,
@@ -14,12 +14,12 @@ enum class DanaStringKey(
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
-    override val isPin: Boolean = false
+    override val isPin: Boolean = false,
+    override val exportable: Boolean = true
 ) : StringPreferenceKey {
 
-    DanaRName("danar_bt_name", ""),
-
-    DanaRsName("danars_name", ""),
-    DanaMacAddress("danars_address", ""),
-    DanaRsPassword("danars_password", ""),
+    RName("danar_bt_name", ""),
+    RsName("danars_name", ""),
+    MacAddress("danars_address", ""),
+    Password("danars_password", ""),
 }

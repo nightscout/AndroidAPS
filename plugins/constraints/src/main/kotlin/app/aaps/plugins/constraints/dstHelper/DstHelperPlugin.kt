@@ -9,12 +9,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,18 +24,19 @@ import javax.inject.Singleton
 class DstHelperPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val sp: SP,
+    preferences: Preferences,
     private val activePlugin: ActivePlugin,
     private val uiInteraction: UiInteraction,
     private val loop: Loop
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.dst_plugin_name),
-    aapsLogger, rh
+    ownPreferences = listOf(DstHelperLongKey::class.java),
+    aapsLogger, rh, preferences
 ), PluginConstraints {
 
     companion object {
@@ -52,10 +54,10 @@ class DstHelperPlugin @Inject constructor(
         }
         val cal = Calendar.getInstance()
         if (willBeDST(cal)) {
-            val snoozedTo: Long = sp.getLong(R.string.key_snooze_dst_in24h, 0L)
+            val snoozedTo: Long = preferences.get(DstHelperLongKey.SnoozeDstIn24h)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 uiInteraction.addNotification(Notification.DST_IN_24H, rh.gs(R.string.dst_in_24h_warning), Notification.LOW, app.aaps.core.ui.R.string.snooze, {
-                    sp.putLong(R.string.key_snooze_dst_in24h, System.currentTimeMillis() + T.hours(24).msecs())
+                    preferences.put(DstHelperLongKey.SnoozeDstIn24h, System.currentTimeMillis() + T.hours(24).msecs())
                 }, null)
             }
         }
@@ -65,14 +67,14 @@ class DstHelperPlugin @Inject constructor(
         }
         if (wasDST(cal)) {
             if (!loop.isSuspended) {
-                val snoozedTo: Long = sp.getLong(R.string.key_snooze_loop_disabled, 0L)
+                val snoozedTo: Long = preferences.get(DstHelperLongKey.SnoozeLoopDisabled)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                     uiInteraction.addNotification(
                         id = Notification.DST_LOOP_DISABLED,
                         text = rh.gs(R.string.dst_loop_disabled_warning),
                         level = Notification.LOW,
                         actionButtonId = app.aaps.core.ui.R.string.snooze,
-                        action = { sp.putLong(R.string.key_snooze_loop_disabled, System.currentTimeMillis() + T.hours(24).msecs()) },
+                        action = { preferences.put(DstHelperLongKey.SnoozeLoopDisabled, System.currentTimeMillis() + T.hours(24).msecs()) },
                         validityCheck = null
                     )
                 }

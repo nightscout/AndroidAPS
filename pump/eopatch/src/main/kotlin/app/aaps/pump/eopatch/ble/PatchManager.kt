@@ -12,20 +12,19 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.RxAction
 import app.aaps.pump.eopatch.alarm.AlarmCode
 import app.aaps.pump.eopatch.alarm.IAlarmRegistry
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.BUZZER_REMINDERS
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.EXPIRATION_REMINDERS
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.LOW_RESERVOIR_REMINDERS
 import app.aaps.pump.eopatch.core.scan.BleConnectionState
 import app.aaps.pump.eopatch.core.scan.IPatchScanner
 import app.aaps.pump.eopatch.core.scan.PatchScanner
 import app.aaps.pump.eopatch.core.scan.ScanList
 import app.aaps.pump.eopatch.event.EventPatchActivationNotComplete
+import app.aaps.pump.eopatch.keys.EopatchBooleanKey
+import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.ui.DialogHelperActivity
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.PatchConfig
@@ -51,7 +50,7 @@ class PatchManager @Inject constructor(
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val context: Context,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val rxAction: RxAction,
@@ -178,7 +177,7 @@ class PatchManager @Inject constructor(
     }
 
     override fun changeBuzzerSetting() {
-        val buzzer = sp.getBoolean(BUZZER_REMINDERS, false)
+        val buzzer = preferences.get(EopatchBooleanKey.BuzzerReminder)
         if (patchConfig.infoReminder != buzzer) {
             if (patchConfig.isActivated) {
                 compositeDisposable.add(
@@ -197,8 +196,8 @@ class PatchManager @Inject constructor(
     }
 
     override fun changeReminderSetting() {
-        val doseUnit = sp.getInt(LOW_RESERVOIR_REMINDERS, 0)
-        val hours = sp.getInt(EXPIRATION_REMINDERS, 0)
+        val doseUnit = preferences.get(EopatchIntKey.LowReservoirReminder)
+        val hours = preferences.get(EopatchIntKey.ExpirationReminder)
         val pc: PatchConfig = patchConfig
         if (pc.lowReservoirAlertAmount != doseUnit || pc.patchExpireAlertTime != hours) {
             if (patchConfig.isActivated) {
