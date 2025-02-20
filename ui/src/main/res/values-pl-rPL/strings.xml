@@ -134,6 +134,7 @@
     <string name="change_your_input">Zmień wprowadzone dane!</string>
     <string name="confirm_treatment">Proszę potwierdzić leczenie</string>
     <string name="recalculate">Przelicz</string>
+    <!--    Widget-->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Obie</item>
         <item>Tylko pozytywne</item>

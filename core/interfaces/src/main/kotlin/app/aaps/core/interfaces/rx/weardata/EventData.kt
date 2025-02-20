@@ -97,7 +97,7 @@ sealed class EventData : Event() {
     data class ActionProfileSwitchSendInitialData(val timeStamp: Long) : EventData()
 
     @Serializable
-    data class ActionProfileSwitchPreCheck(val timeShift: Int, val percentage: Int) : EventData()
+    data class ActionProfileSwitchPreCheck(val timeShift: Int, val percentage: Int, val duration: Int) : EventData()
 
     @Serializable
     data class ActionWizardPreCheck(val carbs: Int, val percentage: Int) : EventData()
@@ -181,7 +181,7 @@ sealed class EventData : Event() {
     data class ActionFillConfirmed(val insulin: Double) : EventData()
 
     @Serializable
-    data class ActionProfileSwitchConfirmed(val timeShift: Int, val percentage: Int) : EventData()
+    data class ActionProfileSwitchConfirmed(val timeShift: Int, val percentage: Int, val duration: Int) : EventData()
 
     @Serializable
     data class OpenLoopRequestConfirmed(val timeStamp: Long) : EventData()
@@ -396,7 +396,7 @@ sealed class EventData : Event() {
     data class ActionrequestSetDefaultWatchface(val timeStamp: Long) : EventData()
 
     @Serializable
-    data class ActionProfileSwitchOpenActivity(val timeShift: Int, val percentage: Int) : EventData()
+    data class ActionProfileSwitchOpenActivity(val timeShift: Int, val percentage: Int, val duration: Int) : EventData()
 
     @Serializable
     data class OpenLoopRequest(val title: String, val message: String, val returnCommand: EventData?) : EventData()

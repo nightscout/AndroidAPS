@@ -134,6 +134,9 @@
     <string name="change_your_input">Cambiar datos de entrada</string>
     <string name="confirm_treatment">Por favor, confirma el tratamiento</string>
     <string name="recalculate">Recalcular</string>
+    <!--    Widget-->
+    <string name="use_black_color">Usar modo oscuro</string>
+    <string name="widget_configuration">Configuración del Widget</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>
