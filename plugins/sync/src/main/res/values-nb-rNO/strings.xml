@@ -46,8 +46,8 @@
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
     <string name="ns_upload">Last opp data til NS</string>
-    <string name="ns_receive_profile_store">Hent lagrede profiler</string>
-    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS profileditor</string>
+    <string name="ns_receive_profile_store">Motta profiler</string>
+    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS eller AAPSClient</string>
     <string name="ns_receive_temp_target">Motta midlertidige mål</string>
     <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller AAPSClient</string>
     <string name="ns_receive_profile_switch">Motta profilbytter</string>
