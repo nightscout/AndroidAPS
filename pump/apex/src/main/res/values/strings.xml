@@ -25,11 +25,11 @@
 
     <string name="overview_pump_battery_approximate">%1$d%%</string>
     <string name="overview_pump_battery_exact">%1$d%% (%2$d mV)</string>
-    <string name="overview_pump_reservoir">%1$.3fU</string>
-    <string name="overview_pump_basal">%1$.3fU (ends %2$d:%3$d)</string>
-    <string name="overview_pump_tempbasal">%1$.3fU (%2$d min left)</string>
+    <string name="overview_pump_reservoir">%1$.3fU/h</string>
+    <string name="overview_pump_basal">%1$.3fU/h</string>
+    <string name="overview_pump_tempbasal">%1$.3fU/h (%2$d min left)</string>
     <string name="overview_pump_tempbasal_percentage">%1$d%% (%2$d min left)</string>
-    <string name="overview_pump_tempbasal_h">%1$.3fU (%2$d h %3$d min left)</string>
+    <string name="overview_pump_tempbasal_h">%1$.3fU/h (%2$d h %3$d min left)</string>
     <string name="overview_pump_tempbasal_percentage_h">%1$d%% (%2$d h %3$d min left)</string>
     <string name="overview_pump_last_bolus_min">%1$.3fU (%2$d min ago)</string>
     <string name="overview_pump_last_bolus_h">%1$.3fU (%2$d h ago)</string>

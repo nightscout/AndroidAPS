@@ -1,32 +1,36 @@
 package app.aaps.pump.apex.connectivity.commands.pump
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.apex.connectivity.commands.CommandId
 
 enum class PumpObject(
     val commandId: CommandId = CommandId.GetValue,
-    val objectId: Int? = null,
-    val valueId: Int? = null,
+    //val objectId: Int? = null,
+    val valueId: List<Int>? = null,
 ) {
     Heartbeat(commandId = CommandId.Heartbeat),
     CommandResponse(commandId = CommandId.SetValue),
-    StatusV1(objectId = 0x01, valueId = 0x00),
-    WizardStatus(objectId = 0x01, valueId = 0x07),
-    BasalProfile(objectId = 0x08),
-    AlarmEntry(objectId = 0x14),
-    TDDEntry(objectId = 0x5c),
-    BolusEntry(objectId = 0x80),
-    FirmwareEntry(objectId = 0x00, valueId = 0x31);
+    StatusV1(valueId = listOf(0x00)),
+    WizardStatus(valueId = listOf(0x07)),
+    BasalProfile(valueId = listOf(0x08)),
+    AlarmEntry(valueId = listOf(0x03)),
+    TDDEntry(valueId = listOf(0x06)),
+    BolusEntry(valueId = listOf(0x21, 0x01)),
+    FirmwareEntry(valueId = listOf(0x31));
 
     companion object {
-        fun findObject(commandId: CommandId, objectId: Int, objectData: ByteArray): PumpObject? {
+        fun findObject(commandId: CommandId, objectData: ByteArray, aapsLogger: AAPSLogger? = null): PumpObject? {
+            val valueId = objectData[0].toInt()
             for (e in entries) {
                 if (commandId != e.commandId) continue
-                if (e.objectId == null) return e
-                if (objectId != e.objectId) continue
+                //if (e.objectId == null) return e
+                //if (objectId != e.objectId) continue
                 if (e.valueId == null) return e
-                if (objectData[0].toInt() != e.valueId) continue
+                if (!e.valueId.contains(valueId)) continue
                 return e
             }
+            aapsLogger?.debug(LTag.PUMPBTCOMM, "Object [0x${commandId.name}:0x${valueId.toString(16)}] not found")
             return null
         }
     }

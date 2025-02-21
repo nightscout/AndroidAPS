@@ -128,7 +128,6 @@ class ApexPumpPlugin @Inject constructor(
     }
 
     override val isFakingTempsByExtendedBoluses = false
-    override fun isBusy() = false
     override fun canHandleDST() = false
 
     override fun manufacturer() = ManufacturerType.Apex
@@ -143,6 +142,7 @@ class ApexPumpPlugin @Inject constructor(
         get() = pump.batteryLevel.percentage
     override val pumpDescription = PumpDescription().fillFor(model())
 
+    override fun isBusy() = service?.isBusy ?: false
     override fun isSuspended() = pump.isSuspended
     override fun isInitialized() = !pump.gettingReady && pump.status != null
     override fun isConnecting() = service?.connectionStatus == ApexBluetooth.Status.CONNECTING

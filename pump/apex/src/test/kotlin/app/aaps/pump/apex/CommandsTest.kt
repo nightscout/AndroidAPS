@@ -26,7 +26,8 @@ class CommandsTest : TestBase() {
         val command = PumpCommand(data)
         assert(command.isCompleteCommand())
         assert(command.verify())
-        assert(PumpObject.findObject(command.id!!, command.objectType, command.objectData) == expectedType)
+        assert(PumpObject.findObject(command.id!!, command.objectData) == expectedType)
+        println("Processed $command")
         return command
     }
 
@@ -64,7 +65,7 @@ class CommandsTest : TestBase() {
         assert(trailing != null)
         assert(trailing!!.isCompleteCommand())
         assert(trailing.verify())
-        assert(PumpObject.findObject(trailing.id!!, trailing.objectType, trailing.objectData) == PumpObject.TDDEntry)
+        assert(PumpObject.findObject(trailing.id!!, trailing.objectData) == PumpObject.TDDEntry)
     }
 
     @Test

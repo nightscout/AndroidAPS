@@ -2,6 +2,7 @@ package app.aaps.pump.apex.connectivity.commands.pump
 
 import app.aaps.pump.apex.connectivity.commands.CommandId
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.utils.toHex
 import app.aaps.pump.apex.utils.ApexCrypto
 
 // Read-only commands which we get from the pump.
@@ -60,4 +61,6 @@ class PumpCommand(private var data: ByteArray) {
         data += remainingData
         return isCompleteCommand()
     }
+
+    override fun toString(): String  = "PumpCommand(type=0x${type.toString(16)}, objType=0x${objectType.toString(16)}, data=${objectData.toHex()})"
 }
