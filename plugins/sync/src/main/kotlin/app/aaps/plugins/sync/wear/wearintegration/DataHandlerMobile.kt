@@ -790,6 +790,13 @@ class DataHandlerMobile @Inject constructor(
         )
     }
 
+    private fun formatGlucose(value: Double, isMgdl: Boolean): String {
+        return if (isMgdl)
+            String.format(Locale.getDefault(), "%.0f mg/dl", value)
+        else
+            String.format(Locale.getDefault(), "%.1f mmol/l", value)
+    }
+
     private fun handleTempTargetPreCheck(action: EventData.ActionTempTargetPreCheck) {
         val title = rh.gs(app.aaps.core.ui.R.string.confirm).uppercase()
         var message = ""
@@ -798,8 +805,9 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
                 val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
                 val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+                val formattedGlucoseValue = formatGlucose(activityTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.activity)
-                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
+                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, activityTTDuration)
                 rxBus.send(
                     EventMobileToWear(
                         EventData.ConfirmAction(
@@ -813,8 +821,9 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
                 val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
                 val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+                val formattedGlucoseValue = formatGlucose(hypoTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
-                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
+                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, hypoTTDuration)
                 rxBus.send(
                     EventMobileToWear(
                         EventData.ConfirmAction(
@@ -828,8 +837,9 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
                 val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
                 val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                val formattedGlucoseValue = formatGlucose(eatingSoonTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
-                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
+                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, eatingSoonTTDuration)
                 rxBus.send(
                     EventMobileToWear(
                         EventData.ConfirmAction(
@@ -870,6 +880,8 @@ class DataHandlerMobile @Inject constructor(
                 } else {
                     var low = action.low
                     var high = action.high
+                    val lowFormattedGlucoseValue = formatGlucose(low, presetIsMGDL)
+                    val highFormattedGlucoseValue = formatGlucose(high, presetIsMGDL)
                     if (!action.isMgdl) {
                         low *= Constants.MMOLL_TO_MGDL
                         high *= Constants.MMOLL_TO_MGDL
@@ -882,8 +894,12 @@ class DataHandlerMobile @Inject constructor(
                         sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
                         return
                     }
-                    message += if (low == high) rh.gs(R.string.wear_action_tempt_manual_message, action.low, action.duration)
-                    else rh.gs(R.string.wear_action_tempt_manual_range_message, action.low, action.high, action.duration)
+                    if (low > high) {
+                        sendError(rh.gs(R.string.wear_action_tempt_range_error, lowFormattedGlucoseValue, highFormattedGlucoseValue))
+                        return
+                    }
+                    message += if (low == high) rh.gs(R.string.wear_action_tempt_manual_message, lowFormattedGlucoseValue, action.duration)
+                    else rh.gs(R.string.wear_action_tempt_manual_range_message, lowFormattedGlucoseValue, highFormattedGlucoseValue, action.duration)
                     rxBus.send(
                         EventMobileToWear(
                             EventData.ConfirmAction(
