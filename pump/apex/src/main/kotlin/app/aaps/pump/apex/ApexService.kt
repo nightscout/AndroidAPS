@@ -892,13 +892,13 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     }
 
 
-    override fun onConnect() = Thread {
+    override fun onConnect() {
         aapsLogger.debug(LTag.PUMPCOMM, "onConnect")
 
         val version = getValue(GetValue.Value.Version)?.firstOrNull()
         if (version !is Version) {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to get version - disconnecting.")
-            return@Thread disconnect()
+            return disconnect()
         }
 
         pump.firmwareVersion = version
@@ -910,14 +910,14 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                 rh.gs(R.string.notification_pump_unsupported),
                 Notification.URGENT,
             )
-            return@Thread disconnect()
+            return disconnect()
         }
 
         onVersion(version)
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol v${version.protocolMajor}.${version.protocolMinor}")
 
-        if (!syncDateTime("BLE-onConnect")) return@Thread
-        if (!notifyAboutConnection("BLE-onConnect")) return@Thread
+        if (!syncDateTime("BLE-onConnect")) return
+        if (!notifyAboutConnection("BLE-onConnect")) return
 
         if (apexDeviceInfo.serialNumber != preferences.get(ApexStringKey.LastConnectedSerialNumber)) {
             onInitialConnection()
@@ -925,14 +925,14 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
 
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
-        if (!getStatus("BLE-onConnect")) return@Thread
-        if (!getBoluses("BLE-onConnect")) return@Thread
+        if (!getStatus("BLE-onConnect")) return
+        if (!getBoluses("BLE-onConnect")) return
 
         unreachableTimerTask?.cancel()
         unreachableTimerTask = null
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
         pump.gettingReady = false
-    }.start()
+    }
 
     private var isDisconnectLoopRunning = false
     private fun spawnLoop() {
@@ -944,7 +944,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                     aapsLogger.debug(LTag.PUMPCOMM, "Starting connection loop")
                     startConnection()
                 }
-                SystemClock.sleep(250)
+                SystemClock.sleep(100)
             }
 
             if (manualDisconnect) {
@@ -957,9 +957,8 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }.start()
     }
 
-    override fun onDisconnect() = Thread {
+    override fun onDisconnect() {
         aapsLogger.debug(LTag.PUMPCOMM, "onDisconnect")
-        getValueResult.clear()
 
         isGetThreadRunning = false
         synchronized(getValueResult) {
@@ -985,21 +984,25 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             }
 
         if (!manualDisconnect) spawnLoop()
-    }.start()
+    }
 
     private var isGetThreadRunning = false
-    override fun onPumpCommand(command: PumpCommand) = Thread {
+    override fun onPumpCommand(command: PumpCommand) {
         if (command.id == null) {
             aapsLogger.error(LTag.PUMPCOMM, "Invalid command with crc ${command.checksum}")
-            return@Thread
+            return
         }
         val type = PumpObject.findObject(command.id!!, command.objectData, aapsLogger)
         aapsLogger.debug(LTag.PUMPCOMM, "from PUMP: ${command.id!!.name}, ${type?.name}")
 
-        if (type == null) return@Thread
-        if (type == PumpObject.CommandResponse) return@Thread onCommandResponse(CommandResponse(command))
+        if (type == null) return
+        if (type == PumpObject.CommandResponse) return onCommandResponse(CommandResponse(command))
 
         notifyAboutResponse(command, type)
+        Thread { processObject(command, type) }.start()
+    }
+
+    private fun processObject(command: PumpCommand, type: PumpObject) {
         when (type) {
             PumpObject.StatusV1        -> onStatusV1(StatusV1(command))
             PumpObject.Heartbeat       -> onHeartbeat()
@@ -1007,8 +1010,9 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             PumpObject.TDDEntry        -> onTDDEntry(TDDEntry(command))
             else -> {}
         }
-    }.start()
+    }
 
+    @Synchronized
     private fun notifyAboutResponse(command: PumpCommand, type: PumpObject) {
         if (!getValueResult.waiting) {
             aapsLogger.debug(LTag.PUMPCOMM, "Got pump command but not waiting for it")
@@ -1059,7 +1063,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                 } else {
                     aapsLogger.debug(LTag.PUMPCOMM, "Response is not ready yet")
                 }
-                SystemClock.sleep(250)
+                SystemClock.sleep(100)
             }
             if (!isGetThreadRunning) {
                 aapsLogger.debug(LTag.PUMPCOMM, "GET thread killed")

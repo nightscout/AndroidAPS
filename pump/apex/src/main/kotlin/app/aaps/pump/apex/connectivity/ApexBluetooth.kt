@@ -49,7 +49,7 @@ class ApexBluetooth @Inject constructor(
         private val WRITE_UUID = UUID.fromString("0000FFE9-0000-1000-8000-00805F9B34FB")
         private val CCC_UUID = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
 
-        private const val WRITE_DELAY_MS = 250
+        private const val WRITE_DELAY_MS = 100
     }
 
     private val bluetoothAdapter = context.getSystemService(BluetoothManager::class.java).adapter
@@ -225,13 +225,13 @@ class ApexBluetooth @Inject constructor(
             @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
             override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
                 super.onCharacteristicRead(gatt, characteristic, status)
-                Thread { onPumpData(characteristic, characteristic.value) }.start()
+                onPumpData(characteristic, characteristic.value)
             }
 
             @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
                 super.onCharacteristicChanged(gatt, characteristic)
-                Thread { onPumpData(characteristic, characteristic.value) }.start()
+                onPumpData(characteristic, characteristic.value)
             }
         }, BluetoothDevice.TRANSPORT_LE)
 
