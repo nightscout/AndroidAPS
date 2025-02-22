@@ -24,6 +24,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
@@ -57,8 +58,10 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     var basalUnTuned = IntArray(24)
     var ic = 0.0
     var isf = 0.0
-    var dia = 0.0
-    var peak = 0
+    val dia: Double
+        get() = profile.iCfg.getDia()
+    val peak: Int
+        get() = profile.iCfg.getPeak()
     var isValid: Boolean = false
     var from: Long = 0
     private var pumpProfileAvgISF = 0.0
@@ -111,7 +114,6 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("name", profileName)
             json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
             json.put("dia", dia)
-            json.put("icfg", ICfg("", peak, dia))
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
                 "curve",
                 "ultra-rapid"
@@ -163,7 +165,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     fun data(circadian: Boolean = false): PureProfile? {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
-            json.put("icfg", ICfg("", peak, dia))
+            json.put("icfg", ICfg("Tuned", peak, dia).toJson())
             json.put("dia", dia)
             if (circadian) {
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
@@ -272,7 +274,5 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             pumpProfileAvgIC = avgIC
             pumpProfileAvgISF = avgISF
         }
-        dia = localInsulin.dia
-        peak = localInsulin.peak
     }
 }

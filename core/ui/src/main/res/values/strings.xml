@@ -162,7 +162,13 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="select_insulin">Select Insulin to Edit</string>
+    <string name="select_pump_insulin">Select Pump Insulin</string>
+    <string name="select_pen_insulin">Select Insulin</string>
+    <string name="insulin_template">Insulin Template</string>
     <string name="dia">DIA</string>
+    <string name="peak">Peak</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Canceling of temporary basal failed</string>

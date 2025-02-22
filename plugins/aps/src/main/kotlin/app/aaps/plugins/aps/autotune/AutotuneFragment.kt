@@ -217,7 +217,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneCheckInputProfile.setOnClickListener {
             val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
                 profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
-                    ATProfile(ProfileSealed.Pure(specificProfile, null), LocalInsulin(""), injector).also {
+                    ATProfile(ProfileSealed.Pure(specificProfile, null), LocalInsulin("", specificProfile.iCfg.getPeak(), specificProfile.iCfg.getDia()), injector).also {
                         it.profileName = profileName
                     }
                 }

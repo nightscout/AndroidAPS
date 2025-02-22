@@ -486,8 +486,8 @@ class AutotuneCore @Inject constructor(
         previousAutotune.isf = isf
         previousAutotune.ic = Round.roundTo(carbRatio, 0.001)
         previousAutotune.basalUnTuned = basalUnTuned
-        previousAutotune.dia = newDia
-        previousAutotune.peak = newPeak
+        previousAutotune.profile.iCfg.setDia(newDia)
+        previousAutotune.profile.iCfg.setPeak(newPeak)
         val localInsulin = LocalInsulin("Ins_$newPeak-$newDia", newPeak, newDia)
         previousAutotune.localInsulin = localInsulin
         previousAutotune.updateProfile()
