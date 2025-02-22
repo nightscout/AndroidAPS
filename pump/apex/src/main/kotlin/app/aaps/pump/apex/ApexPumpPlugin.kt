@@ -228,6 +228,7 @@ class ApexPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Updating pump description")
         pumpDescription.maxTempAbsolute = pump.maxBasal
         pumpDescription.basalMaximumRate = pump.maxBasal
+        pumpDescription.maxBolusSize = pump.maxBolus
     }
 
     override fun loadTDDs(): PumpEnactResult {
