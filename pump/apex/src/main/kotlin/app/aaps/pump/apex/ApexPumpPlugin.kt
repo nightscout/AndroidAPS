@@ -142,7 +142,7 @@ class ApexPumpPlugin @Inject constructor(
         get() = pump.batteryLevel.percentage
     override val pumpDescription = PumpDescription().fillFor(model())
 
-    override fun isBusy() = service?.isBusy ?: false
+    override fun isBusy() = false //service?.isBusy ?: false
     override fun isSuspended() = pump.isSuspended
     override fun isInitialized() = !pump.gettingReady && pump.status != null
     override fun isConnecting() = service?.connectionStatus == ApexBluetooth.Status.CONNECTING
