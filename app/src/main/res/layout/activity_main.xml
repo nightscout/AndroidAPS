@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
             android:layout_width="match_parent"
@@ -26,16 +28,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:importantForAccessibility="no"
             app:srcCompat="@drawable/splash_logo" />
+
     </LinearLayout>
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:elevation="2dp"
         app:contentInsetEndWithActions="48dp"
-        app:contentInsetStartWithNavigation="48dp"
-        android:elevation="2dp">
+        app:contentInsetStartWithNavigation="48dp">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_normal"
@@ -51,17 +55,17 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             app:tabMinWidth="0dp"
-            app:tabPadding="0dp"
+            app:tabMode="scrollable"
 
-            app:tabMode="scrollable" />
+            app:tabPadding="0dp" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/main_pager"
@@ -72,11 +76,11 @@
             android:id="@+id/main_navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:itemBackground="?attr/selectableItemBackground"
-            android:fitsSystemWindows="true"
             android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:itemBackground="?attr/selectableItemBackground"
             app:itemIconTint="?android:textColorPrimary"
-            app:itemTextColor="?android:textColorPrimary"/>
+            app:itemTextColor="?android:textColorPrimary" />
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </LinearLayout>
