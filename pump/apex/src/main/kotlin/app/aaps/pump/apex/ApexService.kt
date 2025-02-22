@@ -997,10 +997,10 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         aapsLogger.debug(LTag.PUMPCOMM, "from PUMP: ${command.id!!.name}, ${type?.name}")
 
         if (type == null) return@Thread
+        if (type == PumpObject.CommandResponse) return@Thread onCommandResponse(CommandResponse(command))
 
         notifyAboutResponse(command, type)
         when (type) {
-            PumpObject.CommandResponse -> onCommandResponse(CommandResponse(command))
             PumpObject.StatusV1        -> onStatusV1(StatusV1(command))
             PumpObject.Heartbeat       -> onHeartbeat()
             PumpObject.BolusEntry      -> onBolusEntry(BolusEntry(command))
@@ -1010,8 +1010,14 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     }.start()
 
     private fun notifyAboutResponse(command: PumpCommand, type: PumpObject) {
-        if (!getValueResult.waiting) return
-        if (type != getValueResult.targetObject) return
+        if (!getValueResult.waiting) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Got pump command but not waiting for it")
+            return
+        }
+        if (type != getValueResult.targetObject) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Got incorrect object type (${type.name} vs ${getValueResult.targetObject?.name})")
+            return
+        }
 
         getValueResult.add(
             when (type) {
@@ -1028,6 +1034,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         )
 
         if (getValueResult.isSingleObject) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Got single value - everything is ready")
             getValueResult.waiting = false
             synchronized(getValueResult) {
                 getValueResult.notifyAll()
@@ -1039,10 +1046,11 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
     }
 
+    @Synchronized
     private fun runGetThread() {
         if (isGetThreadRunning) return
-        aapsLogger.debug(LTag.PUMPCOMM, "Running GET thread")
         isGetThreadRunning = true
+        aapsLogger.debug(LTag.PUMPCOMM, "Running GET thread")
         Thread {
             while (isGetThreadRunning) {
                 val now = System.currentTimeMillis()
@@ -1065,6 +1073,8 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                 getValueResult.notifyAll()
             }
         }.start()
+        // Let thread start
+        SystemClock.sleep(10)
     }
 
     //////// Binder
