@@ -39,6 +39,7 @@ enum class StringKey(
     AutomationLocation("location", "PASSIVE", hideParentScreenIfHidden = true),
 
     SmsAllowedNumbers("smscommunicator_allowednumbers", ""),
+    SmsReceiverNumber("sms_communicator_receiver_number", "", showInApsMode = false, showInPumpControlMode = false, dependency = BooleanKey.SmsAllowRemoteCommands),
     SmsOtpPassword("smscommunicator_otp_password", "", dependency = BooleanKey.SmsAllowRemoteCommands, isPassword = true),
     SmsOtpSecret("smscommunicator_otp_secret", ""), // Move to StringNonKey
 
