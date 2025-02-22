@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -102,7 +103,8 @@ class ImportExportPrefsImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
-    private val dataWorkerStorage: DataWorkerStorage
+    private val dataWorkerStorage: DataWorkerStorage,
+    private val activePlugin: ActivePlugin
 ) : ImportExportPrefs {
 
     override var selectedImportFile: PrefsFile? = null
@@ -397,6 +399,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
                     PrefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
                         if (importPossible) {
+                            activePlugin.beforeImport()
                             sp.clear()
                             for ((key, value) in prefs.values) {
                                 if (value == "true" || value == "false") {
@@ -405,7 +408,7 @@ class ImportExportPrefsImpl @Inject constructor(
                                     sp.putString(key, value)
                                 }
                             }
-
+                            activePlugin.afterImport()
                             restartAppAfterImport(activity)
                         } else {
                             // for impossible imports it should not be called
