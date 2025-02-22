@@ -100,7 +100,7 @@ class ActionsFragment : DaggerFragment() {
                 protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager) })
+                    UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager, insulinName =  activePlugin.activeInsulin.iCfg.insulinLabel) })
             }
         }
         binding.tempTarget.setOnClickListener {

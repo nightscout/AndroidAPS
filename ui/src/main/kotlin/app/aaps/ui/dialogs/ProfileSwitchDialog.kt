@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -57,6 +58,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     private var queryingProtection = false
     private var profileName: String? = null
+    private var iCfg: ICfg? = null
     private val disposable = CompositeDisposable()
     private var _binding: DialogProfileswitchBinding? = null
 
@@ -90,6 +92,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         onCreateViewGeneral()
         arguments?.let { bundle ->
             profileName = bundle.getString("profileName", null)
+            iCfg = bundle.getString("insulinName", null)?.let { activePlugin.activeInsulin.getInsulin(it) }
         }
         _binding = DialogProfileswitchBinding.inflate(inflater, container, false)
         return binding.root
@@ -120,7 +123,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             val profileList = ArrayList<CharSequence>()
             for (profileName in profileListToCheck) {
                 val profileToCheck = activePlugin.activeProfileSource.profile?.getSpecificProfile(profileName.toString())
-                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck, activePlugin).isValid("ProfileSwitch", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid)
+                if (profileToCheck != null &&
+                    ProfileSealed.Pure(profileToCheck, activePlugin).isValid("ProfileSwitch", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid &&
+                    (iCfg == null || profileToCheck.iCfg.isEqual(iCfg)))
                     profileList.add(profileName)
             }
             if (profileList.isEmpty()) {

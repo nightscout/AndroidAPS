@@ -95,9 +95,12 @@ class UiInteractionImpl @Inject constructor(
             .show(fragmentManager, "LoopDialog")
     }
 
-    override fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?) {
+    override fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?, insulinName: String?) {
         ProfileSwitchDialog()
-            .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", profileName) } }
+            .also { it.arguments = Bundle().also { bundle ->
+                bundle.putString("profileName", profileName)
+                bundle.putString("insulinName", insulinName)
+            } }
             .show(fragmentManager, "ProfileSwitchDialog")
     }
 

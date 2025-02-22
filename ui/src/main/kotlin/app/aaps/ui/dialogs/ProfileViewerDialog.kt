@@ -106,7 +106,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.CUSTOM_PROFILE  -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil, activePlugin)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profile2 = null
                 profileName = customProfileName
                 date = ""
@@ -114,8 +114,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.PROFILE_COMPARE -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
-                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil, activePlugin)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil, activePlugin)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
@@ -137,7 +137,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
                     binding.units.text = profileFunction.getUnits().asText
-                    binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), rh.gs(app.aaps.core.interfaces.R.string.shorthour)))
+                    binding.insulin.text = HtmlHelper.fromHtml(formatColors("", profile1.iCfg.getDia(), profile2.iCfg.getDia(), DecimalFormat("0.00"), rh.gs(app.aaps.core.interfaces.R.string.shorthour)))
                     val profileNames = profileName!!.split("\n").toTypedArray()
                     binding.activeProfile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
                     binding.date.text = date
@@ -159,7 +159,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         else
             profile?.let {
                 binding.units.text = it.units.asText
-                binding.dia.text = rh.gs(app.aaps.core.ui.R.string.format_hours, it.dia)
+                //binding.dia.text = rh.gs(app.aaps.core.ui.R.string.format_hours, it.dia)
+                binding.insulin.text = it.iCfg.insulinLabel
                 binding.activeProfile.text = profileName
                 binding.date.text = date
                 binding.ic.text = it.getIcList(rh, dateUtil)

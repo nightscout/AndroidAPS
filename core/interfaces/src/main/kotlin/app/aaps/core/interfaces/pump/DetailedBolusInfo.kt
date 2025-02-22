@@ -4,6 +4,7 @@ import android.content.Context
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -21,6 +22,7 @@ class DetailedBolusInfo {
     var lastKnownBolusTime: Long = 0 // for SMB check
     var deliverAtTheLatest: Long = 0 // SMB should be delivered within 1 min from this time
     @Transient var context: Context? = null // context for progress dialog
+    var iCfg: ICfg? = null
 
     // Prefilled info for storing to db
     var bolusCalculatorResult: BCR? = null
@@ -48,7 +50,8 @@ class DetailedBolusInfo {
                 amount = insulin,
                 type = bolusType,
                 notes = notes,
-                ids = IDs(pumpId = timestamp)
+                ids = IDs(pumpId = timestamp),
+                icfg = iCfg
             )
         else error("insulin == 0.0")
 
@@ -65,6 +68,7 @@ class DetailedBolusInfo {
     fun copy(): DetailedBolusInfo {
         val n = DetailedBolusInfo()
         n.insulin = insulin
+        n.iCfg = iCfg?.deepClone()
         n.carbs = carbs
 
         n.timestamp = timestamp

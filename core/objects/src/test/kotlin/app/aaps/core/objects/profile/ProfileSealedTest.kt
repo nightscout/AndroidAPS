@@ -75,7 +75,7 @@ class ProfileSealedTest : TestBase() {
     fun doTests() {
 
         // Test valid profile
-        var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)
+        var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil, activePlugin.activeInsulin )!!, activePlugin)
         assertThat(p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false).isValid).isTrue()
 //        assertThat(p.log()).contains("NS units: mmol")
 //        JSONAssertions.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
@@ -117,21 +117,21 @@ class ProfileSealedTest : TestBase() {
         assertThat(p.timeshift).isEqualTo(0)
 
         //Test basal profile below limit
-        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!, activePlugin)
+        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil, activePlugin.activeInsulin )!!, activePlugin)
         p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false)
 
         // Test profile w/o units
-        assertThat(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil)).isNull()
+        assertThat(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil, activePlugin.activeInsulin )).isNull()
 
         //Test profile not starting at midnight
-        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notStartingAtZeroValidProfile), dateUtil)!!, activePlugin)
+        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notStartingAtZeroValidProfile), dateUtil, activePlugin.activeInsulin )!!, activePlugin)
         assertThat(p.getIc(0)).isWithin(0.01).of(30.0)
 
         // Test wrong profile
-        assertThat(pureProfileFromJson(JSONObject(wrongProfile), dateUtil)).isNull()
+        assertThat(pureProfileFromJson(JSONObject(wrongProfile), dateUtil, activePlugin.activeInsulin )).isNull()
 
         // Test percentage functionality
-        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)
+        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil, activePlugin.activeInsulin )!!, activePlugin)
         p.pct = 50
         assertThat(p.getBasal(c.timeInMillis)).isWithin(0.01).of(0.05)
         assertThat(p.percentageBasalSum()).isWithin(0.01).of(1.2)
@@ -139,7 +139,7 @@ class ProfileSealedTest : TestBase() {
         assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test", config, processedDeviceStatusData)).isWithin(0.01).of(223.2)
 
         // Test timeshift functionality
-        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)
+        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil, activePlugin.activeInsulin )!!, activePlugin)
         p.ts = 1
         assertThat(p.getIsfList(rh, dateUtil).replace(',', '.')).isEqualTo(
             """
@@ -151,7 +151,7 @@ class ProfileSealedTest : TestBase() {
 
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
-        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil)!!, activePlugin)
+        p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil, activePlugin.activeInsulin )!!, activePlugin)
         p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false)
     }
 }
