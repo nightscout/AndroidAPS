@@ -55,6 +55,7 @@ import org.json.JSONException
 
 import org.json.JSONObject
 import javax.inject.Inject
+import kotlin.math.abs
 
 /**
  * @author Roman Rikhter (teledurak@gmail.com)
@@ -290,10 +291,14 @@ class ApexPumpPlugin @Inject constructor(
 
     override fun isThisProfileSet(profile: Profile): Boolean {
         if (!isInitialized()) return false
-        val profileBasal = profile.toApexReadableProfile()
-        val pumpBasals = service!!.getBasalProfiles("ApexPumpPlugin-isThisProfileSet") ?: return false
-        val pumpBasal = pumpBasals[ApexService.USED_BASAL_PATTERN_INDEX]
-        return pumpBasal == profileBasal
+        val pumpBasalProfiles = service!!.getBasalProfiles("ApexPumpPlugin-isThisProfileSet") ?: return false
+        val pumpBasalProfile = pumpBasalProfiles[ApexService.USED_BASAL_PATTERN_INDEX]
+        for (i in 0..<48) {
+            val profileBasal = profile.getBasalTimeFromMidnight(i * 30 * 60)
+            val pumpBasal = pumpBasalProfile!![i]
+            if (abs(pumpBasal - profileBasal) > 0.01) return false
+        }
+        return true
     }
 
     override fun lastDataTime(): Long {
