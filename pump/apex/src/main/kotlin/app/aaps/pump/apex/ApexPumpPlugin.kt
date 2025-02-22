@@ -217,6 +217,7 @@ class ApexPumpPlugin @Inject constructor(
             "${rh.gs(R.string.status_last_bolus)}: ${pump.lastBolus?.toShortLocalString(rh) ?: "-"}\n" +
             "${rh.gs(R.string.status_tbr)}: ${status.getTBR(rh)}\n" +
             "${rh.gs(R.string.status_basal)}: ${status.getBasal(rh)}\n" +
+            "${rh.gs(R.string.status_reservoir)}: ${status.getReservoirLevel(rh)}\n" +
             "${rh.gs(R.string.status_battery)}: ${status.getBatteryLevel(rh)}"
 
         aapsLogger.debug(LTag.PUMP, "Short status: $ret")
