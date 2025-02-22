@@ -25,6 +25,7 @@ open class PumpDescription {
     var basalMaximumRate = 0.0
     var isRefillingCapable = false
     var isBatteryReplaceable = false
+    var maxBolusSize = 0.0
 
     //var storesCarbInfo = false
     var is30minBasalRatesCapable = false
@@ -64,6 +65,7 @@ open class PumpDescription {
         needsManualTDDLoad = true
         hasCustomUnreachableAlertCheck = false
         useHardwareLink = false
+        maxBolusSize = 0.0
     }
 
     companion object {
