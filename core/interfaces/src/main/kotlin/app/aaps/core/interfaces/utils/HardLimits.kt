@@ -38,6 +38,8 @@ interface HardLimits {
     fun maxDia(): Double
     fun minIC(): Double
     fun maxIC(): Double
+    fun minPeak(): Double
+    fun maxPeak(): Double
 
     // safety checks
     fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean
