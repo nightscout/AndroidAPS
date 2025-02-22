@@ -167,9 +167,9 @@
     <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
     <string name="wear_action_tempt_range_error">Invalid range: Low target (%1$s) cannot be greater than High target (%2$s)</string>
-    <string name="wear_action_tempt_manual_range_message">TempTarget\n\nMin: %1$s\nMax: %2$s\nDuration: %3$s min</string>
-    <string name="wear_action_tempt_manual_message">TempTarget\n\nTarget: %1$s\nDuration: %2$s min</string>
-    <string name="wear_action_tempt_preset_message">TempTarget\n\nReason: %1$s\nTarget: %2$s\nDuration: %3$s min</string>
+    <string name="wear_action_tempt_manual_range_message">TempTarget\n\nMin: %1$s\nMax: %2$s\nDuration: %3$d min</string>
+    <string name="wear_action_tempt_manual_message">TempTarget\n\nTarget: %1$s\nDuration: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">TempTarget\n\nReason: %1$s\nTarget: %2$s\nDuration: %3$d min</string>
     <string name="no_success">not successful - please check phone</string>
     <string name="wear_settings">Wear settings</string>
     <string name="wearcontrol_title">Controls from Watch</string>
