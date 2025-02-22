@@ -3,7 +3,6 @@ package app.aaps.ui.defaultProfile
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
