@@ -31,6 +31,11 @@ class LastBgDataImpl @Inject constructor(
         iobCobCalculator.ads.bucketedData?.firstOrNull()
             ?: persistenceLayer.getLastGlucoseValue()?.let { InMemoryGlucoseValue.fromGv(it) }
 
+    override fun isVeryLow(): Boolean =
+        lastBg()?.let { lastBg ->
+            lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewVeryLowMark)
+        } == true
+
     override fun isLow(): Boolean =
         lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewLowMark)
@@ -41,10 +46,17 @@ class LastBgDataImpl @Inject constructor(
             lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
         } == true
 
+    override fun isVeryHigh(): Boolean =
+        lastBg()?.let { lastBg ->
+            lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewVeryHighMark)
+        } == true
+
     @ColorInt
     override fun lastBgColor(context: Context?): Int =
         when {
+            isVeryLow()  -> rh.gac(context, app.aaps.core.ui.R.attr.bgVeryLow)
             isLow()  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
+            isVeryHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.veryHighColor)
             isHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
             else     -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
         }

@@ -111,8 +111,10 @@
         <item name="cgmDexColor">@color/byodaGray</item>
         <item name="cgmXdripColor">@color/colorCalibrationButton</item>
         <!---BG color-->
-        <item name="bgLow">@color/low</item>
+        <item name="bgVeryLow">@color/low</item>
+        <item name="bgLow">@color/high</item>
         <item name="highColor">@color/high</item>
+        <item name="veryHighColor">@color/low</item>
         <item name="bgInRange">@color/inRange</item>
         <!---Profile Helper -->
         <item name="helperProfileColor">@color/helperProfile</item>
