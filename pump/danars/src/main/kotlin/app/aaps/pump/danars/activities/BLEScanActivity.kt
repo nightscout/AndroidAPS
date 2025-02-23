@@ -23,7 +23,7 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeEnable
@@ -149,8 +149,8 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             }
 
             override fun onClick(v: View) {
-                preferences.put(DanaStringKey.DanaMacAddress, item.device.address)
-                preferences.put(DanaStringKey.DanaRsName, name.text.toString())
+                preferences.put(DanaStringKey.MacAddress, item.device.address)
+                preferences.put(DanaStringKey.RsName, name.text.toString())
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())

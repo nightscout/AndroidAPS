@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_i_understand" translatable="false">I_understand</string>
-
     <string name="units">Units</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="next_button">Next</string>

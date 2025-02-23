@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,8 @@ import javax.inject.Singleton
 @Singleton
 class SyaiTagPlugin @Inject constructor(
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    preferences: Preferences
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -36,8 +38,10 @@ class SyaiTagPlugin @Inject constructor(
         .pluginName(R.string.syai_tag_app)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_patched_syai_tag_app),
-    aapsLogger, rh
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences
 ), BgSource {
+
     class SyaiTagWorker(
         context: Context,
         params: WorkerParameters
@@ -52,10 +56,10 @@ class SyaiTagPlugin @Inject constructor(
             var ret = Result.success()
             if (!syaiTagPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val collection = inputData.getString("collection") ?: return Result.failure(workDataOf("Error" to "missing collection"))
-            if (collection == "entries"){
+            if (collection == "entries") {
                 val data = inputData.getString("data")
                 aapsLogger.debug(LTag.BGSOURCE, "Received Syai Tag Data $data")
-                if (!data.isNullOrEmpty()){
+                if (!data.isNullOrEmpty()) {
                     try {
                         val glucoseValues = mutableListOf<GV>()
                         val jsonArray = JSONArray(data)
@@ -71,6 +75,7 @@ class SyaiTagPlugin @Inject constructor(
                                         trendArrow = TrendArrow.fromString(jsonObject.getString("direction")),
                                         sourceSensor = SourceSensor.SYAI_TAG
                                     )
+
                                 else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
                             }
                         }

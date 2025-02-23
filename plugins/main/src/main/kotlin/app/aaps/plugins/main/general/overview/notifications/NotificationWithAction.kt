@@ -7,9 +7,9 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -21,7 +21,6 @@ class NotificationWithAction(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var activePlugin: ActivePlugin
 
@@ -70,7 +69,7 @@ class NotificationWithAction(
             aapsLogger.debug(LTag.NOTIFICATION, "Notification text is: $text")
             val msToSnooze = preferences.get(IntKey.NsClientAlarmStaleData) * 60 * 1000L
             aapsLogger.debug(LTag.NOTIFICATION, "snooze nsalarm_staledatavalue in minutes is ${T.msecs(msToSnooze).mins()} currentTimeMillis is: ${System.currentTimeMillis()}")
-            sp.putLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + nsAlarm.level(), System.currentTimeMillis() + msToSnooze)
+            preferences.put(LongComposedKey.NotificationSnoozedTo, nsAlarm.level().toString(), value = System.currentTimeMillis() + msToSnooze)
         }
     }
 

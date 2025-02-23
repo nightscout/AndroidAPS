@@ -18,10 +18,11 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewNotificationItemBinding
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
@@ -33,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class NotificationStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
@@ -68,7 +69,7 @@ class NotificationStore @Inject constructor(
             }
         }
         store.add(n)
-        if (sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true) && n !is NotificationWithAction)
+        if (preferences.get(BooleanKey.AlertUrgentAsAndroidNotification) && n !is NotificationWithAction)
             raiseSystemNotification(n)
         if (n.soundId != null && n.soundId != 0) uiInteraction.startAlarm(n.soundId!!, n.text)
         Collections.sort(store, NotificationComparator())

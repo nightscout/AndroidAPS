@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.EoPatchRxBus.listen
 import app.aaps.pump.eopatch.alarm.AlarmCode
 import app.aaps.pump.eopatch.ble.task.ActivateTask
@@ -35,9 +35,6 @@ import app.aaps.pump.eopatch.ble.task.UpdateConnectionTask
 import app.aaps.pump.eopatch.code.BolusExDuration
 import app.aaps.pump.eopatch.code.DeactivationStatus
 import app.aaps.pump.eopatch.code.PatchLifecycle
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.BUZZER_REMINDERS
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.EXPIRATION_REMINDERS
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.LOW_RESERVOIR_REMINDERS
 import app.aaps.pump.eopatch.core.Patch
 import app.aaps.pump.eopatch.core.api.BuzzerStop
 import app.aaps.pump.eopatch.core.api.GetTemperature
@@ -60,6 +57,8 @@ import app.aaps.pump.eopatch.core.scan.BleConnectionState
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.core.scan.PatchSelfTestResult
 import app.aaps.pump.eopatch.event.EventEoPatchAlarm
+import app.aaps.pump.eopatch.keys.EopatchBooleanKey
+import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.ui.receiver.RxBroadcastReceiver
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.NormalBasal
@@ -107,7 +106,7 @@ class PatchManagerExecutor @Inject constructor(
     private val normalBasalManager: NormalBasalManager,
     private val alarms: Alarms,
     private val context: Context,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val START_BOND: StartBondTask,
@@ -121,11 +120,11 @@ class PatchManagerExecutor @Inject constructor(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    private val BUZZER_STOP: BuzzerStop
-    private val TEMPERATURE_GET: GetTemperature
-    private val ALARM_ALERT_ERROR_BEEP_STOP: StopAeBeep
-    private val PUBLIC_KEY_SET: PublicKeySend
-    private val SEQUENCE_GET: SequenceGet
+    private val BUZZER_STOP: BuzzerStop = BuzzerStop()
+    private val TEMPERATURE_GET: GetTemperature = GetTemperature()
+    private val ALARM_ALERT_ERROR_BEEP_STOP: StopAeBeep = StopAeBeep()
+    private val PUBLIC_KEY_SET: PublicKeySend = PublicKeySend()
+    private val SEQUENCE_GET: SequenceGet = SequenceGet()
 
     @Inject fun onInit() {
         patch.init(context)
@@ -203,9 +202,9 @@ class PatchManagerExecutor @Inject constructor(
     private fun onPatchConnected(connected: Boolean) {
         val activated = patchConfig.isActivated
         val useEncryption = patchConfig.sharedKey != null
-        val doseUnit = sp.getInt(LOW_RESERVOIR_REMINDERS, 0)
-        val hours = sp.getInt(EXPIRATION_REMINDERS, 0)
-        val buzzer = sp.getBoolean(BUZZER_REMINDERS, false)
+        val doseUnit = preferences.get(EopatchIntKey.LowReservoirReminder)
+        val hours = preferences.get(EopatchIntKey.ExpirationReminder)
+        val buzzer = preferences.get(EopatchBooleanKey.BuzzerReminder)
         val pc: PatchConfig = patchConfig
 
         if (connected && activated && useEncryption) {
@@ -604,15 +603,6 @@ class PatchManagerExecutor @Inject constructor(
     fun ECPublicToRawBytes(keyPair: KeyPair): Single<ByteArray> {
         return Single.just<PublicKey>(keyPair.public).cast<ECPublicKey>(ECPublicKey::class.java)
             .map<ByteArray>(Function { pubKey: ECPublicKey -> encodeECPublicKey(pubKey) })
-    }
-
-    init {
-
-        BUZZER_STOP = BuzzerStop()
-        TEMPERATURE_GET = GetTemperature()
-        ALARM_ALERT_ERROR_BEEP_STOP = StopAeBeep()
-        PUBLIC_KEY_SET = PublicKeySend()
-        SEQUENCE_GET = SequenceGet()
     }
 
     val patchConnectionState get() = patch.connectionState

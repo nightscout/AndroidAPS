@@ -3,11 +3,10 @@ package app.aaps.pump.equil.manager.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CustomCommand
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_DEVICES
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_PASSWORD
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.database.ResolvedResult
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.Crc
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilManager
@@ -23,7 +22,7 @@ import java.util.Locale
 abstract class BaseCmd(
     val createTime: Long,
     val aapsLogger: AAPSLogger,
-    val sp: SP,
+    val preferences: Preferences,
     val equilManager: EquilManager
 ) : CustomCommand {
 
@@ -73,11 +72,11 @@ abstract class BaseCmd(
     }
 
     fun getEquilDevices(): String {
-        return sp.getString(EQUIL_DEVICES, "")
+        return preferences.get(EquilStringKey.Devices)
     }
 
     fun getEquilPassWord(): String {
-        return sp.getString(EQUIL_PASSWORD, "")
+        return preferences.get(EquilStringKey.Password)
     }
 
     open fun isPairStep(): Boolean {

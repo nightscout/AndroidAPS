@@ -44,12 +44,11 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
@@ -95,7 +94,6 @@ class CommandQueueImplementation @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val context: Context,
-    private val sp: SP,
     private val preferences: Preferences,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -251,7 +249,7 @@ class CommandQueueImplementation @Inject constructor(
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp, preferences,
+            constraintChecker, profileFunction, activePlugin, context, preferences,
             config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator, CommandQueueName("CommandQueueIndependentInstance"), workManager
         )
         tempCommandQueue.readStatus(reason, callback)

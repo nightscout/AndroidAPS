@@ -34,13 +34,14 @@ import app.aaps.core.interfaces.rx.events.Event;
 import app.aaps.core.interfaces.rx.events.EventDismissNotification;
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
-import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.keys.interfaces.Preferences;
 import app.aaps.core.utils.pump.ByteUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey;
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType;
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey;
 import app.aaps.pump.omnipod.eros.R;
-import app.aaps.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import app.aaps.pump.omnipod.eros.definition.PodHistoryEntryType;
 import app.aaps.pump.omnipod.eros.driver.communication.message.response.StatusResponse;
 import app.aaps.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
@@ -83,6 +84,8 @@ import app.aaps.pump.omnipod.eros.extensions.DetailedBolusInfoExtensionKt;
 import app.aaps.pump.omnipod.eros.extensions.PumpStateExtensionKt;
 import app.aaps.pump.omnipod.eros.history.ErosHistory;
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
+import app.aaps.pump.omnipod.eros.keys.ErosBooleanPreferenceKey;
+import app.aaps.pump.omnipod.eros.keys.ErosStringNonPreferenceKey;
 import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil;
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil;
@@ -97,7 +100,7 @@ public class AapsOmnipodErosManager {
     private final AAPSLogger aapsLogger;
     private final RxBus rxBus;
     private final ResourceHelper rh;
-    private final SP sp;
+    private final Preferences preferences;
     private final OmnipodManager delegate;
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final PumpSync pumpSync;
@@ -127,7 +130,7 @@ public class AapsOmnipodErosManager {
                                   AAPSLogger aapsLogger,
                                   AapsSchedulers aapsSchedulers,
                                   RxBus rxBus,
-                                  SP sp,
+                                  Preferences preferences,
                                   ResourceHelper rh,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   PumpSync pumpSync,
@@ -140,7 +143,7 @@ public class AapsOmnipodErosManager {
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
-        this.sp = sp;
+        this.preferences = preferences;
         this.rh = rh;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.pumpSync = pumpSync;
@@ -164,20 +167,20 @@ public class AapsOmnipodErosManager {
     }
 
     public void reloadSettings() {
-        basalBeepsEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED, true);
-        bolusBeepsEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED, true);
-        smbBeepsEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED, true);
-        tbrBeepsEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED, false);
-        suspendDeliveryButtonEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED, false);
-        pulseLogButtonEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
-        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED, false);
-        showRileyLinkBatteryLevel = sp.getBoolean(OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL, false);
-        batteryChangeLoggingEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED, false);
-        timeChangeEventEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
-        notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, false);
-        notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
-        notificationUncertainBolusSoundEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED, true);
-        automaticallyAcknowledgeAlertsEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED, false);
+        basalBeepsEnabled = preferences.get(OmnipodBooleanPreferenceKey.BasalBeepsEnabled);
+        bolusBeepsEnabled = preferences.get(OmnipodBooleanPreferenceKey.BolusBeepsEnabled);
+        smbBeepsEnabled = preferences.get(OmnipodBooleanPreferenceKey.SmbBeepsEnabled);
+        tbrBeepsEnabled = preferences.get(OmnipodBooleanPreferenceKey.TbrBeepsEnabled);
+        suspendDeliveryButtonEnabled = preferences.get(ErosBooleanPreferenceKey.ShowSuspendDeliveryButton);
+        pulseLogButtonEnabled = preferences.get(ErosBooleanPreferenceKey.ShowPulseLogButton);
+        rileylinkStatsButtonEnabled = preferences.get(ErosBooleanPreferenceKey.ShowRileyLinkStatsButton);
+        showRileyLinkBatteryLevel = preferences.get(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel);
+        batteryChangeLoggingEnabled = preferences.get(ErosBooleanPreferenceKey.BatteryChangeLogging);
+        timeChangeEventEnabled = preferences.get(ErosBooleanPreferenceKey.TimeChangeEnabled);
+        notificationUncertainTbrSoundEnabled = preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification);
+        notificationUncertainSmbSoundEnabled = preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification);
+        notificationUncertainBolusSoundEnabled = preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification);
+        automaticallyAcknowledgeAlertsEnabled = preferences.get(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts);
     }
 
     public PumpEnactResult initializePod() {
@@ -438,10 +441,10 @@ public class AapsOmnipodErosManager {
         //
         // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
         try {
-            sp.putString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, DetailedBolusInfoExtensionKt.toJsonString(detailedBolusInfo));
-            aapsLogger.debug(LTag.PUMP, "Stored active bolus to SP for recovery");
+            preferences.put(ErosStringNonPreferenceKey.ActiveBolus, DetailedBolusInfoExtensionKt.toJsonString(detailedBolusInfo));
+            aapsLogger.debug(LTag.PUMP, "Stored active bolus to preferences for recovery");
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);
+            aapsLogger.error(LTag.PUMP, "Failed to store active bolus to preferences", ex);
         }
 
         // Bolus is already updated in Pod state. If this was an SMB, it could be that
@@ -457,7 +460,7 @@ public class AapsOmnipodErosManager {
 
         addBolusToHistory(detailedBolusInfo);
 
-        sp.remove(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS);
+        preferences.remove(ErosStringNonPreferenceKey.ActiveBolus);
 
         return instantiator.providePumpEnactResult().success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }

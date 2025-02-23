@@ -4,8 +4,9 @@ import android.util.Base64
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
 import java.net.URLEncoder
@@ -47,13 +48,13 @@ class OneTimePassword @Inject constructor(
      */
     fun ensureKey(forceNewKey: Boolean = false) {
         val keyBytes: ByteArray
-        val strSecret = preferences.get(StringKey.SmsOtpSecret).trim()
+        val strSecret = preferences.get(StringNonKey.SmsOtpSecret).trim()
         if (strSecret.isEmpty() || forceNewKey) {
             val keyGenerator = KeyGenerator.getInstance(totp.algorithm)
             keyGenerator.init(Constants.OTP_GENERATED_KEY_LENGTH_BITS)
             val generatedKey = keyGenerator.generateKey()
             keyBytes = generatedKey.encoded
-            preferences.put(StringKey.SmsOtpSecret, Base64.encodeToString(keyBytes, Base64.NO_WRAP + Base64.NO_PADDING))
+            preferences.put(StringNonKey.SmsOtpSecret, Base64.encodeToString(keyBytes, Base64.NO_WRAP + Base64.NO_PADDING))
         } else {
             keyBytes = Base64.decode(strSecret, Base64.DEFAULT)
         }

@@ -1,47 +1,36 @@
 <resources>
-    <string name="key_diaconn_g8_address" translatable="false">diagonn_g8_address</string>
-    <string name="key_diaconn_g8_name" translatable="false">Diaconn G8</string>
-
-    <string name="key_diaconn_g8_bolusspeed"  translatable="false">g8_bolusspeed</string>
-    <string name="key_diaconn_g8_logbatterychange" translatable="false">diaconn_g8_logbatterychanges</string>
-    <string name="key_diaconn_g8_loginsulinchange" translatable="false">diaconn_g8_loginsulinchange</string>
-    <string name="key_diaconn_g8_logneedlechange" translatable="false">diaconn_g8_logneedlechange</string>
-    <string name="key_diaconn_g8_cloudsend" translatable="false">diaconn_g8_cloudsend</string>
-    <string name="key_diaconn_g8_appuid" translatable="false">diaconn_g8_appuid</string>
-    <string name="key_diaconn_g8_is_bolus_speed_sync" translatable="false">diaconn_g8_isbolusspeedsync</string>
-
-    <string name="resetpairing" >Reset Pairing</string>
+    <string name="resetpairing">Reset Pairing</string>
     <string name="diaconn_no_device_available">No Device available</string>
-    <string name="diaconn_pairing" >Diaconn Pump Pairing</string>
-    <string name="pumperror" >Pump Error</string>
-    <string name="diaconn_g8_history_alarm" >Alarms</string>
-    <string name="diaconn_g8_history_basalhours" >Basal Hours</string>
-    <string name="diaconn_g8_history_bolus" >Boluses</string>
-    <string name="diaconn_g8_history_dailyinsulin" >Daily insulin</string>
+    <string name="diaconn_pairing">Diaconn Pump Pairing</string>
+    <string name="pumperror">Pump Error</string>
+    <string name="diaconn_g8_history_alarm">Alarms</string>
+    <string name="diaconn_g8_history_basalhours">Basal Hours</string>
+    <string name="diaconn_g8_history_bolus">Boluses</string>
+    <string name="diaconn_g8_history_dailyinsulin">Daily insulin</string>
     <string name="diaconn_g8_history_refill">Refill</string>
     <string name="diaconn_g8_history_suspend">Suspend</string>
-    <string name="invalidpairing" >Invalid pairing information. Requesting new pairing</string>
-    <string name="gettingpumpsettings" >Getting pump settings</string>
-    <string name="gettingpumptime" >Getting pump time</string>
-    <string name="largetimediff" >Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
-    <string name="largetimedifftitle" >Large time difference Title</string>
-    <string name="approachingdailylimit" >Approaching insulin daily limit</string>
-    <string name="startingbolus" >Starting bolus delivery</string>
-    <string name="waitingforestimatedbolusend" >Waiting for estimated bolus end</string>
-    <string name="gettingbolusstatus" >Getting Bolus Status</string>
+    <string name="invalidpairing">Invalid pairing information. Requesting new pairing</string>
+    <string name="gettingpumpsettings">Getting pump settings</string>
+    <string name="gettingpumptime">Getting pump time</string>
+    <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
+    <string name="largetimedifftitle">Large time difference Title</string>
+    <string name="approachingdailylimit">Approaching insulin daily limit</string>
+    <string name="startingbolus">Starting bolus delivery</string>
+    <string name="waitingforestimatedbolusend">Waiting for estimated bolus end</string>
+    <string name="gettingbolusstatus">Getting Bolus Status</string>
     <string name="stoppingtempbasal">Stopping temp basal</string>
-    <string name="settingtempbasal" >Setting temp basal</string>
-    <string name="settingextendedbolus" >Setting extended bolus</string>
-    <string name="stoppingextendedbolus" >Stopping extended bolus</string>
-    <string name="updatingbasalrates" >Updating basal rates</string>
+    <string name="settingtempbasal">Setting temp basal</string>
+    <string name="settingextendedbolus">Setting extended bolus</string>
+    <string name="stoppingextendedbolus">Stopping extended bolus</string>
+    <string name="updatingbasalrates">Updating basal rates</string>
     <string name="description_pump_diaconn_g8">Pump Integration for Diaconn G8 Pumps</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
-    <string name="maxbolusviolation" >Max bolus violation</string>
-    <string name="commanderror" >Command error</string>
-    <string name="speederror" >Speed error</string>
-    <string name="insulinlimitviolation" >Insulin limit violation</string>
-    <string name="boluserrorcode" >Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
+    <string name="maxbolusviolation">Max bolus violation</string>
+    <string name="commanderror">Command error</string>
+    <string name="speederror">Speed error</string>
+    <string name="insulinlimitviolation">Insulin limit violation</string>
+    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
 
     <string name="bolusspeed">Bolus speed</string>
     <string name="selectedpump">Selected pump</string>
@@ -75,9 +64,6 @@
     <string name="insulinlackwarning">Insulin Lack Warning</string>
     <string name="needbatteryreplace">Battery replacement is required</string>
     <string name="needinsullinreplace">Insulin replacement is required</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Log reservoir change</string>
     <string name="diaconn_g8_loginsulinchange_summary">Add \"Insulin Change\" event to careportal when detected in history</string>
     <string name="diaconn_g8_logcanulachange_title">Log needle change</string>
@@ -112,9 +98,9 @@
     <string name="diacon_g8_blockreplacetube">REPLACE TUBE</string>
     <string name="diacon_g8_blockreplaceneedle">REPLACE NEEDLE</string>
     <string name="diacon_g8_blockreplacesyringe">REPLACE SYRINGE</string>
-    <string name="diaconn_g8_logalarmblock" >Injection Block (%s)</string>
-    <string name="diaconn_g8_lgorelease" >basal release (%s)</string>
-    <string name="diaconn_g8_lgosuspend" >basal suspend (%s)</string>
+    <string name="diaconn_g8_logalarmblock">Injection Block (%s)</string>
+    <string name="diaconn_g8_lgorelease">basal release (%s)</string>
+    <string name="diaconn_g8_lgosuspend">basal suspend (%s)</string>
     <string name="diaconn_g8_logdualnormalsuccess">Dual Nomarl Success</string>
     <string name="diaconn_g8_logdualsquarestart">Dual Square Start</string>
     <string name="diaconn_g8_logdualsquaresuccess">Dual Square Success</string>
@@ -123,7 +109,6 @@
     <string name="diaconn_g8_logmealfail">Meal Failed</string>
     <string name="diaconn_g8_logsuccess">Success</string>
     <string name="diaconn_g8_logmealsuccess">Meal Success</string>
-    <string name="key_diaconn_g8_logtubechange" translatable="false">diaconn_g8_logtubechange</string>
     <string name="diaconn_g8_errorcode_1">Can\'t lookup due to packet CRC error.</string>
     <string name="diaconn_g8_errorcode_2">Can\'t be set to an input parameter error.</string>
     <string name="diaconn_g8_errorcode_3">Can\'t be set to a protocol specification error.</string>

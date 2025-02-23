@@ -1,6 +1,7 @@
 package app.aaps.core.objects.wizard
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject
@@ -10,14 +11,14 @@ import javax.inject.Singleton
 
 @Singleton
 class QuickWizard @Inject constructor(
-    private val sp: SP,
+    private val preferences: Preferences,
     private val injector: HasAndroidInjector
 ) {
 
     private var storage = JSONArray()
 
     init {
-        setData(JSONArray(sp.getString(app.aaps.core.utils.R.string.key_quickwizard, "[]")))
+        setData(JSONArray(preferences.get(StringNonKey.QuickWizard)))
         setGuidsForOldEntries()
     }
 
@@ -45,7 +46,7 @@ class QuickWizard @Inject constructor(
     }
 
     fun save() {
-        sp.putString(app.aaps.core.utils.R.string.key_quickwizard, storage.toString())
+        preferences.put(StringNonKey.QuickWizard, storage.toString())
     }
 
     fun size(): Int = storage.length()

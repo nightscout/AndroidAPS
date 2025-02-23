@@ -14,9 +14,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
+import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
 import app.aaps.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -38,7 +40,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val podStateManager: OmnipodDashPodStateManager,
     private val rxBus: RxBus,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rh: ResourceHelper,
     private val fabricPrivacy: FabricPrivacy,
     private val history: DashHistory,
@@ -65,16 +67,16 @@ class DashInsertCannulaViewModel @Inject constructor(
                 profile,
                 basalProgram
             )
-            val expirationReminderEnabled = sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled, true)
-            val expirationReminderHours = sp.getInt(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_expiry, 9)
+            val expirationReminderEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationReminder)
+            val expirationReminderHours = preferences.get(OmnipodIntPreferenceKey.ExpirationReminderHours)
 
             val expirationReminderHoursBeforeShutdown = if (expirationReminderEnabled)
                 expirationReminderHours.toLong()
             else
                 null
 
-            val expirationAlarmEnabled = sp.getBoolean(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_enabled, true)
-            val expirationAlarmHours = sp.getInt(app.aaps.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_hours_before_shutdown, 8)
+            val expirationAlarmEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationAlarm)
+            val expirationAlarmHours = preferences.get(OmnipodIntPreferenceKey.ExpirationAlarmHours)
 
             val expirationAlarmHoursBeforeShutdown = if (expirationAlarmEnabled)
                 expirationAlarmHours.toLong()

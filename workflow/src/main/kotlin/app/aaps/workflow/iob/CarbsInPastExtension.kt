@@ -2,14 +2,11 @@ package app.aaps.workflow.iob
 
 import app.aaps.core.data.model.CA
 import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 
 fun fromCarbs(
     t: CA,

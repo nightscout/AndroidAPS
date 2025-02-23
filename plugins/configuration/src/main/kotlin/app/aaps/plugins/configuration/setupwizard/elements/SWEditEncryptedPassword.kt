@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.extensions.toVisibility
 import dagger.android.HasAndroidInjector
@@ -33,7 +34,7 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
         button?.setText(app.aaps.core.ui.R.string.unlock_settings)
         button?.setOnClickListener {
             scanForActivity(context)?.let { activity ->
-                passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, {
+                passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword, {
                     button?.visibility = View.GONE
                     editText?.visibility = View.VISIBLE
                     editText2?.visibility = View.VISIBLE
@@ -89,7 +90,7 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                sp.remove(preference)
+                preferences.remove(preference as StringPreferenceKey)
                 scheduleChange(updateDelay)
                 if (validator.invoke(editText?.text.toString()) && validator.invoke(editText2?.text.toString()) && editText?.text.toString() == editText2?.text.toString())
                     save(s.toString(), updateDelay)
@@ -102,12 +103,12 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
     }
 
     fun preference(preference: StringKey): SWEditEncryptedPassword {
-        this.preference = preference.key
+        this.preference = preference
         return this
     }
 
     override fun save(value: CharSequence, updateDelay: Long) {
-        sp.putString(preference, cryptoUtil.hashPassword(value.toString()))
+        preferences.put(preference as StringPreferenceKey, cryptoUtil.hashPassword(value.toString()))
         scheduleChange(updateDelay)
     }
 }

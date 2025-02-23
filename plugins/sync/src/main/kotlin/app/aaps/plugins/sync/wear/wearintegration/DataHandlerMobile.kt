@@ -62,7 +62,6 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.LoopStatesList.AvailableLoopState
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -72,9 +71,10 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.generateCOBString
@@ -110,7 +110,6 @@ class DataHandlerMobile @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
     private val preferences: Preferences,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
@@ -951,17 +950,20 @@ class DataHandlerMobile @Inject constructor(
                 states.addAll(listOf(disconnect, reconnect))
                 AvailableLoopState(AvailableLoopState.LoopState.PUMP_DISCONNECT)
             }
-            !loop.isEnabled() -> {
+
+            !loop.isEnabled()   -> {
                 // Disabled => Pump disconnect + Loop enable
                 states.addAll(listOf(disconnect, enable))
                 disable
             }
-            loop.isSuspended -> {
+
+            loop.isSuspended    -> {
                 // Suspended => Resume + Suspend again
                 states.addAll(listOf(resume, suspend))
                 AvailableLoopState(AvailableLoopState.LoopState.LOOP_SUSPEND)
             }
-            else -> {
+
+            else                -> {
                 // Some loop is enabled => Pump disconnect + Modes + Suspend + Disable
                 states.add(disconnect)
                 val mode = when (ApsMode.fromString(preferences.get(StringKey.LoopApsMode))) {
@@ -969,17 +971,20 @@ class DataHandlerMobile @Inject constructor(
                         states.addAll(listOf(lgs, open))
                         closed
                     }
-                    ApsMode.LGS -> {
+
+                    ApsMode.LGS    -> {
                         if (constraintChecker.isClosedLoopAllowed().value()) states.add(closed)
                         states.add(open)
                         lgs
                     }
-                    ApsMode.OPEN -> {
+
+                    ApsMode.OPEN   -> {
                         if (activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) == true) states.add(closed)
                         if (constraintChecker.isLgsAllowed().value()) states.add(lgs)
                         open
                     }
-                    else -> AvailableLoopState(AvailableLoopState.LoopState.LOOP_UNKNOWN)
+
+                    else           -> AvailableLoopState(AvailableLoopState.LoopState.LOOP_UNKNOWN)
                 }
                 states.addAll(listOf(suspend, disable))
                 mode
@@ -988,65 +993,69 @@ class DataHandlerMobile @Inject constructor(
         if (loop.isSuperBolus) currentState = AvailableLoopState(AvailableLoopState.LoopState.SUPERBOLUS)
         lastAuthorizedLoopStateChangeTS = System.currentTimeMillis()
         lastLoopStates = states
-        rxBus.send(EventMobileToWear(
-            EventData.LoopStatesList(lastAuthorizedLoopStateChangeTS!!, states, currentState)
-        ))
+        rxBus.send(
+            EventMobileToWear(
+                EventData.LoopStatesList(lastAuthorizedLoopStateChangeTS!!, states, currentState)
+            )
+        )
     }
 
     private fun handleLoopStateSelected(action: EventData.LoopStateSelected) {
         if (action.timeStamp != lastAuthorizedLoopStateChangeTS) return sendError(rh.gs(R.string.wear_action_loop_state_unauthorized))
         val newState = lastLoopStates?.elementAtOrNull(action.index) ?: return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
         val nDuration = action.duration ?: 0
-        rxBus.send(EventMobileToWear(
-            EventData.ConfirmAction(
-                rh.gs(R.string.wear_action_loop_state_title),
-                when (newState.state) {
-                    AvailableLoopState.LoopState.LOOP_CLOSED     ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_closed))
+        rxBus.send(
+            EventMobileToWear(
+                EventData.ConfirmAction(
+                    rh.gs(R.string.wear_action_loop_state_title),
+                    when (newState.state) {
+                        AvailableLoopState.LoopState.LOOP_CLOSED     ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_closed))
 
-                    AvailableLoopState.LoopState.LOOP_LGS        ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_lgs))
+                        AvailableLoopState.LoopState.LOOP_LGS        ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_lgs))
 
-                    AvailableLoopState.LoopState.LOOP_OPEN       ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_open))
+                        AvailableLoopState.LoopState.LOOP_OPEN       ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_open))
 
-                    AvailableLoopState.LoopState.LOOP_RESUME     ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_resumed))
+                        AvailableLoopState.LoopState.LOOP_RESUME     ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_resumed))
 
-                    AvailableLoopState.LoopState.LOOP_ENABLE     ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_enabled))
+                        AvailableLoopState.LoopState.LOOP_ENABLE     ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_enabled))
 
-                    AvailableLoopState.LoopState.LOOP_DISABLE    ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_disabled))
+                        AvailableLoopState.LoopState.LOOP_DISABLE    ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_disabled))
 
-                    AvailableLoopState.LoopState.PUMP_RECONNECT  ->
-                        rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_pump_reconnected))
+                        AvailableLoopState.LoopState.PUMP_RECONNECT  ->
+                            rh.gs(R.string.wear_action_loop_state_changed, rh.gs(R.string.wear_action_loop_state_now_pump_reconnected))
 
-                    AvailableLoopState.LoopState.SUPERBOLUS      -> rh.gs(
-                        R.string.wear_action_loop_state_changed,
-                        rh.gs(R.string.wear_action_loop_state_now_superbolus)
-                    )
+                        AvailableLoopState.LoopState.SUPERBOLUS      -> rh.gs(
+                            R.string.wear_action_loop_state_changed,
+                            rh.gs(R.string.wear_action_loop_state_now_superbolus)
+                        )
 
-                    AvailableLoopState.LoopState.LOOP_UNKNOWN    -> rh.gs(
-                        R.string.wear_action_loop_state_changed,
-                        rh.gs(R.string.wear_action_loop_state_now_invalid)
-                    )
+                        AvailableLoopState.LoopState.LOOP_UNKNOWN    -> rh.gs(
+                            R.string.wear_action_loop_state_changed,
+                            rh.gs(R.string.wear_action_loop_state_now_invalid)
+                        )
 
-                    AvailableLoopState.LoopState.LOOP_SUSPEND    -> rh.gs(
-                        R.string.wear_action_loop_state_changed_with_duration,
-                        rh.gs(R.string.wear_action_loop_state_now_suspended),
-                        nDuration
-                    )
+                        AvailableLoopState.LoopState.LOOP_SUSPEND    -> rh.gs(
+                            R.string.wear_action_loop_state_changed_with_duration,
+                            rh.gs(R.string.wear_action_loop_state_now_suspended),
+                            nDuration
+                        )
 
-                    AvailableLoopState.LoopState.PUMP_DISCONNECT -> rh.gs(
-                        R.string.wear_action_loop_state_changed_with_duration,
-                        rh.gs(R.string.wear_action_loop_state_now_pump_disconnected),
-                        nDuration
-                    )
-                },
-                EventData.LoopStateConfirmed(action.timeStamp, action.index, action.duration)
+                        AvailableLoopState.LoopState.PUMP_DISCONNECT -> rh.gs(
+                            R.string.wear_action_loop_state_changed_with_duration,
+                            rh.gs(R.string.wear_action_loop_state_now_pump_disconnected),
+                            nDuration
+                        )
+                    },
+                    EventData.LoopStateConfirmed(action.timeStamp, action.index, action.duration)
+                )
             )
-        ))
+        )
     }
 
     private fun handleLoopStateConfirmed(action: EventData.LoopStateConfirmed) {
@@ -1058,25 +1067,28 @@ class DataHandlerMobile @Inject constructor(
         val nDuration = action.duration ?: 0
         val durationValid = action.duration != null && action.duration!! > 0
         when (newState.state) {
-            AvailableLoopState.LoopState.LOOP_CLOSED -> {
+            AvailableLoopState.LoopState.LOOP_CLOSED                                              -> {
                 uel.log(Action.CLOSED_LOOP_MODE, Sources.Wear)
                 preferences.put(StringKey.LoopApsMode, ApsMode.CLOSED.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
-            AvailableLoopState.LoopState.LOOP_LGS -> {
+
+            AvailableLoopState.LoopState.LOOP_LGS                                                 -> {
                 uel.log(Action.LGS_LOOP_MODE, Sources.Wear)
                 preferences.put(StringKey.LoopApsMode, ApsMode.LGS.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
-            AvailableLoopState.LoopState.LOOP_OPEN -> {
+
+            AvailableLoopState.LoopState.LOOP_OPEN                                                -> {
                 uel.log(Action.OPEN_LOOP_MODE, Sources.Wear)
                 preferences.put(StringKey.LoopApsMode, ApsMode.OPEN.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend))) // why in LoopDialog?
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
-            AvailableLoopState.LoopState.LOOP_ENABLE -> {
+
+            AvailableLoopState.LoopState.LOOP_ENABLE                                              -> {
                 (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
                 (loop as PluginBase).setFragmentVisible(PluginType.LOOP, true)
                 configBuilder.storeSettings("EnablingLoop")
@@ -1087,7 +1099,8 @@ class DataHandlerMobile @Inject constructor(
                 ).subscribe()
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
-            AvailableLoopState.LoopState.LOOP_DISABLE -> {
+
+            AvailableLoopState.LoopState.LOOP_DISABLE                                             -> {
                 (loop as PluginBase).setPluginEnabled(PluginType.LOOP, false)
                 (loop as PluginBase).setFragmentVisible(PluginType.LOOP, false)
                 configBuilder.storeSettings("DisablingLoop")
@@ -1105,6 +1118,7 @@ class DataHandlerMobile @Inject constructor(
                 ).subscribe()
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
+
             AvailableLoopState.LoopState.PUMP_RECONNECT, AvailableLoopState.LoopState.LOOP_RESUME -> {
                 disposable += persistenceLayer.cancelCurrentOfflineEvent(
                     dateUtil.now(),
@@ -1124,7 +1138,8 @@ class DataHandlerMobile @Inject constructor(
                 })
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
-            AvailableLoopState.LoopState.LOOP_SUSPEND -> {
+
+            AvailableLoopState.LoopState.LOOP_SUSPEND                                             -> {
                 if (!durationValid) return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
                 loop.suspendLoop(
                     nDuration,
@@ -1134,7 +1149,8 @@ class DataHandlerMobile @Inject constructor(
                 )
                 rxBus.send(EventRefreshOverview("wear_loop_state"))
             }
-            AvailableLoopState.LoopState.PUMP_DISCONNECT -> {
+
+            AvailableLoopState.LoopState.PUMP_DISCONNECT                                          -> {
                 if (!durationValid) return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
                 profileFunction.getProfile()?.let { profile ->
                     loop.goToZeroTemp(
@@ -1153,7 +1169,8 @@ class DataHandlerMobile @Inject constructor(
                     rxBus.send(EventRefreshOverview("wear_loop_state"))
                 }
             }
-            AvailableLoopState.LoopState.LOOP_UNKNOWN, AvailableLoopState.LoopState.SUPERBOLUS -> {
+
+            AvailableLoopState.LoopState.LOOP_UNKNOWN, AvailableLoopState.LoopState.SUPERBOLUS    -> {
                 return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
             }
         }
@@ -1840,12 +1857,12 @@ class DataHandlerMobile @Inject constructor(
         aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}")
         val cwfData = customWatchface.customWatchfaceData
         rxBus.send(EventWearUpdateGui(cwfData, command.exportFile))
-        val watchfaceName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
-        val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
+        val watchfaceName = preferences.get(StringNonKey.WearCwfWatchfaceName)
+        val authorVersion = preferences.get(StringNonKey.WearCwfAuthorVersion)
         if (cwfData.metadata[CwfMetadataKey.CWF_NAME] != watchfaceName || cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] != authorVersion) {
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?: "")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
+            preferences.put(StringNonKey.WearCwfWatchfaceName, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?: "")
+            preferences.put(StringNonKey.WearCwfAuthorVersion, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
+            preferences.put(StringNonKey.WearCwfFileName, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
         }
 
         if (command.exportFile)

@@ -41,8 +41,6 @@ abstract class PumpStatus(var pumpType: PumpType) {
     var tempBasalEnd: Long? = null
     var pumpTime: PumpTimeDifferenceDto? = null
 
-    abstract fun initSettings()
-
     fun setLastCommunicationToNow() {
         lastDataTime = System.currentTimeMillis()
         lastConnection = System.currentTimeMillis()

@@ -118,5 +118,32 @@ interface ActivePlugin {
      */
     fun getSpecificPluginsList(type: PluginType): ArrayList<PluginBase>
 
-    fun loadDefaults()
+    /**
+     * Called before importing preferences.
+     * On Preferences import current content of shared preferences is cleared and then
+     * new content is imported.
+     *
+     * This function is called BEFORE clearing and importing preferences to preserve some current values.
+     * Needed content should be stored into plugin variables and then processed and restored
+     * in [app.aaps.core.interfaces.plugin.PluginBaseWithPreferences.afterImport]
+     *
+     * App is restarted after import.
+     *
+     * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
+     */
+    fun beforeImport()
+
+    /**
+     * Called after importing preferences.
+     * On Preferences import current content of shared preferences is cleared and then
+     * new content is imported.
+     *
+     * This function is called AFTER clearing and importing preferences to process and restore
+     * saved state from [app.aaps.core.interfaces.plugin.PluginBaseWithPreferences.beforeImport]
+     *
+     * App is restarted after import.
+     *
+     * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
+     */
+    fun afterImport()
 }

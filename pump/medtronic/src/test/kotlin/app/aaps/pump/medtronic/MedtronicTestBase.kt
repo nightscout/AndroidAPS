@@ -16,7 +16,7 @@ import org.mockito.Mock
 
 open class MedtronicTestBase : TestBaseWithProfile() {
 
-    var rileyLinkUtil = RileyLinkUtil()
+    var rileyLinkUtil = RileyLinkUtil(aapsLogger)
 
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var pumpSyncStorage: PumpSyncStorage

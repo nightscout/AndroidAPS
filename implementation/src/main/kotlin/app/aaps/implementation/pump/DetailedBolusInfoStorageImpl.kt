@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.implementation.R
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import kotlin.math.abs
 @Singleton
 class DetailedBolusInfoStorageImpl @Inject constructor(
     val aapsLogger: AAPSLogger,
-    val sp: SP,
+    val preferences: Preferences,
     val rh: ResourceHelper
 ) : DetailedBolusInfoStorage {
 
@@ -75,11 +75,11 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
             lastTwoEntries = ArrayList(store.subList(store.size - 2, store.size))
         }
         val jsonString = Gson().toJson(lastTwoEntries)
-        sp.putString(rh.gs(R.string.key_bolus_storage), jsonString)
+        preferences.put(StringNonKey.BolusInfoStorage, jsonString)
     }
 
     private fun loadStore(): ArrayList<DetailedBolusInfo> {
-        val jsonString = sp.getString(rh.gs(R.string.key_bolus_storage), "")
+        val jsonString = preferences.get(StringNonKey.BolusInfoStorage)
         return if (jsonString.isNotEmpty()) {
             val type = object : TypeToken<List<DetailedBolusInfo>>() {}.type
             Gson().fromJson(jsonString, type)

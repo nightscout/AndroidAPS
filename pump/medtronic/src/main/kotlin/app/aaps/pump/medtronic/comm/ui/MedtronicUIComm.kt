@@ -2,10 +2,10 @@ package app.aaps.pump.medtronic.comm.ui
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.defs.MedtronicCommandType
 import app.aaps.pump.medtronic.util.MedtronicUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
@@ -40,6 +40,6 @@ class MedtronicUIComm @Inject constructor(
     }
 
     val invalidResponsesCount: Int
-        get() = medtronicCommunicationManager.notConnectedCount
+        get() = medtronicCommunicationManager.getNotConnectedCount()
 
 }
