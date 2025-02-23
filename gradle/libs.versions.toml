@@ -32,7 +32,7 @@ com-google-dagger-android = { group = "com.google.dagger", name = "dagger-androi
 com-google-dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
 com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 
-com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.2" }
+com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.3" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.9.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }

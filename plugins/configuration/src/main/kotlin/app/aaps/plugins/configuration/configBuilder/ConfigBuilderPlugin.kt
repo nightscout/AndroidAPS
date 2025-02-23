@@ -1,5 +1,8 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +32,7 @@ import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
@@ -46,6 +50,7 @@ import app.aaps.plugins.configuration.databinding.ConfigbuilderSingleCategoryBin
 import app.aaps.plugins.configuration.databinding.ConfigbuilderSinglePluginBinding
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.system.exitProcess
 
 @Singleton
 class ConfigBuilderPlugin @Inject constructor(
@@ -58,7 +63,8 @@ class ConfigBuilderPlugin @Inject constructor(
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync,
     private val protectionCheck: ProtectionCheck,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val context: Context
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -360,6 +366,31 @@ class ConfigBuilderPlugin @Inject constructor(
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
             return type == PluginType.GENERAL || type == PluginType.CONSTRAINTS || type == PluginType.LOOP || type == PluginType.SYNC
+        }
+    }
+
+    override fun exitApp(from: String, source: Sources, launchAgain: Boolean) {
+        rxBus.send(EventAppExit())
+        aapsLogger.debug(LTag.CORE, "Exiting ... Requester: $from")
+        uel.log(Action.EXIT_AAPS, source)
+        if (launchAgain) scheduleStart()
+        System.runFinalization()
+        exitProcess(0)
+    }
+
+    fun scheduleStart() {
+        // fetch the packageManager so we can get the default launch activity
+        context.packageManager?.let { pm ->
+            //create the intent with the default start activity for your application
+            pm.getLaunchIntentForPackage(context.packageName)?.let { startActivity ->
+                startActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                //create a pending intent so the application is restarted after System.exit(0) was called.
+                // We use an AlarmManager to call this intent in 100ms
+                val pendingIntentId = 2233445
+                val pendingIntent = PendingIntent.getActivity(context, pendingIntentId, startActivity, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+                (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
+                    .set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -102,7 +103,8 @@ class ImportExportPrefsImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
-    private val dataWorkerStorage: DataWorkerStorage
+    private val dataWorkerStorage: DataWorkerStorage,
+    private val configBuilder: ConfigBuilder
 ) : ImportExportPrefs {
 
     override var selectedImportFile: PrefsFile? = null
@@ -436,14 +438,10 @@ class ImportExportPrefsImpl @Inject constructor(
         rxBus.send(EventDiaconnG8PumpLogReset())
         preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         OKDialog.show(context, rh.gs(R.string.setting_imported), rh.gs(R.string.restartingapp)) {
-            uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
-            log.debug(LTag.CORE, "Exiting")
-            rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {
                 context.finish()
             }
-            System.runFinalization()
-            exitProcess(0)
+            configBuilder.exitApp("Import", Sources.Maintenance, false)
         }
     }
 

@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.plugin.PluginBase
 
 interface ConfigBuilder {
@@ -55,4 +56,9 @@ interface ConfigBuilder {
 
         fun update()
     }
+
+    /**
+     * Restart application
+     */
+    fun exitApp(from: String, source: Sources, launchAgain: Boolean)
 }
