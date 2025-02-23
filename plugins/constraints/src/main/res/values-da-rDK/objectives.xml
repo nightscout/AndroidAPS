@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Baseret på denne erfaring, beslut hvad max basal skal være og indstil det både på pumpen og i indstillinger</string>
     <string name="objectives_maxbasal_learned">Vær opmærksom på sikkerhedsfunktionerne og juster sikkerhedsparametre, når det er nødvendigt.</string>
     <string name="objectives_maxiobzero_objective">Begynde at bruge lukket loop med lav glukose suspendering</string>
-    <string name="objectives_maxiobzero_gate">Kør i lukket loop med max IOB = 0 i et par dage uden for mange LGS-begivenheder</string>
     <string name="objectives_maxiobzero_learned">Indstilling af MaxIOB til nul forhindrer dig i at få hypoglykæmi og vil ikke tilføje mere insulin udover basalraten (undtagen i situationer med negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning af lukket loop, hæv max IOB over 0 og sænk gradvist BG målet</string>
     <string name="objectives_maxiob_gate">Kør i et par dage, og mindst én nat uden lave BG alarmer, før du sætter målet for BG ned</string>
-    <string name="objectives_maxiob_learned">Opdater MaxIOB som barnet vokser. Lad ikke systemet give dig mere insulin, end du kan dække med mad = virkelig høj værdier er en dårlig idé.</string>
     <string name="objectives_autosens_objective">Justér om nødvendigt basaler og forhold og aktivér derefter auto-sens</string>
     <string name="objectives_autosens_gate">1 uges vellykket looping i dagtimerne med alle måltider tastet ind</string>
     <string name="objectives_autosens_learned">Hvis dit Autosens-resultat ikke oscillerer omkring 100%, er din profil sandsynligvis forkert.</string>
