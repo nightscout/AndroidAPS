@@ -18,7 +18,7 @@
     <string name="objectives_maxbasal">Perform action to fulfill recommendation</string>
     <string name="objectives_maxbasal_learned">Take care about safety features and adjust safety parameters when necessary.</string>
     <string name="objectives_maxiobzero_objective">Starting to close the loop with Low Glucose Suspend</string>
-    <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events. In simple mode this value is calculated according to recommendation in wiki and it\'s not necessary to set it.</string>
+    <string name="objectives_maxiobzero_gate">Run in closed loop in Low Glucose Suspend Mode (ie. max IOB = 0 is set automatically) for a few days without too many LGS events.</string>
     <string name="objectives_maxiobzero_learned">Setting MaxIOB to zero prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
     <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
