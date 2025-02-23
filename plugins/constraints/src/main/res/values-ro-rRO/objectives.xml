@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Pe baza experienței, se va decide care va fi bazala maximă, și se va implementa aceasta în pompă și în preferințe</string>
     <string name="objectives_maxbasal_learned">Ai grijă la caracteristicile de siguranţă şi ajustează parametrii de siguranţă, atunci când este necesar.</string>
     <string name="objectives_maxiobzero_objective">Se va începe modul buclă închisă cu funcția Suspendare la Glicemie Mică</string>
-    <string name="objectives_maxiobzero_gate">Rulează în mod buclă închisă cu max IOB = 0 pentru câteva zile, fără prea multe evenimente LGS (Suspendare la Glicemii Mici)</string>
     <string name="objectives_maxiobzero_learned">Setarea MaxIOB la zero previne hipoglicemia şi nu va adăuga mai multă insulină peste rata bazală (cu excepţia situaţiilor cu IOB negativ)</string>
     <string name="objectives_maxiob_objective">Îmbunătățirea buclei închise, mărirea valorii max IOB peste 0 și scăderea graduală a țintelor de glicemie</string>
     <string name="objectives_maxiob_gate">Se rulează pentru câteva zile și cel puțin o noapte fără a avea alarme de glicemie mică înainte de scăderea țintei</string>
-    <string name="objectives_maxiob_learned">Actualizează MaxIOB pe măsură ce copilul crește. Nu permite sistemului să dea mai multă insulină decât poate fi acoperită prin alimente = valoarea foarte mare este o idee rea.</string>
     <string name="objectives_autosens_objective">Ajustarea bazalelor și a factorilor dacă este necesar și apoi activarea auto-sens</string>
     <string name="objectives_autosens_gate">O săptămână de buclă închisă încheiată cu succes în condițiile introducerii regulate a carbohidraților</string>
     <string name="objectives_autosens_learned">Dacă rezultatul autosens nu oscilează în jurul valorii de 100%, profilul tău probabil că este greșit.</string>
