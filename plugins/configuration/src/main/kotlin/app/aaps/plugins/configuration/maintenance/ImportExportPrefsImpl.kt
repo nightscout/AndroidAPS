@@ -26,10 +26,10 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
@@ -40,7 +40,6 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
@@ -79,7 +78,6 @@ import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 /**
  * Created by mike on 03.07.2016.
@@ -99,12 +97,12 @@ class ImportExportPrefsImpl @Inject constructor(
     private val androidPermission: AndroidPermission,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: FileListProvider,
-    private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
     private val dataWorkerStorage: DataWorkerStorage,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    private val configBuilder: ConfigBuilder
 ) : ImportExportPrefs {
 
     override var selectedImportFile: PrefsFile? = null
@@ -442,14 +440,10 @@ class ImportExportPrefsImpl @Inject constructor(
         rxBus.send(EventDiaconnG8PumpLogReset())
         preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         OKDialog.show(context, rh.gs(R.string.setting_imported), rh.gs(R.string.restartingapp)) {
-            uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
-            aapsLogger.debug(LTag.CORE, "Exiting")
-            rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {
                 context.finish()
             }
-            System.runFinalization()
-            exitProcess(0)
+            configBuilder.exitApp("Import", Sources.Maintenance, false)
         }
     }
 
