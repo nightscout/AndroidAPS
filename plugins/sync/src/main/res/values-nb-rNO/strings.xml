@@ -124,9 +124,15 @@
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
     <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
+    <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
+    <string name="wear_action_tempt_zero_message">Null minutter i varighet - avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
+    <string name="wear_action_tempt_range_error">Ugyldig område: Lavt mål (%1$s) kan ikke være større enn Høyt mål (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">Midlertidig mål\n\nLav: %1$s\nHøy: %2$s\nVarighet: %3$d min</string>
+    <string name="wear_action_tempt_manual_message">Midlertidig mål\n\nMål: %1$s\nVarighet: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">Midlertidig mål\n\nÅrsak: %1$s\nMål: %2$s\nVarighet: %3$d min</string>
     <string name="no_success">feilet - sjekk telefonen</string>
     <string name="wear_settings">Klokkeinnstillinger</string>
     <string name="wearcontrol_title">Kontroller fra klokke</string>
