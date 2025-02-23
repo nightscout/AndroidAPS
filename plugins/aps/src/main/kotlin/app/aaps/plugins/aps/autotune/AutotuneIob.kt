@@ -6,6 +6,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
@@ -14,6 +15,7 @@ import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -41,7 +43,8 @@ open class AutotuneIob @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
-    private val autotuneFS: AutotuneFS
+    private val autotuneFS: AutotuneFS,
+    private val activePlugin: ActivePlugin
 ) {
 
     private var nsTreatments = ArrayList<NsTreatment>()
@@ -245,23 +248,23 @@ open class AutotuneIob @Inject constructor(
         }
     }
 
-    open fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal =
-        getCalculationToTimeTreatments(time, localInsulin).round()
+    open fun getIOB(time: Long, iCfg: ICfg): IobTotal =
+        getCalculationToTimeTreatments(time, iCfg).round()
 
     // Add specific calculation for Autotune (reference localInsulin for Peak/dia)
-    private fun BS.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
+    private fun BS.iobCalc(time: Long, iCfg: ICfg): Iob {
         if (!isValid || type == BS.Type.PRIMING) return Iob()
-        return localInsulin.iobCalcForTreatment(this, time)
+        return activePlugin.activeInsulin.iobCalcForTreatment(this, time, iCfg)
     }
 
-    private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
+    private fun getCalculationToTimeTreatments(time: Long, iCfg: ICfg): IobTotal {
         val total = IobTotal(time)
         val detailedLog = preferences.get(BooleanKey.AutotuneAdditionalLog)
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue
-            if (t.timestamp > time || t.timestamp < time - localInsulin.duration) continue
-            val tIOB = t.iobCalc(time, localInsulin)
+            if (t.timestamp > time || t.timestamp < time - iCfg.insulinEndTime) continue
+            val tIOB = t.iobCalc(time, iCfg)
             if (detailedLog)
                 log(
                     "iobCalc;${t.ids.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateAndTimeAndSecondsString(time)};${

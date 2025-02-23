@@ -145,9 +145,8 @@ class AutotunePlugin @Inject constructor(
         }
         selectedProfile = profileToTune.ifEmpty { profileFunction.getProfileName() }
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile
+            profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = activePlugin) } ?: currentProfile
         }
-        val localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
 
         log("Start Autotune with $daysBack days back")
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
@@ -157,10 +156,10 @@ class AutotunePlugin @Inject constructor(
         if (endTime > lastRun) endTime -= 24 * 60 * 60 * 1000L      // Check if 4 AM is before now
         val startTime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, startTime, endTime))
-        tunedProfile = ATProfile(profile, localInsulin, injector).also {
+        tunedProfile = ATProfile(profile, injector).also {
             it.profileName = rh.gs(R.string.autotune_tunedprofile_name)
         }
-        pumpProfile = ATProfile(profile, localInsulin, injector).also {
+        pumpProfile = ATProfile(profile, injector).also {
             it.profileName = selectedProfile
         }
         autotuneFS.exportPumpProfile(pumpProfile)
@@ -286,9 +285,9 @@ class AutotunePlugin @Inject constructor(
         strResult += rh.gs(R.string.autotune_log_title)
         strResult += line
         val tuneInsulin = preferences.get(BooleanKey.AutotuneTuneInsulinCurve)
-        if (tuneInsulin) {
-            strResult += rh.gs(R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.localInsulin.peak, tunedProfile.localInsulin.peak)
-            strResult += rh.gs(R.string.autotune_log_dia, rh.gs(app.aaps.core.ui.R.string.ic_short), pumpProfile.localInsulin.dia, tunedProfile.localInsulin.dia)
+        if (tuneInsulin || true) {
+            strResult += rh.gs(R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.peak, tunedProfile.peak)
+            strResult += rh.gs(R.string.autotune_log_dia, rh.gs(app.aaps.core.ui.R.string.ic_short), pumpProfile.dia, tunedProfile.dia)
         }
         // show ISF and CR
         strResult += rh.gs(R.string.autotune_log_ic_isf, rh.gs(app.aaps.core.ui.R.string.isf_short), pumpProfile.isf, tunedProfile.isf)
@@ -425,7 +424,7 @@ class AutotunePlugin @Inject constructor(
             selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
             val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
-            pumpProfile = ATProfile(ProfileSealed.Pure(value = profile, activePlugin = null), localInsulin, injector).also { it.profileName = selectedProfile }
+            pumpProfile = ATProfile(ProfileSealed.Pure(value = profile, activePlugin = null), injector).also { it.profileName = selectedProfile }
             val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
             val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
             localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
@@ -434,7 +433,7 @@ class AutotunePlugin @Inject constructor(
                 ?: return
             val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
-            tunedProfile = ATProfile(ProfileSealed.Pure(value = tuned, activePlugin = null), localInsulin, injector).also { atProfile ->
+            tunedProfile = ATProfile(ProfileSealed.Pure(value = tuned, activePlugin = null), injector).also { atProfile ->
                 atProfile.profileName = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(value = circadianTuned, activePlugin = null)
                 for (i in 0..23) {

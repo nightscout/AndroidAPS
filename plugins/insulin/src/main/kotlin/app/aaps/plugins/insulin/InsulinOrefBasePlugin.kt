@@ -103,7 +103,7 @@ abstract class InsulinOrefBasePlugin(
     }
 
     override val iCfg: ICfg
-        get() = ICfg(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
+        get() = ICfg(friendlyName, peak, dia)
 
     override val comment
         get(): String {

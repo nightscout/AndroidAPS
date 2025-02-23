@@ -116,7 +116,7 @@ sealed class ProfileSealed(
         null,
         0,
         100,
-        ICfg("", (value.dia * 3600 * 1000).toLong(), 0),
+        value.iCfg,
         value.timeZone.rawOffset.toLong(),
         activePlugin?.activeAPS
     )
@@ -236,6 +236,9 @@ sealed class ProfileSealed(
         }
     override val dia: Double
         get() = iCfg.insulinEndTime / 1000.0 / 60.0 / 60.0
+
+    override val insulin: ICfg
+        get() = iCfg
 
     override val timeshift: Int
         get() = ts

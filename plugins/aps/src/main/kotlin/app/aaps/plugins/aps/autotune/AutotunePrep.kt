@@ -33,14 +33,14 @@ class AutotunePrep @Inject constructor(
 ) {
 
     fun categorize(tunedProfile: ATProfile): PreppedGlucose? {
-        val preppedGlucose = categorizeBGDatums(tunedProfile, tunedProfile.localInsulin)
+        val preppedGlucose = categorizeBGDatums(tunedProfile)
         val tuneInsulin = preferences.get(BooleanKey.AutotuneTuneInsulinCurve)
         if (tuneInsulin) {
             var minDeviations = 1000000.0
             val diaDeviations: MutableList<DiaDeviation> = ArrayList()
             val peakDeviations: MutableList<PeakDeviation> = ArrayList()
-            val currentDIA = tunedProfile.localInsulin.dia
-            val currentPeak = tunedProfile.localInsulin.peak
+            val currentDIA = tunedProfile.dia
+            val currentPeak = tunedProfile.peak
 
             var dia = currentDIA - 2
             val endDIA = currentDIA + 2
@@ -49,7 +49,7 @@ class AutotunePrep @Inject constructor(
                 var deviations = 0.0
                 var deviationsSq = 0.0
                 val localInsulin = LocalInsulin("Ins_$currentPeak-$dia", currentPeak, dia)
-                val curveOutput = categorizeBGDatums(tunedProfile, localInsulin, false)
+                val curveOutput = categorizeBGDatums(tunedProfile, false)
                 val basalGlucose = curveOutput?.basalGlucoseData
 
                 basalGlucose?.let {
@@ -96,7 +96,7 @@ class AutotunePrep @Inject constructor(
                 var deviations = 0.0
                 var deviationsSq = 0.0
                 val localInsulin = LocalInsulin("Ins_$peak-$currentDIA", peak, currentDIA)
-                val curveOutput = categorizeBGDatums(tunedProfile, localInsulin, false)
+                val curveOutput = categorizeBGDatums(tunedProfile, false)
                 val basalGlucose = curveOutput?.basalGlucoseData
 
                 basalGlucose?.let {
@@ -141,7 +141,7 @@ class AutotunePrep @Inject constructor(
     }
 
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    fun categorizeBGDatums(tunedProfile: ATProfile, localInsulin: LocalInsulin, verbose: Boolean = true): PreppedGlucose? {
+    fun categorizeBGDatums(tunedProfile: ATProfile, verbose: Boolean = true): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         val treatments: MutableList<CA> = autotuneIob.meals
         val boluses: MutableList<BS> = autotuneIob.boluses
@@ -294,7 +294,7 @@ class AutotunePrep @Inject constructor(
             //var iob = getIOB(IOBInputs)[0];
             // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
             //log("currentBasal: " + currentBasal + " BGTime: " + BGTime + " / " + dateUtil!!.timeStringWithSeconds(BGTime) + "******************************************************************************************")
-            val iob = autotuneIob.getIOB(bgTime, localInsulin)    // add localInsulin to be independent to InsulinPlugin
+            val iob = autotuneIob.getIOB(bgTime, tunedProfile.iCfg)    // add localInsulin to be independent to InsulinPlugin
 
             // activity times ISF times 5 minutes is BGI
             val bgi = Round.roundTo(-iob.activity * sens * 5, 0.01)

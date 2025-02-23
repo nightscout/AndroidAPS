@@ -37,7 +37,7 @@ import java.util.TimeZone
 import javax.inject.Inject
 import kotlin.math.min
 
-class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
+class ATProfile(profile: Profile, val injector: HasAndroidInjector) {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
@@ -58,6 +58,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     var basalUnTuned = IntArray(24)
     var ic = 0.0
     var isf = 0.0
+    val iCfg: ICfg
+        get() = profile.iCfg
     val dia: Double
         get() = profile.iCfg.getDia()
     val peak: Int
@@ -100,8 +102,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     }
 
     fun updateProfile() {
-        data()?.let { profile = ProfileSealed.Pure(value = it, activePlugin = null) }
-        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin = null) }
+        data()?.let { profile = ProfileSealed.Pure(value = it, activePlugin) }
+        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin) }
     }
 
     //Export json string with oref0 format used for autotune
