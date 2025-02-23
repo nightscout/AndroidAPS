@@ -76,6 +76,7 @@ class ProfilePlugin @Inject constructor(
     private var rawProfile: ProfileStore? = null
 
     private val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
+    private val defaultICfg = "{\"insulinLabel\":\"\",\"insulinEndTime\":0,\"insulinPeakTime\":0}"
 
     override fun onStart() {
         super.onStart()
@@ -206,7 +207,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun loadSettings() {
+    override fun loadSettings() {
         val numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
         profiles.clear()
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
@@ -220,7 +221,7 @@ class ProfilePlugin @Inject constructor(
                     ProfileSource.SingleProfile(
                         name = name,
                         mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
-                        iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", ""))),
+                        iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", defaultICfg))),
                         dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
                         ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
                         isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),

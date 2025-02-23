@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -76,7 +77,7 @@ class ProfileFragment : DaggerFragment() {
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
+            binding.insulinGraph.show(activePlugin.activeInsulin, profilePlugin.currentProfile()?.iCfg)
         }
     }
 
@@ -84,7 +85,11 @@ class ProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            profilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
+            val dia = SafeParse.stringToDouble(binding.dia.text)
+            val peak = activePlugin.activeInsulin.peak
+            val name = activePlugin.activeInsulin.friendlyName
+            profilePlugin.currentProfile()?.dia = dia
+            profilePlugin.currentProfile()?.iCfg = ICfg(name, peak, dia)
             profilePlugin.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }
@@ -137,7 +142,7 @@ class ProfileFragment : DaggerFragment() {
         if (profilePlugin.numOfProfiles == 0) profilePlugin.addNewProfile()
         val currentProfile = profilePlugin.currentProfile() ?: return
         val units = if (currentProfile.mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText
-
+        aapsLogger.debug("XXXXX PR ${currentProfile?.iCfg?.insulinLabel} peak: ${currentProfile.iCfg.getPeak()} dia: ${currentProfile.iCfg.getDia()}")
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentProfile.name)
         binding.name.addTextChangedListener(textWatch)

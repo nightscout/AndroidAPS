@@ -75,4 +75,6 @@ interface ProfileSource {
      */
     fun loadFromStore(store: ProfileStore)
 
+    fun loadSettings()
+
 }

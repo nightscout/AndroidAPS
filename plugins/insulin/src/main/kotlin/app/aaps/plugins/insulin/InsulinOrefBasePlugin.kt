@@ -55,7 +55,8 @@ abstract class InsulinOrefBasePlugin(
                 hardLimits.minDia()
             }
         }
-    override fun setDefault(iCfg: ICfg?) { }
+    override fun setDefault(iCfg: ICfg?) {
+    }
 
     open fun sendShortDiaNotification(dia: Double) {
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {

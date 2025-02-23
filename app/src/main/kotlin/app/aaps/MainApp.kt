@@ -9,7 +9,9 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.lifecycle.ProcessLifecycleOwner
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -17,9 +19,12 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -30,6 +35,8 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.extensions.fromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.persistence.CompatDBHelper
@@ -59,6 +66,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import javax.inject.Inject
@@ -85,6 +95,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
     @Inject lateinit var themeSwitcherPlugin: ThemeSwitcherPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: Provider<ResourceHelper>
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -186,6 +197,25 @@ class MainApp : DaggerApplication() {
 
     private fun doMigrations() {
         // set values for different builds
+
+        // replace dia by ICfg within profile
+        if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false)) {
+            aapsLogger.debug("XXXXX Start Migration")
+            val defaultInsulin = when {
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) -> Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg()
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) -> Insulin.InsulinType.OREF_LYUMJEV.getICfg()
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) -> Insulin.InsulinType.OREF_FREE_PEAK.getICfg().also {
+                    it.setPeak(preferences.get(IntKey.InsulinOrefPeak))
+                }
+                else -> Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
+            }
+            migrateProfiles(defaultInsulin)
+            // todo include remove key and put key to activate InsulinPlugin
+        }
+
         // 3.1.0
         if (preferences.getIfExists(StringKey.MaintenanceEmail) == "logs@androidaps.org")
             preferences.put(StringKey.MaintenanceEmail, "logs@aaps.app")
@@ -220,6 +250,45 @@ class MainApp : DaggerApplication() {
         }
         // Clear SmsOtpPassword if wrongly replaced
         if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
+    }
+
+    private fun migrateProfiles(defaultInsulin: ICfg) {
+        val numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
+        val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
+//        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
+
+        for (i in 0 until numOfProfiles) {
+            val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
+            val name = sp.getString(localProfileNumbered + "name", Constants.LOCAL_PROFILE + i)
+            try {
+                ProfileSource.SingleProfile(
+                    name = name,
+                    mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
+                    iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", defaultInsulin.toJson().toString()))),
+                    dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
+                    ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
+                    isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),
+                    basal = JSONArray(sp.getString(localProfileNumbered + "basal", defaultArray)),
+                    targetLow = JSONArray(sp.getString(localProfileNumbered + "targetlow", defaultArray)),
+                    targetHigh = JSONArray(sp.getString(localProfileNumbered + "targethigh", defaultArray))
+                ).also {
+                    it.iCfg.setDia(it.dia)
+                    sp.putString(localProfileNumbered + "name", it.name)
+                    sp.putBoolean(localProfileNumbered + "mgdl", it.mgdl)
+                    sp.putString(localProfileNumbered + "icfg", it.iCfg.toJson().toString())
+                    sp.putDouble(localProfileNumbered + "dia", it.dia)
+                    sp.putString(localProfileNumbered + "ic", it.ic.toString())
+                    sp.putString(localProfileNumbered + "isf", it.isf.toString())
+                    sp.putString(localProfileNumbered + "basal", it.basal.toString())
+                    sp.putString(localProfileNumbered + "targetlow", it.targetLow.toString())
+                    sp.putString(localProfileNumbered + "targethigh", it.targetHigh.toString())
+                }
+            } catch (e: JSONException) {
+                aapsLogger.error("Exception", e)
+            }
+        }
+        // reload profile settings after update
+        activePlugin.activeProfileSource.loadSettings()
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

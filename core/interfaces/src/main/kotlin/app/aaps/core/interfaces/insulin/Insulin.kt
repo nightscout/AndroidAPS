@@ -6,6 +6,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.ConfigExportImport
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 interface Insulin : ConfigExportImport {
     enum class InsulinType(val value: Int, val peak: Int, val dia: Double, @StringRes val label: Int) {
@@ -17,6 +18,8 @@ interface Insulin : ConfigExportImport {
         OREF_ULTRA_RAPID_ACTING(3, 55, 6.0, R.string.ultra_rapid_oref),
         OREF_FREE_PEAK(4, 50, 6.0, R.string.free_peak_oref),
         OREF_LYUMJEV(5, 45, 6.0, R.string.lyumjev);
+
+        fun getICfg() = ICfg(this.name, peak, dia)
 
         companion object {
 
