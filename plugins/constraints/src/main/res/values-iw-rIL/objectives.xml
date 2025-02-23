@@ -16,11 +16,9 @@
     <string name="objectives_maxbasal">בצע את הפעולה כמומלץ</string>
     <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
     <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
-    <string name="objectives_maxiobzero_gate">השתמשו בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם כמה שפחות ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
     <string name="objectives_maxiobzero_learned">איפוס ה-MaxIOB פועל למניעת היפוגליקמיה ולא יוסיף אינסולין מעל המינון בזאלי הקבוע בפרופיל (למעט במצב עם אינסולין פעיל שלילי)</string>
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעילו במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
-    <string name="objectives_maxiob_learned">עדכנו את MaxIOB ככל שהילד\ה המטופל\ת גדל\ה. אל תאפשרו למערכת להזריק יותר אינסולין ממה שאפשר לכסות ע\"י מזון = ערך גבוה מאוד הוא רעיון רע.</string>
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
     <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם רישום ערכי פחמימות בקביעות</string>
     <string name="objectives_autosens_learned">אם תוצאת הזיהוי האוטומטי שלכם לא מתנודדת סביב 100%, כנראה שהפרופיל טעון שיפור.</string>
