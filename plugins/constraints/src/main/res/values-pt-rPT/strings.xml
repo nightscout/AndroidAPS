@@ -21,7 +21,6 @@
     <!-- Objectives -->
     <string name="not_completed_yet">Não concluído ainda</string>
     <string name="time_elapsed">Tempo decorrido</string>
-    <string name="maxiobset">IA máxima definida corretamente</string>
     <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
     <string name="loopenabled">Loop activado</string>
     <string name="apsselected">APS seleccionado</string>
