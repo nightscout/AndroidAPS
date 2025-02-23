@@ -37,7 +37,6 @@
     <string name="completed_well_done">Fuldført, godt klaret!</string>
     <string name="not_completed_yet">Ikke afsluttet endnu</string>
     <string name="time_elapsed">Tid forløbet</string>
-    <string name="maxiobset">Maksimal IOB sat korrekt</string>
     <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
     <string name="synchaswritepermission">Synkroniseringstjeneste har skriverettighed</string>
     <string name="loopenabled">Loop aktiveret</string>
