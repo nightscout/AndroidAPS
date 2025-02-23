@@ -62,10 +62,10 @@ class TempTargetActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 val title = if (isSingleTarget) getString(R.string.action_target) else getString(R.string.action_low)
                 if (isMGDL) {
-                    var initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 101.0)
+                    val initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 101.0)
                     lowRange = PlusMinusEditText(viewAdapter, initValue, 72.0, 180.0, 1.0, DecimalFormat("0"), false, title)
                 } else {
-                    var initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 5.6)
+                    val initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 5.6)
                     lowRange = PlusMinusEditText(viewAdapter, initValue, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, title)
                 }
                 container.addView(view)
@@ -76,10 +76,10 @@ class TempTargetActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 if (isMGDL) {
-                    var initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 100.0)
+                    val initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 101.0)
                     highRange = PlusMinusEditText(viewAdapter, initValue, 72.0, 180.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_high))
                 } else {
-                    var initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 5.5)
+                    val initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 5.6)
                     highRange = PlusMinusEditText(viewAdapter, initValue, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, getString(R.string.action_high))
                 }
                 container.addView(view)
