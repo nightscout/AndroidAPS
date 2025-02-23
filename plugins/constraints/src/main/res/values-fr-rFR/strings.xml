@@ -38,7 +38,6 @@
     <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
     <string name="time_elapsed">Temps écoulé</string>
-    <string name="maxiobset">Maximum IA réglé correctement</string>
     <string name="hasbgdata">Glycémie disponible depuis la source sélectionnée</string>
     <string name="synchaswritepermission">Le service de synchronisation a l\'autorisation d\'écriture</string>
     <string name="loopenabled">Boucle activée</string>

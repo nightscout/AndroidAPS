@@ -124,14 +124,9 @@
     <string name="quick_wizard_not_available">Vybraný rýchly bolus už nie je k dispozícii, obnovte prosím dlaždicu</string>
     <string name="quick_wizard_message">Rýchly bolus: %1$s\nInzulín: %2$.2fJI\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
-    <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
-    <string name="wear_action_tempt_zero_message">Nulový dočasný cieľ - zrušenie bežiaceho dočasného cieľa?</string>
     <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
-    <string name="wear_action_tempt_manual_range_message">Doč. cieľ:\nMin: %1$s\nMax: %2$s\nTrvanie: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Doč. cieľ:\nCieľ: %1$s\nTrvanie: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Doč. cieľ:\nDôvod: %1$s\nCieľ: %2$s\nTrvanie: %3$s</string>
     <string name="no_success">Neúspešné - skontrolujte telefón</string>
     <string name="wear_settings">Nastavenie hodiniek</string>
     <string name="wearcontrol_title">Ovládanie z hodiniek</string>
@@ -162,6 +157,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
+    <string name="profile_message">Profil: %1$s\nČas. posun%2$d h\nPercento: %3$d%%\nTrvanie: %4$d min</string>
     <string name="target_only_aps_mode">Ciele sa použijú iba v režime APS!</string>
     <string name="no_history">Žiadne údaje o histórii!</string>
     <string name="temp_target">Dočasný cieľ</string>

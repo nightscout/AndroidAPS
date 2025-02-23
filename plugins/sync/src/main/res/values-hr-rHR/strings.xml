@@ -63,7 +63,6 @@
     <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
     <string name="no_watch_connected">(Sat nije povezan)</string>
     <string name="loop_status">Loop status</string>
-    <string name="wear_action_tempt_preset_message">Trenutni cilj:\nRazlog: %1$s\nCilj: %2$s\nTrajanje: %3$s</string>
     <string name="wear_custom_watchface_authorization_summary">Ovlastite učitani prilagođeni brojčanik za promjenu i zaključavanje nekih postavki prikaza sata kako bi odgovarale dizajnu brojača</string>
     <string name="wear_infos_watchface">Info Watchface</string>
     <string name="cwf_infos_pref_locked">Popis postavki koje je zaključao Watchface</string>

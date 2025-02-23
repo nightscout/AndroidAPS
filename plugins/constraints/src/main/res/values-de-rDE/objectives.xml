@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Entscheide, wie hoch demzufolge max Basal sein sollte und übernimm diesen Wert in die Pumpe und in die AAPS-Einstellungen</string>
     <string name="objectives_maxbasal_learned">Achten Sie auf Sicherheitsmerkmale und stellen Sie bei Bedarf Sicherheitsparameter ein.</string>
     <string name="objectives_maxiobzero_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
-    <string name="objectives_maxiobzero_gate">Probiere den Closed Loop Modus mit max IOB = 0 für ein paar Tage aus, ohne zu viele Unterzuckerungen zu haben</string>
     <string name="objectives_maxiobzero_learned">Das einstellen von MaxIOB auf 0 verhindert Unterzuckerungen und wird nicht mehr Insulin abgeben, als in der Basalrate vorgesehen (außer es kommt zu einem negativen IOB)</string>
     <string name="objectives_maxiob_objective">Passe den Closed Loop an, indem du max IOB auf über 0 erhöhst und den BZ-Zielwert langsam heruntersetzt</string>
     <string name="objectives_maxiob_gate">Bevor Du den Zielwert niedriger einstellst, musst Du einige Tage Erfahrung sammeln und mindestens eine Nacht ohne Hypoalarm schaffen</string>
-    <string name="objectives_maxiob_learned">Passe MaxIOB an, wenn das Kind wächst. Erlauben Sie dem System nicht mehr Insulin abzugeben als Sie mit Lebensmitteln abdecken können = Ein wirklich hoher Wert ist eine schlechte Idee.</string>
     <string name="objectives_autosens_objective">Passe Basalraten und Faktoren bei Bedarf an und schalte anschließend Autosens ein.</string>
     <string name="objectives_autosens_gate">Loope eine Woche tagsüber mit regelmäßiger Kohlenhydrat-Eingabe</string>
     <string name="objectives_autosens_learned">Wenn Ihr Autosens Ergebnis nicht stündlich schwankt, um die angestrebten 100 % ist das verwendete Profil wahrscheinlich falsch.</string>

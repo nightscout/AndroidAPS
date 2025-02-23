@@ -16,11 +16,9 @@
     <string name="objectives_maxbasal">Wykonaj działanie, aby spełnić rekomendację</string>
     <string name="objectives_maxbasal_learned">Należy zwrócić uwagę na dostępne zabezpieczenia i w razie potrzeby dostosować parametry bezpieczeństwa.</string>
     <string name="objectives_maxiobzero_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>
-    <string name="objectives_maxiobzero_gate">Używaj przez kilka dni zamkniętej pętli (Closed Loop) z max IOB = 0 bez zbyt wielu incydentów niedocukrzeń</string>
     <string name="objectives_maxiobzero_learned">Ustawienie MaxIOB na zero zapobiega wystąpieniu hipoglikemii poprzez uniemożliwienie pętli podania insuliny powyżej dawki bazowej (z wyjątkiem sytuacji z ujemnym IOB)</string>
     <string name="objectives_maxiob_objective">Dostrajanie zamkniętej pętli, podniesienie wartości max IOB powyżej 0 i stopniowe obniżanie docelowego poziomu cukru (BG target)</string>
     <string name="objectives_maxiob_gate">Używaj pętli przez kilka dni i przynajmniej jedną noc bez żadnego alarmu niskiego poziomu, przed obniżeniem docelowego poziomu cukru</string>
-    <string name="objectives_maxiob_learned">Aktualizuj MaxIOB wraz ze wzrostem i rozwojem dziecka. Nie pozwalaj systemowi na podanie większej ilości insuliny niż można pokryć posiłkami = naprawdę wysoka wartość to zły pomysł.</string>
     <string name="objectives_autosens_objective">Dostosuj bazę i wartości parametrów jeśli jest to potrzebne, i wtedy uruchom funkcję autosens</string>
     <string name="objectives_autosens_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów</string>
     <string name="objectives_autosens_learned">Jeśli wynik autosens nie oscyluje w okolicach 100%, prawdopodobnie Twój profil nie jest poprawny.</string>

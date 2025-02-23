@@ -38,7 +38,6 @@
     <string name="completed_well_done">Voltooid, goed gedaan!</string>
     <string name="not_completed_yet">Nog niet voltooid</string>
     <string name="time_elapsed">Verstreken tijd</string>
-    <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
     <string name="synchaswritepermission">Synchronisatieservice heeft schrijfrechten</string>
     <string name="loopenabled">Loop Actief</string>

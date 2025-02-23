@@ -37,7 +37,6 @@
     <string name="completed_well_done">Terminado, parabéns!</string>
     <string name="not_completed_yet">Incompleto</string>
     <string name="time_elapsed">Tempo decorrido</string>
-    <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
     <string name="synchaswritepermission">O serviço de sincronização tem permissão de escrita</string>
     <string name="loopenabled">Loop activado</string>

@@ -124,14 +124,9 @@
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
     <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
-    <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
     <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
-    <string name="wear_action_tempt_zero_message">Sıfır-Geçici-Hedef - Çalışan Geçici-Hedefler iptal edilsin mi?</string>
     <string name="wear_action_tempt_min_bg_error">Min-KŞ aralık dışında!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
-    <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\nMin: %1$s\nMaks: %2$s\nSüre: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Geçici Hedef:\nHedef: %1$s\nSüre: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Geçici Hedef:\nNeden: %1$s\nHedef: %2$s\nSüre: %3$s</string>
     <string name="no_success">başarısız - lütfen telefonu kontrol edin</string>
     <string name="wear_settings">Wear ayarları</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
@@ -162,6 +157,7 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
+    <string name="profile_message">Profil: %1$s\nKayma: %2$d h\nYüzde: %3$d%%\nSüre: %4$d min</string>
     <string name="target_only_aps_mode">Hedefler yalnızca APS modunda uygulanır!</string>
     <string name="no_history">Geçmiş verisi yok!</string>
     <string name="temp_target">Geçici Hedef</string>

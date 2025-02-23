@@ -38,7 +38,6 @@
     <string name="completed_well_done">Ukończono, dobra robota!</string>
     <string name="not_completed_yet">Nie ukończono</string>
     <string name="time_elapsed">Czas jaki upłynął</string>
-    <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
     <string name="hasbgdata">BG dostępne z wybranego źródła</string>
     <string name="synchaswritepermission">Usługa synchronizacji ma uprawnienia do zapisu</string>
     <string name="loopenabled">Pętla włączona</string>

@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máxima e configurá-la na bomba e nas preferências</string>
     <string name="objectives_maxbasal_learned">Tenha cuidado com os recursos de segurança e ajuste os parâmetros de segurança quando necessário.</string>
     <string name="objectives_maxiobzero_objective">Começar o loop fechado com Suspensão por Glicose Baixa</string>
-    <string name="objectives_maxiobzero_gate">Utilizar em loop fechado com maxIA = 0 por alguns dias sem muitos eventos de SGB (Suspensão por Glicose Baixa)</string>
     <string name="objectives_maxiobzero_learned">Definir a maxIA para zero previne-o de hipoglicemias e não adicionará mais insulina acima da taxa basal (exceto situações com IA negativa)</string>
     <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IA máxima acima de 0 e reduzir gradualmente os alvos de GLIC</string>
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de GLIC baixa, antes de baixar GLIC</string>
-    <string name="objectives_maxiob_learned">Atualize a maxIA à medida que o seu filho cresce. Não permita que o sistema dê mais insulina do que aquela para a qual tem comida disponível, ou seja, um valor muito elevado é uma má ideia.</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, active o auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de hidratos de carbono</string>
     <string name="objectives_autosens_learned">Se o resultado do seu autosens não oscila à volta de 100% do seu perfil, então provavelmente está errado.</string>

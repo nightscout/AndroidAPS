@@ -80,14 +80,9 @@
     <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
     <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
     <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
-    <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
     <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
-    <string name="wear_action_tempt_zero_message">无临时目标-取消正在运行的临时目标？</string>
     <string name="wear_action_tempt_min_bg_error">目标血糖最小值超出范围！</string>
     <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
-    <string name="wear_action_tempt_manual_range_message">临时目标:\n最小: %1$s\n最大: %2$s\n持续时间: %3$s</string>
-    <string name="wear_action_tempt_manual_message">临时目标:\n目标: %1$s\n持续时间: %2$s</string>
-    <string name="wear_action_tempt_preset_message">临时目标：\n原因： %1$s\n目标： %2$s\n持续时间： %3$s</string>
     <string name="no_success">未成功-请检查手机</string>
     <string name="wear_settings">手表设置</string>
     <string name="wearcontrol_title">从手表上控制</string>

@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
     <string name="objectives_maxbasal_learned">Προσέξτε τα χαρακτηριστικά ασφαλείας και προσαρμόστε τις παραμέτρους ασφαλείας όταν αυτό είναι απαραίτητο.</string>
     <string name="objectives_maxiobzero_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend)</string>
-    <string name="objectives_maxiobzero_gate">Τρέξτε σε κλειστό κύκλωμα με μέγιστο IOB = 0 για μερικές ημέρες χωρίς πολλά LGS - υπογλυκαιμίες</string>
     <string name="objectives_maxiobzero_learned">Η ρύθμιση του MaxIOB στο μηδέν σας αποτρέπει από την υπογλυκαιμία και δεν θα προσθέσει περισσότερη ινσουλίνη πάνω από τον βασικό ρυθμό (εκτός από την περίπτωση του αρνητικού IOB)</string>
     <string name="objectives_maxiob_objective">Ρυθμίζοντας το κλειστό κύκλωμα, αυξήστε το μέγιστο IOB πάνω από 0 και σταδιακά μειώστε τους στόχους BG</string>
     <string name="objectives_maxiob_gate">Τρέξτε το για λίγες ημέρες, και τουλάχιστον μία νύχτα χωρίς χαμηλό συναγερμό BG, πριν χαμηλώσετε τα όρια</string>
-    <string name="objectives_maxiob_learned">Ενημερώστε το MaxIOB καθώς μεγαλώνει ένα παιδί. Μην επιτρέψετε στο σύστημα να σας δώσει περισσότερη ινσουλίνη απ \'ότι μπορείτε να καλύψετε με τροφή = μια πραγματικά υψηλή τιμή είναι κακή ιδέα.</string>
     <string name="objectives_autosens_objective">Ρυθμίστε τον βασικό ρυθμό και τις αναλογίες αν χρειάζεται, και μετά ενεργοποιήστε το auto-sens</string>
     <string name="objectives_autosens_gate">1 επιτυχής εβδομάδα ημερήσιου κυκλώματος με κανονική εισαγωγή υδατανθράκων</string>
     <string name="objectives_autosens_learned">Εάν το αποτέλεσμα του autosens σας δεν ταλαντεύεται περίπου στο 100%, τότε το προφίλ σας είναι πιθανώς λάθος.</string>

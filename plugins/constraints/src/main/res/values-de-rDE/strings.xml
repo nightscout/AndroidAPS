@@ -37,7 +37,6 @@
     <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
     <string name="not_completed_yet">Nicht vollständig ausgefüllt</string>
     <string name="time_elapsed">Verstrichene Zeit</string>
-    <string name="maxiobset">Maximales IOB richtig gesetzt</string>
     <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
     <string name="synchaswritepermission">Synchronisationsdienst hat Schreibrechte</string>
     <string name="loopenabled">Loop aktiviert</string>

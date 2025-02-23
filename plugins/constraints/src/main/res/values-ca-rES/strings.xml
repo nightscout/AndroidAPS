@@ -20,7 +20,6 @@
     <!-- Objectives -->
     <string name="not_completed_yet">No finalitzat encara</string>
     <string name="time_elapsed">Temps transcorregut</string>
-    <string name="maxiobset">Màx IOB correctament configurada</string>
     <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
     <string name="loopenabled">Llaç activat</string>
     <string name="apsselected">APS seleccionat</string>

@@ -38,7 +38,6 @@
     <string name="completed_well_done">Užbaigta, puiku!</string>
     <string name="not_completed_yet">Dar nebaigta</string>
     <string name="time_elapsed">Praėjo laiko</string>
-    <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
     <string name="hasbgdata">Glikemijos šaltinis pasirinktas teisingai</string>
     <string name="synchaswritepermission">Sinchronizacijos servisas turi įrašymo leidimą</string>
     <string name="loopenabled">Ciklas aktyvuotas</string>
