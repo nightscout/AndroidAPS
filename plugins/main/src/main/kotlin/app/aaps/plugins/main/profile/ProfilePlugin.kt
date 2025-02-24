@@ -178,8 +178,6 @@ class ProfilePlugin @Inject constructor(
     override fun storeSettings(activity: FragmentActivity?, timestamp: Long) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                //if (iCfg.getPeak()==0)
-                //    iCfg.setPeak(activePlugin.activeInsulin.peak)
                 val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
                 sp.putString(localProfileNumbered + "name", name)
                 sp.putBoolean(localProfileNumbered + "mgdl", mgdl)

@@ -75,6 +75,9 @@ interface ProfileSource {
      */
     fun loadFromStore(store: ProfileStore)
 
+    /**
+     * Load [ProfileStore] from SharedPreferences (for ICfg migration)
+     */
     fun loadSettings()
 
 }

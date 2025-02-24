@@ -6,7 +6,6 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.ConfigExportImport
-import app.aaps.core.interfaces.resources.ResourceHelper
 
 interface Insulin : ConfigExportImport {
     enum class InsulinType(val value: Int, val peak: Int, val dia: Double, @StringRes val label: Int) {

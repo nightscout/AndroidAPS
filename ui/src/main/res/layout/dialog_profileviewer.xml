@@ -164,7 +164,6 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

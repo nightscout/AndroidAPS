@@ -33,6 +33,10 @@ interface Profile {
 
     //@Deprecated("Replace in favor of accessing InsulinProfile")
     val dia: Double
+
+    /**
+     * InsulinProfile
+     */
     val insulin: ICfg
 
     val percentage: Int
