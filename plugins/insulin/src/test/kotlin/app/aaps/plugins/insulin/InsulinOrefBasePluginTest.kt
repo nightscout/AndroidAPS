@@ -2,6 +2,7 @@ package app.aaps.plugins.insulin
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -47,6 +48,10 @@ class InsulinOrefBasePluginTest {
 
         override val peak: Int
             get() = testPeak
+
+        override fun getOrCreateInsulin(iCfg: ICfg): ICfg = ICfg("Test-Insulin", 45, 8.0)
+
+        override fun getInsulin(insulinLabel: String): ICfg = ICfg("Test-Insulin", 45, 8.0)
 
         override fun commentStandardText(): String = ""
         override val id get(): Insulin.InsulinType = Insulin.InsulinType.UNKNOWN
