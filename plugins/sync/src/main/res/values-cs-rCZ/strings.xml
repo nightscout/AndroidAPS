@@ -124,9 +124,9 @@
     <string name="quick_wizard_not_available">Vybraný rychlý bolus již není k dispozici, obnovte prosím dlaždici</string>
     <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybraná akce uživatele %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
-    <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
+    <string name="wear_action_tempt_cancel_message">Zrušit běžící dočasný cíl?</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
-    <string name="wear_action_tempt_zero_message">Nulový dočasný cíl - zrušení běžícího dočasného cíle?</string>
+    <string name="wear_action_tempt_zero_message">Nulový dočasný cíl – zrušit běžící dočasný cíl?</string>
     <string name="wear_action_tempt_min_bg_error">Minimální glykémie mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo rozsah!</string>
     <string name="wear_action_tempt_range_error">Neplatný rozsah: Nízký cíl (%1$s) nemůže být větší než vysoký cíl (%2$s)</string>
