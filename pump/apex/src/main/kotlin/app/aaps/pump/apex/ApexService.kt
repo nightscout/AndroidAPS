@@ -809,8 +809,8 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
     }
 
-    private val bolusEntryLock = Mutex()
-    private fun onBolusEntry(entry: BolusEntry) = synchronized(bolusEntryLock) {
+    @Synchronized
+    private fun onBolusEntry(entry: BolusEntry) {
         // Extended bolus entries do not have duration stored, do not use them.
         if (entry.extendedDose > 0) return
 
