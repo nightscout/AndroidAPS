@@ -80,14 +80,9 @@
     <string name="wizard_result">Calc. Assistente:\nInsulina: %1$.2fU\nHidratos: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulina: %2$.2fU\nHidratos: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Cancelando Alvos Temporários em execução?</string>
     <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
-    <string name="wear_action_tempt_zero_message">Alvo-temporário-Zero - cancelar Alvos -Temporários em progresso?</string>
     <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
-    <string name="wear_action_tempt_manual_range_message">AlvoTemporário:\nMin: %1$s\nMax: %2$s\nDuração: %3$s</string>
-    <string name="wear_action_tempt_manual_message">AlvoTemporário:\nAlvo: %1$s\nDuração: %2$s</string>
-    <string name="wear_action_tempt_preset_message">AlvoTemporário:\nMotivo %1$s\nAlvo: %2$s\nDuração: %3$s</string>
     <string name="no_success">sem efeito - por favor verifique no telemóvel</string>
     <string name="wear_settings">Definições do Relógio</string>
     <string name="wearcontrol_title">Controles do Relógio</string>

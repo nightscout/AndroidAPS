@@ -38,7 +38,6 @@
     <string name="completed_well_done">完成，做得好！</string>
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已過時間</string>
-    <string name="maxiobset">最大IOB設置正確</string>
     <string name="hasbgdata">從選定的來源可獲取血糖</string>
     <string name="synchaswritepermission">同步服務具有寫入權限</string>
     <string name="loopenabled">循環已啟用</string>

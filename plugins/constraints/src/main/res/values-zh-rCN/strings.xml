@@ -20,7 +20,6 @@
     <!-- Objectives -->
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已用时间</string>
-    <string name="maxiobset">合理地设置最大 IOB</string>
     <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
     <string name="loopenabled">闭环启用了</string>
     <string name="apsselected">APS已选择</string>

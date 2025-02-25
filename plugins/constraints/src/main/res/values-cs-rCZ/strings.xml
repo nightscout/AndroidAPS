@@ -38,7 +38,6 @@
     <string name="completed_well_done">Hotovo, gratulujeme!</string>
     <string name="not_completed_yet">Nedokončeno</string>
     <string name="time_elapsed">Čas</string>
-    <string name="maxiobset">Maximální IOB nastaveno správně</string>
     <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
     <string name="synchaswritepermission">Služba synchronizace má oprávnění k zápisu</string>
     <string name="loopenabled">Smyčka povolena</string>
