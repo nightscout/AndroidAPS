@@ -152,8 +152,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         try {
             initSummary(preferenceScreen, pluginName != null)
-        } catch (_: Exception) {
-            throw Exception("Error in onCreatePreferences pluginName=$pluginName customPreference=$customPreference rootKey=$rootKey filter=$filter")
+        } catch (e: Exception) {
+            throw Exception("Error in onCreatePreferences pluginName=$pluginName customPreference=$customPreference rootKey=$rootKey filter=$filter", e)
         }
         preprocessPreferences()
         if (filter != "") updateFilterVisibility(filter, preferenceScreen)

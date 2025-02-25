@@ -841,6 +841,19 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     fun loop_smb(microBolusAllowed: Boolean, profile: OapsProfileAutoIsf, iob_data_iob: Double, useIobTh: Boolean, iobThEffective: Double): String {
+        val iobThUser = preferences.get(IntKey.ApsAutoIsfIobThPercent)  //iobThresholdPercent
+        if (useIobTh) {
+            val iobThPercent = round(iobThEffective / profile.max_iob * 100.0, 0)
+            if (iobThPercent == iobThUser.toDouble()) {
+                consoleLog.add("User setting iobTH=$iobThUser% not modulated")
+            } else {
+                consoleLog.add("User setting iobTH=$iobThUser% modulated to ${iobThPercent.toInt()}% or ${round(iobThEffective, 2)}U")
+                consoleLog.add("  due to profile %, exercise mode or similar")
+            }
+        } else {
+            consoleLog.add("User setting iobTH=100% disables iobTH method")
+        }
+
         if (!microBolusAllowed) {
             return "AAPS"                                                 // see message in enable_smb
         }
@@ -863,19 +876,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
                 msgTail = "number"
             }
             val msgEven: String = if (evenTarget) "even" else "odd"
-
-            val iobThUser = preferences.get(IntKey.ApsAutoIsfIobThPercent)  //iobThresholdPercent
-            if (useIobTh) {
-                val iobThPercent = round(iobThEffective / profile.max_iob * 100.0, 0)
-                if (iobThPercent == iobThUser.toDouble()) {
-                    consoleLog.add("User setting iobTH=$iobThUser% not modulated")
-                } else {
-                    consoleLog.add("User setting iobTH=$iobThUser% modulated to ${iobThPercent.toInt()}% or ${round(iobThEffective, 2)}U")
-                    consoleLog.add("  due to profile %, exercise mode or similar")
-                }
-            } else {
-                consoleLog.add("User setting iobTH=100% disables iobTH method")
-            }
 
             if (!evenTarget) {
                 consoleLog.add("SMB disabled; current target $target $msgUnits $msgEven $msgTail")

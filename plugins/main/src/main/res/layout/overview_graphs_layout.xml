@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graphs_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -40,16 +39,6 @@
             android:contentDescription="@string/chart_menu"
             android:paddingTop="5dp"
             app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
-
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@+id/chart_menu_button"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
 

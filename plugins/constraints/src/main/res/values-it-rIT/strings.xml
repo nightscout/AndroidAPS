@@ -38,7 +38,6 @@
     <string name="completed_well_done">Completato, ben fatto!</string>
     <string name="not_completed_yet">Non ancora completato</string>
     <string name="time_elapsed">Tempo trascorso</string>
-    <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="synchaswritepermission">Il servizio di sincronizzazione ha i permessi di scrittura</string>
     <string name="loopenabled">Loop abilitato</string>
