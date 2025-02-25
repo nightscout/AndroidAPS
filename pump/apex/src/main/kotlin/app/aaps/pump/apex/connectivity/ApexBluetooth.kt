@@ -49,7 +49,7 @@ class ApexBluetooth @Inject constructor(
         private val WRITE_UUID = UUID.fromString("0000FFE9-0000-1000-8000-00805F9B34FB")
         private val CCC_UUID = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
 
-        private const val WRITE_DELAY_MS = 100
+        private const val WRITE_DELAY_MS = 250
     }
 
     private val bluetoothAdapter = context.getSystemService(BluetoothManager::class.java).adapter
@@ -177,7 +177,7 @@ class ApexBluetooth @Inject constructor(
                     }
                     BluetoothGatt.STATE_CONNECTED -> {
                         bluetoothGatt?.discoverServices()
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "First stage of connection is done")
+                        aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting | Discovering services")
                     }
                 }
             }
@@ -185,6 +185,7 @@ class ApexBluetooth @Inject constructor(
             override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
                 super.onMtuChanged(gatt, mtu, status)
                 this@ApexBluetooth.mtu = mtu
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting | Got MTU $mtu")
             }
 
             @Suppress("DEPRECATION")
@@ -194,6 +195,8 @@ class ApexBluetooth @Inject constructor(
                 Thread {
                     gatt.requestMtu(512)
                     SystemClock.sleep(150)
+
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting | Requesting notification")
 
                     writeCharacteristic = gatt.getService(WRITE_SERVICE.uuid).getCharacteristic(WRITE_UUID)
                     readCharacteristic = gatt.getService(READ_SERVICE.uuid).getCharacteristic(READ_UUID)
@@ -213,12 +216,11 @@ class ApexBluetooth @Inject constructor(
                 super.onDescriptorWrite(gatt, descriptor, status)
                 Thread {
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Connected | Notification status: $status")
-                    SystemClock.sleep(100)
                     gatt?.setCharacteristicNotification(readCharacteristic, true)
-                    SystemClock.sleep(100)
+                    SystemClock.sleep(10)
                     _status = Status.CONNECTED
                     callback?.onConnect()
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "Connected successfully")
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Connected")
                 }.start()
             }
 
@@ -236,6 +238,7 @@ class ApexBluetooth @Inject constructor(
         }, BluetoothDevice.TRANSPORT_LE)
 
         if (bluetoothGatt == null) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Connecting | Failed to set up GATT")
             _status = Status.DISCONNECTED
         }
     }
@@ -254,7 +257,6 @@ class ApexBluetooth @Inject constructor(
 
                 while (lastCommand != null && lastCommand!!.isCompleteCommand()) {
                     if (!lastCommand!!.verify()) {
-                        // TODO: find a better way to do the same thing
                         aapsLogger.error(LTag.PUMPBTCOMM, "[${lastCommand!!.id?.name}] Command checksum is invalid! Expected ${lastCommand!!.checksum.toHex()}")
                         return
                     }
@@ -269,7 +271,7 @@ class ApexBluetooth @Inject constructor(
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun reconnect() {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting to pump...")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting | Setting up GATT")
         bluetoothDevice = bluetoothAdapter!!.getRemoteDevice(preferences.get(ApexStringKey.BluetoothAddress))
         setupGatt()
     }
