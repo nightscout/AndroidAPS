@@ -36,13 +36,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.utils.wait
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.pump.apex.connectivity.ApexBluetooth
 import app.aaps.pump.apex.connectivity.commands.pump.AlarmLength
-import app.aaps.pump.apex.connectivity.commands.pump.BolusEntry
-import app.aaps.pump.apex.connectivity.commands.pump.Version
 import app.aaps.pump.apex.ui.ApexFragment
 import app.aaps.pump.apex.utils.keys.ApexBooleanKey
 import app.aaps.pump.apex.utils.keys.ApexDoubleKey
@@ -50,8 +49,6 @@ import app.aaps.pump.apex.utils.keys.ApexStringKey
 import app.aaps.pump.apex.utils.toApexReadableProfile
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 
 import org.json.JSONObject
@@ -345,14 +342,19 @@ class ApexPumpPlugin @Inject constructor(
             }
         }
 
-        return runBlocking {
-            val bolus = service!!.bolusCompletable?.await()
-            pumpEnactResult.apply {
-                success = bolus != null
-                if (bolus != null) {
-                    enacted = bolus.currentDose >= 0.025
-                    bolusDelivered = bolus.currentDose
-                }
+        pump.inProgressBolus?.let {
+            synchronized(it) {
+                it.wait()
+            }
+        }
+
+        val bolus = pump.inProgressBolus
+        val successful = bolus != null && !bolus.failed
+        return pumpEnactResult.apply {
+            success = successful
+            if (successful) {
+                enacted = bolus!!.currentDose >= 0.025
+                bolusDelivered = bolus.currentDose
             }
         }
     }
