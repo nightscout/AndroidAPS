@@ -648,20 +648,16 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     }
 
     private fun onAlarmsChanged(update: ApexPump.StatusUpdate) {
+        val prev = update.previous?.alarms
         // Alarm was dismissed
-        if (pump.isAlarmPresent && update.current.alarms.isEmpty()) {
-            pump.isAlarmPresent = false
+        if (!prev.isNullOrEmpty() && update.current.alarms.isEmpty()) {
             rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
             rxBus.send(EventDismissNotification(Notification.PUMP_WARNING))
         }
 
         // New alarms
-        if (!pump.isAlarmPresent && update.current.alarms.isNotEmpty()) {
-            if (pump.isBolusing) {
-                // Pump sends early heartbeat while bolusing if there's an error while bolusing.
-                aapsLogger.error(LTag.PUMP, "Bolus has failed!")
-                onBolusFailed()
-            }
+        if (prev.isNullOrEmpty() && update.current.alarms.isNotEmpty()) {
+            var anyUrgent = false
 
             for (alarm in update.current.alarms) {
                 val name = when (alarm) {
@@ -674,23 +670,31 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                     Alarm.TimeAnomalyError, Alarm.MotorAbnormal, Alarm.MotorPowerAbnormal,
                     Alarm.MotorError -> rh.gs(R.string.alarm_hardware_fault, alarm.name)
                     Alarm.Unknown -> rh.gs(R.string.alarm_unknown_error)
+                    Alarm.CheckGlucose -> rh.gs(R.string.alarm_check_bg)
                     else -> rh.gs(R.string.alarm_unknown_error_name, alarm.name)
                 }
                 val isUrgent = when(alarm) {
-                    Alarm.LowBattery, Alarm.LowReservoir -> false
+                    Alarm.LowBattery, Alarm.LowReservoir, Alarm.CheckGlucose -> false
                     else -> true
                 }
+                if (isUrgent) anyUrgent = true
 
                 uiInteraction.addNotification(
                     if (isUrgent) Notification.PUMP_ERROR else Notification.PUMP_WARNING,
-                    name,
+                    rh.gs(R.string.alarm_label, name),
                     if (isUrgent) Notification.URGENT else Notification.NORMAL,
                 )
                 pumpSync.insertAnnouncement(
-                    error = name,
+                    error = rh.gs(R.string.alarm_label, name),
                     pumpType = PumpType.APEX_TRUCARE_III,
                     pumpSerial = apexDeviceInfo.serialNumber,
                 )
+            }
+
+            if (anyUrgent && pump.isBolusing) {
+                // Pump sends early heartbeat while bolusing if there's an error while bolusing.
+                aapsLogger.error(LTag.PUMP, "Bolus has failed!")
+                Thread { onBolusFailed() }.start()
             }
         }
     }

@@ -65,7 +65,6 @@ class ApexPump @Inject constructor() {
     var lastV1: StatusV1? = null
 
     var inProgressBolus: InProgressBolus? = null
-    var isAlarmPresent: Boolean = false
     var lastBolus: BolusEntry? = null
     var firmwareVersion: Version? = null
     var serialNumber: String = ""
