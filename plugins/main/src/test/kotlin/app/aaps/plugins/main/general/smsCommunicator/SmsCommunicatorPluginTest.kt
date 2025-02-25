@@ -1259,7 +1259,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
                 TestCase("BOLUSCARBS 1.2 12 +30", true),
                 TestCase("BOLUSCARBS 1.2 12 21:37", true),
                 TestCase("BOLUSCARBS 1.2 12 21:37 ALARM", true),
-                TestCase("BOLUSCARBS 1.2 12 1:37 ALARM", true),
+                TestCase("BOLUSCARBS 1,2 12 1:37 ALARM", true),
                 TestCase("BOLUSCARBS 1.2 12 1:37PM ALARM", true),
                 TestCase("BOLUSCARBS 1.2 12 0:3 ALARM", false),
                 TestCase("BOLUSCARBS 1.2 12 :3 ALARM", false),
@@ -1291,10 +1291,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         // Test cases
         val testCases = listOf(
-            // "BOLUSCARBS 1.2 12" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1.2 12" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
             "BOLUSCARBS 1.2 12 14:30" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
             "BOLUSCARBS 1.2 12 2:30PM" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
-            "BOLUSCARBS 1.2 12 +30" to "To deliver bolus 1.20U and enter 12g at +30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1,2 12 +30" to "To deliver bolus 1.20U and enter 12g at +30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
             "BOLUSCARBS 1.2 12 14:30 ALARM" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
             "BOLUSCARBS 1.2 12 +30 ALARM" to "To deliver bolus 1.20U and enter 12g at +30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U"
         )

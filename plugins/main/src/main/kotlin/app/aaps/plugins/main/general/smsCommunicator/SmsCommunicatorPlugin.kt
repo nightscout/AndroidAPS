@@ -139,7 +139,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     override var messages = ArrayList<Sms>()
 
     private val CARBS_PATTERN = Pattern.compile("CARBS\\s+(\\d+)(?:\\s*(?:(\\d{1,2}:\\d{2}(?:AM|PM)?)|(\\+\\d{1,2}))(\\s*ALARM)?)?$")
-    private val BOLUSCARBS_PATTERN = Pattern.compile("BOLUSCARBS\\s+(\\d+(?:\\.\\d+)?)\\s+(\\d+)(?:\\s*(?:(\\d{1,2}:\\d{2}(?:AM|PM)?)|(\\+\\d{1,2}))(\\s*ALARM)?)?$")
+    private val BOLUSCARBS_PATTERN = Pattern.compile("BOLUSCARBS\\s+(\\d+(?:[.,]\\d+)?)\\s+(\\d+)(?:\\s*(?:(\\d{1,2}:\\d{2}(?:AM|PM)?)|(\\+\\d{1,2}))(\\s*ALARM)?)?$")
 
     private val commands = mapOf(
         "BG" to "BG",
