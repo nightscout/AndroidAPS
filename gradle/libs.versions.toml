@@ -39,8 +39,10 @@ com-google-firebase-crashlytics = { group = "com.google.firebase", name = "fireb
 com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 com-google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 com-google-firebase-database = { group = "com.google.firebase", name = "firebase-database" }
+com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.2.0" }
 com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "19.0.0" }
+com-google-android-places = { group = "com.google.android.libraries.places", name = "places", version = "4.1.0" }
 com-google-android-gms-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }
 
 com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.12.0" }
@@ -137,6 +139,7 @@ com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", ver
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.16.0" }
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
+com-github-rtchagas-pingplacepicker = { group = "com.github.rtchagas", name = "pingplacepicker", version = "3.0.1" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.1" }
 io-kotlintest-runner-junit5 = { group = "io.kotlintest", name = "kotlintest-runner-junit5", version = "3.4.2" }
 com-polidea-rxandroidble3 = { group = "com.polidea.rxandroidble3", name = "rxandroidble", version = "1.19.0" }
