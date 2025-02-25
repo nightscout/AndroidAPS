@@ -79,8 +79,6 @@
     <string name="deltalabel_u">Glikemijos skirtumas [%1$s]</string>
     <string name="currentlocation">Dabartinė vieta</string>
     <string name="location">Vieta</string>
-    <string name="latitude_short">Platuma:</string>
-    <string name="longitude_short">Ilguma:</string>
     <string name="glucose_u">Glikemija [%1$s]:</string>
     <string name="target_u">Tikslas [%1$s]:</string>
     <string name="lastboluslabel">Paskutinis bolusas</string>
