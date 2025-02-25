@@ -129,9 +129,10 @@
     <string name="wear_action_tempt_zero_message">Objetivo Temporal Zero - ¿Cancelar el Objetivo Temporal en ejecución?</string>
     <string name="wear_action_tempt_min_bg_error">¡Glucosa mínima fuera de rango!</string>
     <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
-    <string name="wear_action_tempt_manual_range_message">Objetivo temporal:\nMin: %1$s\nMax: %2$s\nDuración: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Objetivo temporal:\nObjetivo: %1$s\nDuración: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ObjetivoTemporal:\nRazón: %1$s\nObjetivo: %2$s\nDuración: %3$s</string>
+    <string name="wear_action_tempt_range_error">Rango inválido: El objetivo bajo (%1$s) no puede ser mayor que el objetivo alto (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">ObjTemporal\n\nMin: %1$s\nMax: %2$s\nDuración: %3$d min</string>
+    <string name="wear_action_tempt_manual_message">ObjTemporal\n\nObjetivo: %1$s\nDuración: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">ObjTemporal\n\nRazón: %1$s\nObjetivo: %2$s\nDuracion: %3$d min</string>
     <string name="no_success">sin efecto - por favor verificar en teléfono</string>
     <string name="wear_settings">Ajustes del reloj</string>
     <string name="wearcontrol_title">Control desde el reloj</string>

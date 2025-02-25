@@ -38,7 +38,6 @@
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
     <string name="not_completed_yet">Henüz tamamlanmadı</string>
     <string name="time_elapsed">Geçen süre</string>
-    <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="synchaswritepermission">Senkronizasyon servisi yazma iznine sahip</string>
     <string name="loopenabled">Döngü etkin</string>

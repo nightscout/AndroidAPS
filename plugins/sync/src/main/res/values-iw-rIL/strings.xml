@@ -124,14 +124,9 @@
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="user_action_not_available">פעולת המשתמש %1$s אינה זמינה יותר, בבקשה רעננו את האריח</string>
-    <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - בוטל, הפעלת ערכי מטרה זמניים?</string>
     <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
-    <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
-    <string name="wear_action_tempt_manual_message">ע\' מטרה זמני:\nמטרה: %1$s\n משך: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ע\' מטרה זמני:\nסיבה: %1$s\nמטרה: %2$s\nמשך: %3$s</string>
     <string name="no_success">נכשל - נא לבדוק את הטלפון</string>
     <string name="wear_settings">הגדרות Wear</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>

@@ -37,7 +37,6 @@
     <string name="completed_well_done">Slutfört, bra jobbat!</string>
     <string name="not_completed_yet">Inte slutfört ännu</string>
     <string name="time_elapsed">Förfluten tid</string>
-    <string name="maxiobset">Max IOB är korrekt angivet</string>
     <string name="hasbgdata">BG tillgängligt från vald källa</string>
     <string name="synchaswritepermission">Synkroniseringstjänsten har skrivrättigheter</string>
     <string name="loopenabled">Loop aktiverad</string>

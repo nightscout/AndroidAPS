@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Utifrån vad du nu lärt dig, besluta vilken max basal du vill ha. Ställ in det både i inställningarna i appen och i din pump</string>
     <string name="objectives_maxbasal_learned">Var noggrann med säkerhetsfunktioner och justera säkerhetsparametrar vid behov.</string>
     <string name="objectives_maxiobzero_objective">Börja använda closed loop med aktiverad funktion att stänga av vid lågt BG</string>
-    <string name="objectives_maxiobzero_gate">Aktivera closed loop med max IOB=0 i några dagar till dess systemet inte stänger av pga lågt BG för många gånger</string>
     <string name="objectives_maxiobzero_learned">Att sätta MaxIOB till noll förebygger att du får lågt blodsocker och kommer inte att lägga till mer insulin över basal hastighet (utom situationer där du har negativ IOB)</string>
     <string name="objectives_maxiob_objective">Finjustering av closed loop, med gradvis ökande max IOB och minskande målvärde för BG</string>
     <string name="objectives_maxiob_gate">Kör några dagar och åtminstone en natt utan larm för lågt BG innan du sänker målvärdet för BG</string>
-    <string name="objectives_maxiob_learned">Uppdatera MaxIOB när ett barn växer. Låt inte systemet ge dig mer insulin än du kan täcka med mat = ett mycket högt värde är en dålig idé.</string>
     <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
     <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
     <string name="objectives_autosens_learned">Om ditt autosens-resultat inte pendlar runt 100% är din profil förmodligen fel.</string>
