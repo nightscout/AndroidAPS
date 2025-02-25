@@ -718,7 +718,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         val cur = update.current
         update.previous?.let { old ->
             // Percentage became higher - battery was changed.
-            if (cur.batteryLevel.percentage - 2 > old.batteryLevel.percentage && preferences.get(ApexBooleanKey.LogBatteryChange)) {
+            if (cur.batteryLevel.percentage - 26 > old.batteryLevel.percentage && preferences.get(ApexBooleanKey.LogBatteryChange)) {
                 pumpSync.insertTherapyEventIfNewWithTimestamp(
                     timestamp = System.currentTimeMillis(),
                     pumpType = PumpType.APEX_TRUCARE_III,
