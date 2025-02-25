@@ -9,6 +9,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.DoseStepSize
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
@@ -296,7 +297,11 @@ class ApexPumpPlugin @Inject constructor(
         for (i in 0..<48) {
             val profileBasal = profile.getBasalTimeFromMidnight(i * 30 * 60)
             val pumpBasal = pumpBasalProfile!![i]
-            if (abs(pumpBasal - profileBasal) > 0.01) return false
+            val precision = DoseStepSize.Apex.getStepSizeForAmount(profileBasal) / 2
+            if (abs(pumpBasal - profileBasal) > precision) {
+                aapsLogger.info(LTag.PUMP, "Profiles are not same: req $profileBasal != pump $pumpBasal, block $i, time ${i * 30 * 60}")
+                return false
+            }
         }
         return true
     }
