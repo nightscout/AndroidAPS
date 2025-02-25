@@ -56,13 +56,15 @@
     <string name="notification_pump_is_suspended">Pump is suspended</string>
     <string name="notification_pump_unsupported">Pump has unsupported firmware</string>
 
+    <string name="alarm_label">Pump alarm: %1$s</string>
     <string name="alarm_occlusion">Occlusion</string>
     <string name="alarm_w_battery_low">Low battery</string>
     <string name="alarm_w_reservoir_low">Low reservoir level</string>
     <string name="alarm_battery_dead">Battery is dead</string>
     <string name="alarm_reservoir_empty">Reservoir is empty</string>
-    <string name="alarm_hardware_fault">Hardware error ($1%s)</string>
-    <string name="alarm_unknown_error_name">Unknown error $1%s, report to developers</string>
+    <string name="alarm_hardware_fault">Hardware error (%1$s)</string>
+    <string name="alarm_check_bg">Check blood glucose</string>
+    <string name="alarm_unknown_error_name">Unknown error %1$s, report to developers</string>
     <string name="alarm_unknown_error">Unknown error</string>
 
     <string name="status_delivering">Delivering %1$.3fU</string>
