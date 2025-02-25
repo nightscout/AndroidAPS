@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
     <string name="objectives_maxbasal_learned">Внимавайте за функциите за безопасност и коригирайте безопасно параметрите, когато е необходимо.</string>
     <string name="objectives_maxiobzero_objective">Стартиране на \"Затворен кръг\" с изключване на базал при ниска КЗ</string>
-    <string name="objectives_maxiobzero_gate">Стартиране на \"Затворен кръг\" с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
     <string name="objectives_maxiobzero_learned">Задаването на MaxIOB на нула ви предпазва от хипогликемия и няма да добави повече инсулин над базалната скорост (освен в ситуация с отрицателен IOB)</string>
     <string name="objectives_maxiob_objective">Настройване на \"Затворен кръг\" чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
     <string name="objectives_maxiob_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ</string>
-    <string name="objectives_maxiob_learned">Актуализирайте MaxIOB внимателно. Не позволявайте на системата да ви дава повече инсулин, отколкото можете да покриете с храна = наистина високата стойност е лоша идея.</string>
     <string name="objectives_autosens_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
     <string name="objectives_autosens_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
     <string name="objectives_autosens_learned">Ако вашият резултат от autosens не се колебае около 100%, вашият профил вероятно е грешен.</string>
