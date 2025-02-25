@@ -179,7 +179,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             apexBluetooth.send(GetValue(apexDeviceInfo, value))
             try {
                 aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Waiting for response")
-                getValueResult.waitMillis(if (getValueResult.isSingleObject) 1000 else 5000)
+                getValueResult.waitMillis(if (getValueResult.isSingleObject) 5000 else 15000)
             } catch (e: InterruptedException) {
                 aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
                 isGetThreadRunning = false
@@ -200,7 +200,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             apexBluetooth.send(command)
             try {
                 aapsLogger.debug(LTag.PUMPCOMM, "$command | Waiting for response")
-                commandResponse.waitMillis(1000)
+                commandResponse.waitMillis(5000)
             } catch (e: InterruptedException) {
                 aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
                 commandResponse.waiting = false
