@@ -42,6 +42,9 @@ class UpdateSettingsV1(
     val maxTDD: Int,
     val maxBasalRate: Int,
     val maxSingleBolus: Int,
+    val enableGlucoseReminder: Boolean = false,
+    val enableAutoSuspend: Boolean = false,
+    val lockPump: Boolean = false,
 ) : BaseValueCommand(info) {
     override val valueId = 0x32
     override val isWrite = true
@@ -51,13 +54,17 @@ class UpdateSettingsV1(
     override val additionalData: ByteArray
         get() {
             var functionFlags = 0
-            var bolusFlags = 1 shl 1
+            var bolusFlags = 0
 
             if (bolusSpeed == BolusDeliverySpeed.Low) functionFlags = functionFlags or FunctionFlags.LowBolusSpeed.raw
             if (language == Language.English) functionFlags = functionFlags or FunctionFlags.EnglishLanguage.raw
             if (limitTDD) functionFlags = functionFlags or FunctionFlags.TDDLimit.raw
             if (lockKeys) functionFlags = functionFlags or FunctionFlags.KeyboardLock.raw
+            if (enableAutoSuspend) functionFlags = functionFlags or FunctionFlags.AutoSuspend.raw
+            if (lockPump) functionFlags = functionFlags or FunctionFlags.LockPump.raw
+
             if (enableAdvancedBolus) bolusFlags = bolusFlags or BolusFlags.AdvancedBolus.raw
+            if (enableGlucoseReminder) bolusFlags = bolusFlags or BolusFlags.BGReminder.raw
 
             return byteArrayOf(
                 functionFlags.toByte(),
@@ -77,12 +84,15 @@ class UpdateSettingsV1(
     private enum class FunctionFlags(val raw: Int) {
         LowBolusSpeed(1 shl 0),
         KeyboardLock(1 shl 1),
-        TDDLimit(1 shl 2 and 1 shl 4),
-        EnglishLanguage(1 shl 3 and 1 shl 5),
+        AutoSuspend(1 shl 2),
+        LockPump(1 shl 4),
+        TDDLimit(1 shl 5),
+        EnglishLanguage( 1 shl 6),
     }
 
     private enum class BolusFlags(val raw: Int) {
         AdvancedBolus(1 shl 0),
+        BGReminder(1 shl 1),
     }
 
     override fun toString(): String = "UpdateSettingsV1(maxTDD = $maxTDD, maxBolus = $maxSingleBolus, maxBasal = $maxBasalRate, bolusSpeed = ${bolusSpeed.name}, ...)"

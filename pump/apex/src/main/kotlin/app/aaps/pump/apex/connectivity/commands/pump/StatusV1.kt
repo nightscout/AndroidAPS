@@ -23,11 +23,15 @@ class StatusV1(command: PumpCommand): PumpObjectModel() {
 
     private val bolusFlags = command.objectData[6].toUByte().toInt()
     private enum class BolusFlags(val raw: Int) {
-        AdvancedBolusEnabled(1 shl 1)
+        AdvancedBolusEnabled(1 shl 1),
+        BGReminderEnabled(1 shl 2),
     }
 
     /** Are dual and extended bolus types enabled? */
     val advancedBolusEnabled = (bolusFlags and BolusFlags.AdvancedBolusEnabled.raw) == 1
+
+    /** Is BG reminder alarm enabled? */
+    val bgReminderEnabled = (bolusFlags and BolusFlags.BGReminderEnabled.raw) == 1
 
     /** Keys lock enabled? */
     val keyboardLockEnabled = command.objectData[7].toBoolean()
@@ -44,7 +48,11 @@ class StatusV1(command: PumpCommand): PumpObjectModel() {
     /** Low reservoir alarm (triggered by time left) threshold in 30 minute steps */
     val lowReservoirTimeLeftThreshold = command.objectData[11].toUByte().toInt()
 
-    // Byte 10, 11 unknown
+    /** Is using preset basal pattern? */
+    val isDefaultBasal = command.objectData[12].toBoolean()
+
+    /** Is pump locked? */
+    val isLocked = command.objectData[12].toBoolean()
 
     /** Current basal pattern index */
     val currentBasalPattern = command.objectData[14].toUByte().toInt()
@@ -67,7 +75,29 @@ class StatusV1(command: PumpCommand): PumpObjectModel() {
     /** Maximum bolus in 0.025U steps */
     val maxBolus = getUnsignedShort(command.objectData, 28)
 
-    // Byte 29-45 unknown
+    /** Bolus preset: Breakfast A 5:00-7:00 */
+    val presetBreakfastA = getUnsignedShort(command.objectData, 30)
+
+    /** Bolus preset: Breakfast B 7:00-10:00 */
+    val presetBreakfastB = getUnsignedShort(command.objectData, 32)
+
+    /** Bolus preset: Dinner A 10:00-12:00 */
+    val presetDinnerA = getUnsignedShort(command.objectData, 34)
+
+    /** Bolus preset: Dinner B 12:00-15:00 */
+    val presetDinnerB = getUnsignedShort(command.objectData, 36)
+
+    /** Bolus preset: Supper A 15:00-18:00 */
+    val presetSupperA = getUnsignedShort(command.objectData, 38)
+
+    /** Bolus preset: Supper B 18:00-22:00 */
+    val presetSupperB = getUnsignedShort(command.objectData, 40)
+
+    /** Bolus preset: Night A 22:00-0:00 */
+    val presetNightA = getUnsignedShort(command.objectData, 42)
+
+    /** Bolus preset: Night B 0:00-5:00 */
+    val presetNightB = getUnsignedShort(command.objectData, 44)
 
     /** System date and time */
     val dateTime = DateTime(
@@ -132,6 +162,9 @@ class StatusV1(command: PumpCommand): PumpObjectModel() {
         maxTDD: Int? = null,
         maxBasalRate: Int? = null,
         maxSingleBolus: Int? = null,
+        enableGlucoseReminder: Boolean? = null,
+        enableAutoSuspend: Boolean? = null,
+        lockPump: Boolean? = null,
     ): UpdateSettingsV1 {
         return UpdateSettingsV1(
             info,
@@ -149,6 +182,9 @@ class StatusV1(command: PumpCommand): PumpObjectModel() {
             maxTDD ?: this.maxTDD,
             maxBasalRate ?: this.maxBasal,
             maxSingleBolus ?: this.maxBolus,
+            enableGlucoseReminder ?: this.bgReminderEnabled,
+            enableAutoSuspend ?: this.autoSuspendEnabled,
+            lockPump ?: this.isLocked,
         )
     }
 }
