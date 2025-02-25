@@ -149,6 +149,7 @@ class ApexPump @Inject constructor() {
         var cancelled: Boolean = false,
         var detailedBolusInfo: DetailedBolusInfo,
         var treatment: EventOverviewBolusProgress.Treatment,
+        var failed: Boolean = false,
     )
 
     enum class Update {

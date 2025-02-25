@@ -139,9 +139,6 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     private var getValueLastTaskTimestamp: Long = 0
     private var unreachableTimerTask: TimerTask? = null
 
-    private var waitingForCurrentBolusInHistory = false
-
-    private var _bolusCompletable: CompletableDeferred<ApexPump.InProgressBolus?>? = null
     private var statusGetValue: GetValue.Value = GetValue.Value.StatusV1
 
     private var lastBolusDateTime = DateTime(0)
@@ -322,7 +319,6 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             )
         )
 
-        _bolusCompletable = CompletableDeferred()
         getStatus("ApexService-bolus")
         return true
     }
@@ -573,9 +569,6 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     val connectionStatus: ApexBluetooth.Status
         get() = apexBluetooth.status
 
-    val bolusCompletable: CompletableDeferred<ApexPump.InProgressBolus?>?
-        get() = _bolusCompletable
-
     //////// Pump commands handlers
 
     private fun onBolusProgress(dose: Double) {
@@ -601,7 +594,6 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         aapsLogger.debug(LTag.PUMPCOMM, "bolus completed")
         if (pump.inProgressBolus == null) return
         pump.inProgressBolus!!.currentDose = dose
-        waitingForCurrentBolusInHistory = true
 
         rxBus.send(EventOverviewBolusProgress.apply {
             percent = 100
@@ -609,7 +601,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         })
 
         // Request new bolus history to fixup bolus ID.
-        getBoluses("ApexService-onBolusCompleted")
+        Thread { getBoluses("ApexService-onBolusCompleted") }.start()
     }
 
     private fun onBolusFailed(cancelled: Boolean = false) {
@@ -624,14 +616,16 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
 
         if (pump.inProgressBolus!!.currentDose >= 0.025) {
-            waitingForCurrentBolusInHistory = true
             // Request new bolus history to fixup bolus ID and delivered amount.
-            getBoluses("ApexService-onBolusCompleted")
+            Thread { getBoluses("ApexService-onBolusCompleted") }.start()
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "bolus entirely failed!")
-            // TODO: how to handle fully failed boluses?
+            synchronized(pump.inProgressBolus!!) {
+                pump.inProgressBolus!!.failed = true
+                pump.inProgressBolus!!.notifyAll()
+            }
+            SystemClock.sleep(10)
             pump.inProgressBolus = null
-            _bolusCompletable?.complete(null)
         }
     }
 
@@ -811,9 +805,12 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
     }
 
-    private fun onBolusEntry(entry: BolusEntry) {
+    private val bolusEntryLock = Mutex()
+    private fun onBolusEntry(entry: BolusEntry) = synchronized(bolusEntryLock) {
         // Extended bolus entries do not have duration stored, do not use them.
         if (entry.extendedDose > 0) return
+
+        aapsLogger.debug(LTag.PUMP, "Processing bolus [${entry.standardDose * 0.025}U -> ${entry.standardPerformed * 0.025}U] on ${entry.dateTime}")
 
         if (entry.dateTime > lastBolusDateTime) {
             lastBolusDateTime = entry.dateTime
@@ -824,8 +821,13 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         // Find the bolus in history and sync it.
         // Pump may round up boluses, use 0.11 for failsafe.
         val ipb = pump.inProgressBolus
-        if (waitingForCurrentBolusInHistory && ipb != null && entry.dateTime.millis >= ipb.temporaryId) {
-            if (!ipb.cancelled && abs(entry.standardDose - ipb.currentDose) > 0.11) return
+        if (ipb != null && entry.dateTime.millis - ipb.temporaryId >= -45000) {
+            aapsLogger.debug(LTag.PUMP, "Syncing current bolus [${entry.standardDose * 0.025}U -> ${entry.standardPerformed * 0.025}U]")
+            val delta = abs(entry.standardDose * 0.025 - ipb.currentDose)
+            if (!ipb.cancelled && delta > 0.11) {
+                aapsLogger.debug(LTag.PUMP, "Not this bolus: $delta > 0.11")
+                return
+            }
 
             val syncResult = pumpSync.syncBolusWithTempId(
                 timestamp = entry.dateTime.millis,
@@ -837,14 +839,16 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                 type = ipb.detailedBolusInfo.bolusType,
             )
             aapsLogger.debug(LTag.PUMP, "Final bolus [${entry.standardDose * 0.025}U -> ${entry.standardPerformed * 0.025}U] sync succeeded? $syncResult")
+            synchronized(pump.inProgressBolus!!) {
+                pump.inProgressBolus!!.notifyAll()
+            }
+            SystemClock.sleep(10)
             pump.inProgressBolus = null
-            waitingForCurrentBolusInHistory = false
-            _bolusCompletable?.complete(ipb)
-            _bolusCompletable = null
 
             getStatus("ApexService-updateAfterBolus")
             return
         }
+        if (ipb != null && entry.index < 2) return
 
         // Otherwise, just sync the bolus with the DB
         pumpSync.syncBolusWithPumpId(
