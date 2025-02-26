@@ -50,13 +50,13 @@ class InsulinLyumjevPluginTest {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(rh.gs(eq(R.string.lyumjev))).thenReturn("Lyumjev")
+        `when`(rh.gs(eq(app.aaps.core.interfaces.R.string.lyumjev))).thenReturn("Lyumjev")
         assertThat(sut.commentStandardText()).isEqualTo("Lyumjev")
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(rh.gs(eq(R.string.lyumjev))).thenReturn("Lyumjev")
+        `when`(rh.gs(eq(app.aaps.core.interfaces.R.string.lyumjev))).thenReturn("Lyumjev")
         assertThat(sut.friendlyName).isEqualTo("Lyumjev")
     }
 

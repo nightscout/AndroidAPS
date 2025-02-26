@@ -102,8 +102,8 @@ class ATProfile(profile: Profile, val injector: HasAndroidInjector) {
     }
 
     fun updateProfile() {
-        data()?.let { profile = ProfileSealed.Pure(value = it, activePlugin) }
-        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin) }
+        data()?.let { profile = ProfileSealed.Pure(value = it, null) }
+        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, null) }
     }
 
     //Export json string with oref0 format used for autotune

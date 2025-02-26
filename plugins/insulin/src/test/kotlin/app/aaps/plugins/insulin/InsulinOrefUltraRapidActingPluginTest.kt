@@ -56,7 +56,7 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(rh.gs(eq(R.string.ultra_rapid_oref))).thenReturn("Ultra-Rapid Oref")
+        `when`(rh.gs(eq(app.aaps.core.interfaces.R.string.ultra_rapid_oref))).thenReturn("Ultra-Rapid Oref")
         assertThat(sut.friendlyName).isEqualTo("Ultra-Rapid Oref")
     }
 
