@@ -36,12 +36,16 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
+import app.aaps.plugins.automation.actions.ActionAutoisfDisable
+import app.aaps.plugins.automation.actions.ActionAutoisfEnable
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionNotification
 import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionSendSMS
+import app.aaps.plugins.automation.actions.ActionSetAcceWeight
+import app.aaps.plugins.automation.actions.ActionSetIobTH
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
@@ -397,9 +401,13 @@ class AutomationPlugin @Inject constructor(
             ActionProfileSwitch(injector),
             ActionSendSMS(injector)
         )
-        if (config.isEngineeringMode() && config.isDev())
+        if (config.isEngineeringMode() && config.isDev()) {
             actions.add(ActionRunAutotune(injector))
-
+            actions.add(ActionAutoisfEnable(injector))
+            actions.add(ActionAutoisfDisable(injector))
+            actions.add(ActionSetAcceWeight(injector))
+            actions.add(ActionSetIobTH(injector))
+        }
         return actions.toList()
     }
 
