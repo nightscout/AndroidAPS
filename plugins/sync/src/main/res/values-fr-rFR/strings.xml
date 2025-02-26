@@ -126,6 +126,7 @@
     <string name="user_action_not_available">L\'action utilisateur %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution de la Cible Temp. ?</string>
     <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
+    <string name="wear_action_tempt_zero_message">Durée zéro min - Annuler l\'exécution de la Cible Temp. ?</string>
     <string name="wear_action_tempt_min_bg_error">Gly mini hors limite!</string>
     <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
     <string name="wear_action_tempt_range_error">Limites invalides : la cible basse (%1$s) ne peut pas être supérieure à la cible haute (%2$s)</string>
