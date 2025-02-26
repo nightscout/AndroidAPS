@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.insulin.Insulin
 import org.json.JSONObject
 
 fun ICfg.toJson(): JSONObject = JSONObject()
-    .put("c", insulinLabel)
+    .put("insulinLabel", insulinLabel)
     .put("insulinEndTime", insulinEndTime)
     .put("insulinPeakTime", insulinPeakTime)
 

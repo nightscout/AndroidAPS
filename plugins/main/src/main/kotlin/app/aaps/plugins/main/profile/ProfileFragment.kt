@@ -148,6 +148,8 @@ class ProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.profileList.filters = arrayOf()
         binding.profileList.setText(currentProfile.name)
+        binding.insulinName.text = currentProfile.iCfg.insulinLabel
+        binding.peak.text = rh.gs(app.aaps.core.ui.R.string.mins,currentProfile.iCfg.getPeak())
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
         TimeListEdit(
@@ -421,7 +423,7 @@ class ProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibility(position: Int) {
-        binding.diaPlaceholder.visibility = (position == 0).toVisibility()
+        binding.insulinPlaceholder.visibility = (position == 0).toVisibility()
         binding.ic.visibility = (position == 1).toVisibility()
         binding.isf.visibility = (position == 2).toVisibility()
         binding.basal.visibility = (position == 3).toVisibility()
