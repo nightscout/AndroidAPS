@@ -29,7 +29,6 @@ import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject

@@ -11,7 +11,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -95,7 +94,6 @@ class AutotuneCoreTest : TestBaseWithProfile() {
             val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
             val peak = JsonHelper.safeGetIntAllowNull(jsonObject, "insulinPeakTime") ?: return null
             val iCfg = ICfg("", peak, dia)
-            val localInsulin = LocalInsulin("insulin", peak, dia)
             val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
             val isfJson = jsonObject.getJSONObject("isfProfile")
             val isfBlocks = ArrayList<Block>(1).also {
@@ -124,7 +122,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 dia = dia,
                 iCfg = iCfg
             )
-            return ATProfile(ProfileSealed.Pure(pure, activePlugin), localInsulin, injector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }
+            return ATProfile(ProfileSealed.Pure(pure, activePlugin), injector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }
         } catch (ignored: Exception) {
             return null
         }

@@ -42,7 +42,6 @@ import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import dagger.android.HasAndroidInjector
@@ -391,14 +390,10 @@ class AutotunePlugin @Inject constructor(
         json.put("lastRun", lastRun)
         json.put("pumpProfile", pumpProfile.profile.toPureNsJson(dateUtil))
         json.put("pumpProfileName", pumpProfile.profileName)
-        json.put("pumpPeak", pumpProfile.peak)
-        json.put("pumpDia", pumpProfile.dia)
         tunedProfile?.let { atProfile ->
             json.put("tunedProfile", atProfile.profile.toPureNsJson(dateUtil))
             json.put("tunedCircadianProfile", atProfile.circadianProfile.toPureNsJson(dateUtil))
             json.put("tunedProfileName", atProfile.profileName)
-            json.put("tunedPeak", atProfile.peak)
-            json.put("tunedDia", atProfile.dia)
             for (i in 0..23) {
                 json.put("missingDays_$i", atProfile.basalUnTuned[i])
             }
@@ -418,16 +413,10 @@ class AutotunePlugin @Inject constructor(
             val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
             lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
             lastRun = JsonHelper.safeGetLong(json, "lastRun")
-            val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")
-            val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
-            var localInsulin = LocalInsulin("PumpInsulin", pumpPeak, pumpDia)
             selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
             val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
             pumpProfile = ATProfile(ProfileSealed.Pure(value = profile, activePlugin = null), injector).also { it.profileName = selectedProfile }
-            val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
-            val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
-            localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
             val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
             val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return

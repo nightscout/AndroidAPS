@@ -14,7 +14,6 @@ import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.BGDatum
 import app.aaps.plugins.aps.autotune.data.CRDatum
 import app.aaps.plugins.aps.autotune.data.DiaDeviation
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PeakDeviation
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import javax.inject.Inject
@@ -48,7 +47,6 @@ class AutotunePrep @Inject constructor(
                 var sqrtDeviations = 0.0
                 var deviations = 0.0
                 var deviationsSq = 0.0
-                val localInsulin = LocalInsulin("Ins_$currentPeak-$dia", currentPeak, dia)
                 val curveOutput = categorizeBGDatums(tunedProfile, false)
                 val basalGlucose = curveOutput?.basalGlucoseData
 
@@ -95,7 +93,6 @@ class AutotunePrep @Inject constructor(
                 var sqrtDeviations = 0.0
                 var deviations = 0.0
                 var deviationsSq = 0.0
-                val localInsulin = LocalInsulin("Ins_$peak-$currentDIA", peak, currentDIA)
                 val curveOutput = categorizeBGDatums(tunedProfile, false)
                 val basalGlucose = curveOutput?.basalGlucoseData
 
