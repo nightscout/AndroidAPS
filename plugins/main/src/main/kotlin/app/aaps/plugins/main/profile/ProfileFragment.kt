@@ -91,6 +91,7 @@ class ProfileFragment : DaggerFragment() {
             profilePlugin.currentProfile()?.dia = dia
             profilePlugin.currentProfile()?.iCfg = ICfg(name, peak, dia)
             profilePlugin.currentProfile()?.name = binding.name.text.toString()
+            binding.insulinGraph.show(activePlugin.activeInsulin, profilePlugin.currentProfile()?.iCfg)
             doEdit()
         }
     }
@@ -283,7 +284,7 @@ class ProfileFragment : DaggerFragment() {
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
+            binding.insulinGraph.show(activePlugin.activeInsulin, it.iCfg)
         }
 
         binding.profileAdd.setOnClickListener {
