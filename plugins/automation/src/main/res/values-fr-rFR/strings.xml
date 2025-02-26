@@ -78,6 +78,7 @@
     <string name="deltalabel">Delta de glycémies</string>
     <string name="deltalabel_u">Delta Glyc. [%1$s]</string>
     <string name="currentlocation">Localisation actuelle</string>
+    <string name="choose_from_map">Choisir à partir de carte</string>
     <string name="location">Localisation</string>
     <string name="glucose_u">Glycémie [%1$s] :</string>
     <string name="target_u">Cible [%1$s]:</string>
