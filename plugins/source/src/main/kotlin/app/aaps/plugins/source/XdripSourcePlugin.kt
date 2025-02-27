@@ -119,14 +119,19 @@ class XdripSourcePlugin @Inject constructor(
             val lastTherapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)
             val lastStoredSensorStartTime = lastTherapyEvent?.timestamp
             // Decide whether to update sensorStartTime or keep the last stored one
-            val finalSensorStartTime = if (lastStoredSensorStartTime != null &&
-                newSensorStartTime != null &&
-                abs(newSensorStartTime - lastStoredSensorStartTime) <= 300_000) {
-                aapsLogger.debug(LTag.BGSOURCE, "Sensor start time is within 5 minutes range, skipping update.")
-                null
-                } else {
-                    newSensorStartTime
+            val finalSensorStartTime = when {
+                lastStoredSensorStartTime != null && newSensorStartTime != null &&
+                    abs(newSensorStartTime - lastStoredSensorStartTime) <= 300_000 -> {
+                    aapsLogger.debug(LTag.BGSOURCE, "Sensor start time is within 5 minutes range, skipping update.")
+                    null
                 }
+                lastStoredSensorStartTime != null && newSensorStartTime != null &&
+                    newSensorStartTime < lastStoredSensorStartTime -> {
+                    aapsLogger.debug(LTag.BGSOURCE, "Sensor start time is older than last stored time, skipping update.")
+                    null
+                }
+                else -> newSensorStartTime
+            }
             // Always update glucoseValues, but use the decided sensorStartTime
             persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), finalSensorStartTime)
                 .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
