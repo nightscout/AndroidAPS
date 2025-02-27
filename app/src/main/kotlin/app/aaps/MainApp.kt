@@ -203,7 +203,6 @@ class MainApp : DaggerApplication() {
             sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) ||
             sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) ||
             sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false)) {
-            aapsLogger.debug("XXXXX Start Migration")
             val defaultInsulin = when {
                 sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) -> Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg()
                 sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) -> Insulin.InsulinType.OREF_LYUMJEV.getICfg()
@@ -213,7 +212,15 @@ class MainApp : DaggerApplication() {
                 else -> Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
             }
             migrateProfiles(defaultInsulin)
-            // todo include remove key and put key to activate InsulinPlugin
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Visible")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Visible")
+            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Visible")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Visible")
+            sp.putBoolean("ConfigBuilder_INSULIN_InsulinPlugin_Enabled", true)
         }
 
         // 3.1.0

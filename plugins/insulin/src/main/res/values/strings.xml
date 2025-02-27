@@ -5,12 +5,21 @@
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
     <string name="description_insulin_lyumjev">Insulin preset for Lyumjev</string>
     <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
+    <string name="description_insulin_plugin">Allows you to manage the different insulin you will use within AAPS</string>
+    <string name="insulin_plugin">Insulin</string>
     <string name="insulin_shortname">INS</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="update_profiles">Update Profiles</string>
     <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
-
+    <string name="missing_insulin_name">Missing Insulin Name</string>
+    <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
+    <string name="insulin_duplicated">Insulin already exists with name: %1$s</string>
+    <string name="do_you_want_switch_insulin">Do you want to switch insulin and discard changes made to current insulin?</string>
+    <string name="a11y_add_new_insulin">Add new insulin</string>
+    <string name="a11y_delete_current_insulin">Delete current insulin</string>
+    <string name="save_or_reset_changes_first">Save or reset current changes first</string>
 
 </resources>

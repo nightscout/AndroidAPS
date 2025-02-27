@@ -32,5 +32,6 @@
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
     <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
     <string name="key_used_autosens_on_main_phone" translatable="false">used_autosens_on_main_phone</string>
+    <string name="key_insulin_configuration" translatable="false">insulin_configuration</string>
 
 </resources>
