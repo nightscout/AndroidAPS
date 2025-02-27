@@ -73,8 +73,10 @@ abstract class BaseWatchFace : WatchFace() {
     var loopLevelExt2 = -1
     var enableExt1 = false
     var enableExt2 = false
+    var veryHighColor = Color.RED
     var highColor = Color.YELLOW
-    var lowColor = Color.RED
+    var lowColor = Color.YELLOW
+    var veryLowColor = Color.RED
     var midColor = Color.WHITE
     var gridColor = Color.WHITE
     var basalBackgroundColor = Color.BLUE
@@ -552,12 +554,14 @@ abstract class BaseWatchFace : WatchFace() {
                 if (lowResMode)
                     BgGraphBuilder(
                         sp, dateUtil, graphData.entries, treatmentData.predictions, treatmentData.temps, treatmentData.basals, treatmentData.boluses, pointSize,
-                        midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, carbColor, timeframe
+                        midColor, gridColor,
+                        basalBackgroundColor, basalCenterColor, bolusColor, carbColor, timeframe
                     )
                 else
                     BgGraphBuilder(
-                        sp, dateUtil, graphData.entries, treatmentData.predictions, treatmentData.temps, treatmentData.basals, treatmentData.boluses,
-                        pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, carbColor, timeframe
+                        sp, dateUtil, graphData.entries, treatmentData.predictions, treatmentData.temps, treatmentData.basals, treatmentData.boluses, pointSize,
+                        veryHighColor, highColor, lowColor, veryLowColor, midColor, gridColor,
+                        basalBackgroundColor, basalCenterColor, bolusColor, carbColor, timeframe
                     )
             binding.chart?.lineChartData = bgGraphBuilder.lineData()
             binding.chart?.isViewportCalculationEnabled = true

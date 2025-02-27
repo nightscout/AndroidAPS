@@ -1331,8 +1331,10 @@ class DataHandlerMobile @Inject constructor(
                             timeStamp = bg.timestamp,
                             glucoseUnits = GlucoseUnit.MGDL.asText,
                             sgv = bg.value,
+                            veryHigh = 0.0,
                             high = 0.0,
                             low = 0.0,
+                            veryLow = 0.0,
                             color = predictionColor(context, bg)
                         )
                     )
@@ -1466,8 +1468,10 @@ class DataHandlerMobile @Inject constructor(
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
+        val veryLowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryLowMark), units)
         val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
         val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
+        val veryHighLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryHighMark), units)
 
         return EventData.SingleBg(
             dataset = 0,
@@ -1481,8 +1485,10 @@ class DataHandlerMobile @Inject constructor(
             avgDeltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             sgvLevel = if (glucoseValue.recalculated > highLine) 1L else if (glucoseValue.recalculated < lowLine) -1L else 0L,
             sgv = glucoseValue.recalculated,
+            veryHigh = veryHighLine,
             high = highLine,
             low = lowLine,
+            veryLow = veryLowLine,
             color = 0,
             deltaMgdl = glucoseStatus?.delta,
             avgDeltaMgdl = glucoseStatus?.shortAvgDelta

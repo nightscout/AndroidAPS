@@ -71,10 +71,11 @@ class CustomWatchface : BaseWatchFace() {
     private var json = JSONObject()
     private var jsonString = ""
 
-    private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
-        1L   -> highColor
-        0L   -> midColor
-        -1L  -> lowColor
+    private fun bgColor(dataSet: Int): Int =  when {
+        singleBg[dataSet].sgv >= singleBg[dataSet].veryHigh -> veryHighColor
+        singleBg[dataSet].sgv >= singleBg[dataSet].high     -> highColor
+        singleBg[dataSet].sgv <= singleBg[dataSet].veryLow  -> veryLowColor
+        singleBg[dataSet].sgv <= singleBg[dataSet].low      -> lowColor
         else -> midColor
     }
 

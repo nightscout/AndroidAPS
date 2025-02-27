@@ -28,8 +28,10 @@ class BgGraphBuilder(
     private val basalWatchDataList: ArrayList<Basal>,
     private val bolusWatchDataList: ArrayList<EventData.TreatmentData.Treatment>,
     private val pointSize: Int,
+    private val veryHighColor: Int,
     private val highColor: Int,
     private val lowColor: Int,
+    private val veryLowColor: Int,
     private val midColor: Int,
     private val gridColour: Int,
     private val basalBackgroundColor: Int,
@@ -42,11 +44,15 @@ class BgGraphBuilder(
     private var endingTime: Long = System.currentTimeMillis() + 1000L * 60 * 6 * timeSpan
     private var startingTime: Long = System.currentTimeMillis() - 1000L * 60 * 60 * timeSpan
     private var fuzzyTimeDiv = (1000 * 60 * 1).toDouble()
+    private var veryHighMark: Double = bgDataList[bgDataList.size - 1].veryHigh
     private var highMark: Double = bgDataList[bgDataList.size - 1].high
     private var lowMark: Double = bgDataList[bgDataList.size - 1].low
+    private var veryLowMark: Double = bgDataList[bgDataList.size - 1].veryLow
     private val inRangeValues: MutableList<PointValue> = ArrayList()
+    private val veryHighValues: MutableList<PointValue> = ArrayList()
     private val highValues: MutableList<PointValue> = ArrayList()
     private val lowValues: MutableList<PointValue> = ArrayList()
+    private val veryLowValues: MutableList<PointValue> = ArrayList()
 
     private val predictionEndTime: Long
         get() {
@@ -72,11 +78,17 @@ class BgGraphBuilder(
         tempWatchDataList: List<EventData.TreatmentData.TempBasal>,
         basalWatchDataList: ArrayList<Basal>,
         bolusWatchDataList: ArrayList<EventData.TreatmentData.Treatment>,
-        aPointSize: Int, aMidColor: Int, gridColour: Int, basalBackgroundColor: Int, basalCenterColor: Int, bolusInvalidColor: Int, carbsColor: Int, timeSpan: Int
+        aPointSize: Int,
+        aMidColor: Int,
+        gridColour: Int,
+        basalBackgroundColor: Int,
+        basalCenterColor: Int,
+        bolusInvalidColor: Int,
+        carbsColor: Int,
+        timeSpan: Int
     ) : this(
-        sp, dateUtil,
-        aBgList, predictionsList, tempWatchDataList, basalWatchDataList,
-        bolusWatchDataList, aPointSize, aMidColor, aMidColor, aMidColor, gridColour,
+        sp, dateUtil, aBgList, predictionsList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, aPointSize,
+        aMidColor, aMidColor, aMidColor, aMidColor, aMidColor, gridColour,
         basalBackgroundColor, basalCenterColor, bolusInvalidColor, carbsColor, timeSpan
     )
 
@@ -92,11 +104,15 @@ class BgGraphBuilder(
     private fun defaultLines(): List<Line> {
         addBgReadingValues()
         val lines: MutableList<Line> = ArrayList()
+        lines.add(veryHighLine())
         lines.add(highLine())
         lines.add(lowLine())
+        lines.add(veryLowLine())
         lines.add(inRangeValuesLine())
+        lines.add(veryLowValuesLine())
         lines.add(lowValuesLine())
         lines.add(highValuesLine())
+        lines.add(veryHighValuesLine())
         var minChart = lowMark
         var maxChart = highMark
         for ((_, _, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
@@ -215,7 +231,7 @@ class BgGraphBuilder(
 
     private fun addPredictionLines(lines: MutableList<Line>) {
         val values: MutableMap<Int, MutableList<PointValue>> = HashMap()
-        for ((_, timeStamp, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
+        for ((_, timeStamp, _, _, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
             if (timeStamp <= predictionEndTime) {
                 val value = min(sgv, UPPER_CUTOFF_SGV)
                 if (!values.containsKey(color)) {
@@ -236,6 +252,14 @@ class BgGraphBuilder(
         }
     }
 
+    private fun veryHighValuesLine(): Line =
+        Line(veryHighValues).also { veryHighValuesLine ->
+            veryHighValuesLine.color = veryHighColor
+            veryHighValuesLine.setHasLines(false)
+            veryHighValuesLine.pointRadius = pointSize
+            veryHighValuesLine.setHasPoints(true)
+        }
+
     private fun highValuesLine(): Line =
         Line(highValues).also { highValuesLine ->
             highValuesLine.color = highColor
@@ -250,6 +274,14 @@ class BgGraphBuilder(
             lowValuesLine.setHasLines(false)
             lowValuesLine.pointRadius = pointSize
             lowValuesLine.setHasPoints(true)
+        }
+
+    private fun veryLowValuesLine(): Line =
+        Line(veryLowValues).also { veryLowValuesLine ->
+            veryLowValuesLine.color = veryLowColor
+            veryLowValuesLine.setHasLines(false)
+            veryLowValuesLine.pointRadius = pointSize
+            veryLowValuesLine.setHasPoints(true)
         }
 
     private fun inRangeValuesLine(): Line =
@@ -283,11 +315,13 @@ class BgGraphBuilder(
         for ((_, timeStamp, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
             if (timeStamp > startingTime) {
                 when {
-                    sgv >= 450      -> highValues.add(PointValue(fuzz(timeStamp), 450.toFloat()))
+                    sgv >= 450      -> veryHighValues.add(PointValue(fuzz(timeStamp), 450.toFloat()))
+                    sgv >= veryHighMark -> veryHighValues.add(PointValue(fuzz(timeStamp), sgv.toFloat()))
                     sgv >= highMark -> highValues.add(PointValue(fuzz(timeStamp), sgv.toFloat()))
                     sgv >= lowMark  -> inRangeValues.add(PointValue(fuzz(timeStamp), sgv.toFloat()))
-                    sgv >= 40       -> lowValues.add(PointValue(fuzz(timeStamp), sgv.toFloat()))
-                    sgv >= 11       -> lowValues.add(PointValue(fuzz(timeStamp), 40.toFloat()))
+                    sgv >= veryLowMark  -> veryLowValues.add(PointValue(fuzz(timeStamp), sgv.toFloat()))
+                    sgv >= 40       -> veryLowValues.add(PointValue(fuzz(timeStamp), sgv.toFloat()))
+                    sgv >= 11       -> veryLowValues.add(PointValue(fuzz(timeStamp), 40.toFloat()))
                 }
             }
         }
@@ -304,6 +338,17 @@ class BgGraphBuilder(
         }
     }
 
+    private fun veryHighLine(): Line {
+        val veryHighLineValues: MutableList<PointValue> = ArrayList()
+        veryHighLineValues.add(PointValue(fuzz(startingTime), highMark.toFloat()))
+        veryHighLineValues.add(PointValue(fuzz(endingTime), highMark.toFloat()))
+        return Line(veryHighLineValues).also { veryHighLine ->
+            veryHighLine.setHasPoints(false)
+            veryHighLine.strokeWidth = 1
+            veryHighLine.color = veryHighColor
+        }
+    }
+
     private fun lowLine(): Line {
         val lowLineValues: MutableList<PointValue> = ArrayList()
         lowLineValues.add(PointValue(fuzz(startingTime), lowMark.toFloat()))
@@ -312,6 +357,17 @@ class BgGraphBuilder(
             lowLine.setHasPoints(false)
             lowLine.color = lowColor
             lowLine.strokeWidth = 1
+        }
+    }
+
+    private fun veryLowLine(): Line {
+        val veryLowLineValues: MutableList<PointValue> = ArrayList()
+        veryLowLineValues.add(PointValue(fuzz(startingTime), lowMark.toFloat()))
+        veryLowLineValues.add(PointValue(fuzz(endingTime), lowMark.toFloat()))
+        return Line(veryLowLineValues).also { veryLowLine ->
+            veryLowLine.setHasPoints(false)
+            veryLowLine.color = veryLowColor
+            veryLowLine.strokeWidth = 1
         }
     }
 

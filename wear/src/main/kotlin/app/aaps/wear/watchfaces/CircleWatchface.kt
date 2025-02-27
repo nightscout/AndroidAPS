@@ -253,11 +253,16 @@ class CircleWatchface : WatchFace() {
         angleBig = ((hour + minute / 60f) / 12f * 360 - 90 - BIG_HAND_WIDTH / 2f + 360) % 360
         angleSMALL = (minute / 60f * 360 - 90 - SMALL_HAND_WIDTH / 2f + 360) % 360
         color = 0
-        when (singleBg[0].sgvLevel.toInt()) {
-            -1 -> color = lowColor
-            0  -> color = inRangeColor
-            1  -> color = highColor
+
+        val entry = singleBg[0];
+        color = when {
+            entry.sgv >= entry.veryHigh -> veryHighColor
+            entry.sgv >= entry.high     -> highColor
+            entry.sgv <= entry.veryLow  -> veryLowColor
+            entry.sgv <= entry.low      -> lowColor
+            else -> inRangeColor
         }
+
         circlePaint.shader = null
         circlePaint.style = Paint.Style.STROKE
         circlePaint.strokeWidth = CIRCLE_WIDTH
@@ -292,12 +297,16 @@ class CircleWatchface : WatchFace() {
     }
 
     // defining color for dark and bright
-    private val lowColor: Int
+    private val veryLowColor: Int
         get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 255, 120, 120) else Color.argb(255, 255, 80, 80)
+    private val lowColor: Int
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 255, 255, 120) else Color.argb(255, 255, 80, 80)
     private val inRangeColor: Int
         get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 120, 255, 120) else Color.argb(255, 0, 240, 0)
     private val highColor: Int
         get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 255, 255, 120) else Color.argb(255, 255, 200, 0)
+    private val veryHighColor: Int
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 255, 120, 120) else Color.argb(255, 255, 200, 0)
     private val backgroundColor: Int
         get() = if (sp.getBoolean(R.string.key_dark, true)) Color.BLACK else Color.WHITE
     val textColor: Int
@@ -309,8 +318,10 @@ class CircleWatchface : WatchFace() {
             //Perfect low and High indicators
             if (bgDataList.isNotEmpty()) {
                 addIndicator(canvas, 100f, Color.LTGRAY)
+                addIndicator(canvas, bgDataList.iterator().next().veryLow.toFloat(), veryLowColor)
                 addIndicator(canvas, bgDataList.iterator().next().low.toFloat(), lowColor)
                 addIndicator(canvas, bgDataList.iterator().next().high.toFloat(), highColor)
+                addIndicator(canvas, bgDataList.iterator().next().veryHigh.toFloat(), veryHighColor)
                 if (sp.getBoolean("softRingHistory", true)) {
                     for (data in bgDataList) {
                         addReadingSoft(canvas, data)
@@ -406,9 +417,15 @@ class CircleWatchface : WatchFace() {
             indicatorColor = Color.LTGRAY
         }
         var barColor = Color.GRAY
-        if (entry.sgv >= entry.high) {
+        if (entry.sgv >= entry.veryHigh) {
+            indicatorColor = veryHighColor
+            barColor = darken(veryHighColor)
+        } else if (entry.sgv >= entry.high) {
             indicatorColor = highColor
             barColor = darken(highColor)
+        } else if (entry.sgv <= entry.veryLow) {
+            indicatorColor = veryLowColor
+            barColor = darken(veryLowColor)
         } else if (entry.sgv <= entry.low) {
             indicatorColor = lowColor
             barColor = darken(lowColor)
