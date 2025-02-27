@@ -78,6 +78,7 @@
     <string name="deltalabel">KŞ farkı</string>
     <string name="deltalabel_u">KŞ farkı [%1$s]</string>
     <string name="currentlocation">Mevcut konum</string>
+    <string name="choose_from_map">Haritadan seç</string>
     <string name="location">Konum</string>
     <string name="glucose_u">Glukoz [%1$s]:</string>
     <string name="target_u">Hedef [%1$s]:</string>
