@@ -1,7 +1,6 @@
 package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.interfaces.insulin.Insulin
 import org.json.JSONObject
 
 fun ICfg.toJson(): JSONObject = JSONObject()

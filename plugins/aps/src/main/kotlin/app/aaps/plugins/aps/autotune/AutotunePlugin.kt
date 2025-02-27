@@ -284,7 +284,7 @@ class AutotunePlugin @Inject constructor(
         strResult += rh.gs(R.string.autotune_log_title)
         strResult += line
         val tuneInsulin = preferences.get(BooleanKey.AutotuneTuneInsulinCurve)
-        if (tuneInsulin || true) {
+        if (tuneInsulin) {
             strResult += rh.gs(R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.peak, tunedProfile.peak)
             strResult += rh.gs(R.string.autotune_log_dia, rh.gs(app.aaps.core.ui.R.string.ic_short), pumpProfile.dia, tunedProfile.dia)
         }

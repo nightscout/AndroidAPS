@@ -487,8 +487,6 @@ class AutotuneCore @Inject constructor(
         previousAutotune.basalUnTuned = basalUnTuned
         previousAutotune.profile.iCfg.setDia(newDia)
         previousAutotune.profile.iCfg.setPeak(newPeak)
-        //val localInsulin = LocalInsulin("Ins_$newPeak-$newDia", newPeak, newDia)
-        //previousAutotune.localInsulin = localInsulin
         previousAutotune.updateProfile()
         return previousAutotune
     }
