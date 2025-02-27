@@ -81,7 +81,7 @@ androidx-activity = { group = "androidx.activity", name = "activity-ktx", versio
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.0" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.1" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version = "1.8.6" }
