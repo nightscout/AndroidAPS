@@ -54,7 +54,7 @@ abstract class InsulinOrefBasePlugin(
                 hardLimits.minDia()
             }
         }
-    override fun setDefault(iCfg: ICfg?) {
+    override fun setDefault(iCfg: ICfg) {
         // fun added for future unique Insulin Plugin to replace "selected insulin plugin", by "DefaultInsulin"
     }
 
