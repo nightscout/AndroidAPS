@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "8.8.1"
+gradlePlugin = "8.8.2"
 googleServices = "4.4.2"
 kotlin = "2.1.10"
 wearable = "2.9.0"
@@ -13,14 +13,14 @@ retrofit = "2.11.0"
 kotlinx-serialization = "1.8.0"
 kotlinx-coroutines = "1.10.1"
 work = "2.10.0"
-datastorePreferences = "1.1.2"
+datastorePreferences = "1.1.3"
 annotation = "1.9.1"
 
 [plugins]
 android-library = { id = "com.android.library" }
-klint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.2" }
+klint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.2.0" }
 moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
-ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.30" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.31" }
 
 
 [libraries]
@@ -33,14 +33,14 @@ com-google-dagger-android-processor = { group = "com.google.dagger", name = "dag
 com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.3" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.9.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.10.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 com-google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 com-google-firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
-com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.2.0" }
+com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.3.0" }
 com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "19.0.0" }
 com-google-android-places = { group = "com.google.android.libraries.places", name = "places", version = "4.1.0" }
 com-google-android-gms-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }
@@ -77,11 +77,11 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.2" }
 
 
-androidx-activity = { group = "androidx.activity", name = "activity-ktx", version = "1.10.0" }
+androidx-activity = { group = "androidx.activity", name = "activity-ktx", version = "1.10.1" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.0" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.1" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version = "1.8.6" }
@@ -89,7 +89,7 @@ androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", vers
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.8.7" }
 androidx-media3-common = { group = "androidx.media3", name = "media3-common", version = "1.5.1" }
-androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version = "2.8.7" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version = "2.8.8" }
 androidx-preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
 androidx-room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
