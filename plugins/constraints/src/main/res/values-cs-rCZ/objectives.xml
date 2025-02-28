@@ -20,7 +20,6 @@
     <string name="objectives_maxiobzero_learned">Nastavení MaxIOB na nulu vám zabraňuje v hypoglykémii a nepřidá více inzulínu nad bazální dávkou (kromě situace se záporným IOB)</string>
     <string name="objectives_maxiob_objective">Zapnout uzavřenou smyčku, zvyšovat max IOB nad 0 a snižovat cílovou glykémii</string>
     <string name="objectives_maxiob_gate">Provozovat smyčku několik dní s alespoň jednou nocí bez alarmů na nízkou glykémii</string>
-    <string name="objectives_maxiob_learned">Aktualizujte MaxIOB podle toho, jak dítě roste. Nedovolte, aby systém podal více inzulínu, než kolik dokážete pokrýt jídlem = opravdu vysoká hodnota je špatný nápad. Maximální IOB se v jednoduchém režimu počítá automaticky.</string>
     <string name="maxiobset">Maximální IOB nastaven správně (není nutné v jednoduchém režimu)</string>
     <string name="objectives_autosens_objective">Upravit bazály a poměry, bude-li to potřeba, a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
