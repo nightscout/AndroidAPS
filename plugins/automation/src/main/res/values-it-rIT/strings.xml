@@ -78,9 +78,8 @@
     <string name="deltalabel">Differenza BG</string>
     <string name="deltalabel_u">Differenza BG [%1$s]</string>
     <string name="currentlocation">Posizione corrente</string>
+    <string name="choose_from_map">Scegli dalla mappa</string>
     <string name="location">Posizione</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glicemia [%1$s]:</string>
     <string name="target_u">Target [%1$s]:</string>
     <string name="lastboluslabel">Ultimo bolo</string>

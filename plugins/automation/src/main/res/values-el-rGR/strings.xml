@@ -77,8 +77,6 @@
     <string name="deltalabel_u">Διαφορά BG [%1$s]</string>
     <string name="currentlocation">Τρέχουσα θέση</string>
     <string name="location">Τοποθεσία</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Γλυκόζη [%1$s]:</string>
     <string name="target_u">Στόχος [%1$s]:</string>
     <string name="lastboluslabel">Τελευταίο Bolus</string>

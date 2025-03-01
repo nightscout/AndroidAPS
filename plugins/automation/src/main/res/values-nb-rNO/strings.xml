@@ -78,9 +78,8 @@
     <string name="deltalabel">BS forskjell</string>
     <string name="deltalabel_u">BS forskjell [%1$s]</string>
     <string name="currentlocation">Gjeldende plassering</string>
+    <string name="choose_from_map">Velg fra kartet</string>
     <string name="location">Plassering</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Long:</string>
     <string name="glucose_u">Glukose [%1$s]:</string>
     <string name="target_u">Mål [%1$s]:</string>
     <string name="lastboluslabel">Siste bolus</string>

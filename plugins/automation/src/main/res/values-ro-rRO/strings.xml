@@ -77,8 +77,6 @@
     <string name="deltalabel_u">Diferență glicemie [%1$s]</string>
     <string name="currentlocation">Localizarea curentă</string>
     <string name="location">Localizare</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Long:</string>
     <string name="glucose_u">Glicemie [%1$s]:</string>
     <string name="target_u">Tinta [%1$s]:</string>
     <string name="lastboluslabel">Ultimul bolus</string>
