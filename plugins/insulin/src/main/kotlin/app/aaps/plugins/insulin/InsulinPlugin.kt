@@ -14,11 +14,14 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
@@ -50,7 +53,8 @@ class InsulinPlugin @Inject constructor(
     val config: Config,
     val hardLimits: HardLimits,
     val uiInteraction: UiInteraction,
-    val uel: UserEntryLogger
+    val uel: UserEntryLogger,
+    val activePlugin: ActivePlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.INSULIN)
@@ -103,7 +107,10 @@ class InsulinPlugin @Inject constructor(
     }
 
     override val iCfg: ICfg
-        get() = insulins[defaultInsulinIndex]
+        get() {
+            val profile = profileFunction.getProfile()
+            return profile?.insulin ?:insulins[defaultInsulinIndex]
+        }
 
     lateinit var currentInsulin: ICfg
     private var lastWarned: Long = 0
@@ -216,6 +223,24 @@ class InsulinPlugin @Inject constructor(
         return insulinLabel
     }
 
+    fun updateProfiles(profileList: ArrayList<String>, profileStore: ProfileStore, now: Long) {
+        val profilePlugin = activePlugin.activeProfileSource
+        val fullProfileList = profileStore.getProfileList()
+        profileList.forEach { profileName ->
+            for (p in fullProfileList.indices)
+                if (fullProfileList[p].toString() == profileName) {
+                    profilePlugin.currentProfileIndex = p
+                    profilePlugin.currentProfile()?.iCfg = currentInsulin
+                    uel.log(
+                        action = Action.STORE_PROFILE,
+                        source = Sources.Insulin,
+                        value = ValueWithUnit.SimpleString(profileName)
+                    )
+                }
+        }
+        profilePlugin.storeSettings(timestamp = now)
+        rxBus.send(EventLocalProfileChanged())
+    }
 
     @Synchronized
     fun loadSettings() {
@@ -232,6 +257,7 @@ class InsulinPlugin @Inject constructor(
     @Synchronized
     fun storeSettings() {
         sp.putString(app.aaps.core.utils.R.string.key_insulin_configuration, configuration().toString())
+        isEdited = false
     }
 
     override fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob {
@@ -295,20 +321,6 @@ class InsulinPlugin @Inject constructor(
         }
         defaultInsulinIndex = configuration.optInt("default_insulin")
         currentInsulinIndex = configuration.optInt("current_insulin")
-    }
-
-    override val comment
-        get(): String {
-            var comment = commentStandardText()
-            val userDia = userDefinedDia
-            if (userDia < hardLimits.minDia()) {
-                comment += "\n" + rh.gs(R.string.dia_too_short, userDia, hardLimits.minDia())
-            }
-            return comment
-        }
-
-    fun commentStandardText(): String {
-        return rh.gs(R.string.insulin_peak_time) + ": " + peak
     }
 
     @Synchronized

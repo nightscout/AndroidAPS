@@ -145,7 +145,6 @@ class AutotuneFragment : DaggerFragment() {
                 profileFunction.getProfile()?.let { currentProfile ->
                     profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, injector)
                 }
-                log("XXXXX AT ${profile?.iCfg?.insulinLabel} peak: ${profile?.iCfg?.getPeak()} dia: ${profile?.iCfg?.getDia()}")
                 autotunePlugin.selectedProfile = profileName
                 resetParam(true)
                 binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()

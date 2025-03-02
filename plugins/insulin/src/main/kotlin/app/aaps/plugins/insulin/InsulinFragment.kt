@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -15,15 +18,21 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.insulin.databinding.InsulinFragmentBinding
+import app.aaps.plugins.insulin.databinding.InsulinProfileItemBinding
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
+import org.json.JSONObject
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -35,6 +44,9 @@ class InsulinFragment : DaggerFragment() {
     @Inject lateinit var insulinPlugin: InsulinPlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var instantiator: Instantiator
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var dateUtil: DateUtil
 
     private var _binding: InsulinFragmentBinding? = null
 
@@ -43,9 +55,12 @@ class InsulinFragment : DaggerFragment() {
     private val binding get() = _binding!!
     private val currentInsulin: ICfg
         get() = insulinPlugin.currentInsulin
+    private var sourceInsulin: ICfg? = null
     private var selectedTemplate = Insulin.InsulinType.OREF_RAPID_ACTING    // Default Insulin (should only be used on new install
     private var minPeak = Insulin.InsulinType.OREF_RAPID_ACTING.peak.toDouble()
     private var maxPeak = Insulin.InsulinType.OREF_RAPID_ACTING.peak.toDouble()
+    private lateinit var profileStore: ProfileStore
+    private var profileList = ArrayList<String>()
 
     private val textWatch = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -68,6 +83,9 @@ class InsulinFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(context)
         binding.insulinList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             if (insulinPlugin.isEdited) {
                 activity?.let { activity ->
@@ -86,13 +104,19 @@ class InsulinFragment : DaggerFragment() {
                 insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
                 build()
             }
+            sourceInsulin = currentInsulin.deepClone()
+            profileList = profileStore.getProfileList(currentInsulin)
+            swapAdapter(profileList)
         }
         if (insulinPlugin.numOfInsulins == 0)
             insulinPlugin.addNewInsulin(
                 ICfg("", selectedTemplate.peak, selectedTemplate.dia),
                 autoName = true
             )
-        insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
+        insulinPlugin.currentInsulin = insulinPlugin.iCfg.deepClone()
+        sourceInsulin = currentInsulin.deepClone()
+        profileList = profileStore.getProfileList(currentInsulin)
+        swapAdapter(profileList)
 
         processVisibility(0)
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -108,8 +132,8 @@ class InsulinFragment : DaggerFragment() {
             selectedTemplate = insulinFromTemplate(insulinPlugin.insulinTemplateList()[position].toString())
             currentInsulin.setPeak(selectedTemplate.peak)
             currentInsulin.setDia(selectedTemplate.dia)
-            insulinPlugin.isEdited = false
-            build()
+            insulinPlugin.isEdited = true
+            doEdit()
         }
         binding.insulinAdd.setOnClickListener {
             if (insulinPlugin.isEdited) {
@@ -150,10 +174,22 @@ class InsulinFragment : DaggerFragment() {
                 action = Action.STORE_INSULIN, source = Sources.Insulin,
                 value = ValueWithUnit.SimpleString(insulinPlugin.currentInsulin().insulinLabel)
             )
-            insulinPlugin.insulins[insulinPlugin.currentInsulinIndex] = currentInsulin
-            insulinPlugin.storeSettings()
-            insulinPlugin.isEdited = false
-            build()
+            if (profileList.isEmpty()) {
+                insulinPlugin.insulins[insulinPlugin.currentInsulinIndex] = currentInsulin
+                insulinPlugin.storeSettings()
+                build()
+            } else {
+                OKDialog.showConfirmation(requireContext(),
+                                          rh.gs(R.string.update_profiles_title),
+                                          rh.gs(R.string.update_profiles_message, profileList.size),
+                                          Runnable {
+                                              insulinPlugin.insulins[insulinPlugin.currentInsulinIndex] = currentInsulin
+                                              insulinPlugin.storeSettings()
+                                              insulinPlugin.updateProfiles(profileList, profileStore, dateUtil.now())
+                                              build()
+                                          }
+                )
+            }
         }
         binding.autoName.setOnClickListener {
             binding.name.setText(insulinPlugin.createNewInsulinLabel(currentInsulin, includingCurrent = false))
@@ -171,6 +207,8 @@ class InsulinFragment : DaggerFragment() {
 
     override fun onResume() {
         super.onResume()
+        sourceInsulin?.let { profileList = profileStore.getProfileList(it) }
+        swapAdapter(profileList)
         build()
     }
 
@@ -223,7 +261,7 @@ class InsulinFragment : DaggerFragment() {
         binding.name.setText(currentInsulin.insulinLabel)
         binding.name.addTextChangedListener(textWatch)
         binding.insulinList.filters = arrayOf()
-        binding.insulinList.setText(insulinPlugin.currentInsulin()?.insulinLabel ?:"")
+        binding.insulinList.setText(insulinPlugin.currentInsulin().insulinLabel)
 
         when (selectedTemplate) {
             Insulin.InsulinType.OREF_FREE_PEAK -> {
@@ -241,7 +279,7 @@ class InsulinFragment : DaggerFragment() {
         updateGUI()
     }
 
-    fun insulinFromTemplate(label: String): Insulin.InsulinType = Insulin.InsulinType.values().firstOrNull { rh.gs(it.label) == label } ?:Insulin.InsulinType.OREF_FREE_PEAK
+    fun insulinFromTemplate(label: String): Insulin.InsulinType = Insulin.InsulinType.entries.firstOrNull { rh.gs(it.label) == label } ?:Insulin.InsulinType.OREF_FREE_PEAK
 
     fun doEdit() {
         insulinPlugin.isEdited = true
@@ -251,5 +289,47 @@ class InsulinFragment : DaggerFragment() {
     private fun processVisibility(position: Int) {
         binding.insulinPlaceholder.visibility = (position == 0).toVisibility()
         binding.profilePlaceholder.visibility = (position == 1).toVisibility()
+    }
+
+    private fun swapAdapter(list: List<String>) {
+        binding.tabLayout.getTabAt(1)?.text = rh.gs(app.aaps.core.ui.R.string.profile_number, list.size)
+        binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
+    }
+
+    inner class RecyclerViewAdapter internal constructor(private var profileList: List<String>) : RecyclerView.Adapter<RecyclerViewAdapter.ProfileViewHolder>() {
+
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProfileViewHolder =
+            ProfileViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.insulin_profile_item, viewGroup, false))
+
+        override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
+            val record = this@RecyclerViewAdapter.profileList[position]
+            holder.binding.profileName.text = record
+
+        }
+
+        override fun getItemCount(): Int {
+            return profileList.size
+        }
+
+        inner class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+            val binding = InsulinProfileItemBinding.bind(itemView)
+            init {
+                binding.profileName.setOnClickListener {
+                    activity?.let { activity ->
+                        val profileName = (it as TextView).text.toString()
+                        profileStore.getSpecificProfile((it as TextView).text.toString())?.let { profile ->
+                            uiInteraction.runProfileViewerDialog(
+                                fragmentManager = childFragmentManager,
+                                time = dateUtil.now(),
+                                mode = UiInteraction.Mode.CUSTOM_PROFILE,
+                                customProfile = profile.jsonObject.toString(),
+                                customProfileName = profileName
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }

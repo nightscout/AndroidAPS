@@ -21,5 +21,7 @@
     <string name="a11y_add_new_insulin">Add new insulin</string>
     <string name="a11y_delete_current_insulin">Delete current insulin</string>
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
+    <string name="update_profiles_title">Update Profiles</string>
+    <string name="update_profiles_message">Thihs insulin is used within %1$d profile(s)\nDo you confirm the update of this insulin?\n\nA profile switch will be required to apply the modification within your Loop</string>
 
 </resources>

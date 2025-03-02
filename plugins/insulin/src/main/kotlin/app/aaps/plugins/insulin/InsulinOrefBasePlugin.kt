@@ -106,16 +106,6 @@ abstract class InsulinOrefBasePlugin(
     override val iCfg: ICfg
         get() = ICfg(friendlyName, peak, dia)
 
-    override val comment
-        get(): String {
-            var comment = commentStandardText()
-            val userDia = userDefinedDia
-            if (userDia < hardLimits.minDia()) {
-                comment += "\n" + rh.gs(R.string.dia_too_short, userDia, hardLimits.minDia())
-            }
-            return comment
-        }
-
     abstract override val peak: Int
     abstract fun commentStandardText(): String
 }

@@ -144,6 +144,7 @@
     <string name="reset">reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
+    <string name="profile_number">Profile (%1$d)</string>
     <string name="select_for_removal">Select for removal</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
     <string name="overview_treatment_label">Treatment</string>

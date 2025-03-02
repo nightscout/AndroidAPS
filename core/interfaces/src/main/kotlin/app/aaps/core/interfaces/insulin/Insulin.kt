@@ -30,7 +30,6 @@ interface Insulin : ConfigExportImport {
 
     val id: InsulinType
     val friendlyName: String
-    val comment: String
     val dia: Double
     val peak: Int
     fun setDefault(iCfg: ICfg)
