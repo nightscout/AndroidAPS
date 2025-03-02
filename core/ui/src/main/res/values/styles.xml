@@ -450,6 +450,7 @@
 
     <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="buttonTint">@color/button_tint</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 
 </resources>

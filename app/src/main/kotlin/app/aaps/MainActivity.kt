@@ -100,7 +100,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
-    @Inject lateinit var maitenancePlugin: MaintenancePlugin
+    @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fileListProvider: FileListProvider
@@ -332,7 +332,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 text = rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected),
                 level = Notification.IMPORTANCE_HIGH,
                 buttonText = R.string.select,
-                action = { maitenancePlugin.selectAapsDirectory(this) },
+                action = { maintenancePlugin.selectAapsDirectory(this) },
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }
@@ -506,7 +506,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
         FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
         FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
-        FirebaseCrashlytics.getInstance().setCustomKey("Committed", BuildConfig.COMMITTED)
+        FirebaseCrashlytics.getInstance().setCustomKey("Committed", config.COMMITTED)
         FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
         FirebaseCrashlytics.getInstance().setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
     }
