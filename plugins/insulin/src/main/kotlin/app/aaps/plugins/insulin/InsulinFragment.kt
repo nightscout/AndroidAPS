@@ -55,7 +55,6 @@ class InsulinFragment : DaggerFragment() {
     private val binding get() = _binding!!
     private val currentInsulin: ICfg
         get() = insulinPlugin.currentInsulin
-    private var sourceInsulin: ICfg? = null
     private var selectedTemplate = Insulin.InsulinType.OREF_RAPID_ACTING    // Default Insulin (should only be used on new install
     private var minPeak = Insulin.InsulinType.OREF_RAPID_ACTING.peak.toDouble()
     private var maxPeak = Insulin.InsulinType.OREF_RAPID_ACTING.peak.toDouble()
@@ -104,7 +103,6 @@ class InsulinFragment : DaggerFragment() {
                 insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
                 build()
             }
-            sourceInsulin = currentInsulin.deepClone()
             profileList = profileStore.getProfileList(currentInsulin)
             swapAdapter(profileList)
         }
@@ -113,8 +111,7 @@ class InsulinFragment : DaggerFragment() {
                 ICfg("", selectedTemplate.peak, selectedTemplate.dia),
                 autoName = true
             )
-        insulinPlugin.currentInsulin = insulinPlugin.iCfg.deepClone()
-        sourceInsulin = currentInsulin.deepClone()
+        insulinPlugin.setCurrent(insulinPlugin.iCfg)
         profileList = profileStore.getProfileList(currentInsulin)
         swapAdapter(profileList)
 
@@ -201,13 +198,14 @@ class InsulinFragment : DaggerFragment() {
         context?.let { context ->
             binding.insulinTemplate.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, insulinTemplateList))
         } ?: return
-        insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
+        //insulinPlugin.currentInsulin = insulinPlugin.currentInsulin().deepClone()
         binding.insulinTemplate.setText(currentInsulin.let { rh.gs(Insulin.InsulinType.fromPeak(it.insulinPeakTime).label) }, false)
     }
 
     override fun onResume() {
         super.onResume()
-        sourceInsulin?.let { profileList = profileStore.getProfileList(it) }
+        insulinPlugin.setCurrent(insulinPlugin.iCfg)
+        profileList = profileStore.getProfileList(currentInsulin)
         swapAdapter(profileList)
         build()
     }
@@ -226,23 +224,20 @@ class InsulinFragment : DaggerFragment() {
         context?.let { context ->
             binding.insulinList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, insulinList))
         } ?: return
-        binding.insulinList.setText(insulinPlugin.currentInsulin().insulinLabel, false)
+        binding.insulinList.setText(insulinPlugin.currentInsulin.insulinLabel, false)
         if (isValid) {
             this.view?.setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.okBackgroundColor))
             binding.insulinList.isEnabled = true
 
             if (isEdited) {
                 //edited insulin -> save first
-                //binding.updateProfiles.visibility = View.GONE
                 binding.save.visibility = View.VISIBLE
             } else {
-                //binding.updateProfiles.visibility = View.VISIBLE
                 binding.save.visibility = View.GONE
             }
         } else {
             this.view?.setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.errorBackgroundColor))
             binding.insulinList.isEnabled = false
-            //binding.updateProfiles.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }
 
@@ -261,7 +256,7 @@ class InsulinFragment : DaggerFragment() {
         binding.name.setText(currentInsulin.insulinLabel)
         binding.name.addTextChangedListener(textWatch)
         binding.insulinList.filters = arrayOf()
-        binding.insulinList.setText(insulinPlugin.currentInsulin().insulinLabel)
+        binding.insulinList.setText(currentInsulin.insulinLabel)
 
         when (selectedTemplate) {
             Insulin.InsulinType.OREF_FREE_PEAK -> {

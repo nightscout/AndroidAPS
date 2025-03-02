@@ -60,16 +60,18 @@ class InsulinPlugin @Inject constructor(
         .mainType(PluginType.INSULIN)
         .fragmentClass(InsulinFragment::class.java.name)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
-        .pluginName(R.string.insulin_plugin)
-        .shortName(R.string.insulin_shortname)
+        .pluginName(app.aaps.core.interfaces.R.string.insulin_plugin)
+        .shortName(app.aaps.core.interfaces.R.string.insulin_shortname)
+        .setDefault(true)
         .visibleByDefault(true)
+        .enableByDefault(true)
         .neverVisible(config.AAPSCLIENT)
         .description(R.string.description_insulin_plugin),
     aapsLogger, rh
 ), Insulin {
 
     override val id = Insulin.InsulinType.UNKNOWN
-    override var friendlyName: String = "Insulin"
+    override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.insulin_plugin)
 
     override val dia
         get(): Double {
@@ -92,7 +94,7 @@ class InsulinPlugin @Inject constructor(
                 if (peak < hardLimits.minPeak())
                     hardLimits.minPeak().toInt()
                 else
-                    hardLimits.maxDia().toInt()
+                    hardLimits.maxPeak().toInt()
             }
         }
 
@@ -109,7 +111,7 @@ class InsulinPlugin @Inject constructor(
     override val iCfg: ICfg
         get() {
             val profile = profileFunction.getProfile()
-            return profile?.insulin ?:insulins[defaultInsulinIndex]
+            return getOrCreateInsulin(profile?.insulin ?:insulins[defaultInsulinIndex])
         }
 
     lateinit var currentInsulin: ICfg
@@ -120,15 +122,10 @@ class InsulinPlugin @Inject constructor(
     val numOfInsulins get() = insulins.size
     var isEdited: Boolean = false
     val userDefinedDia: Double
-        get() {
-            val profile = profileFunction.getProfile()
-            return profile?.dia ?: hardLimits.minDia()
-        }
+        get() = iCfg.getDia()
+
     val userDefinedPeak: Int
-        get() {
-            val profile = profileFunction.getProfile()
-            return profile?.insulin?.getPeak() ?: hardLimits.minPeak()
-        }
+        get() =iCfg.getPeak()
 
     override fun onStart() {
         super.onStart()
@@ -147,11 +144,25 @@ class InsulinPlugin @Inject constructor(
             iCfg.insulinPeakTime = insulins[defaultInsulinIndex].insulinPeakTime
         if (iCfg.getDia() < hardLimits.minDia() || iCfg.getDia() > hardLimits.maxDia())
             iCfg.insulinEndTime = insulins[defaultInsulinIndex].insulinEndTime
-        insulins.forEach {
+        insulins.forEachIndexed { index, it ->
             if (iCfg.isEqual(it))
                 return it
         }
         return addNewInsulin(iCfg, true)
+    }
+
+    fun setCurrent(iCfg: ICfg): Int {
+        // First Check insulin with hardlimits, and set default value if not consistent
+        insulins.forEachIndexed { index, it ->
+            if (iCfg.isEqual(it)) {
+                currentInsulinIndex = index
+                currentInsulin = currentInsulin().deepClone()
+                return index
+            }
+        }
+        addNewInsulin(iCfg, true)
+        currentInsulin = currentInsulin().deepClone()
+        return insulins.size - 1
     }
 
     override fun getInsulin(insulinLabel: String): ICfg {
@@ -329,16 +340,19 @@ class InsulinPlugin @Inject constructor(
             if (insulinEndTime < hardLimits.minDia() || dia > hardLimits.maxDia()) {
                 if (verbose)
                     ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_dia), dia))
+                aapsLogger.debug("XXXXX PeakValue currentIndex: $currentInsulinIndex current: ${insulinLabel} peak: ${getDia()}")
                 return false
             }
             if (peak < hardLimits.minPeak() || dia > hardLimits.maxPeak()) {
                 if (verbose)
                     ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_peak), peak))
+                aapsLogger.debug("XXXXX PeakValue currentIndex: $currentInsulinIndex current: ${insulinLabel} peak: ${getPeak()}")
                 return false
             }
             if (insulinLabel.isEmpty()) {
                 if (verbose)
                     ToastUtils.errorToast(activity, rh.gs(R.string.missing_insulin_name))
+                aapsLogger.debug("XXXXX LabelEmpty currentIndex: $currentInsulinIndex current: ${insulinLabel}")
                 return false
             }
             // Check Inulin name is unique and insulin parameters is unique
@@ -348,11 +362,12 @@ class InsulinPlugin @Inject constructor(
                 return false
             }
 
-            insulins.forEachIndexed { index, iCfg ->
+            insulins.forEachIndexed { index, insulin ->
                 if (index != currentInsulinIndex) {
-                    if (isEqual(iCfg)) {
+                    if (isEqual(insulin)) {
                         if (verbose)
-                            ToastUtils.errorToast(activity, rh.gs(R.string.insulin_duplicated, iCfg.insulinLabel))
+                            ToastUtils.errorToast(activity, rh.gs(R.string.insulin_duplicated, insulin.insulinLabel))
+                        aapsLogger.debug("XXXXX Duplicate currentIndex: $currentInsulinIndex current: ${insulinLabel} index: $index, label: ${insulin.insulinLabel} peak: ${insulin.getPeak()}, dia: ${insulin.getDia()}")
                         return false
                     }
                 }
@@ -362,9 +377,10 @@ class InsulinPlugin @Inject constructor(
     }
 
     private fun insulinLabelAlreadyExists(insulinLabel: String, currentIndex: Int): Boolean {
-        insulins.forEachIndexed { index, iCfg ->
+        insulins.forEachIndexed { index, insulin ->
             if (index != currentIndex) {
-                if (iCfg.insulinLabel == insulinLabel) {
+                if (insulin.insulinLabel == insulinLabel) {
+                    aapsLogger.debug("XXXXX Label currentIndex: $currentIndex current: ${insulinLabel} index: $index, label: ${insulin.insulinLabel}")
                     return true
                 }
             }

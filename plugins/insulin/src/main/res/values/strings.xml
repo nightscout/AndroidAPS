@@ -6,8 +6,6 @@
     <string name="description_insulin_lyumjev">Insulin preset for Lyumjev</string>
     <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
     <string name="description_insulin_plugin">Allows you to manage the different insulin you will use within AAPS</string>
-    <string name="insulin_plugin">Insulin</string>
-    <string name="insulin_shortname">INS</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
     <string name="update_profiles">Update Profiles</string>
@@ -22,6 +20,6 @@
     <string name="a11y_delete_current_insulin">Delete current insulin</string>
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
     <string name="update_profiles_title">Update Profiles</string>
-    <string name="update_profiles_message">Thihs insulin is used within %1$d profile(s)\nDo you confirm the update of this insulin?\n\nA profile switch will be required to apply the modification within your Loop</string>
+    <string name="update_profiles_message">This insulin is used within %1$d profile(s)\nDo you confirm the update of this insulin?\n\nA profile switch will be required to apply the modification within your Loop</string>
 
 </resources>
