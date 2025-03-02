@@ -20,6 +20,7 @@
     <string name="objectives_maxiobzero_learned">將MaxIOB設置為零可防止低血糖，且不會增加超過基礎速率的胰島素（除非IOB為負）。</string>
     <string name="objectives_maxiob_objective">調整閉環，將最大IOB提高到0以上，並逐步降低血糖目標</string>
     <string name="objectives_maxiob_gate">運行幾天，並至少一晚沒有低血糖警報，然後再降低血糖目標</string>
+    <string name="objectives_maxiob_learned">隨著孩子成長，請更新最大活性胰島素（MaxIOB）。請勿讓系統提供超過食物能覆蓋的胰島素劑量，設定過高的數值可能會帶來風險。在簡單模式下，最大活性胰島素會自動計算。</string>
     <string name="maxiobset">適當設定 最大活性胰島素（Max IOB）（在簡單模式下則無需手動設定）。</string>
     <string name="objectives_autosens_objective">如有需要，調整基礎速率和比率，然後啟用自動感應</string>
     <string name="objectives_autosens_gate">成功進行一周的白天循環，並定期輸入碳水化合物。在簡單模式下，自動感應預設啟用。</string>
