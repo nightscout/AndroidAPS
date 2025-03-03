@@ -79,8 +79,6 @@
     <string name="deltalabel_u">Różnica poziomu cukru [%1$s]</string>
     <string name="currentlocation">Obecna lokalizacja</string>
     <string name="location">Lokalizacja</string>
-    <string name="latitude_short">Szerokość:</string>
-    <string name="longitude_short">Długość:</string>
     <string name="glucose_u">Poziom [%1$s]:</string>
     <string name="target_u">Cel [%1$s]:</string>
     <string name="lastboluslabel">Przed ostatnim bolusem</string>

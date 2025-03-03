@@ -1,8 +1,11 @@
 package app.aaps.plugins.automation.triggers
 
+import android.content.Context
 import android.location.Location
 import android.widget.LinearLayout
+import app.aaps.core.data.firebase.RemoteConfigKeys
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputButton
@@ -12,12 +15,19 @@ import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.elements.StaticLabel
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.model.Place
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.remoteConfig
+import com.rtchagas.pingplacepicker.PingPlacePicker
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.Optional
 
-class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector), PingPlacePicker.OnPlaceSelectedListener {
+
+   var context: Context? = null
 
     var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
     var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
@@ -30,7 +40,26 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
         locationDataContainer.lastLocation?.let {
             latitude.setValue(it.latitude)
             longitude.setValue(it.longitude)
-            aapsLogger.debug(LTag.AUTOMATION, String.format("Grabbed location: %f %f", latitude.value, longitude.value))
+        }
+    }
+    private val mapAction = Runnable {
+        val activity = scanForActivity(context) ?: return@Runnable
+
+        val builder = PingPlacePicker.Builder()
+        builder
+            .setAndroidApiKey(rh.gs(R.string.key_google_apis_android))
+            .setMapsApiKey(Firebase.remoteConfig.getString(RemoteConfigKeys.KEY_MAPS_API))
+            .setOnPlaceSelectedListener(this)
+
+        // Set a initial location.
+        if (latitude.value != 0.0 && longitude.value != 0.0)
+            builder.setLatLng(LatLng(latitude.value, longitude.value))
+
+        try {
+            val placeIntent = builder.build(activity)
+            activity.startActivity(placeIntent)
+        } catch (_: Exception) {
+            ToastUtils.errorToast(activity, "Google Play Services is not Available")
         }
     }
 
@@ -42,6 +71,12 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
         if (modeSelected.value == InputLocationMode.Mode.GOING_OUT)
             lastMode = InputLocationMode.Mode.OUTSIDE
         name = triggerLocation.name
+    }
+
+    // PingPlacePicker
+    override fun onPlaceSelected(place: Place, latLng: LatLng) {
+        latitude.setValue(latLng.latitude)
+        longitude.setValue(latLng.longitude)
     }
 
     @Synchronized override fun shouldRun(): Boolean {
@@ -93,14 +128,14 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun duplicate(): Trigger = TriggerLocation(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
+        context = root.context
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.location, this))
             .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.name_short), "", name))
-            .add(LabelWithElement(rh, rh.gs(R.string.latitude_short), "", latitude))
-            .add(LabelWithElement(rh, rh.gs(R.string.longitude_short), "", longitude))
+            .maybeAdd(InputButton(rh.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
+            .add(InputButton(rh.gs(R.string.choose_from_map), mapAction))
             .add(LabelWithElement(rh, rh.gs(R.string.distance_short), "", distance))
             .add(LabelWithElement(rh, rh.gs(R.string.location_mode), "", modeSelected))
-            .maybeAdd(InputButton(rh.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
             .build(root)
     }
 

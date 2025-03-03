@@ -78,9 +78,8 @@
     <string name="deltalabel">血糖差異</string>
     <string name="deltalabel_u">血糖差異 [%1$s]</string>
     <string name="currentlocation">目前位置</string>
+    <string name="choose_from_map">從地圖中選擇</string>
     <string name="location">位置</string>
-    <string name="latitude_short">緯度：</string>
-    <string name="longitude_short">經度：</string>
     <string name="glucose_u">血糖 [%1$s]：</string>
     <string name="target_u">目標 [%1$s]：</string>
     <string name="lastboluslabel">最後一次注射時間前</string>

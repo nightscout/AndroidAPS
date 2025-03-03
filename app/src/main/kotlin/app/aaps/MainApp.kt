@@ -45,6 +45,10 @@ import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.widget.Widget
+import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -109,6 +113,7 @@ class MainApp : DaggerApplication() {
             aapsLogger.debug("BuildVersion: " + config.BUILD_VERSION)
             aapsLogger.debug("Remote: " + config.REMOTE)
             registerLocalBroadcastReceiver()
+            setupRemoteConfig()
 
             // trigger here to see the new version on app start after an update
             handler.postDelayed({ versionCheckersUtils.triggerCheckVersion() }, 30000)
@@ -244,6 +249,25 @@ class MainApp : DaggerApplication() {
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
         registerReceiver(BTReceiver(), filter)
+    }
+
+    private fun setupRemoteConfig() {
+        FirebaseApp.initializeApp(this)
+        Firebase.remoteConfig.also { firebaseRemoteConfig ->
+
+            firebaseRemoteConfig.setConfigSettingsAsync(
+                FirebaseRemoteConfigSettings
+                    .Builder()
+                    .setMinimumFetchIntervalInSeconds(3600)
+                    .build()
+            )
+            firebaseRemoteConfig
+                .fetchAndActivate()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) aapsLogger.debug("RemoteConfig received successfully")
+                    else aapsLogger.error("RemoteConfig fetch failed")
+                }
+        }
     }
 
     override fun onTerminate() {

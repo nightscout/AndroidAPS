@@ -229,6 +229,8 @@ dependencies {
 
     // MainApp
     api(libs.com.uber.rxdogtag2.rxdogtag)
+    // Remote config
+    api(libs.com.google.firebase.config)
 }
 
 println("-------------------")

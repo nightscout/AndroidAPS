@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.widget.TextView
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
@@ -55,7 +57,6 @@ import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
 import app.aaps.shared.impl.rx.bus.RxBusImpl
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -64,7 +65,6 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
@@ -78,7 +78,8 @@ class OverviewPlugin @Inject constructor(
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
     private val uiInteraction: UiInteraction,
-    private val nsSettingStatus: NSSettingsStatus
+    private val nsSettingStatus: NSSettingsStatus,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -205,6 +206,21 @@ class OverviewPlugin @Inject constructor(
             overviewData.reset()
             rxBus.send(EventNewHistoryData(0L, reloadBgData = true))
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun setVersionView(view: TextView) {
+        if (config.APS || config.PUMPCONTROL) {
+            view.text = "${config.VERSION_NAME} (${config.HEAD.substring(0, 4)})"
+            if (config.COMMITTED) {
+                view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+                view.alpha = 0.4f
+            } else if (sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0) != 0L) {
+                view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.metadataTextWarningColor))
+            } else {
+                view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))
+            }
+        } else view.text = ""
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
