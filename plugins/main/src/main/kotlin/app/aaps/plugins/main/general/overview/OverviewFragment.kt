@@ -43,6 +43,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -149,6 +150,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
+    @Inject lateinit var overview: Overview
     @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var automation: Automation
     @Inject lateinit var bgQualityCheck: BgQualityCheck
@@ -200,14 +202,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (config.AAPSCLIENT2)
             binding.nsclientCard.setBackgroundColor(Color.argb(80, 0x0F, 0xBB, 0xE0))
 
-        //if (config.APS || config.PUMPCONTROL)
-        binding.infoLayout.version.text = "${config.VERSION_NAME} (${config.HEAD.substring(0, 4)})"
-        if (config.COMMITTED) {
-            binding.infoLayout.version.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
-            binding.infoLayout.version.alpha = 0.4f
-        } else {
-            binding.infoLayout.version.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))
-        }
+        overview.setVersionView(binding.infoLayout.version)
 
         skinProvider.activeSkin().preProcessLandscapeOverviewLayout(binding, landscape, rh.gb(app.aaps.core.ui.R.bool.isTablet), smallHeight)
         binding.nsclientCard.visibility = config.AAPSCLIENT.toVisibility()
