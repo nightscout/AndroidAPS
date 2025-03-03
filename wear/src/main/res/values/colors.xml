@@ -54,7 +54,8 @@
     <color name="inrange">#00FF00</color>
     <color name="exercise">#67DFE8</color>
     <color name="carbs">#FFFB8C00</color>
-    <color name="low">#FF0000</color>
+    <color name="low">#FFFF00</color>
+    <color name="veryLow">#FF0000</color>
     <color name="tempTargetConfirmation">#77dd77</color>
 
     <!-- Material Design - Color Palette -->
