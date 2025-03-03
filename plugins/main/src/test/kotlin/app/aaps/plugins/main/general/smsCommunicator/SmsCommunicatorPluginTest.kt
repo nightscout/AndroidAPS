@@ -14,6 +14,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -58,6 +59,7 @@ import java.util.regex.Pattern
 @Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
+    @Mock lateinit var automation: Automation
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: LoopPlugin
@@ -190,11 +192,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
 
+        automation = Mockito.mock(Automation::class.java)
+        smsCommunicatorPlugin.automation = automation
+        Mockito.doNothing().`when`(automation).scheduleTimeToEatReminder(ArgumentMatchers.anyInt())
+
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
 
         `when`(activePlugin.activeProfileSource).thenReturn(profileSource)
-
 
         `when`(otp.name()).thenReturn("User")
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
@@ -1024,7 +1029,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
         `when`(dateUtilMocked.now()).thenReturn(1000L)
-        `when`(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
+        `when`(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(5)
+
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
@@ -1211,6 +1217,17 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "CARBS 1 +15")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 +15")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at +15 reply with code")
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
+
+        //CARBS 1 +15 ALARM
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "CARBS 1 +15 ALARM")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 +15 ALARM")
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at +15 reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
