@@ -340,8 +340,8 @@ class BgGraphBuilder(
 
     private fun veryHighLine(): Line {
         val veryHighLineValues: MutableList<PointValue> = ArrayList()
-        veryHighLineValues.add(PointValue(fuzz(startingTime), highMark.toFloat()))
-        veryHighLineValues.add(PointValue(fuzz(endingTime), highMark.toFloat()))
+        veryHighLineValues.add(PointValue(fuzz(startingTime), veryHighMark.toFloat()))
+        veryHighLineValues.add(PointValue(fuzz(endingTime), veryHighMark.toFloat()))
         return Line(veryHighLineValues).also { veryHighLine ->
             veryHighLine.setHasPoints(false)
             veryHighLine.strokeWidth = 1
@@ -362,8 +362,8 @@ class BgGraphBuilder(
 
     private fun veryLowLine(): Line {
         val veryLowLineValues: MutableList<PointValue> = ArrayList()
-        veryLowLineValues.add(PointValue(fuzz(startingTime), lowMark.toFloat()))
-        veryLowLineValues.add(PointValue(fuzz(endingTime), lowMark.toFloat()))
+        veryLowLineValues.add(PointValue(fuzz(startingTime), veryLowMark.toFloat()))
+        veryLowLineValues.add(PointValue(fuzz(endingTime), veryLowMark.toFloat()))
         return Line(veryLowLineValues).also { veryLowLine ->
             veryLowLine.setHasPoints(false)
             veryLowLine.color = veryLowColor

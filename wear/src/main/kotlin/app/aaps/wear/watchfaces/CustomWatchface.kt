@@ -627,9 +627,9 @@ class CustomWatchface : BaseWatchFace() {
         var lowCustom: Drawable? = null
             get() = field ?: customLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { lowCustom = it } }
         var veryHighCustom: Drawable? = null
-            get() = field ?: customVeryHigh?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { highCustom = it } }
+            get() = field ?: customVeryHigh?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { veryHighCustom = it } }
         var veryLowCustom: Drawable? = null
-            get() = field ?: customVeryLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { lowCustom = it } }
+            get() = field ?: customVeryLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { veryLowCustom = it } }
         var textDrawable: Drawable? = null
         val drawable: Drawable?
             get() = dynData?.getDrawable() ?: when (cwf.singleBg[0].sgvLevel) {
