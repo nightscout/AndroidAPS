@@ -3,9 +3,11 @@ package app.aaps.shared.impl.weardata
 enum class JsonKeys(val key: String) {
     METADATA("metadata"),
     ENABLESECOND("enableSecond"),
+    VERYHIGHCOLOR("veryHighColor"),
     HIGHCOLOR("highColor"),
     MIDCOLOR("midColor"),
     LOWCOLOR("lowColor"),
+    VERYLOWCOLOR("veryLowColor"),
     LOWBATCOLOR("lowBatColor"),
     CARBCOLOR("carbColor"),
     BASALBACKGROUNDCOLOR("basalBackgroundColor"),

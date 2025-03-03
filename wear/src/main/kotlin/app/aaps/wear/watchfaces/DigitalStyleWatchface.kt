@@ -36,15 +36,14 @@ class DigitalStyleWatchface : BaseWatchFace() {
     }
 
     override fun setColorDark() {
-        val entry = singleBg[0]
-        val color = when {
-            entry.sgv >= entry.veryHigh -> R.color.dark_veryHighColor
-            entry.sgv >= entry.high     -> R.color.dark_highColor
-            entry.sgv <= entry.veryLow  -> R.color.dark_veryLowColor
-            entry.sgv <= entry.low      -> R.color.dark_lowColor
+        val color = when (singleBg[0].sgvLevel.toInt()) {
+            -2   -> R.color.dark_veryLowColor
+            -1   -> R.color.dark_lowColor
+            0    -> R.color.dark_midColor
+            1    -> R.color.dark_highColor
+            2    -> R.color.dark_veryHighColor
             else -> R.color.dark_midColor
         }
-
         binding.sgv.setTextColor(ContextCompat.getColor(this, color))
         binding.direction.setTextColor(ContextCompat.getColor(this, color))
 
