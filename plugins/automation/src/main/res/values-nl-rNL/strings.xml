@@ -79,8 +79,6 @@
     <string name="deltalabel_u">BG verschil [%1$s]</string>
     <string name="currentlocation">Huidige locatie</string>
     <string name="location">Locatie</string>
-    <string name="latitude_short">Br:</string>
-    <string name="longitude_short">Leng:</string>
     <string name="glucose_u">Glucose [%1$s]:</string>
     <string name="target_u">Streefdoel [%1$s]:</string>
     <string name="lastboluslabel">Laatste bolus</string>

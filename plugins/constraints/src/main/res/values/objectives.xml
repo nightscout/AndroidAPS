@@ -22,7 +22,7 @@
     <string name="objectives_maxiobzero_learned">Setting MaxIOB to zero prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
     <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
-    <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow to the system give you more insulin than you can cover by food = really high value is a bad idea. Max IOB is calculated automatically in simple mode</string>
+    <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow the system to give you more insulin than you can cover by food = really high value is a bad idea. Max IOB is calculated automatically in simple mode</string>
     <string name="maxiobset">Maximal IOB set properly (Not necessary in simple mode)</string>
     <string name="objectives_autosens_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry. In simple mode autosens is enabled by default.</string>

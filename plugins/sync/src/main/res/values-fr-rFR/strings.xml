@@ -124,9 +124,15 @@
     <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
     <string name="quick_wizard_message">Assistant : %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
     <string name="user_action_not_available">L\'action utilisateur %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
+    <string name="wear_action_tempt_cancel_message">Annuler l\'exécution de la Cible Temp. ?</string>
     <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
+    <string name="wear_action_tempt_zero_message">Durée zéro min - Annuler l\'exécution de la Cible Temp. ?</string>
     <string name="wear_action_tempt_min_bg_error">Gly mini hors limite!</string>
     <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
+    <string name="wear_action_tempt_range_error">Limites invalides : la cible basse (%1$s) ne peut pas être supérieure à la cible haute (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">Cible Temp.:\n\nMin: %1$s\nMax : %2$s\nDurée : %3$d min</string>
+    <string name="wear_action_tempt_manual_message">Cible Temp.:\n\nCible: %1$s\nDurée: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">Cible Temp.:\n\nRaison: %1$s\nCible : %2$s\nDurée : %3$d min</string>
     <string name="no_success">échec - veuillez vérifier le téléphone</string>
     <string name="wear_settings">Paramètres Wear</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>

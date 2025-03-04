@@ -14,6 +14,7 @@ fun ExtendedBolus.fromDb(): EB =
         utcOffset = this.utcOffset,
         duration = this.duration,
         amount = this.amount,
+        isEmulatingTempBasal = this.isEmulatingTempBasal,
         ids = this.interfaceIDs.fromDb()
     )
 
@@ -28,5 +29,6 @@ fun EB.toDb(): ExtendedBolus =
         utcOffset = this.utcOffset,
         duration = this.duration,
         amount = this.amount,
+        isEmulatingTempBasal = this.isEmulatingTempBasal,
         interfaceIDs_backing = this.ids.toDb()
     )
