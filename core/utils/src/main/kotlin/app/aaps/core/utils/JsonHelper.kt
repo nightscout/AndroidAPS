@@ -10,7 +10,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json[fieldName]
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -21,7 +21,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getJSONObject(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -32,7 +32,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getString(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -43,7 +43,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getString(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -54,7 +54,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getString(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -65,7 +65,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getDouble(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -76,7 +76,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getDouble(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -87,7 +87,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getDouble(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -101,7 +101,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getInt(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -112,7 +112,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getInt(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -123,7 +123,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getLong(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -134,7 +134,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getLong(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -145,7 +145,7 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getBoolean(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
@@ -156,9 +156,18 @@ object JsonHelper {
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getBoolean(fieldName)
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
             }
         }
         return result
     }
+
+    /**
+     * Simple merge of two JSON objects.
+     * @return new JSONObject with all keys from both objects
+     */
+    fun merge(base: JSONObject, changes: JSONObject?): JSONObject =
+        JSONObject(base.toString()).also { json ->
+            changes?.keys()?.forEach { key -> json.put(key, changes[key]) }
+        }
 }
