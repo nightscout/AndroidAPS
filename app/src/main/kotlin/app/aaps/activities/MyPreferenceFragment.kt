@@ -121,7 +121,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 .getDefaultSharedPreferences(context)
                 .registerOnSharedPreferenceChangeListener(this)
         }
-        overview.setVersionView(requireActivity().findViewById<TextView>(R.id.version))
+        requireActivity().findViewById<TextView>(R.id.version)?.let { overview.setVersionView(it) }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
