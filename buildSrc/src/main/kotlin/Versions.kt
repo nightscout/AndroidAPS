@@ -1,6 +1,7 @@
 import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+@Suppress("ConstPropertyName")
 object Versions {
 
     const val appVersion = "3.3.2.0-dev"
