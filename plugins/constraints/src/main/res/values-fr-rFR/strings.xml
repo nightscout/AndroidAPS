@@ -8,13 +8,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <!-- Version Checker -->
-    <string name="old_version">ancienne version</string>
-    <string name="very_old_version">très ancienne version</string>
     <string name="application_expired">Application expirée</string>
-    <string name="new_version_warning">La nouvelle version n\'a pas été vérifiée depuis au moins %1$d jours ! Revenir à AGB après %2$d jours, la boucle sera désactivée après %3$d jours. Restaurer la connectivité internet !</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
-    <string name="version_expire">La version %1$s expire le %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Données recalculées utilisées</string>

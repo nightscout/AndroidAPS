@@ -8,13 +8,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Brak miejsca! Zwolnij co najmniej %1$d MB w pamięci wewnętrznej! Pętla zatrzymana!</string>
     <!-- Version Checker -->
-    <string name="old_version">stara wersja</string>
-    <string name="very_old_version">bardzo stara wersja</string>
     <string name="application_expired">Aplikacja wygasła</string>
-    <string name="new_version_warning">Od co najmniej %1$d dni nie sprawdzono, czy dostępna jest nowa wersja! Nastąpi powrót do trybu LGS (tylko wstrzymanie bazy przy niskiej glikemii) po %2$d dniach, a po %3$d dniach pętla zostanie wyłączona. Przywróć połączenie z Internetem!</string>
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
-    <string name="version_expire">Wersja %1$s wygasa %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
