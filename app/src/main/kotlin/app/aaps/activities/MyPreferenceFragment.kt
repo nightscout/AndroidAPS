@@ -73,7 +73,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var passwordCheck: PasswordCheck
-
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
@@ -121,6 +120,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 .getDefaultSharedPreferences(context)
                 .registerOnSharedPreferenceChangeListener(this)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         requireActivity().findViewById<TextView>(R.id.version)?.let { overview.setVersionView(it) }
     }
 
