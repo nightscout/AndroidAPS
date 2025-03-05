@@ -11,6 +11,7 @@
     <string name="application_expired">Applikasjon utløpt</string>
     <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
+    <string name="version_expire">Versjon %1$s utløper den %2$s og da vil loopstatus endres til Stopp ved lavt BS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Rekalkulerte data benyttes fordi noe BS-data mangler eller at BS ankommer på et ikke-forventet tidspunkt. Vil nullstille seg etter ca 24 timer. Ingen handling kreves</string>
