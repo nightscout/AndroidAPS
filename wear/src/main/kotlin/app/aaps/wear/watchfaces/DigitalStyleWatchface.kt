@@ -44,7 +44,6 @@ class DigitalStyleWatchface : BaseWatchFace() {
             -2L  -> R.color.dark_veryLowColor
             else -> R.color.dark_midColor
         }
-
         binding.sgv.setTextColor(ContextCompat.getColor(this, color))
         binding.direction.setTextColor(ContextCompat.getColor(this, color))
 

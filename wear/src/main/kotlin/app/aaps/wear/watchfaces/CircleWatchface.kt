@@ -252,16 +252,13 @@ class CircleWatchface : WatchFace() {
         val minute = Calendar.getInstance()[Calendar.MINUTE]
         angleBig = ((hour + minute / 60f) / 12f * 360 - 90 - BIG_HAND_WIDTH / 2f + 360) % 360
         angleSMALL = (minute / 60f * 360 - 90 - SMALL_HAND_WIDTH / 2f + 360) % 360
-        color = 0
-
-        when (singleBg[0].sgvLevel.toInt()) {
-            -2 -> color = veryLowColor
-            -1 -> color = lowColor
-            0  -> color = inRangeColor
-            1  -> color = highColor
-            2  -> color = veryHighColor
+        color = when (singleBg[0].sgvLevel.toInt()) {
+            -2   -> veryLowColor
+            -1   -> lowColor
+            1    -> highColor
+            2    -> veryHighColor
+            else -> inRangeColor
         }
-
         circlePaint.shader = null
         circlePaint.style = Paint.Style.STROKE
         circlePaint.strokeWidth = CIRCLE_WIDTH

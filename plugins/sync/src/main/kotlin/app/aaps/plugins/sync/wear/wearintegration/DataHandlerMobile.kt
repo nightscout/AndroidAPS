@@ -1472,6 +1472,13 @@ class DataHandlerMobile @Inject constructor(
         val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
         val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
         val veryHighLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewVeryHighMark), units)
+        val sgvLevel = when {
+            glucoseValue.recalculated > veryHighLine -> 2L
+            glucoseValue.recalculated > highLine     -> 1L
+            glucoseValue.recalculated < veryLowLine  -> -2L
+            glucoseValue.recalculated < lowLine      -> -1L
+            else                                     -> 0L
+        }
 
         return EventData.SingleBg(
             dataset = 0,
@@ -1483,13 +1490,7 @@ class DataHandlerMobile @Inject constructor(
             deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDeltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
-            sgvLevel = when {
-                glucoseValue.recalculated > veryHighLine -> 2L
-                glucoseValue.recalculated > highLine -> 1L
-                glucoseValue.recalculated < veryLowLine -> -2L
-                glucoseValue.recalculated < lowLine -> -1L
-                else -> 0L
-            },
+            sgvLevel = sgvLevel,
             sgv = glucoseValue.recalculated,
             veryHigh = veryHighLine,
             high = highLine,
