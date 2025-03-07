@@ -8,13 +8,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
     <!-- Version Checker -->
-    <string name="old_version">stará verzia</string>
-    <string name="very_old_version">veľmi stará verzia</string>
     <string name="application_expired">Aplikácia expirovala</string>
-    <string name="new_version_warning">Nová verzia nebola skontrolovaná najmenej %1$d dní! V prípade, že uplynie %2$d dní, prepne sa režim na LGS a po %3$d dňoch bude uzavretý okruh vypnutý. Obnovte pripojenie k internetu!</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
-    <string name="version_expire">Verzia %1$s expiruje dňa %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Použité prepočítané dáta</string>
