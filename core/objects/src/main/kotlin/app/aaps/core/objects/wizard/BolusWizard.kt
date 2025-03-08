@@ -91,12 +91,9 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     var timeStamp: Long
-    // var phoneNumber: String
 
     init {
         injector.androidInjector().inject(this)
-        // why this@BolusWizar.phoneNumber not visible in scoped DetailedBolusInfo().apply
-        // phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         timeStamp = dateUtil.now()
     }
 
