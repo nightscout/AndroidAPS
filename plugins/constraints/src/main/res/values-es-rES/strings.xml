@@ -8,13 +8,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡El bucle se encuentra desactivado!</string>
     <!-- Version Checker -->
-    <string name="old_version">versión antigua</string>
-    <string name="very_old_version">versión muy antigua</string>
     <string name="application_expired">Aplicación caducada</string>
-    <string name="new_version_warning">¡La nueva versión no se ha comprobado desde hace al menos %1$d días! Volverás a LGS después de %2$d días, el bucle se deshabilitará después de %3$d días. ¡Restaura la conexión a Internet!</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Bucle desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
-    <string name="version_expire">La versión %1$s caduca el %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Datos recalculados usados</string>

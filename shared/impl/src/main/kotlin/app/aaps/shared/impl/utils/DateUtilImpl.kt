@@ -311,6 +311,9 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
 
     override fun isSameDay(timestamp1: Long, timestamp2: Long) = isSameDay(Date(timestamp1), Date(timestamp2))
 
+    override fun isAfterNoon(): Boolean =
+        Instant.now().atZone(ZoneId.systemDefault()).hour >= 12
+
     override fun isSameDayGroup(timestamp1: Long, timestamp2: Long): Boolean {
         val now = now()
         if (now in (timestamp1 + 1) until timestamp2 || now in (timestamp2 + 1) until timestamp1)

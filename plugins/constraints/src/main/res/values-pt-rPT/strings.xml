@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <!-- Storage constraint -->
     <!-- Version Checker -->
-    <string name="new_version_warning">A nova versão não foi verificada por pelo menos %1$d dias! Voltar ao SGB após %2$d dias, o loop será desativado após %3$d dias. Restaure a conectividade da internet!</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <!-- Safety -->
