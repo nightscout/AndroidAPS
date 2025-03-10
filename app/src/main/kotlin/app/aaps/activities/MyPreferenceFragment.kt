@@ -184,7 +184,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
-        checkForBiometricFallback(preferences.get(key) as PreferenceKey?)
+        // Preference change can be triggered inside AAPS on [NonPreferenceKey] too
+        // check if it's [PreferenceKey]
+        if (preferences.get(key) is PreferenceKey?)
+            checkForBiometricFallback(preferences.get(key) as PreferenceKey?)
 
         preprocessCustomVisibility(preferenceScreen)
         updatePrefSummary(findPreference(key))
