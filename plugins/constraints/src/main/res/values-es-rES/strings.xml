@@ -11,6 +11,7 @@
     <string name="application_expired">Aplicación caducada</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Bucle desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
+    <string name="version_expire">La versión %1$s expira en %2$s y pasará a modo LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Datos recalculados usados</string>
