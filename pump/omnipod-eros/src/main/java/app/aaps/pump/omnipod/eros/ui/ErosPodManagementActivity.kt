@@ -255,7 +255,7 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
             app.aaps.core.ui.UIRunnable {
                 OKDialog.show(
                     it, rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_warning),
-                    rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null
+                    rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration)
                 )
             }.run()
         }

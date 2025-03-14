@@ -11,6 +11,7 @@
     <string name="application_expired">Application expirée</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
+    <string name="version_expire">La version %1$s expirera le %2$s et se transformera en mode AGB</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Données recalculées utilisées</string>

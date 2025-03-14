@@ -222,7 +222,7 @@ class UiInteractionImpl @Inject constructor(
                 NotificationWithAction(injector, id, text, level, validityCheck)
                     .also { n ->
                         n.action(actionButtonId) {
-                            n.contextForAction?.let { OKDialog.show(it, title, message, null) }
+                            n.contextForAction?.let { OKDialog.show(it, title, message) }
                         }
                     })
         )
