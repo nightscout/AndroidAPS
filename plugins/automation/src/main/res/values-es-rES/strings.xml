@@ -78,9 +78,8 @@
     <string name="deltalabel">Diferencia de glucosa</string>
     <string name="deltalabel_u">Diferencia de glucosa %1$s</string>
     <string name="currentlocation">Ubicación actual</string>
+    <string name="choose_from_map">Elegir desde el mapa</string>
     <string name="location">Ubicación</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Long:</string>
     <string name="glucose_u">Glucosa [%1$s]:</string>
     <string name="target_u">Objetivo [%1$s]:</string>
     <string name="lastboluslabel">Último bolo</string>

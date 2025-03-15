@@ -253,7 +253,7 @@ class MedtronicFragment : DaggerFragment() {
         context?.let {
             OKDialog.show(
                 it, rh.gs(R.string.medtronic_warning),
-                rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null
+                rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration)
             )
         }
     }

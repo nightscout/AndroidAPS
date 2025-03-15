@@ -124,9 +124,15 @@
     <string name="quick_wizard_not_available">所選的快速嚮導不再可用，請重新整理您的磁磚</string>
     <string name="quick_wizard_message">快速嚮導: %1$s\n胰島素: %2$.2fU\n碳水化合物: %3$dg</string>
     <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
+    <string name="wear_action_tempt_cancel_message">取消執行中的臨時目標？</string>
     <string name="wear_action_tempt_unit_error">手錶和手機上使用了不同的單位！</string>
+    <string name="wear_action_tempt_zero_message">零臨時目標 - 取消執行中的臨時目標？</string>
     <string name="wear_action_tempt_min_bg_error">最低血糖超出範圍！</string>
     <string name="wear_action_tempt_max_bg_error">最高血糖超出範圍！</string>
+    <string name="wear_action_tempt_range_error">無效範圍：低目標 (%1$s) 不能大於高目標 (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">臨時目標\n\n最小值：%1$s\n最大值：%2$s\n持續時間：%3$d 分鐘</string>
+    <string name="wear_action_tempt_manual_message">臨時目標\n\n目標：%1$s\n持續時間：%2$d 分鐘</string>
+    <string name="wear_action_tempt_preset_message">臨時目標\n\n原因：%1$s\n目標：%2$s\n持續時間：%3$d 分鐘</string>
     <string name="no_success">未成功 - 請檢查手機</string>
     <string name="wear_settings">Wear 設定</string>
     <string name="wearcontrol_title">從手錶控制</string>

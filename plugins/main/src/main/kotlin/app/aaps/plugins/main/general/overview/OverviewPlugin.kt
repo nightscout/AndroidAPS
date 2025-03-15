@@ -4,11 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Typeface
 import android.os.Build
+import android.widget.TextView
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
@@ -52,7 +55,6 @@ import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
 import app.aaps.shared.impl.rx.bus.RxBusImpl
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -61,7 +63,6 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
@@ -75,7 +76,8 @@ class OverviewPlugin @Inject constructor(
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
     private val uiInteraction: UiInteraction,
-    private val nsSettingStatus: NSSettingsStatus
+    private val nsSettingStatus: NSSettingsStatus,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -204,6 +206,21 @@ class OverviewPlugin @Inject constructor(
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    override fun setVersionView(view: TextView) {
+        if (config.APS || config.PUMPCONTROL) {
+            view.text = "${config.VERSION_NAME} (${config.HEAD.substring(0, 4)})"
+            if (config.COMMITTED) {
+                view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.omniGrayColor))
+                view.alpha = 1.0f
+            } else if (sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0) != 0L) {
+                view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.metadataTextWarningColor))
+            } else {
+                view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))
+            }
+        } else view.text = ""
+    }
+
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null && requiredKey != "overview_buttons_settings" && requiredKey != "default_temp_targets_settings" && requiredKey != "prime_fill_settings" && requiredKey != "range_settings" && requiredKey != "statuslights_overview_advanced" && requiredKey != "overview_advanced_settings") return
         val category = PreferenceCategory(context)
@@ -281,11 +298,13 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattCritical, title = R.string.statuslights_bat_critical))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageWarning, title = R.string.statuslights_bage_warning))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageCritical, title = R.string.statuslights_bage_critical))
-                addPreference(AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
-                                                      onPreferenceClickListener = {
-                                                          nsSettingStatus.copyStatusLightsNsSettings(context)
-                                                          true
-                                                      }))
+                addPreference(
+                    AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
+                                            onPreferenceClickListener = {
+                                                nsSettingStatus.copyStatusLightsNsSettings(context)
+                                                true
+                                            })
+                )
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResetBolusPercentageTime, dialogMessage = R.string.deliver_part_of_boluswizard_reset_time, title = app.aaps.core.ui.R.string.partialboluswizard_reset_time))
