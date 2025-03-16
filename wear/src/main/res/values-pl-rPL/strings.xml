@@ -90,7 +90,6 @@
     <string name="menu_default">Domyślnie</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Czas trwania akcji</string>
     <string name="action_tempt_confirmation">Żądany cel tymczasowy</string>
     <string name="action_quick_wizard_confirmation">Szybki kreator</string>
     <string name="action_user_action_confirmation">Wymagane działanie użytkownika</string>
@@ -100,13 +99,8 @@
     <string name="action_fill_confirmation">Wypełnij</string>
     <string name="action_ecarb_confirmation">Żądane węglowodany</string>
     <string name="action_profile_switch_confirmation">Prośba o zmianę profilu</string>
-    <string name="action_target" comment="In temp target menu, single target value">Cel</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Niski</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Wysoki</string>
     <string name="action_carbs">Węglowodany</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Procent</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Czas trwania [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Ustawienie 1</string>
@@ -114,7 +108,6 @@
     <string name="action_preset_3">Ustawienie 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Podana wartość</string>
     <string name="action_confirm">POTWIERDŹ</string>
-    <string name="action_timeshift">przesunięcie czasu</string>
     <string name="bolus_progress">Postęp bolusa</string>
     <string name="press_to_cancel">naciśnij aby anulować</string>
     <string name="cancel_bolus">ANULUJ BOLUS</string>
