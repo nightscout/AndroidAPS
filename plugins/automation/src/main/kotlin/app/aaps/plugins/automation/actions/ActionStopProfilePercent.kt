@@ -22,8 +22,6 @@ class ActionStopProfilePercent(injector: HasAndroidInjector) : Action(injector) 
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var uel: UserEntryLogger
 
-    private val disposable = CompositeDisposable()
-
     override fun friendlyName(): Int = R.string.stopprofilepercent
     override fun shortDescription(): String = rh.gs(R.string.stopprofilepercent)
     override fun icon(): Int = R.drawable.ic_stop_24dp

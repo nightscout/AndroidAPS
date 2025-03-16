@@ -18,7 +18,7 @@ class AutomationStateService @Inject constructor(
     // @Inject lateinit var sp: SP
 
     private var automationStates: HashMap<String, String> = HashMap()
-    val sp_key = "automation_state_service";
+    val sp_key = "automation_state_service"
 
     init {
         val string = sp.getString(sp_key, "{}")
@@ -29,9 +29,9 @@ class AutomationStateService @Inject constructor(
     //check if we are in a particular state or not
     fun inState(stateName: String, state: String): Boolean {
         if (automationStates.containsKey(stateName.trim())) {
-            return automationStates.get(stateName.trim()) == state.trim();
+            return automationStates.get(stateName.trim()) == state.trim()
         }
-        return false;
+        return false
     }
 
     fun setState(stateName: String, state: String) {

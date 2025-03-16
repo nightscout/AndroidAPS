@@ -16,11 +16,6 @@ class TriggerProfile(injector: HasAndroidInjector) : Trigger(injector) {
 
     var profileName: InputProfileName = InputProfileName(rh, activePlugin, "")
 
-    constructor(injector: HasAndroidInjector, value: String) : this(injector) {
-        profileName = InputProfileName(rh, activePlugin, value)
-
-    }
-
     constructor(injector: HasAndroidInjector, triggerProfilePercent: TriggerProfile) : this(injector) {
         profileName = InputProfileName(rh, activePlugin, triggerProfilePercent.profileName.value)
     }

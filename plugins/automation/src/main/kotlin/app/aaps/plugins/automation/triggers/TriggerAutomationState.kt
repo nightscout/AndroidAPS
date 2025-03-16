@@ -14,12 +14,12 @@ import org.json.JSONObject
 
 class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var stateName = InputString();
-    var stateValue = InputString();
+    var stateName = InputString()
+    var stateValue = InputString()
 
     private constructor(injector: HasAndroidInjector, stateName: String, stateValue: String) : this(injector) {
-        this.stateName = InputString(stateName);
-        this.stateValue = InputString(stateValue);
+        this.stateName = InputString(stateName)
+        this.stateValue = InputString(stateValue)
     }
 
     override fun shouldRun(): Boolean {
