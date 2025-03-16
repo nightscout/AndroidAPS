@@ -81,7 +81,6 @@
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Varighed</string>
     <string name="action_tempt_confirmation">Midlertidig Mål Anmodet</string>
     <string name="action_quick_wizard_confirmation">Hurtig Guide Anmodet</string>
     <string name="action_treatment_confirmation">Behandling Anmodet</string>
@@ -90,13 +89,8 @@
     <string name="action_fill_confirmation">Fyldning Anmodet</string>
     <string name="action_ecarb_confirmation">Kulhydrater Anmodet</string>
     <string name="action_profile_switch_confirmation">Profilskift anmodet</string>
-    <string name="action_target" comment="In temp target menu, single target value">Mål</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Lav</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Høj</string>
     <string name="action_carbs">Kulhydrater</string>
     <string name="action_ecarbs">Forlængede kulhydrater</string>
-    <string name="action_percentage">Procentdel</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Varighed [h]</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Forvalg 1</string>
@@ -104,7 +98,6 @@
     <string name="action_preset_3">Forvalg 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Fri mængde</string>
     <string name="action_confirm">BEKRÆFT</string>
-    <string name="action_timeshift">tidsforskydning</string>
     <string name="bolus_progress">Bolus Fremskridt</string>
     <string name="press_to_cancel">tryk for at annullere</string>
     <string name="cancel_bolus">ANNULLER BOLUS</string>
