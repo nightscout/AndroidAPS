@@ -83,7 +83,6 @@
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Durată</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
@@ -92,13 +91,8 @@
     <string name="action_fill_confirmation">Completare solicitată</string>
     <string name="action_ecarb_confirmation">Carbohidrați solicitați</string>
     <string name="action_profile_switch_confirmation">Schimbare profil solicitată</string>
-    <string name="action_target" comment="In temp target menu, single target value">Țintă</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Scăzut</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Mare</string>
     <string name="action_carbs">Carbohidrați</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Procentaj</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Durată [h]</string>
     <string name="action_insulin">Insulină</string>
     <string name="action_preset_1">Presetare 1</string>
@@ -106,7 +100,6 @@
     <string name="action_preset_3">Presetare 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantitate liberă</string>
     <string name="action_confirm">CONFIRMARE</string>
-    <string name="action_timeshift">timp</string>
     <string name="bolus_progress">Progres bolus</string>
     <string name="press_to_cancel">apasă pentru a anula</string>
     <string name="cancel_bolus">ANULARE BOLUS</string>
