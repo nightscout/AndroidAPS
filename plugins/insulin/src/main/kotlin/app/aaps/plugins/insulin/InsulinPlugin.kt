@@ -275,12 +275,6 @@ class InsulinPlugin @Inject constructor(
         return iobCalc(bolus, time, iCfg.getPeak().toDouble(), iCfg.getDia())
     }
 
-    override fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob {
-        assert(dia != 0.0)
-        assert(peak != 0)
-        return iobCalc(bolus, time, peak.toDouble(), dia)
-    }
-
     private fun iobCalc(bolus: BS, time: Long, peak: Double, dia: Double): Iob {
         val result = Iob()
         if (bolus.amount != 0.0) {

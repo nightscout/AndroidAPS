@@ -36,7 +36,6 @@ interface Insulin : ConfigExportImport {
     fun insulinList() = ArrayList<CharSequence>()
     fun getOrCreateInsulin(iCfg: ICfg): ICfg
     fun getInsulin(insulinLabel: String): ICfg
-    fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob
     fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob
 
     val iCfg: ICfg

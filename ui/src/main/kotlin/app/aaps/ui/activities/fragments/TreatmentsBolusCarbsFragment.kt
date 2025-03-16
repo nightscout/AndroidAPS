@@ -224,7 +224,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.bolusNs.visibility = (bolus.ids.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = bolus.ids.isPumpHistory().toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
-                val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
+                val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.insulin)
                 if (iob.iobContrib > 0.01) {
                     holder.binding.iob.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.activeColor))
                     holder.binding.iob.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, iob.iobContrib)
