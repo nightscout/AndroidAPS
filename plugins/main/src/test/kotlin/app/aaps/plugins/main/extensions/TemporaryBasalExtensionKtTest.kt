@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.extensions.iobCalc
-import app.aaps.plugins.insulin.InsulinLyumjevPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

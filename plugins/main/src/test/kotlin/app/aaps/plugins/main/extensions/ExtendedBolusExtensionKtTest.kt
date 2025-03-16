@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.objects.extensions.isInProgress
 import app.aaps.core.objects.extensions.toTemporaryBasal
-import app.aaps.plugins.insulin.InsulinLyumjevPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
