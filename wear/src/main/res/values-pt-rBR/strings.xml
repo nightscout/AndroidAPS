@@ -69,7 +69,6 @@
     <string name="menu_default">Padrão</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Duração</string>
     <string name="action_tempt_confirmation">Solicitação de Meta Temporária</string>
     <string name="action_quick_wizard_confirmation">Solicitação do Assistente Rápido</string>
     <string name="action_treatment_confirmation">Solicitação de Tratamento</string>
@@ -78,13 +77,8 @@
     <string name="action_fill_confirmation">Solicitação de preenchimento</string>
     <string name="action_ecarb_confirmation">Solicitação de carboidratos</string>
     <string name="action_profile_switch_confirmation">Solicitação de Alternância de Perfil</string>
-    <string name="action_target" comment="In temp target menu, single target value">Alvo</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Baixa</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Alta</string>
     <string name="action_carbs">Carboidratos</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Porcentagem</string>
-    <string name="action_start_min">Início [min]</string>
     <string name="action_duration_h">Duração [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Predefinição 1</string>
@@ -92,7 +86,6 @@
     <string name="action_preset_3">Predefinição 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Valor livre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">alteração turno</string>
     <string name="bolus_progress">Bolus em andamento</string>
     <string name="press_to_cancel">pressione para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLUS</string>
