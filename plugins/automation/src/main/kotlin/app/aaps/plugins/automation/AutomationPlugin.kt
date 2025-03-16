@@ -83,44 +83,15 @@ import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 import app.aaps.plugins.automation.ui.TimerUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.automation.actions.Action
-import app.aaps.plugins.automation.actions.ActionStopProfilePercent
-import info.nightscout.automation.actions.ActionAlarm
-import info.nightscout.automation.actions.ActionCarePortalEvent
-import info.nightscout.automation.actions.ActionNotification
-import info.nightscout.automation.actions.ActionProfileSwitch
-import info.nightscout.automation.actions.ActionProfileSwitchPercent
-import info.nightscout.automation.actions.ActionRunAutotune
-import info.nightscout.automation.actions.ActionSendSMS
-import info.nightscout.automation.actions.ActionStartTempTarget
-import info.nightscout.automation.actions.ActionStopProcessing
-import info.nightscout.automation.actions.ActionStopTempTarget
+import info.nightscout.automation.actions.*
+import info.nightscout.automation.actions.ActionStopProfilePercent
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDelta
 import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.events.EventLocationChange
 import info.nightscout.automation.services.LocationServiceHelper
-import info.nightscout.automation.triggers.Trigger
-import info.nightscout.automation.triggers.TriggerAutosensValue
-import info.nightscout.automation.triggers.TriggerBTDevice
-import info.nightscout.automation.triggers.TriggerBg
-import info.nightscout.automation.triggers.TriggerBolusAgo
-import info.nightscout.automation.triggers.TriggerCOB
-import info.nightscout.automation.triggers.TriggerConnector
-import info.nightscout.automation.triggers.TriggerDelta
-import info.nightscout.automation.triggers.TriggerHeartRate
-import info.nightscout.automation.triggers.TriggerIob
-import info.nightscout.automation.triggers.TriggerLocation
-import app.aaps.plugins.automation.triggers.TriggerProfile
-import info.nightscout.automation.triggers.TriggerProfilePercent
-import info.nightscout.automation.triggers.TriggerPumpLastConnection
-import info.nightscout.automation.triggers.TriggerRecurringTime
-import info.nightscout.automation.triggers.TriggerTempTarget
-import info.nightscout.automation.triggers.TriggerTempTargetValue
-import info.nightscout.automation.triggers.TriggerTime
-import info.nightscout.automation.triggers.TriggerTimeRange
-import info.nightscout.automation.triggers.TriggerWifiSsid
+import info.nightscout.automation.triggers.*
 import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
@@ -459,6 +430,8 @@ class AutomationPlugin @Inject constructor(
             ActionCarePortalEvent(injector),
             ActionProfileSwitchPercent(injector),
             ActionStopProfilePercent(injector),
+            ActionSetAutomationState(injector), ActionProfileSwitch(injector),
+            ActionRunAutotune(injector),
             ActionProfileSwitch(injector),
             ActionSendSMS(injector)
         )
@@ -480,7 +453,7 @@ class AutomationPlugin @Inject constructor(
             TriggerCOB(injector),
             TriggerProfilePercent(injector),
             TriggerProfile(injector),
-            TriggerTempTarget(injector),
+            TriggerAutomationState(injector), TriggerTempTarget(injector),
             TriggerTempTargetValue(injector),
             TriggerWifiSsid(injector),
             TriggerLocation(injector),

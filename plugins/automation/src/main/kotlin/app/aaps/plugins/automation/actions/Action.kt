@@ -8,6 +8,10 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.triggers.Trigger
 import dagger.android.HasAndroidInjector
+import info.nightscout.automation.triggers.Trigger
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -73,6 +77,7 @@ abstract class Action(val injector: HasAndroidInjector) {
                 ActionSendSMS::class.java.simpleName              -> ActionSendSMS(injector).fromJSON(data.toString())
                 ActionStartTempTarget::class.java.simpleName      -> ActionStartTempTarget(injector).fromJSON(data.toString())
                 ActionStopTempTarget::class.java.simpleName       -> ActionStopTempTarget(injector).fromJSON(data.toString())
+                ActionSetAutomationState::class.java.simpleName   -> ActionSetAutomationState(injector).fromJSON(data.toString())
                 else                                              -> throw ClassNotFoundException(type)
             }
         } catch (e: ClassNotFoundException) {

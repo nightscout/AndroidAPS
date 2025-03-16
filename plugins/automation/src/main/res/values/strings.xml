@@ -149,4 +149,12 @@
     <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
 
+    <!-- State automation -->
+    <string name="set_state">Set automation state</string>
+    <string name="set_state_description">Set automation state %1$s=%2$s</string>
+    <string name="set_state_state_name">"State name: "</string>
+    <string name="set_state_state_val">"State value: "</string>
+    <string name="check_state_name">Check automation state</string>
+    <string name="check_state_description">Check automation state %1$s=%2$s</string>
+
 </resources>
