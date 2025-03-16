@@ -78,7 +78,6 @@
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">משך</string>
     <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
     <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
     <string name="action_user_action_confirmation">נחוצה פעולת משתמש</string>
@@ -88,13 +87,8 @@
     <string name="action_fill_confirmation">התבקש מילוי</string>
     <string name="action_ecarb_confirmation">נדרשו פחמימות</string>
     <string name="action_profile_switch_confirmation">התבקשה החלפת פרופיל</string>
-    <string name="action_target" comment="In temp target menu, single target value">ערך מטרה</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
     <string name="action_carbs">פחמימות</string>
     <string name="action_ecarbs">פחמימות ממושכות</string>
-    <string name="action_percentage">אחוז</string>
-    <string name="action_start_min">התחלה [min]</string>
     <string name="action_duration_h">משך [h]</string>
     <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
@@ -102,7 +96,6 @@
     <string name="action_preset_3">הגדרה מראש 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
-    <string name="action_timeshift">היסט זמן</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
