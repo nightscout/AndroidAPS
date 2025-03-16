@@ -26,7 +26,9 @@
     <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
     <string name="alreadyset">Already set</string>
     <string name="profilepercentage">Profile percentage</string>
+    <string name="profilecheck">Profile check</string>
     <string name="startprofileforever">Start profile %1$d%%</string>
+    <string name="stopprofilepercent">Stop Profile Percentage</string>
     <string name="percent_u">Percent [%]:</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS to all numbers</string>

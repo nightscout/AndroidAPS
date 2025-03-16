@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation.di
+package info.nightscout.automation.di
 
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.plugins.automation.AutomationEventObject
@@ -59,6 +59,55 @@ import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.automation.AutomationEventObject
+import info.nightscout.automation.AutomationFragment
+import info.nightscout.automation.AutomationPlugin
+import info.nightscout.automation.actions.Action
+import info.nightscout.automation.actions.ActionAlarm
+import info.nightscout.automation.actions.ActionCarePortalEvent
+import info.nightscout.automation.actions.ActionDummy
+import info.nightscout.automation.actions.ActionLoopDisable
+import info.nightscout.automation.actions.ActionLoopEnable
+import info.nightscout.automation.actions.ActionLoopResume
+import info.nightscout.automation.actions.ActionLoopSuspend
+import info.nightscout.automation.actions.ActionNotification
+import info.nightscout.automation.actions.ActionProfileSwitch
+import info.nightscout.automation.actions.ActionProfileSwitchPercent
+import info.nightscout.automation.actions.ActionRunAutotune
+import info.nightscout.automation.actions.ActionSendSMS
+import info.nightscout.automation.actions.ActionStartTempTarget
+import info.nightscout.automation.actions.ActionStopProcessing
+import app.aaps.plugins.automation.actions.ActionStopProfilePercent
+import info.nightscout.automation.actions.ActionStopTempTarget
+import info.nightscout.automation.dialogs.ChooseActionDialog
+import info.nightscout.automation.dialogs.ChooseOperationDialog
+import info.nightscout.automation.dialogs.ChooseTriggerDialog
+import info.nightscout.automation.dialogs.EditActionDialog
+import info.nightscout.automation.dialogs.EditEventDialog
+import info.nightscout.automation.dialogs.EditTriggerDialog
+import info.nightscout.automation.services.LocationService
+import info.nightscout.automation.triggers.Trigger
+import info.nightscout.automation.triggers.TriggerAutosensValue
+import info.nightscout.automation.triggers.TriggerBTDevice
+import info.nightscout.automation.triggers.TriggerBg
+import info.nightscout.automation.triggers.TriggerBolusAgo
+import info.nightscout.automation.triggers.TriggerCOB
+import info.nightscout.automation.triggers.TriggerConnector
+import info.nightscout.automation.triggers.TriggerDelta
+import info.nightscout.automation.triggers.TriggerDummy
+import info.nightscout.automation.triggers.TriggerHeartRate
+import info.nightscout.automation.triggers.TriggerIob
+import info.nightscout.automation.triggers.TriggerLocation
+import info.nightscout.automation.triggers.TriggerProfilePercent
+import app.aaps.plugins.automation.triggers.TriggerProfile
+import info.nightscout.automation.triggers.TriggerPumpLastConnection
+import info.nightscout.automation.triggers.TriggerRecurringTime
+import info.nightscout.automation.triggers.TriggerTempTarget
+import info.nightscout.automation.triggers.TriggerTempTargetValue
+import info.nightscout.automation.triggers.TriggerTime
+import info.nightscout.automation.triggers.TriggerTimeRange
+import info.nightscout.automation.triggers.TriggerWifiSsid
+import info.nightscout.interfaces.automation.Automation
 
 @Module(
     includes = [
@@ -96,6 +145,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerIobInjector(): TriggerIob
     @ContributesAndroidInjector abstract fun triggerLocationInjector(): TriggerLocation
     @ContributesAndroidInjector abstract fun triggerProfilePercentInjector(): TriggerProfilePercent
+    @ContributesAndroidInjector abstract fun triggerProfileInjector(): TriggerProfile
     @ContributesAndroidInjector abstract fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
     @ContributesAndroidInjector abstract fun triggerBTDeviceInjector(): TriggerBTDevice
     @ContributesAndroidInjector abstract fun triggerRecurringTimeInjector(): TriggerRecurringTime
@@ -118,6 +168,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionCarePortalEventInjector(): ActionCarePortalEvent
     @ContributesAndroidInjector abstract fun actionProfileSwitchInjector(): ActionProfileSwitch
     @ContributesAndroidInjector abstract fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
+    @ContributesAndroidInjector abstract fun actionStopProfilePercentInjector(): ActionStopProfilePercent
     @ContributesAndroidInjector abstract fun actionRunAutotuneInjector(): ActionRunAutotune
     @ContributesAndroidInjector abstract fun actionSendSMSInjector(): ActionSendSMS
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
