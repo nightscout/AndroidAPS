@@ -80,7 +80,6 @@
     <string name="menu_default">Προεπιλογή</string>
     <string name="menu_menu">Μενού</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Διάρκεια</string>
     <string name="action_tempt_confirmation">Ζητήθηκε Προσωρινός Στόχος</string>
     <string name="action_quick_wizard_confirmation">Ζητήθηκε Γρήγορος Οδηγός</string>
     <string name="action_treatment_confirmation">Ζητήθηκε Θεραπεία</string>
@@ -89,13 +88,8 @@
     <string name="action_fill_confirmation">Ζητήθηκε Συμπλήρωση</string>
     <string name="action_ecarb_confirmation">Αιτούνται Υδατάνθρακες</string>
     <string name="action_profile_switch_confirmation">Ζητήθηκε Αλλαγή Προφίλ</string>
-    <string name="action_target" comment="In temp target menu, single target value">Στόχος</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Χαμηλό</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Υψηλό</string>
     <string name="action_carbs">Υδατάνθρακες</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Ποσοστό</string>
-    <string name="action_start_min">Έναρξη [min]</string>
     <string name="action_duration_h">Διάρκεια [h]</string>
     <string name="action_insulin">Ινσουλίνη</string>
     <string name="action_preset_1">Προεπιλογή 1</string>
@@ -103,7 +97,6 @@
     <string name="action_preset_3">Προεπιλογή 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Ελεύθερη ποσότητα</string>
     <string name="action_confirm">ΕΠΙΒΕΒΑΙΩΣΗ</string>
-    <string name="action_timeshift">αλλαγή ώρας</string>
     <string name="bolus_progress">Πρόοδος Bolus</string>
     <string name="press_to_cancel">πιέστε για ακύρωση</string>
     <string name="cancel_bolus">ΑΚΥΡΩΣΗ BOLUS</string>
