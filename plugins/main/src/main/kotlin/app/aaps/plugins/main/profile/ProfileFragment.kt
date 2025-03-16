@@ -14,6 +14,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -63,6 +64,7 @@ class ProfileFragment : DaggerFragment() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var loop: Loop
+    @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var inMenu = false
@@ -122,7 +124,6 @@ class ProfileFragment : DaggerFragment() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 processVisibility(tab.position)
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
@@ -161,13 +162,12 @@ class ProfileFragment : DaggerFragment() {
         currentProfile.iCfg = insulin
         binding.dia.text = rh.gs(app.aaps.core.ui.R.string.format_hours,insulin.getDia())
         binding.peak.text = rh.gs(app.aaps.core.ui.R.string.mins,insulin.getPeak())
-        //binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
-        //binding.dia.tag = "LP_DIA"
         val insulinList: ArrayList<CharSequence> = insulinPlugin.insulinList()
         context?.let { context ->
             binding.insulinList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, insulinList))
         } ?: return
         binding.insulinList.setText(currentProfile.iCfg.insulinLabel, false)
+        binding.insulinName.text = currentProfile.iCfg.insulinLabel
 
         TimeListEdit(
             requireContext(),
@@ -380,6 +380,8 @@ class ProfileFragment : DaggerFragment() {
             .toObservable(EventLocalProfileChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ build() }, fabricPrivacy::logException)
+        binding.insulinRow.visibility = config.AAPSCLIENT.toVisibility()
+        binding.insulinMenu.visibility = (!config.AAPSCLIENT).toVisibility()
         build()
     }
 
