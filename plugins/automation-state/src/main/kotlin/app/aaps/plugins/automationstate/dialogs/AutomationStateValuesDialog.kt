@@ -133,7 +133,7 @@ class AutomationStateValuesDialog : DaggerDialogFragment() {
             if (stateValue == currentStateValue) {
                 holder.binding.stateValue.setBackgroundResource(R.drawable.automation_state_active_background)
             } else {
-                holder.binding.stateValue.setBackgroundResource(android.R.color.transparent)
+                holder.binding.stateValue.setBackgroundResource(R.drawable.automation_state_background)
             }
             
             // Set click listener to set this value as the current state
