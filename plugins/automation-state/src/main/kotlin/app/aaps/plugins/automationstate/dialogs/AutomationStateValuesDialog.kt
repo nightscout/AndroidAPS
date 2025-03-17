@@ -59,8 +59,12 @@ class AutomationStateValuesDialog : DaggerDialogFragment() {
         binding.dialogTitle.text = "${rh.gs(R.string.automation_state_values)}: $stateName"
 
         adapter = StateValuesAdapter { position ->
-            stateValues.removeAt(position)
-            adapter.notifyItemRemoved(position)
+            if (stateValues.size > 1) {
+                stateValues.removeAt(position)
+                adapter.notifyItemRemoved(position)
+            } else {
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.automation_state_last_value_cannot_be_deleted))
+            }
         }
 
         binding.stateValuesList.apply {
@@ -103,6 +107,18 @@ class AutomationStateValuesDialog : DaggerDialogFragment() {
 
         binding.cancelButton.setOnClickListener {
             dismiss()
+        }
+
+        binding.deleteStateButton.setOnClickListener {
+            context?.let { ctx ->
+                OKDialog.showConfirmation(ctx, rh.gs(R.string.delete_state), rh.gs(R.string.delete_state_confirmation), 
+                    Runnable {
+                        // Delete the state and its values
+                        automationStateService.deleteState(stateName)
+                        rxBus.send(EventPreferenceChange(rh.gs(R.string.automation_state_values)))
+                        dismiss()
+                    })
+            }
         }
 
         // Load existing values

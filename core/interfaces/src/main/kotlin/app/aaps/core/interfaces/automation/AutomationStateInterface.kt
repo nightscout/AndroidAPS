@@ -49,4 +49,9 @@ interface AutomationStateInterface {
      */
     fun hasStateValues(stateName: String): Boolean
 
+    /**
+     * Delete a state and its values
+     * @param stateName The name of the state to delete
+     */
+    fun deleteState(stateName: String)
 } 

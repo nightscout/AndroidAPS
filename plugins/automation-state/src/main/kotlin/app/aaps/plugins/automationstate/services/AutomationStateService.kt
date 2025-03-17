@@ -86,4 +86,12 @@ class AutomationStateService  @Inject constructor(
    override fun hasStateValues(stateName: String): Boolean {
         return stateValues.containsKey(stateName.trim())
     }
+
+   override fun deleteState(stateName: String) {
+        val trimmedName = stateName.trim()
+        automationStates.remove(trimmedName)
+        stateValues.remove(trimmedName)
+        sp.putString(spKey, Json.encodeToString(automationStates))
+        sp.putString(stateValuesKey, Json.encodeToString(stateValues))
+    }
 }
