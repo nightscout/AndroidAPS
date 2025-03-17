@@ -164,6 +164,7 @@
     <string name="description_automation_states">View and monitor automation state variables</string>
     <string name="automation_state_values">Automation State Values</string>
     <string name="enter_state_value">Enter state value</string>
+    <string name="automation_state_missing_name_value">Please enter a state name </string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="add_automation_state">Add Automation State</string>

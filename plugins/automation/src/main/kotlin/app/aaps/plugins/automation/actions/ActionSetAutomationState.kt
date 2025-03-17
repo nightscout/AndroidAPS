@@ -10,37 +10,38 @@ import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.elements.InputDropdownState
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.services.AutomationStateService
+import app.aaps.plugins.automation.elements.InputDropdownState as AutomationStateInputDropdownState
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
+import app.aaps.core.interfaces.automation.AutomationStateInterface
 
 class ActionSetAutomationState(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var automationState: AutomationStateService
+    @Inject lateinit var automationState: AutomationStateInterface
 
     // Keep these for backwards compatibility with saved automations
     private var inputStateName = InputString()
     private var inputState = InputString()
 
-    private var stateNameDropdown: InputDropdownState
-    private var stateValueDropdown: InputDropdownState
+    private var stateNameDropdown: AutomationStateInputDropdownState
+    private var stateValueDropdown: AutomationStateInputDropdownState
 
     init {
         injector.androidInjector().inject(this)
         
-        stateNameDropdown = InputDropdownState(rh, automationState) { stateName ->
+        stateNameDropdown = AutomationStateInputDropdownState(rh, automationState) { stateName ->
             updateStateValueDropdown(stateName)
         }
-        stateValueDropdown = InputDropdownState(rh, automationState)
+        stateValueDropdown = AutomationStateInputDropdownState(rh, automationState)
         
         // Populate state names dropdown with all available states
         val allStates = automationState.getAllStates()
         val stateNames = allStates.map { it.first }.distinct().toMutableList()
         
         // Add all states that have defined values but may not have a current value
-        automationState.stateValues.keys.forEach { stateName ->
+        automationState.getAllStates().forEach { (stateName,_) ->
             if (!stateNames.contains(stateName)) {
                 stateNames.add(stateName)
             }

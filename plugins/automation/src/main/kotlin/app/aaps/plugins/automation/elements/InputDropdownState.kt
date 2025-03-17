@@ -7,11 +7,11 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.plugins.automation.services.AutomationStateService
+import app.aaps.core.interfaces.automation.AutomationStateInterface
 
 class InputDropdownState(
     private val rh: ResourceHelper,
-    val automationStateService: AutomationStateService? = null,
+    val automationStateService: AutomationStateInterface? = null,
     val onValueSelected: ((String) -> Unit)? = null
 ) : Element {
 
@@ -19,7 +19,7 @@ class InputDropdownState(
     var values: List<String> = listOf()
     private var spinner: Spinner? = null
 
-    constructor(rh: ResourceHelper, automationStateService: AutomationStateService?, name: String, onValueSelected: ((String) -> Unit)? = null) : 
+    constructor(rh: ResourceHelper, automationStateService: AutomationStateInterface?, name: String, onValueSelected: ((String) -> Unit)? = null) :
         this(rh, automationStateService, onValueSelected) {
         value = name
     }
@@ -30,7 +30,7 @@ class InputDropdownState(
     fun getStateValues(stateName: String): List<String> {
         return automationStateService?.getStateValues(stateName) ?: emptyList()
     }
-    
+
     /**
      * Check if automationStateService has values for a state
      */

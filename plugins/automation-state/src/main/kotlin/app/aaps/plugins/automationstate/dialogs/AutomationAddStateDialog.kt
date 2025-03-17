@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation.dialogs
+package app.aaps.plugins.automationstate.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.databinding.AutomationAddStateDialogBinding
-import app.aaps.plugins.automation.services.AutomationStateService
+import app.aaps.plugins.automationstate.R
+import app.aaps.plugins.automationstate.databinding.AutomationAddStateDialogBinding
+import app.aaps.plugins.automationstate.services.AutomationStateService
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class AutomationAddStateDialog : DaggerDialogFragment() {
         binding.okButton.setOnClickListener {
             val stateName = binding.stateNameInput.text.toString().trim()
             if (stateName.isEmpty()) {
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.automation_missing_task_name))
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.automation_state_missing_name_value))
                 return@setOnClickListener
             }
 

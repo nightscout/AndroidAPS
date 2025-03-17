@@ -1,14 +1,15 @@
-package app.aaps.plugins.automation.services
+package app.aaps.plugins.automationstate.services
 
+import app.aaps.core.interfaces.automation.AutomationStateInterface
 import app.aaps.core.interfaces.sharedPreferences.SP
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AutomationStateService @Inject constructor(
+class AutomationStateService  @Inject constructor(
     private val sp: SP
-) {
+) : AutomationStateInterface {
 
     private var automationStates: HashMap<String, String> = HashMap()
     var stateValues: HashMap<String, List<String>> = HashMap()
@@ -32,14 +33,14 @@ class AutomationStateService @Inject constructor(
         }
     }
 
-    fun inState(stateName: String, state: String): Boolean {
+   override fun inState(stateName: String, state: String): Boolean {
         if (automationStates.containsKey(stateName.trim())) {
             return automationStates[stateName.trim()] == state.trim()
         }
         return false
     }
 
-    fun setState(stateName: String, state: String) {
+   override fun setState(stateName: String, state: String) {
         val trimmedName = stateName.trim()
         val trimmedState = state.trim()
         
@@ -53,7 +54,7 @@ class AutomationStateService @Inject constructor(
         sp.putString(spKey, Json.encodeToString(automationStates))
     }
 
-    fun getAllStates(): List<Pair<String, String>> {
+   override fun getAllStates(): List<Pair<String, String>> {
         return automationStates.toList()
     }
 
@@ -62,11 +63,11 @@ class AutomationStateService @Inject constructor(
         sp.putString(spKey, "{}")
     }
 
-    fun getStateValues(stateName: String): List<String> {
+   override fun getStateValues(stateName: String): List<String> {
         return stateValues[stateName.trim()] ?: emptyList()
     }
 
-    fun setStateValues(stateName: String, values: List<String>) {
+   override fun setStateValues(stateName: String, values: List<String>) {
         val trimmedName = stateName.trim()
         val trimmedValues = values.map { it.trim() }
         
@@ -82,7 +83,7 @@ class AutomationStateService @Inject constructor(
         sp.putString(stateValuesKey, Json.encodeToString(stateValues))
     }
 
-    fun hasStateValues(stateName: String): Boolean {
+   override fun hasStateValues(stateName: String): Boolean {
         return stateValues.containsKey(stateName.trim())
     }
 }

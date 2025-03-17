@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation.dialogs
+package app.aaps.plugins.automationstate.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.databinding.AutomationStateDialogBinding
-import app.aaps.plugins.automation.databinding.AutomationStateValueItemBinding
-import app.aaps.plugins.automation.services.AutomationStateService
+import app.aaps.plugins.automationstate.R
+import app.aaps.plugins.automationstate.databinding.AutomationStateDialogBinding
+import app.aaps.plugins.automationstate.databinding.AutomationStateValueItemBinding
+import app.aaps.plugins.automationstate.services.AutomationStateService
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 

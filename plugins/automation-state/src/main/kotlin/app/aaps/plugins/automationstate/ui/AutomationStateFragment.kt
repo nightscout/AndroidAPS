@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation.ui
+package app.aaps.plugins.automationstate.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,12 +19,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.databinding.AutomationStateFragmentBinding
-import app.aaps.plugins.automation.databinding.AutomationStateItemBinding
-import app.aaps.plugins.automation.dialogs.AutomationAddStateDialog
-import app.aaps.plugins.automation.dialogs.AutomationStateValuesDialog
-import app.aaps.plugins.automation.services.AutomationStateService
+import app.aaps.plugins.automationstate.R
+import app.aaps.plugins.automationstate.databinding.AutomationStateFragmentBinding
+import app.aaps.plugins.automationstate.databinding.AutomationStateItemBinding
+import app.aaps.plugins.automationstate.dialogs.AutomationAddStateDialog
+import app.aaps.plugins.automationstate.dialogs.AutomationStateValuesDialog
+import app.aaps.plugins.automationstate.services.AutomationStateService
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

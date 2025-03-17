@@ -1,11 +1,11 @@
-package app.aaps.plugins.automation
+package app.aaps.plugins.automationstate
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.plugins.automation.ui.AutomationStateFragment
+import app.aaps.plugins.automationstate.ui.AutomationStateFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,4 +24,4 @@ class AutomationStatePlugin @Inject constructor(
         .enableByDefault(true)
         .visibleByDefault(true),
     aapsLogger, rh
-)
+) 

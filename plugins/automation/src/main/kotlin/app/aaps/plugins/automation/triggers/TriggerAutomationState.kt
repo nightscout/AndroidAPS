@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
+import app.aaps.core.interfaces.automation.AutomationStateInterface
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -12,8 +13,11 @@ import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.util.Optional
+import javax.inject.Inject
 
 class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
+
+    @Inject lateinit var automationStateService: AutomationStateInterface
 
     // Keep these for backwards compatibility with saved automations
     var stateName = InputString()
@@ -45,7 +49,7 @@ class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
         val stateNames = allStates.map { it.first }.distinct().toMutableList()
         
         // Add all states that have defined values but may not have a current value
-        automationStateService.stateValues.keys.forEach { stateName ->
+        automationStateService.getAllStates().forEach { (stateName,_) ->
             if (!stateNames.contains(stateName)) {
                 stateNames.add(stateName)
             }
