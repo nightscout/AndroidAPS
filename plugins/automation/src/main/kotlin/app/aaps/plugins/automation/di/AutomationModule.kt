@@ -1,4 +1,4 @@
-package info.nightscout.automation.di
+package app.aaps.plugins.automation.di
 
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.plugins.automation.AutomationEventObject
@@ -6,7 +6,6 @@ import app.aaps.plugins.automation.AutomationFragment
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
-import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionDummy
 import app.aaps.plugins.automation.actions.ActionLoopDisable
@@ -18,8 +17,11 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionSendSMS
+import app.aaps.plugins.automation.actions.ActionSetAutomationState
+import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
+import app.aaps.plugins.automation.actions.ActionStopProfilePercent
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
 import app.aaps.plugins.automation.dialogs.ChooseActionDialog
 import app.aaps.plugins.automation.dialogs.ChooseOperationDialog
@@ -29,6 +31,7 @@ import app.aaps.plugins.automation.dialogs.EditEventDialog
 import app.aaps.plugins.automation.dialogs.EditTriggerDialog
 import app.aaps.plugins.automation.services.LocationService
 import app.aaps.plugins.automation.triggers.Trigger
+import app.aaps.plugins.automation.triggers.TriggerAutomationState
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
@@ -43,6 +46,7 @@ import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerPodChange
+import app.aaps.plugins.automation.triggers.TriggerProfile
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
@@ -59,15 +63,6 @@ import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.automation.AutomationEventObject
-import info.nightscout.automation.AutomationFragment
-import info.nightscout.automation.AutomationPlugin
-import info.nightscout.automation.actions.*
-import info.nightscout.automation.actions.ActionStopProfilePercent
-import info.nightscout.automation.dialogs.*
-import info.nightscout.automation.services.LocationService
-import info.nightscout.automation.triggers.*
-import info.nightscout.interfaces.automation.Automation
 
 @Module(
     includes = [

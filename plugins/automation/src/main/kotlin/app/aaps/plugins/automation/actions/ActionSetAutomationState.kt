@@ -1,18 +1,16 @@
-package info.nightscout.automation.actions
+package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.elements.InputString
+import app.aaps.plugins.automation.elements.LabelWithElement
+import app.aaps.plugins.automation.elements.LayoutBuilder
+import app.aaps.plugins.automation.services.AutomationStateService
 import dagger.android.HasAndroidInjector
-import info.nightscout.automation.R
-import info.nightscout.automation.elements.InputString
-import info.nightscout.automation.elements.LabelWithElement
-import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.automation.services.AutomationStateService
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -20,7 +18,6 @@ class ActionSetAutomationState(injector: HasAndroidInjector) : Action(injector) 
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var automationState: AutomationStateService
-    @Inject lateinit var uel: UserEntryLogger
 
     private var inputStateName = InputString()
     private var inputState = InputString()
@@ -29,12 +26,12 @@ class ActionSetAutomationState(injector: HasAndroidInjector) : Action(injector) 
 
     //TODO: make this display the value of state
     override fun shortDescription(): String = rh.gs(R.string.set_state_description, inputStateName.value, inputState.value)
-    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_reorder_gray_24dp
+    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_reorder_gray_24dp
     override fun isValid(): Boolean = true // empty alarm will show app name
 
     override fun doAction(callback: Callback) {
         automationState.setState(inputStateName.value, inputState.value)
-        callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+        callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

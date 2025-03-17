@@ -1,7 +1,6 @@
-package info.nightscout.automation.services
+package app.aaps.plugins.automation.services
 
-import info.nightscout.shared.sharedPreferences.SP
-import kotlinx.serialization.encodeToString
+import app.aaps.core.interfaces.sharedPreferences.SP
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton

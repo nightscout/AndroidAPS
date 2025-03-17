@@ -1,16 +1,16 @@
-package info.nightscout.automation.triggers
+package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
-import com.google.common.base.Optional
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.elements.InputProfileName
+import app.aaps.plugins.automation.elements.LabelWithElement
+import app.aaps.plugins.automation.elements.LayoutBuilder
+import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
-import info.nightscout.automation.R
-import info.nightscout.automation.elements.InputProfileName
-import info.nightscout.automation.elements.LabelWithElement
-import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
+import java.util.Optional
 
 class TriggerProfile(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -52,7 +52,7 @@ class TriggerProfile(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         "${rh.gs(R.string.profilecheck)}: ${profileName.value}"
 
-    override fun icon(): Optional<Int> = Optional.of(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
 
     override fun duplicate(): Trigger = TriggerProfile(injector, this)
 
