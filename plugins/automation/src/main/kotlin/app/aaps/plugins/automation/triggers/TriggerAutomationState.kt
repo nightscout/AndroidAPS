@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.automation.AutomationStateInterface
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.elements.InputDropdownState
+import app.aaps.plugins.automation.elements.InputDropdownMenu
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
@@ -23,12 +23,12 @@ class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
     var stateName = InputString()
     var stateValue = InputString()
 
-    private var stateNameDropdown: InputDropdownState
-    private var stateValueDropdown: InputDropdownState
+    private var stateNameDropdown: InputDropdownMenu
+    private var stateValueDropdown: InputDropdownMenu
 
     private constructor(injector: HasAndroidInjector, stateName: String, stateValue: String) : this(injector) {
         injector.androidInjector().inject(this)
-        
+
         this.stateName.value = stateName
         this.stateValue.value = stateValue
         this.stateNameDropdown.value = stateName
@@ -38,27 +38,27 @@ class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
 
     init {
         injector.androidInjector().inject(this)
-        
-        stateNameDropdown = InputDropdownState(rh, automationStateService) { stateName ->
+
+        stateNameDropdown = InputDropdownMenu(rh) { stateName ->
             updateStateValueDropdown(stateName)
         }
-        stateValueDropdown = InputDropdownState(rh, automationStateService)
-        
+        stateValueDropdown = InputDropdownMenu(rh)
+
         // Populate state names dropdown with all available states
         val allStates = automationStateService.getAllStates()
         val stateNames = allStates.map { it.first }.distinct().toMutableList()
-        
+
         // Add all states that have defined values but may not have a current value
-        automationStateService.getAllStates().forEach { (stateName,_) ->
+        automationStateService.getAllStates().forEach { (stateName, _) ->
             if (!stateNames.contains(stateName)) {
                 stateNames.add(stateName)
             }
         }
-        
+
         if (stateNames.isNotEmpty()) {
             stateNameDropdown.values = stateNames
             stateNameDropdown.updateAdapter()
-            
+
             // Initialize state values dropdown if we have states
             updateStateValueDropdown(stateNameDropdown.value)
         }
@@ -96,14 +96,14 @@ class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
         val d = JSONObject(data)
         val stateName = JsonHelper.safeGetString(d, "stateName", "")
         val stateValue = JsonHelper.safeGetString(d, "stateValue", "")
-        
+
         // For backward compatibility
         this.stateName.value = stateName
         this.stateValue.value = stateValue
-        
+
         // Set the dropdown values
         stateNameDropdown.value = stateName
-        
+
         // Make sure we have values loaded for this state
         if (automationStateService.hasStateValues(stateName)) {
             updateStateValueDropdown(stateName)

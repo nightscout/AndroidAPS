@@ -2,55 +2,49 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.interfaces.automation.AutomationStateInterface
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.elements.InputDropdownState
+import app.aaps.plugins.automation.elements.InputDropdownMenu
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.InputDropdownState as AutomationStateInputDropdownState
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
-import app.aaps.core.interfaces.automation.AutomationStateInterface
 
 class ActionSetAutomationState(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var automationState: AutomationStateInterface
 
-    // Keep these for backwards compatibility with saved automations
-    private var inputStateName = InputString()
-    private var inputState = InputString()
-
-    private var stateNameDropdown: AutomationStateInputDropdownState
-    private var stateValueDropdown: AutomationStateInputDropdownState
+    private var stateNameDropdown: InputDropdownMenu
+    private var stateValueDropdown: InputDropdownMenu
 
     init {
         injector.androidInjector().inject(this)
-        
-        stateNameDropdown = AutomationStateInputDropdownState(rh, automationState) { stateName ->
+
+        stateNameDropdown = InputDropdownMenu(rh) { stateName ->
             updateStateValueDropdown(stateName)
         }
-        stateValueDropdown = AutomationStateInputDropdownState(rh, automationState)
-        
+        stateValueDropdown = InputDropdownMenu(rh)
+
         // Populate state names dropdown with all available states
         val allStates = automationState.getAllStates()
         val stateNames = allStates.map { it.first }.distinct().toMutableList()
-        
+
         // Add all states that have defined values but may not have a current value
-        automationState.getAllStates().forEach { (stateName,_) ->
+        automationState.getAllStates().forEach { (stateName, _) ->
             if (!stateNames.contains(stateName)) {
                 stateNames.add(stateName)
             }
         }
-        
+
         if (stateNames.isNotEmpty()) {
             stateNameDropdown.values = stateNames
             stateNameDropdown.updateAdapter()
-            
+
             // Initialize state values dropdown if we have states
             updateStateValueDropdown(stateNameDropdown.value)
         }
@@ -70,9 +64,9 @@ class ActionSetAutomationState(injector: HasAndroidInjector) : Action(injector) 
     override fun friendlyName(): Int = R.string.set_state
 
     override fun shortDescription(): String = rh.gs(R.string.set_state_description, stateNameDropdown.value, stateValueDropdown.value)
-    
+
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_reorder_gray_24dp
-    
+
     override fun isValid(): Boolean = stateNameDropdown.value.isNotEmpty() && stateValueDropdown.value.isNotEmpty()
 
     override fun doAction(callback: Callback) {
@@ -94,15 +88,15 @@ class ActionSetAutomationState(injector: HasAndroidInjector) : Action(injector) 
         val o = JSONObject(data)
         val stateName = JsonHelper.safeGetString(o, "inputStateName", "")
         val stateValue = JsonHelper.safeGetString(o, "inputState", "")
-        
+
         stateNameDropdown.value = stateName
-        
+
         // Make sure we have values loaded for this state
         if (automationState.hasStateValues(stateName)) {
             updateStateValueDropdown(stateName)
             stateValueDropdown.value = stateValue
         }
-        
+
         return this
     }
 
