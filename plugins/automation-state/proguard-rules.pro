@@ -19,18 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# Keep the R class and its fields
--keep class **.R$* {
-    *;
-}
-
-# Keep the AutomationStatePlugin class
--keep class app.aaps.plugins.automationstate.AutomationStatePlugin {
-    *;
-}
-
-# Keep the AutomationStateService class
--keep class app.aaps.plugins.automationstate.services.AutomationStateService {
-    *;
-} 
