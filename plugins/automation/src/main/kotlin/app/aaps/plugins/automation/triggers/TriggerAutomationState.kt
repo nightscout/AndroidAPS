@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.elements.InputDropdownState
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
@@ -14,16 +15,64 @@ import java.util.Optional
 
 class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
 
+    // Keep these for backwards compatibility with saved automations
     var stateName = InputString()
     var stateValue = InputString()
 
+    private var stateNameDropdown: InputDropdownState
+    private var stateValueDropdown: InputDropdownState
+
     private constructor(injector: HasAndroidInjector, stateName: String, stateValue: String) : this(injector) {
-        this.stateName = InputString(stateName)
-        this.stateValue = InputString(stateValue)
+        injector.androidInjector().inject(this)
+        
+        this.stateName.value = stateName
+        this.stateValue.value = stateValue
+        this.stateNameDropdown.value = stateName
+        updateStateValueDropdown(stateName)
+        this.stateValueDropdown.value = stateValue
+    }
+
+    init {
+        injector.androidInjector().inject(this)
+        
+        stateNameDropdown = InputDropdownState(rh, automationStateService) { stateName ->
+            updateStateValueDropdown(stateName)
+        }
+        stateValueDropdown = InputDropdownState(rh, automationStateService)
+        
+        // Populate state names dropdown with all available states
+        val allStates = automationStateService.getAllStates()
+        val stateNames = allStates.map { it.first }.distinct().toMutableList()
+        
+        // Add all states that have defined values but may not have a current value
+        automationStateService.stateValues.keys.forEach { stateName ->
+            if (!stateNames.contains(stateName)) {
+                stateNames.add(stateName)
+            }
+        }
+        
+        if (stateNames.isNotEmpty()) {
+            stateNameDropdown.values = stateNames
+            stateNameDropdown.updateAdapter()
+            
+            // Initialize state values dropdown if we have states
+            updateStateValueDropdown(stateNameDropdown.value)
+        }
+    }
+
+    private fun updateStateValueDropdown(stateName: String) {
+        if (stateName.isNotEmpty()) {
+            val stateValues = automationStateService.getStateValues(stateName)
+            stateValueDropdown.values = stateValues
+            stateValueDropdown.updateAdapter()
+        } else {
+            stateValueDropdown.values = emptyList()
+            stateValueDropdown.updateAdapter()
+        }
     }
 
     override fun shouldRun(): Boolean {
-        val shouldExecute = automationStateService.inState(stateName.value, stateValue.value)
+        val shouldExecute = automationStateService.inState(stateNameDropdown.value, stateValueDropdown.value)
 
         if (shouldExecute) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -36,30 +85,43 @@ class TriggerAutomationState(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun dataJSON(): JSONObject =
         JSONObject()
-            .put("stateName", stateName.value)
-            .put("stateValue", stateValue.value)
+            .put("stateName", stateNameDropdown.value)
+            .put("stateValue", stateValueDropdown.value)
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        stateName.value = JsonHelper.safeGetString(d, "stateName", "")
-        stateValue.value = JsonHelper.safeGetString(d, "stateValue", "")
+        val stateName = JsonHelper.safeGetString(d, "stateName", "")
+        val stateValue = JsonHelper.safeGetString(d, "stateValue", "")
+        
+        // For backward compatibility
+        this.stateName.value = stateName
+        this.stateValue.value = stateValue
+        
+        // Set the dropdown values
+        stateNameDropdown.value = stateName
+        
+        // Make sure we have values loaded for this state
+        if (automationStateService.hasStateValues(stateName)) {
+            updateStateValueDropdown(stateName)
+            stateValueDropdown.value = stateValue
+        }
         return this
     }
 
     override fun friendlyName(): Int = R.string.check_state_name
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.check_state_description, stateName.value, stateValue.value)
+        rh.gs(R.string.check_state_description, stateNameDropdown.value, stateValueDropdown.value)
 
     override fun icon(): Optional<Int> = Optional.of(app.aaps.core.ui.R.drawable.ic_reorder_gray_24dp)
 
-    override fun duplicate(): Trigger = TriggerAutomationState(injector, this.stateName.value, this.stateValue.value)
+    override fun duplicate(): Trigger = TriggerAutomationState(injector, this.stateNameDropdown.value, this.stateValueDropdown.value)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.check_state_name, this))
-            .add(LabelWithElement(rh, "State name:", "", stateName))
-            .add(LabelWithElement(rh, "State value:", "", stateValue))
+            .add(LabelWithElement(rh, rh.gs(R.string.state_name_label), "", stateNameDropdown))
+            .add(LabelWithElement(rh, rh.gs(R.string.state_value_label), "", stateValueDropdown))
             .build(root)
     }
 }

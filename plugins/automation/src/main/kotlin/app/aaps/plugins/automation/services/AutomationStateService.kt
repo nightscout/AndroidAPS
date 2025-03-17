@@ -5,24 +5,33 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
-//TODO: I'm hoping that this will make this an actual singleton
-//I think the issue i was having, is that each automation would end up with their own instance of this class, and the state would end up out of sync ofcourse
-
 @Singleton
 class AutomationStateService @Inject constructor(
     private val sp: SP
 ) {
 
     private var automationStates: HashMap<String, String> = HashMap()
+    var stateValues: HashMap<String, List<String>> = HashMap()
+        private set
     private val spKey = "automation_state_service"
+    private val stateValuesKey = "automation_state_values"
 
     init {
         val string = sp.getString(spKey, "{}")
+        try {
+            automationStates = Json.decodeFromString(string)
+        } catch (e: Exception) {
+            automationStates = HashMap()
+        }
 
-        automationStates = Json.decodeFromString(string)
+        val valuesString = sp.getString(stateValuesKey, "{}")
+        try {
+            stateValues = Json.decodeFromString(valuesString)
+        } catch (e: Exception) {
+            stateValues = HashMap()
+        }
     }
 
-    //check if we are in a particular state or not
     fun inState(stateName: String, state: String): Boolean {
         if (automationStates.containsKey(stateName.trim())) {
             return automationStates[stateName.trim()] == state.trim()
@@ -31,7 +40,49 @@ class AutomationStateService @Inject constructor(
     }
 
     fun setState(stateName: String, state: String) {
-        automationStates[stateName.trim()] = state.trim()
+        val trimmedName = stateName.trim()
+        val trimmedState = state.trim()
+        
+        // Validate that the state value is in the allowed list
+        if (stateValues.containsKey(trimmedName) && 
+            !stateValues[trimmedName]!!.contains(trimmedState)) {
+            throw IllegalArgumentException("Invalid state value: $trimmedState")
+        }
+        
+        automationStates[trimmedName] = trimmedState
         sp.putString(spKey, Json.encodeToString(automationStates))
+    }
+
+    fun getAllStates(): List<Pair<String, String>> {
+        return automationStates.toList()
+    }
+
+    fun clearStates() {
+        automationStates.clear()
+        sp.putString(spKey, "{}")
+    }
+
+    fun getStateValues(stateName: String): List<String> {
+        return stateValues[stateName.trim()] ?: emptyList()
+    }
+
+    fun setStateValues(stateName: String, values: List<String>) {
+        val trimmedName = stateName.trim()
+        val trimmedValues = values.map { it.trim() }
+        
+        // If there's a current state value that's not in the new values list,
+        // clear the current state
+        val currentState = automationStates[trimmedName]
+        if (currentState != null && !trimmedValues.contains(currentState)) {
+            automationStates.remove(trimmedName)
+            sp.putString(spKey, Json.encodeToString(automationStates))
+        }
+        
+        stateValues[trimmedName] = trimmedValues
+        sp.putString(stateValuesKey, Json.encodeToString(stateValues))
+    }
+
+    fun hasStateValues(stateName: String): Boolean {
+        return stateValues.containsKey(stateName.trim())
     }
 }

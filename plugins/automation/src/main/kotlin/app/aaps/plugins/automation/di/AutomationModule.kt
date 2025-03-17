@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.plugins.automation.AutomationEventObject
 import app.aaps.plugins.automation.AutomationFragment
 import app.aaps.plugins.automation.AutomationPlugin
+import app.aaps.plugins.automation.AutomationStatePlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -23,6 +24,8 @@ import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopProfilePercent
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.dialogs.AutomationAddStateDialog
+import app.aaps.plugins.automation.dialogs.AutomationStateValuesDialog
 import app.aaps.plugins.automation.dialogs.ChooseActionDialog
 import app.aaps.plugins.automation.dialogs.ChooseOperationDialog
 import app.aaps.plugins.automation.dialogs.ChooseTriggerDialog
@@ -60,6 +63,7 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
+import app.aaps.plugins.automation.ui.AutomationStateFragment
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -73,12 +77,15 @@ import dagger.android.ContributesAndroidInjector
 abstract class AutomationModule {
 
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
+    @ContributesAndroidInjector abstract fun contributesAutomationStateFragment(): AutomationStateFragment
     @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
     @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
     @ContributesAndroidInjector abstract fun contributesChooseOperationDialog(): ChooseOperationDialog
     @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
     @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
     @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
+    @ContributesAndroidInjector abstract fun contributesAutomationAddStateDialog(): AutomationAddStateDialog
+    @ContributesAndroidInjector abstract fun contributesAutomationStateValuesDialog(): AutomationStateValuesDialog
     @ContributesAndroidInjector abstract fun automationEventInjector(): AutomationEventObject
 
     @ContributesAndroidInjector abstract fun triggerInjector(): Trigger
@@ -135,7 +142,6 @@ abstract class AutomationModule {
 
     @Module
     interface Bindings {
-
         @Binds fun bindAutomation(automationPlugin: AutomationPlugin): Automation
     }
 }

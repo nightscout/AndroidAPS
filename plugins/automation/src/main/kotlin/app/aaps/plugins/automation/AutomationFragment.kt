@@ -39,6 +39,7 @@ import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.automation.databinding.AutomationEventItemBinding
 import app.aaps.plugins.automation.databinding.AutomationFragmentBinding
+import app.aaps.plugins.automation.dialogs.AutomationAddStateDialog
 import app.aaps.plugins.automation.dialogs.EditEventDialog
 import app.aaps.plugins.automation.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
@@ -63,6 +64,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
 
         const val ID_MENU_ADD = 504
         const val ID_MENU_RUN = 505
+        const val ID_MENU_ADD_STATE = 506
     }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -99,6 +101,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         actionHelper.onCreateOptionsMenu(menu, inflater)
         menu.add(Menu.FIRST, ID_MENU_ADD, 0, rh.gs(R.string.add_automation)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.run_automations)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_ADD_STATE, 0, rh.gs(R.string.add_automation_state)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         MenuCompat.setGroupDividerEnabled(menu, true)
     }
 
@@ -112,6 +115,11 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
 
             ID_MENU_ADD -> {
                 add()
+                true
+            }
+
+            ID_MENU_ADD_STATE -> {
+                addState()
                 true
             }
 
@@ -313,5 +321,10 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
                 putInt("position", -1) // New event
             }
         }.show(childFragmentManager, "EditEventDialog")
+    }
+
+    private fun addState() {
+        actionHelper.finish()
+        AutomationAddStateDialog.newInstance().show(childFragmentManager, "AutomationAddStateDialog")
     }
 }
