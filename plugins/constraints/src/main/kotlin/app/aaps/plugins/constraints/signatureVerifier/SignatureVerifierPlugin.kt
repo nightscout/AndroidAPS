@@ -203,7 +203,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     @Throws(IOException::class)
-    private fun readInputStream(inputStream: InputStream): String {
+    fun readInputStream(inputStream: InputStream): String {
         return try {
             val os = ByteArrayOutputStream()
             val buffer = ByteArray(1024)

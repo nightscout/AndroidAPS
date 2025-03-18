@@ -7,13 +7,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Освободете поне %1$d MB в паметта на телефона! Цикъл изключен!</string>
     <!-- Version Checker -->
-    <string name="old_version">стара версия</string>
-    <string name="very_old_version">много стара версия</string>
     <string name="application_expired">Приложението е твърде старо!</string>
-    <string name="new_version_warning">Не е проверявано за нова версия от %1$d дни! Връщане към LGS след %2$d дни, loop ще бъде изключен след %3$d дни. Възстановете интернет връзката!</string>
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
-    <string name="version_expire">Версия %1$s изтича на %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Рекалкулирани използвани данни</string>

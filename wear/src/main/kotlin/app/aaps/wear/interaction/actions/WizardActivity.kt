@@ -47,7 +47,7 @@ class WizardActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
                 val initValue = SafeParse.stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
-                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), false, getString(R.string.action_carbs))
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), false, getString(R.string.action_carbs_gram))
                 container.addView(view)
                 view.requestFocus()
                 view

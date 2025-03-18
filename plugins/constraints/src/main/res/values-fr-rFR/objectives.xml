@@ -20,6 +20,7 @@
     <string name="objectives_maxiobzero_learned">Définir l\'IAMax à zéro vous préviendra des hypo et n\'ajoutera pas plus d\'insuline que le débit de basal (sauf dans le cas d\'IA négative)</string>
     <string name="objectives_maxiob_objective">Réglage de la Boucle Fermée, augmentation de l\'IA (Insuline Active) maximale au dessus de 0 et abaissement progressif des cibles glycémiques</string>
     <string name="objectives_maxiob_gate">Utilisez pendant plusieurs jours, et au moins une nuit sans alarme d’hypoglycémie, avant d\'abaisser les cibles glycémiques</string>
+    <string name="objectives_maxiob_learned">Mettez à jour IA Max au fur et à mesure que l\'enfant grandit. Ne permettez pas au système de vous donner plus d\'insuline que ce que vous pouvez couvrir par la nourriture = une valeur vraiment élevée est une mauvaise idée. L\'IA Max est calculée automatiquement en mode simple</string>
     <string name="maxiobset">IA Max définie correctement (pas nécessaire en mode simple)</string>
     <string name="objectives_autosens_objective">Ajustement des débits Basal et des ratios si nécessaire, puis activation de la fonction auto-sens</string>
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>

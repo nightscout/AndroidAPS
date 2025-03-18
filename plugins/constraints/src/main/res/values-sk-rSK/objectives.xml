@@ -16,9 +16,12 @@
     <string name="objectives_maxbasal">Vykonajte akciu pre splnenie doporučenia</string>
     <string name="objectives_maxbasal_learned">Dávajte pozor na bezpečnostné prvky a nastavte bezpečnotné parametre, pokiaľ je to potrebné.</string>
     <string name="objectives_maxiobzero_objective">Spustiť uzavretý okruh iba zo zastavovaním pri nízkej glykémii</string>
+    <string name="objectives_maxiobzero_gate">Spustite uzavretý okruh v režime pozastavenia pri nízkej glykémii (tzv. LGS), (tj. max. IOB = 0 je nastavené automaticky) na niekoľko dní, bez príliš častých udalostí s nízkou glykémiou.</string>
     <string name="objectives_maxiobzero_learned">Nastavením MaxIOB na nulu predídete hypoglykémii a nebude pridávaný inzulín nad štandardnú bazálnu dávku (s výnimkou situácií, kedy je IOB negatívne)</string>
     <string name="objectives_maxiob_objective">Zapnúť uzavretý okruh, zvyšovať max IOB nad 0 a znižovať cieľovou glykémii</string>
     <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu</string>
+    <string name="objectives_maxiob_learned">Aktualizujte MaxIOB počas rastu dieťaťa. Nedovoľte systému, aby podal viac inzulínu, ako ste v skutočnosti schopní pokryť jedlom = skutočne vysoká hodnota je zlý nápad. Maximálne IOB sa v jednoduchom režime počíta automaticky.</string>
+    <string name="maxiobset">Maximálne IOB nastavené správne (nie je nutné v jednoduchom režime)</string>
     <string name="objectives_autosens_objective">Upraviť bazály a pomery, ak je to potrebné, a povoliť automatickú detekciu citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týždeň úspešného používania s bežným príjmom sacharidov</string>
     <string name="objectives_autosens_learned">Ak váš výsledok Autosens neosciluje okolo 100%, Váš profil zrejme nebude správny.</string>
