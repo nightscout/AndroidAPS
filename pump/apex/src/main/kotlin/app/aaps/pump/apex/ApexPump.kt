@@ -214,7 +214,7 @@ class ApexPump @Inject constructor() {
             else -> rh.gs(R.string.overview_pump_status_normal)
         }
 
-        fun getBatteryLevel(rh: ResourceHelper): String = if (batteryLevel.approximate)
+        fun getBatteryLevel(rh: ResourceHelper): String = if (batteryLevel.voltage == null)
             rh.gs(R.string.overview_pump_battery_approximate, batteryLevel.percentage)
         else
             rh.gs(R.string.overview_pump_battery_exact, batteryLevel.percentage, batteryLevel.voltage)
