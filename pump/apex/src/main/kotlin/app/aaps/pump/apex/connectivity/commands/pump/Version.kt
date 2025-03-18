@@ -31,4 +31,6 @@ class Version(command: PumpCommand): PumpObjectModel() {
         if (max.minor < protocolMinor) return false
         return true
     }
+
+    override fun toString(): String = "Version(fw = $firmwareMajor.$firmwareMinor, proto = $protocolMajor.$protocolMinor)"
 }

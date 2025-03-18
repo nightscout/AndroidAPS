@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.pump.apex.connectivity.commands.pump.Alarm
 import app.aaps.pump.apex.connectivity.commands.pump.BolusEntry
 import app.aaps.pump.apex.connectivity.commands.pump.StatusV1
+import app.aaps.pump.apex.connectivity.commands.pump.StatusV2
 import app.aaps.pump.apex.connectivity.commands.pump.Version
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class ApexPump @Inject constructor() {
         get() = _status
 
     val batteryLevel: BatteryLevel
-        get() = status?.batteryLevel ?: BatteryLevel(0, 0, true)
+        get() = status?.batteryLevel ?: BatteryLevel(0, 0.0, true)
 
     val isAdvancedBolusEnabled: Boolean
         get() = status?.isAdvancedBolusEnabled ?: false
@@ -59,10 +60,8 @@ class ApexPump @Inject constructor() {
     val settingsAreUnadvised: Boolean
         get() = isAdvancedBolusEnabled || currentBasalPattern != ApexService.USED_BASAL_PATTERN_INDEX
 
-    val isV1: Boolean
-        get() = lastV1 != null
-
     var lastV1: StatusV1? = null
+    var lastV2: StatusV2? = null
 
     var inProgressBolus: InProgressBolus? = null
     var lastBolus: BolusEntry? = null
@@ -76,7 +75,7 @@ class ApexPump @Inject constructor() {
     fun updateFromV1(obj: StatusV1): StatusUpdate {
         val updates = arrayListOf<Update>()
         val new = PumpStatus(
-            batteryLevel = BatteryLevel(obj.batteryLevel!!.approximatePercentage, null, true),
+            batteryLevel = BatteryLevel(obj.batteryLevel!!.approximatePercentage, batteryLevel.voltage, true),
             isAdvancedBolusEnabled = obj.advancedBolusEnabled,
             currentBasalPattern = obj.currentBasalPattern,
             maxBasal = obj.maxBasal * 0.025,
@@ -121,9 +120,38 @@ class ApexPump @Inject constructor() {
         return ret
     }
 
+    fun updateFromV2(obj: StatusV2): StatusUpdate {
+        val new = PumpStatus(
+            batteryLevel = BatteryLevel(batteryLevel.percentage, obj.batteryVoltage, batteryLevel.approximate),
+            dateTime = dateTime,
+            reservoirLevel = reservoirLevel,
+            tbr = tbr,
+            alarms = alarms,
+            currentBasalPattern = currentBasalPattern,
+            maxBasal = maxBasal,
+            maxBolus = maxBolus,
+            basal = basal,
+            isAdvancedBolusEnabled = isAdvancedBolusEnabled,
+        )
+        val updates = mutableListOf<Update>()
+        updates.apply { when {
+            batteryLevel.voltage != new.batteryLevel.voltage -> add(Update.BatteryChanged)
+        } }
+
+        lastV2 = obj
+
+        val ret = StatusUpdate(
+            changes = updates,
+            previous = status,
+            current = new,
+        )
+        _status = new
+        return ret
+    }
+
     data class BatteryLevel(
         val percentage: Int,
-        val voltage: Int?, // v2+
+        val voltage: Double?, // v2+
         val approximate: Boolean
     )
 

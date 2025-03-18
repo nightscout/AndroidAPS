@@ -12,6 +12,7 @@ enum class PumpObject(
     Heartbeat(commandId = CommandId.Heartbeat),
     CommandResponse(commandId = CommandId.SetValue),
     StatusV1(valueId = listOf(0x00)),
+    StatusV2(valueId = listOf(0x0C)),
     WizardStatus(valueId = listOf(0x07)),
     BasalProfile(valueId = listOf(0x08)),
     AlarmEntry(valueId = listOf(0x03)),

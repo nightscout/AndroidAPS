@@ -53,6 +53,7 @@ import app.aaps.pump.apex.connectivity.commands.pump.PumpCommand
 import app.aaps.pump.apex.connectivity.commands.pump.PumpObject
 import app.aaps.pump.apex.connectivity.commands.pump.PumpObjectModel
 import app.aaps.pump.apex.connectivity.commands.pump.StatusV1
+import app.aaps.pump.apex.connectivity.commands.pump.StatusV2
 import app.aaps.pump.apex.connectivity.commands.pump.TDDEntry
 import app.aaps.pump.apex.connectivity.commands.pump.Version
 import app.aaps.pump.apex.events.EventApexPumpDataChanged
@@ -63,7 +64,6 @@ import app.aaps.pump.apex.utils.keys.ApexStringKey
 import dagger.android.DaggerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.sync.Mutex
 import org.joda.time.DateTime
 import java.util.Timer
@@ -94,7 +94,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     companion object {
         const val USED_BASAL_PATTERN_INDEX = 7
         val FIRST_SUPPORTED_PROTO = ProtocolVersion.PROTO_4_10
-        val LAST_SUPPORTED_PROTO = ProtocolVersion.PROTO_4_10
+        val LAST_SUPPORTED_PROTO = ProtocolVersion.PROTO_4_11
     }
 
     private data class InCommandResponse(
@@ -139,8 +139,6 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     private var getValueLastTaskTimestamp: Long = 0
     private var unreachableTimerTask: TimerTask? = null
 
-    private var statusGetValue: GetValue.Value = GetValue.Value.StatusV1
-
     private var lastBolusDateTime = DateTime(0)
     private var lastConnectedTimestamp = System.currentTimeMillis()
 
@@ -163,12 +161,13 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             getValueResult.clear()
             getValueResult.targetObject = when (value) {
                 GetValue.Value.StatusV1 -> PumpObject.StatusV1
+                GetValue.Value.StatusV2 -> PumpObject.StatusV2
                 GetValue.Value.TDDs -> PumpObject.TDDEntry
                 GetValue.Value.Alarms -> PumpObject.AlarmEntry
                 GetValue.Value.BasalProfiles -> PumpObject.BasalProfile
                 GetValue.Value.Version -> PumpObject.FirmwareEntry
                 GetValue.Value.BolusHistory, GetValue.Value.LatestBoluses -> PumpObject.BolusEntry
-                GetValue.Value.LatestTemporaryBasals, GetValue.Value.StatusV2 -> return null // TODO 4.11 bring up
+                GetValue.Value.LatestTemporaryBasals -> return null
                 GetValue.Value.WizardStatus -> return null
             }
             getValueResult.isSingleObject = when (value) {
@@ -430,16 +429,13 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     fun updateSettings(caller: String): Boolean {
         aapsLogger.debug(LTag.PUMPCOMM, "updateSettings - $caller")
         val response = executeWithResponse(
-            if (pump.isV1)
-                pump.lastV1!!.toUpdateSettingsV1(
-                    apexDeviceInfo,
-                    AlarmLength.valueOf(preferences.get(ApexStringKey.AlarmSoundLength)),
-                    maxSingleBolus = (preferences.get(ApexDoubleKey.MaxBolus) / 0.025).roundToInt(),
-                    maxBasalRate = (preferences.get(ApexDoubleKey.MaxBasal) / 0.025).roundToInt(),
-                    enableAdvancedBolus = false,
-                )
-            else
-                return false
+            pump.lastV1!!.toUpdateSettingsV1(
+                apexDeviceInfo,
+                AlarmLength.valueOf(preferences.get(ApexStringKey.AlarmSoundLength)),
+                maxSingleBolus = (preferences.get(ApexDoubleKey.MaxBolus) / 0.025).roundToInt(),
+                maxBasalRate = (preferences.get(ApexDoubleKey.MaxBasal) / 0.025).roundToInt(),
+                enableAdvancedBolus = false,
+            )
         )
         if (response == null) {
             aapsLogger.error(LTag.PUMPCOMM, "[updateSettings caller=$caller] Timed out while trying to communicate with the pump")
@@ -536,10 +532,18 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     fun getStatus(caller: String): Boolean {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.getting_pump_status)))
         aapsLogger.debug(LTag.PUMPCOMM, "getStatus - $caller")
-        val response = getValue(statusGetValue)
-        if (response == null) {
-            aapsLogger.error(LTag.PUMPCOMM, "[getStatus caller=$caller] Timed out while trying to communicate with the pump")
+        val responseV1 = getValue(GetValue.Value.StatusV1)
+        if (responseV1 == null) {
+            aapsLogger.error(LTag.PUMPCOMM, "[getStatus caller=$caller] V1 | Timed out while trying to communicate with the pump")
             return false
+        }
+
+        if ((pump.firmwareVersion?.protocolMinor ?: 0) >= 11) {
+            val responseV2 = getValue(GetValue.Value.StatusV2)
+            if (responseV2 == null) {
+                aapsLogger.error(LTag.PUMPCOMM, "[getStatus caller=$caller] V2 | Timed out while trying to communicate with the pump")
+                return false
+            }
         }
 
         return true
@@ -768,8 +772,9 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         preferences.put(ApexDoubleKey.MaxBolus, update.current.maxBolus)
     }
 
-    private fun onStatusCommon(update: ApexPump.StatusUpdate) {
-        aapsLogger.debug(LTag.PUMPCOMM, "Status updates: ${update.changes.joinToString(", ") { it.name }}")
+    private fun onStatusV1(status: StatusV1) {
+        val update = pump.updateFromV1(status)
+        aapsLogger.debug(LTag.PUMPCOMM, "Got V1 | Status updates: ${update.changes.joinToString(", ") { it.name }}")
 
         preferences.put(ApexDoubleKey.MaxBasal, update.current.maxBasal)
         preferences.put(ApexDoubleKey.MaxBolus, update.current.maxBolus)
@@ -782,12 +787,15 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         onReservoirChanged(update)
         onTBRChanged(update)
         onConstraintsChanged(update)
+        rxBus.send(EventApexPumpDataChanged())
     }
 
-    private fun onStatusV1(status: StatusV1) {
-        aapsLogger.debug(LTag.PUMPCOMM, "Got status V1")
-        val updates = pump.updateFromV1(status)
-        onStatusCommon(updates)
+    private fun onStatusV2(status: StatusV2) {
+        val update = pump.updateFromV2(status)
+        aapsLogger.debug(LTag.PUMPCOMM, "Got V2 | Status updates: ${update.changes.joinToString(", ") { it.name }}")
+
+        //onBatteryChanged(update)
+        rxBus.send(EventApexPumpDataChanged())
     }
 
     private fun onHeartbeat() {
@@ -803,10 +811,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     }
 
     private fun onVersion(version: Version) {
-        aapsLogger.debug(LTag.PUMPCOMM, "Got version")
-        if (version.atleastProto(ProtocolVersion.PROTO_4_11)) {
-            statusGetValue = GetValue.Value.StatusV2
-        }
+        aapsLogger.debug(LTag.PUMPCOMM, "Got version - $version")
     }
 
     @Synchronized
@@ -1013,6 +1018,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     private fun processObject(command: PumpCommand, type: PumpObject) {
         when (type) {
             PumpObject.StatusV1        -> onStatusV1(StatusV1(command))
+            PumpObject.StatusV2        -> onStatusV2(StatusV2(command))
             PumpObject.Heartbeat       -> onHeartbeat()
             PumpObject.BolusEntry      -> onBolusEntry(BolusEntry(command))
             PumpObject.TDDEntry        -> onTDDEntry(TDDEntry(command))
@@ -1036,6 +1042,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
                 PumpObject.Heartbeat       -> Heartbeat()
                 PumpObject.CommandResponse -> CommandResponse(command)
                 PumpObject.StatusV1        -> StatusV1(command)
+                PumpObject.StatusV2        -> StatusV2(command)
                 PumpObject.BasalProfile    -> BasalProfile(command)
                 PumpObject.AlarmEntry      -> AlarmObject(command)
                 PumpObject.TDDEntry        -> TDDEntry(command)
