@@ -6,8 +6,6 @@ plugins {
     id("kotlin-android")
 }
 
-// Convention plugin should be used here to use libs.versions.toml
-// I was not successful to implement it
 dependencies {
     testImplementation(kotlin("test"))
     testImplementationFromCatalog("org-junit-jupiter")
