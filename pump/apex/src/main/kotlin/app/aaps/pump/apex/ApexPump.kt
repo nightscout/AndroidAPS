@@ -11,6 +11,7 @@ import app.aaps.pump.apex.connectivity.commands.pump.Version
 import org.joda.time.DateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 
 /**
  * @author Roman Rikhter (teledurak@gmail.com)
@@ -217,7 +218,7 @@ class ApexPump @Inject constructor() {
         fun getBatteryLevel(rh: ResourceHelper): String = if (batteryLevel.voltage == null)
             rh.gs(R.string.overview_pump_battery_approximate, batteryLevel.percentage)
         else
-            rh.gs(R.string.overview_pump_battery_exact, batteryLevel.percentage, batteryLevel.voltage)
+            rh.gs(R.string.overview_pump_battery_exact, batteryLevel.percentage, (batteryLevel.voltage * 1000).roundToInt())
 
         fun getReservoirLevel(rh: ResourceHelper): String = rh.gs(R.string.overview_pump_reservoir, reservoirLevel)
 
