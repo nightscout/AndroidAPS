@@ -402,12 +402,12 @@
     </ScrollView>
 
     <ImageView
-        android:layout_height="wrap_content"
+        android:layout_height="240dp"
         android:layout_width="match_parent"
         android:contentDescription="@string/apex_plugin_name"
         android:paddingHorizontal="50dp"
         android:paddingBottom="50dp"
         android:paddingTop="25dp"
-        android:src="@drawable/ic_apex"/>
+        android:src="@drawable/ic_apex_detailed"/>
 
 </LinearLayout>
