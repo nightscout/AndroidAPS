@@ -182,6 +182,14 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             } catch (e: InterruptedException) {
                 aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
                 isGetThreadRunning = false
+                disconnect(true)
+                return null
+            }
+
+            if (getValueResult.response == null) {
+                aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
+                isGetThreadRunning = false
+                disconnect(true)
                 return null
             }
 
@@ -203,6 +211,14 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             } catch (e: InterruptedException) {
                 aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
                 commandResponse.waiting = false
+                disconnect(true)
+                return null
+            }
+
+            if (commandResponse.response == null) {
+                aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
+                commandResponse.waiting = false
+                disconnect(true)
                 return null
             }
 
@@ -899,9 +915,10 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         apexBluetooth.connect()
     }
 
-    fun disconnect() {
-        manualDisconnect = true
+    fun disconnect(isReconnect: Boolean = false) {
+        manualDisconnect = !isReconnect
         if (apexBluetooth.status != ApexBluetooth.Status.DISCONNECTED) apexBluetooth.disconnect()
+        if (isReconnect) apexBluetooth.connect()
     }
 
 
@@ -1042,6 +1059,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         if (command.objectData[2].toUInt().toInt() == 0xFF && command.objectData[3].toUInt().toInt() == 0xFF) {
             aapsLogger.debug(LTag.PUMPCOMM, "Got fake bolus entry - skipping")
             getValueResult.waiting = false
+            getValueResult.response = arrayListOf()
             synchronized(getValueResult) {
                 getValueResult.notifyAll()
             }
