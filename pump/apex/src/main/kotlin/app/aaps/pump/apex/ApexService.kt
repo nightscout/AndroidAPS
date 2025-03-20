@@ -143,6 +143,8 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
     private var lastConnectedTimestamp = System.currentTimeMillis()
 
     private var manualDisconnect = false
+    private var doNotReconnect = false
+    private var connectionFinished = false
 
     val isBusy: Boolean
         get() = commandLock.isLocked
@@ -152,79 +154,125 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             lastConnectedTimestamp
         } else System.currentTimeMillis()
 
-    fun getValue(value: GetValue.Value): List<PumpObjectModel>? = synchronized(commandLock) { synchronized(getValueResult) {
-            if (connectionStatus != ApexBluetooth.Status.CONNECTED) {
-                aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Error - pump is disconnected")
-                return null
-            }
+    private fun intGetValue(value: GetValue.Value): List<PumpObjectModel>? = synchronized(getValueResult) {
+        if (connectionStatus != ApexBluetooth.Status.CONNECTED) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Error - pump is disconnected")
+            return null
+        }
 
-            getValueResult.clear()
-            getValueResult.targetObject = when (value) {
-                GetValue.Value.StatusV1 -> PumpObject.StatusV1
-                GetValue.Value.StatusV2 -> PumpObject.StatusV2
-                GetValue.Value.TDDs -> PumpObject.TDDEntry
-                GetValue.Value.Alarms -> PumpObject.AlarmEntry
-                GetValue.Value.BasalProfiles -> PumpObject.BasalProfile
-                GetValue.Value.Version -> PumpObject.FirmwareEntry
-                GetValue.Value.BolusHistory, GetValue.Value.LatestBoluses -> PumpObject.BolusEntry
-                GetValue.Value.LatestTemporaryBasals -> return null
-                GetValue.Value.WizardStatus -> return null
-            }
-            getValueResult.isSingleObject = when (value) {
-                GetValue.Value.StatusV1, GetValue.Value.StatusV2, GetValue.Value.Version -> true
-                else -> false
-            }
+        getValueResult.clear()
+        getValueResult.targetObject = when (value) {
+            GetValue.Value.StatusV1 -> PumpObject.StatusV1
+            GetValue.Value.StatusV2 -> PumpObject.StatusV2
+            GetValue.Value.TDDs -> PumpObject.TDDEntry
+            GetValue.Value.Alarms -> PumpObject.AlarmEntry
+            GetValue.Value.BasalProfiles -> PumpObject.BasalProfile
+            GetValue.Value.Version -> PumpObject.FirmwareEntry
+            GetValue.Value.BolusHistory, GetValue.Value.LatestBoluses -> PumpObject.BolusEntry
+            GetValue.Value.LatestTemporaryBasals -> return null
+            GetValue.Value.WizardStatus -> return null
+        }
+        getValueResult.isSingleObject = when (value) {
+            GetValue.Value.StatusV1, GetValue.Value.StatusV2, GetValue.Value.Version -> true
+            else -> false
+        }
 
-            apexBluetooth.send(GetValue(apexDeviceInfo, value))
-            try {
-                aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Waiting for response")
-                getValueResult.waitMillis(if (getValueResult.isSingleObject) 5000 else 15000)
-            } catch (e: InterruptedException) {
-                aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
-                isGetThreadRunning = false
-                disconnect(true)
-                return null
-            }
+        apexBluetooth.send(GetValue(apexDeviceInfo, value))
+        try {
+            aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Waiting for response")
+            getValueResult.waitMillis(if (getValueResult.isSingleObject) 5000 else 15000)
+        } catch (e: InterruptedException) {
+            aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
+            isGetThreadRunning = false
+            return null
+        }
 
-            if (getValueResult.response == null) {
-                aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
-                isGetThreadRunning = false
-                disconnect(true)
-                return null
-            }
+        if (getValueResult.response == null) {
+            aapsLogger.error(LTag.PUMPCOMM, "Get ${value.name} | Timed out")
+            isGetThreadRunning = false
+            return null
+        }
 
-            aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Completed")
-            getValueResult.response
-        }}
+        aapsLogger.debug(LTag.PUMPCOMM, "Get ${value.name} | Completed")
+        getValueResult.response
+    }
 
-    private fun executeWithResponse(command: DeviceCommand): CommandResponse? = synchronized(commandLock) { synchronized(commandResponse) {
-            if (connectionStatus != ApexBluetooth.Status.CONNECTED) {
-                aapsLogger.debug(LTag.PUMPCOMM, "$command | Error - pump is disconnected")
-                return null
-            }
+    private fun intExecuteWithResponse(command: DeviceCommand): CommandResponse? = synchronized(commandResponse) {
+        if (connectionStatus != ApexBluetooth.Status.CONNECTED) {
+            aapsLogger.debug(LTag.PUMPCOMM, "$command | Error - pump is disconnected")
+            return null
+        }
 
-            commandResponse.clear()
-            apexBluetooth.send(command)
-            try {
-                aapsLogger.debug(LTag.PUMPCOMM, "$command | Waiting for response")
-                commandResponse.waitMillis(5000)
-            } catch (e: InterruptedException) {
-                aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
-                commandResponse.waiting = false
-                disconnect(true)
-                return null
-            }
+        commandResponse.clear()
+        apexBluetooth.send(command)
+        try {
+            aapsLogger.debug(LTag.PUMPCOMM, "$command | Waiting for response")
+            commandResponse.waitMillis(5000)
+        } catch (e: InterruptedException) {
+            aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
+            commandResponse.waiting = false
+            return null
+        }
 
-            if (commandResponse.response == null) {
-                aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
-                commandResponse.waiting = false
-                disconnect(true)
-                return null
-            }
+        if (commandResponse.response == null) {
+            aapsLogger.error(LTag.PUMPCOMM, "$command | Timed out")
+            commandResponse.waiting = false
+            return null
+        }
 
-            aapsLogger.debug(LTag.PUMPCOMM, "$command | Completed")
-            commandResponse.response
-        }}
+        aapsLogger.debug(LTag.PUMPCOMM, "$command | Completed")
+        commandResponse.response
+    }
+
+    fun getValue(value: GetValue.Value): List<PumpObjectModel>? {
+        synchronized(commandLock) {
+            val firstTry = intGetValue(value)
+            if (firstTry != null || doNotReconnect || !connectionFinished) return@getValue firstTry
+            doNotReconnect = true
+        }
+
+        disconnect(true)
+        if (!ensureConnected()) {
+            synchronized(commandLock) { doNotReconnect = false }
+            return null
+        }
+
+        synchronized(commandLock) {
+            val final = intGetValue(value)
+            doNotReconnect = false
+            return@getValue final
+        }
+    }
+
+    private fun executeWithResponse(command: DeviceCommand): CommandResponse? {
+        synchronized(commandLock) {
+            val firstTry = intExecuteWithResponse(command)
+            if (firstTry != null || doNotReconnect || !connectionFinished) return@executeWithResponse firstTry
+            doNotReconnect = true
+        }
+
+        disconnect(true)
+        if (!ensureConnected()) {
+            synchronized(commandLock) { doNotReconnect = false }
+            return null
+        }
+
+        synchronized(commandLock) {
+            val final = intExecuteWithResponse(command)
+            doNotReconnect = false
+            return@executeWithResponse final
+        }
+    }
+
+    private fun ensureConnected(): Boolean {
+        var times = 0
+        while (!connectionFinished && times < 50) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Waiting for successful connection")
+            SystemClock.sleep(500)
+            times++
+        }
+        return connectionFinished
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -917,8 +965,10 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
 
     fun disconnect(isReconnect: Boolean = false) {
         manualDisconnect = !isReconnect
-        if (apexBluetooth.status != ApexBluetooth.Status.DISCONNECTED) apexBluetooth.disconnect()
-        if (isReconnect) apexBluetooth.connect()
+        if (apexBluetooth.status != ApexBluetooth.Status.DISCONNECTED)
+            apexBluetooth.disconnect()
+        else if (isReconnect)
+            apexBluetooth.connect()
     }
 
 
@@ -928,8 +978,10 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         val version = getValue(GetValue.Value.Version)?.firstOrNull()
         if (version !is Version) {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to get version - disconnecting.")
-            return disconnect()
+            return disconnect(true)
         }
+
+        aapsLogger.debug(LTag.PUMPCOMM, version.toString())
 
         pump.firmwareVersion = version
 
@@ -944,10 +996,15 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
 
         onVersion(version)
-        aapsLogger.debug(LTag.PUMPCOMM, "Protocol v${version.protocolMajor}.${version.protocolMinor}")
 
-        if (!syncDateTime("BLE-onConnect")) return
-        if (!notifyAboutConnection("BLE-onConnect")) return
+        if (!syncDateTime("BLE-onConnect")) {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to sync date and time - disconnecting.")
+            return disconnect(true)
+        }
+        if (!notifyAboutConnection("BLE-onConnect")) {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to notify about connection - disconnecting.")
+            return disconnect(true)
+        }
 
         if (apexDeviceInfo.serialNumber != preferences.get(ApexStringKey.LastConnectedSerialNumber)) {
             onInitialConnection()
@@ -955,13 +1012,20 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         }
 
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
-        if (!getStatus("BLE-onConnect")) return
-        if (!getBoluses("BLE-onConnect")) return
+        if (!getStatus("BLE-onConnect")) {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to get status - disconnecting.")
+            return disconnect(true)
+        }
+        if (!getBoluses("BLE-onConnect"))  {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to get boluses - disconnecting.")
+            return disconnect(true)
+        }
 
         unreachableTimerTask?.cancel()
         unreachableTimerTask = null
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
         pump.gettingReady = false
+        connectionFinished = true
     }
 
     private var isDisconnectLoopRunning = false
@@ -989,6 +1053,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
 
     override fun onDisconnect() {
         aapsLogger.debug(LTag.PUMPCOMM, "onDisconnect")
+        connectionFinished = false
 
         isGetThreadRunning = false
         synchronized(getValueResult) {
@@ -1004,7 +1069,7 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
         lastConnectedTimestamp = System.currentTimeMillis()
 
         if (unreachableTimerTask == null)
-            unreachableTimerTask = timer.schedule(60000) {
+            unreachableTimerTask = timer.schedule(120000) {
                 uiInteraction.addNotification(
                     Notification.PUMP_UNREACHABLE,
                     rh.gs(R.string.error_pump_unreachable),
