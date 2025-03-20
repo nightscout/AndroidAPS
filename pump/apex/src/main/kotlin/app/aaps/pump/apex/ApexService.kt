@@ -1037,6 +1037,17 @@ class ApexService: DaggerService(), ApexBluetoothCallback {
             return
         }
 
+        // Pump may send fake bolus entry if there are no boluses in history.
+        // We shouldn't handle it.
+        if (command.objectData[2].toUInt().toInt() == 0xFF && command.objectData[3].toUInt().toInt() == 0xFF) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Got fake bolus entry - skipping")
+            getValueResult.waiting = false
+            synchronized(getValueResult) {
+                getValueResult.notifyAll()
+            }
+            return
+        }
+
         getValueResult.add(
             when (type) {
                 PumpObject.Heartbeat       -> Heartbeat()
