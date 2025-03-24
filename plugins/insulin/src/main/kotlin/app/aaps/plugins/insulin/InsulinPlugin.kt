@@ -99,19 +99,18 @@ class InsulinPlugin @Inject constructor(
         }
 
     override fun setDefault(insulin: ICfg) {
-        getOrCreateInsulin(insulin).let {
-            insulins.forEachIndexed { index, iCfg ->
-                if(iCfg.isEqual(it))
-                    defaultInsulinIndex = index
+        insulins.forEachIndexed { index, iCfg ->
+            if (iCfg.isEqual(insulin)) {
+                defaultInsulinIndex = index
+                currentInsulinIndex = defaultInsulinIndex
             }
-            currentInsulinIndex = defaultInsulinIndex
         }
     }
 
     override val iCfg: ICfg
         get() {
             val profile = profileFunction.getProfile()
-            return getOrCreateInsulin(profile?.insulin ?:insulins[defaultInsulinIndex])
+            return profile?.insulin ?:insulins[defaultInsulinIndex]
         }
 
     lateinit var currentInsulin: ICfg
@@ -145,9 +144,12 @@ class InsulinPlugin @Inject constructor(
         if (iCfg.getDia() < hardLimits.minDia() || iCfg.getDia() > hardLimits.maxDia())
             iCfg.insulinEndTime = insulins[defaultInsulinIndex].insulinEndTime
         insulins.forEachIndexed { index, it ->
-            if (iCfg.isEqual(it))
+            if (iCfg.isEqual(it)) {
+                aapsLogger.debug("XXXXX getOrCreate index: $index name : ${it.insulinLabel}")
                 return it
+                }
         }
+        aapsLogger.debug("XXXXX getOrCreate iCfg: ${iCfg.insulinLabel}")
         return addNewInsulin(iCfg, true)
     }
 
@@ -160,6 +162,7 @@ class InsulinPlugin @Inject constructor(
                 return index
             }
         }
+        aapsLogger.debug("XXXXX setCurrent iCfg: ${iCfg.insulinLabel} ${iCfg.getPeak()} ${iCfg.getDia()}")
         addNewInsulin(iCfg, true)
         currentInsulin = currentInsulin().deepClone()
         return insulins.size - 1
@@ -194,6 +197,7 @@ class InsulinPlugin @Inject constructor(
         get() = rh.gs(R.string.dia_too_short)
 
 
+    @Synchronized
     fun addNewInsulin(template: ICfg, autoName: Boolean = false): ICfg {
         if (autoName)
             template.insulinLabel = createNewInsulinLabel(template)
@@ -206,6 +210,7 @@ class InsulinPlugin @Inject constructor(
         return newInsulin
     }
 
+    @Synchronized
     fun removeCurrentInsulin(activity: FragmentActivity?) {
         // activity included to include PopUp or Toast when Remove can't be done (default insulin or insulin used within profile
         // Todo include Remove authorization and message
@@ -234,6 +239,7 @@ class InsulinPlugin @Inject constructor(
         return insulinLabel
     }
 
+    @Synchronized
     fun updateProfiles(profileList: ArrayList<String>, profileStore: ProfileStore, now: Long) {
         val profilePlugin = activePlugin.activeProfileSource
         val fullProfileList = profileStore.getProfileList()
@@ -311,14 +317,15 @@ class InsulinPlugin @Inject constructor(
         return json
     }
 
+    @Synchronized
     override fun applyConfiguration(configuration: JSONObject) {
         insulins.clear()
         configuration.optJSONArray("insulins")?.let {
+            aapsLogger.debug("XXXXX applyConfig insert ${it.length()} insulins")
             for (index in 0 until (it.length())) {
                 try {
                     val o = it.getJSONObject(index)
-                    insulins.add(ICfg.fromJson(o))
-
+                    getOrCreateInsulin(ICfg.fromJson(o))
                 } catch (e: Exception) {
                     //
                 }
@@ -361,7 +368,6 @@ class InsulinPlugin @Inject constructor(
                     if (isEqual(insulin)) {
                         if (verbose)
                             ToastUtils.errorToast(activity, rh.gs(R.string.insulin_duplicated, insulin.insulinLabel))
-                        aapsLogger.debug("XXXXX Duplicate currentIndex: $currentInsulinIndex current: ${insulinLabel} index: $index, label: ${insulin.insulinLabel} peak: ${insulin.getPeak()}, dia: ${insulin.getDia()}")
                         return false
                     }
                 }
@@ -374,7 +380,6 @@ class InsulinPlugin @Inject constructor(
         insulins.forEachIndexed { index, insulin ->
             if (index != currentIndex) {
                 if (insulin.insulinLabel == insulinLabel) {
-                    aapsLogger.debug("XXXXX Label currentIndex: $currentIndex current: ${insulinLabel} index: $index, label: ${insulin.insulinLabel}")
                     return true
                 }
             }

@@ -19,7 +19,7 @@ data class ICfg(
         return false
     }
 
-    fun getDia(): Double = insulinEndTime / 3600.0 / 1000.0
+    fun getDia(): Double = Math.round(insulinEndTime / 3600.0 / 100.0) / 10.0
     fun getPeak(): Int = (insulinPeakTime / 60000).toInt()
     fun setDia(dia: Double) {
         insulinEndTime = (dia * 3600 * 1000).toLong()
