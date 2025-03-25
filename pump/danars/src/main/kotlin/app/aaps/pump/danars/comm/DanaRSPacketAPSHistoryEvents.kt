@@ -361,13 +361,13 @@ open class DanaRSPacketAPSHistoryEvents(
                 status = "TIME_CHANGE " + dateUtil.timeString(datetime)
             }
 
-            else                                      -> {
-                aapsLogger.debug(
-                    LTag.PUMPCOMM,
-                    "[$pumpId] Event: $recordCode ${dateUtil.dateAndTimeString(datetime)} ($datetime) Param1: $param1 Param2: $param2"
-                )
-                status = "UNKNOWN " + dateUtil.timeString(datetime)
-            }
+            // else                                      -> {
+            //     aapsLogger.debug(
+            //         LTag.PUMPCOMM,
+            //         "[$pumpId] Event: $recordCode ${dateUtil.dateAndTimeString(datetime)} ($datetime) Param1: $param1 Param2: $param2"
+            //     )
+            //     status = "UNKNOWN " + dateUtil.timeString(datetime)
+            // }
         }
         if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
