@@ -37,7 +37,7 @@ abstract class InsulinOrefBasePlugin(
     PluginDescription()
         .mainType(PluginType.INSULIN)
         .fragmentClass(InsulinFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_insulin)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
         .shortName(R.string.insulin_shortname)
         .visibleByDefault(false)
         .neverVisible(config.AAPSCLIENT),
@@ -71,6 +71,10 @@ abstract class InsulinOrefBasePlugin(
             val profile = profileFunction.getProfile()
             return profile?.dia ?: hardLimits.minDia()
         }
+
+   override fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob {
+        return iobCalcForTreatment(bolus, time, (iCfg.insulinEndTime / 3600.0 / 1000.0))
+    }
 
     override fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob {
         assert(dia != 0.0)

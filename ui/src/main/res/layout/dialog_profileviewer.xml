@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:text="@string/dia_label"
+                android:text="@string/insulin_shortname"
                 android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
@@ -191,7 +191,7 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/dia"
+                android:id="@+id/insulin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"

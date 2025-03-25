@@ -4,6 +4,8 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch
@@ -11,8 +13,8 @@ import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import java.security.InvalidParameterException
 
-fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EPS? {
-    val pureProfile = pureProfileFromJson(profileJson, dateUtil) ?: return null
+fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil, activePlugin: ActivePlugin): EPS? {
+    val pureProfile = pureProfileFromJson(profileJson, dateUtil, activePlugin) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return EPS(

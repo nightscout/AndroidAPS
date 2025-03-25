@@ -7,7 +7,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
@@ -78,6 +81,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
     private var _binding: DialogInsulinBinding? = null
+    private var selectedInsulin: ICfg? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -175,10 +179,22 @@ class InsulinDialog : DialogFragmentWithDate() {
 
         if (!binding.recordOnly.isChecked) {
             binding.timeLayout.visibility = View.GONE
+            binding.insulinLayout.visibility = View.GONE
         }
         binding.recordOnly.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.timeLayout.visibility = isChecked.toVisibility()
+            binding.insulinLayout.visibility = isChecked.toVisibility()
         }
+        selectedInsulin = activePlugin.activeInsulin.iCfg
+        val insulinList: ArrayList<CharSequence> = activePlugin.activeInsulin.insulinList()
+        context?.let { context ->
+            binding.insulinList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, insulinList))
+        } ?: return
+        binding.insulinList.setText(activePlugin.activeInsulin.iCfg.insulinLabel, false)
+        binding.insulinList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
+            selectedInsulin = activePlugin.activeInsulin.getInsulin(binding.insulinList.text.toString())
+        }
+
         binding.insulinLabel.labelFor = binding.amount.editTextId
         binding.timeLabel.labelFor = binding.time.editTextId
     }
@@ -260,6 +276,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
+                        detailedBolusInfo.iCfg = selectedInsulin
                         if (recordOnlyChecked) {
                             disposable += persistenceLayer.insertOrUpdateBolus(
                                 bolus = detailedBolusInfo.createBolus(),
