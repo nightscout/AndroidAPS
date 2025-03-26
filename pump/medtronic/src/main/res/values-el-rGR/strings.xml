@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Μέγιστο Bolus στην αντλία (U)</string>
     <string name="medtronic_pump_max_basal">Μέγιστος Βασικός στην αντλία (U/h)</string>
     <string name="medtronic_pump_encoding">Αποκωδικοποίηση Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Παγκοσμίως (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Κωδικοποίηση λογισμικού 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Κωδικοποίηση hardware 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Καθαρισμός Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Επαναφορά Ρυθμίσεων RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Λιθίου (Extended view)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Εκτενής προβολή)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Εκτενής προβολή)</string>
-    <string name="medtronic_bolus_debugging">Εντοπισμός Σφαλμάτων Bolus/Θεραπειών</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Μπαταρία RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">πριν</string>
     <string name="medtronic_notification_check_time_date">Η ώρα της αντλίας χρειάζεται ανανέωση</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Ενεργό</string>
-    <string name="common_off">Ανενεργό</string>
     <string name="pump_time_updated">Η ώρα στην αντλία άλλαξε</string>
     <string name="set_neutral_temps_title">Ορισμός ουδέτερου προσωρινού ρυθμού</string>
     <string name="set_neutral_temps_summary">Αν ενεργοποιηθεί, θα ακυρωθεί ο προσωρινός βασικός πριν από το τέλος κάθε ώρας. Αυτή η μέθοδος μπορεί να βοηθήσει στη διακοπή κάποιου ωριαίου μπιπ/δόνησης ορισμένων αντλιών.</string>
