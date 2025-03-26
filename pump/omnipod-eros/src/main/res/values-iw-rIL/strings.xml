@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">חיבור משאבת Omnipod Eros (הדגם הישן, בו מכסה המחט שקוף). דרוש מכשיר ריילילינק עם גרסת קושחה 2.0 לפחות.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">התראות</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">הצג לחצן \"יומן פעימות\" בתפריט ניהול פוד</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">הצג לחצן \"סטטיסטיקת ריילילינק\" בתפריט ניהול פוד</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">אפשר רישום החלפת סוללה בפעולות</string>
