@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Προειδοποίηση Έλλειψης Ινσουλίνης</string>
     <string name="needbatteryreplace">Απαιτείται αλλαγή μπαταρίας</string>
     <string name="needinsullinreplace">Απαιτείται αντικατάσταση ινσουλίνης</string>
-    <string name="pumpversion">έκδοση_αντλίας</string>
-    <string name="apsIncarnationNo">aps_νούμερο_ενσάρκωσης</string>
-    <string name="pumpserialno">σειριακός_αριθμός_αντλίας</string>
     <string name="diaconn_g8_loginsulinchange_title">Καταγραφή αλλαγής δεξαμενής</string>
     <string name="diaconn_g8_loginsulinchange_summary">Προσθήκη συμβάντος \"Αλλαγή ινσουλίνης\" στο careportal όταν ανιχνευθεί στο ιστορικό</string>
     <string name="diaconn_g8_logcanulachange_title">Καταγραφή αλλαγής βελόνας</string>
