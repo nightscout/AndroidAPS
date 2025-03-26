@@ -159,17 +159,8 @@ class ComboV2Plugin @Inject constructor(
 
     private val _pumpDescription = PumpDescription()
 
-    // The internal SP is the one that will be mainly used by the driver.
-    // The AAPS main SP is updated when the pump state store is created
-    // and when the driver disconnects (to update the nonce value).
-    private val internalSP = InternalSP(
-        context.getSharedPreferences(
-            context.packageName + ".COMBO_PUMP_STATE_STORE",
-            Context.MODE_PRIVATE
-        ),
-        context
-    )
-    private val pumpStateStore = AAPSPumpStateStore(aapsMainSP = sp, internalSP = internalSP)
+    private val pumpStateStore = AAPSPumpStateStore(sp)
+    private var pumpStateBackup: AAPSPumpStateStore.StatesBackup? = null
 
     // These are initialized in onStart() and torn down in onStop().
     private var bluetoothInterface: AndroidBluetoothInterface? = null
@@ -306,34 +297,6 @@ class ComboV2Plugin @Inject constructor(
         super.onStart()
 
         updateComboCtlLogLevel()
-
-        // Check if there is a pump state in the internal SP. If not, try to
-        // copy a pump state from the AAPS main SP. It is possible for example
-        // that AAPS was reinstalled, and the previous settings were imported.
-        // In that case, the internal SP is empty, but there is a pump state
-        // that comes from the settings. We want to restore that pump state
-        // then. If however, there _is_ a pump state in the internal SP, then
-        // we just ignore any state in the main SP. For example, if the user
-        // imports an older AAPS settings file with an old pump state, and a
-        // Combo is already paired with AAPS, then it makes no sense to overwrite
-        // the current pump state with the old one from the imported settings.
-        if (pumpStateStore.getAvailablePumpStateAddresses().isEmpty()) {
-            aapsLogger.info(LTag.PUMP, "There is no pump state in the internal SP; trying to copy a pump state from the main AAPS SP")
-            pumpStateStore.copyAllValuesFromAAPSMainSP(commit = true)
-            val btAddress = pumpStateStore.getAvailablePumpStateAddresses().firstOrNull()
-            if (btAddress == null)
-                aapsLogger.info(LTag.PUMP, "No pump state found in the main AAPS SP; continuing without a pump state (implying that no pump is paired)")
-            else
-                aapsLogger.info(LTag.PUMP, "Pump state found in the main AAPS SP (bluetooth address: $btAddress); continuing with that state")
-        } else {
-            // Copy over the internal SP pump state to the main AAPS SP. If the user
-            // just imported AAPS settings, and said settings contained an old pump
-            // state, then that old pump state is ignored if there is already a
-            // current pump state in the internal SP - but we still need to make sure
-            // the old pump state in the main AAPS SP is replaced by the current one.
-            aapsLogger.debug(LTag.PUMP, "Copying internal SP pump state to main AAPS SP")
-            pumpStateStore.copyAllValuesToAAPSMainSP(commit = false)
-        }
 
         aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
         val newBluetoothInterface = AndroidBluetoothInterface(context)
@@ -535,6 +498,33 @@ class ComboV2Plugin @Inject constructor(
     // There is no corresponding indicator for this
     // in Combo connections, so just return false
     override fun isHandshakeInProgress() = false
+
+    override fun beforeImport() {
+        pumpStateBackup = pumpStateStore.createBackup()
+        if (pumpStateBackup != null)
+            aapsLogger.debug(LTag.PUMP, "Making backup of pump state before importing new configuration")
+        else
+            aapsLogger.debug(LTag.PUMP, "There is no pump state present; not making any pump state backup before importing new configuration")
+    }
+
+    override fun afterImport() {
+        val pumpStateExistsInConfig = pumpStateStore.hasAnyPumpState()
+
+        pumpStateBackup?.let { backup ->
+            if (pumpStateExistsInConfig)
+                aapsLogger.debug(LTag.PUMP, "Restoring pump state backup after importing new configuration, overwriting the existing one from the imported configuration")
+            else
+                aapsLogger.debug(LTag.PUMP, "Restoring pump state backup after importing new configuration (the configuration does not have a pump state of its own)")
+
+            pumpStateStore.applyBackup(backup)
+            pumpStateBackup = null
+        } ?: run {
+            if (pumpStateExistsInConfig)
+                aapsLogger.debug(LTag.PUMP, "There is no pump state backup to restore after importing new configuration; keeping existing one from the imported configuration")
+            else
+                aapsLogger.debug(LTag.PUMP, "There is no pump state backup to restore after importing new configuration, and the configuration does not have a pump state of its own")
+        }
+    }
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Connecting to Combo; reason: $reason")
@@ -806,11 +796,6 @@ class ComboV2Plugin @Inject constructor(
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Disconnecting from Combo; reason: $reason")
         disconnectInternal(forceDisconnect = false)
-
-        // Sync up the TBR and nonce states in the main AAPS SP. We don't do this all the
-        // time since this is unnecessary waste of resources. It is sufficient to update
-        // those once AAPS is done with the connection.
-        pumpStateStore.copyVariantValuesToAAPSMainSP(commit = false)
     }
 
     // This is called when (a) the AAPS watchdog is about to toggle
