@@ -6,26 +6,6 @@
     <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
     <!-- MDT Configuration -->
-    <string name="key_medtronic_serial" translatable="false">pref_medtronic_serial</string>
-    <string name="key_medtronic_pump_type" translatable="false">pref_medtronic_pump_type</string>
-    <string name="key_medtronic_frequency" translatable="false">pref_medtronic_frequency</string>
-    <string name="key_medtronic_max_bolus" translatable="false">pref_medtronic_max_bolus</string>
-    <string name="key_medtronic_max_basal" translatable="false">pref_medtronic_max_basal</string>
-    <string name="key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
-    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
-    <string name="key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
-    <string name="key_medtronic_bolus_debug" translatable="false">pref_medtronic_bolus_debug</string>
-    <string name="key_medtronic_pump_frequency_us_ca" translatable="false">medtronic_pump_frequency_us_ca</string>
-    <string name="key_medtronic_pump_frequency_worldwide" translatable="false">medtronic_pump_frequency_worldwide</string>
-    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
-    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
-    <string name="key_medtronic_pump_battery_no" translatable="false">medtronic_pump_battery_no</string>
-    <string name="key_medtronic_pump_battery_alkaline" translatable="false">medtronic_pump_battery_alkaline</string>
-    <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
-    <string name="key_medtronic_pump_battery_nizn" translatable="false">medtronic_pump_battery_nizn</string>
-    <string name="key_medtronic_pump_battery_nimh" translatable="false">medtronic_pump_battery_nimh</string>
-    <string name="key_medtronic_name_settings" translatable="false">medtronic_name_settings</string>
-
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
     <string name="medtronic_pump_frequency">Pump Frequency</string>
@@ -33,10 +13,6 @@
     <string name="medtronic_pump_max_bolus">Max Bolus on Pump (U)</string>
     <string name="medtronic_pump_max_basal">Max Basal on Pump (U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic Encoding</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Encoding</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Encoding</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Clear Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Config</string>
@@ -46,7 +22,6 @@
     <string name="medtronic_pump_battery_lithium">Lithium (Extended view)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
-    <string name="medtronic_bolus_debugging">Bolus/Treatments Debugging</string>
 
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Battery</string>
@@ -112,11 +87,8 @@
     <string name="medtronic_pump_connected_now">Now</string> <!-- combo_pump_connected_now -->
     <string name="ago">ago</string>
     <string name="medtronic_notification_check_time_date">Pump clock update needed</string> <!-- combo_notification_check_time_date -->
-    <string name="common_on">On</string>
-    <string name="common_off">Off</string>
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="pump_time_updated">Pump time updated</string>
-    <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min remaining)</string>
