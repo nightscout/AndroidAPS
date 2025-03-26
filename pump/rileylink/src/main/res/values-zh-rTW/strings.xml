@@ -9,7 +9,6 @@
     <string name="pump_status_timeout_comm">通訊逾時</string>
     <string name="pump_status_pump_unreachable">幫浦無法使用</string>
     <string name="pump_status_invalid_config">配置無效</string>
-    <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">掃描</string>
     <string name="riley_link_ble_config_scan_stop">停止</string>
