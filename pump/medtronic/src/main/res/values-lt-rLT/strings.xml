@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max Bolusas pompoje (vv)</string>
     <string name="medtronic_pump_max_basal">Maks val. bazė pompoje (v/val)</string>
     <string name="medtronic_pump_encoding">Medronic kodavimas</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Pasaulinis (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Programinis kodavimas 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Įrangos kodavimas 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Pažadinti ir nustatyti</string>
     <string name="medtronic_custom_action_clear_bolus_block">Išvalyti Boluso bloką</string>
     <string name="medtronic_custom_action_reset_rileylink">Išvalyti RileyLink nustatymus</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Ličio (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nizn">Šarminė (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
-    <string name="medtronic_bolus_debugging">Boluso/Terapijos Derinimas</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink baterija</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">prieš</string>
     <string name="medtronic_notification_check_time_date">Būtina atnaujinti pompos laikrodį</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Įjungti</string>
-    <string name="common_off">Išjungta</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
     <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
     <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
