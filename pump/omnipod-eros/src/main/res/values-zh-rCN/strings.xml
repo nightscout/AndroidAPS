@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Omnipod Eros的泵集成 (带有透明针帽的旧款)。需要固件版本至少为2.0的RileyLink 设备。</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">通知</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">在Pod管理菜单中显示Pulse日志按钮</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">在Pod管理菜单中显示RileyLink状态按键</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">在操作中启用电池更改记录</string>
