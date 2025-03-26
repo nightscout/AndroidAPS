@@ -90,7 +90,7 @@
     <string name="menu_default">Výchozí</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Trvání</string>
+    <string name="action_duration_minutes">Trvání\n[minuty]</string>
     <string name="action_tempt_confirmation">Požadován dočasný cíl</string>
     <string name="action_quick_wizard_confirmation">Požadován rychlý bolus</string>
     <string name="action_user_action_confirmation">Požadována Uživatelská akce</string>
@@ -100,21 +100,24 @@
     <string name="action_fill_confirmation">Požadováno plnění</string>
     <string name="action_ecarb_confirmation">Požadovány sacharidy</string>
     <string name="action_profile_switch_confirmation">Požadováno přepnutí profilu</string>
-    <string name="action_target" comment="In temp target menu, single target value">Cíl</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Nízký</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Vysoký</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cíl\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nízká\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Vysoká\n[%s]</string>
     <string name="action_carbs">Sacharidy</string>
+    <string name="action_carbs_gram">Sacharidy [g]</string>
     <string name="action_ecarbs">eSacharidy</string>
-    <string name="action_percentage">Procento</string>
-    <string name="action_start_min">Začátek [min]</string>
+    <string name="action_percentage">Procento\n[%]</string>
+    <string name="action_start_minutes">Spustit\n[minuty]</string>
     <string name="action_duration_h">Trvání [h]</string>
+    <string name="action_duration_hours">Trvání\n[hodiny]</string>
     <string name="action_insulin">Inzulín</string>
+    <string name="action_insulin_units">Inzulin [U]</string>
     <string name="action_preset_1">Předvolba 1</string>
     <string name="action_preset_2">Předvolba 2</string>
     <string name="action_preset_3">Předvolba 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Libovolné množství</string>
     <string name="action_confirm">POTVRDIT</string>
-    <string name="action_timeshift">posun času</string>
+    <string name="action_timeshift_hours">Časový posun\n[hodiny]</string>
     <string name="bolus_progress">Průběh vydávání bolusu</string>
     <string name="press_to_cancel">stisknutím tlačítka akci zrušíte</string>
     <string name="cancel_bolus">ZRUŠIT BOLUS</string>

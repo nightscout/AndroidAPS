@@ -90,7 +90,6 @@
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Длительность</string>
     <string name="action_tempt_confirmation">Требуется Временная Цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_user_action_confirmation">Запрошено действие пользователя</string>
@@ -100,13 +99,8 @@
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
     <string name="action_profile_switch_confirmation">Запрос на смену профиля</string>
-    <string name="action_target" comment="In temp target menu, single target value">Цель</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Низкое значение</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Высокое значение</string>
     <string name="action_carbs">Углеводы</string>
     <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
-    <string name="action_percentage">Процент</string>
-    <string name="action_start_min">Начало [min]</string>
     <string name="action_duration_h">Продолжительность [h]</string>
     <string name="action_insulin">Инсулин</string>
     <string name="action_preset_1">Предустановка 1</string>
@@ -114,7 +108,6 @@
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
-    <string name="action_timeshift">смещение по времени</string>
     <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>

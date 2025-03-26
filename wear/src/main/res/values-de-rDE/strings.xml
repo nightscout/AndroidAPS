@@ -83,7 +83,6 @@
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menü</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Dauer</string>
     <string name="action_tempt_confirmation">Temp Target angefordert</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard angefordert</string>
     <string name="action_treatment_confirmation">Behandlung angefordert</string>
@@ -92,13 +91,8 @@
     <string name="action_fill_confirmation">Füllen angefordert</string>
     <string name="action_ecarb_confirmation">KH angefordert</string>
     <string name="action_profile_switch_confirmation">Profilwechsel angefordert</string>
-    <string name="action_target" comment="In temp target menu, single target value">Ziel</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Niedrig</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Hoch</string>
     <string name="action_carbs">Kohlenhydrate</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Prozentsatz</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Dauer [h]</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Voreinstellung 1</string>
@@ -106,7 +100,6 @@
     <string name="action_preset_3">Voreinstellung 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
-    <string name="action_timeshift">Zeitverschiebung</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>
