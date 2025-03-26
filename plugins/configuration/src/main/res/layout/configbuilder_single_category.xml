@@ -58,7 +58,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_visibility"
+            android:background="@drawable/animated_visibility"
             app:tint="?android:attr/colorAccent" />
 
     </LinearLayout>

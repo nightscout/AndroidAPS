@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -76,6 +77,8 @@ class ConfigBuilderPlugin @Inject constructor(
         .description(R.string.description_config_builder),
     aapsLogger, rh
 ), ConfigBuilder {
+
+    private var visibilityAnimation: AnimationDrawable? = null
 
     override fun initialize() {
         loadSettings()
@@ -265,6 +268,12 @@ class ConfigBuilderPlugin @Inject constructor(
 
         if (title != null) layout.categoryTitle.text = rh.gs(title)
         else layout.categoryTitle.visibility = View.GONE
+
+        visibilityAnimation = layout.categoryVisibility.background as AnimationDrawable?
+        visibilityAnimation?.setEnterFadeDuration(200)
+        visibilityAnimation?.setExitFadeDuration(200)
+        if (visibilityAnimation?.isRunning == false)
+            visibilityAnimation?.start()
         layout.categoryVisibility.visibility = preferences.simpleMode.not().toVisibility()
         layout.categoryDescription.text = rh.gs(description)
         layout.categoryExpandLess.setOnClickListener {
