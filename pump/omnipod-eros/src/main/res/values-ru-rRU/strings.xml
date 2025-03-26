@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Интеграция с помпой Omnipod Eros (более старая модель с прозрачной крышечкой иглы). Требуется устройство RileyLink, имеющее прошивку версии 2.0. и выше.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Уведомления</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Показывать кнопку Pulse Log в меню управления Pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Показывать кнопку статуса RileyLink в меню управления подом</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Включить учет расхода заряда батареи</string>
