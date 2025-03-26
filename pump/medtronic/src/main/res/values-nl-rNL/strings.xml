@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max Bolus op Pomp (E)</string>
     <string name="medtronic_pump_max_basal">Max Basaal op Pomp (E/u)</string>
     <string name="medtronic_pump_encoding">Medtronic Codering</string>
-    <string name="medtronic_pump_frequency_us_ca">VS &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Wereldwijd (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codering</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codering</string>
     <string name="medtronic_custom_action_wake_and_tune">Ontwaak en maak verbinding</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Blokkering wissen</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Configuratie</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lithium (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Uitgebreide weergave)</string>
-    <string name="medtronic_bolus_debugging">Bolus/Behandelingen Debuggen</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batterij van de rileylink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">voorbij</string>
     <string name="medtronic_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Aan</string>
-    <string name="common_off">Uit</string>
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
     <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
     <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
