@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Integrarea pompei pentru Omnipod Dash (modelul nou, cu Bluetooth, cu un capac de ac albastru).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Istoric Pod</string>
     <string name="omnipod_dash_history_item_description">Descriere</string>
