@@ -33,7 +33,7 @@ abstract class PluginBaseWithPreferences(
      *
      * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
      */
-    fun beforeImport() {}
+    open fun beforeImport() {}
 
     /**
      * Called after importing preferences.
@@ -47,5 +47,5 @@ abstract class PluginBaseWithPreferences(
      *
      * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
      */
-    fun afterImport() {}
+    open fun afterImport() {}
 }
