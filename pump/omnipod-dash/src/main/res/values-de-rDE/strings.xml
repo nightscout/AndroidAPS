@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Pumpen-Integration für Omnipod Dash (das neue, bluetooth-fähige Modell mit blauer Nadelkappe).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod Historie</string>
     <string name="omnipod_dash_history_item_description">Beschreibung</string>
