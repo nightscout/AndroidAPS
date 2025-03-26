@@ -72,9 +72,11 @@ class CustomWatchface : BaseWatchFace() {
     private var jsonString = ""
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
+        2L   -> veryHighColor
         1L   -> highColor
         0L   -> midColor
         -1L  -> lowColor
+        -2L  -> veryLowColor
         else -> midColor
     }
 
@@ -240,8 +242,10 @@ class CustomWatchface : BaseWatchFace() {
                 binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
                 val jsonColor = dynPref[json.optString(JsonKeys.DYNPREFCOLOR.key)] ?: json
                 highColor = getColor(jsonColor.optString(JsonKeys.HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
+                veryHighColor = getColor(jsonColor.optString(JsonKeys.VERYHIGHCOLOR.key), highColor)
                 midColor = getColor(jsonColor.optString(JsonKeys.MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
                 lowColor = getColor(jsonColor.optString(JsonKeys.LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
+                veryLowColor = getColor(jsonColor.optString(JsonKeys.VERYLOWCOLOR.key), lowColor)
                 lowBatColor = getColor(jsonColor.optString(JsonKeys.LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
                 carbColor = getColor(jsonColor.optString(JsonKeys.CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
                 basalBackgroundColor = getColor(jsonColor.optString(JsonKeys.BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
@@ -300,9 +304,11 @@ class CustomWatchface : BaseWatchFace() {
             .put(CwfMetadataKey.CWF_COMMENT.key, if (externalViews) getString(app.aaps.core.interfaces.R.string.default_custom_watchface_external_comment) else getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(JsonKeys.METADATA.key, metadata)
+            .put(JsonKeys.VERYHIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and veryHighColor))
             .put(JsonKeys.HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
             .put(JsonKeys.MIDCOLOR.key, String.format("#%06X", 0xFFFFFF and midColor))
             .put(JsonKeys.LOWCOLOR.key, String.format("#%06X", 0xFFFFFF and lowColor))
+            .put(JsonKeys.VERYLOWCOLOR.key, String.format("#%06X", 0xFFFFFF and veryLowColor))
             .put(JsonKeys.LOWBATCOLOR.key, String.format("#%06X", 0xFFFFFF and lowBatColor))
             .put(JsonKeys.CARBCOLOR.key, String.format("#%06X", 0xFFFFFF and carbColor))
             .put(JsonKeys.BASALBACKGROUNDCOLOR.key, String.format("#%06X", 0xFFFFFF and basalBackgroundColor))
@@ -361,9 +367,11 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun setDefaultColors() {
+        veryHighColor = Color.parseColor("#FF0000")
         highColor = Color.parseColor("#FFFF00")
         midColor = Color.parseColor("#00FF00")
-        lowColor = Color.parseColor("#FF0000")
+        lowColor = Color.parseColor("#FFFF00")
+        veryLowColor = Color.parseColor("#FF0000")
         carbColor = ContextCompat.getColor(this, R.color.carbs)
         basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
         basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
@@ -452,6 +460,8 @@ class CustomWatchface : BaseWatchFace() {
         val customDrawable: ResFileMap? = null,
         val customHigh: ResFileMap? = null,
         val customLow: ResFileMap? = null,
+        val customVeryHigh: ResFileMap? = null,
+        val customVeryLow: ResFileMap? = null,
         val external: Int = 0
     ) {
 
@@ -461,7 +471,9 @@ class CustomWatchface : BaseWatchFace() {
             defaultDrawable = R.drawable.background,
             customDrawable = ResFileMap.BACKGROUND,
             customHigh = ResFileMap.BACKGROUND_HIGH,
-            customLow = ResFileMap.BACKGROUND_LOW
+            customLow = ResFileMap.BACKGROUND_LOW,
+            customVeryHigh = ResFileMap.BACKGROUND_VERY_HIGH,
+            customVeryLow = ResFileMap.BACKGROUND_VERY_LOW
         ),
         CHART(ViewKeys.CHART.key, R.id.chart),
         COVER_CHART(
@@ -469,7 +481,9 @@ class CustomWatchface : BaseWatchFace() {
             id = R.id.cover_chart,
             customDrawable = ResFileMap.COVER_CHART,
             customHigh = ResFileMap.COVER_CHART_HIGH,
-            customLow = ResFileMap.COVER_CHART_LOW
+            customLow = ResFileMap.COVER_CHART_LOW,
+            customVeryHigh = ResFileMap.COVER_CHART_VERY_HIGH,
+            customVeryLow = ResFileMap.COVER_CHART_VERY_LOW
         ),
         FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1),
         FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2),
@@ -542,7 +556,9 @@ class CustomWatchface : BaseWatchFace() {
             defaultDrawable = R.drawable.simplified_dial,
             customDrawable = ResFileMap.COVER_PLATE,
             customHigh = ResFileMap.COVER_PLATE_HIGH,
-            customLow = ResFileMap.COVER_PLATE_LOW
+            customLow = ResFileMap.COVER_PLATE_LOW,
+            customVeryHigh = ResFileMap.COVER_PLATE_VERY_HIGH,
+            customVeryLow = ResFileMap.COVER_PLATE_VERY_LOW
         ),
         HOUR_HAND(
             key = ViewKeys.HOUR_HAND.key,
@@ -550,7 +566,9 @@ class CustomWatchface : BaseWatchFace() {
             defaultDrawable = R.drawable.hour_hand,
             customDrawable = ResFileMap.HOUR_HAND,
             customHigh = ResFileMap.HOUR_HAND_HIGH,
-            customLow = ResFileMap.HOUR_HAND_LOW
+            customLow = ResFileMap.HOUR_HAND_LOW,
+            customVeryHigh = ResFileMap.HOUR_HAND_VERY_HIGH,
+            customVeryLow = ResFileMap.HOUR_HAND_VERY_LOW
         ),
         MINUTE_HAND(
             key = ViewKeys.MINUTE_HAND.key,
@@ -558,7 +576,9 @@ class CustomWatchface : BaseWatchFace() {
             defaultDrawable = R.drawable.minute_hand,
             customDrawable = ResFileMap.MINUTE_HAND,
             customHigh = ResFileMap.MINUTE_HAND_HIGH,
-            customLow = ResFileMap.MINUTE_HAND_LOW
+            customLow = ResFileMap.MINUTE_HAND_LOW,
+            customVeryHigh = ResFileMap.MINUTE_HAND_VERY_HIGH,
+            customVeryLow = ResFileMap.MINUTE_HAND_VERY_LOW
         ),
         SECOND_HAND(
             key = ViewKeys.SECOND_HAND.key,
@@ -567,7 +587,9 @@ class CustomWatchface : BaseWatchFace() {
             defaultDrawable = R.drawable.second_hand,
             customDrawable = ResFileMap.SECOND_HAND,
             customHigh = ResFileMap.SECOND_HAND_HIGH,
-            customLow = ResFileMap.SECOND_HAND_LOW
+            customLow = ResFileMap.SECOND_HAND_LOW,
+            customVeryHigh = ResFileMap.SECOND_HAND_VERY_HIGH,
+            customVeryLow = ResFileMap.SECOND_HAND_VERY_LOW
         );
 
         companion object {
@@ -604,12 +626,18 @@ class CustomWatchface : BaseWatchFace() {
             get() = field ?: customHigh?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { highCustom = it } }
         var lowCustom: Drawable? = null
             get() = field ?: customLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { lowCustom = it } }
+        var veryHighCustom: Drawable? = null
+            get() = field ?: customVeryHigh?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { veryHighCustom = it } }
+        var veryLowCustom: Drawable? = null
+            get() = field ?: customVeryLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { veryLowCustom = it } }
         var textDrawable: Drawable? = null
         val drawable: Drawable?
             get() = dynData?.getDrawable() ?: when (cwf.singleBg[0].sgvLevel) {
+                2L   -> veryHighCustom ?: highCustom ?: rangeCustom
                 1L   -> highCustom ?: rangeCustom
                 0L   -> rangeCustom
                 -1L  -> lowCustom ?: rangeCustom
+                -2L  -> veryLowCustom ?: lowCustom ?: rangeCustom
                 else -> rangeCustom
             }
         var twinView: ViewMap? = null
@@ -852,7 +880,7 @@ class CustomWatchface : BaseWatchFace() {
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
         NONE("", 0.0, 0.0),
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
-        SGV_LEVEL(JsonKeyValues.SGV_LEVEL.key, -1.0, 1.0),
+        SGV_LEVEL(JsonKeyValues.SGV_LEVEL.key, -2.0, 2.0),
         DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
         DELTA(ViewKeys.DELTA.key, -25.0, 25.0),
         AVG_DELTA(ViewKeys.AVG_DELTA.key, -25.0, 25.0),
@@ -868,7 +896,7 @@ class CustomWatchface : BaseWatchFace() {
         MONTH(ViewKeys.MONTH.key, 1.0, 12.0),
         WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, 1.0, 53.0),
         SGV_EXT1(ViewKeys.SGV_EXT1.key, 39.0, 400.0),
-        SGV_LEVEL_EXT1(JsonKeyValues.SGV_LEVEL_EXT1.key, -1.0, 1.0),
+        SGV_LEVEL_EXT1(JsonKeyValues.SGV_LEVEL_EXT1.key, -2.0, 2.0),
         DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, 1.0, 7.0),
         DELTA_EXT1(ViewKeys.DELTA_EXT1.key, -25.0, 25.0),
         AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, -25.0, 25.0),
@@ -879,7 +907,7 @@ class CustomWatchface : BaseWatchFace() {
         TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, 0.0, 60.0),
         LOOP_EXT1(ViewKeys.LOOP_EXT1.key, 0.0, 28.0),
         SGV_EXT2(ViewKeys.SGV_EXT2.key, 39.0, 400.0),
-        SGV_LEVEL_EXT2(JsonKeyValues.SGV_LEVEL_EXT2.key, -1.0, 1.0),
+        SGV_LEVEL_EXT2(JsonKeyValues.SGV_LEVEL_EXT2.key, -2.0, 2.0),
         DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, 1.0, 7.0),
         DELTA_EXT2(ViewKeys.DELTA_EXT2.key, -25.0, 25.0),
         AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, -25.0, 25.0),

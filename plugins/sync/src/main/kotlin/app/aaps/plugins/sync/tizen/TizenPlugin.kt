@@ -125,8 +125,10 @@ class TizenPlugin @Inject constructor(
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.shortAvgDelta) // average bg delta
+        bundle.putDouble("veryHigh", preferences.get(UnitDoubleKey.OverviewVeryHighMark)) // predefined topmost value of in range (yellow area)
         bundle.putDouble("high", preferences.get(UnitDoubleKey.OverviewHighMark)) // predefined top value of in range (green area)
         bundle.putDouble("low", preferences.get(UnitDoubleKey.OverviewLowMark)) // predefined bottom  value of in range
+        bundle.putDouble("veryLow", preferences.get(UnitDoubleKey.OverviewVeryLowMark)) // predefined very bottom value of in range
     }
 
     private fun iobCob(bundle: Bundle) {

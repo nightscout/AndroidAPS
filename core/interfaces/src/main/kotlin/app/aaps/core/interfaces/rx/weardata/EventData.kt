@@ -255,8 +255,10 @@ sealed class EventData : Event() {
         val avgDeltaDetailed: String = "--",
         val sgvLevel: Long = 0,
         val sgv: Double,
+        val veryHigh: Double, // veryHighLine
         val high: Double, // highLine
         val low: Double, // lowLine
+        val veryLow: Double, // veryLowLine
         val color: Int = 0,
         val deltaMgdl: Double? = null,
         val avgDeltaMgdl: Double? = null,

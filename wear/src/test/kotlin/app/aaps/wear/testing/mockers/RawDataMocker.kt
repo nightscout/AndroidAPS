@@ -38,7 +38,8 @@ class RawDataMocker {
                 0.0,
                 0.0,
                 0.0,
-                0
+                0.0,
+                0.0
             )
         )
         return raw
@@ -61,7 +62,8 @@ class RawDataMocker {
                 0.0,
                 0.0,
                 0.0,
-                0
+                0.0,
+                0.0
             )
         )
         return raw
