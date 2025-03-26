@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Màx. bolus a la bomba (U)</string>
     <string name="medtronic_pump_max_basal">Màx. basal a la bomba (U/h)</string>
     <string name="medtronic_pump_encoding">Codificació Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">EEUU &amp; Canadà (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Global (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codificació 4b6b software</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificació 4b6b hardware</string>
     <string name="medtronic_custom_action_wake_and_tune">Engegar i ajustar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Esborrar bloc de bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Restablir configuració RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Liti (Vista ampliada)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Vista ampliada)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Vista ampliada)</string>
-    <string name="medtronic_bolus_debugging">Depuració de bolus/tractaments</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">fa</string>
     <string name="medtronic_notification_check_time_date">Cal actualitzar l\'hora de la bomba</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">On</string>
-    <string name="common_off">Off</string>
     <string name="pump_time_updated">Actualitzada hora de la bomba</string>
     <string name="set_neutral_temps_title">Establir basals temporals neutres</string>
     <string name="set_neutral_temps_summary">Si està activat, cancel·larà la basal temporal abans del final de cada hora. Aquest mètode pot ajudar a evitar que algunes bombes pitin/vibrin cada hora.</string>
