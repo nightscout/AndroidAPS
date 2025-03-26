@@ -9,7 +9,6 @@
     <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
     <string name="pump_status_pump_unreachable">המשאבה אינה זמינה</string>
     <string name="pump_status_invalid_config">תצורה לא תקפה</string>
-    <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">סרוק</string>
     <string name="riley_link_ble_config_scan_stop">עצור</string>
