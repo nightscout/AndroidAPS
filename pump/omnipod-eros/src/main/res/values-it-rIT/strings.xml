@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Integrazione del microinfusore Omnipod Eros (il modello più vecchio con la protezione ago di colore trasparente). Richiede un dispositivo RileyLink con almeno la versione firmware 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notifiche</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostra tasto \"log impulsi\" nel menu gestione pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostra tasto \"statistiche RileyLink\" nel menu gestione pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Abilita log cambio batteria in \"Azioni\"</string>
