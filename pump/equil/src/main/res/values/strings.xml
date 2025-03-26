@@ -1,14 +1,4 @@
 <resources>
-    <string name="key_equil_devices" translatable="false">key_equil_devices</string>
-    <string name="key_equil_password" translatable="false">key_equil_password</string>
-    <string name="key_equil_alarm_battery_10" translatable="false">key_equil_alarm_battery_10</string>
-    <string name="key_equil_alarm_insulin_10" translatable="false">key_equil_alarm_insulin_10</string>
-    <string name="key_equil_alarm_insulin_5" translatable="false">key_equil_alarm_insulin_5</string>
-    <string name="key_equil_basal_set" translatable="false">key_equil_basal_set</string>
-    <string name="key_equil_state" translatable="false">key_equil_state1</string>
-    <string name="key_equil_pair_password" translatable="false">key_equil_pair_password</string>
-
-
     <string name="equil_name">Equil 5.3</string>
     <string name="equil_name_short">EQ</string>
     <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
