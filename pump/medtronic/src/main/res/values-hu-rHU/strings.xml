@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max. Bólus a pumpán (E)</string>
     <string name="medtronic_pump_max_basal">Max. Bázis a pumpán (E/ó)</string>
     <string name="medtronic_pump_encoding">Medtronic kódolás</string>
-    <string name="medtronic_pump_frequency_us_ca">USA &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Nemzetközi (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Szoftveres 4b6b kódolás</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardveres 4b6b kódolás</string>
     <string name="medtronic_custom_action_wake_and_tune">Ébresztés és hangolás</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bólus blokk törlése</string>
     <string name="medtronic_custom_action_reset_rileylink">RileyLink beállítás törlése</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lítium (Kiterjesztett nézet)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Kiterjesztett nézet)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (kiterjesztett nézet)</string>
-    <string name="medtronic_bolus_debugging">Bólus/Kezelések hibakeresés</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink elem</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">ezelőtt</string>
     <string name="medtronic_notification_check_time_date">Pumpa idő frissítése szükséges</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Be</string>
-    <string name="common_off">Ki</string>
     <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="set_neutral_temps_title">Semleges átmeneti bázis beállítása</string>
     <string name="set_neutral_temps_summary">Ha be van kapcsolva, akkor minden óra végén törli az átmeneti bázist. Ez a módszer segíthet elkerülni bizonyos pumpákon az óránkénti hangjelzést/rezgést.</string>
