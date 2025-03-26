@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max. bolus v pumpe (U)</string>
     <string name="medtronic_pump_max_basal">Max. bazál v pumpe (U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic kódovanie</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Celosvetovo (868 MHz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Softvérové kódovanie 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardvérové kódovanie 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Prebudenie a prispôsobenie</string>
     <string name="medtronic_custom_action_clear_bolus_block">Odstránenie blokovania bolusu</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetovať konfiguráciu RileyLinku</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Líthiové (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Rozšírené)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Rozšírené zobrazenie)</string>
-    <string name="medtronic_bolus_debugging">Bolus/Ošetrenia ladenie</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batéria RileyLinku</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">pred</string>
     <string name="medtronic_notification_check_time_date">Je vyžadovaná aktualizácia času v pumpe</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">ZAP</string>
-    <string name="common_off">VYP</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
     <string name="set_neutral_temps_title">Nastaviť neutrálny dočasný bazál</string>
     <string name="set_neutral_temps_summary">Ak je povolená táto možnosť, zastaví sa dočasný bazál pred koncom každej hodiny. To môže u niektorých púmp pomôcť zastaviť pípanie/vibrácie na celú hodinu.</string>
