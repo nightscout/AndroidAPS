@@ -215,8 +215,6 @@ public class RFSpy {
             return null; // will be a null (invalid) response
         }
 
-        SystemClock.sleep(100);
-
         return reader.poll(responseTimeout_ms);
     }
 

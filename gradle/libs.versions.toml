@@ -1,13 +1,13 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "8.9.0"
+gradlePlugin = "8.9.1"
 googleServices = "4.4.2"
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 wearable = "2.9.0"
 room = "2.6.1"
-dagger = "2.55"
-mockito = "5.16.0"
-junit = "5.12.0"
+dagger = "2.56.1"
+mockito = "5.16.1"
+junit = "5.12.1"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 kotlinx-serialization = "1.8.0"
@@ -20,7 +20,7 @@ annotation = "1.9.1"
 android-library = { id = "com.android.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.2.0" }
 moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
-ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.31" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.20-1.0.31" }
 
 
 [libraries]
@@ -33,14 +33,14 @@ com-google-dagger-android-processor = { group = "com.google.dagger", name = "dag
 com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.3" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.10.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.11.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 com-google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 com-google-firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
-com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.3.0" }
+com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.4.0" }
 com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "19.0.0" }
 com-google-android-places = { group = "com.google.android.libraries.places", name = "places", version = "4.1.0" }
 com-google-android-gms-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }
@@ -51,9 +51,10 @@ com-google-android-flexbox = { group = "com.google.android.flexbox", name = "fle
 com-google-android-wearable = { group = "com.google.android.wearable", name = "wearable", version.ref = "wearable" }
 com-google-android-wearable-support = { group = "com.google.android.support", name = "wearable", version.ref = "wearable" }
 
-com-google-guava = { group = "com.google.guava", name = "guava", version = "33.4.0-jre" }
+com-google-guava = { group = "com.google.guava", name = "guava", version = "33.4.6-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.12.1" }
-com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.16.0" }
+com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.17.0" }
+com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.4" }
 
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
@@ -84,12 +85,13 @@ androidx-browser = { group = "androidx.browser", name = "browser", version = "1.
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.1" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.6.1" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version = "1.8.6" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version = "1.0.0" }
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.8.7" }
 androidx-media3-common = { group = "androidx.media3", name = "media3-common", version = "1.5.1" }
-androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version = "2.8.8" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version = "2.8.9" }
 androidx-preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
 androidx-room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -99,6 +101,7 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version = "1.1.0" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.6.1" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version = "1.2.1" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version = "2.3.0" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work" }
 androidx-wear = { group = "androidx.wear", name = "wear", version = "1.3.0" }

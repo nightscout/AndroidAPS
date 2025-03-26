@@ -236,8 +236,8 @@ class MedtronicFragment : DaggerFragment() {
                 }
             }
 
-            else                                 ->
-                aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + medtronicPumpStatus.pumpDeviceState)
+            // else                                 ->
+            //     aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + medtronicPumpStatus.pumpDeviceState)
         }
 
         val status = commandQueue.spannedStatus()
@@ -253,7 +253,7 @@ class MedtronicFragment : DaggerFragment() {
         context?.let {
             OKDialog.show(
                 it, rh.gs(R.string.medtronic_warning),
-                rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null
+                rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration)
             )
         }
     }

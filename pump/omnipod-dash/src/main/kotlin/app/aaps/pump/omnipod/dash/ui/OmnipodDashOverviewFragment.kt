@@ -691,7 +691,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
             UIRunnable {
-                OKDialog.show(it, title, message, null)
+                OKDialog.show(it, title, message)
             }.run()
         }
     }

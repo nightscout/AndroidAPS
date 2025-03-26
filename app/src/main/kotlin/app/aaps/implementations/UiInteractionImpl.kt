@@ -216,13 +216,13 @@ class UiInteractionImpl @Inject constructor(
         )
     }
 
-    override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String, validityCheck: (() -> Boolean)?) {
+    override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes buttonText: Int, title: String, message: String, validityCheck: (() -> Boolean)?) {
         rxBus.send(
             EventNewNotification(
                 NotificationWithAction(injector, id, text, level, validityCheck)
                     .also { n ->
-                        n.action(actionButtonId) {
-                            n.contextForAction?.let { OKDialog.show(it, title, message, null) }
+                        n.action(buttonText) {
+                            n.contextForAction?.let { OKDialog.show(it, title, message) }
                         }
                     })
         )

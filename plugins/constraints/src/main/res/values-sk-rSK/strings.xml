@@ -11,6 +11,7 @@
     <string name="application_expired">Aplikácia expirovala</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
+    <string name="version_expire">Platnosť verzie %1$s vyprší dňa %2$s a prepne sa do režimu Ochrana pred nízkou glykémiou (LGS)</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Použité prepočítané dáta</string>
