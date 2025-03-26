@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Ενσωμάτωση αντλίας Omnipod Dash (το νέο μοντέλο με μπλε καπάκι βελόνας - Bluetooth ενεργοποιημένο).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Ιστορικό Pod</string>
     <string name="omnipod_dash_history_item_description">Περιγραφή</string>
