@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Integração da bomba para o Omnipod Dash (o novo modelo habilitado com Bluetooth com uma agulha de tampa azul).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Histórico do Pod</string>
     <string name="omnipod_dash_history_item_description">Descrição</string>
