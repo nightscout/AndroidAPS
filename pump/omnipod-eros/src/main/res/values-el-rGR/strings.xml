@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Ενσωμάτωση αντλίας για Omnipod Eros (το παλαιότερο μοντέλο με διαφανές καπάκι βελόνας). Απαιτεί μια συσκευή RileyLink με έκδοση λογισμικού τουλάχιστον 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Ειδοποιήσεις</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Εμφάνιση κουμπιού καταγραφής Pulse στο μενού Διαχείριση Pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Εμφάνιση του κουμπιού Στατιστικά RileyLink στο μενού Διαχείριση Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Ενεργοποίηση καταγραφής αλλαγής μπαταρίας στις Ενέργειες</string>
