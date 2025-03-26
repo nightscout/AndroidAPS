@@ -16,8 +16,8 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.PrefMetadataMap

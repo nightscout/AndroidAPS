@@ -1,10 +1,8 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import app.aaps.pump.diaconn.R
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
@@ -15,7 +13,6 @@ class BolusSpeedSettingReportPacket(
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    @Inject lateinit var sp: SP
 
     init {
         msgType = 0xC5.toByte()
@@ -32,7 +29,6 @@ class BolusSpeedSettingReportPacket(
 
         val bufferData = prefixDecode(data)
         diaconnG8Pump.speed = getByteToInt(bufferData) // speed result
-        sp.putBoolean(R.string.key_diaconn_g8_is_bolus_speed_sync, true)
         aapsLogger.debug(LTag.PUMPCOMM, "bolusSpeed   --> ${diaconnG8Pump.speed}")
     }
 

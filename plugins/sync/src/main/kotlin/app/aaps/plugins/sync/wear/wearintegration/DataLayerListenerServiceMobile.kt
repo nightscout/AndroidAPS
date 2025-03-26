@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
@@ -52,7 +51,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var loop: Loop
     @Inject lateinit var wearPlugin: WearPlugin
-    @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus

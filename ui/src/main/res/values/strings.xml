@@ -78,11 +78,6 @@
     <string name="duration10h">10 hours</string>
 
     <!-- WizardDialog -->
-    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
-    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
-    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
-
     <string name="a11_correction_percentage">correct outcome with %</string>
     <string name="a11_correction_units">correct outcome with units</string>
     <string name="two_hours">2h</string>

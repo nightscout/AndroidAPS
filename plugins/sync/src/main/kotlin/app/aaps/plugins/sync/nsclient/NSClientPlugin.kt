@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
@@ -34,8 +33,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -50,6 +49,7 @@ import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -63,7 +63,6 @@ class NSClientPlugin @Inject constructor(
     rh: ResourceHelper,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val sp: SP,
     private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val dataSyncSelectorV1: DataSyncSelectorV1,
@@ -160,8 +159,8 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_paused)))
+        preferences.put(NsclientBooleanKey.NsPaused, newState)
+        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override val address: String get() = nsClientService?.nsURL ?: ""

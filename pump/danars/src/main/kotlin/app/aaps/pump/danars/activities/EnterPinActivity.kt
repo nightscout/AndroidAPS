@@ -7,13 +7,13 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
-import app.aaps.pump.dana.keys.DanaString2Key
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.databinding.DanarsEnterPinActivityBinding
 import app.aaps.pump.danars.services.BLEComm
@@ -89,12 +89,12 @@ class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
         for (i in pairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor pairingKey[i]
 
-        preferences.put(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
+        preferences.put(DanaStringComposedKey.V3ParingKey, danaRSPlugin.mDeviceName, value = Base64.encodeToString(pairingKey, Base64.DEFAULT))
 
         for (i in randomPairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor randomPairingKey[i]
 
-        preferences.put(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
+        preferences.put(DanaStringComposedKey.V3RandomParingKey, danaRSPlugin.mDeviceName, value = Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
 
         return checksum[0] == pairingKeyCheckSum
     }

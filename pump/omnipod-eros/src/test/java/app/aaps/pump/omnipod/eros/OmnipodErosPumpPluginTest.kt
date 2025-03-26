@@ -9,8 +9,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.pump.common.defs.TempBasalPair
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
+import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
+import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
+import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import com.google.common.truth.Truth.assertThat
@@ -32,8 +36,13 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var erosHistoryDatabase: ErosHistoryDatabase
+    @Mock lateinit var erosPodStateManager: ErosPodStateManager
+    @Mock lateinit var rileyLinkServiceData: RileyLinkServiceData
+    @Mock lateinit var aapsOmnipodUtil: AapsOmnipodUtil
+    @Mock lateinit var omnipodAlertUtil: OmnipodAlertUtil
 
-    @BeforeEach fun prepare() {
+    @BeforeEach
+    fun prepare() {
         `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
             .thenReturn("")
     }
@@ -43,25 +52,18 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
 
         // mock all the things
         val plugin = OmnipodErosPumpPlugin(
-            injector, aapsLogger, TestAapsSchedulers(), rxBus, null,
-            rh, null, null, aapsOmnipodErosManager, commandQueue,
-            null, null, null, null,
-            rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter, instantiator
+            aapsLogger, rh, preferences, commandQueue, TestAapsSchedulers(), rxBus, context,
+            erosPodStateManager, aapsOmnipodErosManager, fabricPrivacy, rileyLinkServiceData, dateUtil, aapsOmnipodUtil,
+            rileyLinkUtil, omnipodAlertUtil, profileFunction, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter, instantiator
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")
         `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
         `when`(rileyLinkUtil.rileyLinkHistory).thenReturn(ArrayList())
-        val profile = Mockito.mock(
-            Profile::class.java
-        )
+        val profile = Mockito.mock(Profile::class.java)
 
         // always return a PumpEnactResult containing same rate and duration as input
         `when`(
-            aapsOmnipodErosManager.setTemporaryBasal(
-                ArgumentMatchers.any(
-                    TempBasalPair::class.java
-                )
-            )
+            aapsOmnipodErosManager.setTemporaryBasal(ArgumentMatchers.any(TempBasalPair::class.java))
         ).thenAnswer { invocation: InvocationOnMock ->
             val pair = invocation.getArgument<TempBasalPair>(0)
             val result = PumpEnactResultObject(rh)
@@ -73,21 +75,11 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given standard basal
         `when`(profile.getBasal()).thenReturn(0.5)
         // When
-        var result1 =
-            plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        var result2 = plugin.setTempBasalPercent(
-            5000,
-            30000,
-            profile,
-            false,
-            PumpSync.TemporaryBasalType.NORMAL
-        )
-        val result3 =
-            plugin.setTempBasalPercent(0, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        val result4 =
-            plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        val result5 =
-            plugin.setTempBasalPercent(-50, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        var result1 = plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        var result2 = plugin.setTempBasalPercent(5000, 30000, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result3 = plugin.setTempBasalPercent(0, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result4 = plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result5 = plugin.setTempBasalPercent(-50, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return correct values
         assertThat(result1.absolute).isWithin(0.01).of(0.4)
         assertThat(result1.duration).isEqualTo(30)
@@ -104,10 +96,8 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given zero basal
         `when`(profile.getBasal()).thenReturn(0.0)
         // When
-        result1 =
-            plugin.setTempBasalPercent(8000, 90, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        result2 =
-            plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result1 = plugin.setTempBasalPercent(8000, 90, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result2 = plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return zero values
         assertThat(result1.absolute).isWithin(0.01).of(0.0)
         assertThat(result1.duration).isEqualTo(90)
@@ -120,16 +110,13 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         result1 =
             plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return sane values
-        assertThat(result1.absolute).isWithin(0.01).of(
-            PumpType.OMNIPOD_EROS.determineCorrectBasalSize(500.0 * 0.8)
-        )
+        assertThat(result1.absolute).isWithin(0.01).of(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(500.0 * 0.8))
         assertThat(result1.duration).isEqualTo(30)
 
         // Given weird basal
         `when`(profile.getBasal()).thenReturn(1.234567)
         // When treatment
-        result1 =
-            plugin.setTempBasalPercent(280, 600, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result1 = plugin.setTempBasalPercent(280, 600, profile, false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return sane values
         assertThat(result1.absolute).isWithin(0.01).of(3.4567876)
         assertThat(result1.duration).isEqualTo(600)
@@ -137,8 +124,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given negative basal
         `when`(profile.getBasal()).thenReturn(-1.234567)
         // When treatment
-        result1 =
-            plugin.setTempBasalPercent(280, 510, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result1 = plugin.setTempBasalPercent(280, 510, profile, false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return negative value (this is validated further downstream, see TempBasalExtraCommand)
         assertThat(result1.absolute).isWithin(0.01).of(-3.4567876)
         assertThat(result1.duration).isEqualTo(510)

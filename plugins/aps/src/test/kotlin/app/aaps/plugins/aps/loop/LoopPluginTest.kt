@@ -2,7 +2,6 @@ package app.aaps.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.plugin.PluginType
@@ -17,8 +16,6 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -38,29 +35,14 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     private lateinit var loopPlugin: LoopPlugin
 
-    init {
-        addInjector {
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AdaptiveListPreference) {
-                it.preferences = preferences
-            }
-        }
-    }
-
     @BeforeEach fun prepare() {
         preferenceManager = PreferenceManager(context)
         loopPlugin = LoopPlugin(
-            aapsLogger, aapsSchedulers, rxBus, sp, preferences, config,
+            aapsLogger, aapsSchedulers, rxBus, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             persistenceLayer, runningConfiguration, uiInteraction, instantiator, processedDeviceStatusData
         )

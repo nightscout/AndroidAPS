@@ -1,12 +1,9 @@
 package app.aaps.plugins.constraints.objectives
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Objectives
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -22,18 +19,14 @@ import org.mockito.Mockito.`when`
 class ObjectivesPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var config: Config
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is Objective) {
-                it.sp = sp
                 it.preferences = preferences
                 it.rh = rh
                 it.dateUtil = dateUtil
@@ -42,7 +35,7 @@ class ObjectivesPluginTest : TestBase() {
     }
 
     @BeforeEach fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, sp)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, preferences)
         `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")

@@ -28,12 +28,9 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -48,14 +45,11 @@ class StoreDataForDbImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val persistenceLayer: PersistenceLayer,
-    private val sp: SP,
     private val preferences: Preferences,
     private val uel: UserEntryLogger,
-    private val dateUtil: DateUtil,
     private val config: Config,
     private val nsClientSource: NSClientSource,
-    private val virtualPump: VirtualPump,
-    private val uiInteraction: UiInteraction
+    private val virtualPump: VirtualPump
 ) : StoreDataForDb {
 
     private val glucoseValues: MutableList<GV> = mutableListOf()

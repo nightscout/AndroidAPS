@@ -39,7 +39,7 @@ class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun createViewsForSettings() {
         binding.placeholder.removeAllViews()
-        for (element in l.getLogElements()) {
+        for (element in l.logElements()) {
             val logViewHolder = LogViewHolder(element)
             binding.placeholder.addView(logViewHolder.baseView)
         }

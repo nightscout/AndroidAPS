@@ -4,7 +4,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import javax.inject.Inject
@@ -16,15 +17,9 @@ import javax.inject.Singleton
 @Singleton
 class PumpSyncStorage @Inject constructor(
     val pumpSync: PumpSync,
-    val sp: SP,
+    val preferences: Preferences,
     val aapsLogger: AAPSLogger
 ) {
-
-    companion object {
-
-        const val pumpSyncStorageBolusKey: String = "pump_sync_storage_bolus"
-        const val pumpSyncStorageTBRKey: String = "pump_sync_storage_tbr"
-    }
 
     var pumpSyncStorageBolus: MutableList<PumpDbEntryBolus> = mutableListOf()
     var pumpSyncStorageTBR: MutableList<PumpDbEntryTBR> = mutableListOf()
@@ -34,7 +29,6 @@ class PumpSyncStorage @Inject constructor(
 
     init {
         initStorage()
-        cleanOldStorage()
     }
 
     fun initStorage() {
@@ -43,14 +37,12 @@ class PumpSyncStorage @Inject constructor(
 
         xstream.addPermission(AnyTypePermission.ANY)
 
-        if (sp.contains(pumpSyncStorageBolusKey)) {
-            val jsonData: String = sp.getString(pumpSyncStorageBolusKey, "")
-
+        preferences.getIfExists(StringKey.PumpCommonBolusStorage)?.let { jsonData ->
             if (jsonData.isNotBlank()) {
                 @Suppress("UNCHECKED_CAST")
                 pumpSyncStorageBolus = try {
                     xstream.fromXML(jsonData, MutableList::class.java) as MutableList<PumpDbEntryBolus>
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     mutableListOf()
                 }
 
@@ -59,14 +51,12 @@ class PumpSyncStorage @Inject constructor(
             }
         }
 
-        if (sp.contains(pumpSyncStorageTBRKey)) {
-            val jsonData: String = sp.getString(pumpSyncStorageTBRKey, "")
-
+        preferences.getIfExists(StringKey.PumpCommonTbrStorage)?.let { jsonData ->
             if (jsonData.isNotBlank()) {
                 @Suppress("UNCHECKED_CAST")
                 pumpSyncStorageTBR = try {
                     xstream.fromXML(jsonData, MutableList::class.java) as MutableList<PumpDbEntryTBR>
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     mutableListOf()
                 }
 
@@ -79,31 +69,16 @@ class PumpSyncStorage @Inject constructor(
 
     fun saveStorageBolus() {
         if (pumpSyncStorageBolus.isNotEmpty()) {
-            sp.putString(pumpSyncStorageBolusKey, xstream.toXML(pumpSyncStorageBolus))
+            preferences.put(StringKey.PumpCommonBolusStorage, xstream.toXML(pumpSyncStorageBolus))
             aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: boluses=${pumpSyncStorageBolus.size}")
-        } else {
-            if (sp.contains(pumpSyncStorageBolusKey))
-                sp.remove(pumpSyncStorageBolusKey)
-        }
+        } else preferences.remove(StringKey.PumpCommonBolusStorage)
     }
 
     fun saveStorageTBR() {
         if (pumpSyncStorageTBR.isNotEmpty()) {
-            sp.putString(pumpSyncStorageTBRKey, xstream.toXML(pumpSyncStorageTBR))
+            preferences.put(StringKey.PumpCommonTbrStorage, xstream.toXML(pumpSyncStorageTBR))
             aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: tbr=${pumpSyncStorageTBR.size}")
-        } else {
-            if (sp.contains(pumpSyncStorageTBRKey))
-                sp.remove(pumpSyncStorageTBRKey)
-        }
-    }
-
-    private fun cleanOldStorage() {
-        val oldSpKeys = setOf("pump_sync_storage", "pump_sync_storage_xstream", "pump_sync_storage_xstream_v2")
-
-        for (oldSpKey in oldSpKeys) {
-            if (sp.contains(oldSpKey))
-                sp.remove(oldSpKey)
-        }
+        } else preferences.remove(StringKey.PumpCommonTbrStorage)
     }
 
     fun getBoluses(): MutableList<PumpDbEntryBolus> {

@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,8 @@ import javax.inject.Singleton
 @Singleton
 class TomatoPlugin @Inject constructor(
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    preferences: Preferences
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -35,7 +36,8 @@ class TomatoPlugin @Inject constructor(
         .shortName(R.string.tomato_short)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_tomato),
-    aapsLogger, rh
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences
 ), BgSource {
 
     // cannot be inner class because of needed injection
@@ -46,7 +48,6 @@ class TomatoPlugin @Inject constructor(
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var tomatoPlugin: TomatoPlugin
-        @Inject lateinit var sp: SP
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
         @SuppressLint("CheckResult")

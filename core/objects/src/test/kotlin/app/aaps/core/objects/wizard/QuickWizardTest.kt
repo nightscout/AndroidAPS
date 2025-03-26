@@ -2,7 +2,8 @@ package app.aaps.core.objects.wizard
 
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
@@ -15,7 +16,7 @@ import org.mockito.Mockito.`when`
 
 class QuickWizardTest : TestBase() {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var loop: Loop
 
@@ -36,7 +37,7 @@ class QuickWizardTest : TestBase() {
         AndroidInjector {
             if (it is QuickWizardEntry) {
                 it.aapsLogger = aapsLogger
-                it.sp = sp
+                it.preferences = preferences
                 it.profileFunction = profileFunction
                 it.loop = loop
                 it.time = mockedTime
@@ -48,8 +49,8 @@ class QuickWizardTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_quickwizard, "[]")).thenReturn("[]")
-        quickWizard = QuickWizard(sp, injector)
+        `when`(preferences.get(StringNonKey.QuickWizard)).thenReturn("[]")
+        quickWizard = QuickWizard(preferences, injector)
     }
 
     @Test

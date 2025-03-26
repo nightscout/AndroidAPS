@@ -49,7 +49,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -66,7 +66,7 @@ import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaLongKey
-import app.aaps.pump.dana.keys.DanaString2Key
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.activities.BLEScanActivity
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
@@ -83,16 +83,16 @@ import kotlin.math.max
 @Singleton
 class DanaRSPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    rh: ResourceHelper,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    commandQueue: CommandQueue,
     private val danaPump: DanaPump,
     private val pumpSync: PumpSync,
-    private val preferences: Preferences,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
@@ -102,7 +102,7 @@ class DanaRSPlugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DanaFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danai_128)
@@ -111,7 +111,8 @@ class DanaRSPlugin @Inject constructor(
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
-    aapsLogger, rh, commandQueue
+    ownPreferences = listOf(DanaStringKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java, DanaStringComposedKey::class.java, DanaLongKey::class.java),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
@@ -119,24 +120,14 @@ class DanaRSPlugin @Inject constructor(
     private var mDeviceAddress = ""
     var mDeviceName = ""
 
-    // Make plugin preferences available to AAPS
-    init {
-        preferences.registerPreferences(DanaStringKey::class.java)
-        preferences.registerPreferences(DanaIntKey::class.java)
-        preferences.registerPreferences(DanaBooleanKey::class.java)
-        preferences.registerPreferences(DanaIntentKey::class.java)
-        preferences.registerPreferences(DanaString2Key::class.java)
-        preferences.registerPreferences(DanaLongKey::class.java)
-    }
-
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
 
-        if (pref.key == DanaStringKey.DanaRsName.key) {
-            val value = preferences.getIfExists(DanaStringKey.DanaRsName)
+        if (pref.key == DanaStringKey.RsName.key) {
+            val value = preferences.getIfExists(DanaStringKey.RsName)
             pref.summary = value ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
     }
@@ -183,9 +174,9 @@ class DanaRSPlugin @Inject constructor(
     }
 
     fun changePump() {
-        mDeviceAddress = preferences.get(DanaStringKey.DanaMacAddress)
-        mDeviceName = preferences.get(DanaStringKey.DanaRsName)
-        danaPump.serialNumber = preferences.get(DanaStringKey.DanaRsName)
+        mDeviceAddress = preferences.get(DanaStringKey.MacAddress)
+        mDeviceName = preferences.get(DanaStringKey.RsName)
+        danaPump.serialNumber = preferences.get(DanaStringKey.RsName)
         danaPump.reset()
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
@@ -321,7 +312,7 @@ class DanaRSPlugin @Inject constructor(
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
+        val preferencesSpeed = preferences.get(DanaIntKey.BolusSpeed)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -665,11 +656,11 @@ class DanaRSPlugin @Inject constructor(
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
-        preferences.remove(DanaString2Key.DanaRsParingKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsV3RandomParingKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsV3ParingKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsV3RandomSyncKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsBle5PairingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.ParingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.V3RandomParingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.V3ParingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.V3RandomSyncKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.Ble5PairingKey, mDeviceName)
     }
 
     override fun clearAllTables() = danaHistoryDatabase.clearAllTables()
@@ -688,13 +679,13 @@ class DanaRSPlugin @Inject constructor(
             initialExpandedChildrenCount = 0
             addPreference(
                 AdaptiveIntentPreference(
-                    ctx = context, intentKey = DanaIntentKey.DanaRsBtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
+                    ctx = context, intentKey = DanaIntentKey.BtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
                     intent = Intent(context, BLEScanActivity::class.java)
                 )
             )
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = DanaStringKey.DanaRsPassword, title = app.aaps.pump.dana.R.string.danars_password_title,
+                    ctx = context, stringKey = DanaStringKey.Password, title = app.aaps.pump.dana.R.string.danars_password_title,
                     validatorParams = DefaultEditTextValidator.Parameters(
                         testType = EditTextValidator.TEST_REGEXP,
                         customRegexp = rh.gs(app.aaps.core.validators.R.string.fourhexanumber),
@@ -705,15 +696,15 @@ class DanaRSPlugin @Inject constructor(
             addPreference(
                 AdaptiveListIntPreference(
                     ctx = context,
-                    intKey = DanaIntKey.DanaBolusSpeed,
+                    intKey = DanaIntKey.BolusSpeed,
                     title = app.aaps.pump.dana.R.string.bolusspeed,
                     dialogTitle = app.aaps.pump.dana.R.string.bolusspeed,
                     entries = speedEntries,
                     entryValues = speedValues
                 )
             )
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRsLogInsulinChange, title = app.aaps.pump.dana.R.string.rs_loginsulinchange_title, summary = app.aaps.pump.dana.R.string.rs_loginsulinchange_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRsLogCannulaChange, title = app.aaps.pump.dana.R.string.rs_logcanulachange_title, summary = app.aaps.pump.dana.R.string.rs_logcanulachange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.LogInsulinChange, title = app.aaps.pump.dana.R.string.rs_loginsulinchange_title, summary = app.aaps.pump.dana.R.string.rs_loginsulinchange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.LogCannulaChange, title = app.aaps.pump.dana.R.string.rs_logcanulachange_title, summary = app.aaps.pump.dana.R.string.rs_logcanulachange_summary))
         }
     }
 }

@@ -5,9 +5,6 @@
     <string name="omnipod_dash_name_short" translatable="false">Dash</string>
     <string name="omnipod_dash_pump_description">Pump integration for Omnipod Dash (the new, Bluetooth-enabled model with a blue needle cap).</string>
 
-    <!-- Omnipod Dash - Keys -->
-    <string name="key_omnipod_dash_pod_state" translatable="false">AAPS.OmnipodDash.pod_state</string>
-
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod History</string>
     <string name="omnipod_dash_history_item_description">Description</string>
@@ -28,8 +25,6 @@
         with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 80U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Trying to pair with the new Pod and prime it.\n\nWhen the initialization process has successfully been completed, you can press <b>Next</b>.</string>
 
-    <string name="key_omnipod_common_preferences_category_confirmation_beeps" translatable="false">omnipod_common_preferences_category_confirmation</string>
-    <string name="key_omnipod_common_notification_delivery_suspended_sound_enabled" translatable="false">AAPS.Omnipod.notification_delivery_suspended_sound_enabled</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sound when delivery suspended notification enabled</string>
 
     <!-- Exceptions -->

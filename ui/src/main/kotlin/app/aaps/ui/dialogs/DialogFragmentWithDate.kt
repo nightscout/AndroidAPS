@@ -11,10 +11,9 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.toVisibility
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -27,7 +26,6 @@ import javax.inject.Inject
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
 

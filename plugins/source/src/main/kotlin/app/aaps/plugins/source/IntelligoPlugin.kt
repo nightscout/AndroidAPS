@@ -18,10 +18,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.source.keys.IntelligoLongKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,13 +31,13 @@ import javax.inject.Singleton
 class IntelligoPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
+    preferences: Preferences,
     private val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy
 ) : AbstractBgSourcePlugin(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_intelligo)
@@ -45,7 +46,8 @@ class IntelligoPlugin @Inject constructor(
         .shortName(R.string.intelligo)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_intelligo),
-    aapsLogger, resourceHelper
+    ownPreferences = listOf(IntelligoLongKey::class.java),
+    aapsLogger, resourceHelper, preferences
 ), BgSource {
 
     private var handler: Handler? = null
@@ -61,7 +63,7 @@ class IntelligoPlugin @Inject constructor(
                 fabricPrivacy.logException(e)
                 aapsLogger.error("Error while processing data", e)
             }
-            val lastReadTimestamp = sp.getLong(R.string.key_last_processed_intelligo_timestamp, 0L)
+            val lastReadTimestamp = preferences.get(IntelligoLongKey.LastProcessedTimestamp)
             val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
             handler?.postDelayed(refreshLoop, differenceToNow)
         }
@@ -97,7 +99,7 @@ class IntelligoPlugin @Inject constructor(
                 val curr = cr.getDouble(2)
 
                 // bypass already processed
-                if (timestamp < sp.getLong(R.string.key_last_processed_intelligo_timestamp, 0L)) {
+                if (timestamp < preferences.get(IntelligoLongKey.LastProcessedTimestamp)) {
                     cr.moveToNext()
                     continue
                 }
@@ -131,7 +133,7 @@ class IntelligoPlugin @Inject constructor(
                             glucoseUnit = GlucoseUnit.MMOL
                         )
                     )
-                sp.putLong(R.string.key_last_processed_intelligo_timestamp, timestamp)
+                preferences.put(IntelligoLongKey.LastProcessedTimestamp, timestamp)
                 cr.moveToNext()
             }
             cr.close()

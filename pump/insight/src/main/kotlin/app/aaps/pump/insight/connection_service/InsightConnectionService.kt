@@ -14,8 +14,7 @@ import android.os.PowerManager
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.insight.R
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.insight.app_layer.AppLayerMessage
 import app.aaps.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
 import app.aaps.pump.insight.app_layer.AppLayerMessage.Companion.wrap
@@ -57,6 +56,7 @@ import app.aaps.pump.insight.exceptions.satl_errors.SatlNoneErrorException
 import app.aaps.pump.insight.exceptions.satl_errors.SatlPairingRejectedException
 import app.aaps.pump.insight.exceptions.satl_errors.SatlUndefinedErrorException
 import app.aaps.pump.insight.exceptions.satl_errors.SatlWrongStateException
+import app.aaps.pump.insight.keys.InsightIntKey
 import app.aaps.pump.insight.satl.ConnectionRequest
 import app.aaps.pump.insight.satl.ConnectionResponse
 import app.aaps.pump.insight.satl.DataMessage
@@ -99,7 +99,7 @@ import kotlin.math.min
 class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     private val stateCallbacks: MutableList<StateCallback> = ArrayList()
     private val connectionRequests: MutableList<Any> = ArrayList()
     private val exceptionCallbacks: MutableList<ExceptionCallback> = ArrayList()
@@ -136,10 +136,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     val randomBytes: ByteArray = intRandomBytes ?: ByteArray(28).also { intRandomBytes = it; SecureRandom().nextBytes(intRandomBytes) }
 
     private fun increaseRecoveryDuration() {
-        var maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
+        var maxRecoveryDuration = preferences.get(InsightIntKey.MaxRecoveryDuration).toLong()
         maxRecoveryDuration = min(maxRecoveryDuration, 20)
         maxRecoveryDuration = max(maxRecoveryDuration, 0)
-        var minRecoveryDuration = sp.getInt(R.string.key_insight_min_recovery_duration, 5).toLong()
+        var minRecoveryDuration = preferences.get(InsightIntKey.MinRecoveryDuration).toLong()
         minRecoveryDuration = min(minRecoveryDuration, 20)
         minRecoveryDuration = max(minRecoveryDuration, 0)
         recoveryDuration += 1000
@@ -266,7 +266,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 setState(InsightState.DISCONNECTED)
                 cleanup(true)
             } else if (state !== InsightState.DISCONNECTED) {
-                var disconnectTimeout = sp.getInt(R.string.key_insight_disconnect_delay, 5).toLong()
+                var disconnectTimeout = preferences.get(InsightIntKey.DisconnectDelay).toLong()
                 disconnectTimeout = min(disconnectTimeout, 15)
                 disconnectTimeout = max(disconnectTimeout, 0)
                 aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in $disconnectTimeout seconds")
@@ -529,7 +529,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             PairingStatus.PENDING   -> try {
                 Thread.sleep(200)
                 sendSatlMessage(VerifyConfirmRequest())
-            } catch (e: InterruptedException) {
+            } catch (_: InterruptedException) {
                 //Redirect interrupt flag
                 Thread.currentThread().interrupt()
             }

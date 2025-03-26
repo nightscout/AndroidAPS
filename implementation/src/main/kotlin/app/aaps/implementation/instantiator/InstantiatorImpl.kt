@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.profile.ProfileStoreObject

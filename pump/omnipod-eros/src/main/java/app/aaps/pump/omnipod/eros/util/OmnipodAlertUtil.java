@@ -7,26 +7,26 @@ import org.joda.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.core.interfaces.sharedPreferences.SP;
-import app.aaps.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
-import app.aaps.pump.omnipod.eros.driver.definition.OmnipodConstants;
+import app.aaps.core.keys.interfaces.Preferences;
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey;
+import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey;
 
 @Singleton
 public class OmnipodAlertUtil {
-    private final SP sp;
+    private final Preferences preferences;
 
     @Inject
-    public OmnipodAlertUtil(SP sp) {
-        this.sp = sp;
+    public OmnipodAlertUtil(Preferences preferences) {
+        this.preferences = preferences;
     }
 
     @Nullable public Duration getExpirationReminderTimeBeforeShutdown() {
-        boolean expirationAlertEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED, true);
-        return expirationAlertEnabled ? Duration.standardHours(sp.getInt(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN, 9)) : null;
+        boolean expirationAlertEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationReminder);
+        return expirationAlertEnabled ? Duration.standardHours(preferences.get(OmnipodIntPreferenceKey.ExpirationReminderHours)) : null;
     }
 
-    public Integer getLowReservoirAlertUnits() {
-        boolean lowReservoirAlertEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED, true);
-        return lowReservoirAlertEnabled ? sp.getInt(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS, OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD) : null;
+    @Nullable public Integer getLowReservoirAlertUnits() {
+        boolean lowReservoirAlertEnabled = preferences.get(OmnipodBooleanPreferenceKey.LowReservoirAlert);
+        return lowReservoirAlertEnabled ? preferences.get(OmnipodIntPreferenceKey.LowReservoirAlertUnits) : null;
     }
 }

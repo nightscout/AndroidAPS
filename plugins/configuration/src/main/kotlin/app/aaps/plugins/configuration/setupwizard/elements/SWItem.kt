@@ -13,8 +13,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.PreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -26,7 +28,6 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var passwordCheck: PasswordCheck
 
@@ -46,7 +47,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
     var label: Int? = null
     var comment: Int? = null
-    var preference = "UNKNOWN"
+    var preference: PreferenceKey? = null
 
     open fun label(@StringRes label: Int): SWItem {
         this.label = label
@@ -59,7 +60,10 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
     }
 
     open fun save(value: CharSequence, updateDelay: Long) {
-        sp.putString(preference, value.toString())
+        if (preference is StringNonPreferenceKey)
+            preferences.put(preference as StringNonPreferenceKey, value.toString())
+        if (preference is StringPreferenceKey)
+            preferences.put(preference as StringPreferenceKey, value.toString())
         scheduleChange(updateDelay)
     }
 
@@ -77,7 +81,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
             override fun run() {
                 aapsLogger.debug(LTag.CORE, "Firing EventPreferenceChange")
-                rxBus.send(EventPreferenceChange(preference))
+                rxBus.send(EventPreferenceChange(preference?.key ?: ""))
                 rxBus.send(EventSWUpdate(false))
                 scheduledEventPost = null
             }

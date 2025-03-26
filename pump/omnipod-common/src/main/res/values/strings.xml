@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Omnipod - Keys -->
-    <string name="key_omnipod_common_bolus_beeps_enabled" translatable="false">AAPS.Omnipod.bolus_beeps_enabled</string>
-    <string name="key_omnipod_common_basal_beeps_enabled" translatable="false">AAPS.Omnipod.basal_beeps_enabled</string>
-    <string name="key_omnipod_common_smb_beeps_enabled" translatable="false">AAPS.Omnipod.smb_beeps_enabled</string>
-    <string name="key_omnipod_common_tbr_beeps_enabled" translatable="false">AAPS.Omnipod.tbr_beeps_enabled</string>
-    <string name="key_omnipod_common_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
-    <string name="key_omnipod_common_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
-    <string name="key_omnipod_common_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
-    <string name="key_omnipod_common_expiration_reminder_hours_before_expiry" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_expiry</string>
-    <string name="key_omnipod_common_expiration_alarm_enabled" translatable="false">AAPS.Omnipod.expiration_alarm_enabled</string>
-    <string name="key_omnipod_common_expiration_alarm_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_alarm_hours_before_shutdown</string>
-    <string name="key_omnipod_common_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
-    <string name="key_omnipod_common_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
-    <string name="key_omnipod_common_automatically_silence_alerts_enabled" translatable="false">AAPS.Omnipod.automatically_acknowledge_alerts_enabled</string>
-    <string name="key_omnipod_dash_use_bonding" translatable="false">AAPS.Omnipod.Dash.use_bonding</string>
-    <string name="key_common_preferences_category_alerts_settings" translatable="false">common_preferences_category_alerts</string>
-    <string name="key_omnipod_common_preferences_category_notifications_settings" translatable="false">common_preferences_category_notifications_settings</string>
-    <string name="key_omnipod_common_notification_uncertain_tbr_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_tbr_sound_enabled</string>
-    <string name="key_omnipod_common_notification_uncertain_smb_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_smb_sound_enabled</string>
-    <string name="key_omnipod_common_notification_uncertain_bolus_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_bolus_sound_enabled</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_common_pod_management_title">Pod Management</string>
     <string name="omnipod_common_pod_management_heading_actions">Actions</string>

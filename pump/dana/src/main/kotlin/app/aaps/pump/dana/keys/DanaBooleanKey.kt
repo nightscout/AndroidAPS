@@ -1,6 +1,6 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 
 enum class DanaBooleanKey(
     override val key: String,
@@ -13,10 +13,11 @@ enum class DanaBooleanKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
-    DanaRUseExtended("danar_useextended", true, defaultedBySM = true),
-    DanaRsLogCannulaChange("rs_logcanulachange", true),
-    DanaRsLogInsulinChange("rs_loginsulinchange", true),
+    UseExtended("danar_useextended", true, defaultedBySM = true),
+    LogCannulaChange("rs_logcanulachange", true),
+    LogInsulinChange("rs_loginsulinchange", true),
 }

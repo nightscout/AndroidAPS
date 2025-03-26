@@ -36,12 +36,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.runOnUiThread
@@ -59,7 +59,6 @@ class LoopDialog : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var ctx: Context
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -345,7 +344,7 @@ class LoopDialog : DaggerDialogFragment() {
                         }
                     }
                 })
-                sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusereconnect, true)
+                preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
                 return true
             }
 
@@ -394,7 +393,7 @@ class LoopDialog : DaggerDialogFragment() {
                     loop.goToZeroTemp(T.hours(1).mins().toInt(), profile, OE.Reason.DISCONNECT_PUMP, Action.DISCONNECT, Sources.LoopDialog, listOf(ValueWithUnit.Hour(1)))
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
-                sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusedisconnect, true)
+                preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
                 return true
             }
 

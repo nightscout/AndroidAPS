@@ -103,7 +103,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
-        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
 
@@ -125,7 +125,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
 
     private fun readStatus() {
         commandQueue.customCommand(
-            CmdResistanceGet(aapsLogger, sp, equilManager),
+            CmdResistanceGet(aapsLogger, preferences, equilManager),
             object : Callback() {
                 override fun run() {
                     if (activity == null) return

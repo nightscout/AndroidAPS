@@ -6,8 +6,7 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
@@ -18,11 +17,10 @@ class AbstractSensitivityPluginTest : TestBase() {
 
     @Mock lateinit var pluginDescription: PluginDescription
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
 
-    private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, rh: ResourceHelper, sp: SP) :
-        AbstractSensitivityPlugin(pluginDescription, aapsLogger, rh, sp, preferences) {
+    private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, rh: ResourceHelper) :
+        AbstractSensitivityPlugin(pluginDescription, aapsLogger, rh, preferences) {
 
         override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
             return AutosensResult()
@@ -42,7 +40,7 @@ class AbstractSensitivityPluginTest : TestBase() {
 
     @Test
     fun fillResultTest() {
-        val sut = SensitivityTestClass(pluginDescription, aapsLogger, rh, sp)
+        val sut = SensitivityTestClass(pluginDescription, aapsLogger, rh)
         var ar = sut.fillResult(1.0, 1.0, "1", "1.2", "1", 12, 0.7, 1.2)
         assertThat(ar.ratio).isWithin(0.01).of(1.0)
         ar = sut.fillResult(1.2, 1.0, "1", "1.2", "1", 40, 0.7, 1.2)

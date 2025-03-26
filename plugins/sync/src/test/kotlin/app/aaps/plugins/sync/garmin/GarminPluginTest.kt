@@ -1,17 +1,19 @@
 package app.aaps.plugins.sync.garmin
 
-import android.content.SharedPreferences
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.rx.events.EventNewBG
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
+import app.aaps.plugins.sync.garmin.keys.GarminIntKey
+import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterEach
@@ -21,10 +23,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.atMost
 import org.mockito.Mockito.mock
@@ -53,7 +52,6 @@ class GarminPluginTest : TestBaseWithProfile() {
     private lateinit var gp: GarminPlugin
 
     @Mock private lateinit var loopHub: LoopHub
-    @Mock lateinit var sharedPrefs: SharedPreferences
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
     init {
@@ -61,30 +59,27 @@ class GarminPluginTest : TestBaseWithProfile() {
             if (it is AdaptiveIntPreference) {
                 it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
                 it.config = config
             }
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
                 it.config = config
             }
             if (it is AdaptiveStringPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
             }
         }
     }
 
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(aapsLogger, rh, context, loopHub, rxBus, sp, preferences)
+        gp = GarminPlugin(aapsLogger, rh, preferences, context, loopHub, rxBus)
         gp.clock = clock
         `when`(loopHub.currentProfileName).thenReturn("Default")
-        `when`(sp.getBoolean(anyString(), anyBoolean())).thenAnswer { i -> i.arguments[1] }
-        `when`(sp.getString(anyString(), anyString())).thenAnswer { i -> i.arguments[1] }
-        `when`(sp.getInt(anyString(), anyInt())).thenAnswer { i -> i.arguments[1] }
-        `when`(preferences.get(IntKey.GarminLocalHttpPort)).thenReturn(28890)
+        `when`(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28890)
+        `when`(preferences.get(any<IntNonKey>())).thenAnswer { i -> 0 }
+        `when`(preferences.get(any<BooleanNonKey>())).thenAnswer { i -> false }
+        `when`(preferences.get(any<StringNonKey>())).thenAnswer { i -> "" }
     }
 
     @AfterEach
@@ -181,21 +176,22 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun setupHttpServer_enabled() {
-        `when`(preferences.get(BooleanKey.GarminLocalHttpServer)).thenReturn(true)
-        `when`(preferences.get(IntKey.GarminLocalHttpPort)).thenReturn(28892)
+        `when`(preferences.get(GarminStringKey.RequestKey)).thenReturn("")
+        `when`(preferences.get(GarminBooleanKey.LocalHttpServer)).thenReturn(true)
+        `when`(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28892)
         gp.setupHttpServer(Duration.ofSeconds(10))
         val reqUri = URI("http://127.0.0.1:28892/get")
         val resp = reqUri.toURL().openConnection() as HttpURLConnection
         assertEquals(200, resp.responseCode)
 
         // Change port
-        `when`(preferences.get(IntKey.GarminLocalHttpPort)).thenReturn(28893)
+        `when`(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28893)
         gp.setupHttpServer(Duration.ofSeconds(10))
         val reqUri2 = URI("http://127.0.0.1:28893/get")
         val resp2 = reqUri2.toURL().openConnection() as HttpURLConnection
         assertEquals(200, resp2.responseCode)
 
-        `when`(preferences.get(BooleanKey.GarminLocalHttpServer)).thenReturn(false)
+        `when`(preferences.get(GarminBooleanKey.LocalHttpServer)).thenReturn(false)
         gp.setupHttpServer(Duration.ofSeconds(10))
         assertThrows(ConnectException::class.java) {
             (reqUri2.toURL().openConnection() as HttpURLConnection).responseCode
@@ -222,6 +218,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun requestHandler_NoKey() {
+        `when`(preferences.get(GarminStringKey.RequestKey)).thenReturn("")
         val uri = createUri(emptyMap())
         val handler = gp.requestHandler { u: URI -> assertEquals(uri, u); "OK" }
         assertEquals(
@@ -232,6 +229,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun requestHandler_KeyProvided() {
+        `when`(preferences.get(GarminStringKey.RequestKey)).thenReturn("")
         val uri = createUri(mapOf("key" to "foo"))
         val handler = gp.requestHandler { u: URI -> assertEquals(uri, u); "OK" }
         assertEquals(
@@ -242,7 +240,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Test
     fun requestHandler_KeyRequiredAndProvided() {
-        `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
+        `when`(preferences.get(GarminStringKey.RequestKey)).thenReturn("foo")
         val uri = createUri(mapOf("key" to "foo"))
         val handler = gp.requestHandler { u: URI -> assertEquals(uri, u); "OK" }
         assertEquals(
@@ -256,7 +254,7 @@ class GarminPluginTest : TestBaseWithProfile() {
     fun requestHandler_KeyRequired() {
         gp.garminMessengerField = mock(GarminMessenger::class.java)
 
-        `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
+        `when`(preferences.get(GarminStringKey.RequestKey)).thenReturn("foo")
         val uri = createUri(emptyMap())
         val handler = gp.requestHandler { u: URI -> assertEquals(uri, u); "OK" }
         assertEquals(
@@ -287,7 +285,7 @@ class GarminPluginTest : TestBaseWithProfile() {
     @Test
     fun onConnectDevice() {
         gp.garminMessengerField = mock(GarminMessenger::class.java)
-        `when`(preferences.get(StringKey.GarminRequestKey)).thenReturn("foo")
+        `when`(preferences.get(GarminStringKey.RequestKey)).thenReturn("foo")
         val device = GarminDevice(mock(), 1, "Edge")
         gp.onConnectDevice(device)
 

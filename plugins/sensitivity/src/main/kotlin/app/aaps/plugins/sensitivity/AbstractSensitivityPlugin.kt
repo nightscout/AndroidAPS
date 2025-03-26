@@ -8,10 +8,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import kotlin.math.max
 import kotlin.math.min
 
@@ -19,7 +18,6 @@ abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    val sp: SP,
     val preferences: Preferences
 ) : PluginBase(pluginDescription, aapsLogger, rh), Sensitivity {
 

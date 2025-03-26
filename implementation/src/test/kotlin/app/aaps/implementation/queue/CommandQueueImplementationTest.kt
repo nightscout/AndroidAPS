@@ -25,12 +25,11 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
@@ -82,7 +81,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
         context: Context,
-        sp: SP,
         preferences: Preferences,
         config: Config,
         dateUtil: DateUtil,
@@ -96,7 +94,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         workManager: WorkManager
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
+        activePlugin, context, preferences, config, dateUtil, fabricPrivacy, androidPermission,
         uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
     ) {
 
@@ -179,7 +177,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.rxBus = rxBus
                 it.activePlugin = activePlugin
                 it.rh = rh
-                it.sp = sp
                 it.preferences = preferences
                 it.androidPermission = androidPermission
                 it.config = config
@@ -193,7 +190,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueMocked(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction, activePlugin, context,
-            sp, preferences, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
+            preferences, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
         )
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
         testPumpPlugin.connected = true
@@ -237,7 +234,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun commandIsPickedUp() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp, preferences,
+            constraintChecker, profileFunction, activePlugin, context, preferences,
             config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
         )
         val handler = mock(Handler::class.java)

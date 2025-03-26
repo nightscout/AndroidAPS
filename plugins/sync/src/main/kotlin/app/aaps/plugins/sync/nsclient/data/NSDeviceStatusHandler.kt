@@ -6,8 +6,9 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.HtmlHelper
@@ -72,7 +73,7 @@ import javax.inject.Singleton
 @Suppress("SpellCheckingInspection")
 @Singleton
 class NSDeviceStatusHandler @Inject constructor(
-    private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val runningConfiguration: RunningConfiguration,
@@ -100,7 +101,7 @@ class NSDeviceStatusHandler @Inject constructor(
 
                 }
             if (config.APS) {
-                nsDeviceStatus.pump?.let { sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+                nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0
             }
         }
     }

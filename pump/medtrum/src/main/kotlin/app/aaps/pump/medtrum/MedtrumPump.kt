@@ -11,9 +11,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.medtrum.code.ConnectionState
 import app.aaps.pump.medtrum.comm.enums.AlarmSetting
 import app.aaps.pump.medtrum.comm.enums.AlarmState
@@ -23,8 +22,12 @@ import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
+import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
+import app.aaps.pump.medtrum.keys.MedtrumIntNonKey
+import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.EnumSet
@@ -37,7 +40,6 @@ import kotlin.math.round
 class MedtrumPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
@@ -65,7 +67,7 @@ class MedtrumPump @Inject constructor(
         get() = _pumpState.value
         set(value) {
             _pumpState.value = value
-            sp.putInt(R.string.key_pump_state, value.state.toInt())
+            preferences.put(MedtrumIntNonKey.PumpState, value.state.toInt())
         }
 
     // Active alarms
@@ -121,13 +123,13 @@ class MedtrumPump @Inject constructor(
             _batteryVoltage_B.value = value
         }
 
-    /** Stuff stored in SP */
+    /** Stuff stored in preferences */
     private var _patchSessionToken = 0L
     var patchSessionToken: Long
         get() = _patchSessionToken
         set(value) {
             _patchSessionToken = value
-            sp.putLong(R.string.key_session_token, value)
+            preferences.put(MedtrumLongNonKey.SessionToken, value)
         }
 
     // Note: This is not always incremented by the pump, so it is not a reliable indicator for activation unless we reset it on deactivation
@@ -137,7 +139,7 @@ class MedtrumPump @Inject constructor(
         get() = _patchId
         set(value) {
             _patchId = value
-            sp.putLong(R.string.key_patch_id, value)
+            preferences.put(MedtrumLongNonKey.PatchId, value)
         }
 
     private var _currentSequenceNumber = 0
@@ -145,7 +147,7 @@ class MedtrumPump @Inject constructor(
         get() = _currentSequenceNumber
         set(value) {
             _currentSequenceNumber = value
-            sp.putInt(R.string.key_current_sequence_number, value)
+            preferences.put(MedtrumIntNonKey.CurrentSequenceNumber, value)
         }
 
     private var _syncedSequenceNumber = 0
@@ -153,7 +155,7 @@ class MedtrumPump @Inject constructor(
         get() = _syncedSequenceNumber
         set(value) {
             _syncedSequenceNumber = value
-            sp.putInt(R.string.key_synced_sequence_number, value)
+            preferences.put(MedtrumIntNonKey.SyncedSequenceNumber, value)
         }
 
     private var _actualBasalProfile = byteArrayOf(0)
@@ -162,7 +164,7 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _actualBasalProfile = value
             val encodedString = Base64.encodeToString(value, Base64.DEFAULT)
-            sp.putString(R.string.key_actual_basal_profile, encodedString ?: "")
+            preferences.put(MedtrumStringNonKey.ActualBasalProfile, encodedString ?: "")
         }
 
     private var _lastBolusTime = 0L // Time in ms!
@@ -170,7 +172,7 @@ class MedtrumPump @Inject constructor(
         get() = _lastBolusTime
         set(value) {
             _lastBolusTime = value
-            sp.putLong(R.string.key_last_bolus_time, value)
+            preferences.put(MedtrumLongNonKey.LastBolusTime, value)
         }
 
     private var _lastBolusAmount = 0.0
@@ -178,7 +180,7 @@ class MedtrumPump @Inject constructor(
         get() = _lastBolusAmount
         set(value) {
             _lastBolusAmount = value
-            sp.putDouble(R.string.key_last_bolus_amount, value)
+            preferences.put(MedtrumDoubleNonKey.LastBolusAmount, value)
         }
 
     private var _lastConnection = 0L // Time in ms!
@@ -186,7 +188,7 @@ class MedtrumPump @Inject constructor(
         get() = _lastConnection
         set(value) {
             _lastConnection = value
-            sp.putLong(R.string.key_last_connection, value)
+            preferences.put(MedtrumLongNonKey.LastConnection, value)
         }
 
     private var _deviceType: Int = 0 // As reported by pump
@@ -194,7 +196,7 @@ class MedtrumPump @Inject constructor(
         get() = _deviceType
         set(value) {
             _deviceType = value
-            sp.putInt(R.string.key_device_type, value)
+            preferences.put(MedtrumIntNonKey.DeviceType, value)
         }
 
     private var _swVersion: String = "" // As reported by pump
@@ -202,7 +204,7 @@ class MedtrumPump @Inject constructor(
         get() = _swVersion
         set(value) {
             _swVersion = value
-            sp.putString(R.string.key_sw_version, value)
+            preferences.put(MedtrumStringNonKey.SwVersion, value)
         }
 
     private var _patchStartTime = 0L // Time in ms!
@@ -210,7 +212,7 @@ class MedtrumPump @Inject constructor(
         get() = _patchStartTime
         set(value) {
             _patchStartTime = value
-            sp.putLong(R.string.key_patch_start_time, value)
+            preferences.put(MedtrumLongNonKey.PatchStartTime, value)
         }
 
     private var _pumpTimeZoneOffset = 0 // As reported by pump
@@ -218,7 +220,7 @@ class MedtrumPump @Inject constructor(
         get() = _pumpTimeZoneOffset
         set(value) {
             _pumpTimeZoneOffset = value
-            sp.putInt(R.string.key_pump_time_zone_offset, value)
+            preferences.put(MedtrumIntNonKey.PumpTimezoneOffset, value)
         }
 
     private var _pumpSN = 0L
@@ -245,14 +247,14 @@ class MedtrumPump @Inject constructor(
         get() = _bolusStartTime
         set(value) {
             _bolusStartTime = value
-            sp.putLong(R.string.key_bolus_start_time, value)
+            preferences.put(MedtrumLongNonKey.BolusStartTime, value)
         }
     private var _bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusAmountToBeDelivered: Double
         get() = _bolusAmountToBeDelivered
         set(value) {
             _bolusAmountToBeDelivered = value
-            sp.putDouble(R.string.key_bolus_amount_to_be_delivered, value)
+            preferences.put(MedtrumDoubleNonKey.BolusAmountToBeDelivered, value)
         }
 
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
@@ -308,29 +310,29 @@ class MedtrumPump @Inject constructor(
         }
 
     fun loadVarsFromSP() {
-        // Load stuff from SP
-        _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
-        _lastConnection = sp.getLong(R.string.key_last_connection, 0L)
-        _lastBolusTime = sp.getLong(R.string.key_last_bolus_time, 0L)
-        _lastBolusAmount = sp.getDouble(R.string.key_last_bolus_amount, 0.0)
-        _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
-        _patchId = sp.getLong(R.string.key_patch_id, 0L)
-        _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)
-        _pumpState.value = MedtrumPumpState.fromByte(sp.getInt(R.string.key_pump_state, MedtrumPumpState.NONE.state.toInt()).toByte())
-        _deviceType = sp.getInt(R.string.key_device_type, 0)
-        _swVersion = sp.getString(R.string.key_sw_version, "")
-        _patchStartTime = sp.getLong(R.string.key_patch_start_time, 0L)
-        _pumpTimeZoneOffset = sp.getInt(R.string.key_pump_time_zone_offset, 0)
-        _bolusStartTime = sp.getLong(R.string.key_bolus_start_time, 0L)
-        _bolusAmountToBeDelivered = sp.getDouble(R.string.key_bolus_amount_to_be_delivered, 0.0)
+        // Load stuff from preferences
+        _patchSessionToken = preferences.get(MedtrumLongNonKey.SessionToken)
+        _lastConnection = preferences.get(MedtrumLongNonKey.LastConnection)
+        _lastBolusTime = preferences.get(MedtrumLongNonKey.LastBolusTime)
+        _lastBolusAmount = preferences.get(MedtrumDoubleNonKey.LastBolusAmount)
+        _currentSequenceNumber = preferences.get(MedtrumIntNonKey.CurrentSequenceNumber)
+        _patchId = preferences.get(MedtrumLongNonKey.PatchId)
+        _syncedSequenceNumber = preferences.get(MedtrumIntNonKey.SyncedSequenceNumber)
+        _pumpState.value = MedtrumPumpState.fromByte(preferences.get(MedtrumIntNonKey.PumpState).toByte())
+        _deviceType = preferences.get(MedtrumIntNonKey.DeviceType)
+        _swVersion = preferences.get(MedtrumStringNonKey.SwVersion)
+        _patchStartTime = preferences.get(MedtrumLongNonKey.PatchStartTime)
+        _pumpTimeZoneOffset = preferences.get(MedtrumIntNonKey.PumpTimezoneOffset)
+        _bolusStartTime = preferences.get(MedtrumLongNonKey.BolusStartTime)
+        _bolusAmountToBeDelivered = preferences.get(MedtrumDoubleNonKey.BolusAmountToBeDelivered)
 
         loadActiveAlarms()
 
-        val encodedString = sp.getString(R.string.key_actual_basal_profile, "0")
+        val encodedString = preferences.get(MedtrumStringNonKey.ActualBasalProfile)
         try {
             _actualBasalProfile = Base64.decode(encodedString, Base64.DEFAULT)
-        } catch (e: Exception) {
-            aapsLogger.warn(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
+        } catch (_: Exception) {
+            aapsLogger.warn(LTag.PUMP, "Error decoding basal profile from preferences: $encodedString")
         }
 
         loadUserSettingsFromSP()
@@ -615,11 +617,11 @@ class MedtrumPump @Inject constructor(
 
     private fun saveActiveAlarms() {
         val alarmsStr = activeAlarms.joinToString(separator = ",") { it.name }
-        sp.putString(R.string.key_active_alarms, alarmsStr)
+        preferences.put(MedtrumStringNonKey.ActiveAlarms, alarmsStr)
     }
 
     private fun loadActiveAlarms() {
-        val alarmsStr = sp.getString(R.string.key_active_alarms, "")
+        val alarmsStr = preferences.get(MedtrumStringNonKey.ActiveAlarms)
         activeAlarms = if (alarmsStr.isEmpty()) {
             EnumSet.noneOf(AlarmState::class.java)
         } else {

@@ -1,16 +1,15 @@
 package app.aaps.shared.tests
 
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-@Suppress("unused") class HardLimitsMock @Inject constructor(
-    private val sp: SP,
+@Suppress("unused")
+class HardLimitsMock @Inject constructor(
     private val preferences: Preferences,
     private val rh: ResourceHelper
 ) : HardLimits {

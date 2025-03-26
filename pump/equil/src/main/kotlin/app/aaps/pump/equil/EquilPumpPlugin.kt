@@ -34,11 +34,10 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
@@ -50,8 +49,10 @@ import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.keys.EquilBooleanKey
-import app.aaps.pump.equil.keys.EquilDoubleKey
-import app.aaps.pump.equil.keys.EquilIntKey
+import app.aaps.pump.equil.keys.EquilBooleanPreferenceKey
+import app.aaps.pump.equil.keys.EquilDoublePreferenceKey
+import app.aaps.pump.equil.keys.EquilIntPreferenceKey
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
@@ -73,27 +74,31 @@ import javax.inject.Singleton
 class EquilPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
     private val equilManager: EquilManager,
     private val decimalFormatter: DecimalFormatter,
-    private val instantiator: Instantiator,
-    private val preferences: Preferences
+    private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(EquilFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.equil_pump_description), aapsLogger, rh, commandQueue
+        .description(R.string.equil_pump_description),
+    ownPreferences = listOf(
+        EquilBooleanKey::class.java, EquilBooleanPreferenceKey::class.java, EquilDoublePreferenceKey::class.java, EquilIntPreferenceKey::class.java,
+        EquilStringKey::class.java
+    ),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump {
 
     override val pumpDescription: PumpDescription
@@ -102,12 +107,6 @@ class EquilPumpPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private var statusChecker: Runnable
-
-    init {
-        preferences.registerPreferences(EquilIntKey::class.java)
-        preferences.registerPreferences(EquilDoubleKey::class.java)
-        preferences.registerPreferences(EquilBooleanKey::class.java)
-    }
 
     override fun onStart() {
         super.onStart()
@@ -122,56 +121,56 @@ class EquilPumpPlugin @Inject constructor(
             .toObservable(EventEquilAlarm::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ eventEquilError ->
-                var cmd = commandQueue.performing()
-                cmd?.let {
-                    if (it.commandType == Command.CommandType.BOLUS) {
-                        aapsLogger.info(
-                            LTag.PUMPCOMM,
-                            "eventEquilError.tips====${eventEquilError.tips}"
-                        )
-                        rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM))
-                        equilManager.showNotification(
-                            Notification.EQUIL_ALARM,
-                            eventEquilError.tips,
-                            Notification.URGENT, app.aaps.core.ui.R.raw.alarm
-                        )
-                        stopBolusDelivering()
-                    }
-                }
-            }, fabricPrivacy::logException)
+                           var cmd = commandQueue.performing()
+                           cmd?.let {
+                               if (it.commandType == Command.CommandType.BOLUS) {
+                                   aapsLogger.info(
+                                       LTag.PUMPCOMM,
+                                       "eventEquilError.tips====${eventEquilError.tips}"
+                                   )
+                                   rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM))
+                                   equilManager.showNotification(
+                                       Notification.EQUIL_ALARM,
+                                       eventEquilError.tips,
+                                       Notification.URGENT, app.aaps.core.ui.R.raw.alarm
+                                   )
+                                   stopBolusDelivering()
+                               }
+                           }
+                       }, fabricPrivacy::logException)
 
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                if (event.isChanged(EquilIntKey.EquilTone.key)) {
-                    val mode = preferences.get(EquilIntKey.EquilTone)
-                    commandQueue.customCommand(
-                        CmdAlarmSet(mode, aapsLogger, sp, equilManager),
-                        object : Callback() {
-                            override fun run() {
-                                if (result.success) ToastUtils.infoToast(
-                                    context,
-                                    rh.gs(R.string.equil_pump_updated)
-                                )
-                                else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                            }
-                        })
-                } else if (event.isChanged(EquilDoubleKey.EquilMaxBolus.key)) {
-                    val data = preferences.get(EquilDoubleKey.EquilMaxBolus)
-                    commandQueue.customCommand(
-                        CmdSettingSet(data, aapsLogger, sp, equilManager),
-                        object : Callback() {
-                            override fun run() {
-                                if (result.success) ToastUtils.infoToast(
-                                    context,
-                                    rh.gs(R.string.equil_pump_updated)
-                                )
-                                else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                            }
-                        })
-                }
-            }, fabricPrivacy::logException)
+                           if (event.isChanged(EquilIntPreferenceKey.EquilTone.key)) {
+                               val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
+                               commandQueue.customCommand(
+                                   CmdAlarmSet(mode, aapsLogger, preferences, equilManager),
+                                   object : Callback() {
+                                       override fun run() {
+                                           if (result.success) ToastUtils.infoToast(
+                                               context,
+                                               rh.gs(R.string.equil_pump_updated)
+                                           )
+                                           else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                                       }
+                                   })
+                           } else if (event.isChanged(EquilDoublePreferenceKey.EquilMaxBolus.key)) {
+                               val data = preferences.get(EquilDoublePreferenceKey.EquilMaxBolus)
+                               commandQueue.customCommand(
+                                   CmdSettingSet(data, aapsLogger, preferences, equilManager),
+                                   object : Callback() {
+                                       override fun run() {
+                                           if (result.success) ToastUtils.infoToast(
+                                               context,
+                                               rh.gs(R.string.equil_pump_updated)
+                                           )
+                                           else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                                       }
+                                   })
+                           }
+                       }, fabricPrivacy::logException)
     }
 
     var tempActivationProgress = ActivationProgress.NONE
@@ -234,13 +233,7 @@ class EquilPumpPlugin @Inject constructor(
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
             val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
             val pumpEnactResult = equilManager.executeCmd(
-                CmdBasalSet(
-                    basalSchedule,
-                    profile,
-                    aapsLogger,
-                    sp,
-                    equilManager
-                )
+                CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager)
             )
             if (pumpEnactResult.success) {
                 equilManager.equilState?.basalSchedule = basalSchedule
@@ -285,7 +278,7 @@ class EquilPumpPlugin @Inject constructor(
             return instantiator.providePumpEnactResult().success(false).enacted(false)
                 .bolusDelivered(0.0).comment("Invalid input")
         }
-        val maxBolus = preferences.get(EquilDoubleKey.EquilMaxBolus)
+        val maxBolus = preferences.get(EquilDoublePreferenceKey.EquilMaxBolus)
         if (detailedBolusInfo.insulin > maxBolus) {
             val formattedValue = "%.2f".format(maxBolus)
             val comment = rh.gs(R.string.equil_maxbolus_tips, formattedValue)
@@ -471,7 +464,7 @@ class EquilPumpPlugin @Inject constructor(
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver")
-        commandQueue.customCommand(CmdTimeSet(aapsLogger, sp, equilManager), null)
+        commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager), null)
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false
@@ -535,27 +528,26 @@ class EquilPumpPlugin @Inject constructor(
     }
 
     fun resetData() {
-        sp.putBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, false)
-        sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, false)
-        sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, false)
-        sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, false)
-        sp.putBoolean(EquilConst.Prefs.EQUIL_BASAL_SET, false)
+        preferences.put(EquilBooleanKey.AlarmBattery10, false)
+        preferences.put(EquilBooleanKey.AlarmInsulin10, false)
+        preferences.put(EquilBooleanKey.AlarmInsulin5, false)
+        preferences.put(EquilBooleanKey.BasalSet, false)
     }
 
     fun clearData() {
         resetData()
         equilManager.clearPodState()
-        sp.putString(EquilConst.Prefs.EQUIL_DEVICES, "")
-        sp.putString(EquilConst.Prefs.EQUIL_PASSWORD, "")
+        preferences.put(EquilStringKey.Devices, "")
+        preferences.put(EquilStringKey.Password, "")
     }
 
     private fun playAlarm() {
         val battery = equilManager.equilState?.battery ?: 100
         val insulin = equilManager.equilState?.currentInsulin ?: 0
-        val alarmBattery = preferences.get(EquilBooleanKey.EquilAlarmBattery)
-        val alarmInsulin = preferences.get(EquilBooleanKey.EquilAlarmInsulin)
+        val alarmBattery = preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)
+        val alarmInsulin = preferences.get(EquilBooleanPreferenceKey.EquilAlarmInsulin)
         if (battery <= 10 && alarmBattery) {
-            val alarmBattery10 = sp.getBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, false)
+            val alarmBattery10 = preferences.get(EquilBooleanKey.AlarmBattery10)
             if (!alarmBattery10) {
                 equilManager.showNotification(
                     Notification.FAILED_UPDATE_PROFILE,
@@ -563,7 +555,7 @@ class EquilPumpPlugin @Inject constructor(
                     Notification.NORMAL,
                     app.aaps.core.ui.R.raw.alarm
                 )
-                sp.putBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, true)
+                preferences.put(EquilBooleanKey.AlarmBattery10, true)
             } else {
                 if (battery < 5) {
                     equilManager.showNotification(
@@ -579,7 +571,7 @@ class EquilPumpPlugin @Inject constructor(
             when {
                 insulin in 6..10 -> {
                     val alarmInsulin10 =
-                        sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, false)
+                        preferences.get(EquilBooleanKey.AlarmInsulin10)
                     if (!alarmInsulin10) {
                         rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM_INSULIN))
                         equilManager.showNotification(
@@ -588,12 +580,12 @@ class EquilPumpPlugin @Inject constructor(
                             Notification.NORMAL,
                             app.aaps.core.ui.R.raw.alarm
                         )
-                        sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, true)
+                        preferences.put(EquilBooleanKey.AlarmInsulin10, true)
                     }
                 }
 
-                insulin in 3..5 -> {
-                    val alarmInsulin5 = sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, false)
+                insulin in 3..5  -> {
+                    val alarmInsulin5 = preferences.get(EquilBooleanKey.AlarmInsulin5)
                     if (!alarmInsulin5) {
                         rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM_INSULIN))
 
@@ -603,11 +595,11 @@ class EquilPumpPlugin @Inject constructor(
                             Notification.NORMAL,
                             app.aaps.core.ui.R.raw.alarm
                         )
-                        sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, true)
+                        preferences.put(EquilBooleanKey.AlarmInsulin5, true)
                     }
                 }
 
-                insulin <= 2 -> {
+                insulin <= 2     -> {
                     rxBus.send(EventDismissNotification(Notification.EQUIL_ALARM_INSULIN))
                     equilManager.showNotification(
                         Notification.EQUIL_ALARM_INSULIN,
@@ -655,21 +647,21 @@ class EquilPumpPlugin @Inject constructor(
             addPreference(
                 AdaptiveSwitchPreference(
                     ctx = context,
-                    booleanKey = EquilBooleanKey.EquilAlarmBattery,
+                    booleanKey = EquilBooleanPreferenceKey.EquilAlarmBattery,
                     title = R.string.equil_settings_alarm_battery
                 )
             )
             addPreference(
                 AdaptiveSwitchPreference(
                     ctx = context,
-                    booleanKey = EquilBooleanKey.EquilAlarmInsulin,
+                    booleanKey = EquilBooleanPreferenceKey.EquilAlarmInsulin,
                     title = R.string.equil_settings_alarm_insulin
                 )
             )
             addPreference(
                 AdaptiveListIntPreference(
                     ctx = context,
-                    intKey = EquilIntKey.EquilTone,
+                    intKey = EquilIntPreferenceKey.EquilTone,
                     title = R.string.equil_tone,
                     entries = toneEntries,
                     entryValues = toneValues
@@ -678,7 +670,7 @@ class EquilPumpPlugin @Inject constructor(
             addPreference(
                 AdaptiveDoublePreference(
                     ctx = context,
-                    doubleKey = EquilDoubleKey.EquilMaxBolus,
+                    doubleKey = EquilDoublePreferenceKey.EquilMaxBolus,
                     title = app.aaps.core.ui.R.string.max_bolus_title
                 )
             )

@@ -17,8 +17,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAAPSDirectorySelected
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.maintenance.CustomWatchfaceFileContract

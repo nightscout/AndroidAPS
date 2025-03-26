@@ -14,7 +14,7 @@ open class PluginDescription {
         const val PREFERENCE_NONE = -1
 
         /**
-         * Plugin generates [PreferenceScreen] directly
+         * Plugin generates [androidx.preference.PreferenceScreen] directly
          */
         const val PREFERENCE_SCREEN = 0
     }

@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.versionChecker
 
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.plugins.constraints.R
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -19,21 +20,21 @@ class VersionCheckerPluginTest : TestBaseWithProfile() {
 
     @Test
     fun applyMaxIOBConstraintsTest() {
-        versionCheckerPlugin = VersionCheckerPlugin(sp, rh, versionCheckerUtils, aapsLogger, config, dateUtil)
+        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils, config, dateUtil)
         `when`(rh.gs(R.string.application_expired)).thenReturn("")
 
         // No expiration
-        `when`(sp.getLong(anyString(), anyLong())).thenReturn(0)
+        `when`(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(0)
         val c1 = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         assertThat(versionCheckerPlugin.applyMaxIOBConstraints(c1).value()).isEqualTo(Double.MAX_VALUE)
 
         // Waiting for expiration
-        `when`(sp.getLong(anyString(), anyLong())).thenReturn(now + 1000)
+        `when`(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(now + 1000)
         val c2 = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         assertThat(versionCheckerPlugin.applyMaxIOBConstraints(c2).value()).isEqualTo(Double.MAX_VALUE)
 
         // Expired
-        `when`(sp.getLong(anyString(), anyLong())).thenReturn(now - 1000)
+        `when`(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(now - 1000)
         val c3 = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         assertThat(versionCheckerPlugin.applyMaxIOBConstraints(c3).value()).isEqualTo(0.0)
     }

@@ -15,12 +15,13 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.databinding.EquilUnpairActivityBinding
 import app.aaps.pump.equil.events.EventEquilUnPairChanged
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdUnPair
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
@@ -29,7 +30,7 @@ import javax.inject.Inject
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var context: Context
@@ -84,7 +85,7 @@ class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun unpair(name: String) {
         showLoading()
-        commandQueue.customCommand(CmdUnPair(name, sp.getString(rh.gs(R.string.key_equil_pair_password), ""), aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdUnPair(name, preferences.get(EquilStringKey.PairPassword), aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 dismissLoading()
                 if (result.success) {
