@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_bolus_storage" translatable="false">key_bolus_storage</string>
-
     <string name="executing_right_now">Command is executed right now</string>
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
 
