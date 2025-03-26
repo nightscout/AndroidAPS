@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">펌프의 최대 Bolus(U)</string>
     <string name="medtronic_pump_max_basal">펌프의 최대 Basal(U/h)</string>
     <string name="medtronic_pump_encoding">메드트로닉 인코딩</string>
-    <string name="medtronic_pump_frequency_us_ca">미국 &amp; 캐나다(916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">타국가(868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">소프트웨어 4b6b 인코딩</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">하드웨어 4b6b 인코딩</string>
     <string name="medtronic_custom_action_wake_and_tune">켜기 및 튜닝</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus 블록 삭제</string>
     <string name="medtronic_custom_action_reset_rileylink">RileyLink 구성 재설정</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
     <string name="medtronic_pump_battery_nimh">니켈수소전지 (연장 뷰)</string>
-    <string name="medtronic_bolus_debugging">Bolus/관리 디버깅</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 배터리</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">전</string>
     <string name="medtronic_notification_check_time_date">펌프 시간 업데이트가 필요합니다.</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">켜짐</string>
-    <string name="common_off">끄기</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
     <string name="set_neutral_temps_title">기본 임시 basal 설정</string>
     <string name="set_neutral_temps_summary">활성화되면, 매 한 시간 전에 임시 basal을 취소할 것입니다. 이 기능은 일부 펌프에서 한 시간마다 울리는 소리/진동 경고를 멈추게 합니다.</string>
