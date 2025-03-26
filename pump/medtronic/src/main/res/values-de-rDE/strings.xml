@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max Bolus in der Pumpe (IE)</string>
     <string name="medtronic_pump_max_basal">Max Basal in der Pumpe (IE/h)</string>
     <string name="medtronic_pump_encoding">Medtronic Enkodierung</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Weltweit (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codierung</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codierung</string>
     <string name="medtronic_custom_action_wake_and_tune">Aufwachen und anpassen</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Block löschen</string>
     <string name="medtronic_custom_action_reset_rileylink">RileyLink-Konfiguration zurücksetzen</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lithium Batterie (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_nimh">Nickel-Zink-Akku (erweiterte Ansicht)</string>
-    <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink-Batterie</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">her</string>
     <string name="medtronic_notification_check_time_date">Bitte stelle die Uhrzeit der Pumpe ein</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Ein</string>
-    <string name="common_off">Aus</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
     <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
     <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
