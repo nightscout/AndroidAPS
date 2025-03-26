@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Pompintegratie voor Omnipod Eros (het oudere model met een transparante naalddop). Vereist een RileyLink-apparaat met ten minste firmwareversie 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Meldingen</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Knop voor het uitlezen van het Pulslog weergeven in het Podbeheer menu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Knop voor RileyLink statistieken weergeven in het Omnipod-tabblad</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Loggen van batterijwissel in Acties inschakelen</string>
