@@ -9,7 +9,6 @@
     <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
     <string name="pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
     <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
-    <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Tarama</string>
     <string name="riley_link_ble_config_scan_stop">Dur</string>
