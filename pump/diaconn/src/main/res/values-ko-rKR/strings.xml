@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">인슐린 부족 경고</string>
     <string name="needbatteryreplace">베터리 교체가 필요합니다.</string>
     <string name="needinsullinreplace">인슐린 교체가 필요합니다.</string>
-    <string name="pumpversion">펌프_버전</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">펌프_시리얼_넘버</string>
     <string name="diaconn_g8_loginsulinchange_title">인슐린 교체</string>
     <string name="diaconn_g8_loginsulinchange_summary">로그 동기화 시 케어포털 \"인슐린 교체\" 정보 자동 업로드</string>
     <string name="diaconn_g8_logcanulachange_title">바늘 교체</string>
