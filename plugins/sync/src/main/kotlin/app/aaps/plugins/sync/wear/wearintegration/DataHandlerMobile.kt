@@ -755,7 +755,7 @@ class DataHandlerMobile @Inject constructor(
         val activeProfileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
         if (activeProfileSwitch != null) { // read CPP values
             rxBus.send(
-                EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.originalTimeshift).hours().toInt(), activeProfileSwitch.originalPercentage))
+                EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.originalTimeshift).hours().toInt(), activeProfileSwitch.originalPercentage, activeProfileSwitch.originalDuration.toInt()))
             )
         } else {
             sendError(rh.gs(R.string.no_active_profile))
@@ -772,18 +772,29 @@ class DataHandlerMobile @Inject constructor(
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Percentage"))
         }
-        if (command.timeShift < 0 || command.timeShift > 23) {
+        if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
         }
-        val message = rh.gs(R.string.profile_message, command.timeShift, command.percentage)
+        if (command.duration < 0 || command.duration > Constants.MAX_PROFILE_SWITCH_DURATION) {
+            sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Duration"))
+        }
+        val profileName = profileFunction.getOriginalProfileName()
+        val message = rh.gs(R.string.profile_message, profileName, command.timeShift, command.percentage, command.duration)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage)
+                    returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage, command.duration)
                 )
             )
         )
+    }
+
+    private fun formatGlucose(value: Double, isMgdl: Boolean): String {
+        return if (isMgdl)
+            String.format(Locale.getDefault(), "%.0f mg/dl", value)
+        else
+            String.format(Locale.getDefault(), "%.1f mmol/l", value)
     }
 
     private fun handleTempTargetPreCheck(action: EventData.ActionTempTargetPreCheck) {
@@ -794,8 +805,9 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
                 val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
                 val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+                val formattedGlucoseValue = formatGlucose(activityTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.activity)
-                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
+                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, activityTTDuration)
                 rxBus.send(
                     EventMobileToWear(
                         EventData.ConfirmAction(
@@ -809,8 +821,9 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
                 val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
                 val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+                val formattedGlucoseValue = formatGlucose(hypoTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
-                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
+                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, hypoTTDuration)
                 rxBus.send(
                     EventMobileToWear(
                         EventData.ConfirmAction(
@@ -824,8 +837,9 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
                 val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
                 val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                val formattedGlucoseValue = formatGlucose(eatingSoonTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
-                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
+                message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, eatingSoonTTDuration)
                 rxBus.send(
                     EventMobileToWear(
                         EventData.ConfirmAction(
@@ -866,6 +880,8 @@ class DataHandlerMobile @Inject constructor(
                 } else {
                     var low = action.low
                     var high = action.high
+                    val lowFormattedGlucoseValue = formatGlucose(low, presetIsMGDL)
+                    val highFormattedGlucoseValue = formatGlucose(high, presetIsMGDL)
                     if (!action.isMgdl) {
                         low *= Constants.MMOLL_TO_MGDL
                         high *= Constants.MMOLL_TO_MGDL
@@ -878,8 +894,12 @@ class DataHandlerMobile @Inject constructor(
                         sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
                         return
                     }
-                    message += if (low == high) rh.gs(R.string.wear_action_tempt_manual_message, action.low, action.duration)
-                    else rh.gs(R.string.wear_action_tempt_manual_range_message, action.low, action.high, action.duration)
+                    if (low > high) {
+                        sendError(rh.gs(R.string.wear_action_tempt_range_error, lowFormattedGlucoseValue, highFormattedGlucoseValue))
+                        return
+                    }
+                    message += if (low == high) rh.gs(R.string.wear_action_tempt_manual_message, lowFormattedGlucoseValue, action.duration)
+                    else rh.gs(R.string.wear_action_tempt_manual_range_message, lowFormattedGlucoseValue, highFormattedGlucoseValue, action.duration)
                     rxBus.send(
                         EventMobileToWear(
                             EventData.ConfirmAction(
@@ -1763,20 +1783,23 @@ class DataHandlerMobile @Inject constructor(
         //check for validity
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE)
             return
-        if (command.timeShift < 0 || command.timeShift > 23)
+        if (command.timeShift < Constants.CPP_MIN_TIMESHIFT || command.timeShift > Constants.CPP_MAX_TIMESHIFT)
+            return
+        if (command.duration < 0 || command.duration > Constants.MAX_PROFILE_SWITCH_DURATION)
             return
         profileFunction.getProfile() ?: return
         //send profile to pump
         profileFunction.createProfileSwitch(
-            durationInMinutes = 0,
+            durationInMinutes = command.duration,
             percentage = command.percentage,
             timeShiftInHours = command.timeShift,
             action = Action.PROFILE_SWITCH,
             source = Sources.Wear,
-            listValues = listOf(
+            listValues = listOfNotNull(
                 ValueWithUnit.Percent(command.percentage),
-                ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 }
-            ).filterNotNull()
+                ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 },
+                ValueWithUnit.Minute(command.duration)
+            )
         )
     }
 

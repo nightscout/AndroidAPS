@@ -282,7 +282,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 // At time of writing (2021-12-06), the removeBond method
                 // is inexplicably still marked with @hide, so we must use
                 // reflection to get to it and unpair this device.
-                val removeBondMethod = device::class.java.getMethod("removeBond")
+                val removeBondMethod = device.javaClass.getMethod("removeBond")
                 val result = removeBondMethod.invoke(device)
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Remove bond resulted $result")
             }

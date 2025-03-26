@@ -90,7 +90,7 @@
     <string name="menu_default">預設</string>
     <string name="menu_menu">選單</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">持續時間</string>
+    <string name="action_duration_minutes">持續時間\n[分鐘]</string>
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_user_action_confirmation">用戶操作請求</string>
@@ -100,21 +100,24 @@
     <string name="action_fill_confirmation">已請求填充</string>
     <string name="action_ecarb_confirmation">已請求碳水化合物</string>
     <string name="action_profile_switch_confirmation">已請求設定檔切換</string>
-    <string name="action_target" comment="In temp target menu, single target value">目標</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">低</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">高</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">目標\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">低\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">高\n[%s]</string>
     <string name="action_carbs">碳水化合物</string>
+    <string name="action_carbs_gram">碳水化合物 [g]</string>
     <string name="action_ecarbs">碳水化合物</string>
-    <string name="action_percentage">百分比</string>
-    <string name="action_start_min">開始 [分鐘]</string>
+    <string name="action_percentage">百分比\n[%]</string>
+    <string name="action_start_minutes">開始\n[分鐘]</string>
     <string name="action_duration_h">持續 [小時]</string>
+    <string name="action_duration_hours">持續時間\n[小時]</string>
     <string name="action_insulin">胰島素</string>
+    <string name="action_insulin_units">胰島素 [U]</string>
     <string name="action_preset_1">預設 1</string>
     <string name="action_preset_2">預設 2</string>
     <string name="action_preset_3">預設 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">自訂數量</string>
     <string name="action_confirm">確認</string>
-    <string name="action_timeshift">時間偏移</string>
+    <string name="action_timeshift_hours">時差調整\n[小時]</string>
     <string name="bolus_progress">注射進度</string>
     <string name="press_to_cancel">按下取消</string>
     <string name="cancel_bolus">取消注射</string>
@@ -218,10 +221,14 @@
     <string name="complication_blood_glucose">血糖</string>
     <string name="complication_br_cob_iob">BR、CoB及IoB</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_br">基礎率</string>
     <string name="complication_cob_iob">BR、CoB及IoB</string>
     <string name="complication_cob_icon">CoB圖示</string>
     <string name="complication_cob_detailed">CoB 詳細</string>
     <string name="complication_iob_icon">IoB圖示</string>
     <string name="complication_iob_detailed">IoB詳細</string>
     <string name="complication_uploader_phone_battery">Uploader/顯示手機電池</string>
+    <string name="status_loop_state">循環狀態</string>
+    <string name="label_loop_state_title">AAPS（循環狀態）</string>
+    <string name="action_loop_state_selected">請求的循環狀態</string>
 </resources>

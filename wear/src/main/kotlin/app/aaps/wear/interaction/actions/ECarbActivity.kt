@@ -48,7 +48,7 @@ class ECarbActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 var initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
                 val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
-                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), true, getString(R.string.action_carbs))
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), true, getString(R.string.action_carbs_gram))
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -58,7 +58,7 @@ class ECarbActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 var initValue = stringToDouble(editStartTime?.editText?.text.toString(), 0.0)
-                editStartTime = PlusMinusEditText(viewAdapter, initValue, -60.0, 300.0, 15.0, DecimalFormat("0"), false, getString(R.string.action_start_min))
+                editStartTime = PlusMinusEditText(viewAdapter, initValue, -60.0, 300.0, 15.0, DecimalFormat("0"), false, getString(R.string.action_start_minutes))
                 container.addView(view)
                 view
             }
@@ -67,7 +67,7 @@ class ECarbActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 var initValue = stringToDouble(editDuration?.editText?.text.toString(), 0.0)
-                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, 8.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_duration_h))
+                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, 8.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_duration_hours))
                 container.addView(view)
                 view
             }

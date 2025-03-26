@@ -104,14 +104,9 @@
     <string name="wizard_result">계산. 마법사:\n인슐린:%1$.2fU\n탄수화물: %2$dg</string>
     <string name="quick_wizard_not_available">선택한 빠른 마법사를 더 이상 사용할 수 없습니다, 타일을 새로고침 하십시오</string>
     <string name="quick_wizard_message">빠른 마법사: %1$s\n인슐린: %2$.2fU\n탄수화물: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">임시-목표 실행을 취소하시겠습니까?</string>
     <string name="wear_action_tempt_unit_error">워치와 폰과 다른 단위입니다!</string>
-    <string name="wear_action_tempt_zero_message">제로-임시-목표- 임시-목표 실행을 취소하시겠습니까?</string>
     <string name="wear_action_tempt_min_bg_error">최소-BG 범위가 넘었습니다!</string>
     <string name="wear_action_tempt_max_bg_error">최대-BG 범위가 넘었습니다!</string>
-    <string name="wear_action_tempt_manual_range_message">임시 목표:\n최소: %1$s\n최대: %2$s\n기간: %3$s</string>
-    <string name="wear_action_tempt_manual_message">임시 목표:\n목표: %1$s\n기간: %2$s</string>
-    <string name="wear_action_tempt_preset_message">임시 목표:\n이유: %1$s\n목표: %2$s\n기간: %3$s</string>
     <string name="no_success">성공하지 못했습니다. 폰을 확인하세요</string>
     <string name="wear_settings">워치 설정</string>
     <string name="wearcontrol_title">워치로 제어하기</string>
@@ -139,7 +134,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">활성화된 프로파일 스위치가 없습니다!</string>
-    <string name="profile_message">프로파일:\n\n시간 변화: %1$d\n백분율: %2$d%%\"</string>
     <string name="target_only_aps_mode">목표는 APS 모드에서만 적용 가능합니다!</string>
     <string name="no_history">기록이 없습니다!</string>
     <string name="temp_target">임시 목표</string>

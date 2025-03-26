@@ -8,13 +8,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <!-- Version Checker -->
-    <string name="old_version">oude versie</string>
-    <string name="very_old_version">zeer oude versie</string>
     <string name="application_expired">Applicatie is verlopen</string>
-    <string name="new_version_warning">Er is tenminste %1$d dagen niet op een nieuwe versie gecontroleerd! Terugval naar LGS na %2$d dagen, na %3$d dagen zal de loop worden uitgeschakeld. Herstel de internetverbinding!</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
-    <string name="version_expire">Versie %1$s verloopt op %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Herberekende data gebruikt</string>
@@ -38,7 +34,6 @@
     <string name="completed_well_done">Voltooid, goed gedaan!</string>
     <string name="not_completed_yet">Nog niet voltooid</string>
     <string name="time_elapsed">Verstreken tijd</string>
-    <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
     <string name="synchaswritepermission">Synchronisatieservice heeft schrijfrechten</string>
     <string name="loopenabled">Loop Actief</string>

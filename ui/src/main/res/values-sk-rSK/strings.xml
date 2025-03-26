@@ -134,6 +134,9 @@
     <string name="change_your_input">Zmeňte zadanie!</string>
     <string name="confirm_treatment">Prosím potvrďte ošetrenie</string>
     <string name="recalculate">Prepočítať</string>
+    <!--    Widget-->
+    <string name="use_black_color">Použiť čiernu farbu</string>
+    <string name="widget_configuration">Konfiguráciu widgetu</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Iba kladné</item>

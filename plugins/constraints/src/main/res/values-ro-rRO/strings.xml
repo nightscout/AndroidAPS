@@ -7,13 +7,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Eliberați cel puțin %1$d MB de pe stocarea internă! Buclă dezactivată!</string>
     <!-- Version Checker -->
-    <string name="old_version">versiune veche</string>
-    <string name="very_old_version">versiune foarte veche</string>
     <string name="application_expired">Aplicația a expirat</string>
-    <string name="new_version_warning">Noua versiune nu a fost confirmată de cel puțin %1$d zile! Se revine la LGS după %2$d zile, bucla va fi dezactivată după %3$d zile. Restabilește conexiunea la internet!</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
-    <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Date recalculate utilizate</string>
@@ -37,7 +33,6 @@
     <string name="completed_well_done">Finalizat cu succes. Bravo!</string>
     <string name="not_completed_yet">Încă incomplet</string>
     <string name="time_elapsed">Timp scurs</string>
-    <string name="maxiobset">IOB maxim configurat corect</string>
     <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
     <string name="synchaswritepermission">Serviciul de sincronizare are permisiuni de scriere</string>
     <string name="loopenabled">Buclă activată</string>

@@ -123,4 +123,5 @@
     <string name="quickwizard_settings">Setări AsistentRapid</string>
     <string name="overview_edit_quickwizard_valid">Valabil:</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
+    <!--    Widget-->
 </resources>

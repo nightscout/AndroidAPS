@@ -134,6 +134,9 @@
     <string name="change_your_input">Changez votre entrée !</string>
     <string name="confirm_treatment">Veuillez confirmer le traitement</string>
     <string name="recalculate">Recalculer</string>
+    <!--    Widget-->
+    <string name="use_black_color">Utiliser la couleur noire</string>
+    <string name="widget_configuration">Configuration du widget</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Les deux</item>
         <item>Positif uniquement</item>

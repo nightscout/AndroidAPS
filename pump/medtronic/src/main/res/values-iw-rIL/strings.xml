@@ -39,8 +39,8 @@
     <string name="medtronic_error_pump_basal_profiles_not_enabled">הגדרת פרופילי הבזאלי/תבניות אינה מאופשרת במשאבה. הפעילו אותם בגוף המשאבה.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">פרופיל הבזאלי שהוגדר על המשאבה שגוי (חייב להיות סטנדרטי).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">סוג הבזאלי הזמני שהוגדר במשאבה שגוי (חייב להיות מוחלט).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">בולוס מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">בזאלי מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">הבולוס מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">המינון הבזאלי המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\n יש להגדיר קודם את המשאבה על מנת לבצע פעולה זו.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">התבקש שינוי זמן העולה על 24 שעות.</string>
     <!-- MDT History -->

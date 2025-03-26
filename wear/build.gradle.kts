@@ -17,19 +17,16 @@ repositories {
 }
 
 fun generateGitBuild(): String {
-    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        val stdout = ByteArrayOutputStream()
-        exec {
-            commandLine("git", "describe", "--always")
-            standardOutput = stdout
-        }
-        val commitObject = stdout.toString().trim()
-        stringBuilder.append(commitObject)
-    } catch (ignored: Exception) {
-        stringBuilder.append("NoGitSystemAvailable")
+        val processBuilder = ProcessBuilder("git", "describe", "--always")
+        val output = File.createTempFile("git-build", "")
+        processBuilder.redirectOutput(output)
+        val process = processBuilder.start()
+        process.waitFor()
+        return output.readText().trim()
+    } catch (_: Exception) {
+        return "NoGitSystemAvailable"
     }
-    return stringBuilder.toString()
 }
 
 fun generateDate(): String {
@@ -102,6 +99,7 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
     implementation(project(":core:ui"))
+    implementation(project(":core:data"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)

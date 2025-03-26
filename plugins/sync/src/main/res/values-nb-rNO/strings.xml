@@ -46,8 +46,8 @@
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
     <string name="ns_upload">Last opp data til NS</string>
-    <string name="ns_receive_profile_store">Hent lagrede profiler</string>
-    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS profileditor</string>
+    <string name="ns_receive_profile_store">Motta profiler</string>
+    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS eller AAPSClient</string>
     <string name="ns_receive_temp_target">Motta midlertidige mål</string>
     <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller AAPSClient</string>
     <string name="ns_receive_profile_switch">Motta profilbytter</string>
@@ -126,12 +126,13 @@
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
-    <string name="wear_action_tempt_zero_message">Null-midl.mål - skal gjeldende midlertidig mål avbrytes?</string>
+    <string name="wear_action_tempt_zero_message">Null minutter i varighet - avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
-    <string name="wear_action_tempt_manual_range_message">Midlertidig mål:\nMin: %1$s\nMaks: %2$s\nVarighet: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Midlertidig mål:\nMål: %1$s\nVarighet: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Midlertidig mål:\nÅrsak: %1$s\nMål: %2$s\nVarighet: %3$s</string>
+    <string name="wear_action_tempt_range_error">Ugyldig område: Lavt mål (%1$s) kan ikke være større enn Høyt mål (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">Midlertidig mål\n\nLav: %1$s\nHøy: %2$s\nVarighet: %3$d min</string>
+    <string name="wear_action_tempt_manual_message">Midlertidig mål\n\nMål: %1$s\nVarighet: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">Midlertidig mål\n\nÅrsak: %1$s\nMål: %2$s\nVarighet: %3$d min</string>
     <string name="no_success">feilet - sjekk telefonen</string>
     <string name="wear_settings">Klokkeinnstillinger</string>
     <string name="wearcontrol_title">Kontroller fra klokke</string>
@@ -162,7 +163,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d\nProsent: %2$d%%</string>
+    <string name="profile_message">Profil: %1$s\nTidsforskyving: %2$d t\nProsent: %3$d%%\nVarighet: %4$d min</string>
     <string name="target_only_aps_mode">Mål gjelder bare i APS-modus!</string>
     <string name="no_history">Ingen historikkdata!</string>
     <string name="temp_target">Midlertidig mål</string>
@@ -202,5 +203,7 @@
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Ugyldig</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpe frakoblet</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Pumpen tilkoblet igjen</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Koble til pumpen igjen</string>
+    <string name="garmin_request_key">Be om nøkkel</string>
+    <string name="garmin_request_key_summary">Valgfri nøkkel for å sikre HTTP-kommunikasjon mellom Garmin-enhet og AAPS.</string>
 </resources>

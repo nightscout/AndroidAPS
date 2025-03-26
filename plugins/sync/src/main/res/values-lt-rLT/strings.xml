@@ -124,14 +124,9 @@
     <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
     <string name="quick_wizard_message">QuickWizard asistentas: %1$s\nInsulinas: %2$.2fU\nAngliavandeniai: %3$dg</string>
     <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo valdiklį</string>
-    <string name="wear_action_tempt_cancel_message">Atšaukti laikinus tikslus?</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - atšaukti laikinus tikslus?</string>
     <string name="wear_action_tempt_min_bg_error">Min. cukraus kiekis nepatenka į diapozoną!</string>
     <string name="wear_action_tempt_max_bg_error">Max. cukraus kiekis nepatenka į diapozoną!</string>
-    <string name="wear_action_tempt_manual_range_message">Laikinas tikslas:\nMin: %1$s\nMax: %2$s\nLaikotarpis: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Laikinas tikslas:\nTikslas: %1$s\nLaikotarpis: %2$s</string>
-    <string name="wear_action_tempt_preset_message">LT:\npriežastis: %1$s\ntikslas: %2$s\ntrukmė: %3$s</string>
     <string name="no_success">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
     <string name="wear_settings">Išmaniojo laikrodžio nustatymai</string>
     <string name="wearcontrol_title">Laikrodžio valdikliai</string>
@@ -162,7 +157,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">val</string>
     <string name="no_active_profile">Neparinktas aktyvus profilis!</string>
-    <string name="profile_message">Profilis:\n\nLaiko perstūmimas: %1$\nProcentai: %2$d%%\"</string>
     <string name="target_only_aps_mode">Tikslai galioja tik APS režime!</string>
     <string name="no_history">Nėra istorijos!</string>
     <string name="temp_target">Laikinas tikslas</string>

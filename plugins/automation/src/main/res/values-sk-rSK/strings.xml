@@ -78,9 +78,8 @@
     <string name="deltalabel">Rozdiel glykémie</string>
     <string name="deltalabel_u">Rozdiel glykémie [%1$s]</string>
     <string name="currentlocation">Súčasná poloha</string>
+    <string name="choose_from_map">Vybrať z mapy</string>
     <string name="location">Poloha</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glykémia [%1$s]:</string>
     <string name="target_u">Cieľ [%1$s]:</string>
     <string name="lastboluslabel">Od posledného bolusu</string>

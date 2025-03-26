@@ -104,14 +104,9 @@
     <string name="wizard_result">Υπολογισμός. Οδηγός:\nΙνσουλίνη: %1$.2fU\nΥδατάνθρακες: %2$dg</string>
     <string name="quick_wizard_not_available">Ο επιλεγμένος οδηγός δεν είναι πλέον διαθέσιμος, παρακαλώ ανανεώστε το πλακίδιο σας</string>
     <string name="quick_wizard_message">Γρήγορος οδηγός: %1$s\nΙνσουλίνη: %2$.2fU\nΥδατάνθρακες: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Ακύρωση εκτέλεσης προσωρινών στόχων;</string>
     <string name="wear_action_tempt_unit_error">Χρησιμοποιούνται διαφορετικές μονάδες στο ρολόι και το τηλέφωνο!</string>
-    <string name="wear_action_tempt_zero_message">Μηδενικός-Προσωρινός-Στόχος - ακύρωση εκτέλεσης Πρισωρινών-Στόχων;</string>
     <string name="wear_action_tempt_min_bg_error">Ελάσιχτο-BG εκτός εύρους!</string>
     <string name="wear_action_tempt_max_bg_error">Μέγιστο-BG εκτός εύρους!</string>
-    <string name="wear_action_tempt_manual_range_message">Προσωρινός στόχος:\nΕλάχιστο: %1$s\nΜέγιστο: %2$s\nΔιάρκεια: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Προσωρινός στόχος:\nΣτόχος: %1$s\nΔιάρκεια: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Προσωρινός στόχος:\nΑιτία: %1$s\nΣτόχος: %2$s\nΔιάρκεια: %3$s</string>
     <string name="no_success">αποτυχία - ελέγξτε τηλέφωνο</string>
     <string name="wear_settings">Ρυθμίσεις Wear</string>
     <string name="wearcontrol_title">Έλεγχος από ρολόι</string>
@@ -139,7 +134,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">ω</string>
     <string name="no_active_profile">Μη ενεργή αλλαγή προφίλ!</string>
-    <string name="profile_message">Προφίλ:\n\nΧρονική μετατόπιση: %1$d\nΠοσοστό: %2$d%%\"</string>
     <string name="target_only_aps_mode">Οι στόχοι ισχύουν μόνο στη λειτουργία APS!</string>
     <string name="no_history">Δεν υπάρχουν ιστορικά δεδομένα!</string>
     <string name="temp_target">Προσωρινός Στόχος</string>

@@ -33,7 +33,7 @@ class RFSpyReader internal constructor(private val aapsLogger: AAPSLogger, priva
     // This timeout must be coordinated with the length of the RFSpy radio operation or Bad Things Happen.
     fun poll(timeout_ms: Int): ByteArray? {
         aapsLogger.debug(LTag.PUMPBTCOMM, "${ThreadUtil.sig()}Entering poll at t==${SystemClock.uptimeMillis()}, timeout is $timeout_ms mDataQueue size is ${mDataQueue.size}")
-        if (mDataQueue.isEmpty()) {
+        if (mDataQueue.isEmpty() || timeout_ms == 0) { //0 timeout is used for drain queue in RFSpy.writeToDataRaw before sending new command
             try {
                 // block until timeout or data available.
                 // returns null if timeout.

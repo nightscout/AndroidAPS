@@ -124,14 +124,9 @@
     <string name="quick_wizard_not_available">Wybrany szybki bolus nie jest już dostępny, odśwież swój kafelek</string>
     <string name="quick_wizard_message">Szybki bolus: %1$s\nInsulina: %2$.2fU\nWęgle: %3$dg</string>
     <string name="user_action_not_available">Wybranaa akcja użytkownika %1$s nie jest już dostępna, odśwież swój kafelek</string>
-    <string name="wear_action_tempt_cancel_message">Anulować bieżący cel tymczasowy?</string>
     <string name="wear_action_tempt_unit_error">Różne jednostki używane na zegarku i telefonie!</string>
-    <string name="wear_action_tempt_zero_message">Zerowy cel tymczasowy - anulować bieżący cel tymczasowy?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG poza zakresem!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG poza zakresem!</string>
-    <string name="wear_action_tempt_manual_range_message">Cel tymczasowy:\nMin: %1$s\nMax: %2$s\nCzas trwania: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Cel tymczasowy:\nCel: %1$s\nCzas trwania: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Cel tymczasowy:\nPowód: %1$s\nCel: %2$s\nCzas trwania: %3$s</string>
     <string name="no_success">nie udało się - proszę sprawdzić telefon</string>
     <string name="wear_settings">Ustawienia Wear</string>
     <string name="wearcontrol_title">Sterowanie z zegarka</string>
@@ -162,7 +157,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie ustawiono aktywnego profilu!</string>
-    <string name="profile_message">Profil:\n\nZmiana czasu: %1$d\nProcent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Cele mają zastosowanie tylko w trybie APS!</string>
     <string name="no_history">Brak danych historycznych!</string>
     <string name="temp_target">Cel tymczasowy</string>

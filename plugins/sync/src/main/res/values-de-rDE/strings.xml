@@ -105,14 +105,9 @@
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
     <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - abbrechen des laufenden Temp-Targets?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG ist außerhalb des Bereichs!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG ist außerhalb des Bereichs!</string>
-    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDauer: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDauer: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temp-Target:\nGrund: %1$s\nTarget: %2$s\nDauer: %3$s</string>
     <string name="no_success">Nicht erfolgreich - bitte Telefon prüfen</string>
     <string name="wear_settings">Wear-Einstellungen</string>
     <string name="wearcontrol_title">Steuerung durch die Uhr</string>
@@ -140,7 +135,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
-    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Ziele gelten nur im APS-Modus!</string>
     <string name="no_history">Keine Verlaufsdaten!</string>
     <string name="temp_target">Temporäres Ziel</string>

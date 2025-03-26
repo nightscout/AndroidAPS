@@ -8,13 +8,10 @@
     <!-- Storage constraint -->
     <string name="disk_full">Dahili depolama biriminden en az %1$d MB yer kaldı! Döngü devre dışı!</string>
     <!-- Version Checker -->
-    <string name="old_version">eski sürüm</string>
-    <string name="very_old_version">çok eski sürüm</string>
     <string name="application_expired">Uygulamanın süresi doldu</string>
-    <string name="new_version_warning">Yeni sürüm en az %1$d gündür kontrol edilmedi! %2$d gün sonra LGS\'ye geri dönüş, %3$d gün sonra döngü devre dışı bırakılacak. İnternet bağlantısını yeniden sağlayın!</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
-    <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>
+    <string name="version_expire">Sürüm %1$s , %2$s sonra bitecek ve LGS moduna dönecektir.</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>
@@ -38,7 +35,6 @@
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
     <string name="not_completed_yet">Henüz tamamlanmadı</string>
     <string name="time_elapsed">Geçen süre</string>
-    <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="synchaswritepermission">Senkronizasyon servisi yazma iznine sahip</string>
     <string name="loopenabled">Döngü etkin</string>

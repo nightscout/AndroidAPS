@@ -105,14 +105,9 @@
     <string name="wizard_result">Guide:\nInsulin: %1$.2fE\nKH: %2$dg</string>
     <string name="quick_wizard_not_available">Valgt guide er ikke længere tilgængeligt. Opdater venligst din widget</string>
     <string name="quick_wizard_message">Hurtigguide: %1$s\nInsulin: %2$.2fE\nKH: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Annullér aktuelt midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskellige enheder brugt på ur og telefon!</string>
-    <string name="wear_action_tempt_zero_message">0-mål - annuller midlertidigt mål?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS udenfor området!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
-    <string name="wear_action_tempt_manual_range_message">Midlertidigt mål:\nMin: %1$s\nMax: %2$s\nVarighed: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Midlertigt mål:\nMål: %1$s\nVarighed: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Midlertigt mål:\nGrund: %1$s\nMål: %2$s\nVarighed: %3$s</string>
     <string name="no_success">mislykkedes - tjek venligst telefonen</string>
     <string name="wear_settings">Indstillinger for Wear</string>
     <string name="wearcontrol_title">Kontrolleringer fra Ur</string>
@@ -140,7 +135,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Ingen aktiv profilskift!</string>
-    <string name="profile_message">Profil:\n\nTidsskift: %1$d\nProcent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Mål gælder kun i APS-tilstand!</string>
     <string name="no_history">Ingen historisk data!</string>
     <string name="temp_target">Midlertidigt mål</string>

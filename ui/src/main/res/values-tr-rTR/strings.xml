@@ -134,6 +134,9 @@
     <string name="change_your_input">Girişinizi değiştirin!</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
     <string name="recalculate">Tekrar Hesapla</string>
+    <!--    Widget-->
+    <string name="use_black_color">Siyah renk kullanın</string>
+    <string name="widget_configuration">Araç yapılandırması</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>İkisi de</item>
         <item>Sadece pozitif</item>

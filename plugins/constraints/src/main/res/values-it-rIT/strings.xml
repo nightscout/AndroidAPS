@@ -8,13 +8,10 @@
     <!-- Storage constraint -->
     <string name="disk_full">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <!-- Version Checker -->
-    <string name="old_version">versione datata</string>
-    <string name="very_old_version">versione molto datata</string>
     <string name="application_expired">Applicazione scaduta</string>
-    <string name="new_version_warning">Non è stata controllata la presenza di nuova versione per almeno %1$d giorni! Ritorno alla modalità LGS dopo %2$d giorni, il loop sarà disabilitato dopo %3$d giorni. Ristabilire la connessione internet!</string>
     <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
     <string name="versionavailable">Versione %1$s disponibile</string>
-    <string name="version_expire">Versione: %1$s | Scadenza: %2$s</string>
+    <string name="version_expire">La versione %1$s scadrà il %2$s e abiliterà solo la modalità LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Dati ricalcolati usati</string>
@@ -38,7 +35,6 @@
     <string name="completed_well_done">Completato, ben fatto!</string>
     <string name="not_completed_yet">Non ancora completato</string>
     <string name="time_elapsed">Tempo trascorso</string>
-    <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="synchaswritepermission">Il servizio di sincronizzazione ha i permessi di scrittura</string>
     <string name="loopenabled">Loop abilitato</string>

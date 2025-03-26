@@ -124,14 +124,9 @@
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
     <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
-    <string name="wear_action_tempt_cancel_message">Отменить ВЦ?</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
-    <string name="wear_action_tempt_zero_message">Нулевая врем цель - отмена?</string>
     <string name="wear_action_tempt_min_bg_error">Мин ГК вне диапазона!</string>
     <string name="wear_action_tempt_max_bg_error">Макс ГК вне диапазона!</string>
-    <string name="wear_action_tempt_manual_range_message">ВЦ:\nМин: %1$s\nМакс.: %2$s\nДлительность: %3$s</string>
-    <string name="wear_action_tempt_manual_message">ВЦ:\nЦель: %1$s\nДлительность: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ВремЦель:\nПричина: %1$s\nЦель.: %2$s\nДлительность: %3$s</string>
     <string name="no_success">неуспешно - проверьте телефон</string>
     <string name="wear_settings">Настройки смарт-часов на Wear OS</string>
     <string name="wearcontrol_title">Контроль с часов</string>
@@ -162,7 +157,6 @@
     <string name="grams_short">г</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Активный профиль не установлен!</string>
-    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$d$\nПроцент: %2$d%%\"</string>
     <string name="target_only_aps_mode">Цели применяются только в режиме APS!</string>
     <string name="no_history">Нет данных истории!</string>
     <string name="temp_target">Врем. цель</string>

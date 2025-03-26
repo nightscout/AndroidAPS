@@ -104,14 +104,9 @@
     <string name="wizard_result">Съветник:\nИнсулин: %1$.2fЕ\nВъгл: %2$dгр</string>
     <string name="quick_wizard_not_available">Избраният съветник вече не е наличен, моля, опреснете</string>
     <string name="quick_wizard_message">Съветник:%1$s\nИнсулин: %2$.2fЕ\nВъгл:%3$dгр</string>
-    <string name="wear_action_tempt_cancel_message">Изключи текуща Временна цел?</string>
     <string name="wear_action_tempt_unit_error">Различни мерни единици се ползват на телефона и часовника!</string>
-    <string name="wear_action_tempt_zero_message">Нулева цел - изключвам временна цел?</string>
     <string name="wear_action_tempt_min_bg_error">Мин КЗ е извън обхват!</string>
     <string name="wear_action_tempt_max_bg_error">Макс КЗ е извън обхват!</string>
-    <string name="wear_action_tempt_manual_range_message">Временна цел \nМин: %1$s\nМакс: %2$s\nПрод: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Временна цел \nцел: %1$s\nПрод: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Временна цел \nЦел: %1$s\nЦел: %2$s\nПрод: %3$s</string>
     <string name="no_success">неуспешно - моля проверете телефона</string>
     <string name="wear_settings">Настройки на часовник</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
@@ -139,7 +134,6 @@
     <string name="grams_short">гр.</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Не е настроен активен профил!</string>
-    <string name="profile_message">Профил:\n\nОтместване във времето: %1$d\nПроцент: %2$d%%\"</string>
     <string name="target_only_aps_mode">Целите се прилагат само в режим АПС!</string>
     <string name="no_history">Няма хронология!</string>
     <string name="temp_target">Временна цел</string>

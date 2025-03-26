@@ -77,6 +77,8 @@
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
     <string name="a11y_open_settings">פתח הגדרות</string>
     <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
+    <string name="expand_category">הרחב קטגוריה</string>
+    <string name="collapse_category">צמצם קטגוריה</string>
     <!--ImportExport-->
     <string name="nav_preferences">העדפות</string>
     <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
@@ -100,6 +102,7 @@
     <string name="different_password_used">קובץ זה יוצא והוצפן באמצעות סיסמה ראשית שונה. אנא ספקו סיסמה ראשית זו כדי לפענח את הקובץ.</string>
     <string name="master_password_will_be_replaced">בעקבות ייבוא ההגדרות הסיסמה הראשית הקיימת תוחלף עם הסיסמה הראשית המיובאת!</string>
     <string name="exported">ההעדפות יוצאו</string>
+    <string name="exported_failed">יצוא ההעדפות נכשל!</string>
     <string name="filenotfound">הקובץ לא נמצא</string>
     <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>

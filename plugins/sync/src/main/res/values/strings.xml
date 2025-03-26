@@ -161,14 +161,15 @@
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="user_action_not_available">Selected User Action %1$s is no longer available, please refresh your tile</string>
-    <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_cancel_message">Cancel running TempTarget?</string>
     <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_zero_message">Zero-TempTarget - cancel running TempTarget?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
-    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temptarget:\nReason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
+    <string name="wear_action_tempt_range_error">Invalid range: Low target (%1$s) cannot be greater than High target (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">TempTarget\n\nMin: %1$s\nMax: %2$s\nDuration: %3$d min</string>
+    <string name="wear_action_tempt_manual_message">TempTarget\n\nTarget: %1$s\nDuration: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">TempTarget\n\nReason: %1$s\nTarget: %2$s\nDuration: %3$d min</string>
     <string name="no_success">not successful - please check phone</string>
     <string name="wear_settings">Wear settings</string>
     <string name="wearcontrol_title">Controls from Watch</string>
@@ -199,7 +200,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">No active profile switch!</string>
-    <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
+    <string name="profile_message">Profile: %1$s\nTimeshift: %2$d h\nPercentage: %3$d%%\nDuration: %4$d min</string>
     <string name="target_only_aps_mode">Targets only apply in APS mode!</string>
     <string name="no_history">No history data!</string>
     <string name="temp_target">Temp Target</string>
@@ -243,5 +244,7 @@
     <string name="wear_action_loop_state_now_invalid">Invalid</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pump disconnected</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Pump reconnected</string>
+    <string name="garmin_request_key">Request Key</string>
+    <string name="garmin_request_key_summary">Optional key to secure HTTP communication between Garmin device and AAPS.</string>
 
 </resources>

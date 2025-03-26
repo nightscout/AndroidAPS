@@ -29,9 +29,9 @@
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>
 
-    <string name="bgsource_upload">BG upload settings</string>
-    <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
+    <string name="bgsource_settings">BG source settings</string>
+    <string name="bgsource_log_sensor_change_title">Accept sensor start</string>
+    <string name="bgsource_log_sensor_change_summary">Create event \"CGM Sensor Insert\" in Careportal automatically on received sensor start from BG source local broadcast</string>
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">BG generation interval minutes</string>
     <!-- Patched Ottai App -->

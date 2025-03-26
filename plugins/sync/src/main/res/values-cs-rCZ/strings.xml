@@ -124,14 +124,15 @@
     <string name="quick_wizard_not_available">Vybraný rychlý bolus již není k dispozici, obnovte prosím dlaždici</string>
     <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybraná akce uživatele %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
-    <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
+    <string name="wear_action_tempt_cancel_message">Zrušit běžící dočasný cíl?</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
-    <string name="wear_action_tempt_zero_message">Nulový dočasný cíl - zrušení běžícího dočasného cíle?</string>
+    <string name="wear_action_tempt_zero_message">Nulový dočasný cíl – zrušit běžící dočasný cíl?</string>
     <string name="wear_action_tempt_min_bg_error">Minimální glykémie mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo rozsah!</string>
-    <string name="wear_action_tempt_manual_range_message">Doč. cíl:\nMin: %1$s\nMax: %2$s\nTrvání: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Doč. cíl:\nCíl: %1$s\nTrvání: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Doč. cíl:\nDůvod: %1$s\nCíl: %2$s\nTrvání: %3$s</string>
+    <string name="wear_action_tempt_range_error">Neplatný rozsah: Nízký cíl (%1$s) nemůže být větší než vysoký cíl (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">Doč. cíl:\n\nMin: %1$s\nMax: %2$s\nTrvání: %3$d</string>
+    <string name="wear_action_tempt_manual_message">Doč. cíl:\n\nCíl: %1$s\nTrvání: %2$d</string>
+    <string name="wear_action_tempt_preset_message">Doč. cíl:\n\nDůvod: %1$s\nCíl: %2$s\nTrvání: %3$d</string>
     <string name="no_success">neúspěšně - zkontrolujte mobil</string>
     <string name="wear_settings">Nastavení hodinek</string>
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
@@ -162,7 +163,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Není nastaven žádný aktivní profil!</string>
-    <string name="profile_message">Profil:\n\nPosunutí: %1$d\nProcento: %2$d%%\"</string>
+    <string name="profile_message">Profil: %1$s\nPosunutí: %2$d h\nProcento: %3$d%%\nTrvání: %4$d min</string>
     <string name="target_only_aps_mode">Cíle se použijí pouze v režimu APS!</string>
     <string name="no_history">Žádné údaje o historii!</string>
     <string name="temp_target">Dočasný cíl</string>
@@ -203,4 +204,6 @@
     <string name="wear_action_loop_state_now_invalid">Neplatný</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpa odpojena</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Pumpa byla znovu připojena</string>
+    <string name="garmin_request_key">Vyžadovaný klíč</string>
+    <string name="garmin_request_key_summary">Volitelný klíč pro zabezpečení HTTP komunikace mezi zařízením Garmin a AAPS.</string>
 </resources>

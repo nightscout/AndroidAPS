@@ -16,11 +16,12 @@
     <string name="objectives_maxbasal">Utfør handling for å oppfylle anbefalingen</string>
     <string name="objectives_maxbasal_learned">Gjør deg kjent med sikkerhetsfunksjoner og juster sikkerhetsparametrene om nødvendig.</string>
     <string name="objectives_maxiobzero_objective">Begynn å bruk lukket loop med aktivert funksjon for stopping av insulin ved lavt BS</string>
-    <string name="objectives_maxiobzero_gate">Aktiver closed loop med max IOB = 0 i noen dager uten for mange episoder hvor systemet stopper insulintilførsel på grunn av lavt BS</string>
+    <string name="objectives_maxiobzero_gate">Kjør lukket loop i stopp ved lavt bs (LGS) modus (dvs. maks IOB = 0 angis automatisk) noen dager uten for mange LGS-hendelser.</string>
     <string name="objectives_maxiobzero_learned">Å sette MaxIOB til null reduserer muligheten for hypo, og vil ikke tilføre mer insulin enn basalinsulin (unntatt situasjon med negativ IOB)</string>
     <string name="objectives_maxiob_objective">Finjustering av lukket loop med gradvis økende maks IOB over 0 og redusering av BS målverdi</string>
     <string name="objectives_maxiob_gate">Kjør i noen dager og opplev minst en natt uten lavt BS alarmer før du begynner å redusere målverdi for BS</string>
-    <string name="objectives_maxiob_learned">Oppdater MaxIOB etterhvert som barnet vokser. Aldri la systemet få mulighet til å levere mer insulin enn det du kan dekke med mat = virkelig høy verdi er en dårlig idé.</string>
+    <string name="objectives_maxiob_learned">Oppdater MaksIOB etterhvert som barnet vokser. Aldri la systemet få mulighet til å levere mer insulin enn det du kan dekke med mat. En virkelig høy verdi er en dårlig idé. Maks IOB er automatisk kalkulert i enkelmodus</string>
+    <string name="maxiobset">Maksimal IOB satt riktig (Ikke nødvendig i enkelmodus)</string>
     <string name="objectives_autosens_objective">Juster om nødvendig basal og forholdstall, og deretter aktiverer du autosens</string>
     <string name="objectives_autosens_gate">1 uke vellykket looping på dagtid hvor alle måltider (KH) angis</string>
     <string name="objectives_autosens_learned">Hvis dine autosens resultater ikke ligger rundt 100% kan det tyde på at profilen din er feil.</string>

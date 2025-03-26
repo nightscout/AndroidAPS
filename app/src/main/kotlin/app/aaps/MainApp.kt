@@ -32,6 +32,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.core.utils.JsonHelper
 import app.aaps.database.persistence.CompatDBHelper
 import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
@@ -45,6 +46,10 @@ import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.widget.Widget
+import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -55,10 +60,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.declaredMemberProperties
 
 class MainApp : DaggerApplication() {
 
@@ -109,6 +117,7 @@ class MainApp : DaggerApplication() {
             aapsLogger.debug("BuildVersion: " + config.BUILD_VERSION)
             aapsLogger.debug("Remote: " + config.REMOTE)
             registerLocalBroadcastReceiver()
+            setupRemoteConfig()
 
             // trigger here to see the new version on app start after an update
             handler.postDelayed({ versionCheckersUtils.triggerCheckVersion() }, 30000)
@@ -244,6 +253,32 @@ class MainApp : DaggerApplication() {
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
         registerReceiver(BTReceiver(), filter)
+    }
+
+    private fun setupRemoteConfig() {
+        FirebaseApp.initializeApp(this)
+        Firebase.remoteConfig.also { firebaseRemoteConfig ->
+
+            firebaseRemoteConfig.setConfigSettingsAsync(
+                FirebaseRemoteConfigSettings
+                    .Builder()
+                    .setMinimumFetchIntervalInSeconds(3600)
+                    .build()
+            )
+            firebaseRemoteConfig
+                .fetchAndActivate()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        aapsLogger.debug("RemoteConfig received successfully")
+                        @Suppress("UNCHECKED_CAST")
+                        (versionCheckersUtils::class.declaredMemberProperties.find { it.name == "definition" } as KMutableProperty<Any>?)
+                            ?.let {
+                                val merged = JsonHelper.merge(it.getter.call(versionCheckersUtils) as JSONObject, JSONObject(firebaseRemoteConfig.getString("defs")))
+                                it.setter.call(versionCheckersUtils, merged)
+                            }
+                    } else aapsLogger.error("RemoteConfig fetch failed")
+                }
+        }
     }
 
     override fun onTerminate() {

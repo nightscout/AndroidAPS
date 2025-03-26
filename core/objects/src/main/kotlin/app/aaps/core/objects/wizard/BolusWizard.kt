@@ -355,7 +355,7 @@ class BolusWizard @Inject constructor(
             actions.add(
                 rh.gs(app.aaps.core.ui.R.string.cobvsiob) + ": " + rh.gs(
                     app.aaps.core.ui.R.string.formatsignedinsulinunits,
-                    insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG
+                    -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
                 ).formatColor(
                     context, rh, app.aaps.core.ui.R.attr
                         .cobAlertColor
@@ -470,7 +470,7 @@ class BolusWizard @Inject constructor(
         }
         if (useCob) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_cob, cob, insulinFromCOB)
         if (useBg) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_bg, insulinFromBG)
-        if (includeBolusIOB) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_iob, insulinFromBolusIOB + insulinFromBasalIOB)
+        if (includeBolusIOB) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_iob, -insulinFromBolusIOB - insulinFromBasalIOB)
         if (useTrend) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_trend, insulinFromTrend)
         if (useSuperBolus) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_superbolus, insulinFromSuperBolus)
         if (percentageCorrection != 100) {
@@ -542,14 +542,13 @@ class BolusWizard @Inject constructor(
                             override fun run() {
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                                } else if (useAlarm && carbs > 0 && carbTime > 0) {
+                                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                                 }
                             }
                         })
                     }
                     bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
-                }
-                if (useAlarm && carbs > 0 && carbTime > 0) {
-                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                 }
             }
             if (quickWizardEntry != null) {

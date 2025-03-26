@@ -25,9 +25,9 @@
     <string name="random_bg">Gly Aléatoire</string>
     <string name="description_source_random_bg">Générer des glycémies aléatoires (mode démo uniquement)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="bgsource_upload">Paramètres de téléchargement des glycémies</string>
-    <string name="dexcom_log_ns_sensor_change_title">Enreg. du changement de capteur sur NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Créer automatiquement un événement \"Changement de capteur\" dans NS au démarrage du capteur</string>
+    <string name="bgsource_settings">Paramètres Source des glycémies</string>
+    <string name="bgsource_log_sensor_change_title">Accepter le démarrage du capteur</string>
+    <string name="bgsource_log_sensor_change_summary">Créer un événement \"Insertion de capteur MGC\" dans Careportal automatiquement lors de la réception de \"démarrage capteur\" à partir de la diffusion locale de la source des glycémies</string>
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">Interval de temps entre les glycémies (min)</string>
     <!-- Patched Ottai App -->

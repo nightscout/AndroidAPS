@@ -77,8 +77,6 @@
     <string name="deltalabel_u">혈당 차이 [%1$s]</string>
     <string name="currentlocation">현재 위치</string>
     <string name="location">위치</string>
-    <string name="latitude_short">위도:</string>
-    <string name="longitude_short">경도</string>
     <string name="glucose_u">혈당 [%1$s]:</string>
     <string name="target_u">목표 [%1$s]:</string>
     <string name="lastboluslabel">마지막 Bolus</string>

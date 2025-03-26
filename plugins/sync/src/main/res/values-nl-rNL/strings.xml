@@ -124,14 +124,14 @@
     <string name="quick_wizard_not_available">Geselecteerde QuickWizard is niet meer beschikbaar, vernieuw uw tegel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
     <string name="user_action_not_available">De geselecteerde gebruikersactie %1$s is niet meer beschikbaar, ververs uw tegel</string>
-    <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
+    <string name="wear_action_tempt_cancel_message">Tijdelijk streefdoel annuleren?</string>
     <string name="wear_action_tempt_unit_error">Verschillende eenheden gebruikt op horloge en telefoon!</string>
-    <string name="wear_action_tempt_zero_message">Tijdelijk streefdoel 0 minuten,  huidige tijdelijk streefdoel annuleren?</string>
+    <string name="wear_action_tempt_zero_message">Tijdelijk streefdoel 0 - tijdelijk streefdoel annuleren?</string>
     <string name="wear_action_tempt_min_bg_error">Min BG buiten bereik!</string>
     <string name="wear_action_tempt_max_bg_error">Max BG buiten bereik!</string>
-    <string name="wear_action_tempt_manual_range_message">Tijdelijk streefdoel:\nMin: %1$s\nMax: %2$s\nDuur: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Tijdelijk streefdoel:\nDoel: %1$s\nDuur: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Tijdelijk streefdoel:\nReden: %1$s\nDoel: %2$s\nDuur: %3$s</string>
+    <string name="wear_action_tempt_range_error">Ongeldig bereik: Laag streefdoel (%1$s) kan niet groter zijn dan hoog streefdoel (%2$s)</string>
+    <string name="wear_action_tempt_manual_message">Tijdelijk streefdoel:\n\nDoel: %1$s\nDuur: %2$d minuten</string>
+    <string name="wear_action_tempt_preset_message">Tijdelijk streefdoel:\n\nReden: %1$s\nDoel: %2$s\nDuur: %3$d minuten</string>
     <string name="no_success">Niet geslaagd - controleer de telefoon</string>
     <string name="wear_settings">Wear instellingen</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
@@ -162,7 +162,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">u</string>
     <string name="no_active_profile">Geen actieve profielwissel!</string>
-    <string name="profile_message">Profiel:\n\nTijdverschuiving: %1$d\nPercentage: %2$d%%\"</string>
     <string name="target_only_aps_mode">Streefdoelen zijn alleen van toepassing in de APS modus!</string>
     <string name="no_history">Geen geschiedenisgegevens!</string>
     <string name="temp_target">Tijdelijk streefdoel</string>

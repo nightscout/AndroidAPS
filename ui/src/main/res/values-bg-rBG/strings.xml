@@ -123,4 +123,5 @@
     <string name="quickwizard_settings">Настройки Бърз достъп</string>
     <string name="overview_edit_quickwizard_valid">Валиден:</string>
     <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
+    <!--    Widget-->
 </resources>

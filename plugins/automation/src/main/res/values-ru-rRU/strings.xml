@@ -79,8 +79,6 @@
     <string name="deltalabel_u">Разница ГК [%1$s]</string>
     <string name="currentlocation">Текущее местоположение</string>
     <string name="location">Местоположение</string>
-    <string name="latitude_short">Широта:</string>
-    <string name="longitude_short">Долгота:</string>
     <string name="glucose_u">Гк %1$s]:</string>
     <string name="target_u">Цель [%1$s]:</string>
     <string name="lastboluslabel">Предыдущий болюс</string>

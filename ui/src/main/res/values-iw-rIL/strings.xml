@@ -127,4 +127,7 @@
     <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
     <string name="confirm_treatment">אשר טיפול</string>
     <string name="recalculate">חשב מחדש</string>
+    <!--    Widget-->
+    <string name="use_black_color">השתמש בצבע שחור</string>
+    <string name="widget_configuration">תצורת ווידג\'ט</string>
 </resources>

@@ -111,14 +111,9 @@
     <string name="wizard_result">Calc. Asistent:\nInsulină: %1$.2fU\nCarburi: %2$dg</string>
     <string name="quick_wizard_not_available">Asistentul rapid selectat nu mai este disponibil, vă rugăm să reîncărcați iconița</string>
     <string name="quick_wizard_message">Asistent calcul: %1$s\nInsulină: %2$.2fU\nCarbohidrați: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Se anulează rularea țintelor temporare?</string>
     <string name="wear_action_tempt_unit_error">Unități diferite folosite pe ceas și telefon!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - anulați ȚinteleTemporare actuale?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG în afara intervalului!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG în afara intervalului!</string>
-    <string name="wear_action_tempt_manual_range_message">ȚintăTemporară:\nMin: %1$s\nMax: %2$s\nDurată: %3$s</string>
-    <string name="wear_action_tempt_manual_message">ȚintăTemporară:\nȚintă: %1$s\nDurată: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ȚintăTemporarăt:\nMotiv: %1$s\nȚintă: %2$s\nDurată: %3$s</string>
     <string name="no_success">fără succes - verificați telefonul</string>
     <string name="wear_settings">Setări Wear</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
@@ -146,7 +141,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nicio schimbare de profil activă!</string>
-    <string name="profile_message">Profil:\n\nDecalare: %1$d\nProcent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Țintele se aplică numai în modul APS!</string>
     <string name="no_history">Nu există date istorice!</string>
     <string name="temp_target">Țintă temporară</string>

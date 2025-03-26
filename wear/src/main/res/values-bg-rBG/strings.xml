@@ -74,7 +74,6 @@
     <string name="menu_default">Стандартен</string>
     <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Продължителност</string>
     <string name="action_tempt_confirmation">Заявен Временен базал</string>
     <string name="action_quick_wizard_confirmation">Заявен Съветник</string>
     <string name="action_treatment_confirmation">Заявена Терапия</string>
@@ -83,13 +82,8 @@
     <string name="action_fill_confirmation">Заявка за пълнене</string>
     <string name="action_ecarb_confirmation">Трябват въглехидрати</string>
     <string name="action_profile_switch_confirmation">Заявка за смяна на профил</string>
-    <string name="action_target" comment="In temp target menu, single target value">Целeва КЗ:</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Ниска</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Висока</string>
     <string name="action_carbs">въглехидрати</string>
     <string name="action_ecarbs">Удължени въглехидрати</string>
-    <string name="action_percentage">% от профила</string>
-    <string name="action_start_min">Старт [min]</string>
     <string name="action_duration_h">Прод [h]</string>
     <string name="action_insulin">Инсулин</string>
     <string name="action_preset_1">Шаблон 1</string>
@@ -97,7 +91,6 @@
     <string name="action_preset_3">Шаблон 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Неограничено кол</string>
     <string name="action_confirm">ПОТВЪРДИ</string>
-    <string name="action_timeshift">отместване</string>
     <string name="bolus_progress">Болус прогрес</string>
     <string name="press_to_cancel">натиснете за отмяна</string>
     <string name="cancel_bolus">СПРИ БОЛУС</string>

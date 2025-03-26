@@ -105,14 +105,9 @@
     <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
     <string name="quick_wizard_not_available">Vald snabbknapp inte längre tillgänglig. Vänligen uppdatera vyn</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Avbryt temp-mål?</string>
     <string name="wear_action_tempt_unit_error">Olika enheter på klocka och telefon!</string>
-    <string name="wear_action_tempt_zero_message">Noll-temp - avbyta nuvarande temp-mål?</string>
     <string name="wear_action_tempt_min_bg_error">Ogiltigt minimum BG!</string>
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
-    <string name="wear_action_tempt_manual_range_message">Temp-mål:\nMin: %1$s\nMax: %2$s\nVaraktighet: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Temp-mål:\nMål: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Tillfälligt mål:\nOrsak: %1$s\nMål: %2$s\nVaraktighet: %3$s</string>
     <string name="no_success">misslyckat - kontrollera telefonen</string>
     <string name="wear_settings">Inställningar för klocka (Wear)</string>
     <string name="wearcontrol_title">Kontrollera från klockan</string>
@@ -140,7 +135,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Ingen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsförskjutning: %1$d\nProcent: %2$d%%\"</string>
     <string name="target_only_aps_mode">Målen gäller endast i APS-läge!</string>
     <string name="no_history">Inget historiskt data!</string>
     <string name="temp_target">Tillfälligt målvärde</string>

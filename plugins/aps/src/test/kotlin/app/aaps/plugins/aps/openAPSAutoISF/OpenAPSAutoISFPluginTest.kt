@@ -121,7 +121,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio)).thenReturn(0.55)
         `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin)).thenReturn(0.4)
         `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax)).thenReturn(0.6)
-        `when`(preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)).thenReturn(20.0)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)).thenReturn(20.0)
         //`when`(preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)).thenReturn(1.0)
 
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(100, 90.0, "fullLoop")).isEqualTo(0.55)
@@ -129,7 +129,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(100, 90.0, "enforced")).isEqualTo(0.5)
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(80, 90.0, "enforced")).isEqualTo(0.4)
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(180, 90.0, "enforced")).isEqualTo(0.6)
-        `when`(preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)).thenReturn(0.0)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)).thenReturn(0.0)
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(180, 90.0, "enforced")).isEqualTo(0.55)
     }
 

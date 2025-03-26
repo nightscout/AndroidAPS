@@ -8,13 +8,10 @@
     <!-- Storage constraint -->
     <string name="disk_full">Uvolněte alespoň %1$d MB z vnitřního úložiště! Smyčka zakázána!</string>
     <!-- Version Checker -->
-    <string name="old_version">stará verze</string>
-    <string name="very_old_version">velmi stará verze</string>
     <string name="application_expired">Platnost aplikace vypršela</string>
-    <string name="new_version_warning">Nová verze nebyla zkontrolována nejméně %1$d dní! V případě, že uplyne %2$d dní, přepne se režim na LGS a po %3$d dnech bude smyčka vypnuta. Obnovte připojení k internetu!</string>
     <string name="running_invalid_version">Zjistili jsme, že používáte neplatnou verzi, smyčka zakázána!</string>
     <string name="versionavailable">Verze %1$s je k dispozici</string>
-    <string name="version_expire">Platnost verze %1$s vyprší dne %2$s</string>
+    <string name="version_expire">Platnost verze %1$s vyprší dne %2$s a přepne se do režimu Ochrana před nízkou glykémií</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Použita přepočítaná data</string>
@@ -38,7 +35,6 @@
     <string name="completed_well_done">Hotovo, gratulujeme!</string>
     <string name="not_completed_yet">Nedokončeno</string>
     <string name="time_elapsed">Čas</string>
-    <string name="maxiobset">Maximální IOB nastaveno správně</string>
     <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
     <string name="synchaswritepermission">Služba synchronizace má oprávnění k zápisu</string>
     <string name="loopenabled">Smyčka povolena</string>

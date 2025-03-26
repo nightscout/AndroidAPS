@@ -7,13 +7,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">Libere pelo menos %1$d MB do armazenamento interno! ‘Loop’ desativado!</string>
     <!-- Version Checker -->
-    <string name="old_version">versão antiga</string>
-    <string name="very_old_version">versão muito antiga</string>
     <string name="application_expired">Aplicativo expirado</string>
-    <string name="new_version_warning">A nova versão não foi verificada por pelo menos %1$d dias! Voltar ao LGS após %2$d dias, o loop será desativado após %3$d dias. Restaure a conectividade de internet!</string>
     <string name="running_invalid_version">Detectamos que você está executando uma versão inválida. \"Loop\" desativado!</string>
     <string name="versionavailable">Versão %1$s disponível</string>
-    <string name="version_expire">A versão %1$s expira em %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Dados recalculados foram utilizados</string>
@@ -37,7 +33,6 @@
     <string name="completed_well_done">Terminado, parabéns!</string>
     <string name="not_completed_yet">Incompleto</string>
     <string name="time_elapsed">Tempo decorrido</string>
-    <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
     <string name="synchaswritepermission">O serviço de sincronização tem permissão de escrita</string>
     <string name="loopenabled">Loop activado</string>

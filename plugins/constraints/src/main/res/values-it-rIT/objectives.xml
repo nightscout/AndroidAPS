@@ -16,11 +16,12 @@
     <string name="objectives_maxbasal">Eseguire azioni per soddisfare le raccomandazioni</string>
     <string name="objectives_maxbasal_learned">Presta attenzione alle funzionalità di sicurezza e regola i parametri di sicurezza quando necessario.</string>
     <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
-    <string name="objectives_maxiobzero_gate">Esegui l\'applicazione in loop chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>
+    <string name="objectives_maxiobzero_gate">Eseguire in ciclo chiuso in modalità sospensione a basso tenore di glucosio (es. max IOB = 0 è impostato automaticamente) per alcuni giorni senza troppi eventi LGS.</string>
     <string name="objectives_maxiobzero_learned">Impostare MaxIOB a zero previene l\'ipoglicemia e non aggiungerà più insulina al di sopra della velocità basale (eccetto in caso di IOB negativo)</string>
     <string name="objectives_maxiob_objective">Regolazione del loop chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
     <string name="objectives_maxiob_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi di glicemia bassa, prima di abbassare il target glicemico</string>
-    <string name="objectives_maxiob_learned">Aggiorna MaxIOB in base alla crescita del bambino. Non permettere al sistema di dare più insulina di quanto si può coprire con il cibo è una cattiva idea quanto impostare un valore davvero alto.</string>
+    <string name="objectives_maxiob_learned">Aggiorna MaxIOB in base alla crescita del bambino. Non permettere al sistema di dare più insulina di quanto si può coprire con il cibo = impostare un valore molto alto è una cattiva idea. MaxIOB è calcolato automaticamente nella modalità semplice</string>
+    <string name="maxiobset">IOB massimo impostato correttamente (Non necessario in modalità semplice)</string>
     <string name="objectives_autosens_objective">Adatta basali e rapporti se necessario, quindi attiva auto-sens</string>
     <string name="objectives_autosens_gate">1 settimana di looping diurno con inserimento regolare dei carboidrati, eseguito con successo</string>
     <string name="objectives_autosens_learned">Se il risultato di autosens non è oscillante intorno al 100% il tuo profilo probabilmente è errato.</string>

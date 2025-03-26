@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -113,8 +114,26 @@ class XdripSourcePlugin @Inject constructor(
                 trendArrow = TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
                 sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE) ?: "")
             )
-            val sensorStartTime = getSensorStartTime(bundle)
-            persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), sensorStartTime)
+            val newSensorStartTime = getSensorStartTime(bundle)
+            // Retrieve last stored sensorStartTime from the database
+            val lastTherapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)
+            val lastStoredSensorStartTime = lastTherapyEvent?.timestamp
+            // Decide whether to update sensorStartTime or keep the last stored one
+            val finalSensorStartTime = when {
+                lastStoredSensorStartTime != null && newSensorStartTime != null &&
+                    abs(newSensorStartTime - lastStoredSensorStartTime) <= 300_000 -> {
+                    aapsLogger.debug(LTag.BGSOURCE, "Sensor start time is within 5 minutes range, skipping update.")
+                    null
+                }
+                lastStoredSensorStartTime != null && newSensorStartTime != null &&
+                    newSensorStartTime < lastStoredSensorStartTime -> {
+                    aapsLogger.debug(LTag.BGSOURCE, "Sensor start time is older than last stored time, skipping update.")
+                    null
+                }
+                else -> newSensorStartTime
+            }
+            // Always update glucoseValues, but use the decided sensorStartTime
+            persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), finalSensorStartTime)
                 .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
                 .blockingGet()
                 .also { savedValues -> savedValues.all().forEach { xdripSourcePlugin.detectSource(it) } }

@@ -29,6 +29,10 @@ dependencies {
     api(libs.androidx.constraintlayout)
     api(libs.com.google.android.gms.playservices.location)
     api(libs.kotlin.reflect)
+    // Places SDK
+    api(libs.com.google.android.places)
+    api(libs.com.github.rtchagas.pingplacepicker)
+    api(libs.com.google.firebase.config)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.android.processor)

@@ -14,6 +14,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -68,6 +69,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var smsManager: SmsManager
     @Mock lateinit var sharedPrefs: SharedPreferences
+    @Mock lateinit var configBuilder: ConfigBuilder
 
     init {
         addInjector {
@@ -139,7 +141,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             injector, aapsLogger, rh, smsManager, aapsSchedulers, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
-            glucoseStatusProvider, persistenceLayer, decimalFormatter
+            glucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder
         )
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
@@ -668,6 +670,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
+
+        //RESTART
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "RESTART")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("RESTART")
 
         //HELP
         smsCommunicatorPlugin.messages = ArrayList()
