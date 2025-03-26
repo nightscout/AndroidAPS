@@ -90,7 +90,6 @@
     <string name="menu_default">Numatytasis</string>
     <string name="menu_menu">Meniu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Trukmė</string>
     <string name="action_tempt_confirmation">Laikino tikslo užklausa</string>
     <string name="action_quick_wizard_confirmation">Greitojo vedlio užklausa</string>
     <string name="action_user_action_confirmation">Reikalingas vartotojo veiksmas</string>
@@ -100,13 +99,8 @@
     <string name="action_fill_confirmation">Pildymo užklausa</string>
     <string name="action_ecarb_confirmation">AV užklausa</string>
     <string name="action_profile_switch_confirmation">Profilio keitimo užklausa</string>
-    <string name="action_target" comment="In temp target menu, single target value">Tikslas</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Žemas</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Aukštas</string>
     <string name="action_carbs">AV</string>
     <string name="action_ecarbs">iAV</string>
-    <string name="action_percentage">Procentai</string>
-    <string name="action_start_min">Pradėti [min]</string>
     <string name="action_duration_h">Trukmė [h]</string>
     <string name="action_insulin">Insulinas</string>
     <string name="action_preset_1">Ruošinys 1</string>
@@ -114,7 +108,6 @@
     <string name="action_preset_3">Ruošinys 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
-    <string name="action_timeshift">laiko postūmis</string>
     <string name="bolus_progress">Leidžiamas bolusas</string>
     <string name="press_to_cancel">paspauskite atšaukimui</string>
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>

@@ -90,7 +90,7 @@
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Meny</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Varighet</string>
+    <string name="action_duration_minutes">Varighet\n[minutter]</string>
     <string name="action_tempt_confirmation">Midlertidig mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
@@ -100,21 +100,24 @@
     <string name="action_fill_confirmation">Fylling forespurt</string>
     <string name="action_ecarb_confirmation">Karbo forespurt</string>
     <string name="action_profile_switch_confirmation">Profilbytte forespurt</string>
-    <string name="action_target" comment="In temp target menu, single target value">Mål</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Lav</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Høy</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Mål\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Lav\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Høy\n[%s]</string>
     <string name="action_carbs">Karbo</string>
+    <string name="action_carbs_gram">Karbo [g]</string>
     <string name="action_ecarbs">eKarbo</string>
-    <string name="action_percentage">Prosent</string>
-    <string name="action_start_min">Start [min]</string>
+    <string name="action_percentage">Prosent\n[%]</string>
+    <string name="action_start_minutes">Start\n[minutter]</string>
     <string name="action_duration_h">Varighet [t]</string>
+    <string name="action_duration_hours">Varighet\n[timer]</string>
     <string name="action_insulin">Insulin</string>
+    <string name="action_insulin_units">Insulin [E]</string>
     <string name="action_preset_1">Forhåndsinnstilling 1</string>
     <string name="action_preset_2">Forhåndsinnstilling 2</string>
     <string name="action_preset_3">Forhåndsinnstilling 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Valgfri mengde</string>
     <string name="action_confirm">BEKREFT</string>
-    <string name="action_timeshift">tidsforskyv</string>
+    <string name="action_timeshift_hours">Tidsforskyv\n[timer]</string>
     <string name="bolus_progress">Bolusfremdrift</string>
     <string name="press_to_cancel">trykk for å avbryte</string>
     <string name="cancel_bolus">AVBRYT BOLUS</string>

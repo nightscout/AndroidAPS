@@ -36,11 +36,6 @@
     <string name="menu_none">Semmi</string>
     <string name="menu_default">Alapértelmezett</string>
     <string name="menu_menu">Menü</string>
-    <string name="action_duration">Időtartam</string>
-    <string name="action_target" comment="In temp target menu, single target value">Cél</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Alacsony</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Magas</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Időtartam [h]</string>
     <string name="action_insulin">Inzulin</string>
     <string name="action_preset_1">Előre beállított 1</string>

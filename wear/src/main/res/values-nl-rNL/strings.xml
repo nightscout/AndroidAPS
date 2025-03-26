@@ -90,7 +90,6 @@
     <string name="menu_default">Standaard</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Duur</string>
     <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
     <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
     <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
@@ -100,13 +99,8 @@
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
     <string name="action_profile_switch_confirmation">Profiel wisselen aangevraagd</string>
-    <string name="action_target" comment="In temp target menu, single target value">Doel</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Laag</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Hoog</string>
     <string name="action_carbs">Koolhydraten</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Percentage</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Duur [h]</string>
     <string name="action_insulin">Insuline</string>
     <string name="action_preset_1">Voorinstelling 1</string>
@@ -114,7 +108,6 @@
     <string name="action_preset_3">Voorinstelling 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Vrije hoeveelheid</string>
     <string name="action_confirm">BEVESTIGEN</string>
-    <string name="action_timeshift">tijdsverschuiving</string>
     <string name="bolus_progress">Bolus voortgang</string>
     <string name="press_to_cancel">druk om te annuleren</string>
     <string name="cancel_bolus">BOLUS ANNULEREN</string>

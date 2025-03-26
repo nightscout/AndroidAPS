@@ -90,7 +90,7 @@
     <string name="menu_default">Varsayılan</string>
     <string name="menu_menu">Menü</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Süre</string>
+    <string name="action_duration_minutes">Süre\n[minutes]</string>
     <string name="action_tempt_confirmation">Geçici hedef talebi</string>
     <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
     <string name="action_user_action_confirmation">Kullanıcı Eylemi Gerekli</string>
@@ -100,21 +100,24 @@
     <string name="action_fill_confirmation">Doldurma talebi</string>
     <string name="action_ecarb_confirmation">Karonhidrat talebi</string>
     <string name="action_profile_switch_confirmation">Profil Değişimi İstendi</string>
-    <string name="action_target" comment="In temp target menu, single target value">Hedef</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Düşük</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Yüksek</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Hedef\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Düşük\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Yüksek\n[%s]</string>
     <string name="action_carbs">Karbonhidrat</string>
+    <string name="action_carbs_gram">Karb.lar [g]</string>
     <string name="action_ecarbs">yKarb</string>
-    <string name="action_percentage">Yüzde</string>
-    <string name="action_start_min">Başlat [min]</string>
+    <string name="action_percentage">Yüzde\n[%]</string>
+    <string name="action_start_minutes">Başlama\n[minutes]</string>
     <string name="action_duration_h">Süre [h]</string>
+    <string name="action_duration_hours">Süre\n[hours]</string>
     <string name="action_insulin">İnsülin</string>
+    <string name="action_insulin_units">İnsülin [U]</string>
     <string name="action_preset_1">Ön ayar 1</string>
     <string name="action_preset_2">Ön ayar 2</string>
     <string name="action_preset_3">Ön ayar 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Serbest miktar</string>
     <string name="action_confirm">ONAYLA</string>
-    <string name="action_timeshift">vardiya</string>
+    <string name="action_timeshift_hours">Zaman kayması\n[hours]</string>
     <string name="bolus_progress">Bolus İlerlemesi</string>
     <string name="press_to_cancel">iptal etmek için basın</string>
     <string name="cancel_bolus">BOLUS İPTAL ET</string>

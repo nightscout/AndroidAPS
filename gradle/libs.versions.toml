@@ -5,7 +5,7 @@ googleServices = "4.4.2"
 kotlin = "2.1.20"
 wearable = "2.9.0"
 room = "2.6.1"
-dagger = "2.55"
+dagger = "2.56.1"
 mockito = "5.16.1"
 junit = "5.12.1"
 okhttp = "4.12.0"
@@ -51,7 +51,7 @@ com-google-android-flexbox = { group = "com.google.android.flexbox", name = "fle
 com-google-android-wearable = { group = "com.google.android.wearable", name = "wearable", version.ref = "wearable" }
 com-google-android-wearable-support = { group = "com.google.android.support", name = "wearable", version.ref = "wearable" }
 
-com-google-guava = { group = "com.google.guava", name = "guava", version = "33.4.5-jre" }
+com-google-guava = { group = "com.google.guava", name = "guava", version = "33.4.6-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.12.1" }
 com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.17.0" }
 com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.4" }
