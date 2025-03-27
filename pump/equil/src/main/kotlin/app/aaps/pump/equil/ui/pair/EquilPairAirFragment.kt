@@ -12,7 +12,7 @@ import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.driver.definition.BasalSchedule
-import app.aaps.pump.equil.keys.EquilIntKey
+import app.aaps.pump.equil.keys.EquilIntPreferenceKey
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdDevicesGet
@@ -72,7 +72,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
-        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_AIR, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_AIR, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
@@ -88,7 +88,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
 
     private fun setTime() {
         showLoading()
-        commandQueue.customCommand(CmdTimeSet(aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {
@@ -105,8 +105,8 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
 
     private fun setAlarmMode() {
         showLoading()
-        val mode = preferences.get(EquilIntKey.EquilTone)
-        commandQueue.customCommand(CmdAlarmSet(mode, aapsLogger, sp, equilManager), object : Callback() {
+        val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
+        commandQueue.customCommand(CmdAlarmSet(mode, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {
@@ -122,7 +122,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun readFM() {
-        commandQueue.customCommand(CmdDevicesGet(aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices result====" + result.success)
@@ -153,7 +153,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
             return
         }
         showLoading()
-        commandQueue.customCommand(CmdBasalSet(basalSchedule, profile, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdTimeSet result====" + result.success)

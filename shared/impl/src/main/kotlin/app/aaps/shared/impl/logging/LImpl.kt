@@ -3,66 +3,59 @@ package app.aaps.shared.impl.logging
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.LogElement
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.core.keys.interfaces.Preferences
+import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LImpl @Inject constructor(
-    private val sp: SP
+    private val preferences: Lazy<Preferences>
 ) : L {
 
-    private var logElements: MutableList<LogElement> = ArrayList()
+    private var _logElements: List<LogElement>? = null
 
-    init {
-        LTag.entries.forEach { logElements.add(LogElementImpl(it, sp)) }
-    }
-
-    override fun findByName(name: String): LogElement {
-        for (element in logElements) {
-            if (element.name == name) return element
+    override fun logElements(): List<LogElement> {
+        if (_logElements == null) {
+            _logElements = LTag.entries.map { LogElementImpl(it, preferences.get()) }
         }
-        return LogElementImpl(false, sp)
+        return _logElements!!
     }
 
-    override fun getLogElements(): List<LogElement> {
-        return logElements
-    }
+    override fun findByName(name: String): LogElement =
+        logElements().find { it.name == name } ?: LogElementImpl(false, preferences.get())
 
     override fun resetToDefaults() {
-        for (element in logElements) {
-            element.resetToDefault()
-        }
+        logElements().forEach { it.resetToDefault() }
     }
 
     class LogElementImpl : LogElement {
 
-        var sp: SP
+        var preferences: Preferences
         override var name: String
         override var defaultValue: Boolean
         override var enabled: Boolean
         private var requiresRestart = false
 
-        internal constructor(tag: LTag, sp: SP) {
-            this.sp = sp
+        internal constructor(tag: LTag, preferences: Preferences) {
+            this.preferences = preferences
             this.name = tag.tag
             this.defaultValue = tag.defaultValue
             this.requiresRestart = tag.requiresRestart
-            enabled = sp.getBoolean(getSPName(), defaultValue)
+            enabled = preferences.get(BooleanComposedKey.Log, name, defaultValue = defaultValue)
         }
 
-        internal constructor(defaultValue: Boolean, sp: SP) {
-            this.sp = sp
+        internal constructor(defaultValue: Boolean, preferences: Preferences) {
+            this.preferences = preferences
             name = "NONEXISTENT"
             this.defaultValue = defaultValue
             enabled = defaultValue
         }
 
-        private fun getSPName(): String = "log_$name"
-
         override fun enable(enabled: Boolean) {
             this.enabled = enabled
-            sp.putBoolean(getSPName(), enabled)
+            preferences.put(BooleanComposedKey.Log, name, value = enabled)
         }
 
         override fun resetToDefault() {

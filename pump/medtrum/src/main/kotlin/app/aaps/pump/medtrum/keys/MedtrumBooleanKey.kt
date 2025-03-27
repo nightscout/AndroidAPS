@@ -1,6 +1,6 @@
 package app.aaps.pump.medtrum.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 
 enum class MedtrumBooleanKey(
     override val key: String,
@@ -13,7 +13,8 @@ enum class MedtrumBooleanKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     MedtrumWarningNotification("pump_warning_notification", true),

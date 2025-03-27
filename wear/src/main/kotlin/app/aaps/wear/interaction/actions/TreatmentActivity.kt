@@ -52,7 +52,7 @@ class TreatmentActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 var initValue = stringToDouble(editInsulin?.editText?.text.toString(), 0.0)
                 val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
-                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValuesInsulin, DecimalFormat("#0.0"), false, getString(R.string.action_insulin))
+                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValuesInsulin, DecimalFormat("#0.0"), false, getString(R.string.action_insulin_units))
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -63,7 +63,7 @@ class TreatmentActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
                 val initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
-                editCarbs = PlusMinusEditText(viewAdapter, initValue, -maxCarbs, maxCarbs, stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs))
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, -maxCarbs, maxCarbs, stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs_gram))
                 container.addView(view)
                 view
             }

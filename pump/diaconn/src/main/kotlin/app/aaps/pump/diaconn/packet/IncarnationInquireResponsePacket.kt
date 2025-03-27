@@ -2,9 +2,8 @@ package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
@@ -16,7 +15,6 @@ open class IncarnationInquireResponsePacket(
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
 
     var result = 0

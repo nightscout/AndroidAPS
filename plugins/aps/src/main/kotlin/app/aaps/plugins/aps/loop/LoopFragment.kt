@@ -18,10 +18,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.aps.R
@@ -39,7 +40,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var loop: Loop
@@ -116,7 +117,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
                        }, fabricPrivacy::logException)
 
         updateGUI()
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseloop, true)
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
     }
 
     @Synchronized

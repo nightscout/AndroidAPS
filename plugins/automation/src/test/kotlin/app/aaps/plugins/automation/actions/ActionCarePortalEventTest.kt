@@ -11,7 +11,6 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.`when`
 import org.skyscreamer.jsonassert.JSONAssert
@@ -22,7 +21,6 @@ class ActionCarePortalEventTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
         `when`(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
         `when`(dateUtil.now()).thenReturn(0)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)

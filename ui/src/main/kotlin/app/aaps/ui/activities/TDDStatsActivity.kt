@@ -28,9 +28,10 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDanaRSyncStatus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.ui.databinding.ActivityTddStatsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -45,7 +46,7 @@ import kotlin.math.roundToInt
 
 class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
@@ -81,12 +82,12 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         binding.totalBaseBasal2.isClickable = false
         binding.totalBaseBasal2.isFocusable = false
         binding.totalBaseBasal2.inputType = 0
-        tbb = sp.getString("TBB", "10.00")
+        tbb = preferences.get(StringNonKey.TotalBaseBasal)
         val profile = profileFunction.getProfile()
         if (profile != null) {
             val cppTBB = profile.baseBasalSum()
             tbb = decimalFormat.format(cppTBB)
-            sp.putString("TBB", tbb)
+            preferences.put(StringNonKey.TotalBaseBasal, tbb)
         }
         binding.totalBaseBasal.setText(tbb)
         if (!activePlugin.activePump.pumpDescription.needsManualTDDLoad) binding.reload.visibility = View.GONE
@@ -188,8 +189,10 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
             if (hasFocus) {
                 binding.totalBaseBasal.text.clear()
             } else {
-                sp.putString("TBB", binding.totalBaseBasal.text.toString())
-                tbb = sp.getString("TBB", "")
+                binding.totalBaseBasal.text.toString().let {
+                    preferences.put(StringNonKey.TotalBaseBasal, it)
+                    tbb = it
+                }
                 loadDataFromDB()
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.totalBaseBasal.windowToken, 0)

@@ -27,10 +27,11 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.common.data.PumpStatus
 import app.aaps.pump.common.defs.PumpDriverState
 import app.aaps.pump.common.sync.PumpSyncEntriesCreator
@@ -47,13 +48,14 @@ import org.json.JSONObject
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 abstract class PumpPluginAbstract protected constructor(
     pluginDescription: PluginDescription,
+    ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
     pumpType: PumpType,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     var rxBus: RxBus,
     var activePlugin: ActivePlugin,
-    var sp: SP,
     var context: Context,
     var fabricPrivacy: FabricPrivacy,
     var dateUtil: DateUtil,
@@ -62,7 +64,7 @@ abstract class PumpPluginAbstract protected constructor(
     var pumpSyncStorage: PumpSyncStorage,
     var decimalFormatter: DecimalFormatter,
     protected val instantiator: Instantiator
-) : PumpPluginBase(pluginDescription, aapsLogger, rh, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
+) : PumpPluginBase(pluginDescription, ownPreferences, aapsLogger, rh, preferences, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
 
     protected val disposable = CompositeDisposable()
 
@@ -317,7 +319,7 @@ abstract class PumpPluginAbstract protected constructor(
         rxBus.send(EventCustomActionsChanged())
     }
 
-    override fun manufacturer(): ManufacturerType = pumpType.manufacturer() ?: ManufacturerType.AAPS
+    override fun manufacturer(): ManufacturerType = pumpType.manufacturer()
     override fun model(): PumpType = pumpType
     override fun canHandleDST(): Boolean = false
 

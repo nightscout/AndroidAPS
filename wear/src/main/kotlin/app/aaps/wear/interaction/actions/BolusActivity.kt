@@ -43,7 +43,7 @@ class BolusActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val initValue = SafeParse.stringToDouble(editInsulin?.editText?.text.toString(), 0.0)
                 val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
-                val title = getString(R.string.action_insulin)
+                val title = getString(R.string.action_insulin_units)
                 editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValues, DecimalFormat("#0.0"), false, title)
                 val view = viewAdapter.root
                 container.addView(view)

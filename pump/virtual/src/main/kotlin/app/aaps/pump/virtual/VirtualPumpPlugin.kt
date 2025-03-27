@@ -42,8 +42,8 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.utils.fabric.InstanceId
@@ -66,7 +66,7 @@ open class VirtualPumpPlugin @Inject constructor(
     private var fabricPrivacy: FabricPrivacy,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
-    private val preferences: Preferences,
+    preferences: Preferences,
     private val profileFunction: ProfileFunction,
     commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
@@ -76,7 +76,7 @@ open class VirtualPumpPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(VirtualPumpFragment::class.java.name)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_virtual_pump)
@@ -86,7 +86,8 @@ open class VirtualPumpPlugin @Inject constructor(
         .description(R.string.description_pump_virtual)
         .setDefault()
         .neverVisible(config.AAPSCLIENT),
-    aapsLogger, rh, commandQueue
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, VirtualPump {
 
     private val disposable = CompositeDisposable()
@@ -364,6 +365,7 @@ open class VirtualPumpPlugin @Inject constructor(
             try {
                 extended.put("ActiveProfile", profileName)
             } catch (_: Exception) {
+                // ignore
             }
             val tb = persistenceLayer.getTemporaryBasalActiveAt(now)
             if (tb != null) {
@@ -389,7 +391,7 @@ open class VirtualPumpPlugin @Inject constructor(
         return pump
     }
 
-    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer() ?: ManufacturerType.AAPS
+    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer()
 
     override fun model(): PumpType = pumpDescription.pumpType
 

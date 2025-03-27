@@ -1,11 +1,11 @@
 package app.aaps.pump.eopatch.vo
 
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.CommonUtils
 import app.aaps.pump.eopatch.GsonHelper
 import app.aaps.pump.eopatch.code.BasalStatus
-import app.aaps.pump.eopatch.code.SettingKeys
+import app.aaps.pump.eopatch.keys.EopatchStringNonKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
@@ -115,9 +115,9 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP) {
+    override fun flush(preferences: Preferences) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
-        sp.putString(SettingKeys.NORMAL_BASAL, jsonStr)
+        preferences.put(EopatchStringNonKey.NormalBasal, jsonStr)
         subject.onNext(this)
     }
 

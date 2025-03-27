@@ -32,6 +32,7 @@ class AndroidBluetoothDevice(
     private val systemBluetoothAdapter: SystemBluetoothAdapter,
     override val address: BluetoothAddress
 ) : BluetoothDevice(Dispatchers.IO) {
+
     private var systemBluetoothSocket: SystemBluetoothSocket? = null
     private var inputStream: InputStream? = null
     private var outputStream: OutputStream? = null
@@ -80,7 +81,7 @@ class AndroidBluetoothDevice(
                 } else {
                     logger(LogLevel.DEBUG) {
                         "Previous attempt to establish an RFCOMM client connection to the Combo failed with" +
-                        "exception \"$previousException\"; trying again (this is attempt #${attemptNumber + 1} of 5)"
+                            "exception \"$previousException\"; trying again (this is attempt #${attemptNumber + 1} of 5)"
                     }
                 }
 

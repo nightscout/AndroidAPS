@@ -4,7 +4,6 @@
     <string name="menu_treatment">Tretman</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Uglj. hidrati</string>
-    <string name="action_duration">Trajanje</string>
     <string name="action_carbs">Uglj. hidrati</string>
     <string name="action_insulin">Insulin</string>
     <string name="status_pump">Pumpa</string>

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
-    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
-
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>

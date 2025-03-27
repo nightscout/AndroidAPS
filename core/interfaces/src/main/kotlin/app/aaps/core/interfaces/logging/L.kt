@@ -4,5 +4,5 @@ interface L {
 
     fun resetToDefaults()
     fun findByName(name: String): LogElement
-    fun getLogElements(): List<LogElement>
+    fun logElements(): List<LogElement>
 }

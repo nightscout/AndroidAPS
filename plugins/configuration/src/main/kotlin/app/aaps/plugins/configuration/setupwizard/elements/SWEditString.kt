@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 
 class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING) {
@@ -32,7 +32,7 @@ class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING)
         editText.id = View.generateViewId()
         editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.maxLines = 1
-        editText.setText(sp.getString(preference, ""))
+        editText.setText(preferences.get(preference as StringPreferenceKey))
         layout.addView(editText)
         super.generateDialog(layout)
         editText.addTextChangedListener(object : TextWatcher {
@@ -45,8 +45,8 @@ class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING)
         })
     }
 
-    fun preference(preference: StringKey): SWEditString {
-        this.preference = preference.key
+    fun preference(preference: StringPreferenceKey): SWEditString {
+        this.preference = preference
         return this
     }
 

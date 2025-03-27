@@ -30,17 +30,16 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
@@ -51,8 +50,8 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
@@ -79,7 +78,6 @@ import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 /**
  * Created by mike on 03.07.2016.
@@ -87,7 +85,7 @@ import kotlin.system.exitProcess
 
 @Reusable
 class ImportExportPrefsImpl @Inject constructor(
-    private var log: AAPSLogger,
+    private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
     private val preferences: Preferences,
@@ -99,11 +97,11 @@ class ImportExportPrefsImpl @Inject constructor(
     private val androidPermission: AndroidPermission,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: FileListProvider,
-    private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
     private val dataWorkerStorage: DataWorkerStorage,
+    private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder
 ) : ImportExportPrefs {
 
@@ -168,7 +166,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, { password ->
+        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -180,7 +178,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
     ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword.key, passwordExplanation, passwordWarning, { password ->
+        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
                                            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -282,22 +280,25 @@ class ImportExportPrefsImpl @Inject constructor(
         try {
             val entries: MutableMap<String, String> = mutableMapOf()
             for ((key, value) in sp.getAll()) {
-                entries[key] = value.toString()
+                if (preferences.isExportableKey(key))
+                    entries[key] = value.toString()
+                else
+                    aapsLogger.warn(LTag.CORE, "Not exportable key: $key $value")
             }
             val prefs = Prefs(entries, prepareMetadata(context))
             encryptedPrefsFormat.savePreferences(newFile, prefs, password)
             resultOk = true // Assuming export was executed successfully (or it would have thrown an exception)
 
         } catch (e: FileNotFoundException) {
-            log.error(LTag.CORE, "Unhandled exception: file not found", e)
+            aapsLogger.error(LTag.CORE, "Unhandled exception: file not found", e)
         } catch (e: IOException) {
-            log.error(LTag.CORE, "Unhandled exception: IO exception", e)
+            aapsLogger.error(LTag.CORE, "Unhandled exception: IO exception", e)
         } catch (e: PrefFileNotFoundError) {
-            log.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
+            aapsLogger.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
         } catch (e: PrefIOError) {
-            log.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
+            aapsLogger.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
         }
-        log.debug(LTag.CORE, "savePreferences: $resultOk")
+        aapsLogger.debug(LTag.CORE, "savePreferences: $resultOk")
         return resultOk
     }
 
@@ -344,7 +345,7 @@ class ImportExportPrefsImpl @Inject constructor(
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            log.error(LTag.CORE, "Internal android framework exception", e)
+            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
         }
     }
 
@@ -360,7 +361,7 @@ class ImportExportPrefsImpl @Inject constructor(
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            log.error(LTag.CORE, "Internal android framework exception", e)
+            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
         }
     }
 
@@ -396,6 +397,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
                     PrefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
                         if (importPossible) {
+                            activePlugin.beforeImport()
                             sp.clear()
                             for ((key, value) in prefs.values) {
                                 if (value == "true" || value == "false") {
@@ -404,7 +406,7 @@ class ImportExportPrefsImpl @Inject constructor(
                                     sp.putString(key, value)
                                 }
                             }
-
+                            activePlugin.afterImport()
                             restartAppAfterImport(activity)
                         } else {
                             // for impossible imports it should not be called
@@ -416,9 +418,9 @@ class ImportExportPrefsImpl @Inject constructor(
 
             } catch (e: PrefFileNotFoundError) {
                 ToastUtils.errorToast(activity, rh.gs(R.string.filenotfound) + " " + importFile)
-                log.error(LTag.CORE, "Unhandled exception", e)
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
             } catch (e: PrefIOError) {
-                log.error(LTag.CORE, "Unhandled exception", e)
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ToastUtils.errorToast(activity, e.message)
             }
         }

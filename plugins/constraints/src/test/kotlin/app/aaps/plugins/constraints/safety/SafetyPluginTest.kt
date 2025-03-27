@@ -1,6 +1,5 @@
 package app.aaps.plugins.constraints.safety
 
-import android.content.SharedPreferences
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -18,9 +17,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
@@ -47,32 +43,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var tddCalculator: TddCalculator
     @Mock lateinit var determineBasalAMA: DetermineBasalAMA
     @Mock lateinit var determineBasalSMB: DetermineBasalSMB
-    @Mock lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var safetyPlugin: SafetyPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
 
     private val pumpDescription = PumpDescription()
-
-    init {
-        addInjector {
-            if (it is AdaptiveDoublePreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AdaptiveListPreference) {
-                it.preferences = preferences
-            }
-        }
-    }
 
     @BeforeEach
     fun prepare() {

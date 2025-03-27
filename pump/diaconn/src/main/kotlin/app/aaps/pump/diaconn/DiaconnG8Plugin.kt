@@ -6,8 +6,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.format.DateFormat
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -45,16 +46,25 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.pump.diaconn.activities.DiaconnG8BLEScanActivity
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
+import app.aaps.pump.diaconn.keys.DiaconnBooleanKey
+import app.aaps.pump.diaconn.keys.DiaconnIntKey
+import app.aaps.pump.diaconn.keys.DiaconnIntNonKey
+import app.aaps.pump.diaconn.keys.DiaconnIntentKey
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.service.DiaconnG8Service
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
@@ -67,13 +77,13 @@ import kotlin.math.max
 @Singleton
 class DiaconnG8Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    commandQueue: CommandQueue,
     private val rxBus: RxBus,
     private val context: Context,
-    rh: ResourceHelper,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    private val sp: SP,
-    commandQueue: CommandQueue,
     private val diaconnG8Pump: DiaconnG8Pump,
     private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
@@ -86,15 +96,19 @@ class DiaconnG8Plugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DiaconnG8Fragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_diaconn_g8)
         .pluginName(R.string.diaconn_g8_pump)
         .shortName(R.string.diaconn_g8_pump_shortname)
-        .preferencesId(R.xml.pref_diaconn)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_pump_diaconn_g8),
-    aapsLogger, rh, commandQueue
+    ownPreferences = listOf(
+        DiaconnIntentKey::class.java, DiaconnIntKey::class.java, DiaconnBooleanKey::class.java,
+        DiaconnStringNonKey::class.java, DiaconnIntNonKey::class.java,
+    ),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Diaconn, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
@@ -145,8 +159,8 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     fun changePump() {
-        mDeviceAddress = sp.getString(R.string.key_diaconn_g8_address, "")
-        mDeviceName = sp.getString(R.string.key_diaconn_g8_name, "")
+        mDeviceAddress = preferences.get(DiaconnStringNonKey.Address)
+        mDeviceName = preferences.get(DiaconnStringNonKey.Name)
         diaconnG8Pump.reset()
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
@@ -561,7 +575,7 @@ class DiaconnG8Plugin @Inject constructor(
     override fun canHandleDST(): Boolean = false
 
     override fun isBatteryChangeLoggingEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, false)
+        return preferences.get(DiaconnBooleanKey.LogBatteryChange)
     }
 
     @Synchronized
@@ -590,21 +604,27 @@ class DiaconnG8Plugin @Inject constructor(
         }
     }
 
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-
-        val bolusSpeedPreference: Preference? = preferenceFragment.findPreference(rh.gs(R.string.key_diaconn_g8_bolusspeed))
-        bolusSpeedPreference?.setOnPreferenceChangeListener { _, newValue ->
-            val intBolusSpeed = newValue.toString().toInt()
-
-            diaconnG8Pump.bolusSpeed = intBolusSpeed
-            diaconnG8Pump.speed = intBolusSpeed
-            diaconnG8Pump.setUserOptionType = DiaconnG8Pump.BOLUS_SPEED
-            sp.putBoolean(R.string.key_diaconn_g8_is_bolus_speed_sync, false)
-
-            true
-        }
-    }
-
     override fun clearAllTables() = diaconnHistoryDatabase.clearAllTables()
 
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val speedEntries = arrayOf<CharSequence>("1 U/min", "2 U/min", "3 U/min", "4 U/min", "5 U/min", "6 U/min", "7 U/min", "8 U/min")
+        val speedValues = arrayOf<CharSequence>("1", "2", "3", "4", "5", "6", "7", "8")
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "diaconn_settings"
+            title = rh.gs(R.string.diaconn_g8_pump)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveIntentPreference(ctx = context, intentKey = DiaconnIntentKey.BtSelector, title = R.string.selectedpump, intent = Intent(context, DiaconnG8BLEScanActivity::class.java)))
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DiaconnIntKey.BolusSpeed, title = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogInsulinChange, title = R.string.diaconn_g8_loginsulinchange_title, summary = R.string.diaconn_g8_loginsulinchange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogCannulaChange, title = R.string.diaconn_g8_logcanulachange_title, summary = R.string.diaconn_g8_logcanulachange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogTubeChange, title = R.string.diaconn_g8_logtubechange_title, summary = R.string.diaconn_g8_logtubechange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogBatteryChange, title = R.string.diaconn_g8_logbatterychange_title, summary = R.string.diaconn_g8_logbatterychange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.SendLogsToCloud, title = R.string.diaconn_g8_cloudsend_title, summary = R.string.diaconn_g8_cloudsend_summary))
+        }
+    }
 }

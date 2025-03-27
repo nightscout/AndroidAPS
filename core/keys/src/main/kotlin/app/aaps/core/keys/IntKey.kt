@@ -1,5 +1,8 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+
 enum class IntKey(
     override val key: String,
     override val defaultValue: Int,
@@ -13,7 +16,8 @@ enum class IntKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val engineeringModeOnly: Boolean = false
+    override val engineeringModeOnly: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     OverviewCarbsButtonIncrement1("carbs_button_increment_1", 5, -50, 50, defaultedBySM = true, dependency = BooleanKey.OverviewShowCarbsButton),
@@ -64,7 +68,6 @@ enum class IntKey(
     SmsRemoteBolusDistance("smscommunicator_remotebolusmindistance", 15, 3, 60),
 
     BgSourceRandomInterval("randombg_interval_min", 5, 1, 15, defaultedBySM = true),
-    GarminLocalHttpPort("communication_http_port", 28891, 1001, 65535, defaultedBySM = true, hideParentScreenIfHidden = true),
     NsClientAlarmStaleData("ns_alarm_stale_data_value", 16, 15, 120),
     NsClientUrgentAlarmStaleData("ns_alarm_urgent_stale_data_value", 31, 30, 180),
 }

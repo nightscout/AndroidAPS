@@ -1,8 +1,9 @@
 package app.aaps.shared.impl.logging
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
+import dagger.Lazy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -15,13 +16,14 @@ import org.mockito.quality.Strictness
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LImplTest {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private lateinit var sut: LImpl
 
     @BeforeEach
     fun setUp() {
-        sut = LImpl(sp)
+        val lazyPreferences: Lazy<Preferences> = Lazy { preferences }
+        sut = LImpl(lazyPreferences)
     }
 
     @Test
@@ -32,7 +34,7 @@ class LImplTest {
 
     @Test
     fun getLogElements() {
-        assertThat(sut.getLogElements()).isNotEmpty()
+        assertThat(sut.logElements()).isNotEmpty()
     }
 
     @Test

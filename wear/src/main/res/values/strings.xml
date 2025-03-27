@@ -90,7 +90,7 @@
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Duration</string>
+    <string name="action_duration_minutes">Duration\n[minutes]</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
     <string name="action_user_action_confirmation">User Action Requested</string>
@@ -100,21 +100,24 @@
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
     <string name="action_profile_switch_confirmation">Profile Switch Requested</string>
-    <string name="action_target" comment="In temp target menu, single target value">Target</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Low</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">High</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Target\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Low\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">High\n[%s]</string>
     <string name="action_carbs">Carbs</string>
+    <string name="action_carbs_gram">Carbs [g]</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Percentage</string>
-    <string name="action_start_min">Start [min]</string>
+    <string name="action_percentage">Percentage\n[%]</string>
+    <string name="action_start_minutes">Start\n[minutes]</string>
     <string name="action_duration_h">Duration [h]</string>
+    <string name="action_duration_hours">Duration\n[hours]</string>
     <string name="action_insulin">Insulin</string>
+    <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>
     <string name="action_preset_2">Preset 2</string>
     <string name="action_preset_3">Preset 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Free amount</string>
     <string name="action_confirm">CONFIRM</string>
-    <string name="action_timeshift">timeshift</string>
+    <string name="action_timeshift_hours">Timeshift\n[hours]</string>
     <string name="bolus_progress">Bolus Progress</string>
     <string name="press_to_cancel">press to cancel</string>
     <string name="cancel_bolus">CANCEL BOLUS</string>

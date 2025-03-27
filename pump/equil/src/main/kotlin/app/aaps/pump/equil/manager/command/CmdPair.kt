@@ -3,10 +3,9 @@ package app.aaps.pump.equil.manager.command
 import android.util.Log
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_DEVICES
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_PASSWORD
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.EquilResponse
@@ -20,9 +19,9 @@ class CmdPair(
     var address: String,
     private var password: String,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseCmd(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseCmd(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     var sn: String?
 
@@ -129,8 +128,8 @@ class CmdPair(
             return null
         }
 
-        sp.putString(EQUIL_PASSWORD, pwd2)
-        sp.putString(EQUIL_DEVICES, pwd1)
+        preferences.put(EquilStringKey.Password, pwd2)
+        preferences.put(EquilStringKey.Devices, pwd1)
         runPwd = pwd2
         val data1 = Utils.hexStringToBytes(pwd1)
         val data = Utils.concat(data1, keyBytes)

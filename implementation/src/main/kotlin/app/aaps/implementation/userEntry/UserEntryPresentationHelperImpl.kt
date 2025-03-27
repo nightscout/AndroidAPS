@@ -37,7 +37,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Action.ColorGroup.Careportal       -> app.aaps.core.ui.R.color.high
         Action.ColorGroup.Pump             -> app.aaps.core.ui.R.color.loopDisconnected
         Action.ColorGroup.Aaps             -> app.aaps.core.ui.R.color.defaultText
-        else                               -> app.aaps.core.ui.R.color.defaultText
+        // else                               -> app.aaps.core.ui.R.color.defaultText
     }
 
     override fun iconId(source: Sources): Int = when (source) {

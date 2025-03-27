@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -23,11 +23,16 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -37,6 +42,10 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.profile.keys.ProfileComposedBooleanKey
+import app.aaps.plugins.main.profile.keys.ProfileComposedDoubleKey
+import app.aaps.plugins.main.profile.keys.ProfileComposedStringKey
+import app.aaps.plugins.main.profile.keys.ProfileIntKey
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -49,7 +58,7 @@ class ProfilePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     rh: ResourceHelper,
-    private val sp: SP,
+    preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
@@ -59,8 +68,8 @@ class ProfilePlugin @Inject constructor(
     private val instantiator: Instantiator,
     private val decimalFormatter: DecimalFormatter,
     private val uiInteraction: UiInteraction
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PROFILE)
         .fragmentClass(ProfileFragment::class.java.name)
         .enableByDefault(true)
@@ -70,13 +79,19 @@ class ProfilePlugin @Inject constructor(
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)
         .setDefault(),
-    aapsLogger, rh
+    ownPreferences = listOf(
+        ProfileComposedStringKey::class.java, ProfileComposedDoubleKey::class.java, ProfileComposedBooleanKey::class.java, ProfileIntKey::class.java
+    ),
+    aapsLogger, rh, preferences
 ), ProfileSource {
 
     private var rawProfile: ProfileStore? = null
 
-    private val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
-    private val defaultICfg = "{\"insulinLabel\":\"\",\"insulinEndTime\":0,\"insulinPeakTime\":0}"
+    companion object {
+
+        const val DEFAULT_ARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
+        const val DEFAULT_ICFG = "{\"insulinLabel\":\"\",\"insulinEndTime\":0,\"insulinPeakTime\":0}"
+    }
 
     override fun onStart() {
         super.onStart()
@@ -178,21 +193,20 @@ class ProfilePlugin @Inject constructor(
     override fun storeSettings(activity: FragmentActivity?, timestamp: Long) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
-                sp.putString(localProfileNumbered + "name", name)
-                sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
+                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
                 sp.putString(localProfileNumbered + "icfg", iCfg.toJson().toString())
-                sp.putDouble(localProfileNumbered + "dia", dia)
-                sp.putString(localProfileNumbered + "ic", ic.toString())
-                sp.putString(localProfileNumbered + "isf", isf.toString())
-                sp.putString(localProfileNumbered + "basal", basal.toString())
-                sp.putString(localProfileNumbered + "targetlow", targetLow.toString())
-                sp.putString(localProfileNumbered + "targethigh", targetHigh.toString())
+                preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, i, value = dia)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i, value = targetLow.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i, value = targetHigh.toString())
             }
         }
-        sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
+        preferences.put(ProfileIntKey.AmountOfProfiles, numOfProfiles)
 
-        sp.putLong(app.aaps.core.utils.R.string.key_local_profile_last_change, timestamp)
+        preferences.put(LongNonKey.LocalProfileLastChange, timestamp)
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
@@ -206,26 +220,25 @@ class ProfilePlugin @Inject constructor(
 
     @Synchronized
     override fun loadSettings() {
-        val numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
+        val numOfProfiles = preferences.get(ProfileIntKey.AmountOfProfiles)
         profiles.clear()
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
         for (i in 0 until numOfProfiles) {
-            val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
-            val name = sp.getString(localProfileNumbered + "name", Constants.LOCAL_PROFILE + i)
+            val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
             if (isExistingName(name)) continue
             try {
                 profiles.add(
                     ProfileSource.SingleProfile(
                         name = name,
-                        mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
-                        iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", defaultICfg))),
-                        dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
-                        ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
-                        isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),
-                        basal = JSONArray(sp.getString(localProfileNumbered + "basal", defaultArray)),
-                        targetLow = JSONArray(sp.getString(localProfileNumbered + "targetlow", defaultArray)),
-                        targetHigh = JSONArray(sp.getString(localProfileNumbered + "targethigh", defaultArray))
+                        mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
+                        iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", DEFAULT_ICFG))),
+                        dia = preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, i),
+                        ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
+                        isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),
+                        basal = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)),
+                        targetLow = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)),
+                        targetHigh = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i))
                     )
                 )
             } catch (e: JSONException) {
@@ -356,11 +369,11 @@ class ProfilePlugin @Inject constructor(
                 mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
                 iCfg = activePlugin.activeInsulin.iCfg,
                 dia = Constants.defaultDIA,
-                ic = JSONArray(defaultArray),
-                isf = JSONArray(defaultArray),
-                basal = JSONArray(defaultArray),
-                targetLow = JSONArray(defaultArray),
-                targetHigh = JSONArray(defaultArray)
+                ic = JSONArray(DEFAULT_ARRAY),
+                isf = JSONArray(DEFAULT_ARRAY),
+                basal = JSONArray(DEFAULT_ARRAY),
+                targetLow = JSONArray(DEFAULT_ARRAY),
+                targetHigh = JSONArray(DEFAULT_ARRAY)
             )
         )
         currentProfileIndex = profiles.size - 1
@@ -416,7 +429,7 @@ class ProfilePlugin @Inject constructor(
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
-            val startDate = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
+            val startDate = preferences.getIfExists(LongNonKey.LocalProfileLastChange) ?: dateUtil.now()
             json.put("date", startDate)
             json.put("created_at", dateUtil.toISOAsUTC(startDate))
             json.put("startDate", dateUtil.toISOAsUTC(startDate))

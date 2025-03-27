@@ -18,10 +18,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.source.keys.GlunovoLongKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +31,7 @@ import javax.inject.Singleton
 class GlunovoPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
+    preferences: Preferences,
     private val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
@@ -45,7 +46,8 @@ class GlunovoPlugin @Inject constructor(
         .shortName(R.string.glunovo)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_glunovo),
-    aapsLogger, resourceHelper
+    ownPreferences = listOf(GlunovoLongKey::class.java),
+    aapsLogger, resourceHelper, preferences
 ), BgSource {
 
     private var handler: Handler? = null
@@ -61,7 +63,7 @@ class GlunovoPlugin @Inject constructor(
                 fabricPrivacy.logException(e)
                 aapsLogger.error("Error while processing data", e)
             }
-            val lastReadTimestamp = sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)
+            val lastReadTimestamp = preferences.get(GlunovoLongKey.LastProcessedTimestamp)
             val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
             handler?.postDelayed(refreshLoop, differenceToNow)
         }
@@ -98,7 +100,7 @@ class GlunovoPlugin @Inject constructor(
                     val curr = cr.getDouble(2)
 
                     // bypass already processed
-                    if (timestamp < sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)) {
+                    if (timestamp < preferences.get(GlunovoLongKey.LastProcessedTimestamp)) {
                         cr.moveToNext()
                         continue
                     }
@@ -132,7 +134,7 @@ class GlunovoPlugin @Inject constructor(
                                 glucoseUnit = GlucoseUnit.MMOL
                             )
                         )
-                    sp.putLong(R.string.key_last_processed_glunovo_timestamp, timestamp)
+                    preferences.put(GlunovoLongKey.LastProcessedTimestamp, timestamp)
                     cr.moveToNext()
                 }
                 cr.close()

@@ -61,13 +61,7 @@
     <string name="menu_none">Cap</string>
     <string name="menu_default">Per defecte</string>
     <string name="menu_menu">Menú</string>
-    <string name="action_duration">Durada</string>
-    <string name="action_target" comment="In temp target menu, single target value">Objectiu</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Baix</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Alt</string>
     <string name="action_carbs">Carbs</string>
-    <string name="action_percentage">Percentatge</string>
-    <string name="action_start_min">Inici [min]</string>
     <string name="action_duration_h">Durada [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Predefinit 1</string>
@@ -75,7 +69,6 @@
     <string name="action_preset_3">Predefinit 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Quantitat lliure</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">desplaçament horari</string>
     <string name="bolus_progress">Progressió bolus</string>
     <string name="press_to_cancel">premeu per cancel·lar</string>
     <string name="cancel_bolus">CANCEL·LAR BOLUS</string>

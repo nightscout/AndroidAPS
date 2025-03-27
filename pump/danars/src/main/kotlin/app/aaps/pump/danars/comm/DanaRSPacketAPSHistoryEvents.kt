@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaBooleanKey
@@ -288,7 +288,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.REFILL              -> {
-                if (preferences.get(DanaBooleanKey.DanaRsLogInsulinChange)) {
+                if (preferences.get(DanaBooleanKey.LogInsulinChange)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = TE.Type.INSULIN_CHANGE,
@@ -336,7 +336,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.PRIME_CANNULA       -> {
-                if (preferences.get(DanaBooleanKey.DanaRsLogCannulaChange)) {
+                if (preferences.get(DanaBooleanKey.LogCannulaChange)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = TE.Type.CANNULA_CHANGE,
@@ -361,13 +361,13 @@ open class DanaRSPacketAPSHistoryEvents(
                 status = "TIME_CHANGE " + dateUtil.timeString(datetime)
             }
 
-            else                                      -> {
-                aapsLogger.debug(
-                    LTag.PUMPCOMM,
-                    "[$pumpId] Event: $recordCode ${dateUtil.dateAndTimeString(datetime)} ($datetime) Param1: $param1 Param2: $param2"
-                )
-                status = "UNKNOWN " + dateUtil.timeString(datetime)
-            }
+            // else                                      -> {
+            //     aapsLogger.debug(
+            //         LTag.PUMPCOMM,
+            //         "[$pumpId] Event: $recordCode ${dateUtil.dateAndTimeString(datetime)} ($datetime) Param1: $param1 Param2: $param2"
+            //     )
+            //     status = "UNKNOWN " + dateUtil.timeString(datetime)
+            // }
         }
         if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))

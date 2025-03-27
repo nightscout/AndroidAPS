@@ -1,7 +1,7 @@
 package app.aaps.plugins.main.skins
 
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.main.di.SkinsModule
 import java.util.Collections
 import javax.inject.Inject

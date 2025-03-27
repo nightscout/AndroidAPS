@@ -42,7 +42,7 @@ import app.aaps.core.interfaces.utils.Round.ceilTo
 import app.aaps.core.interfaces.utils.Round.floorTo
 import app.aaps.core.interfaces.utils.Round.roundTo
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -88,16 +88,16 @@ class DanaRv2Plugin @Inject constructor(
     instantiator: Instantiator
 ) : AbstractDanaRPlugin(
     danaPump,
-    rh,
-    constraintChecker,
     aapsLogger,
-    aapsSchedulers,
+    rh,
+    preferences,
     commandQueue,
+    constraintChecker,
+    aapsSchedulers,
     rxBus,
     activePlugin,
     dateUtil,
     pumpSync,
-    preferences,
     uiInteraction,
     danaHistoryDatabase,
     decimalFormatter,
@@ -163,7 +163,7 @@ class DanaRv2Plugin @Inject constructor(
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         // v2 stores end time for bolus, we need to adjust time
         // default delivery speed is 12 sec/U
-        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
+        val preferencesSpeed = preferences.get(DanaIntKey.BolusSpeed)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -347,7 +347,7 @@ class DanaRv2Plugin @Inject constructor(
                 .duration(pump.extendedBolusRemainingMinutes)
                 .absolute(pump.extendedBolusAbsoluteRate)
                 .isPercent(false)
-            if (!preferences.get(DanaBooleanKey.DanaRUseExtended)) result.bolusDelivered(pump.extendedBolusAmount)
+            if (!preferences.get(DanaBooleanKey.UseExtended)) result.bolusDelivered(pump.extendedBolusAmount)
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
             return result
         }
@@ -400,10 +400,10 @@ class DanaRv2Plugin @Inject constructor(
             key = "danar_v2_settings"
             title = rh.gs(R.string.danar_pump_settings)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListPreference(ctx = context, stringKey = DanaStringKey.DanaRName, title = R.string.danar_bt_name_title, dialogTitle = R.string.danar_bt_name_title, entries = entries, entryValues = entries))
+            addPreference(AdaptiveListPreference(ctx = context, stringKey = DanaStringKey.RName, title = R.string.danar_bt_name_title, dialogTitle = R.string.danar_bt_name_title, entries = entries, entryValues = entries))
             addPreference(
                 AdaptiveIntPreference(
-                    ctx = context, intKey = DanaIntKey.DanaRPassword, title = R.string.danar_password_title,
+                    ctx = context, intKey = DanaIntKey.Password, title = R.string.danar_password_title,
                     validatorParams = DefaultEditTextValidator.Parameters(
                         testType = EditTextValidator.TEST_REGEXP,
                         customRegexp = rh.gs(app.aaps.core.validators.R.string.fourdigitnumber),
@@ -411,7 +411,7 @@ class DanaRv2Plugin @Inject constructor(
                     )
                 )
             )
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.DanaBolusSpeed, title = R.string.bolusspeed, dialogTitle = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.BolusSpeed, title = R.string.bolusspeed, dialogTitle = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
         }
     }
 }

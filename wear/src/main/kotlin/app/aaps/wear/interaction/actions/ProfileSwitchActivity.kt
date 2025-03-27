@@ -51,7 +51,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 val initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
-                editTimeshift = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
+                editTimeshift = PlusMinusEditText(viewAdapter, initValue, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift_hours), true)
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -70,7 +70,7 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 val initValue = SafeParse.stringToDouble(editDuration?.editText?.text.toString(), duration)
-                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, getString(R.string.action_duration))
+                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, getString(R.string.action_duration_minutes))
                 container.addView(view)
                 view
             }

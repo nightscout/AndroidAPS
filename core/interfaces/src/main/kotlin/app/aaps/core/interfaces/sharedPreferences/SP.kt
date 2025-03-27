@@ -67,7 +67,7 @@ interface SP {
     fun getInt(key: String, defaultValue: Int): Int
     fun getLong(@StringRes resourceID: Int, defaultValue: Long): Long
     fun getLong(key: String, defaultValue: Long): Long
-    fun incLong(@StringRes resourceID: Int)
+    fun incLong(key: String)
     fun putBoolean(key: String, value: Boolean)
     fun putBoolean(@StringRes resourceID: Int, value: Boolean)
     fun putDouble(key: String, value: Double)
@@ -76,7 +76,7 @@ interface SP {
     fun putLong(@StringRes resourceID: Int, value: Long)
     fun putInt(key: String, value: Int)
     fun putInt(@StringRes resourceID: Int, value: Int)
-    fun incInt(@StringRes resourceID: Int)
+    fun incInt(key: String)
     fun putString(@StringRes resourceID: Int, value: String)
     fun putString(key: String, value: String)
 }

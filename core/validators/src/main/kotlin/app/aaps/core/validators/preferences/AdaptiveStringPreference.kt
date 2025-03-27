@@ -1,15 +1,14 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.R
@@ -32,7 +31,6 @@ class AdaptiveStringPreference(
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, stringKey = null, title = null)
@@ -60,11 +58,11 @@ class AdaptiveStringPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
         validatorParameters = validatorParams ?: obtainValidatorParameters(attrs)

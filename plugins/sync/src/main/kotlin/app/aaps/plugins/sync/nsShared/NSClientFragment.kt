@@ -31,8 +31,8 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.sync.R
@@ -41,6 +41,7 @@ import app.aaps.plugins.sync.databinding.NsClientLogItemBinding
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -51,7 +52,7 @@ import javax.inject.Inject
 
 class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -99,7 +100,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
+        binding.paused.isChecked = preferences.get(NsclientBooleanKey.NsPaused)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
             uel.log(action = if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, source = Sources.NSClient)
             nsClientPlugin?.pause(isChecked)
@@ -231,7 +232,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     private fun updateStatus() {
         if (_binding == null) return
-        binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
+        binding.paused.isChecked = preferences.get(NsclientBooleanKey.NsPaused)
         binding.url.text = nsClientPlugin?.address
         binding.status.text = nsClientPlugin?.status
     }

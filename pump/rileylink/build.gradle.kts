@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:keys"))
 
     testImplementation(project(":shared:tests"))
 

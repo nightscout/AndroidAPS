@@ -1,6 +1,6 @@
 package app.aaps.pump.omnipod.eros.manager
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.eros.driver.definition.FirmwareVersion
 import app.aaps.pump.omnipod.eros.driver.definition.PodProgressStatus
 import app.aaps.shared.tests.TestBase
@@ -15,14 +15,14 @@ import org.mockito.Mock
 
 class AapsErosPodStateManagerTest : TestBase() {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     @Test fun times() {
         val timeZone = DateTimeZone.UTC
         DateTimeZone.setDefault(timeZone)
         val now = DateTime(2020, 1, 1, 1, 2, 3, timeZone)
         DateTimeUtils.setCurrentMillisFixed(now.millis)
-        val podStateManager = AapsErosPodStateManager(aapsLogger, sp, rxBus)
+        val podStateManager = AapsErosPodStateManager(aapsLogger, preferences, rxBus)
         podStateManager.initState(0x01)
         podStateManager.setInitializationParameters(
             0, 0, FirmwareVersion(1, 1, 1),
@@ -40,7 +40,7 @@ class AapsErosPodStateManagerTest : TestBase() {
         DateTimeZone.setDefault(timeZone)
         val now = DateTime(2020, 1, 1, 1, 2, 3, timeZone)
         DateTimeUtils.setCurrentMillisFixed(now.millis)
-        val podStateManager = AapsErosPodStateManager(aapsLogger, sp, rxBus)
+        val podStateManager = AapsErosPodStateManager(aapsLogger, preferences, rxBus)
         podStateManager.initState(0x01)
         podStateManager.setInitializationParameters(
             0, 0, FirmwareVersion(1, 1, 1),
@@ -63,7 +63,7 @@ class AapsErosPodStateManagerTest : TestBase() {
         DateTimeZone.setDefault(timeZone)
         val now = DateTime(2020, 1, 1, 1, 2, 3, timeZone)
         DateTimeUtils.setCurrentMillisFixed(now.millis)
-        val podStateManager = AapsErosPodStateManager(aapsLogger, sp, rxBus)
+        val podStateManager = AapsErosPodStateManager(aapsLogger, preferences, rxBus)
         podStateManager.initState(0x01)
         podStateManager.setInitializationParameters(
             0, 0, FirmwareVersion(1, 1, 1),

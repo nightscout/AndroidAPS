@@ -39,7 +39,7 @@ class FillActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 var initValue = stringToDouble(editInsulin?.editText?.text.toString(), 0.0)
-                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, 30.0, 0.1, DecimalFormat("#0.0"), false, getString(R.string.action_insulin))
+                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, 30.0, 0.1, DecimalFormat("#0.0"), false, getString(R.string.action_insulin_units))
                 container.addView(view)
                 view.requestFocus()
                 view

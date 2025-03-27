@@ -20,7 +20,8 @@ import org.mockito.Mock
 /**
  * Created by andy on 3/10/19.
  */
-@Suppress("unused") class MedtronicHistoryDataUTest : MedtronicTestBase() {
+@Suppress("unused")
+class MedtronicHistoryDataUTest : MedtronicTestBase() {
 
     @Mock lateinit var uiInteraction: UiInteraction
     //TestLogger LOGGER = TestLoggerFactory.getTestLogger(MedtronicHistoryDataUTest.class);
@@ -34,12 +35,11 @@ import org.mockito.Mock
 
     @BeforeEach
     fun setup() {
-        medtronicPumpStatus = MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
+        medtronicPumpStatus = MedtronicPumpStatus(preferences, rxBus, rileyLinkUtil)
         medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
         medtronicHistoryData = MedtronicHistoryData(
-            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil
+            aapsLogger, preferences, rh, medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil
         )
 
 

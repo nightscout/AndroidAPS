@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -29,21 +29,20 @@ import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntentKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.putString
 import app.aaps.core.objects.extensions.store
-import app.aaps.core.objects.extensions.storeBoolean
-import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -51,6 +50,7 @@ import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
@@ -63,14 +63,13 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
-    private val sp: SP,
-    private val preferences: Preferences,
-    aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    rh: ResourceHelper,
     private val overviewData: OverviewData,
     private val overviewMenus: OverviewMenus,
     private val context: Context,
@@ -78,8 +77,8 @@ class OverviewPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val nsSettingStatus: NSSettingsStatus,
     private val config: Config
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(OverviewFragment::class.qualifiedName)
         .alwaysVisible(true)
@@ -90,7 +89,8 @@ class OverviewPlugin @Inject constructor(
         .shortName(R.string.overview_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_overview),
-    aapsLogger, rh
+    ownPreferences = listOf(OverviewStringKey::class.java),
+    aapsLogger, rh, preferences
 ), Overview {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -143,7 +143,7 @@ class OverviewPlugin @Inject constructor(
     override fun configuration(): JSONObject =
         JSONObject()
             .put(StringKey.GeneralUnits, preferences)
-            .putString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
+            .put(StringNonKey.QuickWizard, preferences)
             .put(IntKey.OverviewEatingSoonDuration, preferences)
             .put(UnitDoubleKey.OverviewEatingSoonTarget, preferences)
             .put(IntKey.OverviewActivityDuration, preferences)
@@ -167,13 +167,13 @@ class OverviewPlugin @Inject constructor(
             .put(IntKey.OverviewBattWarning, preferences)
             .put(IntKey.OverviewBattCritical, preferences)
             .put(IntKey.OverviewBolusPercentage, preferences)
-            .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value())
+            .put(BooleanNonKey.AutosensUsedOnMainPhone.key, constraintsChecker.isAutosensModeEnabled().value())
 
     override fun applyConfiguration(configuration: JSONObject) {
         val previousUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "old"
         configuration
             .store(StringKey.GeneralUnits, preferences)
-            .storeString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
+            .store(StringNonKey.QuickWizard, preferences)
             .store(IntKey.OverviewEatingSoonDuration, preferences)
             .store(UnitDoubleKey.OverviewEatingSoonTarget, preferences)
             .store(IntKey.OverviewActivityDuration, preferences)
@@ -197,7 +197,7 @@ class OverviewPlugin @Inject constructor(
             .store(IntKey.OverviewBattWarning, preferences)
             .store(IntKey.OverviewBattCritical, preferences)
             .store(IntKey.OverviewBolusPercentage, preferences)
-            .storeBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, sp, rh)
+            .store(BooleanNonKey.AutosensUsedOnMainPhone, preferences)
 
         val newUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "new"
         if (previousUnits != newUnits) {
@@ -213,7 +213,7 @@ class OverviewPlugin @Inject constructor(
             if (config.COMMITTED) {
                 view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.omniGrayColor))
                 view.alpha = 1.0f
-            } else if (sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0) != 0L) {
+            } else if (preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME) != 0L) {
                 view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.metadataTextWarningColor))
             } else {
                 view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))

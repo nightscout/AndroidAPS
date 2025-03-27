@@ -22,16 +22,16 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
@@ -66,7 +66,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
@@ -681,7 +680,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun isAutomaticallySilenceAlertsEnabled(): Boolean {
-        return sp.getBoolean(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_automatically_silence_alerts, false)
+        return preferences.get(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts)
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {

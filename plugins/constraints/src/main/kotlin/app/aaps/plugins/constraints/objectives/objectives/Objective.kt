@@ -8,10 +8,11 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
+import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Runnable
 import javax.inject.Inject
@@ -19,7 +20,6 @@ import kotlin.math.floor
 
 abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRes objective: Int, @StringRes gate: Int) {
 
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
@@ -30,12 +30,12 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
     var startedOn: Long = 0
         set(value) {
             field = value
-            sp.putLong("Objectives_" + spName + "_started", startedOn)
+            preferences.put(ObjectivesLongComposedKey.Started, spName, value = startedOn)
         }
     var accomplishedOn: Long = 0
         set(value) {
             field = value
-            sp.putLong("Objectives_" + spName + "_accomplished", value)
+            preferences.put(ObjectivesLongComposedKey.Accomplished, spName, value = value)
         }
 
     var tasks: MutableList<Task> = ArrayList()
@@ -54,8 +54,8 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         this.spName = spName
         this.objective = objective
         this.gate = gate
-        startedOn = sp.getLong("Objectives_" + spName + "_started", 0L)
-        accomplishedOn = sp.getLong("Objectives_" + spName + "_accomplished", 0L)
+        startedOn = preferences.get(ObjectivesLongComposedKey.Started, spName)
+        accomplishedOn = preferences.get(ObjectivesLongComposedKey.Accomplished, spName)
         if (accomplishedOn - dateUtil.now() > T.hours(3).msecs() || startedOn - dateUtil.now() > T.hours(3).msecs()) { // more than 3 hours in the future
             startedOn = 0
             accomplishedOn = 0
@@ -136,11 +136,11 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         var answered: Boolean = false
             set(value) {
                 field = value
-                sp.putBoolean("UITask_$spIdentifier", value)
+                preferences.put(ObjectivesBooleanComposedKey.AnsweredUi, spIdentifier, value = value)
             }
 
         init {
-            answered = sp.getBoolean("UITask_$spIdentifier", false)
+            answered = preferences.get(ObjectivesBooleanComposedKey.AnsweredUi, spIdentifier)
         }
 
         override fun isCompleted(): Boolean = answered
@@ -152,17 +152,17 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         var answered: Boolean = false
             set(value) {
                 field = value
-                sp.putBoolean("ExamTask_$spIdentifier", value)
+                preferences.put(ObjectivesBooleanComposedKey.AnsweredExam, spIdentifier, value = value)
             }
         var disabledTo: Long = 0
             set(value) {
                 field = value
-                sp.putLong("DisabledTo_$spIdentifier", value)
+                preferences.put(ObjectivesLongComposedKey.DisabledTo, spIdentifier, value = value)
             }
 
         init {
-            answered = sp.getBoolean("ExamTask_$spIdentifier", false)
-            disabledTo = sp.getLong("DisabledTo_$spIdentifier", 0L)
+            answered = preferences.get(ObjectivesBooleanComposedKey.AnsweredExam, spIdentifier)
+            disabledTo = preferences.get(ObjectivesLongComposedKey.DisabledTo, spIdentifier)
         }
 
         override fun isCompleted(): Boolean = answered

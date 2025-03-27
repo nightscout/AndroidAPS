@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.protection
 
 import android.content.Context
 import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.StringPreferenceKey
 
 interface PasswordCheck {
 
@@ -11,7 +12,7 @@ interface PasswordCheck {
     fun queryPassword(
         context: Context,
         @StringRes labelId: Int,
-        preference: String,
+        preference: StringPreferenceKey,
         ok: ((String) -> Unit)?,
         cancel: (() -> Unit)? = null,
         fail: (() -> Unit)? = null,
@@ -21,7 +22,7 @@ interface PasswordCheck {
     fun setPassword(
         context: Context,
         @StringRes labelId: Int,
-        preference: String,
+        preference: StringPreferenceKey,
         ok: ((String) -> Unit)? = null,
         cancel: (() -> Unit)? = null,
         clear: (() -> Unit)? = null,
@@ -34,7 +35,7 @@ interface PasswordCheck {
      * since this query does NOT check validity of password.
      */
     fun queryAnyPassword(
-        context: Context, @StringRes labelId: Int, preference: String, @StringRes passwordExplanation: Int?,
+        context: Context, @StringRes labelId: Int, preference: StringPreferenceKey, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null
     )
 
