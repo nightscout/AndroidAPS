@@ -36,6 +36,7 @@ class ObjectivesPluginTest : TestBase() {
 
     @BeforeEach fun prepareMock() {
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, preferences)
+        objectivesPlugin.onStart()
         `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")

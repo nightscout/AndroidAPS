@@ -84,6 +84,7 @@ class LoopTest @Inject constructor() {
         rxHelper.listen(EventAutosensCalculationFinished::class.java)
         rxHelper.listen(EventAPSCalculationFinished::class.java)
         (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
+        objectivesPlugin.onStart()
 
         persistenceLayer.clearDatabases()
 

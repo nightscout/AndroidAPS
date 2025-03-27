@@ -116,7 +116,7 @@ abstract class PluginBase(
         return true
     }
 
-    protected open fun onStart() {}
+    open fun onStart() {}
     protected open fun onStop() {}
     protected open fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {}
     open fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {}
