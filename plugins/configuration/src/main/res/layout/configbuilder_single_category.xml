@@ -38,7 +38,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:contentDescription="@string/expand_category"
-            app:srcCompat="@drawable/ic_expand_more_24"
+            android:background="@drawable/animated_expand"
             app:tint="?android:attr/colorAccent" />
 
         <ImageView
@@ -58,7 +58,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:importantForAccessibility="no"
-            android:background="@drawable/animated_visibility"
+            app:srcCompat="@drawable/ic_visibility"
             app:tint="?android:attr/colorAccent" />
 
     </LinearLayout>

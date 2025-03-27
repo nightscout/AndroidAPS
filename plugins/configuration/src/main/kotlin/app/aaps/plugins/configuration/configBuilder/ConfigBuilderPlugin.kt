@@ -78,7 +78,7 @@ class ConfigBuilderPlugin @Inject constructor(
     aapsLogger, rh
 ), ConfigBuilder {
 
-    private var visibilityAnimation: AnimationDrawable? = null
+    private var expandAnimation: AnimationDrawable? = null
 
     override fun initialize() {
         loadSettings()
@@ -268,14 +268,13 @@ class ConfigBuilderPlugin @Inject constructor(
 
         if (title != null) layout.categoryTitle.text = rh.gs(title)
         else layout.categoryTitle.visibility = View.GONE
-
-        visibilityAnimation = layout.categoryVisibility.background as AnimationDrawable?
-        visibilityAnimation?.setEnterFadeDuration(200)
-        visibilityAnimation?.setExitFadeDuration(200)
-        if (visibilityAnimation?.isRunning == false)
-            visibilityAnimation?.start()
         layout.categoryVisibility.visibility = preferences.simpleMode.not().toVisibility()
         layout.categoryDescription.text = rh.gs(description)
+        expandAnimation = layout.categoryExpandMore.background as AnimationDrawable?
+        expandAnimation?.setEnterFadeDuration(200)
+        expandAnimation?.setExitFadeDuration(200)
+        if (expandAnimation?.isRunning == false)
+            expandAnimation?.start()
         layout.categoryExpandLess.setOnClickListener {
             layout.categoryExpandLess.visibility = false.toVisibility()
             layout.categoryExpandMore.visibility = true.toVisibility()
