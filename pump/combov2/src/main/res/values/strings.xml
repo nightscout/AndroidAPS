@@ -26,7 +26,6 @@
     <string name="combov2_driver_state_label">Driver state</string>
     <string name="combov2_current_activity_label">Current activity</string>
     <string name="bluetooth_address">Bluetooth address</string>
-    <string name="key_combov2_settings" translatable="false">combov2_settings</string>
     <string name="combov2_start_pairing">Start pairing</string>
     <string name="combov2_pairing_in_progress">Combo pairing in progress</string>
     <string name="combov2_pairing_start_steps">Steps to perform pairing with your Combo:\n\n

@@ -115,7 +115,6 @@ import org.joda.time.Instant
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.util.Optional
 import java.util.function.Supplier
 import javax.inject.Inject
@@ -695,38 +694,38 @@ class OmnipodErosPumpPlugin @Inject constructor(
         aapsLogger.warn(LTag.PUMP, "Unknown custom action: $customActionType")
     }
 
-    override fun executeCustomCommand(command: CustomCommand): PumpEnactResult? {
+    override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
         if (!podStateManager.hasPodState()) return instantiator.providePumpEnactResult().enacted(false).success(false).comment("Null pod state")
-        if (command is CommandSilenceAlerts) {
+        if (customCommand is CommandSilenceAlerts) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.ACKNOWLEDGE_ALERTS, Supplier { aapsOmnipodErosManager.acknowledgeAlerts() })
         }
-        if (command is CommandGetPodStatus) {
+        if (customCommand is CommandGetPodStatus) {
             return getPodStatus()
         }
-        if (command is CommandReadPulseLog) {
+        if (customCommand is CommandReadPulseLog) {
             return retrievePulseLog()
         }
-        if (command is CommandSuspendDelivery) {
+        if (customCommand is CommandSuspendDelivery) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.SUSPEND_DELIVERY, Supplier { aapsOmnipodErosManager.suspendDelivery() })
         }
-        if (command is CommandResumeDelivery) {
+        if (customCommand is CommandResumeDelivery) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.RESUME_DELIVERY, Supplier { aapsOmnipodErosManager.setBasalProfile(profileFunction.getProfile(), false) })
         }
-        if (command is CommandDeactivatePod) {
+        if (customCommand is CommandDeactivatePod) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.DEACTIVATE_POD, Supplier { aapsOmnipodErosManager.deactivatePod() })
         }
-        if (command is CommandHandleTimeChange) {
-            return handleTimeChange(command.requestedByUser)
+        if (customCommand is CommandHandleTimeChange) {
+            return handleTimeChange(customCommand.requestedByUser)
         }
-        if (command is CommandUpdateAlertConfiguration) {
+        if (customCommand is CommandUpdateAlertConfiguration) {
             return updateAlertConfiguration()
         }
-        if (command is CommandPlayTestBeep) {
+        if (customCommand is CommandPlayTestBeep) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.PLAY_TEST_BEEP, Supplier { aapsOmnipodErosManager.playTestBeep(BeepConfigType.BEEEP) })
         }
 
-        aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + command.javaClass.getName())
-        return instantiator.providePumpEnactResult().success(false).enacted(false).comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command, command.javaClass.getName()))
+        aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.getName())
+        return instantiator.providePumpEnactResult().success(false).enacted(false).comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command, customCommand.javaClass.getName()))
     }
 
     private fun retrievePulseLog(): PumpEnactResult {

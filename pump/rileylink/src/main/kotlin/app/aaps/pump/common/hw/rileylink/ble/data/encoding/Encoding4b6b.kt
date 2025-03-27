@@ -10,5 +10,5 @@ interface Encoding4b6b {
     fun encode4b6b(data: ByteArray): ByteArray
 
     @Throws(RileyLinkCommunicationException::class)
-    fun decode4b6b(data: ByteArray): ByteArray
+    fun decode4b6b(raw: ByteArray): ByteArray
 }
