@@ -15,12 +15,11 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -38,7 +37,6 @@ import kotlin.math.min
 class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
 
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
@@ -108,7 +106,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         val insulinInterface: Insulin = activePlugin.activeInsulin
         try {
             json.put("name", profileName)
-            json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
+            json.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
             json.put("dia", dia)
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
                 "curve",

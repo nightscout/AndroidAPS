@@ -15,9 +15,7 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.shared.impl.extensions.safeGetPackageInfo
-import dagger.android.HasAndroidInjector
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.api.ApiResponse
@@ -28,6 +26,8 @@ import app.aaps.pump.diaconn.api.PumpLogDto
 import app.aaps.pump.diaconn.common.RecordTypes
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
+import app.aaps.pump.diaconn.keys.DiaconnBooleanKey
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.pumplog.LogAlarmBattery
 import app.aaps.pump.diaconn.pumplog.LogAlarmBlock
 import app.aaps.pump.diaconn.pumplog.LogAlarmShortAge
@@ -54,6 +54,8 @@ import app.aaps.pump.diaconn.pumplog.LogSuspendV2
 import app.aaps.pump.diaconn.pumplog.LogTbStartV3
 import app.aaps.pump.diaconn.pumplog.LogTbStopV3
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
+import app.aaps.shared.impl.extensions.safeGetPackageInfo
+import dagger.android.HasAndroidInjector
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime
 import retrofit2.Call
@@ -74,7 +76,7 @@ class BigLogInquireResponsePacket(
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
@@ -546,7 +548,7 @@ class BigLogInquireResponsePacket(
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
-                        if (sp.getBoolean(R.string.key_diaconn_g8_loginsulinchange, true)) {
+                        if (preferences.get(DiaconnBooleanKey.LogInsulinChange)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
                                 type = TE.Type.INSULIN_CHANGE,
@@ -575,7 +577,7 @@ class BigLogInquireResponsePacket(
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
-                        if (sp.getBoolean(R.string.key_diaconn_g8_logtubechange, true)) {
+                        if (preferences.get(DiaconnBooleanKey.LogTubeChange)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
                                 type = TE.Type.NOTE,
@@ -705,7 +707,7 @@ class BigLogInquireResponsePacket(
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
-                        if (sp.getBoolean(R.string.key_diaconn_g8_logneedlechange, true)) {
+                        if (preferences.get(DiaconnBooleanKey.LogCannulaChange)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
                                 type = TE.Type.CANNULA_CHANGE,
@@ -872,7 +874,7 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.stringValue = getReasonName(pumpLogKind, logItem.reason)
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         if (logItem.reason == 3.toByte()) {
-                            if (sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, true)) {
+                            if (preferences.get(DiaconnBooleanKey.LogBatteryChange)) {
                                 val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                     timestamp = logDateTime,
                                     type = TE.Type.PUMP_BATTERY_CHANGE,
@@ -903,10 +905,10 @@ class BigLogInquireResponsePacket(
         // 플랫폼 동기화이면,
         if (diaconnG8Pump.isPlatformUploadStarted) {
             aapsLogger.debug(LTag.PUMPCOMM, "Diaconn api upload start!!")
-            var appUid: String = sp.getString(R.string.key_diaconn_g8_appuid, "")
+            var appUid: String = preferences.get(DiaconnStringNonKey.AppUuid)
             if (appUid.isEmpty()) {
                 appUid = UUID.randomUUID().toString()
-                sp.putString(R.string.key_diaconn_g8_appuid, appUid)
+                preferences.put(DiaconnStringNonKey.AppUuid, appUid)
             }
             //api send
             val retrofit = diaconnLogUploader.getRetrofitInstance()

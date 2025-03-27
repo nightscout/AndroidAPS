@@ -6,10 +6,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.HardLimitsMock
@@ -34,7 +33,6 @@ class ProfileSealedTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context
     @Mock lateinit var config: Config
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aps: APS
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
@@ -62,7 +60,7 @@ class ProfileSealedTest : TestBase() {
     fun prepare() {
         testPumpPlugin = TestPumpPlugin(rh)
         dateUtil = DateUtilImpl(context)
-        hardLimits = HardLimitsMock(sp, preferences, rh)
+        hardLimits = HardLimitsMock(preferences, rh)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(rh.gs(app.aaps.core.ui.R.string.profile_per_unit)).thenReturn("/U")
         `when`(rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit)).thenReturn("g/U")

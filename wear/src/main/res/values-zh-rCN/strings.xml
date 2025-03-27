@@ -69,7 +69,6 @@
     <string name="menu_default">默认 </string>
     <string name="menu_menu">菜单</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">时长</string>
     <string name="action_tempt_confirmation">临时目标请求</string>
     <string name="action_quick_wizard_confirmation">快速向导请求</string>
     <string name="action_treatment_confirmation">治疗请求</string>
@@ -78,13 +77,8 @@
     <string name="action_fill_confirmation">Fill 充盈请求</string>
     <string name="action_ecarb_confirmation">碳水化合物请求</string>
     <string name="action_profile_switch_confirmation">请求配置文件切换</string>
-    <string name="action_target" comment="In temp target menu, single target value">目标</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">低</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">高</string>
     <string name="action_carbs">碳水</string>
     <string name="action_ecarbs">碳水化合物</string>
-    <string name="action_percentage">百分比</string>
-    <string name="action_start_min">启动 [min]</string>
     <string name="action_duration_h">持续时长 [h]</string>
     <string name="action_insulin">胰岛素</string>
     <string name="action_preset_1">预设1</string>
@@ -92,7 +86,6 @@
     <string name="action_preset_3">预设3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">可用数值</string>
     <string name="action_confirm">确认</string>
-    <string name="action_timeshift">时间偏移</string>
     <string name="bolus_progress">大剂量进度</string>
     <string name="press_to_cancel">按下以取消</string>
     <string name="cancel_bolus">取消大剂量</string>

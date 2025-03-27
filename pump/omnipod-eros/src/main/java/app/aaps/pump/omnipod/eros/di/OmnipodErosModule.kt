@@ -2,7 +2,6 @@ package app.aaps.pump.omnipod.eros.di
 
 import app.aaps.pump.omnipod.common.di.ActivityScope
 import app.aaps.pump.omnipod.common.di.OmnipodWizardModule
-import app.aaps.pump.omnipod.eros.data.RLHistoryItemOmnipod
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
 import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager
@@ -46,10 +45,6 @@ abstract class OmnipodErosModule {
 
     @ContributesAndroidInjector
     abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
-
-    // DATA
-
-    @ContributesAndroidInjector abstract fun contributesRlHistoryItemOmnipod(): RLHistoryItemOmnipod
 
     companion object {
 

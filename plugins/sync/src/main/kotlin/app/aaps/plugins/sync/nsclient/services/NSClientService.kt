@@ -20,13 +20,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.*
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
@@ -46,6 +46,7 @@ import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import app.aaps.plugins.sync.nsclient.workers.NSClientMbgWorker
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
@@ -79,7 +80,6 @@ class NSClientService : DaggerService() {
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientPlugin: NSClientPlugin
@@ -142,7 +142,7 @@ class NSClientService : DaggerService() {
             .subscribe({ event: EventPreferenceChange ->
                            if (event.isChanged(StringKey.NsClientUrl.key) ||
                                event.isChanged(StringKey.NsClientApiSecret.key) ||
-                               event.isChanged(rh.gs(R.string.key_ns_paused))
+                               event.isChanged(NsclientBooleanKey.NsPaused.key)
                            ) {
                                latestDateInReceivedData = 0
                                destroy()
@@ -255,7 +255,7 @@ class NSClientService : DaggerService() {
         if (!nsClientPlugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("● NSCLIENT", nsClientPlugin.blockingReason))
             rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason))
-        } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● NSCLIENT", "paused"))
             rxBus.send(EventNSClientStatus("Paused"))
         } else if (!nsEnabled) {
@@ -649,7 +649,7 @@ class NSClientService : DaggerService() {
 
     private fun handleAlarm(alarm: JSONObject) {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, alarm.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(nsAlarm)
@@ -661,7 +661,7 @@ class NSClientService : DaggerService() {
 
     private fun handleUrgentAlarm(alarm: JSONObject) {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, alarm.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(nsAlarm)

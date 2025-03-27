@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.tidepool.messages
 
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import okhttp3.Credentials
 
 object AuthRequestMessage : BaseMessage() {

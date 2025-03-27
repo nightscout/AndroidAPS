@@ -90,7 +90,7 @@
     <string name="menu_default">Por defecto</string>
     <string name="menu_menu">Menú</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Duración</string>
+    <string name="action_duration_minutes">Duración\n[minutos]</string>
     <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
     <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
@@ -100,21 +100,24 @@
     <string name="action_fill_confirmation">Llenado Solicitado</string>
     <string name="action_ecarb_confirmation">Carbohidratos Solicitados</string>
     <string name="action_profile_switch_confirmation">Solicitado cambio de perfil</string>
-    <string name="action_target" comment="In temp target menu, single target value">Objetivo</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Bajo</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Objetivo\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Bajo\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto\n[%s]</string>
     <string name="action_carbs">Carbohidratos</string>
+    <string name="action_carbs_gram">Carbohidratos [g]</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Porcentaje</string>
-    <string name="action_start_min">Iniciar [min]</string>
+    <string name="action_percentage">Porcentaje\n[%]</string>
+    <string name="action_start_minutes">Iniciar\n[minutos]</string>
     <string name="action_duration_h">Duración [h]</string>
+    <string name="action_duration_hours">Duración\n[horas]</string>
     <string name="action_insulin">Insulina</string>
+    <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Botón 1</string>
     <string name="action_preset_2">Botón 2</string>
     <string name="action_preset_3">Botón 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">Cambio de hora</string>
+    <string name="action_timeshift_hours">Intervalo de tiempo\n[horas]</string>
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>

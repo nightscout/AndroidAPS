@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -36,18 +37,19 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
 import app.aaps.plugins.configuration.databinding.ConfigbuilderSingleCategoryBinding
 import app.aaps.plugins.configuration.databinding.ConfigbuilderSinglePluginBinding
+import app.aaps.plugins.configuration.keys.ConfigurationBooleanComposedKey
+import app.aaps.plugins.configuration.keys.ConfigurationBooleanKey
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.system.exitProcess
@@ -56,17 +58,16 @@ import kotlin.system.exitProcess
 class ConfigBuilderPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val sp: SP,
-    private val preferences: Preferences,
+    preferences: Preferences,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync,
     private val protectionCheck: ProtectionCheck,
     private val uiInteraction: UiInteraction,
-    private val context: Context
-) : PluginBase(
-    PluginDescription()
+private val context: Context
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(ConfigBuilderFragment::class.java.name)
         .alwaysEnabled(true)
@@ -74,7 +75,8 @@ class ConfigBuilderPlugin @Inject constructor(
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),
-    aapsLogger, rh
+    ownPreferences = listOf(ConfigurationBooleanKey::class.java, ConfigurationBooleanComposedKey::class.java),
+    aapsLogger, rh, preferences
 ), ConfigBuilder {
 
     override fun initialize() {
@@ -103,11 +105,13 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     private fun savePref(p: PluginBase, type: PluginType) {
-        val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        sp.putBoolean(settingEnabled, p.isEnabled())
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled())
+        // val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
+        // sp.putBoolean(settingEnabled, p.isEnabled())
+        preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, type.name + "_" + p.javaClass.simpleName, value = p.isEnabled())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + ConfigurationBooleanComposedKey.ConfigBuilderEnabled.composeKey(type.name + "_" + p.javaClass.simpleName) + ":" + p.isEnabled())
         val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-        sp.putBoolean(settingVisible, p.isFragmentVisible())
+        //sp.putBoolean(settingVisible, p.isFragmentVisible())
+        preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, type.name + "_" + p.javaClass.simpleName, value = p.isFragmentVisible())
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible())
     }
 
@@ -121,18 +125,22 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     private fun loadPref(p: PluginBase, type: PluginType) {
-        val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false))
+        // val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
+        // if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false))
+        val existing = preferences.getIfExists(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, type.name + "_" + p.javaClass.simpleName)
+        if (existing != null) p.setPluginEnabled(type, existing)
         else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type))
-        val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-        if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false))
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + ConfigurationBooleanComposedKey.ConfigBuilderEnabled.composeKey(type.name + "_" + p.javaClass.simpleName) + ":" + p.isEnabled(type))
+        //val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
+        //if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false))
+        val existingVisible = preferences.getIfExists(ConfigurationBooleanComposedKey.ConfigBuilderVisible, type.name + "_" + p.javaClass.simpleName)
+        if (existingVisible != null) p.setFragmentVisible(type, existingVisible)
         else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
             p.setFragmentVisible(type, true)
         }
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + ConfigurationBooleanComposedKey.ConfigBuilderVisible.composeKey(type.name + "_" + p.javaClass.simpleName) + ":" + p.isFragmentVisible())
     }
 
     fun logPluginStatus() {
@@ -165,7 +173,7 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     private fun confirmPumpPluginActivation(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity, type: PluginType) {
-        val allowHardwarePump = sp.getBoolean("allow_hardware_pump", false)
+        val allowHardwarePump = preferences.get(ConfigurationBooleanKey.AllowHardwarePump)
         if (allowHardwarePump) {
             performPluginSwitch(changedPlugin, newState, type)
             pumpSync.connectNewPump()
@@ -173,7 +181,7 @@ class ConfigBuilderPlugin @Inject constructor(
             OKDialog.showConfirmation(activity, rh.gs(R.string.allow_hardware_pump_text), {
                 performPluginSwitch(changedPlugin, newState, type)
                 pumpSync.connectNewPump()
-                sp.putBoolean("allow_hardware_pump", true)
+                preferences.put(ConfigurationBooleanKey.AllowHardwarePump, true)
                 uel.log(
                     action = Action.HW_PUMP_ALLOWED,
                     source = Sources.ConfigBuilder,

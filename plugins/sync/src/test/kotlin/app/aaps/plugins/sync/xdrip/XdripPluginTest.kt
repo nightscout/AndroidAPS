@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.xdrip
 
-import android.content.SharedPreferences
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -15,7 +14,6 @@ import org.mockito.Mock
 
 class XdripPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var loop: Loop
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -27,12 +25,10 @@ class XdripPluginTest : TestBaseWithProfile() {
         addInjector {
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
                 it.config = config
             }
             if (it is AdaptiveIntentPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
             }
         }
     }
@@ -40,7 +36,7 @@ class XdripPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
         xdripPlugin = XdripPlugin(
-            preferences, profileFunction, profileUtil, rh, aapsSchedulers, context, fabricPrivacy, loop, iobCobCalculator, processedTbrEbData, rxBus, uiInteraction, dateUtil, aapsLogger, config, decimalFormatter, glucoseStatusProvider
+            aapsLogger, rh, preferences, profileFunction, profileUtil, aapsSchedulers, context, fabricPrivacy, loop, iobCobCalculator, processedTbrEbData, rxBus, uiInteraction, dateUtil, config, decimalFormatter, glucoseStatusProvider
         )
     }
 

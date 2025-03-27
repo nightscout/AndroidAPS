@@ -20,20 +20,19 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
@@ -45,6 +44,7 @@ import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
+import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
@@ -61,9 +61,9 @@ import javax.inject.Singleton
 @Singleton
 class AutotunePlugin @Inject constructor(
     private val injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
-    private val sp: SP,
-    private val preferences: Preferences,
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -74,10 +74,9 @@ class AutotunePlugin @Inject constructor(
     private val autotuneCore: AutotuneCore,
     private val config: Config,
     private val uel: UserEntryLogger,
-    aapsLogger: AAPSLogger,
     private val instantiator: Instantiator
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_autotune)
@@ -86,7 +85,8 @@ class AutotunePlugin @Inject constructor(
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .showInList { config.isEngineeringMode() && config.isDev() }
         .description(R.string.autotune_description),
-    aapsLogger, resourceHelper
+    ownPreferences = listOf(AutotuneStringKey::class.java),
+    aapsLogger, rh, preferences
 ), Autotune {
 
     @Volatile override var lastRunSuccess: Boolean = false
@@ -407,14 +407,14 @@ class AutotunePlugin @Inject constructor(
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
-        sp.putString(R.string.key_autotune_last_run, json.toString())
+        preferences.put(AutotuneStringKey.AutotuneLastRun, json.toString())
     }
 
     fun loadLastRun() {
         result = ""
         lastRunSuccess = false
         try {
-            val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
+            val json = JSONObject(preferences.get(AutotuneStringKey.AutotuneLastRun))
             lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
             lastRun = JsonHelper.safeGetLong(json, "lastRun")
             val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")

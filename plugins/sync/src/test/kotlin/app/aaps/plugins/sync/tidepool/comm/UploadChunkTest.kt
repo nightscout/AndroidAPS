@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.elements.BolusElement
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import com.google.common.truth.Truth.assertThat
@@ -25,7 +25,7 @@ import org.mockito.kotlin.any
 @ExtendWith(MockitoExtension::class)
 class UploadChunkTest {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var profileFunction: ProfileFunction

@@ -5,7 +5,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

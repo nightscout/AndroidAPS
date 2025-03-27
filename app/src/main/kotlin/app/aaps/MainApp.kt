@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.lifecycle.ProcessLifecycleOwner
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
@@ -24,12 +25,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.JsonHelper
@@ -38,8 +41,13 @@ import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
+import app.aaps.plugins.configuration.keys.ConfigurationBooleanComposedKey
+import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
+import app.aaps.plugins.main.profile.keys.ProfileComposedBooleanKey
+import app.aaps.plugins.main.profile.keys.ProfileComposedDoubleKey
+import app.aaps.plugins.main.profile.keys.ProfileComposedStringKey
 import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
@@ -122,6 +130,8 @@ class MainApp : DaggerApplication() {
             // trigger here to see the new version on app start after an update
             handler.postDelayed({ versionCheckersUtils.triggerCheckVersion() }, 30000)
 
+            doMigrations()
+
             // Register all tabs in app here
             pluginStore.plugins = plugins
             configBuilder.initialize()
@@ -148,7 +158,6 @@ class MainApp : DaggerApplication() {
             KeepAliveWorker.schedule(this@MainApp)
             localAlertUtils.shortenSnoozeInterval()
             localAlertUtils.preSnoozeAlarms()
-            doMigrations()
 
             //  schedule widget update
             refreshWidget = Runnable {
@@ -190,13 +199,6 @@ class MainApp : DaggerApplication() {
 
     private fun doMigrations() {
         // set values for different builds
-        // 3.1.0
-        if (preferences.getIfExists(StringKey.MaintenanceEmail) == "logs@androidaps.org")
-            preferences.put(StringKey.MaintenanceEmail, "logs@aaps.app")
-        // fix values for theme switching
-        sp.putString(app.aaps.plugins.main.R.string.value_dark_theme, "dark")
-        sp.putString(app.aaps.plugins.main.R.string.value_light_theme, "light")
-        sp.putString(app.aaps.plugins.main.R.string.value_system_theme, "system")
         // 3.3
         if (preferences.get(IntKey.OverviewEatingSoonDuration) == 0) preferences.remove(IntKey.OverviewEatingSoonDuration)
         if (preferences.get(UnitDoubleKey.OverviewEatingSoonTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewEatingSoonTarget)
@@ -224,6 +226,120 @@ class MainApp : DaggerApplication() {
         }
         // Clear SmsOtpPassword if wrongly replaced
         if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
+
+        val keys: Map<String, *> = sp.getAll()
+        // Migrate ActivityMonitor
+        for ((key, value) in keys) {
+            if (key.startsWith("Monitor") && key.endsWith("total")) {
+                val activity = key.split("_")[1]
+                if (value is String)
+                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = SafeParse.stringToLong(value))
+                else
+                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = value as Long)
+                sp.remove(key)
+            }
+            if (key.startsWith("Monitor") && key.endsWith("resumed")) {
+                val activity = key.split("_")[1]
+                if (value is String)
+                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = SafeParse.stringToLong(value))
+                else
+                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = value as Long)
+                sp.remove(key)
+            }
+            if (key.startsWith("Monitor") && key.endsWith("start")) {
+                val activity = key.split("_")[1]
+                if (value is String)
+                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = SafeParse.stringToLong(value))
+                else
+                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = value as Long)
+                sp.remove(key)
+            }
+        }
+        // Migrate Objectives
+        for ((key, value) in keys) {
+            if (key.startsWith("Objectives_") && key.endsWith("_started")) {
+                val objective = key.split("_")[1]
+                if (value is String)
+                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = SafeParse.stringToLong(value))
+                else
+                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = value as Long)
+                sp.remove(key)
+            }
+            if (key.startsWith("Objectives_") && key.endsWith("_accomplished")) {
+                val objective = key.split("_")[1]
+                if (value is String)
+                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = SafeParse.stringToLong(value))
+                else
+                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = value as Long)
+                sp.remove(key)
+            }
+        }
+        // Migrate ConfigBuilder
+        for ((key, value) in keys) {
+            if (key.startsWith("ConfigBuilder_") && key.endsWith("_Enabled")) {
+                val plugin = key.split("_")[1] + "_" + key.split("_")[2]
+                preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, plugin, value = value as Boolean)
+                sp.remove(key)
+            }
+            if (key.startsWith("ConfigBuilder_") && key.endsWith("_Visible")) {
+                val plugin = key.split("_")[1] + "_" + key.split("_")[2]
+                preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, plugin, value = value as Boolean)
+                sp.remove(key)
+            }
+        }
+        // Migrate Profile
+        for ((key, value) in keys) {
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, SafeParse.stringToInt(number), value = value as Boolean)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_isf")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targetlow")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targethigh")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia")) {
+                val number = key.split("_")[1]
+                if (value is String)
+                    preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = SafeParse.stringToDouble(value))
+                else if (value is Float)
+                    preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = value.toDouble())
+                else
+                    preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = value as Double)
+                sp.remove(key)
+            }
+        }
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

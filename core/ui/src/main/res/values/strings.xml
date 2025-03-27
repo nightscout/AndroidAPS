@@ -446,7 +446,6 @@
 
 
     <!-- Alerts -->
-    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>

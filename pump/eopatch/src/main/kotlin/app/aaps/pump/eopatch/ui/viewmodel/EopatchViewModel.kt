@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.CommonUtils
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.RxAction
@@ -21,7 +21,6 @@ import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.code.EventType
 import app.aaps.pump.eopatch.code.PatchLifecycle
 import app.aaps.pump.eopatch.code.PatchStep
-import app.aaps.pump.eopatch.code.SettingKeys.Companion.EXPIRATION_REMINDERS
 import app.aaps.pump.eopatch.core.define.IPatchConstant
 import app.aaps.pump.eopatch.core.scan.BleConnectionState
 import app.aaps.pump.eopatch.core.scan.PatchSelfTestResult.TEST_SUCCESS
@@ -29,6 +28,7 @@ import app.aaps.pump.eopatch.extension.getDiffDays
 import app.aaps.pump.eopatch.extension.subscribeDefault
 import app.aaps.pump.eopatch.extension.subscribeEmpty
 import app.aaps.pump.eopatch.extension.takeOne
+import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.ui.EoBaseNavigator
 import app.aaps.pump.eopatch.ui.event.SingleLiveEvent
 import app.aaps.pump.eopatch.ui.event.UIEvent
@@ -74,7 +74,7 @@ class EopatchViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxAction: RxAction,
-    private val sp: SP
+    private val preferences: Preferences
 ) : EoBaseViewModel<EoBaseNavigator>() {
 
     companion object {
@@ -547,7 +547,7 @@ class EopatchViewModel @Inject constructor(
                     PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE                                    -> {
                         val now = System.currentTimeMillis()
                         val expireTimeStamp = patchConfig.expireTimestamp
-                        val millisBeforeExpiration = TimeUnit.HOURS.toMillis(sp.getInt(EXPIRATION_REMINDERS, 0).toLong())
+                        val millisBeforeExpiration = TimeUnit.HOURS.toMillis(preferences.get(EopatchIntKey.ExpirationReminder).toLong())
 
                         Maybe.just(AlarmCode.B012)
                             .flatMap { alarmRegistry.remove(it) }

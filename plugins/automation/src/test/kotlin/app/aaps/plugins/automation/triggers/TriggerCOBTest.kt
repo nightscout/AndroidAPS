@@ -4,17 +4,11 @@ import app.aaps.core.data.iob.CobInfo
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerCOBTest : TriggerTestBase() {
-
-    @BeforeEach fun mock() {
-        `when`(sp.getInt(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())).thenReturn(48)
-    }
 
     @Test fun shouldRunTest() {
         // COB value is 6

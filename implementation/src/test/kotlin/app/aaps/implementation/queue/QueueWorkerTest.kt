@@ -48,7 +48,6 @@ class QueueWorkerTest : TestBaseWithProfile() {
                 it.rxBus = rxBus
                 it.activePlugin = activePlugin
                 it.rh = rh
-                it.sp = sp
                 it.preferences = preferences
                 it.androidPermission = androidPermission
                 it.config = config
@@ -63,7 +62,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
-            profileFunction, activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
+            profileFunction, activePlugin, context, preferences, config, dateUtil, fabricPrivacy, androidPermission,
             uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
         )
 

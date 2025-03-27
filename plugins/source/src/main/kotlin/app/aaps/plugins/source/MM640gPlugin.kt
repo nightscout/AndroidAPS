@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
@@ -27,9 +28,10 @@ import javax.inject.Singleton
 @Singleton
 class MM640gPlugin @Inject constructor(
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    preferences: Preferences
 ) : AbstractBgSourcePlugin(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
@@ -37,7 +39,8 @@ class MM640gPlugin @Inject constructor(
         .pluginName(R.string.mm640g)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_mm640g),
-    aapsLogger, rh
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences
 ), BgSource {
 
     // cannot be inner class because of needed injection

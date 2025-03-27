@@ -28,7 +28,7 @@ class EquilChangeInsulinFragment : EquilPairFragmentBase() {
         view.findViewById<Button>(R.id.button_next).setOnClickListener {
             context?.let {
                 showLoading()
-                commandQueue.customCommand(CmdInsulinChange(aapsLogger, sp, equilManager), object : Callback() {
+                commandQueue.customCommand(CmdInsulinChange(aapsLogger, preferences, equilManager), object : Callback() {
                     override fun run() {
                         dismissLoading()
                         if (result.success) {

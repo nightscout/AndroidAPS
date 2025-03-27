@@ -6,8 +6,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -45,9 +47,13 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -65,6 +71,12 @@ import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
 import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
+import info.nightscout.pump.combov2.keys.ComboBooleanKey
+import info.nightscout.pump.combov2.keys.ComboIntKey
+import info.nightscout.pump.combov2.keys.ComboIntNonKey
+import info.nightscout.pump.combov2.keys.ComboIntentKey
+import info.nightscout.pump.combov2.keys.ComboLongNonKey
+import info.nightscout.pump.combov2.keys.ComboStringNonKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -91,6 +103,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.joda.time.DateTime
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -109,6 +122,7 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val context: Context,
     private val rxBus: RxBus,
@@ -123,15 +137,19 @@ class ComboV2Plugin @Inject constructor(
     private val instantiator: Instantiator
 ) :
     PumpPluginBase(
-        PluginDescription()
+        pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(ComboV2Fragment::class.java.name)
             .pluginIcon(R.drawable.ic_combov2)
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
-            .preferencesId(R.xml.pref_combov2),
-        aapsLogger, rh, commandQueue
+            .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+        ownPreferences = listOf(
+            ComboIntentKey::class.java, ComboIntKey::class.java, ComboBooleanKey::class.java,
+            ComboStringNonKey::class.java, ComboIntNonKey::class.java, ComboLongNonKey::class.java
+        ),
+        aapsLogger, rh, preferences, commandQueue
     ), Pump, PluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines
@@ -141,17 +159,8 @@ class ComboV2Plugin @Inject constructor(
 
     private val _pumpDescription = PumpDescription()
 
-    // The internal SP is the one that will be mainly used by the driver.
-    // The AAPS main SP is updated when the pump state store is created
-    // and when the driver disconnects (to update the nonce value).
-    private val internalSP = InternalSP(
-        context.getSharedPreferences(
-            context.packageName + ".COMBO_PUMP_STATE_STORE",
-            Context.MODE_PRIVATE
-        ),
-        context
-    )
-    private val pumpStateStore = AAPSPumpStateStore(aapsMainSP = sp, internalSP = internalSP)
+    private val pumpStateStore = AAPSPumpStateStore(sp)
+    private var pumpStateBackup: AAPSPumpStateStore.StatesBackup? = null
 
     // These are initialized in onStart() and torn down in onStop().
     private var bluetoothInterface: AndroidBluetoothInterface? = null
@@ -289,34 +298,6 @@ class ComboV2Plugin @Inject constructor(
 
         updateComboCtlLogLevel()
 
-        // Check if there is a pump state in the internal SP. If not, try to
-        // copy a pump state from the AAPS main SP. It is possible for example
-        // that AAPS was reinstalled, and the previous settings were imported.
-        // In that case, the internal SP is empty, but there is a pump state
-        // that comes from the settings. We want to restore that pump state
-        // then. If however, there _is_ a pump state in the internal SP, then
-        // we just ignore any state in the main SP. For example, if the user
-        // imports an older AAPS settings file with an old pump state, and a
-        // Combo is already paired with AAPS, then it makes no sense to overwrite
-        // the current pump state with the old one from the imported settings.
-        if (pumpStateStore.getAvailablePumpStateAddresses().isEmpty()) {
-            aapsLogger.info(LTag.PUMP, "There is no pump state in the internal SP; trying to copy a pump state from the main AAPS SP")
-            pumpStateStore.copyAllValuesFromAAPSMainSP(commit = true)
-            val btAddress = pumpStateStore.getAvailablePumpStateAddresses().firstOrNull()
-            if (btAddress == null)
-                aapsLogger.info(LTag.PUMP, "No pump state found in the main AAPS SP; continuing without a pump state (implying that no pump is paired)")
-            else
-                aapsLogger.info(LTag.PUMP, "Pump state found in the main AAPS SP (bluetooth address: $btAddress); continuing with that state")
-        } else {
-            // Copy over the internal SP pump state to the main AAPS SP. If the user
-            // just imported AAPS settings, and said settings contained an old pump
-            // state, then that old pump state is ignored if there is already a
-            // current pump state in the internal SP - but we still need to make sure
-            // the old pump state in the main AAPS SP is replaced by the current one.
-            aapsLogger.debug(LTag.PUMP, "Copying internal SP pump state to main AAPS SP")
-            pumpStateStore.copyAllValuesToAAPSMainSP(commit = false)
-        }
-
         aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
         val newBluetoothInterface = AndroidBluetoothInterface(context)
         bluetoothInterface = newBluetoothInterface
@@ -444,22 +425,6 @@ class ComboV2Plugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val verboseLoggingPreference = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_combov2_verbose_logging))
-        verboseLoggingPreference?.setOnPreferenceChangeListener { _, newValue ->
-            updateComboCtlLogLevel(newValue as Boolean)
-            true
-        }
-
-        val unpairPumpPreference: Preference? = preferenceFragment.findPreference(rh.gs(R.string.key_combov2_unpair_pump))
-        unpairPumpPreference?.setOnPreferenceClickListener {
-            preferenceFragment.context?.let { ctx ->
-                OKDialog.showConfirmation(ctx, "Confirm pump unpairing", "Do you really want to unpair the pump?", ok = Runnable {
-                    unpair()
-                })
-            }
-            false
-        }
-
         // Setup coroutine to enable/disable the pair and unpair
         // preferences depending on the pairing state.
         preferenceFragment.run {
@@ -472,10 +437,8 @@ class ComboV2Plugin @Inject constructor(
             // recreates the fragment.
             lifecycle.coroutineScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    val pairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_pair_with_pump))
-                    val unpairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_unpair_pump))
-
-                    pairPref?.intent = Intent(activity, ComboV2PairingActivity::class.java)
+                    val pairPref: Preference? = findPreference(ComboIntentKey.PairWithPump.key)
+                    val unpairPref: Preference? = findPreference(ComboIntentKey.UnpairPump.key)
 
                     val isInitiallyPaired = pairedStateUIFlow.value
                     pairPref?.isEnabled = !isInitiallyPaired
@@ -535,6 +498,33 @@ class ComboV2Plugin @Inject constructor(
     // There is no corresponding indicator for this
     // in Combo connections, so just return false
     override fun isHandshakeInProgress() = false
+
+    override fun beforeImport() {
+        pumpStateBackup = pumpStateStore.createBackup()
+        if (pumpStateBackup != null)
+            aapsLogger.debug(LTag.PUMP, "Making backup of pump state before importing new configuration")
+        else
+            aapsLogger.debug(LTag.PUMP, "There is no pump state present; not making any pump state backup before importing new configuration")
+    }
+
+    override fun afterImport() {
+        val pumpStateExistsInConfig = pumpStateStore.hasAnyPumpState()
+
+        pumpStateBackup?.let { backup ->
+            if (pumpStateExistsInConfig)
+                aapsLogger.debug(LTag.PUMP, "Restoring pump state backup after importing new configuration, overwriting the existing one from the imported configuration")
+            else
+                aapsLogger.debug(LTag.PUMP, "Restoring pump state backup after importing new configuration (the configuration does not have a pump state of its own)")
+
+            pumpStateStore.applyBackup(backup)
+            pumpStateBackup = null
+        } ?: run {
+            if (pumpStateExistsInConfig)
+                aapsLogger.debug(LTag.PUMP, "There is no pump state backup to restore after importing new configuration; keeping existing one from the imported configuration")
+            else
+                aapsLogger.debug(LTag.PUMP, "There is no pump state backup to restore after importing new configuration, and the configuration does not have a pump state of its own")
+        }
+    }
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Connecting to Combo; reason: $reason")
@@ -806,11 +796,6 @@ class ComboV2Plugin @Inject constructor(
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Disconnecting from Combo; reason: $reason")
         disconnectInternal(forceDisconnect = false)
-
-        // Sync up the TBR and nonce states in the main AAPS SP. We don't do this all the
-        // time since this is unnecessary waste of resources. It is sufficient to update
-        // those once AAPS is done with the connection.
-        pumpStateStore.copyVariantValuesToAAPSMainSP(commit = false)
     }
 
     // This is called when (a) the AAPS watchdog is about to toggle
@@ -969,7 +954,7 @@ class ComboV2Plugin @Inject constructor(
         pumpStatus?.availableUnitsInReservoir?.let { newLevel ->
             _reservoirLevel?.let { currentLevel ->
                 aapsLogger.debug(LTag.PUMP, "Current/new reservoir levels: $currentLevel / $newLevel")
-                if (sp.getBoolean(R.string.key_combov2_automatic_reservoir_entry, true) && (newLevel > currentLevel)) {
+                if (preferences.get(ComboBooleanKey.AutomaticReservoirEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
@@ -993,7 +978,7 @@ class ComboV2Plugin @Inject constructor(
 
             _batteryLevel?.let { currentLevel ->
                 aapsLogger.debug(LTag.PUMP, "Current/new battery levels: $currentLevel / $newLevel")
-                if (sp.getBoolean(R.string.key_combov2_automatic_battery_entry, true) && (newLevel > currentLevel)) {
+                if (preferences.get(ComboBooleanKey.AutomaticBatteryEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
@@ -1108,7 +1093,7 @@ class ComboV2Plugin @Inject constructor(
 
                 // Rethrowing to finish coroutine cancellation.
                 throw e
-            } catch (e: ComboCtlPump.BolusCancelledByUserException) {
+            } catch (_: ComboCtlPump.BolusCancelledByUserException) {
                 aapsLogger.info(LTag.PUMP, "Bolus cancelled via Combo CMD_CANCEL_BOLUS command")
 
                 // This exception is thrown when the bolus is cancelled
@@ -1118,13 +1103,13 @@ class ComboV2Plugin @Inject constructor(
                 // error, hence the "success = true".
 
                 reportFinishedBolus(R.string.combov2_bolus_cancelled, pumpEnactResult, succeeded = true)
-            } catch (e: ComboCtlPump.BolusNotDeliveredException) {
+            } catch (_: ComboCtlPump.BolusNotDeliveredException) {
                 aapsLogger.error(LTag.PUMP, "Bolus not delivered")
                 reportFinishedBolus(R.string.combov2_bolus_not_delivered, pumpEnactResult, succeeded = false)
-            } catch (e: ComboCtlPump.UnaccountedBolusDetectedException) {
+            } catch (_: ComboCtlPump.UnaccountedBolusDetectedException) {
                 aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected")
                 reportFinishedBolus(R.string.combov2_unaccounted_bolus_detected_cancelling_bolus, pumpEnactResult, succeeded = false)
-            } catch (e: ComboCtlPump.InsufficientInsulinAvailableException) {
+            } catch (_: ComboCtlPump.InsufficientInsulinAvailableException) {
                 aapsLogger.error(LTag.PUMP, "Insufficient insulin in reservoir")
                 reportFinishedBolus(R.string.combov2_insufficient_insulin_in_reservoir, pumpEnactResult, succeeded = false)
             } catch (e: Exception) {
@@ -1479,7 +1464,7 @@ class ComboV2Plugin @Inject constructor(
             val localBolusTimestamp = it.timestamp.toLocalDateTime(TimeZone.currentSystemDefault())
             lines += rh.gs(
                 R.string.combov2_short_status_last_bolus, decimalFormatter.to2Decimal(it.bolusAmount.cctlBolusToIU()),
-                String.format("%02d:%02d", localBolusTimestamp.hour, localBolusTimestamp.minute)
+                String.format(Locale.getDefault(), "%02d:%02d", localBolusTimestamp.hour, localBolusTimestamp.minute)
             )
         }
 
@@ -1644,7 +1629,7 @@ class ComboV2Plugin @Inject constructor(
     private var pairingPINChannel: Channel<PairingPIN>? = null
 
     fun startPairing() {
-        val discoveryDuration = sp.getInt(R.string.key_combov2_discovery_duration, 300)
+        val discoveryDuration = preferences.get(ComboIntKey.DiscoveryDuration)
 
         val newPINChannel = Channel<PairingPIN>(capacity = Channel.RENDEZVOUS)
         pairingPINChannel = newPINChannel
@@ -2103,6 +2088,7 @@ class ComboV2Plugin @Inject constructor(
             is ComboCtlPump.Event.UnknownTbrDetected   -> {
                 // Inform about this unknown TBR that was observed (and automatically aborted).
                 val remainingDurationString = String.format(
+                    Locale.getDefault(),
                     "%02d:%02d",
                     event.remainingTbrDurationInMinutes / 60,
                     event.remainingTbrDurationInMinutes % 60
@@ -2220,7 +2206,7 @@ class ComboV2Plugin @Inject constructor(
     private fun isPaired() = pairedStateUIFlow.value
 
     private fun updateComboCtlLogLevel() =
-        updateComboCtlLogLevel(sp.getBoolean(R.string.key_combov2_verbose_logging, false))
+        updateComboCtlLogLevel(preferences.get(ComboBooleanKey.VerboseLogging))
 
     private fun updateComboCtlLogLevel(enableVerbose: Boolean) {
         aapsLogger.debug(LTag.PUMP, "${if (enableVerbose) "Enabling" else "Disabling"} verbose logging")
@@ -2440,4 +2426,43 @@ class ComboV2Plugin @Inject constructor(
 
             else                     -> false
         }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "combov2_settings"
+            title = rh.gs(R.string.combov2_title)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = ComboIntentKey.PairWithPump, title = R.string.combov2_pair_with_pump_title, summary = R.string.combov2_pair_with_pump_summary,
+                    intent = Intent(context, ComboV2PairingActivity::class.java)
+                )
+            )
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = ComboIntentKey.UnpairPump, title = R.string.combov2_unpair_pump_title, summary = R.string.combov2_unpair_pump_summary
+                ).apply {
+                    onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
+                        OKDialog.showConfirmation(preference.context, "Confirm pump unpairing", "Do you really want to unpair the pump?", ok = Runnable { unpair() })
+                        false
+                    }
+                }
+            )
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = ComboIntKey.DiscoveryDuration, title = R.string.combov2_discovery_duration))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticReservoirEntry, title = R.string.combov2_automatic_reservoir_entry))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticBatteryEntry, title = R.string.combov2_automatic_battery_entry))
+            addPreference(
+                AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.VerboseLogging, title = R.string.combov2_verbose_logging).apply {
+                    onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+                        updateComboCtlLogLevel(newValue as Boolean)
+                        true
+                    }
+                }
+            )
+        }
+    }
 }

@@ -1,7 +1,7 @@
 package app.aaps.wear.di
 
 import android.content.Context
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.impl.di.LoggerModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.wear.WearApp

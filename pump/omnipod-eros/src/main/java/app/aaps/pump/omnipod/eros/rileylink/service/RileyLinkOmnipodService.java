@@ -19,6 +19,8 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkConst;
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey;
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey;
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkService;
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin;
 import app.aaps.pump.omnipod.eros.R;
@@ -64,11 +66,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public void initRileyLinkServiceData() {
-        rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
-        rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
+        rileyLinkServiceData.setTargetDevice(RileyLinkTargetDevice.Omnipod);
+        rileyLinkServiceData.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Omnipod);
 
-        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
-        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
+        rileyLinkServiceData.setRileyLinkAddress(preferences.get(RileyLinkStringPreferenceKey.MacAddress));
+        rileyLinkServiceData.setRileyLinkName(preferences.get(RileyLinkStringKey.Name));
 
         rfSpy.startReader();
 
@@ -101,7 +103,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         try {
             errorDescription = null;
 
-            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+            String rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress);
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: no address");
@@ -119,7 +121,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                 }
             }
 
-            rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
+            rileyLinkServiceData.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Omnipod);
 
             reconfigureService(forceRileyLinkAddressRenewal);
 

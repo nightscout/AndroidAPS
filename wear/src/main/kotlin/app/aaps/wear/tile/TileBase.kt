@@ -38,7 +38,7 @@ import androidx.wear.tiles.TimelineBuilders.TimelineEntry
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import com.google.common.util.concurrent.ListenableFuture

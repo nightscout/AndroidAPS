@@ -11,6 +11,7 @@
     <string name="application_expired">Uygulamanın süresi doldu</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
+    <string name="version_expire">Sürüm %1$s , %2$s sonra bitecek ve LGS moduna dönecektir.</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>

@@ -82,7 +82,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     init {
         addInjector {
             if (it is Objective) {
-                it.sp = sp
                 it.preferences = preferences
                 it.dateUtil = dateUtil
             }
@@ -118,10 +117,10 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
-        `when`(preferences.get(DanaStringKey.DanaRsName)).thenReturn("")
-        `when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.RsName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
         // R
-        `when`(preferences.get(DanaStringKey.DanaRName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.RName)).thenReturn("")
 
         //SafetyPlugin
         constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger)
@@ -130,20 +129,20 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, sp)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, preferences)
         danaRPlugin = DanaRPlugin(
-            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
+            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
+            uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
-                commandQueue, danaPump, pumpSync, preferences, detailedBolusInfoStorage, temporaryBasalStorage,
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, profileFunction,
+                danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
         insightPlugin = InsightPlugin(
-            aapsLogger, rxBus, rh, sp, commandQueue, profileFunction,
-            context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
+            aapsLogger, rh, preferences, commandQueue, rxBus, profileFunction,
+            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
         )
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(

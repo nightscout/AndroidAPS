@@ -22,9 +22,9 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToPercent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -72,12 +72,12 @@ class LoopHubImpl @Inject constructor(
         get() = iobCobCalculator.calculateIobFromBolus().iob
 
     /** Returns the remaining bolus and basal insulin on board. */
-    override val insulinBasalOnboard :Double
+    override val insulinBasalOnboard: Double
         get() = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().basaliob
 
     /** Returns the remaining carbs on board. */
     override val carbsOnboard: Double?
-       get() = iobCobCalculator.getCobInfo("LoopHubImpl").displayCob
+        get() = iobCobCalculator.getCobInfo("LoopHubImpl").displayCob
 
     /** Returns true if the pump is connected. */
     override val isConnected: Boolean get() = !loop.isDisconnected
@@ -98,11 +98,15 @@ class LoopHubImpl @Inject constructor(
             } ?: Double.NaN
         }
 
-    override val lowGlucoseMark get() = profileUtil.convertToMgdl(
-        preferences.get(UnitDoubleKey.OverviewLowMark), glucoseUnit)
+    override val lowGlucoseMark
+        get() = profileUtil.convertToMgdl(
+            preferences.get(UnitDoubleKey.OverviewLowMark), glucoseUnit
+        )
 
-    override val highGlucoseMark get() = profileUtil.convertToMgdl(
-        preferences.get(UnitDoubleKey.OverviewHighMark), glucoseUnit)
+    override val highGlucoseMark
+        get() = profileUtil.convertToMgdl(
+            preferences.get(UnitDoubleKey.OverviewHighMark), glucoseUnit
+        )
 
     /** Tells the loop algorithm that the pump is physically connected. */
     override fun connectPump() {

@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:validators"))
     implementation(project(":implementation"))
     implementation(project(":shared:impl"))
 

@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3
 
-import android.content.SharedPreferences
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -24,20 +23,12 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -53,7 +44,6 @@ import org.mockito.Mockito.anyLong
 internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var receiverDelegate: ReceiverDelegate
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var uel: UserEntryLogger
@@ -63,46 +53,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
     @Mock lateinit var l: L
-    @Mock lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var storeDataForDb: StoreDataForDbImpl
     private lateinit var sut: NSClientV3Plugin
 
     private var insulinConfiguration: ICfg = ICfg("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
-
-    init {
-        addInjector {
-            if (it is AdaptiveDoublePreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AdaptiveIntentPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveUnitPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AdaptiveStringPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-        }
-    }
 
     @BeforeEach
     fun mock() {
@@ -112,11 +67,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, sp, preferences, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, preferences, uel, config, nsClientSource, virtualPump)
         sut =
             NSClientV3Plugin(
-                aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, preferences, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
+                aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
+                receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter, l
             )
         sut.nsAndroidClient = nsAndroidClient

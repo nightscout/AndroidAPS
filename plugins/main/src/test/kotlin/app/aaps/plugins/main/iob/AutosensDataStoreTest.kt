@@ -8,7 +8,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import app.aaps.shared.impl.utils.DateUtilImpl

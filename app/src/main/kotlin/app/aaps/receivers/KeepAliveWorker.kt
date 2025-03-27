@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.R
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
@@ -27,9 +26,10 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
@@ -56,7 +56,7 @@ class KeepAliveWorker(
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
 
     companion object {
 
@@ -140,11 +140,11 @@ class KeepAliveWorker(
     // Perform history data cleanup every day
     // Keep 6 months
     private fun databaseCleanup() {
-        val lastRun = sp.getLong(R.string.key_last_cleanup_run, 0L)
+        val lastRun = preferences.get(LongNonKey.LastCleanupRun)
         if (lastRun < dateUtil.now() - T.days(1).msecs()) {
             val result = persistenceLayer.cleanupDatabase(6 * 31, deleteTrackedChanges = false)
             aapsLogger.debug(LTag.CORE, "Cleanup result: $result")
-            sp.putLong(R.string.key_last_cleanup_run, dateUtil.now())
+            preferences.put(LongNonKey.LastCleanupRun, dateUtil.now())
         }
     }
 

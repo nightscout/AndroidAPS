@@ -1,10 +1,10 @@
 package app.aaps.pump.eopatch.vo
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.CommonUtils
 import app.aaps.pump.eopatch.GsonHelper
-import app.aaps.pump.eopatch.code.SettingKeys
 import app.aaps.pump.eopatch.code.UnitOrPercent
+import app.aaps.pump.eopatch.keys.EopatchStringNonKey
 import com.google.common.base.Preconditions
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -52,9 +52,9 @@ class TempBasalManager : IPreference<TempBasalManager> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP) {
+    override fun flush(preferences: Preferences) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
-        sp.putString(SettingKeys.TEMP_BASAL, jsonStr)
+        preferences.put(EopatchStringNonKey.TempBasal, jsonStr)
         subject.onNext(this)
     }
 
