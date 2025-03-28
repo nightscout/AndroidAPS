@@ -28,11 +28,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
-import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
-import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -195,8 +191,8 @@ class ProfilePlugin @Inject constructor(
             profiles[i].run {
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
                 preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
-                sp.putString(localProfileNumbered + "icfg", iCfg.toJson().toString())
                 preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, i, value = dia)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, i, value = iCfg.toJson().toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
@@ -232,7 +228,7 @@ class ProfilePlugin @Inject constructor(
                     ProfileSource.SingleProfile(
                         name = name,
                         mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
-                        iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", DEFAULT_ICFG))),
+                        iCfg = ICfg.fromJson(JSONObject(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIcfg, i))),
                         dia = preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, i),
                         ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
                         isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),

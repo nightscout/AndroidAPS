@@ -2,5 +2,5 @@
 <resources>
     <!--    Keys-->
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_insulin_configuration" translatable="false">insulin_configuration</string>
+
 </resources>

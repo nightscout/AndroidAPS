@@ -25,8 +25,11 @@ import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromJson
+import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.toast.ToastUtils
 import org.json.JSONArray
@@ -48,7 +51,6 @@ class InsulinPlugin @Inject constructor(
     rh: ResourceHelper,
     val profileFunction: ProfileFunction,
     val rxBus: RxBus,
-    private val sp: SP,
     aapsLogger: AAPSLogger,
     val config: Config,
     val hardLimits: HardLimits,
@@ -261,7 +263,7 @@ class InsulinPlugin @Inject constructor(
 
     @Synchronized
     fun loadSettings() {
-        val jsonString = sp.getString(app.aaps.core.utils.R.string.key_insulin_configuration, "")
+        val jsonString = preferences.get(StringKey.InsulinConfiguration)
         try {
             JSONObject(jsonString).let {
                 applyConfiguration(it)
@@ -273,7 +275,7 @@ class InsulinPlugin @Inject constructor(
 
     @Synchronized
     fun storeSettings() {
-        sp.putString(app.aaps.core.utils.R.string.key_insulin_configuration, configuration().toString())
+        preferences.put(StringKey.InsulinConfiguration, configuration().toString())
         isEdited = false
     }
 

@@ -231,7 +231,8 @@ class MainApp : DaggerApplication() {
             sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Visible")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Visible")
-            sp.putBoolean("ConfigBuilder_INSULIN_InsulinPlugin_Enabled", true)
+            preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinPlugin", value = true)
+            preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinPlugin", value = true)
         }
 
         // 3.3
@@ -339,9 +340,9 @@ class MainApp : DaggerApplication() {
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
                 sp.remove(key)
             }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_icfg")) {
                 val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number), value = value as String)
                 sp.remove(key)
             }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {

@@ -35,7 +35,6 @@ class InsulinPluginTest: TestBaseWithProfile() {
             if (it is AdaptiveIntPreference) {
                 it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
                 it.config = config
             }
         }
@@ -44,7 +43,7 @@ class InsulinPluginTest: TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        sut = InsulinPlugin(preferences, rh, profileFunction, rxBus, sp, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
+        sut = InsulinPlugin(preferences, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
     }
 
     @Test
