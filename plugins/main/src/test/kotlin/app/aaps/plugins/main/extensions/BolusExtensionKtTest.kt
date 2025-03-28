@@ -26,7 +26,7 @@ class BolusExtensionKtTest : TestBaseWithProfile() {
     private val iCfg = Insulin.InsulinType.OREF_LYUMJEV.getICfg().also {it.setDia(7.0) }
 
     @BeforeEach fun setup() {
-        insulin = InsulinPlugin(preferences, rh, profileFunctions, rxBus, sp, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
+        insulin = InsulinPlugin(preferences, rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
     }
 

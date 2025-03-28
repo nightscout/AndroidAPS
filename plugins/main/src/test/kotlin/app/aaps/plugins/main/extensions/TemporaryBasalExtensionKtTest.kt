@@ -29,7 +29,7 @@ class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        insulin = InsulinPlugin(preferences, rh, profileFunctions, rxBus, sp, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
+        insulin = InsulinPlugin(preferences, rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
     }
