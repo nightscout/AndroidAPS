@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Предупреждение за липса на инсулин</string>
     <string name="needbatteryreplace">Нужна е подмяната на батерията</string>
     <string name="needinsullinreplace">Нужна е подмяната на инсулина</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Записвай смените на резервоар</string>
     <string name="diaconn_g8_loginsulinchange_summary">Добави \"Смяна на резервоар\" в НС, когато е открит в историята</string>
     <string name="diaconn_g8_logcanulachange_title">Записвай смяна на иглата</string>

@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Omnipod Eros 幫浦整合（舊款，帶有透明針帽）。需要至少韌體版本 2.0 的 RileyLink 裝置。</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">通知</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">在 Pod 管理選單中顯示脈搏日誌按鈕</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">在 Pod 管理選單中顯示 RileyLink 統計按鈕</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">在動作中啟用電池更換日誌</string>

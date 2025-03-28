@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Intégration de la pompe Omnipod Eros (l\'ancien modèle avec un capuchon d\'aiguille transparent). Nécessite un RileyLink avec au moins la version 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notifications</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Afficher le bouton Journal d\'impulsions dans le menu de gestion des pods</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Afficher le bouton Stats RileyLink dans le menu de gestion du pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activer l\'enregistrement des changements de pile dans Actions</string>

@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Omnipod Dash için pompa entegrasyonu (mavi iğne başlıklı, Bluetooth özellikli model).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod Geçmişi</string>
     <string name="omnipod_dash_history_item_description">Açıklama</string>

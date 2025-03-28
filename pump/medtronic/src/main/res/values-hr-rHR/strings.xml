@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max Bolus na Pumpi (U)</string>
     <string name="medtronic_pump_max_basal">Max Basal na Pumpi (U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic kodiranje</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Ostatak svijeta (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b kodiranje</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b kodiranje</string>
     <string name="medtronic_custom_action_wake_and_tune">Buđenje i podešavanje</string>
     <string name="medtronic_custom_action_clear_bolus_block">Izbriši bolusni blok</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetirajte konfiguraciju RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Litij (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nizn">Nikal-Cink (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (prošireni prikaz)</string>
-    <string name="medtronic_bolus_debugging">Bolus/tretmani Otklanjanje pogrešaka</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterija RileyLink</string>
     <!-- MDT Errors -->

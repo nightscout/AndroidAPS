@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Pumpe-integration til Omnipod Eros (Den model med gennemsigtig nålehætte). Kræver en RileyLink-enhed med mindst firmware-version 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notifikationer</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Puls Log knap i Pod indstillingsmenu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis Rileylink statistik knap i Pod indstillingsmenu</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logning af batteriskift i menuen Handlinger</string>

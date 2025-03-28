@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Omnipod Eros 를 위한 펌프 통합 (투명 니들 캡이있는 구형 모델). 펌웨어 버전이 2.0 이상인 RileyLink 장치가 필요합니다.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">알림</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod 관리 메뉴에 Pulse 로그 버튼 표시</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod 관리 메뉴에 RileyLink 통계 버튼 표시</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Actions 탭에서 배터리 교환 활성화</string>

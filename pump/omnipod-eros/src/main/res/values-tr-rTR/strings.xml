@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Omnipod Eros için pompa entegrasyonu (şeffaf iğne kapaklı eski model). En az donanım yazılımı sürümü 2.0 olan bir RileyLink cihazı gerektirir.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Bildirimler</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod Yönetimi menüsünde Nabız Günlüğü düğmesini göster</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod Yönetimi menüsünde RileyLink İstatistikleri düğmesini göster</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Eylemler\'de pil değişikliği günlüğünü etkinleştir</string>

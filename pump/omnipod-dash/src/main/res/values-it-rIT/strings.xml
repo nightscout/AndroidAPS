@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Integrazione del microinfusore Omnipod Dash (il nuovo modello, con il Bluetooth e con la protezione ago di colore blu).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Storico pod</string>
     <string name="omnipod_dash_history_item_description">Descrizione</string>

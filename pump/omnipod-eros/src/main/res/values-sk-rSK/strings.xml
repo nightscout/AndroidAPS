@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Integrácia pumpy pre Omnipod Eros (starší model s priehľadným krytom ihly). Vyžaduje zariadenie RileyLink s firmware aspoň verzie 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notifikácie</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Zobraziť tlačítko Pulzný Log v menu Správa Podu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Zobraziť tlačítko Štatistika RileyLink v menu Správa Podu</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">V Akciách povoliť zaznamenávanie výmeny batérie</string>

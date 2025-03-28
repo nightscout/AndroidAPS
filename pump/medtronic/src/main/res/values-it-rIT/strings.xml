@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Max bolo su micro (U)</string>
     <string name="medtronic_pump_max_basal">Max basale su micro (U/h)</string>
     <string name="medtronic_pump_encoding">Codifica Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Globale (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codifica Software 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica Hardware 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Risveglio e Sintonizzazione</string>
     <string name="medtronic_custom_action_clear_bolus_block">Cancella blocco bolo</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Litio (Extended view)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
-    <string name="medtronic_bolus_debugging">Debug Bolo/Trattamenti</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batteria RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">fa</string>
     <string name="medtronic_notification_check_time_date">Necessario aggiornare orologio micro</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">On</string>
-    <string name="common_off">Off</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
     <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>

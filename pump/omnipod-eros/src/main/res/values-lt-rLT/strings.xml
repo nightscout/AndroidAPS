@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Omnipod Eros pompos integracija (senesnis modelis su skaidriu adatos dangteliu). Reikalingas RileyLink įrenginys, su 2.0 ar naujesne programinės įrangos versija.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Pranešimai</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod valdymo meniu rodyti mygtuką Pulse log</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod valdymo meniu rodyti mygtuką RileyLink statistika</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Įjungti baterijos keitimo registravimą veiksmuose</string>
