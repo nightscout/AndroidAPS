@@ -141,6 +141,25 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
+    <!-- autoISF automation -->
+    <string name="autoisf_alreadyenabled">AutoISF already enabled</string>
+    <string name="autoisf_enabled">AutoISF has been enabled</string>
+    <string name="autoisf_alreadydisabled">AutoISF already disabled</string>
+    <string name="autoisf_disabled">AutoISF has been disabled</string>
+    <string name="enable_autoISF" translatable="false">openapsama_enable_autoISF</string>
+    <string name="weight_new">new value</string>
+    <string name="weight_old">as before</string>
+    <string name="bgAccel_ISF_weight" translatable="false">bgAccel_ISF_weight</string>
+    <string name="iob_threshold_percent" translatable="false">iob_threshold_percent</string>
+    <string name="automate_set_acce_weight">Set bgAccel_ISF_weight to %1$.2f</string>
+    <string name="automate_set_iobTH_percent">Set iobTH to %1$d%%</string>
+    <string name="autoisf_acce_weight">BgAccel weight</string>
+    <string name="autoisf_iobTH_percent">iobTH percent</string>
+    <string name="acceweightcompared">acce weight %1$s %2$s</string>
+    <string name="iobTHpercentcompared">iobTH percent %1$s %2$s</string>
+    <string name="disableautoisf">Disable glucose ISF weights(autoISF)</string>
+    <string name="enableautoisf">Enable glucose ISF weights(autoISF)</string>
+
 
     <!--    Steps count-->
     <string name="triggerStepsCountLabel">Steps Count</string>

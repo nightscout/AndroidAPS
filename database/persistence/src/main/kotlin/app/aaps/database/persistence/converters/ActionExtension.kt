@@ -92,6 +92,10 @@ fun UserEntry.Action.fromDb(): Action =
         UserEntry.Action.EXIT_AAPS                       -> Action.EXIT_AAPS
         UserEntry.Action.PLUGIN_ENABLED                  -> Action.PLUGIN_ENABLED
         UserEntry.Action.PLUGIN_DISABLED                 -> Action.PLUGIN_DISABLED
+        UserEntry.Action.AUTOISF_ENABLED                 -> Action.AUTOISF_ENABLED
+        UserEntry.Action.AUTOISF_DISABLED                -> Action.AUTOISF_DISABLED
+        UserEntry.Action.IOB_TH_SET                      -> Action.IOB_TH_SET
+        UserEntry.Action.ACCE_WEIGHT_SET                 -> Action.ACCE_WEIGHT_SET
         UserEntry.Action.UNKNOWN                         -> Action.UNKNOWN
     }
 
@@ -184,6 +188,10 @@ fun Action.toDb(): UserEntry.Action =
         Action.EXIT_AAPS                       -> UserEntry.Action.EXIT_AAPS
         Action.PLUGIN_ENABLED                  -> UserEntry.Action.PLUGIN_ENABLED
         Action.PLUGIN_DISABLED                 -> UserEntry.Action.PLUGIN_DISABLED
+        Action.AUTOISF_ENABLED                 -> UserEntry.Action.AUTOISF_ENABLED
+        Action.AUTOISF_DISABLED                -> UserEntry.Action.AUTOISF_DISABLED
+        Action.IOB_TH_SET                      -> UserEntry.Action.IOB_TH_SET
+        Action.ACCE_WEIGHT_SET                 -> UserEntry.Action.ACCE_WEIGHT_SET
         Action.UNKNOWN                         -> UserEntry.Action.UNKNOWN
     }
 

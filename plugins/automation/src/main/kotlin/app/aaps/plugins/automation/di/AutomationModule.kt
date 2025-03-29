@@ -6,6 +6,8 @@ import app.aaps.plugins.automation.AutomationFragment
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
+import app.aaps.plugins.automation.actions.ActionAutoisfDisable
+import app.aaps.plugins.automation.actions.ActionAutoisfEnable
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionDummy
@@ -18,6 +20,8 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionSendSMS
+import app.aaps.plugins.automation.actions.ActionSetAcceWeight
+import app.aaps.plugins.automation.actions.ActionSetIobTH
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
@@ -32,6 +36,7 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
+import app.aaps.plugins.automation.triggers.TriggerBgAcceWeight
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
 import app.aaps.plugins.automation.triggers.TriggerCannulaAge
@@ -41,6 +46,7 @@ import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
 import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
+import app.aaps.plugins.automation.triggers.TriggerIobTH
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerPodChange
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
@@ -105,6 +111,8 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerTimeRangeInjector(): TriggerTimeRange
     @ContributesAndroidInjector abstract fun triggerWifiSsidInjector(): TriggerWifiSsid
     @ContributesAndroidInjector abstract fun triggerStepsCountInjector(): TriggerStepsCount
+    @ContributesAndroidInjector abstract fun triggerBgAcceWeightInjector(): TriggerBgAcceWeight
+    @ContributesAndroidInjector abstract fun triggerIonTHWeightInjector(): TriggerIobTH
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
     @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
@@ -119,6 +127,10 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionProfileSwitchInjector(): ActionProfileSwitch
     @ContributesAndroidInjector abstract fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
     @ContributesAndroidInjector abstract fun actionRunAutotuneInjector(): ActionRunAutotune
+    @ContributesAndroidInjector abstract fun actionAutoisfEnableInjector(): ActionAutoisfEnable
+    @ContributesAndroidInjector abstract fun actionAutoisfDisableInjector(): ActionAutoisfDisable
+    @ContributesAndroidInjector abstract fun actionSetAcceWeightInjector(): ActionSetAcceWeight
+    @ContributesAndroidInjector abstract fun actionSetIobTHInjector(): ActionSetIobTH
     @ContributesAndroidInjector abstract fun actionSendSMSInjector(): ActionSendSMS
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
     @ContributesAndroidInjector abstract fun actionStopTempTargetInjector(): ActionStopTempTarget
