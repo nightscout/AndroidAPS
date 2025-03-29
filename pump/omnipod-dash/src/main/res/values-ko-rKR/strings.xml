@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">옴니파드 대쉬(파란색 바늘 캡이 달린 새로운 블루투스 연결 모델)를 위한 펌프 통합</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod 이력</string>
     <string name="omnipod_dash_history_item_description">상세설명</string>

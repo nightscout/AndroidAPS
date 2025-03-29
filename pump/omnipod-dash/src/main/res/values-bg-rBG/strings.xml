@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Интегриране на помпа за Omnipod Dash (новият модел с активиран Bluetooth, със синя капачка на иглата).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">История на под</string>
     <string name="omnipod_dash_history_item_description">Описание</string>

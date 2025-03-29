@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Integração da bomba para o Omnipod Eros (o modelo mais antigo com uma tampa transparente de agulha). Requer um dispositivo RileyLink com pelo menos a versão firmware 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notificações</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botão de pulso Log no menu de gerenciamento do Pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar estatísticas do botão RileyLink no menu de gerenciamento do Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Habilitar o log de mudança de bateria em Ações</string>

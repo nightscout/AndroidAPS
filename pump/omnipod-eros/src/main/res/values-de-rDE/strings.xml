@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Pumpen-Integration für Omnipod Eros (älteres Modell mit transparenter Nadelkappe). Benötigt ein RileyLink-Gerät mit mindestens Firmware-Version 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Benachrichtigungen</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiviere die Protokollierung des Akkuwechsels im Aktionen-Tab/Menü</string>

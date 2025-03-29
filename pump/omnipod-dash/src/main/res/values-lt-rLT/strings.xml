@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Pompos integracija Omnipod Dash (naujas, Bluetooth palaikantis modelis su mėlynu adatos dangteliu).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">POD istorija</string>
     <string name="omnipod_dash_history_item_description">Aprašymas</string>

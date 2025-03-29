@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">胰島素不足警告</string>
     <string name="needbatteryreplace">需要更換電池</string>
     <string name="needinsullinreplace">需要更換胰島素</string>
-    <string name="pumpversion">幫浦版本</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">幫浦序列號</string>
     <string name="diaconn_g8_loginsulinchange_title">紀錄儲液盒更換</string>
     <string name="diaconn_g8_loginsulinchange_summary">當在歷史紀錄中偵測到時，添加 “胰島素更換” 事件至 careportal</string>
     <string name="diaconn_g8_logcanulachange_title">紀錄針頭更換</string>

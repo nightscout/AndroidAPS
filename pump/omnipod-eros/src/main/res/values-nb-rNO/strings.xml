@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Pumpeintegrering for Omnipod Eros (den eldre modellen med en gjennomsiktig kanylehette). Den krever en RileyLink-enhet med firmware minst versjon 2.0.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Varsler</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Pulslogg knappen i Pod menyen</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Handlinger</string>

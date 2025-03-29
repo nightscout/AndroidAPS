@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Maks Bolus dose på pumpen (Enheter)</string>
     <string name="medtronic_pump_max_basal">Maks Basal på pumpen (Enheter/time)</string>
     <string name="medtronic_pump_encoding">Medtronic koding</string>
-    <string name="medtronic_pump_frequency_us_ca">USA &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b koding</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b koding</string>
     <string name="medtronic_custom_action_wake_and_tune">Oppstart og enhetssøk</string>
     <string name="medtronic_custom_action_clear_bolus_block">Nullstill Bolus blokk</string>
     <string name="medtronic_custom_action_reset_rileylink">Tilbakestill RileyLink oppsett</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lithium (Utvidet visning)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Utvidet visning)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Utvidet visning)</string>
-    <string name="medtronic_bolus_debugging">Feilsøking bolus/behandlingsinformasjon</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink batteri</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">siden</string>
     <string name="medtronic_notification_check_time_date">Pumpens tid må oppdateres</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">På</string>
-    <string name="common_off">Av</string>
     <string name="pump_time_updated">Pumpens tid ble oppdatert</string>
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en midlertidig basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>

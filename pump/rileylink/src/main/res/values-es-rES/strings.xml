@@ -9,7 +9,6 @@
     <string name="pump_status_timeout_comm">Tiempo de espera agotado en la comunicación</string>
     <string name="pump_status_pump_unreachable">Bomba inaccesible</string>
     <string name="pump_status_invalid_config">Configuración inválida</string>
-    <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Escanear</string>
     <string name="riley_link_ble_config_scan_stop">Detener</string>

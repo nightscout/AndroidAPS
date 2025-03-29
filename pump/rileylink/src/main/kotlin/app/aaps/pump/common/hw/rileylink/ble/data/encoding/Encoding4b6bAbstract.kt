@@ -12,7 +12,7 @@ abstract class Encoding4b6bAbstract : Encoding4b6b {
     abstract override fun encode4b6b(data: ByteArray): ByteArray
 
     @Throws(RileyLinkCommunicationException::class)
-    abstract override fun decode4b6b(data: ByteArray): ByteArray
+    abstract override fun decode4b6b(raw: ByteArray): ByteArray
 
     fun writeError(aapsLogger: AAPSLogger, raw: ByteArray, errorData: String?) {
         aapsLogger.error(

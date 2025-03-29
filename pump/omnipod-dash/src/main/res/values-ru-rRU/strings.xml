@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Интеграция с помпой Omnipod Dash (новая модель с поддержкой Bluetooth, с синим колпачком на игле).</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Журнал помпы</string>
     <string name="omnipod_dash_history_item_description">Описание</string>

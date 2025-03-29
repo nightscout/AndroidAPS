@@ -2,10 +2,8 @@
 <resources>
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Integració de la bomba per Omnipod Eros (el model antic amb agulla amb tap transparent). Requereix un dispositiu RileyLink amb firmware versió 2.0 o superior.</string>
-    <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_category_notifications">Notificacions</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botó \"Registre de pols\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botó \"Estadístiques RileyLink\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activar registre de canvi de pila a Accions</string>

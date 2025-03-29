@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Nivåvarning insulinreservoar</string>
     <string name="needbatteryreplace">Batteribyte krävs</string>
     <string name="needinsullinreplace">Reservoarbyte krävs</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">Serienummer</string>
     <string name="diaconn_g8_loginsulinchange_title">Logga reservoarbyten</string>
     <string name="diaconn_g8_loginsulinchange_summary">Logga reservoarbyte automatiskt när det upptäcks i historiken</string>
     <string name="diaconn_g8_logcanulachange_title">Logga nålbyte</string>

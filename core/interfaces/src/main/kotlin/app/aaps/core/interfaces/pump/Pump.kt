@@ -273,7 +273,7 @@ interface Pump {
     /**
      * Only used for pump types where hasCustomUnreachableAlertCheck=true
      */
-    fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean = false
+    fun isUnreachableAlertTimeoutExceeded(unreachableTimeoutMilliseconds: Long): Boolean = false
 
     /**
      * if true APS set 100% basal before full hour to avoid pump beeping

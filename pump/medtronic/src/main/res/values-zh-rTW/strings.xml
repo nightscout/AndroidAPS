@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">幫浦最大注射量 (U)</string>
     <string name="medtronic_pump_max_basal">幫浦最大基礎率 (U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic 編碼</string>
-    <string name="medtronic_pump_frequency_us_ca">美國和加拿大 (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">全球 (868 MHz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">軟體 4b6b 編碼</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">硬體 4b6b 編碼</string>
     <string name="medtronic_custom_action_wake_and_tune">喚醒並調整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除注射阻塞</string>
     <string name="medtronic_custom_action_reset_rileylink">重置 RileyLink 配置</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">鋰電池（延長檢視）</string>
     <string name="medtronic_pump_battery_nizn">鎳鋅電池（延長檢視）</string>
     <string name="medtronic_pump_battery_nimh">鎳氫電池（延長檢視）</string>
-    <string name="medtronic_bolus_debugging">胰島素注射/治療除錯</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 電池</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">前</string>
     <string name="medtronic_notification_check_time_date">需要更新幫浦時鐘</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">開</string>
-    <string name="common_off">關</string>
     <string name="pump_time_updated">幫浦時間已更新</string>
     <string name="set_neutral_temps_title">設置中性臨時基礎率</string>
     <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/震動。</string>

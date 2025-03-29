@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Upozornění na nedostatek inzulínu</string>
     <string name="needbatteryreplace">Je vyžadována výměna baterie</string>
     <string name="needinsullinreplace">Je vyžadována výměna inzulínu</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Zaznamenat výměnu zásobníku</string>
     <string name="diaconn_g8_loginsulinchange_summary">Přidat událost \"Výměna inzulínu\" do portálu pěče, pokud je zjištěna v historii</string>
     <string name="diaconn_g8_logcanulachange_title">Zaznamenat změnu jehly</string>

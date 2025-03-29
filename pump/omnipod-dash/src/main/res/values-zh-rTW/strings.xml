@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Omnipod Dash 幫浦整合（新型號，支援藍牙並且有藍色針頭蓋）。</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">幫浦歷史紀錄</string>
     <string name="omnipod_dash_history_item_description">描述</string>

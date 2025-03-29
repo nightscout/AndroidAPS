@@ -2,7 +2,6 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Omnipod Dash的泵集成（支持蓝牙的新型号，带蓝色针帽）。</string>
-    <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod 历史</string>
     <string name="omnipod_dash_history_item_description">描述</string>
