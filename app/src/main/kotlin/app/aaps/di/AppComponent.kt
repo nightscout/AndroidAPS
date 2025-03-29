@@ -31,6 +31,7 @@ import app.aaps.pump.omnipod.dash.di.OmnipodDashModule
 import app.aaps.pump.omnipod.eros.di.OmnipodErosModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.LoggerModule
+import app.aaps.plugins.automationstate.di.AutomationStateModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
 import app.aaps.workflow.di.WorkflowModule
@@ -54,6 +55,7 @@ import javax.inject.Singleton
 
         // Gradle modules
         AutomationModule::class,
+        AutomationStateModule::class,
         ApsModule::class,
         ConfigurationModule::class,
         CoreModule::class,

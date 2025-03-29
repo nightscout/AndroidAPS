@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="automation_state_background">#535353</color>
+    <color name="automation_state_active_background">#408343</color>
+</resources> 

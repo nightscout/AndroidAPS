@@ -43,9 +43,11 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionSendSMS
+import app.aaps.plugins.automation.actions.ActionSetAutomationState
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
+import app.aaps.plugins.automation.actions.ActionStopProfilePercent
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
@@ -55,6 +57,7 @@ import app.aaps.plugins.automation.events.EventLocationChange
 import app.aaps.plugins.automation.keys.AutomationStringKey
 import app.aaps.plugins.automation.services.LocationServiceHelper
 import app.aaps.plugins.automation.triggers.Trigger
+import app.aaps.plugins.automation.triggers.TriggerAutomationState
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
@@ -68,6 +71,7 @@ import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerPodChange
+import app.aaps.plugins.automation.triggers.TriggerProfile
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
@@ -391,6 +395,9 @@ class AutomationPlugin @Inject constructor(
             ActionSettingsExport(injector),
             ActionCarePortalEvent(injector),
             ActionProfileSwitchPercent(injector),
+            ActionStopProfilePercent(injector),
+            ActionSetAutomationState(injector), ActionProfileSwitch(injector),
+            ActionRunAutotune(injector),
             ActionProfileSwitch(injector),
             ActionSendSMS(injector)
         )
@@ -411,7 +418,8 @@ class AutomationPlugin @Inject constructor(
             TriggerIob(injector),
             TriggerCOB(injector),
             TriggerProfilePercent(injector),
-            TriggerTempTarget(injector),
+            TriggerProfile(injector),
+            TriggerAutomationState(injector), TriggerTempTarget(injector),
             TriggerTempTargetValue(injector),
             TriggerWifiSsid(injector),
             TriggerLocation(injector),

@@ -8,40 +8,46 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import app.aaps.core.interfaces.resources.ResourceHelper
 
-class InputDropdownMenu(private val rh: ResourceHelper) : Element {
+class InputDropdownMenu(
+    private val rh: ResourceHelper,
+    val onValueSelected: ((String) -> Unit)? = null
+) : Element {
 
-    private var itemList: ArrayList<CharSequence> = ArrayList()
     var value: String = ""
+    var values: List<String> = listOf()
+    private var spinner: Spinner? = null
 
-    constructor(rh: ResourceHelper, name: String) : this(rh) {
+    constructor(rh: ResourceHelper, name: String, onValueSelected: ((String) -> Unit)? = null) : this(rh, onValueSelected) {
         value = name
     }
 
-    @Suppress("unused")
-    constructor(rh: ResourceHelper, another: InputDropdownMenu) : this(rh) {
-        value = another.value
-    }
-
     override fun addToLayout(root: LinearLayout) {
-        root.addView(
-            Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, itemList).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
-                    it.setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
-                }
+        spinner = Spinner(root.context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also {
+                it.setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
+            }
 
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        setValue(itemList[position].toString())
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (position >= 0 && position < values.size) {
+                        val selectedValue = values[position]
+                        if (value != selectedValue) {
+                            value = selectedValue
+                            onValueSelected?.invoke(value)
+                        }
                     }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
-                gravity = Gravity.CENTER_HORIZONTAL
-                for (i in 0 until itemList.size) if (itemList[i] == value) setSelection(i)
-            })
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+            gravity = Gravity.CENTER_HORIZONTAL
+        }
+
+        updateAdapter()
+        root.addView(spinner)
     }
 
     fun setValue(name: String): InputDropdownMenu {
@@ -49,12 +55,41 @@ class InputDropdownMenu(private val rh: ResourceHelper) : Element {
         return this
     }
 
-    fun setList(values: ArrayList<CharSequence>) {
-        itemList = ArrayList(values)
+    fun setList(newValues: List<String>) {
+        values = ArrayList(newValues)
+        updateAdapter()
     }
 
-    // For testing only
+    // For testing and backwards compatibility
     fun add(item: String) {
-        itemList.add(item)
+        val newList = values.toMutableList()
+        newList.add(item)
+        values = newList
+        updateAdapter()
+    }
+
+    fun updateAdapter() {
+        // Don't update if there are no values or context
+        if (values.isEmpty() || spinner?.context == null) {
+            return
+        }
+
+        val adapter = ArrayAdapter(
+            spinner?.context ?: return,
+            android.R.layout.simple_spinner_item,
+            values
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner?.adapter = adapter
+
+        // Set selected item if value is in the list
+        val position = values.indexOf(value)
+        if (position >= 0) {
+            spinner?.setSelection(position)
+        } else if (values.isNotEmpty()) {
+            value = values[0]
+            spinner?.setSelection(0)
+            onValueSelected?.invoke(value)
+        }
     }
 }
