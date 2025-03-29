@@ -453,13 +453,16 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus advisor</string>
     <string name="bolus_advisor_message">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
+    <string name="bolus_advisor_not_supported">Bolus advisor doesn\'t work with SMS commands. Wait till BG drops or provide correction bolus using Insulin or Treatment buttons.</string>
 
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
+    <string name="sms_receiver_number">Receiver phone number for sms commands sent from AAPSClient phone</string>
     <string name="partialboluswizard_reset_time">Old glycemia time threshold [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
+    <string name="sms_request_notification">SMS command will be sent</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>

@@ -73,7 +73,7 @@ enum class BooleanKey(
     AutotuneCircadianIcIsf("autotune_circadian_ic_isf", false),
     AutotuneAdditionalLog("autotune_additional_log", false),
 
-    SmsAllowRemoteCommands("smscommunicator_remotecommandsallowed", false),
+    SmsAllowRemoteCommands("smscommunicator_remotecommandsallowed", false, showInApsMode = false, showInPumpControlMode = false),
     SmsReportPumpUnreachable("smscommunicator_report_pump_unreachable", true),
 
     VirtualPumpStatusUpload("virtualpump_uploadstatus", false, showInNsClientMode = false),

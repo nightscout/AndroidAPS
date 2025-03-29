@@ -13,6 +13,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -46,10 +47,12 @@ import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
+import java.util.regex.Pattern
 
 @Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
+    @Mock lateinit var automation: Automation
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: LoopPlugin
@@ -152,11 +155,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
 
+        automation = Mockito.mock(Automation::class.java)
+        smsCommunicatorPlugin.automation = automation
+        Mockito.doNothing().`when`(automation).scheduleTimeToEatReminder(ArgumentMatchers.anyInt())
+
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
 
         `when`(activePlugin.activeProfileSource).thenReturn(profileSource)
-
 
         `when`(otp.name()).thenReturn("User")
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
@@ -168,7 +174,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.sms_min_ago)).thenReturn("%1\$dmin ago")
         `when`(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
         `when`(rh.gs(R.string.smscommunicator_stops_ns_with_code)).thenReturn("To disable the SMS Remote Service reply with code %1\$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.")
-        `when`(rh.gs(R.string.smscommunicator_meal_bolus_reply_with_code)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2\$s.")
+        `when`(rh.gs(eq(R.string.smscommunicator_meal_bolus_reply_with_code), ArgumentMatchers.anyDouble(), ArgumentMatchers.anyString(), ArgumentMatchers.anyDouble())).thenAnswer { i: InvocationOnMock ->
+            "To deliver meal bolus %1$.2fU reply with code %2\$s. Current IOB is %3$.2fU".format(i.arguments[1], i.arguments[2], i.arguments[3])
+        }
         `when`(rh.gs(R.string.smscommunicator_temptarget_with_code)).thenReturn("To set the Temp Target %1\$s reply with code %2\$s")
         `when`(rh.gs(R.string.smscommunicator_temptarget_cancel)).thenReturn("To cancel Temp Target reply with code %1\$s")
         `when`(rh.gs(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
@@ -202,7 +210,21 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.smscommunicator_extended_canceled)).thenReturn("Extended bolus canceled")
         `when`(rh.gs(R.string.smscommunicator_extended_reply_with_code)).thenReturn("To start extended bolus %1$.2fU for %2\$d min reply with code %3\$s")
         `when`(rh.gs(R.string.smscommunicator_extended_set)).thenReturn("Extended bolus %1$.2fU for %2\$d min started successfully")
-        `when`(rh.gs(R.string.smscommunicator_bolus_reply_with_code)).thenReturn("To deliver bolus %1$.2fU reply with code %2\$s")
+        `when`(rh.gs(eq(R.string.smscommunicator_bolus_reply_with_code), ArgumentMatchers.anyDouble(), ArgumentMatchers.anyString(), ArgumentMatchers.anyDouble())).thenAnswer { i: InvocationOnMock ->
+            "To deliver bolus %1$.2fU reply with code %2\$s. Current IOB is %3$.2fU".format(i.arguments[1], i.arguments[2], i.arguments[3])
+        }
+        `when`(
+            rh.gs(
+                eq(R.string.smscommunicator_boluscarbs_reply_with_code),
+                ArgumentMatchers.anyDouble(),
+                ArgumentMatchers.anyInt(),
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyDouble()
+            )
+        ).thenAnswer { i: InvocationOnMock ->
+            "To deliver bolus %1\$.2fU and enter %2\$dg at %3\$s reply with code %4\$s. Current IOB is %5\$.2fU".format(i.arguments[1], i.arguments[2], i.arguments[3], i.arguments[4], i.arguments[5])
+        }
         `when`(rh.gs(R.string.smscommunicator_bolus_delivered)).thenReturn("Bolus %1$.2fU delivered successfully")
         `when`(rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)).thenReturn("Remote bolus not available. Try again later.")
         `when`(rh.gs(R.string.smscommunicator_calibration_reply_with_code)).thenReturn("To send calibration %1$.2f reply with code %2\$s")
@@ -970,7 +992,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
         `when`(dateUtilMocked.now()).thenReturn(1000L)
-        `when`(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
+        `when`(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(5)
+
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
@@ -1151,6 +1174,28 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
+
+        //CARBS 1 +15
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "CARBS 1 +15")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 +15")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at +15 reply with code")
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
+
+        //CARBS 1 +15 ALARM
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "CARBS 1 +15 ALARM")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 +15 ALARM")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at +15 reply with code")
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
     }
 
     @Test fun sendNotificationToAllNumbers() {
@@ -1165,5 +1210,97 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val screen = preferenceManager.createPreferenceScreen(context)
         smsCommunicatorPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
+    }
+
+    @Test
+    fun testSmsPatterns() {
+        data class TestCase(val input: String, val shouldMatch: Boolean)
+
+        fun getPattern(name: String): Pattern {
+            val field = SmsCommunicatorPlugin::class.java.getDeclaredField(name)
+            field.isAccessible = true
+            return field.get(smsCommunicatorPlugin) as Pattern
+        }
+
+        val patternTests = mapOf(
+            getPattern("CARBS_PATTERN") to listOf(
+                TestCase("CARBS 12", true),
+                TestCase("CARBS 12 14:30", true),
+                TestCase("CARBS 12 2:30AM", true),
+                TestCase("CARBS 12 2:30PM", true),
+                TestCase("CARBS 12 14:30 ALARM", true),
+                TestCase("CARBS 12 +30", true),
+                TestCase("CARBS 12 +30 ALARM", true),
+                TestCase("CARBS 12 2:30PM ALARM", true),
+                TestCase("CARBS 12 2:02", true),
+                TestCase("CARBS 12 23:00", true),
+                TestCase("CARBS", false),
+                TestCase("CARBS abc", false),
+                TestCase("CARBS 12 2:0", false),
+                TestCase("CARBS 12 2:30PM +15", false),
+                TestCase("CARBS 12 -30", false),
+                TestCase("CARBS 12 ALARM -30", false),
+            ),
+            getPattern("BOLUSCARBS_PATTERN") to listOf(
+                TestCase("BOLUSCARBS 1.2 12", true),
+                TestCase("BOLUSCARBS 1.2 12 14:30", true),
+                TestCase("BOLUSCARBS 1.2 12 +30", true),
+                TestCase("BOLUSCARBS 1.2 12 21:37", true),
+                TestCase("BOLUSCARBS 1.2 12 21:37 ALARM", true),
+                TestCase("BOLUSCARBS 1,2 12 1:37 ALARM", true),
+                TestCase("BOLUSCARBS 1.2 12 1:37PM ALARM", true),
+                TestCase("BOLUSCARBS 1.2 12 0:3 ALARM", false),
+                TestCase("BOLUSCARBS 1.2 12 :3 ALARM", false),
+                TestCase("BOLUSCARBS 1.2 12 1: ALARM", false),
+                TestCase("BOLUSCARBS 1.2 12 1:110 ALARM", false),
+                TestCase("BOLUSCARBS 1.2 12 123:11", false),
+                TestCase("BOLUSCARBS 1", false),
+                TestCase("BOLUSCARBS abc 12", false),
+            )
+        )
+
+        patternTests.forEach { (pattern, tests) ->
+            println("Testing pattern: ${pattern.pattern()}")
+            tests.forEach { (input, shouldMatch) ->
+                val matcher = pattern.matcher(input)
+                assertThat(matcher.matches()).isEqualTo(shouldMatch)
+            }
+        }
+    }
+
+    @Test
+    fun processBolusCarbsTest() {
+        // Mock necessary dependencies
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        `when`(dateUtilMocked.now()).thenReturn(1000L)
+        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("14:30")
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.2, aapsLogger))
+        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(12, aapsLogger))
+
+        // Test cases
+        val testCases = listOf(
+            "BOLUSCARBS 1.2 12" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1.2 12 14:30" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1.2 12 2:30PM" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1,2 12 +30" to "To deliver bolus 1.20U and enter 12g at +30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1.2 12 14:30 ALARM" to "To deliver bolus 1.20U and enter 12g at 14:30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U",
+            "BOLUSCARBS 1.2 12 +30 ALARM" to "To deliver bolus 1.20U and enter 12g at +30 reply with code from Authenticator app for: User followed by PIN. Current IOB is 0.00U"
+        )
+
+        testCases.forEach { (input, expectedReply) ->
+            smsCommunicatorPlugin.messages = ArrayList()
+            println(input)
+            val sms = Sms("1234", input)
+            smsCommunicatorPlugin.processSms(sms)
+            assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo(input)
+            assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo(expectedReply)
+        }
+
+        // Test invalid format
+        val invalidSms = Sms("1234", "BOLUSCARBS 1.2")
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(invalidSms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUSCARBS 1.2")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
     }
 }
