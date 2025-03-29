@@ -44,8 +44,8 @@ class ProfileUtilImpl @Inject constructor(
         if (targetUnits == GlucoseUnit.MGDL) (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to0Decimal(valueInMgdl)
         else (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to1Decimal(valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL)
 
-    override fun isMgdl(anyBg: Double) = anyBg >= 39
-    override fun isMmol(anyBg: Double) = anyBg < 39
+    override fun isMgdl(anyBg: Double) = anyBg >= 36
+    override fun isMmol(anyBg: Double) = anyBg < 36
     override fun unitsDetect(anyBg: Double) = if (isMgdl(anyBg)) GlucoseUnit.MGDL else GlucoseUnit.MMOL
 
     override fun valueInUnitsDetect(anyBg: Double, targetUnits: GlucoseUnit): Double =
