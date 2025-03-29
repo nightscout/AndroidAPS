@@ -74,4 +74,13 @@
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 
+    <!-- Insulin -->
+    <string name="insulin_plugin">Insulin</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="unknown">Unknown</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+
 </resources>

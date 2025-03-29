@@ -5,10 +5,11 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.extensions.iobCalc
-import app.aaps.plugins.insulin.InsulinLyumjevPlugin
+import app.aaps.plugins.insulin.InsulinPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -20,6 +21,7 @@ class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
 
     @Mock lateinit var profileFunctions: ProfileFunction
     @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var insulin: Insulin
 
@@ -27,7 +29,7 @@ class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        insulin = InsulinLyumjevPlugin(rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction)
+        insulin = InsulinPlugin(preferences, rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
     }

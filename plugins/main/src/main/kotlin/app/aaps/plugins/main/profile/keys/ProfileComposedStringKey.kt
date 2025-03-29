@@ -3,6 +3,7 @@ package app.aaps.plugins.main.profile.keys
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.plugins.main.profile.ProfilePlugin.Companion.DEFAULT_ARRAY
+import app.aaps.plugins.main.profile.ProfilePlugin.Companion.DEFAULT_ICFG
 
 enum class ProfileComposedStringKey(
     override val key: String,
@@ -12,6 +13,7 @@ enum class ProfileComposedStringKey(
 ) : StringComposedNonPreferenceKey {
 
     LocalProfileNumberedIsf(Constants.LOCAL_PROFILE + "_isf_", "%d", DEFAULT_ARRAY),
+    LocalProfileNumberedIcfg(Constants.LOCAL_PROFILE + "_icfg_", "%d", DEFAULT_ICFG),
     LocalProfileNumberedIc(Constants.LOCAL_PROFILE + "_ic_", "%d", DEFAULT_ARRAY),
     LocalProfileNumberedBasal(Constants.LOCAL_PROFILE + "_basal_", "%d", DEFAULT_ARRAY),
     LocalProfileNumberedTargetLow(Constants.LOCAL_PROFILE + "_targetlow_", "%d", DEFAULT_ARRAY),

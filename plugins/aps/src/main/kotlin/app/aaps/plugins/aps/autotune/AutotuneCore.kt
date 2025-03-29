@@ -5,7 +5,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import java.util.Calendar
 import javax.inject.Inject
@@ -486,10 +485,8 @@ class AutotuneCore @Inject constructor(
         previousAutotune.isf = isf
         previousAutotune.ic = Round.roundTo(carbRatio, 0.001)
         previousAutotune.basalUnTuned = basalUnTuned
-        previousAutotune.dia = newDia
-        previousAutotune.peak = newPeak
-        val localInsulin = LocalInsulin("Ins_$newPeak-$newDia", newPeak, newDia)
-        previousAutotune.localInsulin = localInsulin
+        previousAutotune.profile.iCfg.setDia(newDia)
+        previousAutotune.profile.iCfg.setPeak(newPeak)
         previousAutotune.updateProfile()
         return previousAutotune
     }

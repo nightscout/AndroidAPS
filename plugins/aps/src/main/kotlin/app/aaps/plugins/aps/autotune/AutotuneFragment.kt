@@ -49,7 +49,6 @@ import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import app.aaps.plugins.aps.databinding.AutotuneFragmentBinding
 import dagger.android.HasAndroidInjector
@@ -110,7 +109,7 @@ class AutotuneFragment : DaggerFragment() {
         profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector)
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, injector)
         }
         days.addToLayout(binding.selectWeekDays)
         days.view?.setOnWeekdaysChangeListener { i: Int, selected: Boolean ->
@@ -144,7 +143,7 @@ class AutotuneFragment : DaggerFragment() {
             if (!autotunePlugin.calculationRunning) {
                 profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
                 profileFunction.getProfile()?.let { currentProfile ->
-                    profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector)
+                    profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, injector)
                 }
                 autotunePlugin.selectedProfile = profileName
                 resetParam(true)
@@ -217,11 +216,11 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneCheckInputProfile.setOnClickListener {
             val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
                 profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
-                    ATProfile(ProfileSealed.Pure(specificProfile, null), LocalInsulin(""), injector).also {
+                    ATProfile(ProfileSealed.Pure(specificProfile, null), injector).also {
                         it.profileName = profileName
                     }
                 }
-                    ?: ATProfile(currentProfile, LocalInsulin(""), injector).also {
+                    ?: ATProfile(currentProfile, injector).also {
                         it.profileName = profileFunction.getProfileName()
                     }
             }
@@ -325,7 +324,7 @@ class AutotuneFragment : DaggerFragment() {
         profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector)
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, injector)
         }
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
@@ -389,7 +388,7 @@ class AutotuneFragment : DaggerFragment() {
         }
         profileFunction.getProfile()?.let { currentProfile ->
             profile =
-                ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector).also { profile ->
+                ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, injector).also { profile ->
                     if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
                     if (profile.icSize > 1) {
                         warning += nl + rh.gs(R.string.autotune_ic_warning, profile.icSize, profile.ic)
@@ -464,8 +463,8 @@ class AutotuneFragment : DaggerFragment() {
                                             toTableRowValue(
                                                 context,
                                                 rh.gs(R.string.insulin_peak),
-                                                autotunePlugin.pumpProfile.localInsulin.peak.toDouble(),
-                                                tuned.localInsulin.peak.toDouble(),
+                                                autotunePlugin.pumpProfile.peak.toDouble(),
+                                                tuned.peak.toDouble(),
                                                 "%.0f"
                                             )
                                         )
@@ -473,8 +472,8 @@ class AutotuneFragment : DaggerFragment() {
                                             toTableRowValue(
                                                 context,
                                                 rh.gs(app.aaps.core.ui.R.string.dia),
-                                                Round.roundTo(autotunePlugin.pumpProfile.localInsulin.dia, 0.1),
-                                                Round.roundTo(tuned.localInsulin.dia, 0.1),
+                                                Round.roundTo(autotunePlugin.pumpProfile.dia, 0.1),
+                                                Round.roundTo(tuned.dia, 0.1),
                                                 "%.1f"
                                             )
                                         )

@@ -1,10 +1,12 @@
 package app.aaps.ui.defaultProfile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
@@ -15,7 +17,8 @@ import javax.inject.Singleton
 @Singleton
 class DefaultProfileDPV @Inject constructor(
     private val dateUtil: DateUtil,
-    private val profileUtil: ProfileUtil
+    private val profileUtil: ProfileUtil,
+    private val activePlugin: ActivePlugin
 ) {
 
     private var oneToFive = arrayOf(3.97, 3.61, 3.46, 3.70, 3.76, 3.87, 4.18, 4.01, 3.76, 3.54, 3.15, 2.80, 2.86, 3.21, 3.61, 3.97, 4.43, 4.96, 5.10, 5.50, 5.81, 6.14, 5.52, 5.10)
@@ -40,6 +43,7 @@ class DefaultProfileDPV @Inject constructor(
         } else if (age > 18) {
             return null
         }
+        profile.put("icfg", activePlugin.activeInsulin.iCfg.toJson())
         profile.put("dia", 5.0)
         profile.put("carbs_hr", 20) // not used
         profile.put("delay", 5.0) // not used

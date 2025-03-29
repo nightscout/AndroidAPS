@@ -1,6 +1,7 @@
 package app.aaps.implementation.profile
 
 import androidx.collection.ArrayMap
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -64,6 +65,20 @@ class ProfileStoreObject(
             while (keys.hasNext()) {
                 val profileName = keys.next() as String
                 ret.add(profileName)
+            }
+        }
+        return ret
+    }
+
+    override fun getProfileList(iCfg: ICfg): ArrayList<String> {
+        val ret = ArrayList<String>()
+        getStore()?.keys()?.let { keys ->
+            while (keys.hasNext()) {
+                val profileName = keys.next() as String
+                getSpecificProfile(profileName)?.let {
+                    if (it.iCfg.isEqual(iCfg))
+                        ret.add(profileName)
+                }
             }
         }
         return ret
