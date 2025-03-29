@@ -5,6 +5,6 @@
         android:drawable="@drawable/ic_expand_more_24"
         android:duration="1200" />
     <item
-        android:drawable="@drawable/ic_expand_less_24"
+        android:drawable="@drawable/ic_expand_more_double_24"
         android:duration="500" />
 </animation-list>
