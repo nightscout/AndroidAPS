@@ -31,6 +31,30 @@ jobs:
     name: Build AAPS
     runs-on: ubuntu-latest
     steps:
+      - name: Check Secrets
+        run: |
+          MISSING=0
+          if [ -z "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "❌ Missing secret: KEYSTORE_BASE64"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.STORE_PASSWORD }}" ]; then
+            echo "❌ Missing secret: STORE_PASSWORD"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.KEY_ALIAS }}" ]; then
+            echo "❌ Missing secret: KEY_ALIAS"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.KEY_PASSWORD }}" ]; then
+            echo "❌ Missing secret: KEY_PASSWORD"
+            MISSING=1
+          fi
+          if [ "$MISSING" -eq 1 ]; then
+            echo "🛑 Required secret(s) missing. Failing the build."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
