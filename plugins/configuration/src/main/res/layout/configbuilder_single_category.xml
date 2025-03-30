@@ -39,7 +39,7 @@
             android:layout_margin="4dp"
             android:contentDescription="@string/expand_category"
             android:background="@drawable/animated_expand"
-            app:tint="?android:attr/colorAccent" />
+            android:backgroundTint="?android:attr/colorAccent" />
 
         <ImageView
             android:id="@+id/category_expand_less"
