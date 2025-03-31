@@ -285,7 +285,7 @@ class InsulinPlugin @Inject constructor(
 
     private fun iobCalc(bolus: BS, time: Long, peak: Double, dia: Double): Iob {
         val result = Iob()
-        if (bolus.amount != 0.0) {
+        if (bolus.amount != 0.0 && peak != 0.0) {
             val bolusTime = bolus.timestamp
             val t = (time - bolusTime) / 1000.0 / 60.0
             val td = dia * 60 //getDIA() always >= MIN_DIA
