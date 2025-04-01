@@ -22,14 +22,11 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromJson
-import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.toast.ToastUtils
 import org.json.JSONArray
@@ -162,7 +159,6 @@ class InsulinPlugin @Inject constructor(
                 return index
             }
         }
-        aapsLogger.debug("XXXXX setCurrent iCfg: ${iCfg.insulinLabel} ${iCfg.getPeak()} ${iCfg.getDia()}")
         addNewInsulin(iCfg, true)
         currentInsulin = currentInsulin().deepClone()
         return insulins.size - 1
@@ -344,19 +340,16 @@ class InsulinPlugin @Inject constructor(
             if (insulinEndTime < hardLimits.minDia() || dia > hardLimits.maxDia()) {
                 if (verbose)
                     ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_dia), dia))
-                aapsLogger.debug("XXXXX PeakValue currentIndex: $currentInsulinIndex current: ${insulinLabel} peak: ${getDia()}")
                 return false
             }
             if (peak < hardLimits.minPeak() || dia > hardLimits.maxPeak()) {
                 if (verbose)
                     ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_peak), peak))
-                aapsLogger.debug("XXXXX PeakValue currentIndex: $currentInsulinIndex current: ${insulinLabel} peak: ${getPeak()}")
                 return false
             }
             if (insulinLabel.isEmpty()) {
                 if (verbose)
                     ToastUtils.errorToast(activity, rh.gs(R.string.missing_insulin_name))
-                aapsLogger.debug("XXXXX LabelEmpty currentIndex: $currentInsulinIndex current: ${insulinLabel}")
                 return false
             }
             // Check Inulin name is unique and insulin parameters is unique

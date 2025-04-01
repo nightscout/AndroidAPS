@@ -150,7 +150,6 @@ class ProfileFragment : DaggerFragment() {
         if (profilePlugin.numOfProfiles == 0) profilePlugin.addNewProfile()
         val currentProfile = profilePlugin.currentProfile() ?: return
         val units = if (currentProfile.mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText
-        aapsLogger.debug("XXXXX PR ${currentProfile?.iCfg?.insulinLabel} peak: ${currentProfile.iCfg.getPeak()} dia: ${currentProfile.iCfg.getDia()}")
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentProfile.name)
         binding.name.addTextChangedListener(textWatch)

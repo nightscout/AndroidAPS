@@ -156,7 +156,6 @@ class InsulinFragment : DaggerFragment() {
             if (insulinPlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
-                aapsLogger.debug("XXXXX defaultIndex: ${insulinPlugin.defaultInsulinIndex} currentIndex: ${insulinPlugin.currentInsulinIndex}")
                 if (insulinPlugin.currentInsulinIndex != insulinPlugin.defaultInsulinIndex) {
                     insulinPlugin.removeCurrentInsulin(activity)
                     insulinPlugin.isEdited = false
