@@ -100,9 +100,9 @@ class InsulinPlugin @Inject constructor(
             }
         }
 
-    override fun setDefault(insulin: ICfg) {
+    override fun setDefault(iCfg: ICfg) {
         insulins.forEachIndexed { index, iCfg ->
-            if (iCfg.isEqual(insulin)) {
+            if (iCfg.isEqual(iCfg)) {
                 defaultInsulinIndex = index
                 currentInsulinIndex = defaultInsulinIndex
             }

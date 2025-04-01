@@ -252,7 +252,7 @@ class InsulinFragment : DaggerFragment() {
             binding.reset.visibility = View.GONE
         }
         //Show Remove button if profileList is empty
-        if (profileList.isEmpty)
+        if (profileList.isEmpty())
             binding.insulinRemove.visibility = View.VISIBLE
         else
             binding.insulinRemove.visibility = View.GONE

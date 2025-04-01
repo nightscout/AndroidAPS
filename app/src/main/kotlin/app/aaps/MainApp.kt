@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -74,8 +73,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
@@ -208,21 +205,27 @@ class MainApp : DaggerApplication() {
 
     private fun doMigrations() {
         // set values for different builds
+        var defaultInsulin = Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
+        // replace dia by ICfg within profile either if we are from 3.3.2.0 or 3.3.3.0
+        if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefRapidActingPlugin") ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefUltraRapidActingPlugin") ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinLyumjevPlugin") ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefFreePeakPlugin")
+        ) {
+            aapsLogger.debug("XXXXX Migration InsulinPlugin")
+            defaultInsulin = when {
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) ||
+                    preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefRapidActingPlugin") -> Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg()
 
-        // replace dia by ICfg within profile
-        if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false)) {
-            val defaultInsulin = when {
-                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) -> Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg()
-                sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) -> Insulin.InsulinType.OREF_LYUMJEV.getICfg()
-                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) -> Insulin.InsulinType.OREF_FREE_PEAK.getICfg().also {
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) ||
+                    preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinLyumjevPlugin")         -> Insulin.InsulinType.OREF_LYUMJEV.getICfg()
+
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) ||
+                    preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefFreePeakPlugin")    -> Insulin.InsulinType.OREF_FREE_PEAK.getICfg().also {
                     it.setPeak(preferences.get(IntKey.InsulinOrefPeak))
                 }
-                else -> Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
+                else                                                                                                              -> Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
             }
-            migrateProfiles(defaultInsulin)
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Visible")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled")
@@ -231,8 +234,16 @@ class MainApp : DaggerApplication() {
             sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Visible")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Visible")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefUltraRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinLyumjevPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefFreePeakPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinOrefRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinOrefUltraRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinLyumjevPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinOrefFreePeakPlugin")
             preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinPlugin", value = true)
-            preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinPlugin", value = true)
+            preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinPlugin", value = true)
         }
 
         // 3.3
@@ -342,7 +353,9 @@ class MainApp : DaggerApplication() {
             }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_icfg")) {
                 val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number), value = value as String)
+                val iCfg = ICfg.fromJson(JSONObject(value as String))
+                if (iCfg.getPeak() > 0)
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number), value = value as String)
                 sp.remove(key)
             }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {
@@ -373,48 +386,15 @@ class MainApp : DaggerApplication() {
                     preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = value.toDouble())
                 else
                     preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = value as Double)
+                defaultInsulin.also {
+                    it.setDia(preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number)))
+                }
+                val iCfg = ICfg.fromJson(JSONObject(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number))))
+                if (iCfg.getPeak() == 0)
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number), value = defaultInsulin.toJson().toString())
                 sp.remove(key)
             }
         }
-    }
-
-    private fun migrateProfiles(defaultInsulin: ICfg) {
-        val numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
-        val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
-//        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
-
-        for (i in 0 until numOfProfiles) {
-            val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
-            val name = sp.getString(localProfileNumbered + "name", Constants.LOCAL_PROFILE + i)
-            try {
-                ProfileSource.SingleProfile(
-                    name = name,
-                    mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
-                    iCfg = ICfg.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg", defaultInsulin.toJson().toString()))),
-                    dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
-                    ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
-                    isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),
-                    basal = JSONArray(sp.getString(localProfileNumbered + "basal", defaultArray)),
-                    targetLow = JSONArray(sp.getString(localProfileNumbered + "targetlow", defaultArray)),
-                    targetHigh = JSONArray(sp.getString(localProfileNumbered + "targethigh", defaultArray))
-                ).also {
-                    it.iCfg.setDia(it.dia)
-                    sp.putString(localProfileNumbered + "name", it.name)
-                    sp.putBoolean(localProfileNumbered + "mgdl", it.mgdl)
-                    sp.putString(localProfileNumbered + "icfg", it.iCfg.toJson().toString())
-                    sp.putDouble(localProfileNumbered + "dia", it.dia)
-                    sp.putString(localProfileNumbered + "ic", it.ic.toString())
-                    sp.putString(localProfileNumbered + "isf", it.isf.toString())
-                    sp.putString(localProfileNumbered + "basal", it.basal.toString())
-                    sp.putString(localProfileNumbered + "targetlow", it.targetLow.toString())
-                    sp.putString(localProfileNumbered + "targethigh", it.targetHigh.toString())
-                }
-            } catch (e: JSONException) {
-                aapsLogger.error("Exception", e)
-            }
-        }
-        // reload profile settings after update
-        activePlugin.activeProfileSource.loadSettings()
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
