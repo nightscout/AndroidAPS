@@ -40,7 +40,7 @@ interface ProfileUtil {
 
     /**
      * Detect units of [anyBg] and return string in currently used units.
-     * Values >= 39 are expected to be in mmol/l, below in mg/dl.
+     * Values >= 36 are expected to be in mg/dl, below in mmol/l.
      *
      * @param anyBg value either in mmol/l or mg/dl
      * @return formatted string in current units
@@ -69,7 +69,7 @@ interface ProfileUtil {
      * Test if value is in mg/dl.
      *
      * @param anyBg glycemia
-     * @return true if value < 39
+     * @return true if value >= 36
      */
     fun isMgdl(anyBg: Double): Boolean
 
@@ -77,7 +77,7 @@ interface ProfileUtil {
      * Test if value is in mmol/l
      *
      * @param anyBg glycemia
-     * @return true if value >= 39
+     * @return true if value < 36
      */
     fun isMmol(anyBg: Double): Boolean
 
@@ -85,7 +85,7 @@ interface ProfileUtil {
      * Detect units of [anyBg]
      *
      * @param anyBg glycemia
-     * @return [GlucoseUnit.MMOL] if value >= 39 otherwise [GlucoseUnit.MGDL]
+     * @return [GlucoseUnit.MMOL] if value < 36 otherwise [GlucoseUnit.MGDL]
      */
     fun unitsDetect(anyBg: Double): GlucoseUnit
 
@@ -100,7 +100,7 @@ interface ProfileUtil {
 
     /**
      * Detect units of [anyBg] and return string in [targetUnits]
-     * Values >= 39 are expected to be in mmol/l, below in mg/dl.
+     * Values >= 36 are expected to be in mg/dl, below in mmol/l.
      *
      * @param anyBg value either in mmol/l or mg/dl
      * @return formatted string
@@ -109,7 +109,7 @@ interface ProfileUtil {
 
     /**
      * Detect units and convert value to mg/dl
-     * Values >= 39 are expected to be in mmol/l, below in mg/dl.
+     * Values >= 36 are expected to be in mg/dl, below in mmol/l.
      *
      * @param anyBg in any units
      * @return value in mg/dl
