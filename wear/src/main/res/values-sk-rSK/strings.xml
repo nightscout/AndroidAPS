@@ -90,6 +90,7 @@
     <string name="menu_default">Štandardný</string>
     <string name="menu_menu">Ponuka</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Trvanie\n[minúty]</string>
     <string name="action_tempt_confirmation">Požadovaný dočasný cieľ</string>
     <string name="action_quick_wizard_confirmation">Požadovaný rýchly bolus</string>
     <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
@@ -99,15 +100,24 @@
     <string name="action_fill_confirmation">Požadované plnenie</string>
     <string name="action_ecarb_confirmation">Požadované sacharidy</string>
     <string name="action_profile_switch_confirmation">Požadované prepnutie profilu</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cieľ\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nízka\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Vysoká\n[%s]</string>
     <string name="action_carbs">Sacharidy</string>
+    <string name="action_carbs_gram">Sacharidy [g]</string>
     <string name="action_ecarbs">eSacharidy</string>
+    <string name="action_percentage">Percento\n[%]</string>
+    <string name="action_start_minutes">Spustiť\n[minúty]</string>
     <string name="action_duration_h">Trvanie [h]</string>
+    <string name="action_duration_hours">Trvanie\n[hodiny]</string>
     <string name="action_insulin">Inzulín</string>
+    <string name="action_insulin_units">Inzulín [J]</string>
     <string name="action_preset_1">Predvoľba 1</string>
     <string name="action_preset_2">Predvoľba 2</string>
     <string name="action_preset_3">Predvoľba 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Ľubovoľné množstvo</string>
     <string name="action_confirm">POTVRDIŤ</string>
+    <string name="action_timeshift_hours">Časový posun\n[hodiny]</string>
     <string name="bolus_progress">Priebeh podávania bolusu</string>
     <string name="press_to_cancel">stlačením tlačidla zrušíte akciu</string>
     <string name="cancel_bolus">ZRUŠIŤ BOLUS</string>
