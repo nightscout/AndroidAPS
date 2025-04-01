@@ -147,11 +147,9 @@ class InsulinPlugin @Inject constructor(
             iCfg.insulinEndTime = insulins[defaultInsulinIndex].insulinEndTime
         insulins.forEachIndexed { index, it ->
             if (iCfg.isEqual(it)) {
-                aapsLogger.debug("XXXXX getOrCreate index: $index name : ${it.insulinLabel}")
                 return it
                 }
         }
-        aapsLogger.debug("XXXXX getOrCreate iCfg: ${iCfg.insulinLabel}")
         return addNewInsulin(iCfg, true)
     }
 
@@ -216,9 +214,13 @@ class InsulinPlugin @Inject constructor(
     fun removeCurrentInsulin(activity: FragmentActivity?) {
         // activity included to include PopUp or Toast when Remove can't be done (default insulin or insulin used within profile
         // Todo include Remove authorization and message
+        if (currentInsulinIndex == defaultInsulinIndex)
+            return
         val insulinRemoved = currentInsulin().insulinLabel
         insulins.removeAt(currentInsulinIndex)
         uel.log(Action.INSULIN_REMOVED, Sources.Insulin, value = ValueWithUnit.SimpleString(insulinRemoved))
+        if (currentInsulinIndex < defaultInsulinIndex)
+            defaultInsulinIndex--
         currentInsulinIndex = defaultInsulinIndex
         currentInsulin = currentInsulin().deepClone()
         storeSettings()
@@ -323,7 +325,6 @@ class InsulinPlugin @Inject constructor(
     override fun applyConfiguration(configuration: JSONObject) {
         insulins.clear()
         configuration.optJSONArray("insulins")?.let {
-            aapsLogger.debug("XXXXX applyConfig insert ${it.length()} insulins")
             for (index in 0 until (it.length())) {
                 try {
                     val o = it.getJSONObject(index)

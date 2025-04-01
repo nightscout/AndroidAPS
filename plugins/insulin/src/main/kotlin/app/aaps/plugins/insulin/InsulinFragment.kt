@@ -114,6 +114,7 @@ class InsulinFragment : DaggerFragment() {
                 autoName = true
             )
         }
+        insulinPlugin.setDefault(insulinPlugin.iCfg)
         insulinPlugin.setCurrent(insulinPlugin.iCfg)
         swapAdapter()
 
@@ -133,6 +134,7 @@ class InsulinFragment : DaggerFragment() {
             currentInsulin.setDia(selectedTemplate.dia)
             insulinPlugin.isEdited = true
             doEdit()
+            build()
         }
         binding.insulinAdd.setOnClickListener {
             if (insulinPlugin.isEdited) {
@@ -154,6 +156,7 @@ class InsulinFragment : DaggerFragment() {
             if (insulinPlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
+                aapsLogger.debug("XXXXX defaultIndex: ${insulinPlugin.defaultInsulinIndex} currentIndex: ${insulinPlugin.currentInsulinIndex}")
                 if (insulinPlugin.currentInsulinIndex != insulinPlugin.defaultInsulinIndex) {
                     insulinPlugin.removeCurrentInsulin(activity)
                     insulinPlugin.isEdited = false
