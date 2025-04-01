@@ -111,7 +111,7 @@ class StatusLightHandler @Inject constructor(
     private fun handleLevel(view: TextView?, criticalSetting: IntKey, warnSetting: IntKey, level: Double, units: String) {
         val resUrgent = preferences.get(criticalSetting)
         val resWarn = preferences.get(warnSetting)
-        if (level > 0) view?.text = " " + decimalFormatter.to0Decimal(level, units)
+        if (level > 0) view?.text = " " + decimalFormatter.to2Decimal(level, units)
         else view?.text = ""
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
     }
