@@ -4,6 +4,7 @@ abstract class SmsAction(val pumpCommand: Boolean) : Runnable {
 
     var aDouble: Double? = null
     var anInteger: Int? = null
+    private var aLong: Long? = null
     private var secondInteger: Int? = null
     private var secondLong: Long? = null
     private var aString: String? = null
@@ -31,8 +32,15 @@ abstract class SmsAction(val pumpCommand: Boolean) : Runnable {
         this.secondInteger = secondInteger
     }
 
-    internal constructor(pumpCommand: Boolean, anInteger: Int, secondLong: Long) : this(pumpCommand) {
+    internal constructor(pumpCommand: Boolean, anInteger: Int, aLong: Long) : this(pumpCommand) {
         this.anInteger = anInteger
+        this.aLong = aLong
+    }
+
+    internal constructor(pumpCommand: Boolean, aDouble: Double, anInteger: Int, aLong: Long, secondLong: Long) : this(pumpCommand) {
+        this.aDouble = aDouble
+        this.anInteger = anInteger
+        this.aLong = aLong
         this.secondLong = secondLong
     }
 
@@ -51,6 +59,12 @@ abstract class SmsAction(val pumpCommand: Boolean) : Runnable {
     fun secondInteger(): Int {
         return secondInteger?.let {
             secondInteger
+        } ?: throw IllegalStateException()
+    }
+
+    fun aLong(): Long {
+        return aLong?.let {
+            aLong
         } ?: throw IllegalStateException()
     }
 

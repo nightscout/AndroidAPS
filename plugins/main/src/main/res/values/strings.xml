@@ -2,7 +2,6 @@
 <resources>
 
     <!-- SMS Communicator & OTP Authenticator -->
-
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Remote control AAPS using SMS commands.</string>
@@ -34,8 +33,8 @@
     <string name="sms_timeout_while_waiting">Timeout while waiting for finish of previous pump communication</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolus_reply_with_code">To deliver bolus %1$.2fU reply with code %2$s</string>
-    <string name="smscommunicator_meal_bolus_reply_with_code">To deliver meal bolus %1$.2fU reply with code %2$s</string>
+    <string name="smscommunicator_bolus_reply_with_code">To deliver bolus %1$.2fU reply with code %2$s. Current IOB is %3$.2fU</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">To deliver meal bolus %1$.2fU reply with code %2$s. Current IOB is %3$.2fU</string>
     <string name="smscommunicator_temptarget_with_code">To set the Temp Target %1$s reply with code %2$s</string>
     <string name="smscommunicator_temptarget_cancel">To cancel Temp Target reply with code %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">To disable the SMS Remote Service reply with code %1$s.\n\nKeep in mind that you\'ll able to reactivate it directly from the AAPS master smartphone only.</string>
@@ -46,6 +45,9 @@
     <string name="smscommunicator_remote_bolus_min_distance">How many minutes must elapse, at least, between one bolus and the next</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="smscommunicator_boluscarbs_reply_with_code">To deliver bolus %1$.2fU and enter %2$dg at %3$s reply with code %4$s. Current IOB is %5$.2fU</string>
+    <string name="smscommunicator_boluscarbs_delivered">Bolus %1$.2fU delivered and carbs %2$dg entered successfully</string>
+    <string name="smscommunicator_boluscarbs_failed">Bolus and carbs failed</string>
     <string name="smscommunicator_meal_bolus_delivered">Meal Bolus %1$.2f U delivered successfully</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s for %2$d minutes</string>
     <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
@@ -186,7 +188,7 @@
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
 
-    <!-- Overview -->
+    <!-- Overview Preferences -->
     <string name="show_statuslights">Show status lights on home screen</string>
     <string name="statuslights_cage_warning">Threshold warning cannula age [h]</string>
     <string name="statuslights_cage_critical">Threshold critical cannula age [h]</string>
@@ -275,8 +277,13 @@
     <string name="enablebolusreminder">Enable bolus reminder</string>
     <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard ("post-bolus")</string>
     <string name="run_question">Run %s?</string>
+    <!-- AAPSClient sms related settings-->
+    <string name="sms_receiver_number_dialog">If number is provided, insulin and calculator buttons will be able to send SMS command to inject bolus. Note that you still need to confirm it and reply with security token/code. Note that you need to enabled SMS control of AAPS phone to use this function.</string>
+    <string name="client_allow_sms">Allow AAPSClient to send SMS with bolus command</string>
+    <string name="client_allow_sms_warning">"Use this functionality with caution. Before enabling make sure that IOB and BG is synchronized between AAPS and AAPSClient.Use it at your own risk, every time you shall check IOB and BG before issuing a bolus. You can do that by sending 'BG' command. If this function is enabled then Treatment, Insulin and Calculator options will send SMS commands. Carbs button is NOT affected."</string>
 
-    <!--    OverviewMenu-->
+    <!--  OverviewMenu-->
+    <string name="key_graph_config" translatable="false">graphconfig</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_heartRate">Heart Rate</string>

@@ -36,11 +36,15 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.smsCommunicator.formatBolusCarbsCommand
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
@@ -62,6 +66,7 @@ class BolusWizard @Inject constructor(
     val injector: HasAndroidInjector
 ) {
 
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
@@ -328,7 +333,7 @@ class BolusWizard @Inject constructor(
     }
 
     private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null): Spanned {
-
+        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
@@ -368,8 +373,12 @@ class BolusWizard @Inject constructor(
                 rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints)
                     .formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
             )
-        if (config.AAPSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+        val bolusOrCarbs = (insulinAfterConstraints > 0 || carbs > 0)
+        if (config.AAPSCLIENT && bolusOrCarbs)
+            if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank() && bolusOrCarbs)
+                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_request_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            else
+                actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
             actions.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
         if (advisor)
@@ -407,9 +416,10 @@ class BolusWizard @Inject constructor(
             if (carbs > 0.0)
                 automation.removeAutomationEventEatReminder()
             if (preferences.get(BooleanKey.OverviewUseBolusAdvisor) && profileUtil.convertToMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
-                OKDialog.showYesNoCancel(ctx, rh.gs(app.aaps.core.ui.R.string.bolus_advisor), rh.gs(app.aaps.core.ui.R.string.bolus_advisor_message),
-                                         { bolusAdvisorProcessing(ctx) },
-                                         { commonProcessing(ctx, quickWizardEntry) }
+                OKDialog.showYesNoCancel(
+                    ctx, rh.gs(app.aaps.core.ui.R.string.bolus_advisor), rh.gs(app.aaps.core.ui.R.string.bolus_advisor_message),
+                    { bolusAdvisorProcessing(ctx) },
+                    { commonProcessing(ctx, quickWizardEntry) }
                 )
             else
                 commonProcessing(ctx, quickWizardEntry)
@@ -419,6 +429,14 @@ class BolusWizard @Inject constructor(
     }
 
     private fun bolusAdvisorProcessing(ctx: Context) {
+        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
+        if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
+            // Bolus advisor is not supported because automation.scheduleAutomationEventEatReminder() can't be set on AAPSClient phone.
+            // In order to do so AAPSClient phone would need to wait in pooling for bolus confirmation message. I don't want to block app on that.
+            OKDialog.show(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), rh.gs(app.aaps.core.ui.R.string.bolus_advisor_not_supported))
+            return
+        }
+
         val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
         OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
@@ -536,15 +554,21 @@ class BolusWizard @Inject constructor(
                                 ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
                             ).filterNotNull()
                         )
-                        commandQueue.bolus(this, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                                } else if (useAlarm && carbs > 0 && carbTime > 0) {
-                                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
+                        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
+                        if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
+                            rh.gs(app.aaps.core.ui.R.string.sms_request_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
+                            smsCommunicator.sendSMS(Sms(phoneNumber, formatBolusCarbsCommand(insulin, this@BolusWizard.carbs, this@BolusWizard.carbTime.toString(), useAlarm)))
+                        } else {
+                            commandQueue.bolus(this, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                                    } else if (config.APS && useAlarm && carbs > 0 && carbTime > 0) {
+                                        automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     }
                     bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
                 }
