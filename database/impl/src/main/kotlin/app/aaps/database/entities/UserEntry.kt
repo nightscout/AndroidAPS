@@ -113,6 +113,10 @@ data class UserEntry(
         EXIT_AAPS,
         PLUGIN_ENABLED,
         PLUGIN_DISABLED,
+        AUTOISF_ENABLED,
+        AUTOISF_DISABLED,
+        IOB_TH_SET,
+        ACCE_WEIGHT_SET,
         UNKNOWN
         ;
     }

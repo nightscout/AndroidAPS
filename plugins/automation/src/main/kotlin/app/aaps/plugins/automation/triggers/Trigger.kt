@@ -90,6 +90,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             return when (type) {
                 TriggerAutosensValue::class.java.simpleName      -> TriggerAutosensValue(injector).fromJSON(data.toString())
                 TriggerBg::class.java.simpleName                 -> TriggerBg(injector).fromJSON(data.toString())
+                TriggerBgAcceWeight::class.java.simpleName       -> TriggerBgAcceWeight(injector).fromJSON(data.toString())
                 TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(data.toString())
                 TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data.toString())
                 TriggerSensorAge::class.java.simpleName          -> TriggerSensorAge(injector).fromJSON(data.toString())
@@ -100,6 +101,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 TriggerPumpBatteryAge::class.java.simpleName     -> TriggerPumpBatteryAge(injector).fromJSON(data.toString())
                 TriggerPumpBatteryLevel::class.java.simpleName   -> TriggerPumpBatteryLevel(injector).fromJSON(data.toString())
                 TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
+                TriggerIobTH::class.java.simpleName              -> TriggerIobTH(injector).fromJSON(data.toString())
                 TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data.toString())
                 TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(data.toString())
                 TriggerDelta::class.java.simpleName              -> TriggerDelta(injector).fromJSON(data.toString())
