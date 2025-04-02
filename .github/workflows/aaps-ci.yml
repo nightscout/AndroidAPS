@@ -1,11 +1,6 @@
 name: AAPS CI
 
 on:
-  push:
-    branches: ["main", "master"]
-  pull_request:
-    branches: ["main", "master"]
-    types: [synchronize]
   workflow_dispatch:
     inputs:
       buildVariant:
@@ -89,8 +84,15 @@ jobs:
           echo "VARIANT_FLAVOR=$VARIANT_FLAVOR" >> $GITHUB_ENV
           echo "VARIANT_TYPE=$VARIANT_TYPE" >> $GITHUB_ENV
       
+          VERSION_SUFFIX=""
+          if [[ "$VARIANT_TYPE" == "debug" ]]; then
+            VERSION_SUFFIX="-debug"
+          fi
+          echo "VERSION_SUFFIX=$VERSION_SUFFIX" >> $GITHUB_ENV
+
           echo "VARIANT_FLAVOR: $VARIANT_FLAVOR"
           echo "VARIANT_TYPE: $VARIANT_TYPE"
+          echo "VERSION_SUFFIX: $VERSION_SUFFIX"
 
       - name: Build APKs
         run: |
@@ -103,10 +105,12 @@ jobs:
       - name: Extract VERSION_NAME for App and Wear
         id: extract_versions
         run: |
-          VARIANT_LOWER=$(echo "${{ env.BUILD_VARIANT }}" | tr '[:upper:]' '[:lower:]')
           APP_VERSION=$(find app/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
           WEAR_VERSION=$(find wear/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
 
+          APP_VERSION="$APP_VERSION${VERSION_SUFFIX}"
+          WEAR_VERSION="$WEAR_VERSION${VERSION_SUFFIX}"
+          
           echo "app_version_name=$APP_VERSION" >> $GITHUB_OUTPUT
           echo "wear_version_name=$WEAR_VERSION" >> $GITHUB_OUTPUT
 
@@ -115,9 +119,11 @@ jobs:
 
       - name: Rename APKs with version
         run: |
-          VARIANT_LOWER=$(echo "${{ env.BUILD_VARIANT }}" | tr '[:upper:]' '[:lower:]')
-          mv app/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk
-          mv wear/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk
+          mv app/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk \
+            aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk
+
+          mv wear/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk \
+            aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
