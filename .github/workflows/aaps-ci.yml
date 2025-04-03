@@ -85,7 +85,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Set BUILD_VARIANT (default if empty)
+      - name: Set BUILD_VARIANT
         id: set_build_variant
         run: |
           BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
@@ -123,12 +123,19 @@ jobs:
           APP_VERSION=$(find app/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
           WEAR_VERSION=$(find wear/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
 
+          APP_VERSION_DIR=$(echo "$APP_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
+          WEAR_VERSION_DIR=$(echo "WEAR_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
+
           APP_VERSION="$APP_VERSION${VERSION_SUFFIX}"
           WEAR_VERSION="$WEAR_VERSION${VERSION_SUFFIX}"
           
+          echo "app_version_dir=$APP_VERSION_DIR" >> $GITHUB_OUTPUT
+          echo "wear_version_dir=$WEAR_VERSION_DIR" >> $GITHUB_OUTPUT
           echo "app_version_name=$APP_VERSION" >> $GITHUB_OUTPUT
           echo "wear_version_name=$WEAR_VERSION" >> $GITHUB_OUTPUT
 
+          echo "APP_VERSION_DIR: $APP_VERSION_DIR"
+          echo "WEAR_VERSION_DIR: $WEAR_VERSION_DIR"
           echo "APP_VERSION: $APP_VERSION"
           echo "WEAR_VERSION: $WEAR_VERSION"
 
@@ -140,42 +147,40 @@ jobs:
           mv wear/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk \
             aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk
 
-      - name: Upload APKs to Dropbox
+      - name: Upload APKs to Target
         run: |
-          if [[ "${{ github.event.inputs.uploadTarget }}" != "dropbox" ]]; then
-            echo "Skipping Dropbox upload (uploadTarget=${{ github.event.inputs.uploadTarget }})"
-            exit 0
+          if [[ "${{ github.event.inputs.uploadTarget }}" == "dropbox" ]]; then
+            set -e  # Exit immediately on error
+  
+            upload_to_dropbox() {
+              FILE_PATH=$1
+              DROPBOX_DEST=$2
+  
+              if [ ! -f "$FILE_PATH" ]; then
+                echo "❌ File not found: $FILE_PATH"
+                exit 1
+              fi
+  
+              echo "⬆️ Uploading $FILE_PATH to Dropbox as $DROPBOX_DEST..."
+  
+              RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/response.json \
+                -X POST https://content.dropboxapi.com/2/files/upload \
+                --header "Authorization: Bearer ${{ secrets.DROPBOX_ACCESS_TOKEN }}" \
+                --header "Dropbox-API-Arg: {\"path\": \"/$DROPBOX_DEST\",\"mode\": \"overwrite\",\"autorename\": false,\"mute\": false}" \
+                --header "Content-Type: application/octet-stream" \
+                --data-binary @"$FILE_PATH")
+  
+              HTTP_CODE="${RESPONSE: -3}"  # Extract last 3 characters as HTTP status code
+  
+              if [[ "$HTTP_CODE" != "200" ]]; then
+                echo "❌ Upload failed with HTTP status: $HTTP_CODE"
+                echo "🔽 Dropbox API response:"
+                cat /tmp/response.json
+                exit 1
+              fi
+              echo "✅ Upload successful: $DROPBOX_DEST"
+            }
+  
+            upload_to_dropbox "aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk" "${{ steps.extract_versions.outputs.app_version_dir }}/aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk"
+            upload_to_dropbox "aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk" "${{ steps.extract_versions.outputs.wear_version_dir }}/aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk"
           fi
-          set -e  # Exit immediately on error
-
-          upload_to_dropbox() {
-            FILE_PATH=$1
-            DROPBOX_DEST=$2
-
-            if [ ! -f "$FILE_PATH" ]; then
-              echo "❌ File not found: $FILE_PATH"
-              exit 1
-            fi
-
-            echo "⬆️ Uploading $FILE_PATH to Dropbox as $DROPBOX_DEST..."
-
-            RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/response.json \
-              -X POST https://content.dropboxapi.com/2/files/upload \
-              --header "Authorization: Bearer ${{ secrets.DROPBOX_ACCESS_TOKEN }}" \
-              --header "Dropbox-API-Arg: {\"path\": \"/$DROPBOX_DEST\",\"mode\": \"overwrite\",\"autorename\": false,\"mute\": false}" \
-              --header "Content-Type: application/octet-stream" \
-              --data-binary @"$FILE_PATH")
-
-            HTTP_CODE="${RESPONSE: -3}"  # Extract last 3 characters as HTTP status code
-
-            if [[ "$HTTP_CODE" != "200" ]]; then
-              echo "❌ Upload failed with HTTP status: $HTTP_CODE"
-              echo "🔽 Dropbox API response:"
-              cat /tmp/response.json
-              exit 1
-            fi
-            echo "✅ Upload successful: $DROPBOX_DEST"
-          }
-
-          upload_to_dropbox "aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk" "aaps/aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk"
-          upload_to_dropbox "aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk" "aaps/aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk"
