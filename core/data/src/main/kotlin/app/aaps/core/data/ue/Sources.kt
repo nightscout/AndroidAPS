@@ -36,6 +36,7 @@ enum class Sources {
     Glunovo,
     Intelligo,
     Xdrip,
+    Insulin,            //From Insulin plugin
     LocalProfile,       //From LocalProfile plugin
     Loop,               //From Loop plugin
     Maintenance,        //From Maintenance plugin

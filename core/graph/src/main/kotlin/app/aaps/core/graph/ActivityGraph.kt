@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
 import com.jjoe64.graphview.GraphView
@@ -17,11 +18,11 @@ class ActivityGraph : GraphView {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    fun show(insulin: Insulin, diaSample: Double? = null) {
+    fun show(insulin: Insulin, iCfgSample: ICfg? = null) {
+        val iCfg = iCfgSample ?:insulin.iCfg
         removeAllSeries()
-        val dia = diaSample ?: insulin.dia
         mSecondScale = null
-        val hours = floor(dia + 1).toLong()
+        val hours = floor(iCfg.getDia() + 1).toLong()
         val bolus = BS(
             timestamp = 0,
             amount = 1.0,
@@ -31,7 +32,7 @@ class ActivityGraph : GraphView {
         val iobArray: MutableList<DataPoint> = ArrayList()
         var time: Long = 0
         while (time <= T.hours(hours).msecs()) {
-            val iob = insulin.iobCalcForTreatment(bolus, time, dia)
+            val iob = insulin.iobCalcForTreatment(bolus, time, iCfg)
             activityArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.activityContrib))
             iobArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.iobContrib))
             time += T.mins(5).msecs()

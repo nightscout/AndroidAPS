@@ -351,7 +351,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("type", it.type.toString())
                 put("isBasalInsulin", it.isBasalInsulin)
                 put("insulinEndTime", it.icfg?.insulinEndTime)
-                put("peak", it.icfg?.peak)
+                put("peak", it.icfg?.insulinPeakTime)
             }
             tags.add("Boluses")
         }
@@ -389,7 +389,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("originalDuration", it.originalDuration)
                 put("originalEnd", it.originalEnd)
                 put("insulinEndTime", it.iCfg.insulinEndTime)
-                put("insulinEndTime", it.iCfg.peak)
+                put("insulinEndTime", it.iCfg.insulinPeakTime)
             }
             tags.add("EffectiveProfileSwitches")
         }
@@ -474,7 +474,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("percentage", it.percentage)
                 put("duration", it.duration)
                 put("insulinEndTime", it.iCfg.insulinEndTime)
-                put("peak", it.iCfg.peak)
+                put("peak", it.iCfg.insulinPeakTime)
             }
             tags.add("ProfileSwitches")
         }

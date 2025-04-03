@@ -11,6 +11,7 @@ import android.os.HandlerThread
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -18,8 +19,10 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -33,6 +36,8 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.fromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.JsonHelper
@@ -97,6 +102,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
     @Inject lateinit var themeSwitcherPlugin: ThemeSwitcherPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: Provider<ResourceHelper>
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -199,6 +205,47 @@ class MainApp : DaggerApplication() {
 
     private fun doMigrations() {
         // set values for different builds
+        var defaultInsulin = Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
+        // replace dia by ICfg within profile either if we are from 3.3.2.0 or 3.3.3.0
+        if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefRapidActingPlugin") ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefUltraRapidActingPlugin") ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinLyumjevPlugin") ||
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) || preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefFreePeakPlugin")
+        ) {
+            aapsLogger.debug("XXXXX Migration InsulinPlugin")
+            defaultInsulin = when {
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) ||
+                    preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefRapidActingPlugin") -> Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg()
+
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) ||
+                    preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinLyumjevPlugin")         -> Insulin.InsulinType.OREF_LYUMJEV.getICfg()
+
+                sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) ||
+                    preferences.get(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefFreePeakPlugin")    -> Insulin.InsulinType.OREF_FREE_PEAK.getICfg().also {
+                    it.setPeak(preferences.get(IntKey.InsulinOrefPeak))
+                }
+                else                                                                                                              -> Insulin.InsulinType.OREF_RAPID_ACTING.getICfg()
+            }
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Visible")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Visible")
+            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Visible")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled")
+            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Visible")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefUltraRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinLyumjevPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinOrefFreePeakPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinOrefRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinOrefUltraRapidActingPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinLyumjevPlugin")
+            preferences.remove(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinOrefFreePeakPlugin")
+            preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, "INSULIN_InsulinPlugin", value = true)
+            preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, "INSULIN_InsulinPlugin", value = true)
+        }
+
         // 3.3
         if (preferences.get(IntKey.OverviewEatingSoonDuration) == 0) preferences.remove(IntKey.OverviewEatingSoonDuration)
         if (preferences.get(UnitDoubleKey.OverviewEatingSoonTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewEatingSoonTarget)
@@ -304,9 +351,11 @@ class MainApp : DaggerApplication() {
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
                 sp.remove(key)
             }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_icfg")) {
                 val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
+                val iCfg = ICfg.fromJson(JSONObject(value as String))
+                if (iCfg.getPeak() > 0)
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number), value = value as String)
                 sp.remove(key)
             }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {
@@ -337,6 +386,12 @@ class MainApp : DaggerApplication() {
                     preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = value.toDouble())
                 else
                     preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number), value = value as Double)
+                defaultInsulin.also {
+                    it.setDia(preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, SafeParse.stringToInt(number)))
+                }
+                val iCfg = ICfg.fromJson(JSONObject(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number))))
+                if (iCfg.getPeak() == 0)
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, SafeParse.stringToInt(number), value = defaultInsulin.toJson().toString())
                 sp.remove(key)
             }
         }

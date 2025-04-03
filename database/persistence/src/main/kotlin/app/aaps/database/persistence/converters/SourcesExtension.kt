@@ -40,6 +40,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Glunovo             -> Sources.Glunovo
         UserEntry.Sources.Intelligo           -> Sources.Intelligo
         UserEntry.Sources.Xdrip               -> Sources.Xdrip
+        UserEntry.Sources.Insulin             -> Sources.Insulin
         UserEntry.Sources.LocalProfile        -> Sources.LocalProfile
         UserEntry.Sources.Loop                -> Sources.Loop
         UserEntry.Sources.Maintenance         -> Sources.Maintenance
@@ -159,5 +160,6 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Unknown             -> UserEntry.Sources.Unknown
         Sources.Ottai               -> UserEntry.Sources.Ottai
         Sources.SyaiTag             -> UserEntry.Sources.SyaiTag
+        Sources.Insulin             -> UserEntry.Sources.Insulin
     }
 

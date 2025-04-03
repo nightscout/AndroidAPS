@@ -51,6 +51,8 @@ class HardLimitsImpl @Inject constructor(
     override fun maxDia(): Double = HardLimits.MAX_DIA[loadAge()]
     override fun minIC(): Double = HardLimits.MIN_IC[loadAge()]
     override fun maxIC(): Double = HardLimits.MAX_IC[loadAge()]
+    override fun minPeak(): Int = 35
+    override fun maxPeak(): Int = 120
 
     // safety checks
     override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =

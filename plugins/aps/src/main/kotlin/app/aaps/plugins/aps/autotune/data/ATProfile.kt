@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -22,6 +23,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
@@ -34,7 +36,7 @@ import java.util.TimeZone
 import javax.inject.Inject
 import kotlin.math.min
 
-class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
+class ATProfile(profile: Profile, val injector: HasAndroidInjector) {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var preferences: Preferences
@@ -54,8 +56,12 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     var basalUnTuned = IntArray(24)
     var ic = 0.0
     var isf = 0.0
-    var dia = 0.0
-    var peak = 0
+    val iCfg: ICfg
+        get() = profile.iCfg
+    val dia: Double
+        get() = profile.iCfg.getDia()
+    val peak: Int
+        get() = profile.iCfg.getPeak()
     var isValid: Boolean = false
     var from: Long = 0
     private var pumpProfileAvgISF = 0.0
@@ -94,8 +100,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     }
 
     fun updateProfile() {
-        data()?.let { profile = ProfileSealed.Pure(value = it, activePlugin = null) }
-        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin = null) }
+        data()?.let { profile = ProfileSealed.Pure(value = it, null) }
+        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, null) }
     }
 
     //Export json string with oref0 format used for autotune
@@ -159,6 +165,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     fun data(circadian: Boolean = false): PureProfile? {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
+            json.put("icfg", ICfg("Tuned", peak, dia).toJson())
             json.put("dia", dia)
             if (circadian) {
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
@@ -267,7 +274,5 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             pumpProfileAvgIC = avgIC
             pumpProfileAvgISF = avgISF
         }
-        dia = localInsulin.dia
-        peak = localInsulin.peak
     }
 }

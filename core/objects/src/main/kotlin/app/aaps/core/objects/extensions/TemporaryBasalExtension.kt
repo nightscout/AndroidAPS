@@ -62,8 +62,8 @@ fun TB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTota
     var netBasalAmount = 0.0
     if (realDuration > 0) {
         var netBasalRate: Double
-        val dia = profile.dia
-        val diaAgo = time - dia * 60 * 60 * 1000
+        val iCfg = profile.insulin
+        val diaAgo = time - iCfg.insulinEndTime
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
         val tempBolusSpacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
@@ -83,7 +83,7 @@ fun TB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTota
                     amount = tempBolusSize,
                     type = BS.Type.NORMAL
                 )
-                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
+                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, iCfg)
                 result.basaliob += aIOB.iobContrib
                 result.activity += aIOB.activityContrib
                 result.netbasalinsulin += tempBolusPart.amount
@@ -120,8 +120,8 @@ fun TB.iobCalc(
     }
     if (realDuration > 0) {
         var netBasalRate: Double
-        val dia = profile.dia
-        val diaAgo = time - dia * 60 * 60 * 1000
+        val iCfg = profile.insulin
+        val diaAgo = time - iCfg.insulinEndTime
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
         val tempBolusSpacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
@@ -143,7 +143,7 @@ fun TB.iobCalc(
                     amount = tempBolusSize,
                     type = BS.Type.NORMAL
                 )
-                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
+                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, iCfg)
                 result.basaliob += aIOB.iobContrib
                 result.activity += aIOB.activityContrib
                 result.netbasalinsulin += tempBolusPart.amount

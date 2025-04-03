@@ -4,6 +4,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.model.data.Block
@@ -12,6 +13,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
@@ -22,7 +24,6 @@ import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -56,7 +57,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
     fun autotunePrepTest1() { // Test if categorisation with standard treatments with carbs is Ok
         val inputIobJson = File("src/test/res/autotune/test1/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
-        autotuneIob = TestAutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS, iobOapsCalculation)
+        autotuneIob = TestAutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS, iobOapsCalculation, activePlugin)
         autotunePrep = AutotunePrep(preferences, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
@@ -69,7 +70,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         `when`(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(false)
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, false)!!
         // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
         for (i in aapsPreppedGlucose.crData.indices)
             assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
@@ -89,7 +90,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
     fun autotunePrepTest2() { // Test if categorisation without carbs (full UAM) and categorize UAM as basal false is Ok
         val inputIobJson = File("src/test/res/autotune/test2/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
-        autotuneIob = TestAutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS, iobOapsCalculation)
+        autotuneIob = TestAutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS, iobOapsCalculation, activePlugin)
         autotunePrep = AutotunePrep(preferences, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test2/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
@@ -102,7 +103,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         `when`(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(false)           // CategorizeUAM as Basal = False
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, false)!!
         // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
         for (i in aapsPreppedGlucose.crData.indices)
             assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
@@ -122,7 +123,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
     fun autotunePrepTest3() { // Test if categorisation without carbs (full UAM) and categorize UAM as basal true is Ok
         val inputIobJson = File("src/test/res/autotune/test3/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
-        autotuneIob = TestAutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS, iobOapsCalculation)
+        autotuneIob = TestAutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS, iobOapsCalculation, activePlugin)
         autotunePrep = AutotunePrep(preferences, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test3/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
@@ -135,7 +136,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         `when`(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(true)           // CategorizeUAM as Basal = True
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, false)!!
         // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
         for (i in aapsPreppedGlucose.crData.indices)
             assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
@@ -164,7 +165,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
             val units = GlucoseUnit.fromText(txtUnits)
             val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
             val peak = JsonHelper.safeGetIntAllowNull(jsonObject, "insulinPeakTime") ?: return null
-            val localInsulin = LocalInsulin("insulin", peak, dia)
+            val iCfg = ICfg("insulin", peak, dia)
             val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
             val isfJson = jsonObject.getJSONObject("isfProfile")
             val isfBlocks = ArrayList<Block>(1).also {
@@ -190,9 +191,10 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 targetBlocks = targetBlocks,
                 glucoseUnit = units,
                 timeZone = timezone,
+                iCfg = iCfg,
                 dia = dia
             )
-            return ATProfile(ProfileSealed.Pure(pure, activePlugin), localInsulin, injector).also { it.dateUtil = dateUtil }
+            return ATProfile(ProfileSealed.Pure(pure, activePlugin), injector).also { it.dateUtil = dateUtil }
         } catch (ignored: Exception) {
             return null
         }
@@ -292,17 +294,19 @@ class AutotunePrepTest : TestBaseWithProfile() {
         preferences: Preferences,
         dateUtil: DateUtil,
         autotuneFS: AutotuneFS,
-        private val iobOapsCalculation: ArrayList<IobTotal>
+        private val iobOapsCalculation: ArrayList<IobTotal>,
+        activePlugin: ActivePlugin
     ) : AutotuneIob(
         aapsLogger,
         persistenceLayer,
         profileFunction,
         preferences,
         dateUtil,
-        autotuneFS
+        autotuneFS,
+        activePlugin
     ) {
 
-        override fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
+        override fun getIOB(time: Long, iCfg: ICfg): IobTotal {
             val bolusIob = IobTotal(time)
             iobOapsCalculation.forEach {
                 if (it.time == time)

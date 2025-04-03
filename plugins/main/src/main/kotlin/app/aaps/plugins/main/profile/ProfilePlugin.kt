@@ -3,6 +3,7 @@ package app.aaps.plugins.main.profile
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -27,13 +28,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
-import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
-import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -87,6 +86,7 @@ class ProfilePlugin @Inject constructor(
     companion object {
 
         const val DEFAULT_ARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
+        const val DEFAULT_ICFG = "{\"insulinLabel\":\"\",\"insulinEndTime\":0,\"insulinPeakTime\":0}"
     }
 
     override fun onStart() {
@@ -171,6 +171,7 @@ class ProfilePlugin @Inject constructor(
     fun getEditedProfile(): PureProfile? {
         val profile = JSONObject()
         with(profiles[currentProfileIndex]) {
+            profile.put("icfg", iCfg.toJson())
             profile.put("dia", dia)
             profile.put("carbratio", ic)
             profile.put("sens", isf)
@@ -191,6 +192,7 @@ class ProfilePlugin @Inject constructor(
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
                 preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
                 preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, i, value = dia)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIcfg, i, value = iCfg.toJson().toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
@@ -213,7 +215,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun loadSettings() {
+    override fun loadSettings() {
         val numOfProfiles = preferences.get(ProfileIntKey.AmountOfProfiles)
         profiles.clear()
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
@@ -226,6 +228,7 @@ class ProfilePlugin @Inject constructor(
                     ProfileSource.SingleProfile(
                         name = name,
                         mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
+                        iCfg = ICfg.fromJson(JSONObject(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIcfg, i))),
                         dia = preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, i),
                         ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
                         isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),
@@ -289,6 +292,7 @@ class ProfilePlugin @Inject constructor(
         return ProfileSource.SingleProfile(
             name = verifiedName,
             mgdl = profile.units == GlucoseUnit.MGDL,
+            iCfg = pureProfile.iCfg.deepClone(),
             dia = pureJson.getDouble("dia"),
             ic = pureJson.getJSONArray("carbratio"),
             isf = pureJson.getJSONArray("sens"),
@@ -359,6 +363,7 @@ class ProfilePlugin @Inject constructor(
             ProfileSource.SingleProfile(
                 name = Constants.LOCAL_PROFILE + free,
                 mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
+                iCfg = activePlugin.activeInsulin.iCfg,
                 dia = Constants.defaultDIA,
                 ic = JSONArray(DEFAULT_ARRAY),
                 isf = JSONArray(DEFAULT_ARRAY),
@@ -407,6 +412,7 @@ class ProfilePlugin @Inject constructor(
             for (i in 0 until numOfProfiles) {
                 profiles[i].run {
                     val profile = JSONObject()
+                    profile.put("icfg", iCfg.toJson())
                     profile.put("dia", dia)
                     profile.put("carbratio", ic)
                     profile.put("sens", isf)

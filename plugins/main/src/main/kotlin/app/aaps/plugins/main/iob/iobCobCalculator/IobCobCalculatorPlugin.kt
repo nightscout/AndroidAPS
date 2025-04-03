@@ -515,7 +515,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private fun calculateIobFromBolusToTime(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
         val profile = profileFunction.getProfile() ?: return total
-        val dia = profile.dia
+        val iCfg = profile.insulin
         val divisor = preferences.get(DoubleKey.ApsAmaBolusSnoozeDivisor)
         assert(divisor > 0)
 
@@ -523,7 +523,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 
         boluses.forEach { t ->
             if (t.isValid && t.timestamp < toTime) {
-                val tIOB = t.iobCalc(activePlugin, toTime, dia)
+                val tIOB = t.iobCalc(activePlugin, toTime, iCfg)
                 total.iob += tIOB.iobContrib
                 total.activity += tIOB.activityContrib
                 if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
@@ -532,7 +532,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                     // multiply the time the treatment is seen active.
                     val timeSinceTreatment = toTime - t.timestamp
                     val snoozeTime = t.timestamp + (timeSinceTreatment * divisor).toLong()
-                    val bIOB = t.iobCalc(activePlugin, snoozeTime, dia)
+                    val bIOB = t.iobCalc(activePlugin, snoozeTime, iCfg)
                     total.bolussnooze += bIOB.iobContrib
                 }
             }
@@ -580,7 +580,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                 type = BS.Type.NORMAL,
                 isBasalInsulin = true
             )
-            val iob = bolus.iobCalc(activePlugin, toTime, profile.dia)
+            val iob = bolus.iobCalc(activePlugin, toTime, profile.insulin)
             total.basaliob += iob.iobContrib
             total.activity += iob.activityContrib
             i += T.mins(5).msecs()

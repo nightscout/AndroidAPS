@@ -47,8 +47,8 @@ fun EB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTota
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     if (realDuration > 0) {
-        val dia = profile.dia
-        val diaAgo = time - dia * 60 * 60 * 1000
+        val iCfg = profile.insulin
+        val diaAgo = time - iCfg.insulinEndTime
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
         val spacing = realDuration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
@@ -61,7 +61,7 @@ fun EB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTota
                     amount = tempBolusSize,
                     type = BS.Type.NORMAL
                 )
-                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
+                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, iCfg)
                 result.iob += aIOB.iobContrib
                 result.activity += aIOB.activityContrib
                 result.extendedBolusInsulin += tempBolusPart.amount
@@ -93,8 +93,8 @@ fun EB.iobCalc(
     }
     if (realDuration > 0) {
         var netBasalRate: Double
-        val dia = profile.dia
-        val diaAgo = time - dia * 60 * 60 * 1000
+        val iCfg = profile.insulin
+        val diaAgo = time - iCfg.insulinEndTime
         val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
         val spacing = realDuration / aboutFiveMinIntervals
         for (j in 0L until aboutFiveMinIntervals) {
@@ -110,7 +110,7 @@ fun EB.iobCalc(
                     amount = tempBolusSize,
                     type = BS.Type.NORMAL
                 )
-                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
+                val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, iCfg)
                 result.iob += aIOB.iobContrib
                 result.activity += aIOB.activityContrib
                 result.extendedBolusInsulin += tempBolusPart.amount
