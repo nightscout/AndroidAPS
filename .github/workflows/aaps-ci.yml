@@ -17,9 +17,13 @@ on:
           - aapsclient2Debug
           - pumpcontrolRelease
           - pumpcontrolDebug
-
-env:
-  DEFAULT_BUILD_VARIANT: FullRelease
+      uploadTarget:
+        description: 'Select Upload Target'
+        required: true
+        default: 'dropbox'
+        type: choice
+        options:
+          - dropbox
 
 jobs:
   build:
@@ -33,8 +37,8 @@ jobs:
             echo "❌ Missing secret: KEYSTORE_BASE64"
             MISSING=1
           fi
-          if [ -z "${{ secrets.STORE_PASSWORD }}" ]; then
-            echo "❌ Missing secret: STORE_PASSWORD"
+          if [ -z "${{ secrets.KEYSTORE_PASSWORD }}" ]; then
+            echo "❌ Missing secret: KEYSTORE_PASSWORD"
             MISSING=1
           fi
           if [ -z "${{ secrets.KEY_ALIAS }}" ]; then
@@ -45,8 +49,23 @@ jobs:
             echo "❌ Missing secret: KEY_PASSWORD"
             MISSING=1
           fi
+
+          # Conditionally check Dropbox secret if uploadTool is dropbox
+          if [ "${{ github.event.inputs.uploadTool }}" = "dropbox" ]; then
+            if [ -z "${{ secrets.DROPBOX_ACCESS_TOKEN }}" ]; then
+              echo "❌ Missing secret: DROPBOX_ACCESS_TOKEN (required for Dropbox upload)"
+              echo ""
+              echo "🔧 Please create an app and generate a token at:"
+              echo "👉 https://www.dropbox.com/developers/apps"
+              echo ""
+              echo "📘 For detailed instructions, see:"
+              echo "🔗 https://androidaps.readthedocs.io/en/latest/SettingUpAaps/BuildingAaps.html#upload-to-dropbox"
+              MISSING=1
+            fi
+          fi
+
           if [ "$MISSING" -eq 1 ]; then
-            echo "🛑 Required secret(s) missing. Failing the build."
+            echo "🛑 One or more required secrets are missing. Failing the build."
             exit 1
           fi
 
@@ -69,11 +88,7 @@ jobs:
       - name: Set BUILD_VARIANT (default if empty)
         id: set_build_variant
         run: |
-          if [[ -n "${{ github.event.inputs.buildVariant }}" ]]; then
-            BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
-          else
-            BUILD_VARIANT="${{ env.DEFAULT_BUILD_VARIANT }}"
-          fi
+          BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
           echo "BUILD_VARIANT=$BUILD_VARIANT" >> $GITHUB_ENV
           echo "Selected BUILD_VARIANT: $BUILD_VARIANT"
           
@@ -98,7 +113,7 @@ jobs:
         run: |
           ./gradlew assemble${{ env.BUILD_VARIANT }} \
           -Pandroid.injected.signing.store.file=$(pwd)/keystore/keystore.jks \
-          -Pandroid.injected.signing.store.password=${{ secrets.STORE_PASSWORD }} \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
@@ -125,10 +140,42 @@ jobs:
           mv wear/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk \
             aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk
 
-      - name: Upload APK artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: aaps-${{ steps.extract_versions.outputs.app_version_name }}
-          path: |
-            aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk
-            aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk
+      - name: Upload APKs to Dropbox
+        run: |
+          if [[ "${{ github.event.inputs.uploadTarget }}" != "dropbox" ]]; then
+            echo "Skipping Dropbox upload (uploadTarget=${{ github.event.inputs.uploadTarget }})"
+            exit 0
+          fi
+          set -e  # Exit immediately on error
+
+          upload_to_dropbox() {
+            FILE_PATH=$1
+            DROPBOX_DEST=$2
+
+            if [ ! -f "$FILE_PATH" ]; then
+              echo "❌ File not found: $FILE_PATH"
+              exit 1
+            fi
+
+            echo "⬆️ Uploading $FILE_PATH to Dropbox as $DROPBOX_DEST..."
+
+            RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/response.json \
+              -X POST https://content.dropboxapi.com/2/files/upload \
+              --header "Authorization: Bearer ${{ secrets.DROPBOX_ACCESS_TOKEN }}" \
+              --header "Dropbox-API-Arg: {\"path\": \"/$DROPBOX_DEST\",\"mode\": \"overwrite\",\"autorename\": false,\"mute\": false}" \
+              --header "Content-Type: application/octet-stream" \
+              --data-binary @"$FILE_PATH")
+
+            HTTP_CODE="${RESPONSE: -3}"  # Extract last 3 characters as HTTP status code
+
+            if [[ "$HTTP_CODE" != "200" ]]; then
+              echo "❌ Upload failed with HTTP status: $HTTP_CODE"
+              echo "🔽 Dropbox API response:"
+              cat /tmp/response.json
+              exit 1
+            fi
+            echo "✅ Upload successful: $DROPBOX_DEST"
+          }
+
+          upload_to_dropbox "aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk" "aaps/aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk"
+          upload_to_dropbox "aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk" "aaps/aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk"
