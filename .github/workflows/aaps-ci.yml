@@ -3,6 +3,14 @@ name: AAPS CI
 on:
   workflow_dispatch:
     inputs:
+      java-version:
+        description: 'Specify JDK version'
+        required: true
+        default: '21'
+        type: choice
+        options:
+          - '21'
+          - '19'
       buildVariant:
         description: 'Select Build Variant'
         required: true
@@ -70,17 +78,16 @@ jobs:
           fi
 
       - uses: actions/checkout@v4
-      - name: Set up JDK 21
+      - name: Set up JDK ${{ inputs.java-version }}
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: ${{ inputs.java-version }}
           distribution: 'temurin'
           cache: gradle
-
       - name: Decode keystore
         run: |
-          mkdir -p keystore
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $(pwd)/keystore/keystore.jks
+          mkdir -p "$RUNNER_TEMP/keystore"
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/keystore/keystore.jks"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -95,10 +102,10 @@ jobs:
           # Split into FLAVOR and TYPE (release/debug)
           VARIANT_FLAVOR=$(echo "$BUILD_VARIANT" | sed -E 's/(Release|Debug)$//' | tr '[:upper:]' '[:lower:]')
           VARIANT_TYPE=$(echo "$BUILD_VARIANT" | grep -oE '(Release|Debug)$' | tr '[:upper:]' '[:lower:]')
-      
+          
           echo "VARIANT_FLAVOR=$VARIANT_FLAVOR" >> $GITHUB_ENV
           echo "VARIANT_TYPE=$VARIANT_TYPE" >> $GITHUB_ENV
-      
+          
           VERSION_SUFFIX=""
           if [[ "$VARIANT_TYPE" == "debug" ]]; then
             VERSION_SUFFIX="-debug"
@@ -112,7 +119,7 @@ jobs:
       - name: Build APKs
         run: |
           ./gradlew assemble${{ env.BUILD_VARIANT }} \
-          -Pandroid.injected.signing.store.file=$(pwd)/keystore/keystore.jks \
+          -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
@@ -151,27 +158,27 @@ jobs:
         run: |
           if [[ "${{ github.event.inputs.uploadTarget }}" == "dropbox" ]]; then
             set -e  # Exit immediately on error
-  
+          
             upload_to_dropbox() {
               FILE_PATH=$1
               DROPBOX_DEST=$2
-  
+          
               if [ ! -f "$FILE_PATH" ]; then
                 echo "❌ File not found: $FILE_PATH"
                 exit 1
               fi
-  
+          
               echo "⬆️ Uploading $FILE_PATH to Dropbox as $DROPBOX_DEST..."
-  
+          
               RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/response.json \
                 -X POST https://content.dropboxapi.com/2/files/upload \
                 --header "Authorization: Bearer ${{ secrets.DROPBOX_ACCESS_TOKEN }}" \
                 --header "Dropbox-API-Arg: {\"path\": \"/$DROPBOX_DEST\",\"mode\": \"overwrite\",\"autorename\": false,\"mute\": false}" \
                 --header "Content-Type: application/octet-stream" \
                 --data-binary @"$FILE_PATH")
-  
+          
               HTTP_CODE="${RESPONSE: -3}"  # Extract last 3 characters as HTTP status code
-  
+          
               if [[ "$HTTP_CODE" != "200" ]]; then
                 echo "❌ Upload failed with HTTP status: $HTTP_CODE"
                 echo "🔽 Dropbox API response:"
@@ -180,7 +187,7 @@ jobs:
               fi
               echo "✅ Upload successful: $DROPBOX_DEST"
             }
-  
+          
             upload_to_dropbox "aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk" "${{ steps.extract_versions.outputs.app_version_dir }}/aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk"
             upload_to_dropbox "aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk" "${{ steps.extract_versions.outputs.wear_version_dir }}/aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk"
           fi
