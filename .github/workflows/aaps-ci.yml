@@ -124,7 +124,7 @@ jobs:
           WEAR_VERSION=$(find wear/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
 
           APP_VERSION_DIR=$(echo "$APP_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
-          WEAR_VERSION_DIR=$(echo "WEAR_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
+          WEAR_VERSION_DIR=$(echo "$WEAR_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
 
           APP_VERSION="$APP_VERSION${VERSION_SUFFIX}"
           WEAR_VERSION="$WEAR_VERSION${VERSION_SUFFIX}"
