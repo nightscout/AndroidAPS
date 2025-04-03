@@ -1,6 +1,6 @@
 package app.aaps.core.data.pump.defs
 
-class PumpDescription {
+open class PumpDescription {
 
     var pumpType = PumpType.GENERIC_AAPS
     var isBolusCapable = false
@@ -25,6 +25,7 @@ class PumpDescription {
     var basalMaximumRate = 0.0
     var isRefillingCapable = false
     var isBatteryReplaceable = false
+    var maxBolusSize = 0.0
 
     //var storesCarbInfo = false
     var is30minBasalRatesCapable = false
@@ -64,6 +65,7 @@ class PumpDescription {
         needsManualTDDLoad = true
         hasCustomUnreachableAlertCheck = false
         useHardwareLink = false
+        maxBolusSize = 0.0
     }
 
     companion object {

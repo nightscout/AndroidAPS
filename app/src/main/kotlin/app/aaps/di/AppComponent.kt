@@ -15,6 +15,7 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+import app.aaps.pump.apex.di.ApexModule
 import app.aaps.pump.common.di.PumpCommonModule
 import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.di.DanaModule
@@ -88,6 +89,7 @@ import javax.inject.Singleton
         RileyLinkModule::class,
         MedtrumModule::class,
         EquilModule::class,
+        ApexModule::class,
         VirtualPumpModule::class
     ]
 )

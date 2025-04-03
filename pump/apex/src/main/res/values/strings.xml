@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="apex_plugin_name">APEX TruCare III</string>
+    <string name="apex_plugin_shortname">APEX</string>
+    <string name="apex_plugin_description">Native integration with APEX TruCare III insulin pump</string>
+    <string name="apex_settings">APEX Pump Settings</string>
+
+    <string name="setting_alarm_length">Alarm length</string>
+    <string name="setting_alarm_length_short">Short</string>
+    <string name="setting_alarm_length_medium">Medium</string>
+    <string name="setting_alarm_length_long">Long</string>
+
+    <string name="setting_max_bolus">Maximum bolus [U]</string>
+    <string name="setting_max_basal">Maximum basal rate [U/h]</string>
+
+    <string name="setting_serial_number">Pump serial number</string>
+
+    <string name="overview_connection_status_disconnected">Disconnected</string>
+    <string name="overview_connection_status_connecting">Connecting</string>
+    <string name="overview_connection_status_connected">Connected</string>
+
+    <string name="overview_pump_status_normal">Normal</string>
+    <string name="overview_pump_status_suspended">Suspended</string>
+    <string name="overview_pump_status_alarm">Alarm</string>
+
+    <string name="overview_pump_battery_approximate">%1$d%%</string>
+    <string name="overview_pump_battery_exact">%1$d%% (%2$d mV)</string>
+    <string name="overview_pump_reservoir">%1$.3fU</string>
+    <string name="overview_pump_basal">%1$.3fU/h</string>
+    <string name="overview_pump_tempbasal">%1$.3fU/h (%2$d min left)</string>
+    <string name="overview_pump_tempbasal_percentage">%1$d%% (%2$d min left)</string>
+    <string name="overview_pump_tempbasal_h">%1$.3fU/h (%2$d h %3$d min left)</string>
+    <string name="overview_pump_tempbasal_percentage_h">%1$d%% (%2$d h %3$d min left)</string>
+    <string name="overview_pump_last_bolus_min">%1$.3fU (%2$d min ago)</string>
+    <string name="overview_pump_last_bolus_h">%1$.3fU (%2$d h ago)</string>
+    <string name="overview_pump_fw">v%1$d.%2$d (v%3$d.%4$d)</string>
+
+    <string name="status_pump_status">Pump status</string>
+    <string name="status_conn_status">BT status</string>
+    <string name="status_last_bolus">Last bolus</string>
+    <string name="status_reservoir">Insulin</string>
+    <string name="status_battery">Battery</string>
+    <string name="status_tbr">TBR</string>
+    <string name="status_basal">Base basal</string>
+
+    <string name="action_label">Current action</string>
+    <string name="action_idle">Idle</string>
+    <string name="action_status">Updating pump status</string>
+    <string name="action_tdd">Updating TDDs</string>
+    <string name="action_alarms">Updating alarms</string>
+    <string name="action_basal">Getting basal profiles</string>
+    <string name="action_version">Getting version</string>
+    <string name="action_boluses">Updating boluses</string>
+    <string name="action_setting_bolus">Setting bolus %1$.3fU</string>
+
+    <string name="notification_pump_is_suspended">Pump is suspended</string>
+    <string name="notification_pump_unsupported">Pump has unsupported firmware</string>
+
+    <string name="alarm_label">Pump alarm: %1$s</string>
+    <string name="alarm_occlusion">Occlusion</string>
+    <string name="alarm_w_battery_low">Low battery</string>
+    <string name="alarm_w_reservoir_low">Low reservoir level</string>
+    <string name="alarm_battery_dead">Battery is dead</string>
+    <string name="alarm_reservoir_empty">Reservoir is empty</string>
+    <string name="alarm_hardware_fault">Hardware error (%1$s)</string>
+    <string name="alarm_check_bg">Check blood glucose</string>
+    <string name="alarm_unknown_error_name">Unknown error %1$s, report to developers</string>
+    <string name="alarm_unknown_error">Unknown error</string>
+
+    <string name="status_delivering">Delivering %1$.3fU</string>
+    <string name="status_delivered">Delivered %1$.3fU successfully</string>
+    <string name="status_bolus_cancelled">Bolus was cancelled</string>
+
+    <string name="error_not_ready">Pump is not ready</string>
+    <string name="error_failed_to_switch_basal_profile_index">Failed to switch basal profile index</string>
+    <string name="error_failed_to_update_basal_profile">Failed to update basal profile</string>
+    <string name="error_pump_unreachable">Pump unreachable</string>
+    <string name="error_pump_suspended">Pump is suspended</string>
+    <string name="error_bolus_start_failed">Failed to start bolus</string>
+    <string name="error_tbr_cancel_failed">Failed to cancel TBR</string>
+    <string name="error_tbr_set_failed">Failed to set TBR</string>
+    <string name="error_only_absolute_supported">Only absolute TBRs are supported</string>
+    <string name="firmware_version">Firmware version</string>
+    <string name="connection_status">Connection status</string>
+    <string name="status_label">Pump status</string>
+    <string name="getting_pump_status">GET STATUS</string>
+    <string name="getting_boluses">GET BOLUS</string>
+    <string name="suspend">Suspend</string>
+</resources>

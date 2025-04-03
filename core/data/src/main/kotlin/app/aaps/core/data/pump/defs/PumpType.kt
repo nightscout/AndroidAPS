@@ -474,6 +474,22 @@ enum class PumpType(
         pumpCapability = PumpCapability.DiaconnCapabilities,
         source = Source.EQuil,
         useHardwareLink = true,
+    ),
+    APEX_TRUCARE_III(
+        description = "APEX TruCare III",
+        manufacturer = ManufacturerType.Apex,
+        model = "TruCare III",
+        extendedBolusSettings = DoseSettings(0.025, 15, 24 * 60, 0.025),
+        tbrSettings = DoseSettings(0.025, 15, 24 * 60, 0.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        bolusSize = 0.025,
+        baseBasalMinValue = 0.025,
+        baseBasalStep = 0.025,
+        baseBasalSpecialSteps = DoseStepSize.Apex,
+        specialBolusSize = DoseStepSize.Apex,
+        pumpCapability = PumpCapability.ApexCapabilities,
+        source = Source.ApexTruCareIII,
+        useHardwareLink = true,
     );
 
     fun manufacturer() = parent?.manufacturer ?: manufacturer ?: throw IllegalStateException()
@@ -511,7 +527,8 @@ enum class PumpType(
         MDI,
         VirtualPump,
         Unknown,
-        EQuil
+        EQuil,
+        ApexTruCareIII
     }
 
     companion object {
