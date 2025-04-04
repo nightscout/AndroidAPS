@@ -6,7 +6,6 @@ import app.aaps.plugins.automation.AutomationFragment
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
-import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionDummy
 import app.aaps.plugins.automation.actions.ActionLoopDisable
@@ -18,8 +17,11 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionSendSMS
+import app.aaps.plugins.automation.actions.ActionSetAutomationState
+import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
+import app.aaps.plugins.automation.actions.ActionStopProfilePercent
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
 import app.aaps.plugins.automation.dialogs.ChooseActionDialog
 import app.aaps.plugins.automation.dialogs.ChooseOperationDialog
@@ -29,6 +31,7 @@ import app.aaps.plugins.automation.dialogs.EditEventDialog
 import app.aaps.plugins.automation.dialogs.EditTriggerDialog
 import app.aaps.plugins.automation.services.LocationService
 import app.aaps.plugins.automation.triggers.Trigger
+import app.aaps.plugins.automation.triggers.TriggerAutomationState
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
@@ -43,6 +46,7 @@ import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerPodChange
+import app.aaps.plugins.automation.triggers.TriggerProfile
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
@@ -58,7 +62,9 @@ import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import javax.inject.Singleton
 
 @Module(
     includes = [
@@ -96,6 +102,8 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerIobInjector(): TriggerIob
     @ContributesAndroidInjector abstract fun triggerLocationInjector(): TriggerLocation
     @ContributesAndroidInjector abstract fun triggerProfilePercentInjector(): TriggerProfilePercent
+    @ContributesAndroidInjector abstract fun triggerProfileInjector(): TriggerProfile
+    @ContributesAndroidInjector abstract fun triggerAutomationState(): TriggerAutomationState
     @ContributesAndroidInjector abstract fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
     @ContributesAndroidInjector abstract fun triggerBTDeviceInjector(): TriggerBTDevice
     @ContributesAndroidInjector abstract fun triggerRecurringTimeInjector(): TriggerRecurringTime
@@ -118,6 +126,8 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionCarePortalEventInjector(): ActionCarePortalEvent
     @ContributesAndroidInjector abstract fun actionProfileSwitchInjector(): ActionProfileSwitch
     @ContributesAndroidInjector abstract fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
+    @ContributesAndroidInjector abstract fun actionStopProfilePercentInjector(): ActionStopProfilePercent
+    @ContributesAndroidInjector abstract fun actionSetAutomationStateInjector(): ActionSetAutomationState
     @ContributesAndroidInjector abstract fun actionRunAutotuneInjector(): ActionRunAutotune
     @ContributesAndroidInjector abstract fun actionSendSMSInjector(): ActionSendSMS
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
@@ -127,7 +137,6 @@ abstract class AutomationModule {
 
     @Module
     interface Bindings {
-
         @Binds fun bindAutomation(automationPlugin: AutomationPlugin): Automation
     }
 }

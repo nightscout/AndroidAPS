@@ -26,7 +26,9 @@
     <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
     <string name="alreadyset">Already set</string>
     <string name="profilepercentage">Profile percentage</string>
+    <string name="profilecheck">Profile check</string>
     <string name="startprofileforever">Start profile %1$d%%</string>
+    <string name="stopprofilepercent">Stop Profile Percentage</string>
     <string name="percent_u">Percent [%]:</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS to all numbers</string>
@@ -147,4 +149,27 @@
     <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
 
+    <!-- State automation -->
+    <string name="set_state">Set automation state</string>
+    <string name="set_state_description">Set automation state %1$s=%2$s</string>
+    <string name="set_state_state_name">"State name: "</string>
+    <string name="set_state_state_val">"State value: "</string>
+    <string name="check_state_name">Check automation state</string>
+    <string name="check_state_description">Check automation state %1$s=%2$s</string>
+    <string name="no_automation_states">No automation states defined yet. Use the \"Set automation state\" action in your automation rules to create states.</string>
+
+    <!-- Automation States Plugin -->
+    <string name="automation_states">Automation States</string>
+    <string name="automation_states_short">States</string>
+    <string name="description_automation_states">View and monitor automation state variables</string>
+    <string name="automation_state_values">Automation State Values</string>
+    <string name="enter_state_value">Enter state value</string>
+    <string name="automation_state_missing_name_value">Please enter a state name </string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_automation_state">Add Automation State</string>
+    <string name="select_state_name">Select state name</string>
+    <string name="select_state_value">Select state value</string>
+    <string name="state_name_label">State name</string>
+    <string name="state_value_label">State value</string>
 </resources>

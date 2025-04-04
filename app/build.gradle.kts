@@ -170,6 +170,7 @@ dependencies {
     implementation(project(":ui"))
     implementation(project(":plugins:aps"))
     implementation(project(":plugins:automation"))
+    implementation(project(":plugins:automation-state"))
     implementation(project(":plugins:configuration"))
     implementation(project(":plugins:constraints"))
     implementation(project(":plugins:insulin"))
