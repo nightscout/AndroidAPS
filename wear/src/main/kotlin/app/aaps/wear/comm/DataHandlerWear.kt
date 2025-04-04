@@ -4,11 +4,13 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.support.wearable.complications.ProviderUpdateRequester
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -26,6 +28,8 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
+import app.aaps.wear.complications.BaseComplicationProviderService
+import app.aaps.wear.complications.LongStatusComplication
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
@@ -129,7 +133,8 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Status${it.dataset} received from ${it.sourceNodeId}")
                 persistence.store(it)
-                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+                //LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+                requestComplicationUpdate()
             }
         disposable += rxBus
             .toObservable(EventData.SingleBg::class.java)
@@ -348,5 +353,11 @@ class DataHandlerWear @Inject constructor(
             SystemClock.sleep(seconds * 1000L)
             NotificationManagerCompat.from(context).cancel(DataLayerListenerServiceWear.BOLUS_PROGRESS_NOTIF_ID)
         }.start()
+    }
+
+    private fun requestComplicationUpdate() {
+        BaseComplicationProviderService.ListComplications.values().forEach { it ->
+            ProviderUpdateRequester(context, ComponentName(context, it.cls)).requestUpdateAll()
+        }
     }
 }

@@ -57,6 +57,25 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     private var localBroadcastManager: LocalBroadcastManager? = null
     private var messageReceiver: MessageReceiver? = null
 
+
+    //==============================================================================================
+    // LIST OF AVAILABLE COMPLICATION FOR UPDATE
+    //==============================================================================================
+    enum class ListComplications(val cls: Class<*>) {
+        BRCOBIOBCOMPLICATION(BrCobIobComplication::class.java),
+        BRCOMPLICATION(BrComplication::class.java),
+        BRIOBCOMPLICATION(BrIobComplication::class.java),
+        COBDETAILEDCOMPLICATION(CobDetailedComplication::class.java),
+        COBICONCOMPLICATION(CobIconComplication::class.java),
+        COBIOBCOMPLICATION(CobIobComplication::class.java),
+        IOBDETAILEDCOMPLICATION(IobDetailedComplication::class.java),
+        IOBICONCOMPLICATION(IobIconComplication::class.java),
+        LONGSTATUSCOMPLICATION(LongStatusComplication::class.java),
+        LONGSTATUSFLIPPEDCOMPLICATION(LongStatusFlippedComplication::class.java),
+        SGVCOMPLICATION(SgvComplication::class.java),
+        UPLOADERBATTERYCOMPLICATION(UploaderBatteryComplication::class.java)
+    }
+
     //==============================================================================================
     // ABSTRACT COMPLICATION INTERFACE
     //==============================================================================================
@@ -171,12 +190,9 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         persistence.putString("complication_$complicationId", getProviderCanonicalName())
         persistence.putBoolean("complication_" + complicationId + "_since", usesSinceField())
         persistence.addToSet(Persistence.KEY_COMPLICATIONS, "complication_$complicationId")
-        val messageFilter = IntentFilter(INTENT_NEW_DATA)
         messageReceiver = MessageReceiver()
         localBroadcastManager = LocalBroadcastManager.getInstance(this)
-        messageReceiver?.let { localBroadcastManager?.registerReceiver(it, messageFilter) }
         rxBus.send(EventWearToMobile(ActionResendData("BaseComplicationProviderService")))
-        checkIfUpdateNeeded()
     }
 
     /*
@@ -255,21 +271,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     //==============================================================================================
     // UPDATE AND REFRESH LOGIC
     //==============================================================================================
-    /*
-     * Schedule check for field update
-     */
-    private fun checkIfUpdateNeeded() {
-        aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(Persistence.KEY_COMPLICATIONS, ""))
-        inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS) {
-            if (wearUtil.isBelowRateLimit("complication-checkIfUpdateNeeded", 5)) {
-                aapsLogger.warn(LTag.WEAR, "Checking if update needed")
-                requestUpdateIfSinceChanged()
-                // We reschedule need for check - to make sure next check will Inevitable go in next 15s
-                checkIfUpdateNeeded()
-            }
-        }
-    }
-
     /*
      * Check if displayed since field (field that shows how old, in minutes, is reading)
      * is up-to-date or need to be changed (a minute or more elapsed)
@@ -367,7 +368,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     private fun updateAll() {
         val complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS)
         if (complications.isNotEmpty()) {
-            checkIfUpdateNeeded()
             // We request all active providers
             requestUpdate(activeProviderClasses)
         }

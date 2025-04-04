@@ -10,6 +10,9 @@ import androidx.annotation.DrawableRes
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
+import app.aaps.wear.interaction.utils.DisplayFormat
+import app.aaps.wear.interaction.utils.SmallestDoubleString
+import java.util.concurrent.TimeUnit
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -80,8 +83,17 @@ class UploaderBatteryComplication : BaseComplicationProviderService() {
             }
 
             ComplicationData.TYPE_SHORT_TEXT   -> {
+                val levelString = ComplicationText.TimeDifferenceBuilder()
+                    .setSurroundingText(levelStr)
+                    .setReferencePeriodStart(raw.singleBg[0].timeStamp)
+                    .setReferencePeriodEnd(raw.singleBg[0].timeStamp + 60000)
+                    .setStyle(ComplicationText.DIFFERENCE_STYLE_SHORT_SINGLE_UNIT)
+                    .setMinimumUnit(TimeUnit.MINUTES)
+                    .setStyle(ComplicationText.DIFFERENCE_STYLE_STOPWATCH)
+                    .setShowNowText(false)
+                    .build()
                 val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                    .setShortText(ComplicationText.plainText(levelStr))
+                    .setShortText(levelString)
                     .setIcon(Icon.createWithResource(this, batteryIcon))
                     .setBurnInProtectionIcon(Icon.createWithResource(this, burnInBatteryIcon))
                     .setTapAction(complicationPendingIntent)
