@@ -1,0 +1,193 @@
+name: AAPS CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      java-version:
+        description: 'Specify JDK version'
+        required: true
+        default: '21'
+        type: choice
+        options:
+          - '21'
+          - '19'
+      buildVariant:
+        description: 'Select Build Variant'
+        required: true
+        default: 'FullRelease'
+        type: choice
+        options:
+          - FullRelease
+          - FullDebug
+          - aapsclientRelease
+          - aapsclientDebug
+          - aapsclient2Release
+          - aapsclient2Debug
+          - pumpcontrolRelease
+          - pumpcontrolDebug
+      uploadTarget:
+        description: 'Select Upload Target'
+        required: true
+        default: 'dropbox'
+        type: choice
+        options:
+          - dropbox
+
+jobs:
+  build:
+    name: Build AAPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Secrets
+        run: |
+          MISSING=0
+          if [ -z "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "❌ Missing secret: KEYSTORE_BASE64"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.KEYSTORE_PASSWORD }}" ]; then
+            echo "❌ Missing secret: KEYSTORE_PASSWORD"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.KEY_ALIAS }}" ]; then
+            echo "❌ Missing secret: KEY_ALIAS"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.KEY_PASSWORD }}" ]; then
+            echo "❌ Missing secret: KEY_PASSWORD"
+            MISSING=1
+          fi
+
+          # Conditionally check Dropbox secret if uploadTool is dropbox
+          if [ "${{ github.event.inputs.uploadTool }}" = "dropbox" ]; then
+            if [ -z "${{ secrets.DROPBOX_ACCESS_TOKEN }}" ]; then
+              echo "❌ Missing secret: DROPBOX_ACCESS_TOKEN (required for Dropbox upload)"
+              echo ""
+              echo "🔧 Please create an app and generate a token at:"
+              echo "👉 https://www.dropbox.com/developers/apps"
+              echo ""
+              echo "📘 For detailed instructions, see:"
+              echo "🔗 https://androidaps.readthedocs.io/en/latest/SettingUpAaps/BuildingAaps.html#upload-to-dropbox"
+              MISSING=1
+            fi
+          fi
+
+          if [ "$MISSING" -eq 1 ]; then
+            echo "🛑 One or more required secrets are missing. Failing the build."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ inputs.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'temurin'
+          cache: gradle
+      - name: Decode keystore
+        run: |
+          mkdir -p "$RUNNER_TEMP/keystore"
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/keystore/keystore.jks"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Set BUILD_VARIANT
+        id: set_build_variant
+        run: |
+          BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
+          echo "BUILD_VARIANT=$BUILD_VARIANT" >> $GITHUB_ENV
+          echo "Selected BUILD_VARIANT: $BUILD_VARIANT"
+          
+          # Split into FLAVOR and TYPE (release/debug)
+          VARIANT_FLAVOR=$(echo "$BUILD_VARIANT" | sed -E 's/(Release|Debug)$//' | tr '[:upper:]' '[:lower:]')
+          VARIANT_TYPE=$(echo "$BUILD_VARIANT" | grep -oE '(Release|Debug)$' | tr '[:upper:]' '[:lower:]')
+          
+          echo "VARIANT_FLAVOR=$VARIANT_FLAVOR" >> $GITHUB_ENV
+          echo "VARIANT_TYPE=$VARIANT_TYPE" >> $GITHUB_ENV
+          
+          VERSION_SUFFIX=""
+          if [[ "$VARIANT_TYPE" == "debug" ]]; then
+            VERSION_SUFFIX="-debug"
+          fi
+          echo "VERSION_SUFFIX=$VERSION_SUFFIX" >> $GITHUB_ENV
+
+          echo "VARIANT_FLAVOR: $VARIANT_FLAVOR"
+          echo "VARIANT_TYPE: $VARIANT_TYPE"
+          echo "VERSION_SUFFIX: $VERSION_SUFFIX"
+
+      - name: Build APKs
+        run: |
+          ./gradlew assemble${{ env.BUILD_VARIANT }} \
+          -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Extract VERSION_NAME for App and Wear
+        id: extract_versions
+        run: |
+          APP_VERSION=$(find app/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
+          WEAR_VERSION=$(find wear/build/generated/source/buildConfig -name 'BuildConfig.java' -exec grep 'VERSION_NAME' {} \; | head -1 | awk -F '"' '{print $2}')
+
+          APP_VERSION_DIR=$(echo "$APP_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
+          WEAR_VERSION_DIR=$(echo "$WEAR_VERSION" | grep -oE '[0-9]+(\.[0-9]+)+')
+
+          APP_VERSION="$APP_VERSION${VERSION_SUFFIX}"
+          WEAR_VERSION="$WEAR_VERSION${VERSION_SUFFIX}"
+          
+          echo "app_version_dir=$APP_VERSION_DIR" >> $GITHUB_OUTPUT
+          echo "wear_version_dir=$WEAR_VERSION_DIR" >> $GITHUB_OUTPUT
+          echo "app_version_name=$APP_VERSION" >> $GITHUB_OUTPUT
+          echo "wear_version_name=$WEAR_VERSION" >> $GITHUB_OUTPUT
+
+          echo "APP_VERSION_DIR: $APP_VERSION_DIR"
+          echo "WEAR_VERSION_DIR: $WEAR_VERSION_DIR"
+          echo "APP_VERSION: $APP_VERSION"
+          echo "WEAR_VERSION: $WEAR_VERSION"
+
+      - name: Rename APKs with version
+        run: |
+          mv app/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk \
+            aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk
+
+          mv wear/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk \
+            aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk
+
+      - name: Upload APKs to Target
+        run: |
+          if [[ "${{ github.event.inputs.uploadTarget }}" == "dropbox" ]]; then
+            set -e  # Exit immediately on error
+          
+            upload_to_dropbox() {
+              FILE_PATH=$1
+              DROPBOX_DEST=$2
+          
+              if [ ! -f "$FILE_PATH" ]; then
+                echo "❌ File not found: $FILE_PATH"
+                exit 1
+              fi
+          
+              echo "⬆️ Uploading $FILE_PATH to Dropbox as $DROPBOX_DEST..."
+          
+              RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/response.json \
+                -X POST https://content.dropboxapi.com/2/files/upload \
+                --header "Authorization: Bearer ${{ secrets.DROPBOX_ACCESS_TOKEN }}" \
+                --header "Dropbox-API-Arg: {\"path\": \"/$DROPBOX_DEST\",\"mode\": \"overwrite\",\"autorename\": false,\"mute\": false}" \
+                --header "Content-Type: application/octet-stream" \
+                --data-binary @"$FILE_PATH")
+          
+              HTTP_CODE="${RESPONSE: -3}"  # Extract last 3 characters as HTTP status code
+          
+              if [[ "$HTTP_CODE" != "200" ]]; then
+                echo "❌ Upload failed with HTTP status: $HTTP_CODE"
+                echo "🔽 Dropbox API response:"
+                cat /tmp/response.json
+                exit 1
+              fi
+              echo "✅ Upload successful: $DROPBOX_DEST"
+            }
+          
+            upload_to_dropbox "aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk" "${{ steps.extract_versions.outputs.app_version_dir }}/aaps-${{ steps.extract_versions.outputs.app_version_name }}.apk"
+            upload_to_dropbox "aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk" "${{ steps.extract_versions.outputs.wear_version_dir }}/aaps-wear-${{ steps.extract_versions.outputs.wear_version_name }}.apk"
+          fi
