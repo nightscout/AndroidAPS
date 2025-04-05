@@ -11,6 +11,7 @@ data class EB(
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    /** Duration in milliseconds */
     var duration: Long,
     var amount: Double,
     var isEmulatingTempBasal: Boolean = false

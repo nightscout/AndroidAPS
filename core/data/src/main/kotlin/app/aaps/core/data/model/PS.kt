@@ -21,7 +21,8 @@ data class PS(
     var profileName: String,
     var timeshift: Long,  // [milliseconds]
     var percentage: Int, // 1 ~ XXX [%]
-    var duration: Long, // [milliseconds]
+    /** Duration in milliseconds */
+    var duration: Long,
     var iCfg: ICfg
 ) : HasIDs {
 

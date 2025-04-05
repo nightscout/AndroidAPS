@@ -11,7 +11,8 @@ data class CA(
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
-    var duration: Long, // in milliseconds
+    /** Duration in milliseconds */
+    var duration: Long,
     var amount: Double,
     var notes: String? = null
 ) : HasIDs {

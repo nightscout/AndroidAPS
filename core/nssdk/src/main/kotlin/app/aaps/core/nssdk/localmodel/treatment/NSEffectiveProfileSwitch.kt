@@ -26,6 +26,7 @@ data class NSEffectiveProfileSwitch(
     val originalCustomizedName: String,
     val originalTimeshift: Long,
     val originalPercentage: Int,
+    /** Duration in milliseconds */
     val originalDuration: Long,
     val originalEnd: Long
 

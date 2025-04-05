@@ -37,7 +37,9 @@ internal data class RemoteTreatment(
     @SerializedName("protein") val protein: Int? = null,               // number... Amount of protein given.
     @SerializedName("fat") val fat: Int? = null,                       // number... Amount of fat given.
     @SerializedName("insulin") val insulin: Double? = null,            // number... Amount of insulin, if any.
+    /** Duration in minutes */
     @SerializedName("duration") val duration: Long? = null,             // number... Duration in minutes.
+    /** Duration in milliseconds */
     @SerializedName("durationInMilliseconds") val durationInMilliseconds: Long? = null, // number... Duration in milliseconds.
     @SerializedName("preBolus") val preBolus: Int? = null,             // number... How many minutes the bolus was given before the meal started.
     @SerializedName("splitNow") val splitNow: Int? = null,             // number... Immediate part of combo bolus (in percent).

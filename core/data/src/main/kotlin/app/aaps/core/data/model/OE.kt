@@ -12,7 +12,8 @@ data class OE(
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var reason: Reason,
-    var duration: Long // in millis
+    /** Duration in milliseconds */
+    var duration: Long
 ) : HasIDs {
 
     fun contentEqualsTo(other: OE): Boolean =

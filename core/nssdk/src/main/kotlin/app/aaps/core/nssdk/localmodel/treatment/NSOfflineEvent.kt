@@ -20,6 +20,7 @@ data class NSOfflineEvent(
     override val pumpType: String?,
     override val pumpSerial: String?,
     override var app: String? = null,
+    /** Duration in milliseconds */
     val duration: Long,
     val reason: Reason
 ) : NSTreatment {

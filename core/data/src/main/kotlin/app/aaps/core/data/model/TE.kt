@@ -11,6 +11,7 @@ data class TE(
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    /** Duration in milliseconds */
     var duration: Long = 0,
     var type: Type,
     var note: String? = null,

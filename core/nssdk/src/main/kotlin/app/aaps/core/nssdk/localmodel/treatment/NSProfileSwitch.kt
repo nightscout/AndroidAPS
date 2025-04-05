@@ -26,6 +26,7 @@ data class NSProfileSwitch(
     val originalProfileName: String?,
     val timeShift: Long?,
     val percentage: Int?,
+    /** Duration in milliseconds */
     val duration: Long?,
     val originalDuration: Long?
 ) : NSTreatment
