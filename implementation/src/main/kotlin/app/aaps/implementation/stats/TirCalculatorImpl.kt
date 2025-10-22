@@ -50,6 +50,29 @@ class TirCalculatorImpl @Inject constructor(
         return result
     }
 
+    override fun calculateToday(lowMgdl: Double, highMgdl: Double): TIR {
+        val midnight = MidnightTime.calc(dateUtil.now())
+        val now = dateUtil.now()
+        return calculateRange(midnight, now, lowMgdl, highMgdl)
+    }
+
+    override fun calculateRange(start: Long, end: Long, lowMgdl: Double, highMgdl: Double): TIR {
+        if (lowMgdl < 39) throw RuntimeException("Low below 39")
+        if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
+
+        val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, end, true)
+        val tir = TirImpl(start, lowMgdl, highMgdl)
+
+        for (bg in bgReadings) {
+            if (bg.value < 39) tir.error()
+            if (bg.value >= 39 && bg.value < lowMgdl) tir.below()
+            if (bg.value in lowMgdl..highMgdl) tir.inRange()
+            if (bg.value > highMgdl) tir.above()
+        }
+
+        return tir
+    }
+
     private fun averageTIR(tirs: LongSparseArray<TIR>): TIR {
         val totalTir = if (tirs.size() > 0) {
             TirImpl(tirs.valueAt(0).date, tirs.valueAt(0).lowThreshold, tirs.valueAt(0).highThreshold)

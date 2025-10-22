@@ -81,6 +81,7 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -161,6 +162,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var graphDataProvider: Provider<GraphData>
     @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var tirCalculator: TirCalculator
+    @Inject lateinit var tirHelper: TirHelper
 
     private val disposable = CompositeDisposable()
 
@@ -1170,6 +1173,36 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]
                 ).toVisibility()
             secondaryGraphsData[g].performUpdate()
+        }
+
+        // Update TIR chart
+        updateTirChart(menuChartSettings)
+    }
+
+    private fun updateTirChart(menuChartSettings: List<Array<Boolean>>) {
+        _binding ?: return
+
+        // Check if TIR is enabled in primary graph settings (single checkbox)
+        val tirEnabled = menuChartSettings.isNotEmpty() &&
+                         menuChartSettings[0][OverviewMenus.CharType.TIR.ordinal]
+
+        aapsLogger.debug("TIR Chart - enabled: $tirEnabled, settings size: ${menuChartSettings.size}, TIR ordinal: ${OverviewMenus.CharType.TIR.ordinal}")
+
+        if (tirEnabled) {
+            try {
+                val chartData = tirHelper.calculateTodayChartData()
+                if (chartData != null) {
+                    binding.graphsLayout.tirChart.tirChartLayout.visibility = View.VISIBLE
+                    binding.graphsLayout.tirChart.tirChartView.setChartData(chartData)
+                } else {
+                    binding.graphsLayout.tirChart.tirChartLayout.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                aapsLogger.error("Error calculating TIR", e)
+                binding.graphsLayout.tirChart.tirChartLayout.visibility = View.GONE
+            }
+        } else {
+            binding.graphsLayout.tirChart.tirChartLayout.visibility = View.GONE
         }
     }
 
