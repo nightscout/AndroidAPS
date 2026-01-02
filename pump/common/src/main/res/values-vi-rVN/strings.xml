@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Thao tác không được hỗ trợ bởi bơm insulin và/hoặc trình điều khiển.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Chưa khởi tạo</string>
+    <string name="pump_status_initialized">Đã được khởi tạo</string>
+    <string name="pump_status_encrypt">Đang mã hóa dữ liệu liên lạc</string>
+    <string name="pump_status_ready">Sẵn sàng</string>
+    <string name="pump_status_busy">Đang bận</string>
+    <string name="pump_status_suspended">Bị tạm dừng</string>
+    <string name="pump_status_executing_command">Đang thực hiện lệnh</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Liều Basal</string>
+    <string name="history_group_configuration">Cấu hình</string>
+    <string name="history_group_notification">Thông báo</string>
+    <string name="history_group_statistic">Thống kê</string>
+    <string name="history_group_unknown">Không xác định</string>
+    <string name="history_group_all">Tất cả</string>
+    <string name="history_group_bolus">Liều bolus</string>
+    <string name="history_group_prime">Mồi bơm</string>
+    <string name="history_group_alarm">Cảnh báo</string>
+    <string name="history_group_glucose">Đường huyết</string>
+    <string name="history_group_base">Base</string>
+    <string name="history_group_other">Khác</string>
+    <string name="history_group_events">Tất cả sự kiện</string>
+    <string name="history_group_events_no_stat">Sự kiện (không thống kê)</string>
+    <!-- Time -->
+    <string name="time_today">Hôm nay</string>
+    <string name="time_last_hour">Giờ trước</string>
+    <string name="time_last_3_hours">3 giờ trước</string>
+    <string name="time_last_6_hours">6 giờ trước</string>
+    <string name="time_last_12_hours">12 giờ trước</string>
+    <string name="time_last_2_days">2 ngày trước</string>
+    <string name="time_last_4_days">4 ngày trước</string>
+    <string name="time_last_week">Tuần trước</string>
+    <string name="time_last_month">Tháng trước</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Quét</string>
+    <string name="ble_config_scan_stop">Dừng lại</string>
+    <string name="ble_config_scan_selected">Đã chọn</string>
+    <string name="ble_config_scan_scanning">Đang quét</string>
+    <string name="ble_config_scan_finished">Quét hoàn tất</string>
+    <string name="ble_config_scan_error">Lỗi quét: %1$d</string>
+    <string name="ble_config_remove">Xóa</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Loại:</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d ngày</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d giờ</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="other">%1$d giờ trước</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="other">%1$d ngày trước</item>
+    </plurals>
+</resources>

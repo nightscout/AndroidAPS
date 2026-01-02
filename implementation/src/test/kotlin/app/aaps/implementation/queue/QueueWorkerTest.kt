@@ -20,7 +20,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.seconds
 
@@ -48,7 +49,6 @@ class QueueWorkerTest : TestBaseWithProfile() {
                 it.rxBus = rxBus
                 it.activePlugin = activePlugin
                 it.rh = rh
-                it.sp = sp
                 it.preferences = preferences
                 it.androidPermission = androidPermission
                 it.config = config
@@ -63,27 +63,27 @@ class QueueWorkerTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
-            profileFunction, activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
-            uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
+            profileFunction, activePlugin, context, config, dateUtil, fabricPrivacy,
+            uiInteraction, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager
         )
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
 
-        Mockito.`when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
+        whenever(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = ConstraintObject(0.0, aapsLogger)
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        Mockito.`when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
+        whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
+        whenever(constraintChecker.applyExtendedBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
         val carbsConstraint = ConstraintObject(0, aapsLogger)
-        Mockito.`when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
+        whenever(constraintChecker.applyCarbsConstraints(anyOrNull())).thenReturn(carbsConstraint)
         val rateConstraint = ConstraintObject(0.0, aapsLogger)
-        Mockito.`when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
+        whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(rateConstraint)
         val percentageConstraint = ConstraintObject(0, aapsLogger)
-        Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
+        whenever(constraintChecker.applyBasalPercentConstraints(anyOrNull(), anyOrNull()))
             .thenReturn(percentageConstraint)
-        Mockito.`when`(rh.gs(ArgumentMatchers.eq(app.aaps.core.ui.R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
+        whenever(rh.gs(ArgumentMatchers.eq(app.aaps.core.ui.R.string.temp_basal_absolute), anyOrNull(), anyOrNull())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
         sut = TestListenableWorkerBuilder<QueueWorker>(context).build()
     }

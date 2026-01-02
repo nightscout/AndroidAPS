@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.TABLE_CARBS
+import app.aaps.database.entities.embedments.InterfaceIDs
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
@@ -30,6 +31,9 @@ internal interface CarbsDao : TraceableDao<Carbs> {
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE unlikely(timestamp = :timestamp) AND likely(referenceId IS NULL)")
     fun findByTimestamp(timestamp: Long): Carbs?
+
+    @Query("SELECT * FROM $TABLE_CARBS WHERE unlikely(pumpId = :pumpId) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
+    fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Carbs?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
     fun getLastCarbsRecordMaybe(): Maybe<Carbs>

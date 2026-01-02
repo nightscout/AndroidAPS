@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.configuration
 
+import android.content.Context
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
@@ -46,7 +47,7 @@ interface ConfigBuilder {
         @StringRes description: Int,
         pluginType: PluginType,
         plugins: List<PluginBase>,
-        pluginViewHolders: ArrayList<PluginViewHolderInterface>,
+        pluginViewHolders: ArrayList<PluginViewHolderInterface>?,
         activity: FragmentActivity,
         parent: LinearLayout,
         showExpanded: Boolean = false
@@ -54,7 +55,7 @@ interface ConfigBuilder {
 
     fun interface PluginViewHolderInterface {
 
-        fun update()
+        fun update(context: Context)
     }
 
     /**

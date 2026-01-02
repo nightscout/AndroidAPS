@@ -29,6 +29,9 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     fun findByNSId(nsId: String): TemporaryTarget?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    fun getTemporaryTargetActiveAtLegacy(timestamp: Long): TemporaryTarget?
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryTargetActiveAt(timestamp: Long): Maybe<TemporaryTarget>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")

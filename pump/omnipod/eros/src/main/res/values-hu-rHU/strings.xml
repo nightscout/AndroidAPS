@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
+    <!-- Omnipod Eros - Short Status -->
+    <!-- Omnipod Eros - Error -->
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">RileyLink beállítás törlése</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+</resources>

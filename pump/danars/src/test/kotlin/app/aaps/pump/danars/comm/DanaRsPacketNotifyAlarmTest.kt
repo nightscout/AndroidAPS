@@ -2,8 +2,6 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -12,21 +10,9 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
 
     @Mock lateinit var pumpSync: PumpSync
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketNotifyAlarm) {
-                it.aapsLogger = aapsLogger
-                it.rxBus = rxBus
-                it.rh = rh
-                it.pumpSync = pumpSync
-                it.danaPump = danaPump
-                it.uiInteraction = uiInteraction
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketNotifyAlarm(packetInjector)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, pumpSync, danaPump, uiInteraction)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding

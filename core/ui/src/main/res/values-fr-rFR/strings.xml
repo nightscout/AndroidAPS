@@ -5,7 +5,6 @@
     <string name="error">Erreur</string>
     <string name="profile_set_ok">Profil basal dans la pompe mis à jour</string>
     <string name="invalid_input">Données saisies invalides</string>
-    <string name="bolus_delivering">Injection de %1$.2fU en cours</string>
     <string name="constraint_applied">Restriction appliquée !</string>
     <string name="tempbasals_iobtotal_label_string">IA Totale:</string>
     <string name="tt_label">CT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pompe non initialisée, profil non défini !</string>
     <string name="failed_update_basal_profile">La mise à jour du profil basal a échouée</string>
-    <string name="bolus_delivered_successfully">Bolus de %1$.2f U délivré avec succès</string>
     <string name="no_valid_basal_rate">Aucun débit basal valide lu depuis la pompe</string>
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="loop_disabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
@@ -91,7 +89,7 @@
     <string name="alarm">Alarme</string>
     <string name="exportsettings">Exporter les paramètres</string>
     <string name="disableloop">Désactiver la Boucle</string>
-    <string name="enableloop">Activer la Boucle</string>
+    <string name="disabled_loop">Désactiver la boucle</string>
     <string name="resumeloop">Reprendre la boucle</string>
     <string name="suspendloop">Suspendre la boucle</string>
     <string name="duration_min_label">Durée [min]</string>
@@ -119,8 +117,10 @@
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pompe arrêtée</string>
+    <string name="pump_running">Pompe en fonctionnement</string>
     <string name="notconfigured">Non configuré</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
+    <string name="loop_suspended_by_dst">Boucle suspendue par le changement d\'heure</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">req</string>
@@ -155,19 +155,23 @@
     <string name="treatments_wizard_basaliob_label">IA Basal</string>
     <string name="invalid">INVALIDE</string>
     <string name="login">Connexion</string>
+    <string name="logout">Déconnexion</string>
     <string name="prime_fill">Amorcer/Remplir</string>
+    <string name="site_rotation">Rotation du site</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="stoptemptarget">Arrêter la cible temp</string>
     <string name="closedloop">Boucle Fermée</string>
     <string name="openloop">Boucle Ouverte</string>
     <string name="lowglucosesuspend">Arrêt Glycémie Basse</string>
+    <string name="pump_disconnected">Pompe déconnectée</string>
+    <string name="pump_suspended">Pompe suspendue</string>
+    <string name="mode_reverted">Mode rétabli</string>
     <string name="dia">DAI</string>
     <string name="ic_short">G/I</string>
     <string name="isf_short">SI</string>
     <string name="canceling_tbr_failed">Echec de l\'annulation du basal temporaire</string>
     <string name="canceling_eb_failed">Échec de l\'annulation du Bolus étendu</string>
     <string name="virtualpump_uploadstatus_title">Télécharger l\'état de la pompe sur NS ou Tidepool</string>
-    <string name="suspendloop_label">Boucle désactivée/suspendue</string>
     <string name="iob_label">Insuline Active (IA)</string>
     <string name="loopstatus_targets">CIBLES:</string>
     <string name="loopstatus_OAPS_result">RÉSULTATS OAPS:</string>
@@ -220,6 +224,8 @@
     <string name="careportal_exercise_message">Exercice : %1$s</string>
     <string name="careportal_pump_site_change">Changement de site</string>
     <string name="cgm_sensor_insert">Insertion Capteur MGC</string>
+    <string name="careportal_pump_site_management">Sites de la pompe</string>
+    <string name="careportal_cgm_site_management">Sites du capteur MGC</string>
     <string name="careportal_cgmsensorstart">Démarrage Capteur MGC</string>
     <string name="careportal_cgm_sensor_stop">Arrêt capteur MGC</string>
     <string name="careportal_dad_alert">Chien d\'alerte</string>
@@ -235,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS hors ligne</string>
     <string name="pump_battery_change">Changement pile pompe</string>
     <string name="temporary_target">Cible Temp</string>
+    <string name="running_mode">En cours de fonctionnement</string>
     <string name="careportal_temporarytargetvalue">Valeur de Cible Temporaire</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
@@ -252,6 +259,39 @@
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
     <string name="record">Enregistrement</string>
+    <string name="location_front_right_upper_chest">Poitrine Droite</string>
+    <string name="location_front_left_upper_chest">Poitrine Gauche</string>
+    <string name="location_side_right_upper_arm">Bras Droit Extérieur</string>
+    <string name="location_side_left_upper_arm">Bras Gauche Extérieur</string>
+    <string name="location_back_right_upper_arm">Bras Droit Arrière</string>
+    <string name="location_back_left_upper_arm">Bras Gauche Arrière Haut</string>
+    <string name="location_side_right_upper_abdomen">Abdomen Droit Extérieur Haut</string>
+    <string name="location_side_left_upper_abdomen">Abdomen Gauche Extérieur Haut</string>
+    <string name="location_side_right_lower_abdomen">Abdomen Droit Extérieur Bas</string>
+    <string name="location_side_left_lower_abdomen">Abdomen Gauche Extérieur Bas</string>
+    <string name="location_front_right_upper_abdomen">Abdomen Droit Avant Haut</string>
+    <string name="location_front_left_upper_abdomen">Abdomen Gauche Avant Haut</string>
+    <string name="location_front_right_lower_abdomen">Abdomen Droit Avant Bas</string>
+    <string name="location_front_left_lower_abdomen">Abdomen Gauche Avant Bas</string>
+    <string name="location_back_right_buttock">Fesse Droite</string>
+    <string name="location_back_left_buttock">Fesse Gauche</string>
+    <string name="location_side_right_upper_thigh">Cuisse Droite Extérieur Haut</string>
+    <string name="location_side_left_upper_thigh">Cuisse Gauche Extérieur Haut</string>
+    <string name="location_side_right_lower_thigh">Cuisse Droite Extérieur Bas</string>
+    <string name="location_side_left_lower_thigh">Cuisse Gauche Extérieur Bas</string>
+    <string name="location_front_right_upper_thigh">Cuisse Droite Avant Haut</string>
+    <string name="location_front_left_upper_thigh">Cuisse Gauche Avant Haut</string>
+    <string name="location_front_right_lower_thigh">Cuisse Droite Avant Bas</string>
+    <string name="location_front_left_lower_thigh">Cuisse Gauche Avant Bas</string>
+    <string name="arrow_up">Haut</string>
+    <string name="arrow_up_right">Haut Droite</string>
+    <string name="arrow_right">Droite</string>
+    <string name="arrow_down_right">Bas Droite</string>
+    <string name="arrow_down">Bas</string>
+    <string name="arrow_down_left">Bas Gauche</string>
+    <string name="arrow_left">Gauche</string>
+    <string name="arrow_up_left">Haut Gauche</string>
+    <string name="arrow_center">Centre</string>
     <!--    Command-->
     <string name="connectiontimedout">Connexion expirée</string>
     <!--    PumpEnactResult-->
@@ -297,7 +337,8 @@
     <string name="uel_lgs_loop_mode">BOUCLE AGB</string>
     <string name="uel_open_loop_mode">BOUCLE OUVERTE</string>
     <string name="uel_loop_disabled">BOUCLE DÉSACTIVÉE</string>
-    <string name="uel_loop_enabled">BOUCLE ACTIVÉE</string>
+    <string name="uel_loop_resumed">BOUCLE RÉACTIVÉE</string>
+    <string name="uel_pump_running">POMPE EN FONCTIONNEMENT</string>
     <string name="uel_reconnect">POMPE RECONNECTÉE</string>
     <string name="uel_disconnect">POMPE DÉCONNECTÉE</string>
     <string name="uel_resume">REPRISE BOUCLE</string>
@@ -310,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">BOLUS ÉTENDU ANNULÉ</string>
     <string name="uel_cancel_tt">ANNULER CIBLE TEMP</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">EMPLACEMENT CAPTEUR</string>
     <string name="uel_site_change">CHANGEMENT DE SITE</string>
+    <string name="uel_site_location">EMPLACEMENT POMPE</string>
     <string name="uel_reservoir_change">CHANGEMENT DU RÉSERVOIR</string>
     <string name="uel_calibration">ÉTALONNAGE</string>
     <string name="uel_prime_bolus">BOLUS D\'AMORÇAGE</string>
@@ -373,6 +416,9 @@
     <string name="uel_loop_change">BOUCLE CHANGÉE</string>
     <string name="uel_loop_removed">BOUCLE SUPPRIMÉE</string>
     <string name="uel_other">AUTRE</string>
+    <string name="uel_running_mode">MODE EN COURS</string>
+    <string name="uel_running_mode_removed">MODE EN COURS SUPPRIMÉ</string>
+    <string name="uel_running_mode_updarted">MODE EN COURS MISE À JOUR</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Cible basse du profil</string>
     <string name="profile_high_target">Cible haute du profil</string>
@@ -596,4 +642,6 @@
     <string name="rate_percent_duration">Débit: %1$.2f U/h (%2$.2f%%) Durée: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Débit</b>: %1$.2f%% (%2$.2f U/h)<br><b>Durée</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Débit</b>: %1$.2f U/h (%2$.2f%%) <br><b>Durée</b>: %3$d min<br>]]></string>
+    <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS joue l'audio"</string>
 </resources>

@@ -26,7 +26,6 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.databinding.DialogProfileviewerBinding
-import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -34,7 +33,6 @@ import javax.inject.Inject
 
 class ProfileViewerDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction

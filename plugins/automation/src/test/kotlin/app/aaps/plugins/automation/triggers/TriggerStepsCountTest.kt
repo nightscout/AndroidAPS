@@ -6,9 +6,9 @@ import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoMoreInteractions
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerStepsCountTest : TriggerTestBase() {
@@ -21,8 +21,8 @@ class TriggerStepsCountTest : TriggerTestBase() {
     @Test
     fun friendlyDescription() {
         val t = TriggerStepsCount(injector)
-        `when`(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
-        `when`(rh.gs(R.string.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
+        whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
+        whenever(rh.gs(R.string.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
 
         assertThat(t.friendlyDescription()).isEqualTo("test")
     }
@@ -55,7 +55,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
         }
-        `when`(persistenceLayer.getStepsCountFromTime(now - 300000L)).thenReturn(emptyList())
+        whenever(persistenceLayer.getStepsCountFromTime(now - 300000L)).thenReturn(emptyList())
         assertThat(t.shouldRun()).isFalse()
         verify(persistenceLayer).getStepsCountFromTime(now - 300000L)
         verifyNoMoreInteractions(persistenceLayer)
@@ -69,8 +69,8 @@ class TriggerStepsCountTest : TriggerTestBase() {
             comparator.value = Comparator.Compare.IS_GREATER
         }
         val scs = listOf(SC(duration = 300_000, timestamp = now, steps5min = 80, steps10min = 110, steps15min = 0, steps30min = 0, steps60min = 0, steps180min = 0, device = "test"))
-        
-        `when`(persistenceLayer.getStepsCountFromTime(now - 300000L)).thenReturn(scs)
+
+        whenever(persistenceLayer.getStepsCountFromTime(now - 300000L)).thenReturn(scs)
         assertThat(t.shouldRun()).isFalse()
         verify(persistenceLayer).getStepsCountFromTime(now - 300000L)
         verifyNoMoreInteractions(persistenceLayer)
@@ -85,7 +85,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
         }
         val scs = listOf(SC(duration = 300_000, timestamp = now, steps5min = 112, steps10min = 110, steps15min = 0, steps30min = 0, steps60min = 0, steps180min = 0, device = "test"))
 
-        `when`(persistenceLayer.getStepsCountFromTime(now - 300000L)).thenReturn(scs)
+        whenever(persistenceLayer.getStepsCountFromTime(now - 300000L)).thenReturn(scs)
         assertThat(t.shouldRun()).isTrue()
         verify(persistenceLayer).getStepsCountFromTime(now - 300000L)
         verifyNoMoreInteractions(persistenceLayer)

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Nije inicijalizirano</string>
+    <string name="pump_status_initialized">Inicijalizirano</string>
+    <string name="pump_status_encrypt">Šifriranje komunikacije</string>
+    <string name="pump_status_ready">Spremno</string>
+    <string name="pump_status_busy">Zauzet</string>
+    <string name="pump_status_suspended">Suspendiran</string>
+    <string name="pump_status_executing_command">Izvršavanje naredbe</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_all">Svi</string>
+    <string name="history_group_bolus">Bolusi</string>
+    <string name="history_group_prime">Punjenje katetera</string>
+    <string name="history_group_base">Osnova</string>
+    <string name="history_group_other">Ostalo</string>
+    <string name="history_group_events">Svi događaji</string>
+    <string name="history_group_events_no_stat">Događaji (bez statistike)</string>
+    <!-- Time -->
+    <string name="time_today">Danas</string>
+    <string name="time_last_hour">Zadnjih sat vremena</string>
+    <string name="time_last_3_hours">Zadnja 3 sata</string>
+    <string name="time_last_6_hours">Zadnjih 6 sati</string>
+    <string name="time_last_12_hours">Zadnjih 12 sati</string>
+    <string name="time_last_2_days">Zadnja 2 dana</string>
+    <string name="time_last_4_days">Zadnja 4 dana</string>
+    <string name="time_last_week">Prošli tjedan</string>
+    <string name="time_last_month">Prošli mjesec</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Pretraži</string>
+    <string name="ble_config_scan_stop">Zaustavi</string>
+    <string name="ble_config_scan_selected">Odabrano</string>
+    <string name="ble_config_scan_scanning">Pretraživanje</string>
+    <string name="ble_config_scan_finished">Skeniranje završeno</string>
+    <string name="ble_config_scan_error">Pogreška skeniranja: %1$d</string>
+    <string name="ble_config_remove">Ukloniti</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Tip:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dan</item>
+        <item quantity="few">%1$d dana</item>
+        <item quantity="other">%1$d dana</item>
+    </plurals>
+</resources>

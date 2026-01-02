@@ -22,7 +22,6 @@
     <string name="limitingextendedbolus">Vertraagde bolus beperkt tot %1$.1f E vanwege %2$s</string>
     <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
-    <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
     <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
     <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>

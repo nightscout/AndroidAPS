@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Dočasný cieľ úspešne zrušený</string>
     <string name="smscommunicator_remote_commands_allowed">Povoliť príkazy na diaľku cez SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Uzavretý okruh bol deaktivovaný</string>
-    <string name="smscommunicator_loop_has_been_enabled">Uzavretý okruh bol aktivovaný</string>
     <string name="smscommunicator_loop_is_enabled">Uzavretý okruh je aktivovaný</string>
     <string name="smscommunicator_pump_connect_with_code">Ak chcete pripojiť pumpu, odpovedzte pomocou SMS s kódom %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Pripojenie k pumpe zlyhalo</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Pumpa odpojená</string>
     <string name="smscommunicator_reconnect">Pumpa bola znovu pripojená</string>
     <string name="smscommunicator_remote_command_not_allowed">Príkazy na diaľku nie sú povolené</string>
+    <string name="smscommunicator_remote_command_not_possible">Príkaz na diaľku nie je možný</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Diaľkovo ovládaný bolus nie je momentálne povolený. Skúste to neskôr.</string>
     <string name="smscommunicator_basal_reply_with_code">Pre spustenie bazálu %1$.2f JI/h na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Pre prepnutie profilu na %1$s %2$d%% odpovedzte SMS s kódom %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Pre spustenie bazálu %1$d%% na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Pre obnovenie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Pre povolenie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Pre zakázanie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
     <string name="smscommunicator_tempbasal_set">Dočasný bazál %1$.2fJI/h spustený na %2$d minút</string>
     <string name="smscommunicator_extended_set">Predĺžený bolus %1$.2fJI na %2$d min úspešne spustený</string>
@@ -130,7 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LPRF</string>
-    <string name="description_profile_local">Definujte profil, ktorý je dostupný offline.</string>
+    <string name="description_profile_local">Definujte profil popisujúci vašu potrebu inzulínu.</string>
     <string name="a11y_add_new_to_list">pridať nový do zoznamu</string>
     <string name="do_you_want_switch_profile">Chcete prepnúť profil a zahodiť zmeny urobené v aktuálnom profile?</string>
     <string name="save_or_reset_changes_first">Najprv uložte alebo resetujte aktuálne zmeny</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">Predĺžený bolus</string>
     <string name="extended_bolus_cancel_button">Zrušiť predĺžený bolus</string>
     <string name="tools">Nástroje</string>
+    <string name="site_rotation">Striedanie miest</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">vek:</string>

@@ -28,6 +28,7 @@
     <string name="fw_version_label">Version du FW</string>
     <string name="patch_no_label">N° du Patch</string>
     <string name="patch_expiry_label">Expiration du Patch</string>
+    <string name="patch_activation_time_label">Activation</string>
     <string name="refresh_label">Actualiser</string>
     <string name="reset_alarms_label">Réinitialiser les alarmes</string>
     <string name="change_patch_label">Changer le Patch</string>
@@ -57,7 +58,7 @@
     <!-- wizard-->
     <string name="retry">Réessayer</string>
     <string name="next">Suivant</string>
-    <string name="discard">Retirer</string>
+    <string name="discard">Supprimer</string>
     <string name="step_prepare_patch">Activer le Patch</string>
     <string name="step_prepare_patch_connect">Connecter et remplir</string>
     <string name="step_prime">Amorcer</string>

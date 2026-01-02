@@ -25,24 +25,25 @@ import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.plugins.configuration.databinding.ActivitySetupwizardBinding
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
+import javax.inject.Provider
 import kotlin.math.max
 import kotlin.math.min
 
 class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var swItemProvider: Provider<SWItem>
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
     private var currentWizardPage = 0
+    private var setupWizardMenuProvider: MenuProvider? = null
 
     private val intentMessage = "WIZZARDPAGE"
 
@@ -60,25 +61,18 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
         swDefinition.activity = this
         screens = swDefinition.getScreens()
-        val intent = intent
         currentWizardPage = intent.getIntExtra(intentMessage, 0)
-        if (screens.isNotEmpty() && currentWizardPage < screens.size) {
-            val currentScreen = screens[currentWizardPage]
+        prepareLayout()
 
-            //Set screen name
-            val screenName = findViewById<TextView>(R.id.sw_content)
-            screenName.text = currentScreen.getHeader()
-            //Generate layout first
-            generateLayout()
-            updateButtons()
-        }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (currentWizardPage == 0)
-                    OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
+                    OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() } else {
+                    currentWizardPage = previousPage(); prepareLayout()
+                }
             }
         })
-        addMenuProvider(object : MenuProvider {
+        setupWizardMenuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
@@ -91,7 +85,20 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
                     else              -> false
                 }
-        })
+        }
+        setupWizardMenuProvider?.let { addMenuProvider(it) }
+        binding.nextButton.setOnClickListener { currentWizardPage = nextPage(); prepareLayout() }
+        binding.previousButton.setOnClickListener { currentWizardPage = previousPage(); prepareLayout() }
+        binding.finishButton.setOnClickListener { finishSetupWizard() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.nextButton.setOnClickListener(null)
+        binding.previousButton.setOnClickListener(null)
+        binding.finishButton.setOnClickListener(null)
+        setupWizardMenuProvider?.let { removeMenuProvider(it) }
+        swDefinition.activity = null
     }
 
     override fun onPause() {
@@ -132,9 +139,31 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         updateButtons()
     }
 
+    fun prepareLayout() {
+        if (screens.isNotEmpty() && currentWizardPage < screens.size) {
+            val currentScreen = screens[currentWizardPage]
+
+            //Set screen name
+            val screenName = findViewById<TextView>(R.id.sw_content)
+            screenName.text = currentScreen.getHeader()
+            //Generate layout first
+            generateLayout()
+            updateButtons()
+        }
+    }
+
+    // Go back to overview
+    fun finishSetupWizard() {
+        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
+        val intent = Intent(this, uiInteraction.mainActivity).setAction("SetupWizardActivity")
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        finish()
+    }
+
     private fun generateLayout() {
         val currentScreen = screens[currentWizardPage]
-        val layout = SWItem(injector, SWItem.Type.NONE).generateLayout(findViewById(R.id.sw_content_fields))
+        val layout = swItemProvider.get().generateLayout(findViewById(R.id.sw_content_fields))
         for (i in currentScreen.items.indices) {
             val currentItem = currentScreen.items[i]
             currentItem.generateDialog(layout)
@@ -146,7 +175,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         runOnUiThread {
             val currentScreen = screens[currentWizardPage]
             if (currentScreen.validator == null || currentScreen.validator?.invoke() == true || currentScreen.skippable) {
-                if (currentWizardPage == nextPage(null)) {
+                if (currentWizardPage == nextPage()) {
                     findViewById<View>(R.id.finish_button).visibility = View.VISIBLE
                     findViewById<View>(R.id.next_button).visibility = View.GONE
                 } else {
@@ -158,38 +187,11 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
                 findViewById<View>(R.id.next_button).visibility = View.GONE
             }
             if (currentWizardPage == 0) findViewById<View>(R.id.previous_button).visibility = View.GONE else findViewById<View>(R.id.previous_button).visibility = View.VISIBLE
-            currentScreen.processVisibility()
+            currentScreen.processVisibility(this)
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun showNextPage(view: View?) {
-        finish()
-        val intent = Intent(this, SetupWizardActivity::class.java).setAction("app.aaps.plugins.configuration.setupwizard.SetupWizardActivity")
-        intent.putExtra(intentMessage, nextPage(null))
-        startActivity(intent)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    fun showPreviousPage(view: View?) {
-        finish()
-        val intent = Intent(this, SetupWizardActivity::class.java).setAction("app.aaps.plugins.configuration.setupwizard.SetupWizardActivity")
-        intent.putExtra(intentMessage, previousPage(null))
-        startActivity(intent)
-    }
-
-    // Go back to overview
-    @Suppress("UNUSED_PARAMETER")
-    fun finishSetupWizard(view: View?) {
-        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
-        val intent = Intent(this, uiInteraction.mainActivity).setAction("app.aaps.plugins.configuration.setupwizard.SetupWizardActivity")
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
-        finish()
-    }
-
-    @Suppress("UNUSED_PARAMETER", "SameParameterValue")
-    private fun nextPage(view: View?): Int {
+    private fun nextPage(): Int {
         var page = currentWizardPage + 1
         while (page < screens.size) {
             if (screens[page].visibility == null || screens[page].visibility?.invoke() == true) return page
@@ -198,8 +200,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         return min(currentWizardPage, screens.size - 1)
     }
 
-    @Suppress("UNUSED_PARAMETER", "SameParameterValue")
-    private fun previousPage(view: View?): Int {
+    private fun previousPage(): Int {
         var page = currentWizardPage - 1
         while (page >= 0) {
             if (screens[page].visibility == null || screens[page].visibility?.invoke() == true) return page

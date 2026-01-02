@@ -119,4 +119,5 @@
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

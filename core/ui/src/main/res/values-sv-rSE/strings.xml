@@ -5,7 +5,6 @@
     <string name="error">Fel</string>
     <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
     <string name="invalid_input">Fel på inmatning</string>
-    <string name="bolus_delivering">Levererar %1$.2f enheter</string>
     <string name="constraint_applied">Begränsning nådd</string>
     <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
     <string name="tt_label">TT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pump inte initierad, ingen profil vald.</string>
     <string name="failed_update_basal_profile">Lyckades inte uppdatera basalprofilen</string>
-    <string name="bolus_delivered_successfully">Bolus %1$.2f U levererad</string>
     <string name="no_valid_basal_rate">Ingen giltig data om temp basaler fanns i pumpen</string>
     <string name="limiting_iob">Begränsar IOB till %1$.1f pga %2$s</string>
     <string name="loop_disabled">LOOP INAKTIVERAD PGA BEGRÄNSNINGAR</string>
@@ -89,7 +87,6 @@
     <string name="loopisdisabled">Loop är inaktiverad</string>
     <string name="alarm">Larm</string>
     <string name="disableloop">Inaktivera loop</string>
-    <string name="enableloop">Aktivera loop</string>
     <string name="resumeloop">Återuppta loop</string>
     <string name="suspendloop">Pausa loop</string>
     <string name="duration_min_label">Duration [min]</string>
@@ -103,7 +100,6 @@
     <string name="name_short">Namn:</string>
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
-    <string name="loading">Laddar…</string>
     <string name="notes_label">Anteckning</string>
     <string name="remove_button">Ta bort</string>
     <string name="add_new">Lägg till ny</string>
@@ -164,7 +160,6 @@
     <string name="canceling_tbr_failed">Det gick inte att avbryta temp-basal</string>
     <string name="canceling_eb_failed">Det gick inte att avbryta förlängd bolus</string>
     <string name="virtualpump_uploadstatus_title">Ladda upp status till Nightscout eller Tidepool</string>
-    <string name="suspendloop_label">Inaktiverad/pausad loop</string>
     <string name="iob_label">Aktivt Insulin (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Fel lösenord</string>
@@ -281,7 +276,6 @@
     <string name="uel_lgs_loop_mode">LGS LOOP-LÄGE</string>
     <string name="uel_open_loop_mode">OPEN LOOP-LÄGE</string>
     <string name="uel_loop_disabled">LOOP INAKTIVERAD</string>
-    <string name="uel_loop_enabled">LOOP AKTIVERAD</string>
     <string name="uel_reconnect">ÅTERANSLUT</string>
     <string name="uel_disconnect">KOPPLA IFRÅN</string>
     <string name="uel_resume">ÅTERUPPTA</string>
@@ -539,4 +533,5 @@
     <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2fU</string>
+    <!--    Playback-->
 </resources>

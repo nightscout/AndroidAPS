@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Η λειτουργία δεν υποστηρίζεται από την αντλία ή/και οδηγό.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Δεν αρχικοποιήθηκε</string>
+    <string name="pump_status_initialized">Αρχικοποιήθηκε</string>
+    <string name="pump_status_encrypt">Κρυπτογράφηση επικοινωνίας</string>
+    <string name="pump_status_ready">Έτοιμο</string>
+    <string name="pump_status_busy">Απασχολημένο</string>
+    <string name="pump_status_suspended">Σε αναστολή</string>
+    <string name="pump_status_executing_command">Εκτέλεση εντολής</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Βασικοί</string>
+    <string name="history_group_configuration">Ρύθμιση παραμέτρων</string>
+    <string name="history_group_notification">Ειδοποιήσεις</string>
+    <string name="history_group_statistic">Στατιστικά</string>
+    <string name="history_group_unknown">Άγνωστα</string>
+    <string name="history_group_all">Όλα</string>
+    <string name="history_group_bolus">Bolus</string>
+    <string name="history_group_prime">Πλήρωση</string>
+    <string name="history_group_alarm">Συναγερμοί</string>
+    <string name="history_group_glucose">Γλυκόζη</string>
+    <string name="history_group_base">Βάση</string>
+    <string name="history_group_other">Άλλο</string>
+    <string name="history_group_events">Όλα τα γεγονότα</string>
+    <string name="history_group_events_no_stat">Γεγονότα (Χωρίς Στατιστικά)</string>
+    <!-- Time -->
+    <string name="time_today">Σήμερα</string>
+    <string name="time_last_hour">Τελευταία Ώρα</string>
+    <string name="time_last_3_hours">Τελευταίες 3 ώρες</string>
+    <string name="time_last_6_hours">Τελευταίες 6 ώρες</string>
+    <string name="time_last_12_hours">Τελευταίες 12 ώρες</string>
+    <string name="time_last_2_days">Τελευταίες 2 μέρες</string>
+    <string name="time_last_4_days">Τελευταίες 4 μέρες</string>
+    <string name="time_last_week">Τελευταία εβδομάδα</string>
+    <string name="time_last_month">Τελευταίος μήνας</string>
+    <!-- BLE Config -->
+    <string name="ble_config_scan_selected">Επιλεγμένο</string>
+    <string name="ble_config_scan_scanning">Σάρωση</string>
+    <string name="ble_config_scan_finished">Η σάρωση ολοκληρώθηκε</string>
+    <string name="ble_config_scan_error">Λάθος σάρωσης: %1$d</string>
+    <string name="ble_config_remove">Μετακίνηση</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Τύπος:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d ημέρες</item>
+        <item quantity="other">%1$d ημέρες</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">%1$d ώρα πριν</item>
+        <item quantity="other">%1$d ώρες πριν</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d ημέρα πριν</item>
+        <item quantity="other">%1$d ημέρες πριν</item>
+    </plurals>
+</resources>

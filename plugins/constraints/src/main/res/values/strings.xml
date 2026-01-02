@@ -4,9 +4,6 @@
     <string name="phone_checker" translatable="false">PhoneChecker</string>
 
     <!-- DST Helper -->
-    <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
-    <string name="key_snooze_loop_disabled" translatable="false">snooze_loop_disabled</string>
-
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
     <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
@@ -19,10 +16,6 @@
     <!-- Version Checker -->
     <string name="version_checker" translatable="false">Version Checker</string>
     <string name="application_expired">Application expired</string>
-    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
-    <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
-    <string name="key_last_versionchecker_plugin_warning_timestamp" translatable="false">last_versionchecker_plugin_warning_timestamp</string>
-    <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
     <string name="version_expire">Version %1$s expire on %2$s and will turn into LGS mode</string>
@@ -44,7 +37,6 @@
 
     <string name="safety" translatable="false">Safety</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
-    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>

@@ -8,8 +8,8 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
-import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -151,10 +151,10 @@ class NSClientAddUpdateWorker(
                     }
 
                 eventType == TE.Type.APS_OFFLINE.text                             ->
-                    if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.AAPSCLIENT) {
-                        OE.fromJson(json)?.let { offlineEvent ->
-                            storeDataForDb.addToOfflineEvents(offlineEvent)
-                        } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
+                    if (preferences.get(BooleanKey.NsClientAcceptRunningMode) && config.isEngineeringMode() || config.AAPSCLIENT) {
+                        RM.fromJson(json)?.let { runningMode ->
+                            storeDataForDb.addToRunningModes(runningMode)
+                        } ?: aapsLogger.error("Error parsing RunningMode json $json")
                     }
             }
         }

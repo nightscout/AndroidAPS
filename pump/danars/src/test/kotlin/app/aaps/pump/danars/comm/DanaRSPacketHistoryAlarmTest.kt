@@ -1,10 +1,9 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -13,23 +12,11 @@ import java.util.GregorianCalendar
 class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
 
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
-
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacket) {
-                it.aapsLogger = aapsLogger
-                it.dateUtil = dateUtil
-            }
-            if (it is DanaRSPacketHistoryAlarm) {
-                it.rxBus = rxBus
-                it.danaHistoryRecordDao = danaHistoryRecordDao
-            }
-        }
-    }
+    @Mock lateinit var pumpSync: PumpSync
 
     @Test
     fun runTest() {
-        val packet = DanaRSPacketHistoryAlarm(packetInjector, 0)
+        val packet = DanaRSPacketHistoryAlarm(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump).with(0)
 
         val array = createArray(12, 0.toByte()) // 10 + 2
         putByteToArray(array, 0, 0x0A) // record code alarm

@@ -1,13 +1,13 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.plugins.automation.elements.Comparator
+import app.aaps.pump.virtual.VirtualPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 import java.util.Optional
 
@@ -16,9 +16,9 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Test fun shouldRunTest() {
-        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
-        `when`(virtualPumpPlugin.batteryLevel).thenReturn(6)
+        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
+        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
+        whenever(virtualPumpPlugin.batteryLevel).thenReturn(6)
         var t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -38,19 +38,19 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunBatteryLevelSupport() {
-        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
-        `when`(virtualPumpPlugin.batteryLevel).thenReturn(6)
+        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
+        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
+        whenever(virtualPumpPlugin.batteryLevel).thenReturn(6)
         val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
 
-        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.OMNIPOD_EROS)
-        `when`(virtualPumpPlugin.isUseRileyLinkBatteryLevel()).thenReturn(true)
-        `when`(virtualPumpPlugin.batteryLevel).thenReturn(6)
+        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.OMNIPOD_EROS)
+        whenever(virtualPumpPlugin.isUseRileyLinkBatteryLevel()).thenReturn(true)
+        whenever(virtualPumpPlugin.batteryLevel).thenReturn(6)
         assertThat(t.shouldRun()).isTrue()
 
-        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.OMNIPOD_DASH)
-        `when`(virtualPumpPlugin.batteryLevel).thenReturn(0)
+        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.OMNIPOD_DASH)
+        whenever(virtualPumpPlugin.batteryLevel).thenReturn(0)
         assertThat(t.shouldRun()).isFalse()
     }
 

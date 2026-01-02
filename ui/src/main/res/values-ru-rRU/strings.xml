@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fг IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fг IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Всего</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Спереди</string>
+    <string name="site_back">Сзади</string>
+    <string name="site_man">Мужчина</string>
+    <string name="site_woman">Женщина</string>
+    <string name="site_child">Ребенок</string>
+    <string name="user_profile">Профиль пользователя</string>
+    <string name="user_profile_description">Описание профиля пользователя включает часто используемые места установки катетера для мужчин, женщин, детей</string>
+    <string name="site_management">Профиль контроля места установки</string>
+    <string name="site_management_description">Отсюда можно контролировать место установки катетера помпы и/или сенсора НМГ. Эта настройка будет автоматически открывать диалоговое окно при каждой новой обнаруженной установке</string>
+    <string name="select_site">Нажмите ниже, чтобы выбрать место установки</string>
+    <string name="record_site_change">Записать расположение места установки</string>
+    <string name="edit_site">Редактировать</string>
+    <string name="record_site_location">Место установки: %1$s</string>
+    <string name="record_site_arrow">Стрелка места установки: %1$s</string>
+    <string name="record_site_note">Примечание: %1$s</string>
+    <string name="delete_site_note">Примечание удалено</string>
     <!-- FillDialog -->
     <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
     <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
@@ -135,6 +152,10 @@
     <string name="confirm_treatment">Подтвердите терапию</string>
     <string name="recalculate">Пересчитать</string>
     <!--    Widget-->
+    <string name="use_black_color">Использовать черный цвет</string>
+    <string name="widget_configuration">Настройки виджета</string>
+    <string name="until_changed">До изменения</string>
+    <string name="limitations">Ограничения</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Оба варианта</item>
         <item>Только положительный</item>

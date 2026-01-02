@@ -43,7 +43,6 @@
     <string name="identification">Identificació (correu electrònic, FB, nick de Discord, etc.)</string>
     <string name="request">Petició</string>
     <string name="apsmode_title">Mode APS</string>
-    <string name="setupwizard_preferred_aps_mode">Mode APS preferit</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configurador</string>

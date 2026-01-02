@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Интегриране на помпа за Omnipod Dash (новият модел с активиран Bluetooth, със синя капачка на иглата).</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">История на под</string>
+    <string name="omnipod_dash_history_item_description">Описание</string>
+    <string name="omnipod_dash_history_item_amount">Количество</string>
+    <string name="omnipod_dash_history_item_source">Източник</string>
+    <string name="omnipod_dash_history_item_date">Дата</string>
+    <string name="omnipod_dash_history_type">Тип:</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Bluetooh статус</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth адрес</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Фърмуер %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Качество на връзката</string>
+    <string name="omnipod_dash_overview_delivery_status">Статус на доставката</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Напълнете новия Pod
+        с достатъчно инсулин за 3 дни.\n\nИзчакайте два сигнала от Pod по време на процеса на зареждане. Те показват, че е сложен минималният размер от 80Е. Уверете се, че сте изпразнили напълно спринцовката, дори след като сте чули двата сигнала.\n\nСлед пълнене на Pod, моля натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> не вадете капачката на иглата на Pod в този момент.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Опитвате се да се сдвоите с новия Pod и да го заредите.\n\nКогато процесът на инициализация приключи успешно, можете да натиснете <b>Напред</b>.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Сигнализирай при активирано известие за спряна доставка</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Неуспешна връзка с pod</string>
+    <string name="omnipod_dash_found_too_many_pods">Намерени са твърде много подове за активиране</string>
+    <string name="omnipod_dash_scan_failed">Не може да се намери наличен pod за активиране</string>
+    <string name="omnipod_dash_generic_error">Обща грешка: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Грешка при изпращане на команда</string>
+    <string name="omnipod_dash_command_not_sent">Командата не е изпратена</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Командата не е получена от pod</string>
+    <string name="omnipod_dash_unknown">Неизвестно състояние за командата</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f Е/ч, %2$d минути</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2fЕ</string>
+    <string name="omnipod_common_alert_delivery_suspended">Доставянето на инсулин е спряно</string>
+    <string name="omnipod_common_history_total_delivered">Общо доставени: %1$.2f Ед.</string>
+    <string name="omnipod_dash_connection_lost">Загубена връзка с pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Доставя се друг болус</string>
+    <string name="omnipod_dash_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Непотвърдена команда</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Заявено от потребителя</string>
+    <string name="profile_set_ok">Профилът е зададен OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Спирането на доставката не е потвърдено! Моля, опреснете ръчно състоянието на Pod от раздела Omnipod и възобновете доставката, ако е необходимо.</string>
+    <string name="insulin_delivery_suspended">Доставянето на инсулин е спряно</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Часовата зона на pod е различна от часовата зона на телефона. Базалната доза е неправилна. Превключете профила, за да коригирате</string>
+    <string name="failed_to_set_the_new_basal_profile">Неуспешно задаване на новия базален профил. Доставката е спряна</string>
+    <string name="setting_basal_profile_might_have_failed">Задаването на базален профил може да е неуспешно. Доставката може да бъде спряна! Моля, опреснете ръчно състоянието на Pod от раздела Omnipod и възобновете доставката, ако е необходимо.</string>
+    <string name="bolus_delivery_status_uncertain">Състоянието на доставка на болус е неопределено. Обновете състоянието на pod, за да потвърдите или отхвърлите.</string>
+    <string name="temp_basal_out_of_sync">Статус на временен базал не според очакванията! Ако преди това е изпълняван временен базал, той е отменен. Моля, проверете доставения инсулин и история на Pod.</string>
+    <string name="checking_delivery_status">Проверка на състоянието на доставката</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Задаването на временен базал може да е неуспешно. Ако преди това е изпълняван временен базал, той е бил отменен. Моля, опреснете ръчно състоянието на Pod от раздела Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Отменянето временния базален резултат е неопределено</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Непотвърдна командата Подновяване на доставка. Моля опрвснете статуса на пода</string>
+    <string name="cancelling_temp_basal_might_have_failed">Спирането на временния базал може да е отпаднало. Ако временен базал е вървял преди, може да е бил отказан. Моля ръчно обновете статуса на пода от бутон Omnipod tab.</string>
+</resources>

@@ -20,7 +20,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 // https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size
@@ -45,8 +45,8 @@ open class EncryptedPrefsFormatTest : TestBase() {
 
     @BeforeEach
     fun mock() {
-        Mockito.`when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
-        Mockito.`when`(context.contentResolver).thenReturn(contentResolver)
+        whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
+        whenever(context.contentResolver).thenReturn(contentResolver)
     }
 
     @Test
@@ -255,9 +255,9 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Mock lateinit var file: DocumentFile
 
     private fun getMockedFile(): DocumentFile {
-        Mockito.`when`(file.exists()).thenReturn(true)
-        Mockito.`when`(file.canRead()).thenReturn(true)
-        Mockito.`when`(file.canWrite()).thenReturn(true)
+        whenever(file.exists()).thenReturn(true)
+        whenever(file.canRead()).thenReturn(true)
+        whenever(file.canWrite()).thenReturn(true)
         return file
     }
 }

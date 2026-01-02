@@ -90,6 +90,7 @@
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Продолжительность\n[минут]</string>
     <string name="action_tempt_confirmation">Требуется Временная Цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_user_action_confirmation">Запрошено действие пользователя</string>
@@ -99,15 +100,24 @@
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
     <string name="action_profile_switch_confirmation">Запрос на смену профиля</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Целевое значение\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Низкое\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Высокое\n[%s]</string>
     <string name="action_carbs">Углеводы</string>
+    <string name="action_carbs_gram">Углеводы [g]</string>
     <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
+    <string name="action_percentage">Процент\n[%]</string>
+    <string name="action_start_minutes">Начало\n[minutes]</string>
     <string name="action_duration_h">Продолжительность [h]</string>
+    <string name="action_duration_hours">Продолжительность\n[час]</string>
     <string name="action_insulin">Инсулин</string>
+    <string name="action_insulin_units">Инсулин [ед]</string>
     <string name="action_preset_1">Предустановка 1</string>
     <string name="action_preset_2">Предустановка 2</string>
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
+    <string name="action_timeshift_hours">Временной сдвиг\n[час]</string>
     <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
@@ -141,20 +151,15 @@
     <string name="color_name_black">black</string>
     <string name="color_name_multicolor">полихром</string>
     <string name="pref_simplify_ui">Упростить интерфейс</string>
-    <string name="pref_simplify_ui_sum">Показывать только время и ГК</string>
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
     <string name="pref_show_weeknumber">Показывать номер недели</string>
     <string name="pref_include_external">Включить внешние представления в шаблон</string>
     <string name="pref_switch_external">Включить внешние данные на циферблате</string>
     <string name="custom_pref_show_seconds">Показывать секунды</string>
-    <string name="digitalstyle_pref_your_style">Ваш стиль:</string>
     <string name="digitalstyle_style_none">без стиля</string>
     <string name="digitalstyle_style_minimal">минималистский</string>
     <string name="digitalstyle_style_shape">стиль формы</string>
     <string name="digitalstyle_style_full">полный стиль</string>
-    <string name="digitalstyle_pref_your_color">Ваш цвет:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Ваша цветовая насыщенность:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Непрозрачность вашего цвета:</string>
     <string name="bolus_progress_channel_name">Вводится болюс</string>
     <string name="bolus_progress_silent_channel_name">Беззвучный ввод болюса</string>
     <string name="bolus_progress_channel_description">Ввод и отмена болюса</string>
@@ -209,12 +214,20 @@
     <string name="complication_full_status">Полная информация о статусе</string>
     <string name="complication_full_status_flipped">Полный статус (в обратном виде)</string>
     <string name="complication_blood_glucose">Гликемия</string>
+    <string name="complication_blood_glucose_ext1">ГК усл1</string>
+    <string name="complication_blood_glucose_ext2">ГК усл2</string>
     <string name="complication_br_cob_iob">База, актУг &amp; актИнс</string>
+    <string name="complication_br_cob_iob_ext1">СкБаз, АктгУ&amp; АктИнсУсл1</string>
+    <string name="complication_br_cob_iob_ext2">СкБаз, АктгУ&amp; АктИнсУсл2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_br">Базальная скорость</string>
     <string name="complication_cob_iob">АктУг &amp; актИнс</string>
     <string name="complication_cob_icon">Иконка актУг</string>
     <string name="complication_cob_detailed">АктУг подробно</string>
     <string name="complication_iob_icon">Иконка актИнс</string>
     <string name="complication_iob_detailed">АктИнс подробно</string>
     <string name="complication_uploader_phone_battery">Батарея загрузчика/телефона</string>
+    <string name="status_loop_state">Состояние цикла</string>
+    <string name="label_loop_state_title">AAPS(состояние цикла)</string>
+    <string name="action_loop_state_selected">Запрошено состояние цикла</string>
 </resources>

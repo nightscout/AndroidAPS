@@ -4,8 +4,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -18,28 +16,10 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacket) {
-                it.aapsLogger = aapsLogger
-                it.dateUtil = dateUtil
-            }
-            if (it is DanaRSPacketAPSHistoryEvents) {
-                it.rxBus = rxBus
-                it.rh = rh
-                it.pumpSync = pumpSync
-                it.danaPump = danaPump
-                it.detailedBolusInfoStorage = detailedBolusInfoStorage
-                it.temporaryBasalStorage = temporaryBasalStorage
-                it.preferences = preferences
-            }
-        }
-    }
-
     @Test fun runTest() {
         val now = dateUtil.now()
 
-        val testPacket = DanaRSPacketAPSHistoryEvents(packetInjector, now)
+        val testPacket = DanaRSPacketAPSHistoryEvents(aapsLogger, dateUtil, rxBus, rh, danaPump, detailedBolusInfoStorage, temporaryBasalStorage, preferences, pumpSync).with(now)
         // test getRequestedParams
         val returnedValues = testPacket.getRequestParams()
         val expectedValues = getCalender(now)

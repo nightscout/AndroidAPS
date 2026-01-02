@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Използвай мобилен интернет</string>
     <string name="ns_wifi">Използвай само WiFi</string>
     <string name="ns_wifi_ssids">WiFi име</string>
@@ -19,10 +19,8 @@
     <string name="unsupported_ns_version">Несъвместима версия на Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">КАЧВ</string>
-    <string name="ns_malfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSClient няма права за запис. Грешна API парола?</string>
-    <string name="ns_client">Вътрешен NSClient</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
     <string name="restart">Рестарт</string>
     <string name="ns_client_url_title">Nightscout адрес</string>
@@ -38,19 +36,12 @@
     <string name="ns_receive_profile_store">Получаване на профили</string>
     <string name="ns_receive_profile_store_summary">Синхорнизирай профили от NS профилния едитор</string>
     <string name="ns_receive_temp_target">Получаване на временни цели</string>
-    <string name="ns_receive_temp_target_summary">Приеми временни цели зададени през NS или NS клиент</string>
     <string name="ns_receive_profile_switch">Получаване на смяна на профили</string>
-    <string name="ns_receive_profile_switch_summary">Приеми смяна на профили от NS или NS клиент</string>
-    <string name="ns_receive_offline_event">Приеми изключване на APS</string>
-    <string name="ns_receive_offline_event_summary">Приеми изключвания на APS през NS или NS Клиент</string>
     <string name="ns_receive_tbr_eb">Получаване на временни базали и удължени болуси</string>
     <string name="ns_receive_tbr_eb_summary">Получаване на временни базали и удължени болуси от други източници</string>
     <string name="ns_receive_insulin">Получавай инсулин</string>
-    <string name="ns_receive_insulin_summary">Приеми инсулин зададен през NS или NS Клиент (не се инжектира, само се калкулира във формулата за IOB)</string>
     <string name="ns_receive_carbs">Приемай въглехидрати</string>
-    <string name="ns_receive_carbs_summary">Приемай въглехидрати зададени през NS или NS Клиент</string>
     <string name="ns_receive_therapy_events">Приемай смени (канула, инсулин, батерия и др.)</string>
-    <string name="ns_receive_therapy_events_summary">Приемай смени (канула, инсулин, батерия и др.) зададени от NS или NS Клиент</string>
     <string name="ns_receive_cgm">Приеми история от данни от сензора</string>
     <string name="ns_receive_cgm_summary">Приемай постояни данни от сензора идващи от NS</string>
     <string name="ns_sync_slow">Забавени качвания на данни</string>
@@ -64,17 +55,10 @@
     <string name="ns_use_ws_title">Свържи се с websockets /протокола за връзка/</string>
     <string name="ns_use_ws_summary">Активирането означава: по-бързи актуализации, получаване на аларми и обявления и по-висока консумация на батерия, подобно на v1. Всички други програми за качване в NS трябва да използват v3 протокол.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>
-    <string name="title_tidepool_username">Потребителско име</string>
-    <string name="summary_tidepool_password">Tidepool парола</string>
-    <string name="title_tidepool_password">Парола </string>
-    <string name="title_tidepool_test_login">Тест на Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Когато е активирано, данните ще отиват към https://int-app.tidepool.org вместо към стандартния адрес https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Използвай тестовите сървъри</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Качване на данни в Tidepool</string>
-    <string name="remove_all">Премахване на всички</string>
     <string name="upload_now">Качи сега</string>
     <string name="not_connected">Няма активна връзка</string>
     <string name="read_only">Само за четене</string>

@@ -2,7 +2,7 @@
 <resources>
     <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
-    <string name="temp_target_short">TT</string>
+    <string name="temp_target_short">Midlertidig mål</string>
     <string name="dialog_canceled">Dialogvindu avbrutt</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Total</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Forside</string>
+    <string name="site_back">Bakside</string>
+    <string name="site_man">Mann</string>
+    <string name="site_woman">Kvinne</string>
+    <string name="site_child">Barn</string>
+    <string name="user_profile">Brukerprofil</string>
+    <string name="user_profile_description">Brukerprofilbeskrivelsen brukes til å vise de mest brukte stedene for en mann, en kvinne eller et barn</string>
+    <string name="site_management">Profil for stedsadministrasjon</string>
+    <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, CGM-område eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
+    <string name="select_site">Klikk nedenfor for å velge stedsplassering</string>
+    <string name="record_site_change">Registrer stedsplassering</string>
+    <string name="edit_site">Rediger</string>
+    <string name="record_site_location">Infusjonssted: %1$s</string>
+    <string name="record_site_arrow">Områdepil: %1$s</string>
+    <string name="record_site_note">Notat: %1$s</string>
+    <string name="delete_site_note">Notat slettet</string>
     <!-- FillDialog -->
     <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
     <string name="record_pump_site_change">Logg bytte av slangesett</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">Bruk svart farge</string>
     <string name="widget_configuration">Widget konfigurasjon</string>
+    <string name="until_changed">Inntil endret</string>
+    <string name="limitations">Begrensninger</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Begge</item>
         <item>Kun positiv</item>

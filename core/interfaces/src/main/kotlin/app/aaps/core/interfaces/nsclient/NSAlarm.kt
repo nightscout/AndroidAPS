@@ -15,11 +15,11 @@ interface NSAlarm {
     }
      */
 
-    fun level(): Int
-    fun group(): String
-    fun title(): String
-    fun message(): String
-    fun low(): Boolean
-    fun high(): Boolean
-    fun timeago(): Boolean
+    val level: Int
+    val group: String
+    val title: String
+    val message: String
+    val low: Boolean
+    val high: Boolean
+    val timeAgo: Boolean
 }

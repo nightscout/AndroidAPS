@@ -1,26 +1,16 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketOptionSetPumpTimeTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacket) {
-                it.aapsLogger = aapsLogger
-                it.dateUtil = dateUtil
-            }
-        }
-    }
-
-    @Test fun runTest() {
+    @Test
+    fun runTest() {
         val date = DateTime()
-        val packet = DanaRSPacketOptionSetPumpTime(packetInjector, date.millis)
+        val packet = DanaRSPacketOptionSetPumpTime(aapsLogger, dateUtil).with(date.millis)
         // test params
         val params = packet.getRequestParams()
         Assertions.assertEquals((date.year - 2000 and 0xff).toByte(), params[0]) // 2019 -> 19

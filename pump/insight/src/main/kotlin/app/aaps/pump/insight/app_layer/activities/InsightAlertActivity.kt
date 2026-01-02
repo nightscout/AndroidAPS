@@ -58,6 +58,8 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
     }
 
     override fun onDestroy() {
+        binding.mute.setOnClickListener(null)
+        binding.confirm.setOnClickListener(null)
         unbindService(serviceConnection)
         super.onDestroy()
     }

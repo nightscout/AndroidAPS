@@ -5,7 +5,6 @@
     <string name="error">שגיאה</string>
     <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
     <string name="invalid_input">קלט לא חוקי</string>
-    <string name="bolus_delivering">מזריק %1$.2f יח\'</string>
     <string name="constraint_applied">מגבלה הוחלה!</string>
     <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
     <string name="tt_label">TT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f יח\' לשעה</string>
     <string name="pump_not_initialized_profile_not_set">משאבה לא אותחלה! לא נקבע פרופיל!</string>
     <string name="failed_update_basal_profile">עדכון הפרופיל הבזאלי נכשל</string>
-    <string name="bolus_delivered_successfully">בולוס %1$.2f יח\' ניתן בהצלחה</string>
     <string name="no_valid_basal_rate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="loop_disabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
@@ -90,7 +88,6 @@
     <string name="loopisdisabled">הלולאה מושבתת</string>
     <string name="alarm">התראה</string>
     <string name="disableloop">השבתת לולאה</string>
-    <string name="enableloop">הפעלת לולאה</string>
     <string name="resumeloop">חידוש לולאה</string>
     <string name="suspendloop">השהיית הלולאה</string>
     <string name="duration_min_label">משך [min]</string>
@@ -104,7 +101,6 @@
     <string name="name_short">שם:</string>
     <string name="time">זמן</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">טוען…</string>
     <string name="notes_label">הערות</string>
     <string name="remove_button">הסרה</string>
     <string name="add_new">הוספת חדש</string>
@@ -153,6 +149,7 @@
     <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
+    <string name="logout">התנתקות</string>
     <string name="prime_fill">תיחול\\מילוי</string>
     <string name="overview_insulin_label">אינסולין</string>
     <string name="stoptemptarget">הפסקת ערך מטרה זמני</string>
@@ -165,7 +162,6 @@
     <string name="canceling_tbr_failed">ביטול בזאלי זמני נכשל</string>
     <string name="canceling_eb_failed">ביטול בולוס ממושך נכשל</string>
     <string name="virtualpump_uploadstatus_title">שלח את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
-    <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <string name="loopstatus_targets">ערכי מטרה:</string>
     <string name="loopstatus_OAPS_result">תוצאות OAPS:</string>
@@ -285,7 +281,6 @@
     <string name="uel_lgs_loop_mode">מצב השהיה עקב סוכר נמוך</string>
     <string name="uel_open_loop_mode">מצב לולאה פתוחה</string>
     <string name="uel_loop_disabled">לולאה מושבתת</string>
-    <string name="uel_loop_enabled">לולאה מופעלת</string>
     <string name="uel_reconnect">חיבור מחדש</string>
     <string name="uel_disconnect">ניתוק</string>
     <string name="uel_resume">חידוש</string>
@@ -577,4 +572,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f יח\'</string>
     <string name="format_insulin_units">%1$.2f יח\'</string>
+    <!--    Playback-->
 </resources>

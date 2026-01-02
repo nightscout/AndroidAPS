@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Pomp integratie voor Omnipod Dash (het nieuwe, Bluetooth-enabled model met een blauwe naalddop).</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Pod Historie</string>
+    <string name="omnipod_dash_history_item_description">Beschrijving</string>
+    <string name="omnipod_dash_history_item_amount">Hoeveelheid</string>
+    <string name="omnipod_dash_history_item_source">Bron</string>
+    <string name="omnipod_dash_history_item_date">Datum</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Bluetooth status</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adres</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Verbindingskwaliteit</string>
+    <string name="omnipod_dash_overview_delivery_status">Leveringsstatus</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Vul de nieuwe Pod met voldoende insuline voor 3 dagen.\n\nLuister of je twee piepjes hoort tijdens het vullen. Deze geven aan dat de minimum hoeveelheid van 80E is bereikt. Ook als je de twee piepjes hebt gehoord ga je verder met vullen totdat de vulspuit volledig leeg is.\n\nNa het vullen van de Pod druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> verwijder de beschermkap van de Pod naald nog niet.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Poging tot koppelen en voorvullen van de Pod.\n\nWanneer het initialisatieproces succesvol is voltooid, kunt u op <b>Volgende</b> drukken.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Geluid voor levering onderbroken notificatie ingeschakeld</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Verbinding maken met de pod mislukt</string>
+    <string name="omnipod_dash_found_too_many_pods">Te veel pods gevonden voor activering</string>
+    <string name="omnipod_dash_scan_failed">Kan geen beschikbare pod vinden voor activering</string>
+    <string name="omnipod_dash_generic_error">Algemene fout: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Fout bij verzenden van de opdracht</string>
+    <string name="omnipod_dash_command_not_sent">Opdracht niet verzonden</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Opdracht niet ontvangen door de pod</string>
+    <string name="omnipod_dash_unknown">Onbekende status voor de opdracht</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f E/u, %2$d minuten</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_common_alert_delivery_suspended">Insuline levering is opgeschort</string>
+    <string name="omnipod_common_history_total_delivered">Totaal toegediend: %1$.2f E</string>
+    <string name="omnipod_dash_connection_lost">Verbinding met pod verbroken</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Een andere bolus wordt op dit moment toegediend</string>
+    <string name="omnipod_dash_not_enough_insulin">Niet voldoende insuline in het reservoir</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Onbevestigde opdracht</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Aangevraagd door gebruiker</string>
+    <string name="profile_set_ok">Profiel succesvol ingesteld</string>
+    <string name="suspend_delivery_is_unconfirmed">Onderbreken insuline levering niet bevestigd! Vernieuw de Pod-status handmatig op het Omnipod tabblad en hervat de levering indien nodig.</string>
+    <string name="insulin_delivery_suspended">Insuline levering is opgeschort</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Tijdzone op pod verschilt van de tijdzone op de telefoon. Basaal stand is onjuist. Wissel profiel om het op te lossen</string>
+    <string name="failed_to_set_the_new_basal_profile">Het instellen van het nieuwe basaal profiel is mislukt. Levering onderbroken</string>
+    <string name="setting_basal_profile_might_have_failed">Instellen van basaal profiel is mogelijk mislukt. De insuline levering kan onderbroken zijn! Vernieuw de Pod status handmatig in het Omnipod tabblad en hervat de toediening indien nodig.</string>
+    <string name="bolus_delivery_status_uncertain">Bolus levering status onzeker. Vernieuw de Pod status om te bevestigen of te weigeren.</string>
+    <string name="temp_basal_out_of_sync">Tijdelijke basale status niet zoals verwacht! Als er eerder een tijdelijke basale toediening actief was, is deze geannuleerd. Controleer de toegediende insuline in de pod geschiedenis</string>
+    <string name="checking_delivery_status">Levering status wordt gecontroleerd</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Het instellen van een tijdelijke basaal is mogelijk mislukt. Indien een tijdelijk basaal eerder actief was is deze geannuleerd. Vernieuw de Pod status vanaf het Omnipod tabblad.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Annuleren tijdelijk basaal resultaat is onzeker</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Onbevestigd commando voor hervatting van levering. Vernieuw de Pod status</string>
+    <string name="cancelling_temp_basal_might_have_failed">Het annuleren van een tijdelijke basaal is mogelijk mislukt. Indien een tijdelijk basaal eerder actief was is deze mogelijk geannuleerd. Vernieuw de Pod status vanaf het Omnipod tabblad.</string>
+</resources>

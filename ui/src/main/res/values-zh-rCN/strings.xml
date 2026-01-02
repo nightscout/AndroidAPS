@@ -34,6 +34,7 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">总计</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">请确保数量和输液器里的药量匹配</string>
     <string name="record_pump_site_change">记录泵管路更换</string>

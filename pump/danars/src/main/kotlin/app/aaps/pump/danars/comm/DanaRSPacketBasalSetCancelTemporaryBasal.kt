@@ -1,12 +1,13 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
+import javax.inject.Inject
 
-class DanaRSPacketBasalSetCancelTemporaryBasal(
-    injector: HasAndroidInjector
-) : DanaRSPacket(injector) {
+class DanaRSPacketBasalSetCancelTemporaryBasal @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : DanaRSPacket() {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL

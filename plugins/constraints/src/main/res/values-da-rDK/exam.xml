@@ -54,7 +54,6 @@
     <string name="basaltest_fixed">Når de er angivet og valideret, skal disse værdier ikke ændres over tid.</string>
     <string name="prerequisites_label">Forudsætninger</string>
     <string name="prerequisites_what">Hvad er afgørende for at opsætte og bruge AAPS?</string>
-    <string name="prerequisites_computer">En computer med Android Studio installeret og konfigureret.</string>
     <string name="prerequisites_pump">En kompatibel insulinpumpe, hvis du har planer om at køre lukket Loop.</string>
     <string name="prerequisites_nightscout">Nightscout, for at holde en log over alle data og gennemgå indstillinger.</string>
     <string name="prerequisites_beanandroiddeveloper">Erfaring med programmering eller redigering af kode.</string>
@@ -81,7 +80,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/\"regulært\" humant insulin.</string>
     <string name="sensitivity_label">Sensitivitets plugins</string>
     <string name="sensitivity_adjust">Sensitivitetsplugins giver AAPS mulighed for at justere midlertidigt eller kortvarige ændringer i insulin-følsomheden (f.eks. hormonelle ændringer eller problemer med absorption på infusionsstedet).</string>
     <string name="sensitivity_edit">Sensitivitetsplugins giver brugeren forslag til ændringer i basalrater, IC-forhold og ISF, der kan bruges til at redigere profilen.</string>

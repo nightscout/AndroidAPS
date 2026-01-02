@@ -27,7 +27,7 @@ class SyncPumpExtendedBolusTransaction(private val extendedBolus: ExtendedBolus)
                 result.updated.add(existing)
             }
         } else {
-            val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
+            val running = database.extendedBolusDao.getExtendedBolusActiveAtLegacy(extendedBolus.timestamp)
             if (running != null) {
                 val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
                 running.amount *= pctRun

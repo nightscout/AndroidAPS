@@ -44,6 +44,24 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Total</string>
 
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Front</string>
+    <string name="site_back">Back</string>
+    <string name="site_man">Man</string>
+    <string name="site_woman">Woman</string>
+    <string name="site_child">Child</string>
+    <string name="user_profile">User Profile</string>
+    <string name="user_profile_description">User Profile Description is used to show most frequent sites available for a man, a woman or a child</string>
+    <string name="site_management">Site Management Profile</string>
+    <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
+    <string name="select_site">Click below to select Site</string>
+    <string name="record_site_change">Record Site Location</string>
+    <string name="edit_site">Edit</string>
+    <string name="record_site_location">Site Location: %1$s</string>
+    <string name="record_site_arrow">Site Arrow: %1$s</string>
+    <string name="record_site_note">Note: %1$s</string>
+    <string name="delete_site_note">Note deleted</string>
+
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="record_pump_site_change">Record pump site change</string>
@@ -78,11 +96,6 @@
     <string name="duration10h">10 hours</string>
 
     <!-- WizardDialog -->
-    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
-    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
-    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
-
     <string name="a11_correction_percentage">correct outcome with %</string>
     <string name="a11_correction_units">correct outcome with units</string>
     <string name="two_hours">2h</string>
@@ -159,6 +172,8 @@
     <!--    Widget-->
     <string name="use_black_color">Use black color</string>
     <string name="widget_configuration">Widget configuration</string>
+    <string name="until_changed">Until changed</string>
+    <string name="limitations">Limitations</string>
 
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Both</item>

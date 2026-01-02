@@ -15,10 +15,13 @@ import androidx.appcompat.view.ContextThemeWrapper
 import app.aaps.core.ui.R
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.getThemeColor
+import java.lang.ref.WeakReference
 
 object ToastUtils {
 
-    private var lastToast: Toast? = null
+    /** Reference to last displayed Toast */
+    private var lastToast: WeakReference<Toast> = WeakReference(null)
+
     fun warnToast(ctx: Context?, string: String?) {
         graphicalToast(ctx, string, R.drawable.ic_toast_warn, true)
     }
@@ -35,12 +38,16 @@ object ToastUtils {
         graphicalToast(ctx, ctx?.getString(id), R.drawable.ic_toast_info, true)
     }
 
-    fun okToast(ctx: Context?, string: String?) {
-        graphicalToast(ctx, string, R.drawable.ic_toast_check, true)
+    fun okToast(ctx: Context?, string: String?, isShort: Boolean = true) {
+        graphicalToast(ctx, string, R.drawable.ic_toast_check, isShort)
     }
 
     fun errorToast(ctx: Context?, string: String?) {
         graphicalToast(ctx, string, R.drawable.ic_toast_error, true)
+    }
+
+    fun longErrorToast(ctx: Context?, string: String?) {
+        graphicalToast(ctx, string, R.drawable.ic_toast_error, false)
     }
 
     fun errorToast(ctx: Context?, @StringRes id: Int) {
@@ -59,12 +66,13 @@ object ToastUtils {
             toastMessage.text = string
             val toastIcon = toastRoot.findViewById<ImageView>(android.R.id.icon)
             toastIcon.setImageResource(iconId)
-            lastToast?.cancel()
-            lastToast = Toast(ctx)
-            lastToast?.duration = if (isShort) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
-            @Suppress("deprecation")
-            lastToast?.view = toastRoot
-            lastToast?.show()
+            lastToast.get()?.cancel()
+            val toast = Toast(ctx)
+            toast.duration = if (isShort) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+            @Suppress("DEPRECATION")
+            toast.view = toastRoot
+            toast.show()
+            lastToast = WeakReference(toast)
         }
     }
 
@@ -80,8 +88,9 @@ object ToastUtils {
         }
     }
 
-    fun playSound(ctx: Context?, soundID: Int) {
-        val soundMP = MediaPlayer.create(ctx, soundID)
+    fun playSound(ctx: Context, soundID: Int) {
+        val audioAttributionContext = ctx.createAttributionContext("aapsAudio")
+        val soundMP = MediaPlayer.create(audioAttributionContext, soundID)
         soundMP.start()
         soundMP.setOnCompletionListener { obj: MediaPlayer -> obj.release() }
     }

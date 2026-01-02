@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
+    <string name="bolus_delivering">מזריק %1$.2f יח\'</string>
+    <string name="bolus_delivered_successfully">%1$.2f יח\' הוזרקו בהצלחה</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">מנהל התקן המשאבה שונה.</string>
     <!--    DateUtil-->
-    <string name="minago">לפני %1$d דקות</string>
     <string name="minago_long">לפני %1$d דקות</string>
-    <string name="hoursago">לפני %1$.1f שעות</string>
     <string name="days_ago">לפני %1$.1f ימים</string>
     <string name="days_ago_round">לפני %1$.0f ימים</string>
     <string name="in_days">בעוד %1$.0f ימים</string>
@@ -33,6 +34,7 @@
     <string name="connecting_for">מתחבר במשך %1$d שניות</string>
     <string name="handshaking">לוחץ יד</string>
     <string name="connected">מחובר</string>
+    <string name="authorized">מורשה</string>
     <string name="disconnecting">מתנתק</string>
     <string name="waiting_for_disconnection">ממתין לניתוק</string>
     <!-- Custom Watchface -->

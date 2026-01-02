@@ -15,7 +15,7 @@ interface ConstraintsChecker : PluginConstraints {
 
     fun isLoopInvocationAllowed(): Constraint<Boolean>
     fun isClosedLoopAllowed(): Constraint<Boolean>
-    fun isLgsAllowed(): Constraint<Boolean>
+    fun isLgsForced(): Constraint<Boolean>
     fun isAutosensModeEnabled(): Constraint<Boolean>
     fun isSMBModeEnabled(): Constraint<Boolean>
     fun isUAMEnabled(): Constraint<Boolean>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Quản lý Pod</string>
+    <string name="omnipod_common_pod_management_heading_actions">Actions</string>
+    <string name="omnipod_common_pod_management_heading_tools">Công cụ</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Kích hoạt Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Hủy kích hoạt Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Loại bỏ Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Nếu bạn loại bỏ Pod, bạn sẽ không thể giao tiếp với nó nữa. Bạn chỉ nên thực hiện thao tác này khi mọi liên lạc với Pod đều liên tục thất bại. Nếu bạn vẫn còn có thể giao tiếp với Pod, vui lòng sử dụng tùy chọn <b>Hủy kích hoạt Pod</b>.\n\nNếu bạn muốn tiếp tục, hãy đảm bảo tháo Pod ra khỏi cơ thể trước!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Kiểm tra tiếng Beep</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Đang kiểm tra tiếng bíp…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Lịch sử Pod</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Không có Pod hoạt động</string>
+    <string name="omnipod_common_error_set_basal_failed">Cài đặt cấu hình basal không thành công.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Bolus không thành công.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Thiết lập cấu hình Basal thất bại: nhận được cấu hình trống. Hãy đảm bảo rằng bạn đã kích hoạt Cấu hình Basal của mình.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Không có cấu hình Basal nào đang hoạt động. Hãy đảm bảo bạn đã kích hoạt cấu hình Basal của mình.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Lệnh tùy chỉnh không được hỗ trợ: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Không thể cập nhật trạng thái</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Không thể cập nhật trạng thái khi khởi động</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Không thể tắt cảnh báo</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Không thể tạm dừng truyền insulin</string>
+    <string name="omnipod_common_error_failed_to_set_time">Không thể thiết lập thời gian</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Không thể tiếp tục truyền insulin</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Không thể khởi tạo Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Gắn kim truyền thất bại</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Đã bị vượt quá thời gian kích hoạt Pod. Pod này không thể được kích hoạt nữa.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Không thể kích hoạt. Vui lòng thử lại.</string>
+    <string name="omnipod_common_error_pod_suspended">Pod đã tạm dừng</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Không phát được tiếng bíp</string>
+    <string name="omnipod_common_error_time_out_of_sync">Thời gian trên Pod không đồng bộ. Vui lòng cập nhật lại thời gian trong Omnipod.</string>
+    <string name="omnipod_common_error_unexpected_exception">Đã xảy ra lỗi không mong đợi. Vui lòng báo cáo! (%1$s: %2$s).</string>
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Xác nhận</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Cấu hình cảnh báo đã được cập nhật trên Pod.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">Thời gian trên Pod đã được cập nhật.</string>
+    <string name="omnipod_common_confirmation_suspended_delivery">Mọi hoạt động cung cấp insulin đã bị tạm dừng.</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">Các cảnh báo đã bị tắt âm.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">Việc truyền insulin đã được tiếp tục.</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Đặt thời gian</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Tạm dừng</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Tiếp tục bơm insulin</string>
+    <string name="omnipod_common_overview_button_pod_management">Pod Mgmt</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Tắt cảnh báo</string>
+    <string name="omnipod_common_overview_pod_status">Trạng thái Pod</string>
+    <string name="omnipod_common_overview_total_delivered">Tổng lượng đã tiêm</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_pod_unique_id">Mã số duy nhất</string>
+    <string name="omnipod_common_overview_lot_number">LOT Number</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Số thứ tự</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Pod hết hạn</string>
+    <string name="omnipod_common_overview_last_connection">Kết nối lần cuối</string>
+    <string name="omnipod_common_overview_last_bolus">Liều bolus mới nhất</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Tỷ lệ Basal tạm thời</string>
+    <string name="omnipod_common_overview_base_basal_rate">Tỷ lệ basal cơ bản</string>
+    <string name="omnipod_common_overview_reservoir">Ngăn chứa</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Cảnh báo Pod đang bật</string>
+    <string name="omnipod_common_overview_firmware_version">Phiên bản phần mềm</string>
+    <string name="omnipod_common_overview_time_on_pod">Thời gian trên Pod</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
+    <string name="omnipod_common_overview_reservoir_value">Còn lại %1$.2f U</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Còn lại hơn 50 U</string>
+    <string name="omnipod_common_overview_errors">Lỗi</string>
+    <string name="omnipod_common_uncertain">không chắc chắn</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Hủy</string>
+    <string name="omnipod_common_wizard_button_finish">Kết thúc</string>
+    <string name="omnipod_common_wizard_button_next">Tiếp theo</string>
+    <string name="omnipod_common_wizard_button_retry">Thử lại</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Hủy kích hoạt Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Xóa Pod</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Bạn chưa hoàn tất tất cả các bước. Bạn có chắc chắn muốn thoát không?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Thoát</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Làm đầy Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Khởi tạo Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Gắn Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Chuẩn bị vị trí gắn. Tháo nắp kim và lớp keo bảo vệ của Pod, sau đó gắn Pod vào vị trí tiêm.\n\nNếu kim truyền (cannula) bị lòi ra, vui lòng nhấn <b>Hủy</b> và Loại bỏ Pod của bạn.\n\nNhấn <b>Tiếp theo</b> để đưa kim truyền vào và bắt đầu truyền basal.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Khi bạn nhấn <b>OK</b>, kim truyền sẽ được đưa vào. Hãy đảm bảo rằng bạn đã gắn Pod vào vị trí gắn.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Gắn kim truyền</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Đang thiết lập lịch basal ban đầu và đưa kim truyền vào.\n\nKhi kim truyền đã được đưa vào thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Đã kích hoạt Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Pod mới đã được kích hoạt.\n\nLịch basal của bạn đã được lập trình và kim truyền đã được đưa vào.\n\nVui lòng kiểm tra xem kim truyền đã được đưa vào đúng chưa và thay Pod nếu bạn cho rằng chưa đúng.</string>
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Hủy kích hoạt Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Nhấn <b>Tiếp theo</b> để hủy kích hoạt Pod.\n\n<b>Lưu ý:</b> Thao tác này sẽ tạm dừng toàn bộ việc truyền insulin và hủy kích hoạt Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Đang hủy kích hoạt Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Đang hủy kích hoạt Pod.\n\nKhi quá trình hủy kích hoạt hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Đã hủy kích hoạt Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod của bạn đã được hủy kích hoạt.\n\nVui lòng tháo Pod ra khỏi cơ thể và cho vào thùng rác.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Đã xóa Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Trạng thái Pod đã bị loại bỏ. Việc truyền insulin không bị tạm dừng vì Pod chưa được hủy kích hoạt đúng cách!\n\nVui lòng tháo Pod ra khỏi cơ thể và cho vào thùng rác.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Nếu bạn loại bỏ Pod, bạn sẽ không thể giao tiếp với nó nữa. Bạn chỉ nên thực hiện khi mọi liên lạc với Pod đều liên tục thất bại. Bạn có chắc chắn muốn loại bỏ Pod không?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Xóa Pod</string>
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Đã bật tiếng bíp Bolus</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Đã bật tiếng bíp Basal</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Đã bật tiếng bíp SMB</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Đã bật tiếng bíp TBR</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Hiển thị nút Tạm dừng truyền insulin trong thẻ Omnipod</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Đã bật phát hiện múi giờ/giờ mùa hè (DST)</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Đã bật cảnh báo hết hạn</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Khi bật, Pod sẽ phát tiếng bíp khi đến thời gian đã đặt</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Nhắc trước khi Pod hết hạn (72 giờ)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Đã bật cảnh báo hết hạn</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Khi bật, Pod sẽ phát tiếng bíp khi đến thời gian đã chỉ định và 1 giờ trước khi tắt</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Cảnh báo trước giờ tắt máy (80 giờ)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Đã bật cảnh báo sắp hết insulin</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Số đơn vị</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Tự động tắt cảnh báo Pod</string>
+    <string name="omnipod_common_preferences_category_other">Khác</string>
+    <string name="omnipod_common_preferences_category_alerts">Cảnh báo</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Xác nhận tiếng bip</string>
+    <string name="omnipod_common_preferences_category_notifications">Thông báo</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Đã bật âm thanh thông báo TBR không chắc chắn</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Đã bật âm thanh thông báo SMB không chắc chắn</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Đã bật âm thanh thông báo Bolus không chắc chắn</string>
+    <string name="omnipod_dash_use_bonding">Thiết bị Bond BT trên Android 15</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Không có Pod hoạt động</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Đang thiết lập (đang chờ kích hoạt Pod)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Đang thiết lập (đang chờ đưa kim truyền vào)</string>
+    <string name="omnipod_common_pod_status_running">Đang chạy</string>
+    <string name="omnipod_common_pod_status_normal">Bình thường</string>
+    <string name="omnipod_common_pod_status_suspended">Bị tạm dừng</string>
+    <string name="omnipod_common_pod_status_pod_fault">Sự cố Pod</string>
+    <string name="omnipod_common_pod_status_inactive">Không hoạt động</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Sự cố Pod: %1$03d %2$s</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_deactivate_pod">Hủy kích hoạt Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Xóa Pod</string>
+    <string name="omnipod_common_cmd_set_bolus">Thiết lập liều Bolus</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Hủy liều bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Đặt Basal tạm thời</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Hủy Basal tạm thời (do hệ thống điều khiển)</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Hủy bỏ Basal tạm thời</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Đặt lịch trình Basal</string>
+    <string name="omnipod_common_cmd_get_pod_status">Nhận trạng thái Pod</string>
+    <string name="omnipod_common_cmd_get_pod_info">Nhận thông tin Pod</string>
+    <string name="omnipod_common_cmd_set_time">Đặt giờ</string>
+    <string name="omnipod_common_cmd_configure_alerts">Cấu hình cảnh báo</string>
+    <string name="omnipod_common_cmd_silence_alerts">Tắt cảnh báo</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Tạm dừng liều insulin</string>
+    <string name="omnipod_common_cmd_resume_delivery">Tiếp tục bơm insulin</string>
+    <string name="omnipod_common_cmd_unknown_entry">Mục nhập không xác định</string>
+    <string name="omnipod_common_cmd_initialize_pod">Khởi tạo Pod</string>
+    <string name="omnipod_common_cmd_insert_cannula">Gắn kim truyền</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Đọc nhật ký Pulse</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Thiết lập basal tạm thời giả vì Pod đang bị tạm dừng</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Hủy basal tạm thời giả đã được tạo khi Pod bị tạm dừng</string>
+    <string name="omnipod_common_cmd_split_tbr">Chia basal tạm thời do không chắc chắn về việc hủy thành công</string>
+    <string name="omnipod_common_cmd_play_test_beep">Kiểm tra tiếng Beep</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Nhắc hoàn tất ghép nối</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Hoàn thành thiết lập lời nhắc</string>
+    <string name="omnipod_common_alert_expiration">Pod sẽ sớm hết hạn</string>
+    <string name="omnipod_common_alert_expiration_advisory">Pod sẽ sớm hết hạn</string>
+    <string name="omnipod_common_alert_shutdown_imminent">Thiết bị sắp tắt</string>
+    <string name="omnipod_common_alert_low_reservoir">Sắp hết insulin</string>
+    <string name="omnipod_common_alert_unknown_alert">Cảnh báo không xác định</string>
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Có</string>
+    <string name="omnipod_common_no">Không</string>
+    <string name="omnipod_common_ok">ĐỒNG Ý</string>
+    <string name="omnipod_common_cancel">Hủy</string>
+    <string name="omnipod_common_warning">Cảnh báo</string>
+    <string name="omnipod_common_disable_suspend_alerts">TẮT CẢ CẢNH BÁO TẠM DỪNG</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">Vừa nãy</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
+    <string name="omnipod_common_composite_time">%1$s và %2$s</string>
+    <string name="omnipod_common_time_ago">%1$d giây trước</string>
+    <plurals name="omnipod_common_minutes">
+        <item quantity="other">%1$d phút</item>
+    </plurals>
+    <plurals name="omnipod_common_hours">
+        <item quantity="other">%1$d giờ</item>
+    </plurals>
+    <plurals name="omnipod_common_days">
+        <item quantity="other">%1$d ngày</item>
+    </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="other">Cảnh báo Pod: %1$s</item>
+    </plurals>
+</resources>

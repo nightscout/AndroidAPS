@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Recibir los datos de glucosa de Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
-    <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
+    <string name="description_source_xdrip">Recibir valores de glucosa de xDrip+ y aplicaciones compatibles (Juggluco etc.).</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">Crear evento \"Inserción de sensor\" en el Portal de Cuidados automátciamente al recibir un inicio de sensor desde una fuente de origen de glucosa de transmisión local</string>
     <string name="direction">dirección</string>
     <string name="bg_generation_interval_minutes">Intervalo de generación de BG en minutos</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Recibir datos de glucosa de la aplicación Ottai</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Recibir datos de glucosa de la aplicación Syai Tag</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Recibir los valores de glucosa de la aplicación Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplicación Sibionic SI</string>
+    <string name="description_source_patched_si_app">Recibir los valores de glucosa de la aplicación parcheada Sibionic SI</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplicación Sino</string>
+    <string name="description_source_patched_sino_app">Recibir los valores de glucosa de la aplicación parcheada Sino</string>
 </resources>

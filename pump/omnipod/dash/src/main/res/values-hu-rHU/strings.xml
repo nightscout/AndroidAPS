@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <!-- Omnipod Dash - History -->
+    <!-- Omnipod Dash - Overview -->
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <!-- Exceptions -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
+</resources>

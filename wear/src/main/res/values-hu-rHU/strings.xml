@@ -74,14 +74,10 @@
     <string name="color_name_multicolor">sokszínű</string>
     <string name="pref_vibrate_hourly">Rezgés óránként</string>
     <string name="pref_show_weeknumber">Hét számának megjelenítése</string>
-    <string name="digitalstyle_pref_your_style">Stílus:</string>
     <string name="digitalstyle_style_none">nincs stílus</string>
     <string name="digitalstyle_style_minimal">minimál stílus</string>
     <string name="digitalstyle_style_shape">szögletes stílus</string>
     <string name="digitalstyle_style_full">teljes stílus</string>
-    <string name="digitalstyle_pref_your_color">Szín:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Szín telítettsége:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Szín átlátszósága:</string>
     <string name="bolus_progress_channel_name">AAPS bólus folyamata</string>
     <string name="bolus_progress_silent_channel_name">AAPS bólus folyamata néma</string>
     <string name="bolus_progress_channel_description">Bólus folyamata és törlés</string>

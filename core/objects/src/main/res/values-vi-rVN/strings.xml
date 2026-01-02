@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d g</string>
+    <string name="count_selected">Đã chọn %1$d</string>
+    <string name="remove_items">Xóa mục</string>
+    <string name="sort_items">Sắp xếp các mục</string>
+    <string name="remove_selected_items">Xóa mục đã chọn</string>
+    <string name="sort_label">Sắp xếp</string>
+</resources>

@@ -22,7 +22,6 @@
     <string name="limitingextendedbolus">Ištęstas bolusas ribojamas iki %1$.1f v dėl %2$s</string>
     <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
-    <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
     <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes glikemijos duomenų šaltinis neturi reikalingo filtravimo</string>

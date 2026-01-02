@@ -135,7 +135,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
             holder.binding.time.text = dateUtil.timeStringWithSeconds(current.timestamp)
             holder.binding.action.text = userEntryPresentationHelper.actionToColoredString(current.action)
             holder.binding.notes.text = current.note
-            holder.binding.notes.visibility = (current.note != "").toVisibility()
+            holder.binding.notes.visibility = (current.note.isNotEmpty()).toVisibility()
             holder.binding.iconSource.setImageResource(userEntryPresentationHelper.iconId(current.source))
             holder.binding.values.text = userEntryPresentationHelper.listToPresentationString(current.values)
             holder.binding.values.visibility = (holder.binding.values.text != "").toVisibility()

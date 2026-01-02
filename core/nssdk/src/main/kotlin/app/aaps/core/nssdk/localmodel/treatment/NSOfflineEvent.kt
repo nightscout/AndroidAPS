@@ -20,9 +20,37 @@ data class NSOfflineEvent(
     override val pumpType: String?,
     override val pumpSerial: String?,
     override var app: String? = null,
+    /**
+     * Duration in milliseconds
+     * Can be fake zero in RM mode
+     */
     val duration: Long,
-    val reason: Reason
+    /** RM Duration in milliseconds */
+    val originalDuration: Long?,
+    val reason: Reason, // Used in v1 only
+    val mode: Mode, // Used in RM
+    val autoForced: Boolean, // Used in RM
+    val reasons: String?, // Used in RM
 ) : NSTreatment {
+
+    enum class Mode {
+        DISABLED_LOOP,
+        OPEN_LOOP,
+        CLOSED_LOOP,
+        CLOSED_LOOP_LGS,
+        // Temporary only
+        SUPER_BOLUS,
+        DISCONNECTED_PUMP,
+        SUSPENDED_BY_PUMP,
+        SUSPENDED_BY_USER,
+        UNKNOWN
+        ;
+
+        companion object {
+
+            fun fromString(reason: String?) = Mode.entries.firstOrNull { it.name == reason } ?: UNKNOWN
+        }
+    }
 
     enum class Reason {
         DISCONNECT_PUMP,

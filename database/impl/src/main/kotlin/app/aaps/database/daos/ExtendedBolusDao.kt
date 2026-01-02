@@ -39,6 +39,9 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     fun findByPumpEndIds(endPumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): ExtendedBolus?
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    fun getExtendedBolusActiveAtLegacy(timestamp: Long): ExtendedBolus?
+
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus>
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")

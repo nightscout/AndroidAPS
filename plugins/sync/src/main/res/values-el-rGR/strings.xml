@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Χρήση σύνδεσης κινητής τηλεφωνίας</string>
     <string name="ns_wifi">Χρήση σύνδεσης Wi-Fi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -19,10 +19,8 @@
     <string name="unsupported_ns_version">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Επανεκκίνηση</string>
     <string name="ns_client_url_title">Διεύθυνση Nightscout</string>
@@ -38,19 +36,12 @@
     <string name="ns_receive_profile_store">Λήψη αποθήκευσης προφίλ</string>
     <string name="ns_receive_profile_store_summary">Συγχρονισμός προφίλ από τον επεξεργαστή προφίλ NS</string>
     <string name="ns_receive_temp_target">Λήψη προσωρινών στόχων</string>
-    <string name="ns_receive_temp_target_summary">Αποδοχή προσωρινών στόχων που εισήχθησαν μέσω NS ή NSClient</string>
     <string name="ns_receive_profile_switch">Λήψη αλλαγών προφίλ</string>
-    <string name="ns_receive_profile_switch_summary">Αποδοχή αλλαγών προφίλ που εισήχθησαν μέσω NS ή NSClient</string>
-    <string name="ns_receive_offline_event">Λήψη συμβάντων APS εκτός σύνδεσης</string>
-    <string name="ns_receive_offline_event_summary">Αποδοχή συμβάντων APS εκτός σύνδεσης που εισήχθησαν μέσω NS ή NSClient</string>
     <string name="ns_receive_tbr_eb">Λήψη TBR και EB</string>
     <string name="ns_receive_tbr_eb_summary">Αποδοχή TBR και EB που εισήχθησαν μέσω άλλης διεργασίας</string>
     <string name="ns_receive_insulin">Λήψη ινσουλίνης</string>
-    <string name="ns_receive_insulin_summary">Αποδοχή ινσουλίνης που εισάγεται μέσω NS ή NSClient (δεν χορηγείτε, υπολογίζεται μόνο στο IOB)</string>
     <string name="ns_receive_carbs">Λήψη υδατανθράκων</string>
-    <string name="ns_receive_carbs_summary">Αποδοχή υδατανθράκων που εισήχθησαν μέσω NS ή NSClient</string>
     <string name="ns_receive_therapy_events">Λήψη συμβαμάτων θεραπείας</string>
-    <string name="ns_receive_therapy_events_summary">Αποδοχή συμβάντων θεραπείας (καθετήρας, ινσουλίνη, αλλαγή μπαταρίας κλπ) που εισήχθησαν μέσω της NS ή NSClient</string>
     <string name="ns_receive_cgm">Λήψη δεδομένων CGM</string>
     <string name="ns_receive_cgm_summary">Αποδοχή δεδομένων CGM από NS</string>
     <string name="ns_sync_slow">Επιβράδυνση ανεβάσματος δεδομένων</string>
@@ -64,17 +55,10 @@
     <string name="ns_use_ws_title">Σύνδεση σε websockets</string>
     <string name="ns_use_ws_summary">Ενεργοποίηση σημαίνει: ταχύτερες ενημερώσεις, λήψη ειδοποιήσεων και ανακοινώσεις και υψηλότερη κατανάλωση μπαταρίας παρόμοια με την v1. Όλοι οι άλλοι μεταφορτωτές στο NS πρέπει να χρησιμοποιούν το πρωτόκολλο v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
-    <string name="title_tidepool_username">Όνομα Χρήστη</string>
-    <string name="summary_tidepool_password">Το συνθηματικό του Tidepool</string>
-    <string name="title_tidepool_password">Συνθηματικό εισόδου</string>
-    <string name="title_tidepool_test_login">Δοκιμή εισόδου Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Αν ενεργοποιήθηκε, τα δεδομένα θα ανέβουν στο https://int-app.tidepool.org αντί για το σύνηθες https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
-    <string name="remove_all">Αφαίρεση όλων</string>
     <string name="upload_now">Ανέβασμα τώρα</string>
     <string name="not_connected">Μη συνδεδεμένο</string>
     <string name="read_only">Μόνο για ανάγνωση</string>

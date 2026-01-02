@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Utilizează conexiunea mobilă</string>
     <string name="ns_wifi">Utilizează conexiunea WiFi</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
@@ -20,10 +20,8 @@
     <string name="unsupported_ns_version">Versiune incompatibilă de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT nu are permisiuni de scriere. Cheia API este corect scrisă?</string>
-    <string name="ns_client">Client NS</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Restartare</string>
     <string name="ns_client_url_title">Adresa Nightscout</string>
@@ -39,19 +37,12 @@
     <string name="ns_receive_profile_store">Primire stocare profile</string>
     <string name="ns_receive_profile_store_summary">Sincronizează profilurile din editorul de profil NS</string>
     <string name="ns_receive_temp_target">Primește ținte temporare</string>
-    <string name="ns_receive_temp_target_summary">Acceptați țintele temporare introduse prin NS sau NSClient</string>
     <string name="ns_receive_profile_switch">Primește schimbări de profil</string>
-    <string name="ns_receive_profile_switch_summary">Acceptați schimbările de profil introduse prin NS sau NSClient</string>
-    <string name="ns_receive_offline_event">Primiți evenimente APS offline</string>
-    <string name="ns_receive_offline_event_summary">Acceptați evenimente offline APS introduse prin NS sau NSClient</string>
     <string name="ns_receive_tbr_eb">Primește RBT și EB</string>
     <string name="ns_receive_tbr_eb_summary">Acceptă TBR și EB introduse prin altă instanță</string>
     <string name="ns_receive_insulin">Primiţi date insulina</string>
-    <string name="ns_receive_insulin_summary">Acceptaţi insulina introdusă prin NS sau NSClient (nu este livrată, ci doar calculată in IoB)</string>
     <string name="ns_receive_carbs">Primește carbohidrați</string>
-    <string name="ns_receive_carbs_summary">Acceptați carbohidrați introduși prin NS sau NSClient</string>
     <string name="ns_receive_therapy_events">Primește evenimente terapeutice</string>
-    <string name="ns_receive_therapy_events_summary">Acceptaţi evenimentele de tratament (canulă, insulină, modificarea bateriei etc.) introduse prin NS sau NSClient</string>
     <string name="ns_receive_cgm">Primire/completare date CGM</string>
     <string name="ns_receive_cgm_summary">Acceptați datele CGM din NS</string>
     <string name="ns_sync_slow">Încarcă mai lent</string>
@@ -65,17 +56,10 @@
     <string name="ns_use_ws_title">Conectează-te la websockets</string>
     <string name="ns_use_ws_summary">Activare înseamnă: actualizări mai rapide, primirea alarmelor și anunțurilor și un consum mai mare al bateriei similar cu v1. Restul upload-urilor NS trebuie să folosească protocolul v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Utilizatorul Tidepool (de obicei adresa de email)</string>
-    <string name="title_tidepool_username">Numele de utilizator</string>
-    <string name="summary_tidepool_password">Parola Tidepool</string>
-    <string name="title_tidepool_password">Parola utilizatorului</string>
-    <string name="title_tidepool_test_login">Testează conectarea la Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Dacă este activ, înregistrările vor fi transmise către https://int-app.tidepool.org, în loc să fie transmise către https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Folosește serverele Integration (test)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Înregistrează datele la Tidepool</string>
-    <string name="remove_all">Înlătură Tot</string>
     <string name="upload_now">Încarcă acum</string>
     <string name="not_connected">Neconectat</string>
     <string name="read_only">Doar vizualizare</string>

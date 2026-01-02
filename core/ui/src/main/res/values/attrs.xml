@@ -146,7 +146,9 @@
     <attr name="basal" format="reference|color" />
     <!---Loop Icon-->
     <!---Loop Paused Icon Color-->
-    <attr name="loopPaused" format="reference|color" />
+    <attr name="loopSuspended" format="reference|color" />
+    <!---Loop LGS Icon Color-->
+    <attr name="loopLgs" format="reference|color" />
     <!---Loop Closed Icon Color-->
     <attr name="loopClosed" format="reference|color" />
     <!---Loop Disabled Icon Color-->

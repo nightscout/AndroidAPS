@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -27,10 +28,10 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
@@ -47,7 +48,6 @@ class WearPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
-    private val sp: SP,
     private val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
@@ -90,8 +90,8 @@ class WearPlugin @Inject constructor(
             .toObservable(EventOverviewBolusProgress::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventOverviewBolusProgress ->
-                           if (!event.isSMB() || preferences.get(BooleanKey.WearNotifyOnSmb)) {
-                               if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = event.percent, status = event.status)))
+                           if (!BolusProgressData.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
+                               if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = BolusProgressData.percent, status = BolusProgressData.status)))
                            }
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -139,9 +139,9 @@ class WearPlugin @Inject constructor(
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
             val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
-            val cwfName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
-            val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
-            val fileName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_filename, "")
+            val cwfName = preferences.get(StringNonKey.WearCwfWatchfaceName)
+            val authorVersion = preferences.get(StringNonKey.WearCwfAuthorVersion)
+            val fileName = preferences.get(StringNonKey.WearCwfFileName)
             var toUpdate = false
             CwfData("", cwf.metadata, mutableMapOf()).also {
                 if (cwfAuthorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
@@ -168,7 +168,7 @@ class WearPlugin @Inject constructor(
     private fun broadcastData(payload: EventData) {
         // Identify and update source set before broadcast
         val client = if (config.AAPSCLIENT1) 1 else if (config.AAPSCLIENT2) 2 else throw UnsupportedOperationException()
-        var dataToSend = when (payload) {
+        val dataToSend = when (payload) {
             is EventData.SingleBg -> payload.copy().apply { dataset = client }
             is EventData.Status   -> payload.copy().apply { dataset = client }
             else                  -> payload

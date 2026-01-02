@@ -16,18 +16,18 @@ import androidx.biometric.BiometricPrompt.ERROR_UNABLE_TO_PROCESS
 import androidx.biometric.BiometricPrompt.ERROR_USER_CANCELED
 import androidx.biometric.BiometricPrompt.ERROR_VENDOR
 import androidx.biometric.BiometricPrompt.PromptInfo
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
-import java.util.concurrent.Executors
 
 object BiometricCheck {
 
     fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
-        val executor = Executors.newSingleThreadExecutor()
+        val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -42,9 +42,7 @@ object BiometricCheck {
                     ERROR_USER_CANCELED        -> {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // fallback to master password
-                        runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                        }
+                        passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NEGATIVE_BUTTON      ->
@@ -54,18 +52,14 @@ object BiometricCheck {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // no pin set
                         // fallback to master password
-                        runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                        }
+                        passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NO_SPACE,
                     ERROR_HW_UNAVAILABLE,
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
-                        runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                        }
+                        passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                 }
             }
 

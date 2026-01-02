@@ -9,7 +9,10 @@
     <string name="pump_status_timeout_comm">Délai de communication dépassé</string>
     <string name="pump_status_pump_unreachable">Pompe inaccessible</string>
     <string name="pump_status_invalid_config">Configuration invalide</string>
-    <!-- RL keys -->
+    <string name="medtronic_pump_encoding_4b6b_local">Encodage logiciel 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Encodage matériel 4b6b</string>
+    <string name="medtronic_pump_frequency_us_ca">États-Unis &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mondial (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Rechercher</string>
     <string name="riley_link_ble_config_scan_stop">Arrêter</string>

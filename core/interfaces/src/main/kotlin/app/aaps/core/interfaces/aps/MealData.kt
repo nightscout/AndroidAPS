@@ -1,10 +1,8 @@
 package app.aaps.core.interfaces.aps
 
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
 @Serializable
-@OptIn(InternalSerializationApi::class)
 data class MealData(
 
     var carbs: Double = 0.0,

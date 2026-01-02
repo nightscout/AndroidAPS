@@ -16,4 +16,13 @@
     <string name="day_tir">Время в целевом диапазоне днем</string>
     <string name="night_tir">Время в целевом диапазоне ночью</string>
     <string name="carbs_short" comment="max 6 characters">Угли</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Пред соед: %1$d мин. наз</string>
+    <string name="short_status_alert">Внимание: %1$s</string>
+    <string name="short_status_last_bolus">ПредБолюс: %1$s ед. @ %2$s</string>
+    <string name="short_status_temp_basal">ВремБаз %1$s</string>
+    <string name="short_status_extended">ПролонгБол: %1$s</string>
+    <string name="short_status_reservoir">Резерв: %1$dед</string>
+    <string name="short_status_battery">Бат: %1$d%%</string>
+    <string name="short_status_not_initialized">Помпа не иниц</string>
 </resources>

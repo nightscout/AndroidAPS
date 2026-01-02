@@ -103,15 +103,7 @@
     <string name="combov2_unpair_pump_summary">AndroidAPS와 Android를 현재 페어링된 Accu-Chek Combo 펌프와 페어링 해제하세요.</string>
     <string name="combov2_unknown_tbr_detected">알 수 없는 TBR이 감지되어 중단됨; 퍼센트: %1$d%%; 남은 시간: %2$s</string>
     <string name="combov2_connection_error">연결 오류: %1$s</string>
-    <string name="combov2_short_status_last_connection">마지막 연결: %1$d 분 전</string>
     <string name="combov2_short_status_alert">경고: %s</string>
-    <string name="combov2_short_status_last_bolus">마지막 bolus: %1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">임시: %s</string>
-    <string name="combov2_short_status_reservoir">잔여 인슐린 양: %d U</string>
-    <string name="combov2_short_status_battery_state_empty">비어 있음</string>
-    <string name="combov2_short_status_battery_state_low">소</string>
-    <string name="combov2_short_status_battery_state_full">전체</string>
-    <string name="combov2_short_status_battery_state">배터리: %s</string>
     <string name="combov2_automatic_reservoir_entry">인슐린 레저버 교체를 자동으로 감지하고, 자동으로 입력함</string>
     <string name="combov2_automatic_battery_entry">배터리 교체를 자동으로 감지하고, 자동으로 입력함</string>
     <string name="combov2_timezone_changed">시간대가 변경됨</string>

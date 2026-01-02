@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="48dp"
+    android:width="48dp"
+    android:viewportHeight="24"
+    android:viewportWidth="24">
+      
+    <path android:fillColor="?attr/pumpCannulaColor" android:pathData="M7.803,4.948L6.819,3.295c-2.96,1.769 -4.955,4.994 -4.962,8.685H0.294l2.525,4.373l2.525,-4.373H3.783C3.79,8.991 5.406,6.38 7.803,4.948z"/>
+    <path android:fillColor="?attr/pumpCannulaColor" android:pathData="M21.18,7.641l-2.525,4.373h1.561c-0.005,2.991 -1.621,5.604 -4.02,7.038l0.984,1.653c2.962,-1.77 4.957,-4.998 4.962,-8.691h1.563L21.18,7.641z"/>
+    <path android:fillColor="?attr/pumpCannulaColor" android:pathData="M11.979,20.217c-2.988,-0.007 -5.599,-1.623 -7.032,-4.02l-1.653,0.984c1.769,2.96 4.994,4.955 8.685,4.962v1.563l4.373,-2.525l-4.373,-2.525V20.217z"/>
+    <path android:fillColor="?attr/pumpCannulaColor" android:pathData="M12.014,1.857V0.294L7.641,2.819l4.373,2.525V3.783c2.991,0.005 5.604,1.621 7.038,4.02l1.653,-0.984C18.935,3.857 15.707,1.862 12.014,1.857z"/>
+    
+</vector>

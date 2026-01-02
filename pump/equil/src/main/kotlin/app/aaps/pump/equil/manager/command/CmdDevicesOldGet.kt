@@ -2,24 +2,22 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.EquilResponse
 import app.aaps.pump.equil.manager.Utils
-import java.lang.Exception
 import java.nio.ByteBuffer
-import java.util.ArrayList
 import java.util.Locale
 
 class CmdDevicesOldGet(
     var address: String,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     private var firmwareVersion = 0f
 
@@ -88,7 +86,7 @@ class CmdDevicesOldGet(
                 isEnd = true
                 response = EquilResponse(createTime)
                 rspIndex = intValue
-                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex)
+                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====$intValue====$rspIndex")
                 return list
             } catch (e: Exception) {
                 response = EquilResponse(createTime)
@@ -108,7 +106,7 @@ class CmdDevicesOldGet(
             response = EquilResponse(createTime)
             config = true
             rspIndex = intValue
-            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex)
+            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====$intValue====$rspIndex")
             return list
         } catch (e: Exception) {
             e.printStackTrace()
@@ -129,7 +127,7 @@ class CmdDevicesOldGet(
         )
         reqModel.ciphertext = Utils.bytesToHex(getNextData())
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
         return responseCmd(reqModel, "0000" + reqModel.code)
@@ -171,7 +169,7 @@ class CmdDevicesOldGet(
                 + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL))
         )
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
     }

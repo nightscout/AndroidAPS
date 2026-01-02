@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">NS 血糖</string>
     <string name="description_source_ns_client">從 Nightscout 下載血糖資料</string>
     <string name="source_xdrip">xDrip+ 血糖</string>
-    <string name="description_source_xdrip">接收來自 xDrip+ 的血糖值。</string>
+    <string name="description_source_xdrip">從 xDrip+ 及相容的應用程式（例如 Juggluco 等）接收血糖數值。</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">接收來自「Build Your Own Dexcom App」的血糖值。</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">在收到來自血糖資料來源的本地廣播傳感器啟動時，自動在「照護入口」建立「CGM 傳感器植入」事件</string>
     <string name="direction">方向</string>
     <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">歐態（Ottai）</string>
-    <string name="description_source_patched_ottai_app">從歐態應用程式接收血糖資料。</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">從 Syai Tag 應用程式接收血糖資料。</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">從 Syai / 與歐態應用程式接收血糖資料。</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">從修改版 Sibionic SI App 接收血糖資料。</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">從修改版 Sino App 接收血糖資料。</string>
 </resources>

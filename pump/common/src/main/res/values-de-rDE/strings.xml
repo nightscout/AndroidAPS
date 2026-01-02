@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Aktion von Pumpe und/oder Treiber nicht unterstützt.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Nicht initialisiert</string>
+    <string name="pump_status_initialized">Initialisiert</string>
+    <string name="pump_status_encrypt">Kommunikation verschlüsseln</string>
+    <string name="pump_status_ready">Bereit</string>
+    <string name="pump_status_busy">Beschäftigt</string>
+    <string name="pump_status_suspended">Angehalten</string>
+    <string name="pump_status_executing_command">Befehl ausführen</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basal</string>
+    <string name="history_group_configuration">Konfigurationen</string>
+    <string name="history_group_notification">Benachrichtigungen</string>
+    <string name="history_group_statistic">Statistiken</string>
+    <string name="history_group_unknown">Unbekannte</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Boli</string>
+    <string name="history_group_prime">Füllen</string>
+    <string name="history_group_alarm">Alarme</string>
+    <string name="history_group_glucose">Glukose</string>
+    <string name="history_group_base">Basis</string>
+    <string name="history_group_other">Anderes</string>
+    <string name="history_group_events">Alle Events</string>
+    <string name="history_group_events_no_stat">Events (keine Statistik)</string>
+    <!-- Time -->
+    <string name="time_today">Heute</string>
+    <string name="time_last_hour">Letzte Stunde</string>
+    <string name="time_last_3_hours">Letzte 3 Stunden</string>
+    <string name="time_last_6_hours">Letzte 6 Stunden</string>
+    <string name="time_last_12_hours">Letzte 12 Stunden</string>
+    <string name="time_last_2_days">Letzte 2 Tage</string>
+    <string name="time_last_4_days">Letzte 4 Tage</string>
+    <string name="time_last_week">Letzte Woche</string>
+    <string name="time_last_month">Letzter Monat</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Scannen</string>
+    <string name="ble_config_scan_stop">Stopp</string>
+    <string name="ble_config_scan_selected">Ausgewählt</string>
+    <string name="ble_config_scan_scanning">Scannt</string>
+    <string name="ble_config_scan_finished">Scannen abgeschlossen</string>
+    <string name="ble_config_scan_error">Scanfehler: %1$d</string>
+    <string name="ble_config_remove">Löschen</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Typ:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d Stunde</item>
+        <item quantity="other">%1$d Stunden</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">Vor %1$d Stunde(n)</item>
+        <item quantity="other">Vor %1$d Stunden</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">Vor %1$d Tage</item>
+        <item quantity="other">Vor %1$d Tagen</item>
+    </plurals>
+</resources>

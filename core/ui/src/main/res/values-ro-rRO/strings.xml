@@ -5,7 +5,6 @@
     <string name="error">Eroare</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
     <string name="invalid_input">Date de intrare incorecte</string>
-    <string name="bolus_delivering">Se livrează %1$.2f U</string>
     <string name="constraint_applied">Limitare aplicată!</string>
     <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
     <string name="tt_label">TT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pompa nu este inițializată, profilul nu este setat!</string>
     <string name="failed_update_basal_profile">Actualizarea profilului bazalei a eșuat</string>
-    <string name="bolus_delivered_successfully">Bolusul de %1$.2fU a fost livrat cu succes</string>
     <string name="no_valid_basal_rate">Nu s-a citit o rată bazală validă din pompă</string>
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="loop_disabled">BUCLĂ DEZACTIVATĂ DATORITĂ CONSTRÂNGERILOR</string>
@@ -90,7 +88,6 @@
     <string name="loopisdisabled">Bucla este dezactivată</string>
     <string name="alarm">Alarmă</string>
     <string name="disableloop">Dezactivează bucla</string>
-    <string name="enableloop">Activează bucla</string>
     <string name="resumeloop">Repornește bucla</string>
     <string name="suspendloop">Suspendă bucla</string>
     <string name="duration_min_label">Durată [min]</string>
@@ -104,7 +101,6 @@
     <string name="name_short">Nume:</string>
     <string name="time">Timp</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
-    <string name="loading">Se încarcă…</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Șterge</string>
     <string name="add_new">Adăugare nouă</string>
@@ -165,7 +161,6 @@
     <string name="canceling_tbr_failed">Anularea ratei bazale temporare a eșuat</string>
     <string name="canceling_eb_failed">Anularea bolusului extins a eșuat</string>
     <string name="virtualpump_uploadstatus_title">Trimitere status către NS sau Tidepool</string>
-    <string name="suspendloop_label">Buclă dezactivată/suspendată</string>
     <string name="iob_label">Insulină activă (IOB)</string>
     <string name="loopstatus_targets">ȚINTE:</string>
     <string name="loopstatus_OAPS_result">REZULTATUL OAPS:</string>
@@ -284,7 +279,6 @@
     <string name="uel_lgs_loop_mode">MOD BUCLA LGS</string>
     <string name="uel_open_loop_mode">MOD BUCLA DESCHISA</string>
     <string name="uel_loop_disabled">BUCLA DEZACTIVATA</string>
-    <string name="uel_loop_enabled">BUCLA ACTIVATA</string>
     <string name="uel_reconnect">RECONECTARE</string>
     <string name="uel_disconnect">DECONECTARE</string>
     <string name="uel_resume">REPORNIRE</string>
@@ -562,4 +556,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <!--    Playback-->
 </resources>

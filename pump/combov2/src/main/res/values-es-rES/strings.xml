@@ -103,15 +103,7 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_unpair_pump_summary">Desemparejar AndroidAPS y Android desde la bomba Accu-Chek Combo actualmente emparejada</string>
     <string name="combov2_unknown_tbr_detected">Una TBR desconocida fue detectada y detenida; porcentaje: %1$d%%; duración restante: %2$s</string>
     <string name="combov2_connection_error">Error de conexión: %1$s</string>
-    <string name="combov2_short_status_last_connection">ÚltimaConexión: hace %1$d minutos</string>
     <string name="combov2_short_status_alert">Alertas: %s</string>
-    <string name="combov2_short_status_last_bolus">ÚltimoBolo: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
-    <string name="combov2_short_status_reservoir">Reservorio: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">vacío</string>
-    <string name="combov2_short_status_battery_state_low">bajo</string>
-    <string name="combov2_short_status_battery_state_full">completo</string>
-    <string name="combov2_short_status_battery_state">Batería: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetectar y añadir automáticamente los cambios de reservorio de insulina</string>
     <string name="combov2_automatic_battery_entry">Autodetectar y añadir automáticamente los cambios de pila</string>
     <string name="combov2_timezone_changed">Zona horaria cambiada</string>

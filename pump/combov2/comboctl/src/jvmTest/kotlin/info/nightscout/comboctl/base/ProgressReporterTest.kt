@@ -1,9 +1,10 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ProgressReporterTest {
+class ProgressReporterTest : TestBase() {
     // NOTE: In the tests here, the progress sequences are fairly
     // arbitrary, and do _not_ reflect how actual sequences used
     // in pairing etc. look like.

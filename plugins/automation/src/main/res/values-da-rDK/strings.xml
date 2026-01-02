@@ -119,4 +119,5 @@
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

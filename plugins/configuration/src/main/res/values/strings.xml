@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_i_understand" translatable="false">I_understand</string>
-
     <string name="units">Units</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="next_button">Next</string>
@@ -37,7 +35,6 @@
     <string name="profile">Profile</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="exitwizard">Skip setup wizard</string>
-    <string name="setupwizard_loop_description">Press the button below to enable AAPS to suggest/make basal changes</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
@@ -53,7 +50,6 @@
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="request">Request</string>
     <string name="apsmode_title">APS Mode</string>
-    <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="error_asking_for_permissions">Error asking for permissions</string>
     <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
 

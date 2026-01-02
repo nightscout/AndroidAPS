@@ -22,7 +22,7 @@ class SyncPumpTemporaryBasalTransaction(
                 existing.timestamp != temporaryBasal.timestamp ||
                 existing.rate != temporaryBasal.rate ||
                 existing.duration != temporaryBasal.duration && existing.interfaceIDs.endId == null ||
-                existing.type != type ?: existing.type
+                existing.type != (type ?: existing.type)
             ) {
                 val old = existing.copy()
                 existing.timestamp = temporaryBasal.timestamp
@@ -33,7 +33,7 @@ class SyncPumpTemporaryBasalTransaction(
                 result.updated.add(Pair(old, existing))
             }
         } else {
-            val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(temporaryBasal.timestamp).blockingGet()
+            val running = database.temporaryBasalDao.getTemporaryBasalActiveAtLegacy(temporaryBasal.timestamp)
             if (running != null) {
                 val old = running.copy()
                 running.end = temporaryBasal.timestamp

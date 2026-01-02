@@ -36,7 +36,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Changer de profil</string>
     <string name="exitwizard">Ignorer l\'assistant de configuration</string>
-    <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AAPS à suggérer/faire des changements de basal</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont organisés du plus ancien au plus récent. Les algorithmes les plus récents sont habituellement plus puissants et plus agressifs. De ce fait, si vous êtes un nouvel utilisateur, vous devriez probablement démarrer avec AMA au lieu de choisir un algorithme plus récent. N\'oubliez pas de lire la documentation OpenAPS et en faire la configuration avant utilisation.</string>
@@ -47,12 +46,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="readstatus">Statut de lecture</string>
     <string name="data_choices">Choix de données</string>
     <string name="fabric_upload">Téléchargement Fabric</string>
-    <string name="unattended_settings_export">Exportation des paramètres sans surveillance</string>
+    <string name="unattended_settings_export">Export des paramètres sans surveillance</string>
     <string name="unattended_settings_export_summary">L\'activation permettra de stocker votre mot de passe en toute sécurité sur votre téléphone</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
     <string name="request">Demande</string>
     <string name="apsmode_title">Mode APS</string>
-    <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <!--    ConfigBuilder-->

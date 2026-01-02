@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Chưa từng kết nối</string>
+    <string name="pump_status_sleeping">Đang ngủ</string>
+    <string name="pump_status_waking_up">Đang khởi động</string>
+    <string name="pump_status_active">Kích hoạt</string>
+    <string name="pump_status_error_comm">Lỗi giao tiếp</string>
+    <string name="pump_status_timeout_comm">Hết thời gian giao tiếp</string>
+    <string name="pump_status_pump_unreachable">Không thể kết nối với Pump</string>
+    <string name="pump_status_invalid_config">Cấu hình không hợp lệ</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Mã hóa 4b6b phần mềm</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Mã hóa 4b6b phần cứng</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scan</string>
+    <string name="riley_link_ble_config_scan_stop">Dừng lại</string>
+    <string name="riley_link_ble_config_scan_selected">Đã chọn</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
+    <string name="riley_link_ble_config_scan_scanning">Đang quét</string>
+    <string name="riley_link_ble_config_scan_finished">Quét hoàn tất</string>
+    <string name="riley_link_ble_config_scan_error">Lỗi quét: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Không bao giờ</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink đang chọn</string>
+    <string name="riley_link_ble_config_remove_riley_link">Loại bỏ</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Bạn có chắc chắn muốn gỡ RileyLink của mình không?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Gỡ bỏ RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Chưa chọn RileyLink nào</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Cài đặt</string>
+    <string name="rileylink_settings_tab2">Lịch sử</string>
+    <string name="rileylink_status">Trạng thái RileyLink</string>
+    <string name="medtronic_pump_status">Trạng thái Pump</string>
+    <string name="title_activity_rileylink_settings">Cài đặt RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Địa chỉ:</string>
+    <string name="rileylink_name">Tên:</string>
+    <string name="rileylink_battery_level">Mức pin:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Trạng thái kết nối:</string>
+    <string name="rileylink_connection_error">Lỗi kết nối:</string>
+    <string name="rileylink_device">Thiết bị</string>
+    <string name="rileylink_device_type">Loại thiết bị:</string>
+    <string name="rileylink_configured_device_model">Thiết bị đã cấu hình:</string>
+    <string name="rileylink_connected_device_model">Thiết bị đã kết nối:</string>
+    <string name="rileylink_last_used_frequency">Tần số sử dụng lần cuối:</string>
+    <string name="rileylink_last_device_contact">Liên lạc sử dụng lần cuối:</string>
+    <string name="rileylink_firmware_version">Phiên bản phần mềm:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Số serial Pump:</string>
+    <string name="rileylink_pump_frequency">Tần số Pump:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Đang khởi tạo Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Lỗi Bluetooth</string>
+    <string name="rileylink_state_bt_ready">Bluetooth đã sẵn sàng</string>
+    <string name="rileylink_state_not_started">Chưa bắt đầu</string>
+    <string name="rileylink_state_rl_init">Đang khởi tạo RileyLink…</string>
+    <string name="rileylink_state_rl_error">RileyLink lỗi</string>
+    <string name="rileylink_state_pc_tune_up">Đang hiệu chỉnh RileyLink và Pump</string>
+    <string name="rileylink_state_pc_error">Gặp sự cố khi kết nối với Pump</string>
+    <string name="rileylink_state_connected">Đã kết nối</string>
+    <string name="rileylink_state_rl_ready">RileyLink sẵn sàng</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Thiết bị không phải là RileyLink</string>
+    <string name="rileylink_error_unreachable">Không thể kết nối với RileyLink</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth chưa được bật</string>
+    <string name="rileylink_error_no_bt_adapter">Không có bộ điều hợp Bluetooth</string>
+    <string name="rileylink_error_tuneup_failed">Hiệu chỉnh thất bại</string>
+    <string name="rileylink_error_pump_unreachable">Không thể kết nối với Pump</string>
+    <string name="rileylink_error_pod_unreachable">Không thể kết nối với Pod</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Hiển thị mức pin được báo cáo bởi OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">KHÔNG hoạt động với RileyLink gốc. Có thể không hoạt động với các phiên bản RileyLink thay thế khác.</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d ngày</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d giờ</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Sử dụng Scan</string>
+    <string name="orange_use_scanning_level_summary">Scan trước khi kết nối với OrangeLink, điều này sẽ giúp cải thiện kết nối (cũng có thể sử dụng với các bản sao RileyLink khác nếu cần)</string>
+    <string name="rileylink_configuration">Cấu hình RileyLink</string>
+</resources>

@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Aviso de falta de insulina</string>
     <string name="needbatteryreplace">Substituição da bateria é necessária</string>
     <string name="needinsullinreplace">Substituição de insulina é necessária</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Registar mudança de reservatório</string>
     <string name="diaconn_g8_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao careportal quando detectado no histórico</string>
     <string name="diaconn_g8_logcanulachange_title">Registar mudança de agulha</string>

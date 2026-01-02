@@ -19,10 +19,10 @@ class SyncNsFoodTransaction(private val foods: List<Food>) : Transaction<SyncNsF
             if (current != null) {
                 // nsId exists, update if different
                 if (!current.contentEqualsTo(food)) {
-                    current.copyFrom(food)
-                    database.foodDao.updateExistingEntry(current)
                     if (food.isValid && current.isValid) result.updated.add(current)
                     else if (!food.isValid && current.isValid) result.invalidated.add(current)
+                    current.copyFrom(food)
+                    database.foodDao.updateExistingEntry(current)
                 }
             } else {
                 // not known nsId, add

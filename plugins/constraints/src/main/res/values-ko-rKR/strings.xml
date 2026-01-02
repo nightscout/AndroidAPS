@@ -21,7 +21,6 @@
     <string name="limitingextendedbolus">%2$s 때문에 확장 bolus를 %1$.1f U로 제한합니다</string>
     <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
     <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
-    <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
     <string name="closed_loop_disabled_with_eb">확장 Bolus 사용으로 인해 Closed Loop가 비활성화됨</string>
     <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>

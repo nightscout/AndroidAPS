@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Giới hạn liều bolus đã bật</string>
+    <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Đã hủy hộp thoại</string>
+    <string name="start_activity_tt">Start Activity TT</string>
+    <string name="start_eating_soon_tt">Start Eating soon TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Time offset</string>
+    <string name="unit_minute_short">phút</string>
+    <string name="remind_to_bolus_later">Nhắc tiêm bolus sau</string>
+    <string name="a11y_carb_reminder">đặt lời nhắc</string>
+    <!--    Widget-->
+    <string name="configure">Cấu hình độ trong suốt</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Màn hình hoạt động</string>
+    <string name="do_you_want_reset_stats">Bạn có muốn đặt lại thống kê hoạt động không?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Bạn có muốn tính toán lại thống kê TDD không?</string>
+    <string name="statistics">Thống kê</string>
+    <string name="calculation_in_progress">Đang tiến hành tính toán</string>
+    <string name="invalid_age">Tuổi không hợp lệ</string>
+    <string name="invalid_weight">Cân nặng không hợp lệ</string>
+    <string name="id">ID:</string>
+    <string name="submit">Áp dụng</string>
+    <string name="age">Tuổi</string>
+    <string name="weight_label">Cân nặng</string>
+    <string name="most_common_profile">Cấu hình phổ biến:</string>
+    <string name="survey_comment">Lưu ý: Chỉ những dữ liệu trên màn hình này sẽ được tải lên ẩn danh. Mỗi cài đặt AAPS sẽ có một ID riêng. Bạn có thể gửi lại dữ liệu nếu thay đổi Cấu hình chính, nhưng hãy để ứng dụng chạy ít nhất một tuần để kết quả về thời gian trong phạm vi được hiển thị. Cảm ơn bạn đã đóng góp dữ liệu.</string>
+    <string name="glucose_type">Loại đường huyết</string>
+    <string name="bg_other">Khác</string>
+    <string name="bg_meter">Máy đo</string>
+    <string name="bg_sensor">Cảm biến</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Tổng</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Phía trước</string>
+    <string name="site_back">Quay lại</string>
+    <string name="site_man">Nam</string>
+    <string name="site_woman">Nữ</string>
+    <string name="site_child">Trẻ em</string>
+    <string name="user_profile">Cấu hình người dùng</string>
+    <string name="user_profile_description">Mô tả cấu hình người dùng được dùng để hiển thị các vị trí tiêm phổ biến nhất đối với nam, nữ hoặc trẻ em</string>
+    <string name="site_management">Cấu hình quản lý vị trí tiêm</string>
+    <string name="site_management_description">Tại đây bạn có thể chọn quản lý vị trí tiêm, vị trí cảm biến CGM hoặc cả hai. Thiết lập này sẽ được dùng để tự động hiển thị hộp thoại quản lý vị trí mỗi khi phát hiện mục nhập mới</string>
+    <string name="select_site">Nhấn bên dưới để chọn vị trí</string>
+    <string name="record_site_change">Ghi lại vị trí tiêm/cảm biến</string>
+    <string name="edit_site">Chỉnh sửa</string>
+    <string name="record_site_location">Vị trí: %1$s</string>
+    <string name="record_site_arrow">Hướng vị trí: %1$s</string>
+    <string name="record_site_note">Ghi chú: %1$s</string>
+    <string name="delete_site_note">Đã xóa ghi chú</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Hãy chắc chắn rằng liều lượng phù hợp với thông số của bộ dây truyền!</string>
+    <string name="record_pump_site_change">Ghi lại việc thay vị trí tiêm</string>
+    <string name="record_insulin_cartridge_change">Ghi lại việc thay ống insulin</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Không bolus, chỉ lưu lại</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Tái sử dụng %1$d%% %2$dh</string>
+    <string name="timeshift_label">Dịch chuyển thời gian</string>
+    <string name="percentage_label">Phần trăm</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Tạm dừng vòng lặp 1 giờ</string>
+    <string name="suspendloopfor2h">Tạm dừng vòng lặp 2 giờ</string>
+    <string name="suspendloopfor3h">Tạm dừng vòng lặp 3 giờ</string>
+    <string name="suspendloopfor10h">Tạm dừng vòng lặp 10 giờ</string>
+    <string name="disconnectpump">Ngắt kết nối pump</string>
+    <string name="disconnectpumpfor15m">Ngắt kết nối pump trong 15 phút</string>
+    <string name="disconnectpumpfor30m">Ngắt kết nối pump trong 30 phút</string>
+    <string name="disconnectpumpfor1h">Ngắt kết nối pump trong 1 giờ</string>
+    <string name="disconnectpumpfor2h">Ngắt kết nối pump trong 2 giờ</string>
+    <string name="disconnectpumpfor3h">Ngắt kết nối pump trong 3 giờ</string>
+    <string name="resume">Tiếp tục</string>
+    <string name="reconnect">Kết nối lại pump</string>
+    <string name="duration15m">15 phút</string>
+    <string name="duration30m">30 phút</string>
+    <string name="duration1h">1 giờ</string>
+    <string name="duration2h">2 giờ</string>
+    <string name="duration3h">3 giờ</string>
+    <string name="duration10h">10 giờ</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">kết quả đúng với %</string>
+    <string name="a11_correction_units">kết quả đúng với đơn vị</string>
+    <string name="two_hours">2 giờ</string>
+    <string name="result_insulin_carbs">Kết quả: %1$s %2$s</string>
+    <string name="missing_carbs">Còn thiếu %1$d g</string>
+    <string name="a11y_current_bg">đường huyết hiện tại</string>
+    <string name="carb_time_label">Carb time</string>
+    <string name="a11y_set_carb_timer">đặt nhắc nhở carb</string>
+    <string name="show_calculation">Xem chi tiết tính toán</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Không có bản ghi nào</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Bữa ăn</string>
+    <string name="prime">Mồi bơm</string>
+    <string name="carbs_and_bolus">Carbs and bolus</string>
+    <string name="show_invalidated_records">Hiển thị bản ghi không hợp lệ / đã xóa</string>
+    <string name="hide_invalidated_records">Ẩn bản ghi không hợp lệ / đã xóa</string>
+    <string name="show_invalidated">Hiện các bản ghi không hợp lệ</string>
+    <string name="hide_invalidated">Ẩn các bản ghi không hợp lệ</string>
+    <string name="careportal_remove_started_events">Xóa các bản ghi đã bắt đầu bởi AAPS</string>
+    <string name="hide_loop">Ẩn vòng lặp</string>
+    <string name="show_loop">Hiển thị vòng lặp</string>
+    <string name="user_entry">Nhập liệu người dùng</string>
+    <string name="clone_label">Nhân bản</string>
+    <string name="show_loop_records">Hiện dữ liệu vòng lặp</string>
+    <string name="show_hide_records">Ẩn dữ liệu vòng lặp</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Cấu hình 1</string>
+    <string name="profile2">Cấu hình 2</string>
+    <string name="profile_type">Loại Cấu hình</string>
+    <string name="basal_pct_from_tdd_label">% của liều nền</string>
+    <string name="selected_profile">Chọn:</string>
+    <string name="compare_profile">So sánh các Cấu hình</string>
+    <string name="nav_profile_helper">Hỗ trợ cấu hình</string>
+    <string name="motol_default_profile">Cấu hình mặc định</string>
+    <string name="current_profile">Cấu hình hiện tại</string>
+    <string name="available_profile">Cấu hình có sẵn</string>
+    <string name="format_with_tdd">Age: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
+    <string name="dpv_default_profile">Cấu hình mặc định DPV</string>
+    <string name="invalid_pct">Giá trị % không hợp lệ</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Tỷ lệ liều Basal</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">ĐÃ NHẤN DỪNG</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">chỉ trên đồng hồ</string>
+    <string name="a11y_only_on_phone">chỉ trên điện thoại</string>
+    <string name="quickwizard_settings">Cài đặt QuickWizard</string>
+    <string name="overview_edit_quickwizard_button_text">Button text</string>
+    <string name="overview_edit_quickwizard_valid">Hợp lệ:</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Tỷ lệ phần trăm quá cao!</string>
+    <string name="a11y_drag_and_drop_handle">nút kéo–thả</string>
+    <string name="additional_ecarbs">Thêm eCarbs</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Sử dụng để tính toán:</string>
+    <string name="constraints_violation">Vượt giới hạn cho phép</string>
+    <string name="change_your_input">Nhập lại dữ liệu!</string>
+    <string name="confirm_treatment">Vui lòng xác nhận điều trị</string>
+    <string name="recalculate">Tính toán lại</string>
+    <!--    Widget-->
+    <string name="use_black_color">Sử dụng màu đen</string>
+    <string name="widget_configuration">Cấu hình tiện ích</string>
+    <string name="until_changed">Cho đến khi thay đổi</string>
+    <string name="limitations">Các hạn chế</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Cả hai</item>
+        <item>Chỉ cho phép giá trị dương</item>
+        <item>Chỉ cho phép giá trị âm</item>
+    </string-array>
+</resources>

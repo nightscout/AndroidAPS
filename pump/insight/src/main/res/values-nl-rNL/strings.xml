@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Time-out tijdens verbinden - reset bluetooth</string>
     <string name="pump_stopped">Pomp gestopt</string>
     <string name="pump_started">Pomp gestart</string>
-    <string name="short_status_last_connected">Laatste conn: %1$d min geleden</string>
-    <string name="short_status_tbr">TBR: %1$d%% gedurende %2$d / %3$d min</string>
-    <string name="short_status_extended">Vertraagd: %1$.2f / %2$.2f U gedurende %3$d min</string>
-    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f E gedurende %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reservoir: %1$.2f E</string>
-    <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="release_software_version">Release softwareversie</string>
     <string name="ui_processor_software_version">UI processor softwareversie</string>
     <string name="pc_processor_software_version">PC processor softwareversie</string>

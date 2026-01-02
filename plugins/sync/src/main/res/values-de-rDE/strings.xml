@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Mobilfunkverbindung verwenden</string>
     <string name="ns_wifi">WLAN Verbindung verwenden</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
@@ -19,10 +19,8 @@
     <string name="unsupported_ns_version">Nicht unterstützte Nightscout-Version</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
-    <string name="ns_client">Nightscout-Client</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Neustart</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
@@ -38,19 +36,12 @@
     <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
     <string name="ns_receive_profile_store_summary">Profile mit NS Profil-Editor synchronisieren</string>
     <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
-    <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
-    <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
-    <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_tbr_eb">TBR und EB empfangen</string>
     <string name="ns_receive_tbr_eb_summary">Akzeptiere TBR und EB, die von einer anderen Instanz eingegeben wurden</string>
     <string name="ns_receive_insulin">Insulin abrufen</string>
-    <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
-    <string name="ns_receive_carbs_summary">Kohlenhydrate akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_therapy_events">Ereignisse abrufen</string>
-    <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
@@ -64,17 +55,10 @@
     <string name="ns_use_ws_title">Mit Websockets verbinden</string>
     <string name="ns_use_ws_summary">Aktivieren bedeutet: schnellere Updates, Empfang von Alarmen und Ankündigungen und ein höherer Akkuverbrauch ähnlich v1. Alle anderen Uploader zu NS müssen v3-Protokoll verwenden.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
-    <string name="title_tidepool_username">Login-Benutzername</string>
-    <string name="summary_tidepool_password">Dein Tidepool Anmeldekennwort</string>
-    <string name="title_tidepool_password">Anmeldekennwort</string>
-    <string name="title_tidepool_test_login">Teste den Tidepool Login</string>
-    <string name="summary_tidepool_dev_servers">Wenn diese Option aktiviert ist, werden die Uploads an https://int-app.tidepool.org statt an die reguläre https://app.tidepool.org/ weitergeleitet</string>
     <string name="title_tidepool_dev_servers">Integrations (Test) Server verwenden</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Daten zu Tidepool hochladen</string>
-    <string name="remove_all">Alle entfernen</string>
     <string name="upload_now">Jetzt hochladen</string>
     <string name="not_connected">Nicht verbunden</string>
     <string name="read_only">Nur lesen</string>

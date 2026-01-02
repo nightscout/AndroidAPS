@@ -10,6 +10,9 @@ object Constants {
     const val defaultDIA = 5.0
     const val notificationID = 556677
 
+    // OpenAPS algorithm
+    const val ALLOW_SMB_WITH_HIGH_TT = 100
+
     // SMS COMMUNICATOR
     const val remoteBolusMinDistance = 15 * 60 * 1000L
 

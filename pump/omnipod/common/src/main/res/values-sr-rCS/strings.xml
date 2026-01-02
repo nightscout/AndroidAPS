@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Error -->
+    <!-- Omnipod - Confirmation -->
+    <!-- Omnipod - Overview -->
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_exit_confirmation_title">Izađi</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_category_other">Ostalo</string>
+    <!-- Omnipod - Pod Status -->
+    <!-- Omnipod - Commands -->
+    <!-- Omnipod - Alerts -->
+    <!-- Omnipod - Other -->
+    <!-- Omnipod - Times -->
+</resources>

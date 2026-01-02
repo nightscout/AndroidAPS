@@ -27,6 +27,8 @@ fun TE.Companion.fromJson(jsonObject: JSONObject): TE? {
     val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val glucose = JsonHelper.safeGetDoubleAllowNull(jsonObject, "glucose")
     val glucoseType = TE.MeterType.fromString(JsonHelper.safeGetString(jsonObject, "glucoseType"))
+    val location = TE.Location.fromString(JsonHelper.safeGetString(jsonObject, "location"))
+    val arrow = TE.Arrow.fromString(JsonHelper.safeGetString(jsonObject, "arrow"))
     val enteredBy = JsonHelper.safeGetStringAllowNull(jsonObject, "enteredBy", null)
     val note = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
@@ -45,6 +47,8 @@ fun TE.Companion.fromJson(jsonObject: JSONObject): TE? {
         glucoseType = glucoseType,
         enteredBy = enteredBy,
         note = note,
+        location = location,
+        arrow = arrow,
         isValid = isValid
     )
     te.ids.nightscoutId = id
@@ -66,5 +70,6 @@ fun TE.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (glucoseType != null) it.put("glucoseType", glucoseType!!.text)
             if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
             if (type == TE.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
+            if (location != null) it.put("location", location?.text)
+            if (arrow != null) it.put("arrow", arrow?.text)
         }
-

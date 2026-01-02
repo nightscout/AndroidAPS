@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Pompa ve/veya sürücü tarafından desteklenmeyen işlem.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Başlatılmadı</string>
+    <string name="pump_status_initialized">Başlatıldı</string>
+    <string name="pump_status_encrypt">İletişim Şifreleniyor</string>
+    <string name="pump_status_ready">Hazır</string>
+    <string name="pump_status_busy">Meşgul</string>
+    <string name="pump_status_suspended">Askıya Alındı</string>
+    <string name="pump_status_executing_command">Komut Çalıştırılıyor</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazallar</string>
+    <string name="history_group_configuration">Konfigürasyon</string>
+    <string name="history_group_notification">Bildirimler</string>
+    <string name="history_group_statistic">İstatistikler</string>
+    <string name="history_group_unknown">Bilinmeyenler</string>
+    <string name="history_group_all">Tümü</string>
+    <string name="history_group_bolus">Boluslar</string>
+    <string name="history_group_prime">Doldur</string>
+    <string name="history_group_alarm">Alarmlar</string>
+    <string name="history_group_glucose">Glikoz</string>
+    <string name="history_group_base">Temel</string>
+    <string name="history_group_other">Diğer</string>
+    <string name="history_group_events">Tüm Etkinlikler</string>
+    <string name="history_group_events_no_stat">Etkinlikler (İstatistik yok)</string>
+    <!-- Time -->
+    <string name="time_today">Bugün</string>
+    <string name="time_last_hour">Son 1 Saat</string>
+    <string name="time_last_3_hours">Son 3 Saat</string>
+    <string name="time_last_6_hours">Son 6 Saat</string>
+    <string name="time_last_12_hours">Son 12 Saat</string>
+    <string name="time_last_2_days">Son 2 gün</string>
+    <string name="time_last_4_days">Son 4 gün</string>
+    <string name="time_last_week">Geçen hafta</string>
+    <string name="time_last_month">Geçen ay</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Tara</string>
+    <string name="ble_config_scan_stop">Dur</string>
+    <string name="ble_config_scan_selected">Seçili</string>
+    <string name="ble_config_scan_scanning">Taranıyor</string>
+    <string name="ble_config_scan_finished">Tarama tamamlandı</string>
+    <string name="ble_config_scan_error">Tarama Hatası:%1$d</string>
+    <string name="ble_config_remove">Kaldır</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Tip:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d gün</item>
+        <item quantity="other">%1$d gün</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">%1$d saat önce</item>
+        <item quantity="other">%1$d saat önce</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d gün önce</item>
+        <item quantity="other">%1$d gün önce</item>
+    </plurals>
+</resources>

@@ -19,6 +19,39 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToLong
 
+/**
+ * Builds interactive blood glucose graph charts for Wear OS watchfaces.
+ *
+ * Creates a multi-layer line chart displaying:
+ * - Historical BG readings (color-coded by range: high/in-range/low)
+ * - Prediction lines (COB, IOB, UAM, ZT)
+ * - Treatment markers (boluses, carbs, temp basals)
+ * - Basal rate profile background
+ * - Target range lines
+ * - Time/value axes with grid
+ *
+ * The graph automatically scales to show configured time span (1-5 hours)
+ * and adjusts to accommodate predictions. Supports both full-color and
+ * low-resolution (ambient mode) rendering.
+ *
+ * @param sp SharedPreferences for user settings (grid, predictions, etc.)
+ * @param dateUtil Date utilities for time calculations
+ * @param bgDataList Historical BG readings to plot
+ * @param predictionsList Predicted future BG values (COB/IOB/UAM/ZT)
+ * @param tempWatchDataList Temporary basal rate changes to display
+ * @param basalWatchDataList Basal profile data for background
+ * @param bolusWatchDataList Bolus treatments to mark on graph
+ * @param pointSize Size of BG data points in pixels
+ * @param highColor Color for BG values above target range
+ * @param lowColor Color for BG values below target range
+ * @param midColor Color for BG values within target range
+ * @param gridColour Color for graph grid lines and axes
+ * @param basalBackgroundColor Background color for basal area
+ * @param basalCenterColor Center line color for basal profile
+ * @param bolusInvalidColor Color for invalid/aging bolus markers
+ * @param carbsColor Color for carb treatment markers
+ * @param timeSpan Time span to display in hours (1-5)
+ */
 class BgGraphBuilder(
     private val sp: SP,
     private val dateUtil: DateUtil,
@@ -64,7 +97,28 @@ class BgGraphBuilder(
             endingTime = max(predictionEndTime, endingTime)
     }
 
-    //used for low resolution screen.
+    /**
+     * Simplified constructor for low-resolution (ambient mode) rendering.
+     *
+     * Uses single color for all BG values (no range-based coloring) to comply
+     * with Wear OS ambient mode requirements (black and white only).
+     *
+     * @param sp SharedPreferences for user settings
+     * @param dateUtil Date utilities for time calculations
+     * @param aBgList Historical BG readings
+     * @param predictionsList Predicted BG values
+     * @param tempWatchDataList Temporary basal changes
+     * @param basalWatchDataList Basal profile data
+     * @param bolusWatchDataList Bolus treatments
+     * @param aPointSize Size of data points
+     * @param aMidColor Single color for all elements (typically white)
+     * @param gridColour Grid color (typically white)
+     * @param basalBackgroundColor Basal background (typically black)
+     * @param basalCenterColor Basal center line (typically white)
+     * @param bolusInvalidColor Bolus marker color
+     * @param carbsColor Carb marker color
+     * @param timeSpan Time span in hours
+     */
     constructor(
         sp: SP, dateUtil: DateUtil,
         aBgList: List<SingleBg>,
@@ -80,6 +134,22 @@ class BgGraphBuilder(
         basalBackgroundColor, basalCenterColor, bolusInvalidColor, carbsColor, timeSpan
     )
 
+    /**
+     * Build complete line chart data with all graph elements.
+     *
+     * Assembles the final chart by combining:
+     * 1. BG data lines (high/in-range/low values)
+     * 2. Prediction lines (COB, IOB, UAM, ZT if enabled)
+     * 3. Treatment lines (bolus, carbs, temp basals if enabled)
+     * 4. Target range lines (high/low marks)
+     * 5. Basal profile background (if enabled)
+     * 6. Axes and grid (if enabled in preferences)
+     *
+     * The chart automatically scales axes to fit all data points and
+     * configured time span.
+     *
+     * @return Complete LineChartData ready for rendering
+     */
     fun lineData(): LineChartData {
         val lineData = LineChartData(defaultLines())
         if (sp.getBoolean(R.string.key_show_graph_grid, true)) {

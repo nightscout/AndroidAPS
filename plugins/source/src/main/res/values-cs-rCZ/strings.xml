@@ -5,23 +5,23 @@
     <string name="ns_client_bg_short">NSGL</string>
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
     <string name="source_xdrip">xDrip+ glykémie</string>
-    <string name="description_source_xdrip">Příjem glykémií z xDripu+.</string>
+    <string name="description_source_xdrip">Přijímat hodnoty glykémie z xDripu+ a kompatibilních aplikací (Juggluco atd.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom (BYODA).</string>
+    <string name="description_source_dexcom">Přijímat glykémie z upravené aplikace Dexcom (BYODA).</string>
     <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
+    <string name="description_source_glimp">Přijímat glykémie z aplikace Glimp.</string>
     <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Příjem glykémií z Uploaderu 640G.</string>
+    <string name="description_source_mm640g">Přijímat glykémie z Uploaderu 640G.</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Získávat glykémie z aplikace Poctech</string>
+    <string name="description_source_poctech">Přijímat glykémie z aplikace Poctech</string>
     <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Získávat glykémie z aplikace Glunovo</string>
+    <string name="description_source_glunovo">Přijímat glykémie z aplikace Glunovo</string>
     <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Přijímat hodnoty z aplikace Intelligo</string>
+    <string name="description_source_intelligo">Přijímat glykémie z aplikace Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
+    <string name="description_source_tomato">Přijímat glykémie z aplikace Tomato (MiaoMiao zařízení)</string>
     <string name="random_bg">Náhodná glykémie</string>
     <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
     <string name="random_bg_short">Gly</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">Automaticky vytvořit událost „Výměna senzoru“ v části Péče při spuštění senzoru ze zdroje glykémie pomocí lokálního odesílání dat</string>
     <string name="direction">směr</string>
     <string name="bg_generation_interval_minutes">Interval generování glykémie v minutách</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Příjem glykémií z aplikace Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Příjem glykémií z aplikace Syai Tag.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Přijímat glykémie z aplikace Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplikace SI</string>
+    <string name="description_source_patched_si_app">Přijímat glykémie z upravené aplikace Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplikace Sino</string>
+    <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
 </resources>

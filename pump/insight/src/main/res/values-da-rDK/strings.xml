@@ -30,11 +30,6 @@
     <string name="timeout_during_handshake">En timeout opstod i parringsprosessen - genstart Bluetooth</string>
     <string name="pump_stopped">Pumpe stoppet</string>
     <string name="pump_started">Pumpe startet</string>
-    <string name="short_status_last_connected">Seneste forb: %1$d min siden</string>
-    <string name="short_status_tbr">MBR: %1$d%% i %2$d / %3$d min</string>
-    <string name="short_status_extended">Forlænget: %1$.2f / %2$.2f IE i %3$d min</string>
-    <string name="short_status_multiwave">Kombineret: %1$.2f / %2$.2f IE i %3$d min</string>
-    <string name="short_status_reservoir">Ampul: %1$.2f IE</string>
     <string name="safety_processor_software_version">Sikkerhedsprocessor software version</string>
     <string name="bt_info_page_version">BT infoside version</string>
     <string name="bluetooth_address">Bluetooth adresse</string>

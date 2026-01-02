@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_wifi_ssids">SSID WiFi</string>
     <string name="connection_settings_title">Definições de ligação</string>
     <string name="ns_wifi_allowed_ssids">SSIDs permitidos (separada por ponto e vírgula)</string>
@@ -12,10 +12,8 @@
     <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Erro de funcionamento do ClienteNS. Pondere reiniciar o NS e ClienteNS.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
-    <string name="ns_client">ClienteNS</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -31,17 +29,10 @@
     <string name="ns_receive_profile_store">Receber armazenamento de perfil</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfis a partir do editor de perfis do NS</string>
     <string name="ns_receive_temp_target">Receber alvos temporários</string>
-    <string name="ns_receive_temp_target_summary">Aceitar alvos temporários inseridos através do NS ou NSCliente</string>
     <string name="ns_receive_profile_switch">Receber mudança de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceitar mudanças de perfil inseridos através de NS ou NSCliente</string>
-    <string name="ns_receive_offline_event">Receber eventos da APS offline</string>
-    <string name="ns_receive_offline_event_summary">Aceitar eventos APS inseridos através de NS ou NSClient</string>
     <string name="ns_receive_insulin">Receber insulina</string>
-    <string name="ns_receive_insulin_summary">Aceitar insulina inserida através do NS ou NSClient (não é administrada, apenas utilizada no cálculo da IA)</string>
     <string name="ns_receive_carbs">Receber hidratos de carbono</string>
-    <string name="ns_receive_carbs_summary">Aceitar hidratos de carbono inseridos através do NS ou NSCliente</string>
     <string name="ns_receive_therapy_events">Receber tratamentos</string>
-    <string name="ns_receive_therapy_events_summary">Aceitar tratamentos (catéter, insulina, mudança de bateria etc) inseridos através do NS ou NSCliente</string>
     <string name="ns_receive_cgm">Receber/preencher dados do MCG</string>
     <string name="ns_receive_cgm_summary">Aceitar dados do MCG provenientes do NS</string>
     <string name="ns_sync_slow">Reduzir velocidade de transferência</string>
@@ -53,12 +44,6 @@
     <string name="ns_log_app_started_event">Registar inicio da app no NS</string>
     <string name="copy_existing_values">Copiar definições do NS (se existir)?</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
-    <string name="title_tidepool_username">Nome de Utilizador</string>
-    <string name="summary_tidepool_password">Senha da conta Tidepool</string>
-    <string name="title_tidepool_password">Senha Login</string>
-    <string name="title_tidepool_test_login">Teste de Conta Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Se ativado, o envio será para https://int-app.tidepool.org em vez do habitual https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>

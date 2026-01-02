@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba trocado.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d m atrás</string>
     <string name="minago_long">%%1$d minutos atrás</string>
-    <string name="hoursago">%1$.1f h atrás</string>
     <string name="days_ago">%1$.1f dias atrás</string>
     <string name="days_ago_round">%1$.0f dias atrás</string>
     <string name="in_days">em %1$.0f dias</string>

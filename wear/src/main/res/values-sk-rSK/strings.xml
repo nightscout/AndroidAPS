@@ -90,6 +90,7 @@
     <string name="menu_default">Štandardný</string>
     <string name="menu_menu">Ponuka</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Trvanie\n[minúty]</string>
     <string name="action_tempt_confirmation">Požadovaný dočasný cieľ</string>
     <string name="action_quick_wizard_confirmation">Požadovaný rýchly bolus</string>
     <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
@@ -99,15 +100,24 @@
     <string name="action_fill_confirmation">Požadované plnenie</string>
     <string name="action_ecarb_confirmation">Požadované sacharidy</string>
     <string name="action_profile_switch_confirmation">Požadované prepnutie profilu</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cieľ\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nízka\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Vysoká\n[%s]</string>
     <string name="action_carbs">Sacharidy</string>
+    <string name="action_carbs_gram">Sacharidy [g]</string>
     <string name="action_ecarbs">eSacharidy</string>
+    <string name="action_percentage">Percento\n[%]</string>
+    <string name="action_start_minutes">Spustiť\n[minúty]</string>
     <string name="action_duration_h">Trvanie [h]</string>
+    <string name="action_duration_hours">Trvanie\n[hodiny]</string>
     <string name="action_insulin">Inzulín</string>
+    <string name="action_insulin_units">Inzulín [J]</string>
     <string name="action_preset_1">Predvoľba 1</string>
     <string name="action_preset_2">Predvoľba 2</string>
     <string name="action_preset_3">Predvoľba 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Ľubovoľné množstvo</string>
     <string name="action_confirm">POTVRDIŤ</string>
+    <string name="action_timeshift_hours">Časový posun\n[hodiny]</string>
     <string name="bolus_progress">Priebeh podávania bolusu</string>
     <string name="press_to_cancel">stlačením tlačidla zrušíte akciu</string>
     <string name="cancel_bolus">ZRUŠIŤ BOLUS</string>
@@ -141,20 +151,19 @@
     <string name="color_name_black">čierna</string>
     <string name="color_name_multicolor">viacfarebná</string>
     <string name="pref_simplify_ui">Zjednodušené užívateľské rozhranie</string>
-    <string name="pref_simplify_ui_sum">Zobraziť iba čas a glykémiu</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
     <string name="pref_include_external">Zahrnúť externé zobrazenia do šablóny</string>
     <string name="pref_switch_external">Zobraziť externé dáta v ciferníku</string>
     <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
-    <string name="digitalstyle_pref_your_style">Váš štýl:</string>
+    <string name="digitalstyle_pref_your_style">Tvoj štýl</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>
     <string name="digitalstyle_style_minimal">minimálny štýl</string>
     <string name="digitalstyle_style_shape">tvar štýlu</string>
     <string name="digitalstyle_style_full">úplný štýl</string>
-    <string name="digitalstyle_pref_your_color">Vaša farba:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Vaše nasýtenie farby:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Priehľadnosť farby:</string>
+    <string name="digitalstyle_pref_your_color">Tvoja farba</string>
+    <string name="digitalstyle_pref_your_color_saturation">Tvoja sýtosť farieb</string>
+    <string name="digitalstyle_pref_your_color_opacity">Tvoja priehľadnosť farieb</string>
     <string name="bolus_progress_channel_name">AAPS Priebeh podávania bolusu</string>
     <string name="bolus_progress_silent_channel_name">AAPS Priebeh podávania bolusu tichý</string>
     <string name="bolus_progress_channel_description">Priebeh bolusu a zrušenie</string>
@@ -209,7 +218,11 @@
     <string name="complication_full_status">Kompletný stav</string>
     <string name="complication_full_status_flipped">Kompletní stav (opačne)</string>
     <string name="complication_blood_glucose">Glykémia</string>
+    <string name="complication_blood_glucose_ext1">Glykémia Ext1</string>
+    <string name="complication_blood_glucose_ext2">Glykémia Ext2</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
+    <string name="complication_br_cob_iob_ext1">Bazál, COB &amp; IOB Ext1</string>
+    <string name="complication_br_cob_iob_ext2">Bazál, COB &amp; IOB Ext2</string>
     <string name="complication_br_iob">Bazál &amp; IOB</string>
     <string name="complication_br">Bazálna dávka</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
@@ -221,4 +234,22 @@
     <string name="status_loop_state">Stav uzavretého okruhu</string>
     <string name="label_loop_state_title">AAPS (Stav uzavretého okruhu)</string>
     <string name="action_loop_state_selected">Požadovaný stav uzavretého okruhu</string>
+    <string name="wizard_total_insulin">Celkový inzulín</string>
+    <string name="wizard_calculation">Výpočet</string>
+    <string name="wizard_carbs_format">%1$d g sacharidov</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_swipe_left_confirm">Potiahnite prstom doľava pre potvrdenie</string>
+    <string name="wizard_result_bg">GL</string>
+    <string name="wizard_result_bg_tt">GL (DC: %1$s)</string>
+    <string name="wizard_result_trend">15min trend</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Sacharidy (%1$d g)</string>
+    <string name="wizard_result_subtotal">Medzisúčet</string>
+    <string name="wizard_result_total">Spolu</string>
+    <string name="wizard_insulin_format">%1$s JI</string>
+    <string name="insulin_unit_short">JI</string>
+    <string name="wizard_result_correction_percentage">Korekcia %1$d%%</string>
+    <string name="expand_calculation_details">Kliknutím rozbalíte podrobnosti výpočtu</string>
+    <string name="wizard_confirmation_sent">Odoslané</string>
 </resources>

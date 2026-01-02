@@ -6,14 +6,13 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import org.joda.time.DateTime
@@ -25,6 +24,7 @@ import java.security.InvalidParameterException
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
@@ -36,8 +36,8 @@ class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
-    private val instantiator: Instantiator,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val profileStoreProvider: Provider<ProfileStore>
 ) {
 
     @Suppress("unused")
@@ -59,8 +59,8 @@ class DanaPump @Inject constructor(
 
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
-    @JvmField var readHistoryFrom: Long = 0 // start next history read from this timestamp
-    @JvmField var historyDoneReceived: Boolean = false // true when last history message is received
+    var readHistoryFrom: Long = 0 // start next history read from this timestamp
+    var historyDoneReceived: Boolean = false // true when last history message is received
 
     // Info
     var serialNumber = ""
@@ -106,13 +106,12 @@ class DanaPump @Inject constructor(
     var pumpSuspended = false
     var calculatorEnabled = false
     var dailyTotalUnits = 0.0
-    var decRatio = 0 // RS v3: [%] for pump IOB calculation
     var maxDailyTotalUnits = 0
     var bolusStep = 0.1
     var basalStep = 0.1
     var iob = 0.0
     var reservoirRemainingUnits = 0.0
-    var batteryRemaining = 0
+    var batteryRemaining: Int? = null
     var bolusBlocked = false
     var lastBolusTime: Long = 0
     var lastBolusAmount = 0.0
@@ -265,8 +264,7 @@ class DanaPump @Inject constructor(
     }
 
     var bolusStartErrorCode: Int = 0 // last start bolus errorCode
-    var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
-    var bolusAmountToBeDelivered = 0.0 // amount to be delivered
+    var bolusingDetailedBolusInfo: DetailedBolusInfo? = null // actually delivered treatment
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus finished
     var bolusStopForced = false // bolus forced to stop by user
@@ -368,7 +366,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return instantiator.provideProfileStore(json)
+            return profileStoreProvider.get().with(json)
         }
         return null
     }
@@ -386,11 +384,11 @@ class DanaPump @Inject constructor(
     }
 
     val isPasswordOK: Boolean
-        get() = password == preferences.get(DanaIntKey.DanaRPassword)
+        get() = password == preferences.get(DanaIntKey.Password)
 
     val isRSPasswordOK: Boolean
         get() = rsPassword.equals(
-            preferences.get(DanaStringKey.DanaRsPassword),
+            preferences.get(DanaStringKey.Password),
             ignoreCase = true
         ) || ignoreUserPassword
 

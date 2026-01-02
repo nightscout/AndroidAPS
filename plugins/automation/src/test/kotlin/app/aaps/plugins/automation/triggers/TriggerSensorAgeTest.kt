@@ -7,7 +7,7 @@ import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 import java.util.Optional
 
@@ -15,7 +15,7 @@ class TriggerSensorAgeTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
         val sensorAgeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.SENSOR_CHANGE)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorAgeEvent)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorAgeEvent)
         var t: TriggerSensorAge = TriggerSensorAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerSensorAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -35,7 +35,7 @@ class TriggerSensorAgeTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunNotAvailable() {
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(null)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(null)
         var t = TriggerSensorAge(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         t = TriggerSensorAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)

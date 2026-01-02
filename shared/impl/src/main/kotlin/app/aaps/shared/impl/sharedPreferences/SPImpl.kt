@@ -159,9 +159,9 @@ class SPImpl @Inject constructor(
             SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
         }
 
-    override fun incLong(resourceID: Int) {
-        val value = getLong(resourceID, 0) + 1L
-        sharedPreferences.edit().putLong(context.getString(resourceID), value).apply()
+    override fun incLong(key: String) {
+        val value = getLong(key, 0) + 1L
+        sharedPreferences.edit().putLong(key, value).apply()
     }
 
     override fun putBoolean(key: String, value: Boolean) = sharedPreferences.edit().putBoolean(key, value).apply()
@@ -187,9 +187,9 @@ class SPImpl @Inject constructor(
     override fun putInt(resourceID: Int, value: Int) =
         sharedPreferences.edit().putInt(context.getString(resourceID), value).apply()
 
-    override fun incInt(resourceID: Int) {
-        val value = getInt(resourceID, 0) + 1
-        sharedPreferences.edit().putInt(context.getString(resourceID), value).apply()
+    override fun incInt(key: String) {
+        val value = getInt(key, 0) + 1
+        sharedPreferences.edit().putInt(key, value).apply()
     }
 
     override fun putString(resourceID: Int, value: String) =

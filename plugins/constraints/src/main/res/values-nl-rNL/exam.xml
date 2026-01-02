@@ -63,7 +63,6 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Vereisten</string>
     <string name="prerequisites_what">Wat is minimaal nodig om AAPS in te stellen en te gebruiken?</string>
-    <string name="prerequisites_computer">Een computer waarop Android Studio is geïnstalleerd en geconfigureerd.</string>
     <string name="prerequisites_pump">Een ondersteunde insulinepomp als je van plan bent een closed loop te gebruiken.</string>
     <string name="prerequisites_nightscout">Nightscout, om een logboek van alle gegevens bij te houden en instellingen te bekijken.</string>
     <string name="prerequisites_beanandroiddeveloper">Ervaar met programmeren of code aanpassen.</string>
@@ -97,7 +96,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/\"regular\" menselijke insuline.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/nl/latest/Configuration/Config-Builder.html#insuline</string>
     <string name="sensitivity_label">Gevoeligheidsplugins</string>
     <string name="sensitivity_adjust">Gevoeligheidsplugins stellen AndroidAPS in staat om aan te passen aan tijdelijke of kortstondige veranderingen in insulinegevoeligheid (bijvoorbeeld hormonale veranderingen of problemen met insuline-opname bij de infuusplaats).</string>

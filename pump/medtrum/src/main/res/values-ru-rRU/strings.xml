@@ -28,6 +28,7 @@
     <string name="fw_version_label">Версия ПО</string>
     <string name="patch_no_label">Номер патча</string>
     <string name="patch_expiry_label">Патч заканчивается</string>
+    <string name="patch_activation_time_label">Активация</string>
     <string name="refresh_label">Обновить</string>
     <string name="reset_alarms_label">Сбросить оповещения</string>
     <string name="change_patch_label">Сменить патч</string>

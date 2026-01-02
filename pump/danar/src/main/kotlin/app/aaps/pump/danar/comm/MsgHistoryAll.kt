@@ -2,9 +2,9 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.events.EventDanaRSyncStatus
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecord
+import app.aaps.pump.dana.events.EventDanaRSyncStatus
 import dagger.android.HasAndroidInjector
 
 @Suppress("SpellCheckingInspection")

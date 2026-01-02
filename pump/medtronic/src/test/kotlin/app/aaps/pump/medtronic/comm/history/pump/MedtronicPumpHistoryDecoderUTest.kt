@@ -2,12 +2,12 @@ package app.aaps.pump.medtronic.comm.history.pump
 
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.utils.pump.ByteUtil
-import com.google.common.truth.Truth.assertThat
 import app.aaps.pump.medtronic.MedtronicTestBase
 import app.aaps.pump.medtronic.comm.history.RawHistoryPage
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.util.MedtronicUtil
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -19,11 +19,6 @@ import org.mockito.Mock
 class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
 
     @Mock lateinit var uiInteraction: UiInteraction
-    //@Mock lateinit var injector: HasAndroidInjector
-    //@Mock lateinit var rh: ResourceHelper
-//    @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
-    //@Mock lateinit var rileyLinkUtil: RileyLinkUtil
-    //@Mock lateinit var sp: SP
 
     private lateinit var medtronicPumpStatus: MedtronicPumpStatus
 
@@ -31,10 +26,8 @@ class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
     //private var decoder: MedtronicPumpHistoryDecoder? = null
 
     @BeforeEach fun setup() {
-        medtronicPumpStatus =
-            MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
-        medtronicUtil =
-            MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
+        medtronicPumpStatus = MedtronicPumpStatus(preferences, rxBus, rileyLinkUtil)
+        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }
 

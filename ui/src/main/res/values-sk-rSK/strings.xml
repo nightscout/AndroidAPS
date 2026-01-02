@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Spolu</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Predné</string>
+    <string name="site_back">Zadné</string>
+    <string name="site_man">Muž</string>
+    <string name="site_woman">Žena</string>
+    <string name="site_child">Dieťa</string>
+    <string name="user_profile">Profil používateľa</string>
+    <string name="user_profile_description">Popis profilu používateľa sa používa na zobrazenie nejčastejších miest aplikácie dostupných pre mužov, ženy, alebo deti</string>
+    <string name="site_management">Profil správy miesta aplikácie</string>
+    <string name="site_management_description">Tu nastavíte, či chcete spravovať miesta aplikácie pre pumpu, senzor, alebo oboje. Toto nastavenie bude použité na automatické zobrazenie dialógového okna správy miesta aplikácie u každého zisteného nového záznamu.</string>
+    <string name="select_site">Kliknutím nižšie vyberte miesto aplikácie</string>
+    <string name="record_site_change">Zaznamenať miesto aplikácie</string>
+    <string name="edit_site">Upraviť</string>
+    <string name="record_site_location">Miesto aplikácie: %1$s</string>
+    <string name="record_site_arrow">Šípka miesta aplikácie: %1$s</string>
+    <string name="record_site_note">Poznámka: %1$s</string>
+    <string name="delete_site_note">Poznámka odstránená</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
     <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">Použiť čiernu farbu</string>
     <string name="widget_configuration">Konfiguráciu widgetu</string>
+    <string name="until_changed">Dokiaľ sa nezmení</string>
+    <string name="limitations">Obmedzenia</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Iba kladné</item>

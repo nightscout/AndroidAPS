@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Bolus Max sur Pompe (U)</string>
     <string name="medtronic_pump_max_basal">Basal Max sur Pompe (U/h)</string>
     <string name="medtronic_pump_encoding">Encodage Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Mondial (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Encodage logiciel 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Encodage matériel 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Réveil et Réglage</string>
     <string name="medtronic_custom_action_clear_bolus_block">Effacer le bloc Bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Réinitialiser la config. RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lithium (vue étendue)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (vue étendue)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vue Étendue)</string>
-    <string name="medtronic_bolus_debugging">Débogage de Bolus/Traitements</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batterie RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">passé(e)s</string>
     <string name="medtronic_notification_check_time_date">Mise à jour nécessaire de l\'heure de la pompe</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Activé</string>
-    <string name="common_off">Off</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
     <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
     <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>

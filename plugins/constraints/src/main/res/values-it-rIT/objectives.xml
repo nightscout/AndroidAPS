@@ -75,6 +75,10 @@
     <string name="unfinshed_button">Prossimo N.C.</string>
     <string name="requestcode">Codice richiesta: %1$s</string>
     <string name="objectives_hint">(segna tutte le risposte corrette)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Non connesso a internet</string>
     <string name="failedretrievetime">Impossibile recuperare l\'ora</string>
     <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>

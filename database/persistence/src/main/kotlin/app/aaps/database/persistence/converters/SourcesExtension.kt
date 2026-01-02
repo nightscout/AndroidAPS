@@ -17,6 +17,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.TempBasalDialog     -> Sources.TempBasalDialog
         UserEntry.Sources.CalibrationDialog   -> Sources.CalibrationDialog
         UserEntry.Sources.FillDialog          -> Sources.FillDialog
+        UserEntry.Sources.SiteRotationDialog  -> Sources.SiteRotationDialog
         UserEntry.Sources.BgCheck             -> Sources.BgCheck
         UserEntry.Sources.SensorInsert        -> Sources.SensorInsert
         UserEntry.Sources.BatteryChange       -> Sources.BatteryChange
@@ -40,6 +41,10 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Glunovo             -> Sources.Glunovo
         UserEntry.Sources.Intelligo           -> Sources.Intelligo
         UserEntry.Sources.Xdrip               -> Sources.Xdrip
+        UserEntry.Sources.Ottai    -> Sources.Ottai
+        UserEntry.Sources.SyaiTag  -> Sources.SyaiTag
+        UserEntry.Sources.SiBionic -> Sources.SiBionic
+        UserEntry.Sources.Sino     -> Sources.Sino
         UserEntry.Sources.LocalProfile        -> Sources.LocalProfile
         UserEntry.Sources.Loop                -> Sources.Loop
         UserEntry.Sources.Maintenance         -> Sources.Maintenance
@@ -78,8 +83,6 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Garmin              -> Sources.Garmin
         UserEntry.Sources.Database            -> Sources.Database
         UserEntry.Sources.Unknown             -> Sources.Unknown
-        UserEntry.Sources.Ottai               -> Sources.Ottai
-        UserEntry.Sources.SyaiTag             -> Sources.SyaiTag
     }
 
 fun Sources.toDb(): UserEntry.Sources =
@@ -96,6 +99,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.TempBasalDialog     -> UserEntry.Sources.TempBasalDialog
         Sources.CalibrationDialog   -> UserEntry.Sources.CalibrationDialog
         Sources.FillDialog          -> UserEntry.Sources.FillDialog
+        Sources.SiteRotationDialog  -> UserEntry.Sources.SiteRotationDialog
         Sources.BgCheck             -> UserEntry.Sources.BgCheck
         Sources.SensorInsert        -> UserEntry.Sources.SensorInsert
         Sources.BatteryChange       -> UserEntry.Sources.BatteryChange
@@ -119,6 +123,10 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Glunovo             -> UserEntry.Sources.Glunovo
         Sources.Intelligo           -> UserEntry.Sources.Intelligo
         Sources.Xdrip               -> UserEntry.Sources.Xdrip
+        Sources.Ottai    -> UserEntry.Sources.Ottai
+        Sources.SyaiTag  -> UserEntry.Sources.SyaiTag
+        Sources.SiBionic -> UserEntry.Sources.SiBionic
+        Sources.Sino     -> UserEntry.Sources.Sino
         Sources.LocalProfile        -> UserEntry.Sources.LocalProfile
         Sources.Loop                -> UserEntry.Sources.Loop
         Sources.Maintenance         -> UserEntry.Sources.Maintenance
@@ -157,7 +165,5 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Garmin              -> UserEntry.Sources.Garmin
         Sources.Database            -> UserEntry.Sources.Database
         Sources.Unknown             -> UserEntry.Sources.Unknown
-        Sources.Ottai               -> UserEntry.Sources.Ottai
-        Sources.SyaiTag             -> UserEntry.Sources.SyaiTag
     }
 

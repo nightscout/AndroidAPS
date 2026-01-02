@@ -8,7 +8,7 @@ data class NE(
     val effectiveProfileSwitches: List<EPS>,
     val extendedBoluses: List<EB>,
     val glucoseValues: List<GV>,
-    val offlineEvents: List<OE>,
+    val runningModes: List<RM>,
     //val preferencesChanges: List<PreferenceChange>,
     val profileSwitches: List<PS>,
     val temporaryBasals: List<TB>,

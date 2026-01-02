@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpentreiber geändert.</string>
     <!--    DateUtil-->
-    <string name="minago">vor %1$d Min.</string>
     <string name="minago_long">vor %1$d Minuten</string>
-    <string name="hoursago">vor %1$.1f Stunde</string>
     <string name="days_ago">vor %1$.1f Tagen</string>
     <string name="days_ago_round">vor %1$.0f Tagen</string>
     <string name="in_days">in %1$.0f Tagen</string>

@@ -17,6 +17,19 @@ jobs:
       - checkout
 
       - run:
+          name: Run compileFullDebugAndroidTestSources
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            env
+            ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.daemon=true \
+            compileFullDebugAndroidTestSources
+
+      - run:
           name: Create avd
           command: |
             echo "no" | /usr/lib/android-sdk/cmdline-tools/13.0/bin/avdmanager --verbose create avd -n citest -k "system-images;android-31;google_apis_playstore;x86_64" --force
@@ -35,7 +48,12 @@ jobs:
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
             env
-            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g connectedFullDebugAndroidTest
+            ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.daemon=true \
+            connectedFullDebugAndroidTest
           
       - run:
           name: Kill emulators
@@ -48,7 +66,13 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g testFullDebugUnitTest
+            ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.workers.max=22 \
+            -Dorg.gradle.daemon=true \
+            testFullDebugUnitTest
 
       - run:
           run: Run jacocoAllDebugReport

@@ -35,7 +35,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
     <string name="exitwizard">Hopp over oppsettsveiviser</string>
-    <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basaendringer</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets-plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identifikasjon (e-post, Facebook eller Discord-nick osv.)</string>
     <string name="request">Forespørsel</string>
     <string name="apsmode_title">APS modus</string>
-    <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
     <string name="error_asking_for_permissions">Feil under spørring etter tillatelser</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Det ser ikke ut som mobilen støtter registrering av apper som unntas fra batterioptimalisering - du kan oppleve ytelsesproblemer.</string>
     <!--    ConfigBuilder-->

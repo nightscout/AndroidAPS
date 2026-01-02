@@ -2,7 +2,6 @@ package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.AlarmState
 import app.aaps.pump.medtrum.comm.enums.BasalType
@@ -10,6 +9,7 @@ import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class NotificationPacket(val injector: HasAndroidInjector) {
@@ -34,6 +34,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var medtrumPump: MedtrumPump
+    @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil
 
     companion object {
 
@@ -243,7 +244,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
     private fun handleSuspend(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Suspend notification received")
-        medtrumPump.suspendTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
+        medtrumPump.suspendTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
         aapsLogger.debug(LTag.PUMPCOMM, "Suspend time: ${medtrumPump.suspendTime}")
         return offset + SIZE_SUSPEND
     }
@@ -270,7 +271,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         val basalType = enumValues<BasalType>()[data.copyOfRange(offset, offset + 1).toInt()]
         val basalSequence = data.copyOfRange(offset + 1, offset + 3).toInt()
         val basalPatchId = data.copyOfRange(offset + 3, offset + 5).toLong()
-        val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
+        val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
         val basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
         val basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
         val basalDelivery = (basalRateAndDelivery shr 12) * 0.05
@@ -301,7 +302,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
     private fun handleStartTime(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
-        newPatchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
+        newPatchStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
         if (medtrumPump.patchStartTime != newPatchStartTime) {
             aapsLogger.debug(LTag.PUMPCOMM, "Patch start time changed from ${medtrumPump.patchStartTime} to $newPatchStartTime")
             medtrumPump.patchStartTime = newPatchStartTime

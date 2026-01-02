@@ -12,4 +12,5 @@
     <string name="autotune_run_with_error">Помилка при останньому запуску Autotune</string>
     <string name="autotune_run_cancelled">Виявлено ще один запуск Autotune, запуск скасовано</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

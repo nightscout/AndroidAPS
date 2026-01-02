@@ -6,15 +6,20 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.elements.NumberPicker
-import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class SWEditIntNumber(injector: HasAndroidInjector, private val init: Int, private val min: Int, private val max: Int) : SWItem(injector, Type.NUMBER) {
+class SWEditIntNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
-    private val validator: (Int) -> Boolean = { value -> value in min..max }
+    private val validator: (Int) -> Boolean = { value -> value in (preference as IntPreferenceKey).min..(preference as IntPreferenceKey).max }
     private var updateDelay = 0
 
     override fun generateDialog(layout: LinearLayout) {
@@ -34,9 +39,9 @@ class SWEditIntNumber(injector: HasAndroidInjector, private val init: Int, priva
         label?.let { l.setText(it) }
         l.setTypeface(l.typeface, Typeface.BOLD)
         layout.addView(l)
-        val initValue = sp.getInt(preference, init)
+        val initValue = preferences.get(preference as IntPreferenceKey)
         val numberPicker = NumberPicker(context)
-        numberPicker.setParams(initValue.toDouble(), min.toDouble(), max.toDouble(), 1.0, DecimalFormat("0"), false, null, watcher)
+        numberPicker.setParams(initValue.toDouble(), (preference as IntPreferenceKey).min.toDouble(), (preference as IntPreferenceKey).max.toDouble(), 1.0, DecimalFormat("0"), false, null, watcher)
 
         layout.addView(numberPicker)
         val c = TextView(context)
@@ -47,8 +52,8 @@ class SWEditIntNumber(injector: HasAndroidInjector, private val init: Int, priva
         super.generateDialog(layout)
     }
 
-    fun preference(preference: IntKey): SWEditIntNumber {
-        this.preference = preference.key
+    fun preference(preference: IntPreferenceKey): SWEditIntNumber {
+        this.preference = preference
         return this
     }
 

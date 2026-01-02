@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -26,7 +27,7 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -36,14 +37,13 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDeviceStatusChange
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
-import app.aaps.core.interfaces.rx.events.EventOfflineChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventRunningModeChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
@@ -52,9 +52,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
@@ -82,6 +84,9 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
@@ -103,13 +108,12 @@ import javax.inject.Singleton
 @Singleton
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    rh: ResourceHelper,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val sp: SP,
-    private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -119,7 +123,7 @@ class NSClientV3Plugin @Inject constructor(
     private val storeDataForDb: StoreDataForDb,
     private val decimalFormatter: DecimalFormatter,
     private val l: L
-) : NsClient, Sync, PluginBase(
+) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
@@ -128,7 +132,8 @@ class NSClientV3Plugin @Inject constructor(
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_ns_client_v3),
-    aapsLogger, rh
+    ownPreferences = listOf(NsclientBooleanKey::class.java, NsclientStringKey::class.java, NsclientLongKey::class.java),
+    aapsLogger, rh, preferences
 ) {
 
     @Suppress("PrivatePropertyName")
@@ -147,14 +152,14 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_paused, false)                                          -> rh.gs(app.aaps.core.ui.R.string.paused)
+                preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(app.aaps.core.ui.R.string.paused)
                 isAllowed.not()                                                                       -> blockingReason
                 preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
                 preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(R.string.not_connected)
                 lastOperationError != null                                                            -> rh.gs(app.aaps.core.ui.R.string.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(R.string.not_connected)
                 workIsRunning()                                                                       -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(app.aaps.core.interfaces.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(app.aaps.core.interfaces.R.string.authorized)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(R.string.read_only)
                 else                                                                                  -> rh.gs(app.aaps.core.ui.R.string.unknown)
             }
@@ -173,17 +178,18 @@ class NSClientV3Plugin @Inject constructor(
     internal var initialLoadFinished = false
 
     private val fullSyncSemaphore = Object()
+
     /**
      * Set to true if full sync is requested from fragment.
      * In this case we must enable accepting all data from NS even when disabled in preferences
      */
-    private var fullSyncRequested: Boolean = false
+    @VisibleForTesting var fullSyncRequested: Boolean = false
 
     /**
      * Full sync is performed right now
      */
     var doingFullSync = false
-        private set
+        @VisibleForTesting set
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName) {
@@ -202,12 +208,7 @@ class NSClientV3Plugin @Inject constructor(
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-        lastLoadedSrvModified = Json.decodeFromString(
-            sp.getString(
-                R.string.key_ns_client_v3_last_modified,
-                Json.encodeToString(LastModified.serializer(), LastModified(LastModified.Collections()))
-            )
-        )
+        lastLoadedSrvModified = Json.decodeFromString(preferences.get(NsclientStringKey.V3LastModified))
 
         setClient()
 
@@ -215,19 +216,23 @@ class NSClientV3Plugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ stopService() }, fabricPrivacy::logException)
+            .subscribe({
+                           stopService()
+                           WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventConnectivityOptionChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
                            rxBus.send(EventNSClientNewLog("● CONNECTIVITY", ev.blockingReason))
-                           assert(nsClientV3Service != null)
-                           if (ev.connected) {
-                               when {
-                                   isAllowed && nsClientV3Service?.storageSocket == null  -> setClient() // socket must be created
-                                   !isAllowed && nsClientV3Service?.storageSocket != null -> stopService()
+                           nsClientV3Service?.let { service ->
+                               if (ev.connected) {
+                                   when {
+                                       isAllowed && service.storageSocket == null  -> setClient() // socket must be created
+                                       !isAllowed && service.storageSocket != null -> stopService()
+                                   }
+                                   if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
                                }
-                               if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
                            }
                            rxBus.send(EventNSClientUpdateGuiStatus())
                        }, fabricPrivacy::logException)
@@ -238,7 +243,7 @@ class NSClientV3Plugin @Inject constructor(
                            if (ev.isChanged(StringKey.NsClientAccessToken.key) ||
                                ev.isChanged(StringKey.NsClientUrl.key) ||
                                ev.isChanged(BooleanKey.NsClient3UseWs.key) ||
-                               ev.isChanged(rh.gs(R.string.key_ns_paused)) ||
+                               ev.isChanged(NsclientBooleanKey.NsPaused.key) ||
                                ev.isChanged(BooleanKey.NsClientNotificationsFromAlarms.key) ||
                                ev.isChanged(BooleanKey.NsClientNotificationsFromAnnouncements.key)
                            ) {
@@ -246,14 +251,10 @@ class NSClientV3Plugin @Inject constructor(
                                nsAndroidClient = null
                                setClient()
                            }
-                           if (ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_local_profile_last_change)))
+                           if (ev.isChanged(LongNonKey.LocalProfileLastChange.key))
                                executeUpload("PROFILE_CHANGE", forceNew = true)
 
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNSClientNewLog::class.java)
             .observeOn(aapsSchedulers.io)
@@ -282,9 +283,9 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("EventTherapyEventChange", forceNew = false) }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventOfflineChange::class.java)
+            .toObservable(EventRunningModeChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventOfflineChange", forceNew = false) }, fabricPrivacy::logException)
+            .subscribe({ executeUpload("EventRunningModeChange", forceNew = false) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventProfileStoreChanged::class.java)
             .observeOn(aapsSchedulers.io)
@@ -329,6 +330,7 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun onStop() {
         handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quit()
         handler = null
         disposable.clear()
         stopService()
@@ -358,7 +360,10 @@ class NSClientV3Plugin @Inject constructor(
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
         SystemClock.sleep(2000)
-        startService()
+        if (preferences.get(BooleanKey.NsClient3UseWs)) {
+            if (nsClientV3Service == null) startService()
+            else nsClientV3Service?.initializeWebSockets("setClient")
+        }
         rxBus.send(EventSWSyncStatus(status))
     }
 
@@ -387,8 +392,8 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_paused)))
+        preferences.put(NsclientBooleanKey.NsPaused, newState)
+        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override fun detectedNsVersion(): String? = nsAndroidClient?.lastStatus?.version
@@ -489,7 +494,7 @@ class NSClientV3Plugin @Inject constructor(
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
                     storeDataForDb.addToNsIdDeviceStatuses(dataPair.value)
-                    sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
+                    preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true)
                 }
                 slowDown()
                 return true
@@ -617,7 +622,7 @@ class NSClientV3Plugin @Inject constructor(
 
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toNSProfileSwitch(dateUtil, decimalFormatter)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toNSEffectiveProfileSwitch(dateUtil)
-            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toNSOfflineEvent()
+            is DataSyncSelector.PairRunningMode            -> dataPair.value.toNSOfflineEvent()
             else                                           -> null
         }?.let { data ->
             try {
@@ -693,9 +698,9 @@ class NSClientV3Plugin @Inject constructor(
                                 storeDataForDb.addToNsIdEffectiveProfileSwitches(dataPair.value)
                             }
 
-                            is DataSyncSelector.PairOfflineEvent           -> {
+                            is DataSyncSelector.PairRunningMode            -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.addToNsIdOfflineEvents(dataPair.value)
+                                storeDataForDb.addToNsIdRunningModes(dataPair.value)
                             }
 
                             else                                           -> {
@@ -727,12 +732,12 @@ class NSClientV3Plugin @Inject constructor(
         }
 
     fun storeLastLoadedSrvModified() {
-        sp.putString(R.string.key_ns_client_v3_last_modified, Json.encodeToString(LastModified.serializer(), lastLoadedSrvModified))
+        preferences.put(NsclientStringKey.V3LastModified, Json.encodeToString(LastModified.serializer(), lastLoadedSrvModified))
     }
 
     internal fun executeLoop(origin: String, forceNew: Boolean) {
         if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished) return
-        if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● RUN", "paused  $origin"))
             return
         }
@@ -778,7 +783,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun executeUpload(origin: String, forceNew: Boolean) {
-        if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● RUN", "paused"))
             return
         }
@@ -841,7 +846,7 @@ class NSClientV3Plugin @Inject constructor(
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptInsulin, summary = R.string.ns_receive_insulin_summary, title = R.string.ns_receive_insulin))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptCarbs, summary = R.string.ns_receive_carbs_summary, title = R.string.ns_receive_carbs))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTherapyEvent, summary = R.string.ns_receive_therapy_events_summary, title = R.string.ns_receive_therapy_events))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptOfflineEvent, summary = R.string.ns_receive_offline_event_summary, title = R.string.ns_receive_offline_event))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptRunningMode, summary = R.string.ns_receive_running_mode_summary, title = R.string.ns_receive_running_mode))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTbrEb, summary = R.string.ns_receive_tbr_eb_summary, title = R.string.ns_receive_tbr_eb))
             })
             addPreference(preferenceManager.createPreferenceScreen(context).apply {

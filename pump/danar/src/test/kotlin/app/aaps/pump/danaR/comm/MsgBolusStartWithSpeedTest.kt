@@ -4,12 +4,13 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.danar.comm.MsgBolusStartWithSpeed
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 
 class MsgBolusStartWithSpeedTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
+        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(ConstraintObject(0.0, aapsLogger))
         val packet = MsgBolusStartWithSpeed(injector, 0.0, 0)
 
         // test message decoding

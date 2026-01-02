@@ -8,12 +8,12 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 
 class TriggerLocationTest : TriggerTestBase() {
 
     @BeforeEach fun mock() {
-        `when`(locationDataContainer.lastLocation).thenReturn(mockedLocation())
+        whenever(locationDataContainer.lastLocation).thenReturn(mockedLocation())
     }
 
     @Test fun copyConstructorTest() {
@@ -35,9 +35,9 @@ class TriggerLocationTest : TriggerTestBase() {
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
         //        t.modeSelected.setValue(InputLocationMode.Mode.OUTSIDE);
-        `when`(locationDataContainer.lastLocation).thenReturn(null)
+        whenever(locationDataContainer.lastLocation).thenReturn(null)
         assertThat(t.shouldRun()).isFalse()
-        `when`(locationDataContainer.lastLocation).thenReturn(mockedLocation())
+        whenever(locationDataContainer.lastLocation).thenReturn(mockedLocation())
         assertThat(t.shouldRun()).isTrue()
         t = TriggerLocation(injector)
         t.distance.setValue(-500.0)
@@ -47,8 +47,8 @@ class TriggerLocationTest : TriggerTestBase() {
         t = TriggerLocation(injector)
         t.distance.setValue(50.0)
         t.lastMode = t.currentMode(55.0)
-        `when`(locationDataContainer.lastLocation).thenReturn(null)
-        `when`(locationDataContainer.lastLocation).thenReturn(mockedLocationOut())
+        whenever(locationDataContainer.lastLocation).thenReturn(null)
+        whenever(locationDataContainer.lastLocation).thenReturn(mockedLocationOut())
         t.modeSelected.value = InputLocationMode.Mode.GOING_IN
         assertThat(InputLocationMode.Mode.OUTSIDE).isEqualTo(t.lastMode)
         assertThat(InputLocationMode.Mode.INSIDE).isEqualTo(t.currentMode(5.0))

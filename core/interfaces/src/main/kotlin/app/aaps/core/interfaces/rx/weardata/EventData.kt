@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.rx.weardata
 
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -10,7 +9,6 @@ import java.util.Date
 import java.util.Objects
 
 @Serializable
-@OptIn(InternalSerializationApi::class)
 sealed class EventData : Event() {
 
     var sourceNodeId = ""
@@ -79,6 +77,17 @@ sealed class EventData : Event() {
     data class ActionLoopStatus(val timeStamp: Long) : EventData()
 
     @Serializable
+    data class ActionLoopStatusDetailed(
+        val timeStamp: Long
+    ) : EventData()
+
+    @Serializable
+    data class LoopStatusResponse(
+        val timeStamp: Long,
+        val data: LoopStatusData
+    ) : EventData()
+
+    @Serializable
     data class ActionTddStatus(val timeStamp: Long) : EventData()
 
     @Serializable
@@ -104,6 +113,26 @@ sealed class EventData : Event() {
 
     @Serializable
     data class ActionQuickWizardPreCheck(val guid: String) : EventData()
+
+    @Serializable
+    data class ActionWizardResult(
+        val timestamp: Long,
+        val totalInsulin: Double,
+        val carbs: Int,
+        val ic: Double,
+        val sens: Double,
+        val insulinFromCarbs: Double,
+        val insulinFromBG: Double?,
+        val insulinFromCOB: Double?,
+        val insulinFromBolusIOB: Double?,
+        val insulinFromBasalIOB: Double?,
+        val insulinFromTrend: Double?,
+        val insulinFromSuperBolus: Double?,
+        val tempTarget: String?,
+        val percentageCorrection: Int?,
+        val totalBeforePercentage: Double?,
+        val cob: Double
+    ) : EventData()
 
     @Serializable
     data class ActionUserActionPreCheck(val id: Int, val title: String) : EventData()
@@ -187,7 +216,7 @@ sealed class EventData : Event() {
     data class OpenLoopRequestConfirmed(val timeStamp: Long) : EventData()
 
     @Serializable
-    data class LoopStatesList(val timeStamp: Long, val states: List<AvailableLoopState>, val currentState: AvailableLoopState) : EventData() {
+    data class LoopStatesList(val timeStamp: Long, val states: List<AvailableLoopState>) : EventData() {
         @Serializable
         data class AvailableLoopState(
             val state: LoopState,
@@ -202,13 +231,12 @@ sealed class EventData : Event() {
                 LOOP_CLOSED,
 
                 LOOP_DISABLE,
-                LOOP_ENABLE,
 
-                LOOP_SUSPEND, // 1h, 2h, 3h, 10h
+                LOOP_USER_SUSPEND, // 1h, 2h, 3h, 10h
+                LOOP_PUMP_SUSPEND,
                 LOOP_RESUME,
 
                 PUMP_DISCONNECT, // 15m, 30m, 1h, 2h, 3h
-                PUMP_RECONNECT,
 
                 // Returned current statuses
                 LOOP_UNKNOWN,

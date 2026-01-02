@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Tích hợp bơm Medtronic, cần có thiết bị RileyLink và đúng mẫu bơm hỗ trợ</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Số serial Pump</string>
+    <string name="medtronic_pump_type">Loại Pump</string>
+    <string name="medtronic_pump_frequency">Tần số Pump</string>
+    <string name="medtronic_pump_bolus_delay">Thời gian trễ trước khi bắt đầu tiêm bolus (giây)</string>
+    <string name="medtronic_pump_max_bolus">Bolus tối đa trên bơm (U)</string>
+    <string name="medtronic_pump_max_basal">Basal tối đa trên bơm (U)</string>
+    <string name="medtronic_pump_encoding">Mã hóa Medtronic</string>
+    <string name="medtronic_custom_action_wake_and_tune">Đánh thức và hiệu chỉnh</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Xóa chặn bolus</string>
+    <string name="medtronic_custom_action_reset_rileylink">Đặt lại cấu hình RileyLink</string>
+    <string name="medtronic_pump_battery_select">Loại pin (xem nguồn)</string>
+    <string name="medtronic_pump_battery_no">Chưa chọn (xem đơn giản)</string>
+    <string name="medtronic_pump_battery_alkaline">Pin Alkaline (xem mở rộng)</string>
+    <string name="medtronic_pump_battery_lithium">Pin lithium (xem mở rộng)</string>
+    <string name="medtronic_pump_battery_nizn">Pin NiZn (xem mở rộng)</string>
+    <string name="medtronic_pump_battery_nimh">Pin NiMH (xem mở rộng)</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Pin RileyLink</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Lỗi</string>
+    <string name="medtronic_error_serial_not_set">Serial # chưa thiết lập.</string>
+    <string name="medtronic_error_serial_invalid">Serial # chưa hợp lệ.</string>
+    <string name="medtronic_error_pump_type_not_set">Chưa chọn loại pump.</string>
+    <string name="medtronic_error_pump_type_invalid">Loại pump này không được hỗ trợ.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Tần số pump chưa được thiết lập.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Tần số bơm không được hỗ trợ.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Địa chỉ RileyLink không hợp lệ.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Loại pump phát hiện không khớp với loại đã cấu hình.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Cài đặt các profiles/patterns chưa được bật trên bơm. Hãy bật nó trên bơm.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Cấu hình Basal trên bơm không chính xác (phải là Standard).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Loại TBR trên pump không đúng (phải là Absolute).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Giá trị Max Bolus trên pump không đúng (phải là %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Giá trị Max Basal trên pump không đúng (phải là %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Thao tác không thể thực hiện được.\n\nBạn cần cấu hình bơm Medtronic trước khi có thể sử dụng thao tác này.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Yêu cầu thay đổi thời gian trên 24 giờ đã được gửi.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Lịch sử Pump Medtronic</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Bạn đã hủy Bolus sau khi nó đã được thiết lập trên pump. Vì pump Medtronic không hỗ trợ hủy trực tiếp, bạn sẽ cần hủy thủ công. Đặt pump vào chế độ Suspend rồi thực hiện Resume (nếu bạn vẫn muốn hủy). Ứng dụng sẽ nhận các thay đổi này trong lần cập nhật tiếp theo (dưới 5 phút).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Không thể đọc TBR hiện tại.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Không thể hủy TBR hiện tại. Dừng thao tác.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Thiết lập cấu hình thất bại, vì các mẫu sau có tỷ lệ Basal quá cao: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Không thể tiêm Bolus.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Không thể tiêm Bolus, vì lượng insulin hiện có (%1$.2f) ít hơn lượng Bolus yêu cầu (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">Không thể thiết lập TBR.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Không thể hủy TBR hiện tại.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Không thể thiết lập Cấu hình Basal.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Cấu hình Basal không thay đổi, nên sẽ không được thiết lập lại.</string>
+    <string name="medtronic_cmd_desc_get_history">Lấy lịch sử - Trang %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Lấy lịch sử - Trang %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Lấy thời gian Pump</string>
+    <string name="medtronic_cmd_desc_set_time">Thiết lập thời gian Pump</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Lấy trạng thái pin</string>
+    <string name="medtronic_cmd_desc_get_settings">Lấy cài đặt</string>
+    <string name="medtronic_cmd_desc_get_model">Lấy mẫu Pump</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Lấy Cấu hình Basal</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Thiết lập Cấu hình Basal</string>
+    <string name="medtronic_cmd_desc_get_tbr">Lấy Temporary Basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Thiết lập liều nền tạm thời</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Hủy liều nền tạm thời</string>
+    <string name="medtronic_cmd_desc_set_bolus">Thiết lập liều Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Lấy lượng insulin còn lại</string>
+    <string name="medtronic_pump_status_pump_unreachable">Không thể kết nối với Pump</string>
+    <string name="medtronic_warning">Cảnh báo</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Bây giờ</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">cách đây</string>
+    <string name="medtronic_notification_check_time_date">Cần cập nhật đồng hồ Pump</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="pump_time_updated">Đã đồng bộ thời gian Pump</string>
+    <string name="set_neutral_temps_title">Thiết lập basal tạm thời trung tính</string>
+    <string name="set_neutral_temps_summary">Nếu được bật, tính năng này sẽ hủy liều nền tạm thời trước khi kết thúc mỗi giờ. Phương pháp này có thể giúp ngăn một số pump phát tiếng bíp hoặc rung vào đầu giờ.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/giờ (%2$d phút còn lại)</string>
+    <string name="invalid_history_data">Phát hiện dữ liệu lịch sử bơm không hợp lệ. Hãy tạo báo cáo mới và cung cấp nhật ký.</string>
+    <string name="riley_statistics">Thống kê RL</string>
+    <string name="medtronic_history_type">Loại:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Đã nhấn làm mới</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Cập nhật trạng thái theo lịch</string>
+</resources>

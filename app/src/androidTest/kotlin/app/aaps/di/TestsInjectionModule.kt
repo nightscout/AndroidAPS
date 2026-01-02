@@ -3,6 +3,7 @@ package app.aaps.di
 import app.aaps.CompatDbHelperTest
 import app.aaps.LoopTest
 import app.aaps.ReplayApsResultsTest
+import app.aaps.RunningConfigurationTest
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -17,4 +18,5 @@ abstract class TestsInjectionModule {
     @ContributesAndroidInjector abstract fun contributesReplayApsResultsTest(): ReplayApsResultsTest
     @ContributesAndroidInjector abstract fun contributesLoopTest(): LoopTest
     @ContributesAndroidInjector abstract fun contributesCompatDbHelperTest(): CompatDbHelperTest
+    @ContributesAndroidInjector abstract fun contributesRunningConfigurationTest(): RunningConfigurationTest
 }

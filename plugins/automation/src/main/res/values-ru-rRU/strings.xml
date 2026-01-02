@@ -78,6 +78,7 @@
     <string name="deltalabel">Разница Гк</string>
     <string name="deltalabel_u">Разница ГК [%1$s]</string>
     <string name="currentlocation">Текущее местоположение</string>
+    <string name="choose_from_map">Выбрать на карте</string>
     <string name="location">Местоположение</string>
     <string name="glucose_u">Гк %1$s]:</string>
     <string name="target_u">Цель [%1$s]:</string>
@@ -139,4 +140,10 @@
     <string name="triggerStepsCountLabel">Количество шагов</string>
     <string name="triggerStepsCountDesc">Количество шагов за %1$s минут %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Продолжительность измерения</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Включить/выключить SMB</string>
+    <string name="changeSmbTo">Изменить SMB на %1$s</string>
+    <string name="newSmbMode">Новый режим SMB:</string>
+    <string name="on">ВКЛ</string>
+    <string name="off">ВЫКЛ</string>
 </resources>

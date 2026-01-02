@@ -85,4 +85,11 @@ interface APS : ConfigExportImport {
      * @param tempBasalFallback if true previous enact of SMB failed. Try calculation without SMB
      */
     fun invoke(initiator: String, tempBasalFallback: Boolean)
+
+    /**
+     * Provide glucose status calculation
+     * @param allowOldData if true non current data will be allowed
+     * @return [GlucoseStatus]
+     */
+    fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus?
 }

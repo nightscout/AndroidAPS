@@ -34,7 +34,6 @@
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="exitwizard">Sair do assistente de configuração</string>
-    <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir ao AndroidAPS sugerir/fazer alterações na basal.</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor configurar o seu RileyLink abaixo. Após selecionar um RileyLink e assim que o estado do RileyLink for \"Conectado\", será possível continuar a instalação. Isso pode levar um minuto.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">Identificação (e-mail, apelido FB ou Discord, etc)</string>
     <string name="request">Pedido</string>
     <string name="apsmode_title">Modo APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="error_asking_for_permissions">Erro alterando permissões</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <!--    ConfigBuilder-->

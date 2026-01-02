@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
     <string name="treatments_wizard_total_label">Total</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Face</string>
+    <string name="site_back">Dos</string>
+    <string name="site_man">Homme</string>
+    <string name="site_woman">Femme</string>
+    <string name="site_child">Enfant</string>
+    <string name="user_profile">Profil utilisateur</string>
+    <string name="user_profile_description">La description du profil utilisateur est utilisée pour montrer les sites les plus fréquents disponibles pour un homme, une femme ou un enfant</string>
+    <string name="site_management">Paramètres de gestion du site</string>
+    <string name="site_management_description">Sélectionnez si vous souhaitez gérer le site de la pompe, le site MGC ou les deux. Ce paramètre permettra d\'ouvrir automatiquement la boîte de dialogue de gestion du site à chaque nouvelle entrée détectée</string>
+    <string name="select_site">Cliquez ci-dessous pour sélectionner le site</string>
+    <string name="record_site_change">Enregistrer la localisation du site</string>
+    <string name="edit_site">Éditer</string>
+    <string name="record_site_location">Site : %1$s</string>
+    <string name="record_site_arrow">Flèche : %1$s</string>
+    <string name="record_site_note">Note : %1$s</string>
+    <string name="delete_site_note">Note supprimée</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assurez-vous que le montant correspond à la spécification de votre ensemble de perfusions!</string>
     <string name="record_pump_site_change">Enregistrer le changement de site de la pompe</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">Utiliser la couleur noire</string>
     <string name="widget_configuration">Configuration du widget</string>
+    <string name="until_changed">Jusqu\'à nouvel ordre</string>
+    <string name="limitations">Limitations</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Les deux</item>
         <item>Positif uniquement</item>

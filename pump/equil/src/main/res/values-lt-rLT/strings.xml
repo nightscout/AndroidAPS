@@ -3,14 +3,12 @@
     <string name="equil_pump_description">Equil Patch 5.3 ar naujesnė pompa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Bazinis insulinas</string>
-    <string name="equil_bolus_delivered">%1$.3f vv / %2$.3f vv suleista</string>
     <string name="equil_btn_cancel">Atšaukti</string>
     <string name="equil_btn_need">Reikia</string>
     <string name="equil_btn_skip">Praleisti</string>
     <string name="equil_date_device">Paskutinis prisijungimas</string>
     <string name="equil_dressing">Rezervuaro keitimas</string>
     <string name="equil_dressing_onkey_msg">Stūmoklis automatiškai perkeliamas į rezervuaro dugną. Pasiekus dugną, jis automatiškai sustos. Jei reikia, spustelėkite „Stop“, kad nutrauktumėte veiksmą.</string>
-    <string name="equil_finish">Atlikta</string>
     <string name="equil_next">Toliau</string>
     <string name="equil_hint_dressing">Ši operacija sustabdys insulino leidimą ir inicijuos pompos stūmoklio atitraukimą iki apačios!</string>
     <string name="equil_history">Istorija</string>
@@ -91,7 +89,6 @@
     <string name="equil_command_connect_no_response">Nėra atsakymo iš pompos</string>
     <string name="equil_command__unknown">Nežinoma komandos būklė</string>
     <string name="equil_install">Įvesti pompą į kūną</string>
-    <string name="equil_settings">Nustatymai</string>
     <string name="equil_settings_alarm_battery">Įspėjimas apie senkančią bateriją</string>
     <string name="equil_settings_alarm_insulin">Įspėjimas apie mažą insulino likutį</string>
     <string name="equil_init_insulin_error">Rezervuaro inicijavimas nebaigtas</string>
@@ -122,11 +119,6 @@
     <string name="equil_history_item16">Baterija tuščia!</string>
     <string name="equil_history_item17">Įjungimo atstatymas</string>
     <string name="equil_history_item18">Neįprastas suleidimas sustabdytas</string>
-    <string name="equil_common_short_status_last_connection">Pask. prijung: prieš %1$d min</string>
-    <string name="equil_common_short_status_last_bolus">Pask. Bolusas: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Laik. bazė: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Ištęstas: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Rezervuaras: %1$svv</string>
     <string name="equil_common_overview_button_suspend_delivery">Sustabdyti</string>
     <string name="equil_common_overview_button_resume_delivery">Atnaujinti suleidimą</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fvv/val @%2$s (%3$d/%4$d min)</string>
@@ -171,7 +163,6 @@
     <string name="equil_hint_dressing2">Nuimkite pompą nuo jos pagrindo</string>
     <string name="equil_unpair">Deaktyvuoti seną pompą%1$s?</string>
     <string name="equil_pump_updated">Pompa atnaujinta</string>
-    <string name="equil_maxbolus_tips">Didžiausias leistinas bolusas pompoje [%1$svv]</string>
     <string name="equil_replace_reservoir">Rezervuaras tuščias. Pakeiskite rezervuarą</string>
     <string name="error_mustbe6hexadidits">Turi būti 6 simboliai iš ABCDEF0123456789</string>
 </resources>

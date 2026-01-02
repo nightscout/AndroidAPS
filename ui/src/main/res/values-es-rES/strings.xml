@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Total</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Parte delantera</string>
+    <string name="site_back">Parte trasera</string>
+    <string name="site_man">Hombre</string>
+    <string name="site_woman">Mujer</string>
+    <string name="site_child">Niño</string>
+    <string name="user_profile">Perfil de usuario</string>
+    <string name="user_profile_description">La descripción del perfil del usuario se utiliza para mostrar los sitios más frecuentes disponibles para un hombre, una mujer o un niño.</string>
+    <string name="site_management">Perfil de gestión del sitio</string>
+    <string name="site_management_description">Aquí establecerá si desea gestionar la ubicación del sitio de la bomba, la del sensor (MCG) o ambos. Esta configuración se utilizará para enviar automáticamente el diálogo de administración del sitio en cada nueva entrada detectada</string>
+    <string name="select_site">Haga clic abajo para seleccionar la ubicación</string>
+    <string name="record_site_change">Registrar ubicación del sitio</string>
+    <string name="edit_site">Editar</string>
+    <string name="record_site_location">Ubicación del sitio: %1$s</string>
+    <string name="record_site_arrow">Flecha del sitio: %1$s</string>
+    <string name="record_site_note">Nota: %1$s</string>
+    <string name="delete_site_note">Nota borrada</string>
     <!-- FillDialog -->
     <string name="fill_warning">Por favor, asegúrate de que la cantidad coincide con la especificada en el set de infusión!</string>
     <string name="record_pump_site_change">Anotar el cambio de sitio de la bomba</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">Usar modo oscuro</string>
     <string name="widget_configuration">Configuración del Widget</string>
+    <string name="until_changed">Hasta el cambio</string>
+    <string name="limitations">Limitaciones</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>

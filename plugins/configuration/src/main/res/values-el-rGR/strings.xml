@@ -34,7 +34,6 @@
     <string name="profile">Προφίλ</string>
     <string name="doprofileswitch">Κάντε αλλαγή προφίλ</string>
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
-    <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να επιτρέψετε στο AndroidAPS να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
     <string name="setupwizard_aps_description">Επιλέξτε έναν από τους διαθέσιμους αλγόριθμους. Ταξινομούνται από το παλαιότερο στον νεότερο. Ένας νεότερος είναι συνήθως καλύτερος και πιο επιθετικός. Επομένως, αν είστε καινούριος στο κλειστό κύκλωμα, θα πρέπει πρώτα να επιλέξετε μόνο το AMA και όχι το τελευταίο. Μην ξεχάσετε να διαβάσετε το εγχειρίδιο του OpenAPS και να κάνετε τις ρυθμίσεις προτού αρχίσετε να το χρησιμοποιείτε.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Παρακαλώ ρυθμίστε τις παραμέτρους του RileyLink σας παρακάτω. Μετά την επιλογή ενός RileyLink, θα είναι δυνατόν να συνεχίσετε την εγκατάσταση μόλις η κατάσταση RileyLink είναι \"Συνδεδεμένο\". Αυτό μπορεί να διαρκέσει ένα λεπτό.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">Ταυτότητα (email, FB ή Discord κλπ)</string>
     <string name="request">Αίτημα</string>
     <string name="apsmode_title">Λειτουργία APS</string>
-    <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
     <string name="error_asking_for_permissions">Σφάλμα στην ερώτηση για δικαιώματα</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <!--    ConfigBuilder-->

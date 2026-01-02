@@ -1,28 +1,15 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Calendar
 
 class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacket) {
-                it.aapsLogger = aapsLogger
-                it.dateUtil = dateUtil
-            }
-            if (it is DanaRSPacketBolusGetStepBolusInformation) {
-                it.danaPump = danaPump
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketBolusGetStepBolusInformation(packetInjector)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketBolusGetStepBolusInformation(aapsLogger, dateUtil, danaPump)
 
         val array = createArray(13, 0.toByte()) // 11 + 2
         putByteToArray(array, 0, 2) // error 2

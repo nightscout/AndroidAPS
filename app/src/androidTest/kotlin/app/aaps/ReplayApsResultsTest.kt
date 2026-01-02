@@ -6,7 +6,8 @@ import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
-import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.GlucoseStatusAutoIsf
+import app.aaps.core.interfaces.aps.GlucoseStatusSMB
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
@@ -14,13 +15,12 @@ import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
@@ -57,7 +57,6 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
     @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMB
     @Inject lateinit var determineBasalAutoISF: DetermineBasalAutoISF
-    @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var preferences: Preferences
 
@@ -148,7 +147,7 @@ class ReplayApsResultsTest @Inject constructor() {
             preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
-        val glucoseStatus = GlucoseStatus(
+        val glucoseStatus = GlucoseStatusSMB(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getDouble("noise"),
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),
@@ -312,7 +311,7 @@ class ReplayApsResultsTest @Inject constructor() {
             preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
-        val glucoseStatus = GlucoseStatus(
+        val glucoseStatus = GlucoseStatusSMB(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getDouble("noise"),
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),
@@ -471,7 +470,7 @@ class ReplayApsResultsTest @Inject constructor() {
             preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
-        val glucoseStatus = GlucoseStatus(
+        val glucoseStatus = GlucoseStatusSMB(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = 0.0,
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),
@@ -610,7 +609,7 @@ class ReplayApsResultsTest @Inject constructor() {
         JSONAssert.assertEquals(
             "Error in file $filename",
             output.toString(),
-            result?.json()?.apply {
+            result.json()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
             }.toString(),
@@ -629,7 +628,7 @@ class ReplayApsResultsTest @Inject constructor() {
             preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
-        val glucoseStatus = GlucoseStatus(
+        val glucoseStatus = GlucoseStatusAutoIsf(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getDouble("noise"),
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),

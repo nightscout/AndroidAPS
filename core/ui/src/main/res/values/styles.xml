@@ -174,7 +174,9 @@
         <item name="tempTargetBgInRange">@color/tempTargetConfirmation</item>
         <!---Loop Icon-->
         <!---Loop Paused Icon Color-->
-        <item name="loopPaused">@color/loopSuspended</item>
+        <item name="loopSuspended">@color/loopSuspended</item>
+        <!---Loop LGS Icon Color-->
+        <item name="loopLgs">@color/loopLgs</item>
         <!---Loop Closed Icon Color-->
         <item name="loopClosed">@color/loopClosed</item>
         <!---Loop Disabled Icon Color-->

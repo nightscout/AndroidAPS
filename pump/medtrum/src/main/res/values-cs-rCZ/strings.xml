@@ -28,6 +28,7 @@
     <string name="fw_version_label">Verze FW</string>
     <string name="patch_no_label">Č. patche</string>
     <string name="patch_expiry_label">Patch vyprší</string>
+    <string name="patch_activation_time_label">Aktivace</string>
     <string name="refresh_label">Obnovit</string>
     <string name="reset_alarms_label">Resetovat alarmy</string>
     <string name="change_patch_label">Vyměnit patch</string>

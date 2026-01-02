@@ -6,31 +6,45 @@ import androidx.preference.PreferenceManager
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
-import app.aaps.core.objects.aps.DetermineBasalResult
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.implementation.instantiator.InstantiatorImpl
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
+import app.aaps.implementation.aps.DetermineBasalResult
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
+import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.implementation.utils.DecimalFormatterImpl
+import app.aaps.plugins.aps.openAPS.DeltaCalculator
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -41,14 +55,18 @@ import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.whenever
+import javax.inject.Provider
 
 @Suppress("SpellCheckingInspection")
 open class TestBaseWithProfile : TestBase() {
 
-    @Mock open lateinit var activePlugin: ActivePlugin
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var processedTbrEbData: ProcessedTbrEbData
@@ -56,7 +74,6 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var context: DaggerApplication
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
     @Mock lateinit var theme: Resources.Theme
@@ -66,7 +83,19 @@ open class TestBaseWithProfile : TestBase() {
     lateinit var profileUtil: ProfileUtil
     lateinit var decimalFormatter: DecimalFormatter
     lateinit var hardLimits: HardLimits
-    lateinit var instantiator: Instantiator
+    lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    lateinit var profileStoreProvider: Provider<ProfileStore>
+    lateinit var glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
+    lateinit var deltaCalculator: DeltaCalculator
+    lateinit var apsResultProvider: Provider<APSResult>
+
+    val smbGlucoseStatusProvider = object : GlucoseStatusProvider {
+        override val glucoseStatusData: GlucoseStatus?
+            get() = getGlucoseStatusData(false)
+
+        override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = glucoseStatusCalculatorSMB.getGlucoseStatusData(allowOldData)
+
+    }
 
     private val injectors = mutableListOf<(Any) -> Unit>()
     fun addInjector(fn: (Any) -> Unit) {
@@ -75,15 +104,37 @@ open class TestBaseWithProfile : TestBase() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DetermineBasalResult) {
-                it.aapsLogger = aapsLogger
-                it.constraintChecker = constraintsChecker
+            if (it is AdaptiveDoublePreference) {
+                it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.activePlugin = activePlugin
-                it.processedTbrEbData = processedTbrEbData
-                it.profileFunction = profileFunction
-                it.rh = rh
-                it.decimalFormatter = decimalFormatter
+            }
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.config = config
+            }
+            if (it is AdaptiveIntentPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveUnitPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+            }
+            if (it is AdaptiveSwitchPreference) {
+                it.preferences = preferences
+                it.config = config
+            }
+            if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveListPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveListIntPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveClickPreference) {
+                it.preferences = preferences
             }
             injectors.forEach { fn -> fn(it) }
         }
@@ -94,6 +145,7 @@ open class TestBaseWithProfile : TestBase() {
     lateinit var preferenceManager: PreferenceManager
     lateinit var validProfile: ProfileSealed.Pure
     lateinit var effectiveProfileSwitch: EPS
+    lateinit var profileSwitch: PS
     lateinit var testPumpPlugin: TestPumpPlugin
 
     var now = 1656358822000L
@@ -109,18 +161,20 @@ open class TestBaseWithProfile : TestBase() {
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         preferenceManager = PreferenceManager(context)
-        dateUtil = Mockito.spy(DateUtilImpl(context))
+        dateUtil = spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(rh)
-        Mockito.`when`(context.applicationContext).thenReturn(context)
-        Mockito.`when`(context.androidInjector()).thenReturn(injector.androidInjector())
-        Mockito.`when`(context.theme).thenReturn(theme)
-        Mockito.`when`(context.obtainStyledAttributes(anyObject(), any(), any(), any())).thenReturn(typedArray)
-        Mockito.`when`(dateUtil.now()).thenReturn(now)
-        Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        Mockito.`when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
-        hardLimits = HardLimitsMock(sp, preferences, rh)
+        whenever(context.applicationContext).thenReturn(context)
+        whenever(context.androidInjector()).thenReturn(injector.androidInjector())
+        whenever(context.theme).thenReturn(theme)
+        whenever(context.obtainStyledAttributes(anyOrNull(), any(), any(), any())).thenReturn(typedArray)
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
+        whenever(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
+        deltaCalculator = DeltaCalculator(aapsLogger)
+        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider) }
+        hardLimits = HardLimitsMock(preferences, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
@@ -137,43 +191,56 @@ open class TestBaseWithProfile : TestBase() {
             originalEnd = 0,
             iCfg = ICfg("", 0, 0)
         )
+        profileSwitch = PS(
+            timestamp = dateUtil.now(),
+            basalBlocks = validProfile.basalBlocks,
+            isfBlocks = validProfile.isfBlocks,
+            icBlocks = validProfile.icBlocks,
+            targetBlocks = validProfile.targetBlocks,
+            glucoseUnit = GlucoseUnit.MMOL,
+            profileName = "",
+            timeshift = 0,
+            percentage = 100,
+            duration = 0,
+            iCfg = ICfg("", 0, 0)
+        )
 
-        Mockito.`when`(rh.gs(R.string.ok)).thenReturn("OK")
-        Mockito.`when`(rh.gs(R.string.error)).thenReturn("Error")
+        whenever(rh.gs(R.string.ok)).thenReturn("OK")
+        whenever(rh.gs(R.string.error)).thenReturn("Error")
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Int?>(1)
             String.format(rh.gs(string), arg1)
-        }.`when`(rh).gs(anyInt(), anyInt())
+        }.whenever(rh).gs(anyInt(), anyInt())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Double?>(1)
             String.format(rh.gs(string), arg1)
-        }.`when`(rh).gs(anyInt(), anyDouble())
+        }.whenever(rh).gs(anyInt(), anyDouble())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<String?>(1)
             String.format(rh.gs(string), arg1)
-        }.`when`(rh).gs(anyInt(), anyString())
+        }.whenever(rh).gs(anyInt(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<String?>(1)
             val arg2 = invocation.getArgument<String?>(2)
             String.format(rh.gs(string), arg1, arg2)
-        }.`when`(rh).gs(anyInt(), anyString(), anyString())
+        }.whenever(rh).gs(anyInt(), anyString(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<String?>(1)
             val arg2 = invocation.getArgument<Int?>(2)
             String.format(rh.gs(string), arg1, arg2)
-        }.`when`(rh).gs(anyInt(), anyString(), anyInt())
+        }.whenever(rh).gs(anyInt(), anyString(), anyInt())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Double?>(1)
             val arg2 = invocation.getArgument<String?>(2)
@@ -184,61 +251,63 @@ open class TestBaseWithProfile : TestBase() {
 
             // Use a default value or handle null appropriately
             String.format(formattedString, arg1, arg2)
-        }.`when`(rh).gs(anyInt(), anyDouble(), anyString())
+        }.whenever(rh).gs(anyInt(), anyDouble(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Double?>(1)
             val arg2 = invocation.getArgument<Int?>(2)
             String.format(rh.gs(string), arg1, arg2)
-        }.`when`(rh).gs(anyInt(), anyDouble(), anyInt())
+        }.whenever(rh).gs(anyInt(), anyDouble(), anyInt())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Int?>(1)
             val arg2 = invocation.getArgument<Int?>(2)
             String.format(rh.gs(string), arg1, arg2)
-        }.`when`(rh).gs(anyInt(), anyInt(), anyInt())
+        }.whenever(rh).gs(anyInt(), anyInt(), anyInt())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Int?>(1)
             val arg2 = invocation.getArgument<String?>(2)
             String.format(rh.gs(string), arg1, arg2)
-        }.`when`(rh).gs(anyInt(), anyInt(), anyString())
+        }.whenever(rh).gs(anyInt(), anyInt(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Int?>(1)
             val arg2 = invocation.getArgument<Int?>(2)
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
-        }.`when`(rh).gs(anyInt(), anyInt(), anyInt(), anyString())
+        }.whenever(rh).gs(anyInt(), anyInt(), anyInt(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Int?>(1)
             val arg2 = invocation.getArgument<String?>(2)
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
-        }.`when`(rh).gs(anyInt(), anyInt(), anyString(), anyString())
+        }.whenever(rh).gs(anyInt(), anyInt(), anyString(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Double?>(1)
             val arg2 = invocation.getArgument<Int?>(2)
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
-        }.`when`(rh).gs(anyInt(), anyDouble(), anyInt(), anyString())
+        }.whenever(rh).gs(anyInt(), anyDouble(), anyInt(), anyString())
 
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<String?>(1)
             val arg2 = invocation.getArgument<Int?>(2)
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
-        }.`when`(rh).gs(anyInt(), anyString(), anyInt(), anyString())
-        instantiator = InstantiatorImpl(injector, dateUtil, rh, aapsLogger, preferences, activePlugin, config, rxBus, hardLimits)
+        }.whenever(rh).gs(anyInt(), anyString(), anyInt(), anyString())
+        pumpEnactResultProvider = Provider { PumpEnactResultObject(rh) }
+        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil) }
+        glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
     }
 
     fun getValidProfileStore(): ProfileStore {
@@ -247,7 +316,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(json, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil).with(json)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -256,7 +325,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(json, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil).with(json)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -266,6 +335,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(json, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil).with(json)
     }
 }

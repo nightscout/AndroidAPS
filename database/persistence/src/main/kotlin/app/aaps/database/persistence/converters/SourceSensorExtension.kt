@@ -6,18 +6,9 @@ import app.aaps.database.entities.GlucoseValue
 fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
     when (this) {
         GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN  -> SourceSensor.DEXCOM_NATIVE_UNKNOWN
-        GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE       -> SourceSensor.DEXCOM_G5_NATIVE
         GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE       -> SourceSensor.DEXCOM_G6_NATIVE
         GlucoseValue.SourceSensor.DEXCOM_G7_NATIVE       -> SourceSensor.DEXCOM_G7_NATIVE
-        GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL        -> SourceSensor.DEXCOM_G4_WIXEL
-        GlucoseValue.SourceSensor.DEXCOM_G4_XBRIDGE      -> SourceSensor.DEXCOM_G4_XBRIDGE
-        GlucoseValue.SourceSensor.DEXCOM_G4_NATIVE       -> SourceSensor.DEXCOM_G4_NATIVE
         GlucoseValue.SourceSensor.MEDTRUM_A6             -> SourceSensor.MEDTRUM_A6
-        GlucoseValue.SourceSensor.DEXCOM_G4_NET          -> SourceSensor.DEXCOM_G4_NET
-        GlucoseValue.SourceSensor.DEXCOM_G4_NET_XBRIDGE  -> SourceSensor.DEXCOM_G4_NET_XBRIDGE
-        GlucoseValue.SourceSensor.DEXCOM_G4_NET_CLASSIC  -> SourceSensor.DEXCOM_G4_NET_CLASSIC
-        GlucoseValue.SourceSensor.DEXCOM_G5_XDRIP        -> SourceSensor.DEXCOM_G5_XDRIP
-        GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP -> SourceSensor.DEXCOM_G5_NATIVE_XDRIP
         GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP -> SourceSensor.DEXCOM_G6_NATIVE_XDRIP
         GlucoseValue.SourceSensor.DEXCOM_G7_NATIVE_XDRIP -> SourceSensor.DEXCOM_G7_NATIVE_XDRIP
         GlucoseValue.SourceSensor.DEXCOM_G7_XDRIP        -> SourceSensor.DEXCOM_G7_XDRIP
@@ -45,6 +36,8 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.UNKNOWN                -> SourceSensor.UNKNOWN
         GlucoseValue.SourceSensor.OTTAI                  -> SourceSensor.OTTAI
         GlucoseValue.SourceSensor.SYAI_TAG               -> SourceSensor.SYAI_TAG
+        GlucoseValue.SourceSensor.SIBIONIC -> SourceSensor.SIBIONIC
+        GlucoseValue.SourceSensor.SINO     -> SourceSensor.SINO
 
         GlucoseValue.SourceSensor.IOB_PREDICTION         -> SourceSensor.IOB_PREDICTION
         GlucoseValue.SourceSensor.A_COB_PREDICTION       -> SourceSensor.A_COB_PREDICTION
@@ -56,18 +49,9 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
 fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
     when (this) {
         SourceSensor.DEXCOM_NATIVE_UNKNOWN  -> GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN
-        SourceSensor.DEXCOM_G5_NATIVE       -> GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE
         SourceSensor.DEXCOM_G6_NATIVE       -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE
         SourceSensor.DEXCOM_G7_NATIVE       -> GlucoseValue.SourceSensor.DEXCOM_G7_NATIVE
-        SourceSensor.DEXCOM_G4_WIXEL        -> GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL
-        SourceSensor.DEXCOM_G4_XBRIDGE      -> GlucoseValue.SourceSensor.DEXCOM_G4_XBRIDGE
-        SourceSensor.DEXCOM_G4_NATIVE       -> GlucoseValue.SourceSensor.DEXCOM_G4_NATIVE
         SourceSensor.MEDTRUM_A6             -> GlucoseValue.SourceSensor.MEDTRUM_A6
-        SourceSensor.DEXCOM_G4_NET          -> GlucoseValue.SourceSensor.DEXCOM_G4_NET
-        SourceSensor.DEXCOM_G4_NET_XBRIDGE  -> GlucoseValue.SourceSensor.DEXCOM_G4_NET_XBRIDGE
-        SourceSensor.DEXCOM_G4_NET_CLASSIC  -> GlucoseValue.SourceSensor.DEXCOM_G4_NET_CLASSIC
-        SourceSensor.DEXCOM_G5_XDRIP        -> GlucoseValue.SourceSensor.DEXCOM_G5_XDRIP
-        SourceSensor.DEXCOM_G5_NATIVE_XDRIP -> GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP
         SourceSensor.DEXCOM_G6_NATIVE_XDRIP -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP
         SourceSensor.DEXCOM_G7_NATIVE_XDRIP -> GlucoseValue.SourceSensor.DEXCOM_G7_NATIVE_XDRIP
         SourceSensor.DEXCOM_G7_XDRIP        -> GlucoseValue.SourceSensor.DEXCOM_G7_XDRIP
@@ -95,6 +79,8 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.UNKNOWN                -> GlucoseValue.SourceSensor.UNKNOWN
         SourceSensor.OTTAI                  -> GlucoseValue.SourceSensor.OTTAI
         SourceSensor.SYAI_TAG               -> GlucoseValue.SourceSensor.SYAI_TAG
+        SourceSensor.SIBIONIC -> GlucoseValue.SourceSensor.SIBIONIC
+        SourceSensor.SINO     -> GlucoseValue.SourceSensor.SINO
 
         SourceSensor.IOB_PREDICTION         -> GlucoseValue.SourceSensor.IOB_PREDICTION
         SourceSensor.A_COB_PREDICTION       -> GlucoseValue.SourceSensor.A_COB_PREDICTION

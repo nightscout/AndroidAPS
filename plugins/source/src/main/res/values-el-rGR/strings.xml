@@ -5,7 +5,6 @@
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
     <string name="source_xdrip">xDrip+ -</string>
-    <string name="description_source_xdrip">Λάβετε τιμές BG από το xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Λάβετε τις τιμές BG από την εφαρμογή \'Build Your Own Dexcom App\'.</string>
@@ -26,6 +25,7 @@
     <string name="description_source_random_bg">Δημιουργία τυχαίων δεδομένων BG (λειτουργία επίδειξης μόνο)</string>
     <string name="random_bg_short">BG</string>
     <string name="direction">κατεύθυνση</string>
-    <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

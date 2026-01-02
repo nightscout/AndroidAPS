@@ -17,11 +17,8 @@ class OpenHumansWorker(
         (applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 
-    @Inject
-    lateinit var logger: AAPSLogger
-
-    @Inject
-    lateinit var openHumansUploader: OpenHumansUploaderPlugin
+    @Inject lateinit var logger: AAPSLogger
+    @Inject lateinit var openHumansUploader: OpenHumansUploaderPlugin
 
     override suspend fun doWork(): Result {
         return try {

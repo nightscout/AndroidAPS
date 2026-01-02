@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Celkem</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Přední</string>
+    <string name="site_back">Zadní</string>
+    <string name="site_man">Muž</string>
+    <string name="site_woman">Žena</string>
+    <string name="site_child">Dítě</string>
+    <string name="user_profile">Profil uživatele</string>
+    <string name="user_profile_description">Popis profilu uživatele se používá k zobrazení nejčastějších míst aplikace dostupných pro muže, ženy nebo děti</string>
+    <string name="site_management">Profil správy místa aplikace</string>
+    <string name="site_management_description">Zde nastavíte, zda chcete spravovat místa aplikace pro pumpu, senzor nebo obojí. Toto nastavení bude použito k automatickému zobrazení dialogového okna správy místa aplikace u každého zjištěného nového záznamu.</string>
+    <string name="select_site">Kliknutím níže vyberte místo aplikace</string>
+    <string name="record_site_change">Zaznamenat místo aplikace</string>
+    <string name="edit_site">Upravit</string>
+    <string name="record_site_location">Místo aplikace: %1$s</string>
+    <string name="record_site_arrow">Šipka místa aplikace: %1$s</string>
+    <string name="record_site_note">Poznámka: %1$s</string>
+    <string name="delete_site_note">Poznámka odstraněna</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
     <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
@@ -109,7 +126,7 @@
     <string name="motol_default_profile">Výchozí profil</string>
     <string name="current_profile">Aktuální profil</string>
     <string name="available_profile">Dostupný profil</string>
-    <string name="format_with_tdd">Věk: %1$.0f CDD: %2$.0f U</string>
+    <string name="format_with_tdd">Věk: %1$d CDD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Věk: %1$d CDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Věk: %1$.0f Hmotnost: %2$.0f kg</string>
     <string name="dpv_default_profile">Výchozí profil DPV</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">Použít černou barvu</string>
     <string name="widget_configuration">Konfigurace widgetu</string>
+    <string name="until_changed">Dokud nebude změněno</string>
+    <string name="limitations">Omezení</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Pouze kladné</item>

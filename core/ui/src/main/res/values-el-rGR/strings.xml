@@ -5,7 +5,6 @@
     <string name="error">Σφάλμα</string>
     <string name="profile_set_ok">Το Βασικό προφίλ στην αντλία ενημερώθηκε</string>
     <string name="invalid_input">Μη έγκυρα δεδομένα</string>
-    <string name="bolus_delivering">Έγχυση %1$.2f U</string>
     <string name="constraint_applied">Εφαρμόστηκαν Περιορισμοί!</string>
     <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
     <string name="tt_label">TT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Η αντλία δεν έχει ρυθμιστεί, δεν ορίστηκε προφίλ!</string>
     <string name="failed_update_basal_profile">Αποτυχία αναβάθμισης βασικού προφίλ</string>
-    <string name="bolus_delivered_successfully">Δόση Bolus %1$.2f U χορηγήθηκε επιτυχώς</string>
     <string name="no_valid_basal_rate">Διαβάζεται από την αντλία μη έγκυρος βασικός ρυθμός</string>
     <string name="limiting_iob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="loop_disabled">ΤΟ ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΘΗΚΕ ΑΠΟ ΠΕΡΙΟΡΙΣΜΟΥΣ</string>
@@ -89,7 +87,6 @@
     <string name="loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="alarm">Συναγερμός</string>
     <string name="disableloop">Απενεργοποιήστε κύκλωμα</string>
-    <string name="enableloop">Ενεργοποιήστε κύκλωμα</string>
     <string name="resumeloop">Επαναφορά κυκλώματος</string>
     <string name="suspendloop">Αναστολή κυκλώματος</string>
     <string name="duration_min_label">Διάρκεια [min]</string>
@@ -103,7 +100,6 @@
     <string name="name_short">Όνομα:</string>
     <string name="time">Χρόνος</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">Φόρτωση…</string>
     <string name="notes_label">Σημειώσεις</string>
     <string name="remove_button">Διαγραφή</string>
     <string name="add_new">Προσθήκη νέου</string>
@@ -164,7 +160,6 @@
     <string name="canceling_tbr_failed">Απέτυχε η Ακύρωση Προσωρινού Ρυθμού</string>
     <string name="canceling_eb_failed">Η ακύρωση της εκτεταμένης δόσης bolus απέτυχε</string>
     <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης αντλίας στο NS ή στο Tidepool</string>
-    <string name="suspendloop_label">Απενεργοποιημένο/Αναστολή κυκλώματος</string>
     <string name="iob_label">Ενεργή Ινσουλίνη (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Λάθος κωδικός</string>
@@ -281,7 +276,6 @@
     <string name="uel_lgs_loop_mode">ΛΕΙΤΟΥΡΓΙΑ ΚΥΚΛΩΜΑΤΟΣ LGS</string>
     <string name="uel_open_loop_mode">ΛΕΙΤΟΥΡΓΙΑ ΑΝΟΙΚΤΟΥ ΚΥΚΛΩΜΑΤΟΣ</string>
     <string name="uel_loop_disabled">ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ ΚΥΚΛΩΜΑΤΟΣ</string>
-    <string name="uel_loop_enabled">ΕΝΕΡΓΟΠΟΙΗΣΗ ΚΥΚΛΩΜΑΤΟΣ</string>
     <string name="uel_reconnect">ΕΝΑΝΑΣΥΝΔΕΣΗ</string>
     <string name="uel_disconnect">ΑΠΟΣΥΝΔΕΣΗ</string>
     <string name="uel_resume">ΕΠΑΝΑΦΟΡΑ</string>
@@ -554,4 +548,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <!--    Playback-->
 </resources>

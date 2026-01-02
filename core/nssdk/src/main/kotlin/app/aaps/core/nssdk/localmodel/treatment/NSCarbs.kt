@@ -21,5 +21,6 @@ data class NSCarbs(
     override val pumpSerial: String?,
     override var app: String? = null,
     val carbs: Double,
+    /** Duration in milliseconds */
     val duration: Long?
 ) : NSTreatment

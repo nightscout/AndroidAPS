@@ -5,7 +5,6 @@
     <string name="ns_client_bg_short">Glicose via NS</string>
     <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
     <string name="source_xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
@@ -26,6 +25,7 @@
     <string name="description_source_random_bg">Gerar dados aleatórios de glicemia (apenas no modo de demonstração)</string>
     <string name="random_bg_short">Glicemia</string>
     <string name="direction">direção</string>
-    <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

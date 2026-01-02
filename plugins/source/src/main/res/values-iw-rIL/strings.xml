@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">נתוני סוכר מ-NS</string>
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
     <string name="source_xdrip">נתוני סוכר מ-xDrip+</string>
-    <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
+    <string name="description_source_xdrip">מקבל ערכי סוכר מ-xDrip ומיישומים מתאימים (Juggluco ועוד).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
@@ -30,10 +30,7 @@
     <string name="bgsource_log_sensor_change_summary">צור באופן אוטומטי אירוע \"החדרת חיישן\" בפורטל הטיפולים עם קבלת אירוע התחלת חיישן משידור מקומי של מקור נתוני הסוכר</string>
     <string name="direction">כיוון</string>
     <string name="bg_generation_interval_minutes">מרווח זמן לקריאת רמת סוכר (דקות)</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">קבלת ערכי סוכר מיישומון Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">קבלת ערכי סוכר מיישומון Syai Tag.</string>
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

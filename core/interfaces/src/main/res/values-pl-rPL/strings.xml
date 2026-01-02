@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Zmieniono ster. pompy.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d min temu</string>
     <string name="minago_long">%1$d minut temu</string>
-    <string name="hoursago">%1$.1f godz. temu</string>
     <string name="days_ago">%1$.1f dni temu</string>
     <string name="days_ago_round">%1$.0f dni temu</string>
     <string name="in_days">za %1$.0f dni</string>

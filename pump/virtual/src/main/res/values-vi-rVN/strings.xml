@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Kiểu bơm ảo</string>
+    <string name="virtual_pump_definition">Cấu hình bơm</string>
+    <string name="virtual_pump_pump_def">Bolus: Bước = %1$s\nBolus mở rộng: [Bước = %2$s, Thời gian = %3$s phút - %4$s giờ]\nBasal: Bước = %5$s\nTBR: %6$s (bởi %7$s), Thời gian = %8$s phút - %9$s giờ\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="description_pump_virtual">Tích hợp bơm cho các loại bơm chưa có driver (Chế độ Mạch hở – Open Loop)</string>
+    <string name="virtual_pump_label">VIRTUAL PUMP</string>
+    <string name="virtualpump_settings">Cài đặt máy bơm ảo</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">*Chỉ hỗ trợ các giá trị rời rạc, không hỗ trợ khoảng giá trị, làm mức độ chi tiết cho basal/bolus trong bơm ảo.</string>
+</resources>

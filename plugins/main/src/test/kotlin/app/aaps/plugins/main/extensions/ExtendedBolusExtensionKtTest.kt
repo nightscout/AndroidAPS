@@ -17,7 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 
 class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
 
@@ -30,8 +30,8 @@ class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
 
     @BeforeEach fun setup() {
         insulin = InsulinLyumjevPlugin(rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction)
-        Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
-        Mockito.`when`(dateUtil.now()).thenReturn(now)
+        whenever(activePlugin.activeInsulin).thenReturn(insulin)
+        whenever(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun iobCalc() {
@@ -71,9 +71,9 @@ class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
 
     @Test fun isInProgress() {
         val bolus = EB(timestamp = now - 1, amount = 1.0, duration = T.hours(1).msecs())
-        Mockito.`when`(dateUtil.now()).thenReturn(now)
+        whenever(dateUtil.now()).thenReturn(now)
         assertThat(bolus.isInProgress(dateUtil)).isTrue()
-        Mockito.`when`(dateUtil.now()).thenReturn(now + T.hours(2).msecs())
+        whenever(dateUtil.now()).thenReturn(now + T.hours(2).msecs())
         assertThat(bolus.isInProgress(dateUtil)).isFalse()
     }
 

@@ -19,8 +19,6 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.lang.Exception
-import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -72,7 +70,7 @@ class StopBasalTask @Inject constructor(
 
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
-            commandQueue.cancelTempBasal(true, object : Callback() {
+            commandQueue.cancelTempBasal(true, callback = object : Callback() {
                 override fun run() {
                     basalCheckSubject.onNext(true)
                 }

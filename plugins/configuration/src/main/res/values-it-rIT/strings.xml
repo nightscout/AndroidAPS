@@ -35,7 +35,6 @@
     <string name="profile">Profilo</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="exitwizard">Salta configurazione guidata</string>
-    <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AAPS di proporre/fare modifiche alla basale</string>
     <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
@@ -50,7 +49,6 @@
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
     <string name="request">Richiesta</string>
     <string name="apsmode_title">Modalità APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modalità APS preferita</string>
     <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <!--    ConfigBuilder-->

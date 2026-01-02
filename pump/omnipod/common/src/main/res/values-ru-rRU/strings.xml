@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Управление помпой Omnipod </string>
+    <string name="omnipod_common_pod_management_heading_actions">Действия</string>
+    <string name="omnipod_common_pod_management_heading_tools">Инструментарий</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Активировать Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Деактивировать Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Завершить пользование Pod\'ом</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Если нажать Завершить пользование Pod\'ом, обмениваться командами с Pod будет невозможно. Делайте это только если связь с помпой постоянно отсутствует. Если связь с Pod еще возможна, воспользуйтесь опцией <b>Деактивировать Pod</b>.\n\n Если все же хотите продолжить, снимите Pod с тела!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Воспроизводится тестовый звуковой сигнал…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Журнал Pod</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Нет активных Pod</string>
+    <string name="omnipod_common_error_set_basal_failed">Настройка базального профиля не состоялась.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Болюс не подан.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Не удалось задать базальный профиль: получен пустой профиль. Активируйте профиль базала.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Базальный профиль не активен. Активируйте профиль базала.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Неподдерживаемая пользовательская команда: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Не удалось обновить статус</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Не удалось обновить статус при запуске</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Не удалось заглушить оповещения</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Не удалось приостановить подачу</string>
+    <string name="omnipod_common_error_failed_to_set_time">Не удалось задать время</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Не удалось возобновить подачу</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Не удалось инициализировать Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Не удалось установить канюлю</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Превышено время активации Pod. Этот Pod больше не может быть активирован.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Не удалось проверить ход активации. Повторите попытку.</string>
+    <string name="omnipod_common_error_pod_suspended">Omnipod остановлен</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Не удалось воспроизвести тестовый звуковой сигнал</string>
+    <string name="omnipod_common_error_time_out_of_sync">Время в Pod не синхронизировано. Обновите время на вкладке Omnipod.</string>
+    <string name="omnipod_common_error_unexpected_exception">Непредвиденная ошибка. Сообщите об ошибке! (%1$s:%2$s).</string>
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Подтверждение</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Конфигурация оповещений обновлена в Pod.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">Время на Pod обновлено.</string>
+    <string name="omnipod_common_confirmation_suspended_delivery">Все подачи инсулина приостановлены.</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">Активные оповещения были заглушены.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">Подача инсулина возобновлена.</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Установить время</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Останов</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Возобновить подачу</string>
+    <string name="omnipod_common_overview_button_pod_management">Управление помпой</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Заглушить</string>
+    <string name="omnipod_common_overview_pod_status">Статус помпы</string>
+    <string name="omnipod_common_overview_total_delivered">Всего подано</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f ед</string>
+    <string name="omnipod_common_overview_pod_unique_id">Уникальный ID</string>
+    <string name="omnipod_common_overview_lot_number">Номер партии</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Порядковый номер</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Срок действия Пода истекает</string>
+    <string name="omnipod_common_overview_last_connection">Прошлое соединение</string>
+    <string name="omnipod_common_overview_last_bolus">Прошлый болюс</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Временная базальная скорость</string>
+    <string name="omnipod_common_overview_base_basal_rate">Базовая скорость базала</string>
+    <string name="omnipod_common_overview_reservoir">Резервуар</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Активные оповещения помпы</string>
+    <string name="omnipod_common_overview_firmware_version">Версия прошивки</string>
+    <string name="omnipod_common_overview_time_on_pod">Время на Pod</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fед/ч @%2$s (%3$d/%4$d мин)</string>
+    <string name="omnipod_common_overview_reservoir_value">%1$.2f ед. осталось</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Осталось свыше 50 ед</string>
+    <string name="omnipod_common_overview_errors">Ошибки</string>
+    <string name="omnipod_common_uncertain">не подтверждено</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Отменить</string>
+    <string name="omnipod_common_wizard_button_finish">Завершить</string>
+    <string name="omnipod_common_wizard_button_next">Далее</string>
+    <string name="omnipod_common_wizard_button_retry">Повторить</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Деактивировать Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Завершить пользование Pod\'ом</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Вы еще не выполнили все шаги. Действительно хотите выйти?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Выход</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Заполнить Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Инициализировать Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Подключить Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Подготовьте место инфузии. Удалите колпачок с иглы и защиту липкого слоя, Установите Pod на тело.\n\nесли канюля выступает, нажмите <b>Отмена</b> и утилизируйте Pod.\n\nНажмите <b>Далее</b> чтобы установить катетер и начать подачу базала.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">При нажатии <b>OK</b>будет установлен катетер. Убедитесь, что вы подключили Pod к инфузионному отсеку.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Вставить катетер</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Определение графика подачи базала и установка катетера. \n\n После установки катетера нажмите <b>Далее</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod активирован</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Новый Pod активирован.\n\nБазальный график запрограммирован и катетер установлен.\n\nУбедитесь в том, что катетер установлен правильно и замените Pod, если такой уверенности нет.</string>
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Деактивировать Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nНажмите <b>Далее</b> для деактивации Pod \n\n<b>Примечание:</b> Это Приостановит любую подачу инсулина и деактивирует помпу.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod деактивируется</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Деактивация Pod.\n\nПри успешной деактивации можно нажать <b>Далее</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod деактивирован</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod деактивирован.\n\nУдалите и утилизируйте Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod сброшен</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Состояние Pod cброшено. Подача инсулина не была приостановлена, так как Pod не был правильно деактивирован!\n\nУдалите Pod с тела и утилизируйте его.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Если сбросить Pod, дальнейшая коммуникация с ним невозможна. Делайте это только тогда, когда все попытки связи с Pod неудачны. Вы уверены, что хотите cбросить Pod?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Завершить пользование Pod\'ом</string>
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Звуковой сигнал болюса включен</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Звуковой сигнал базала включен</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Звуковой сигнал микроболюса SMB включен</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Звуковой сигнал временного базала TBR включен</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Показывать кнопку Приостановить подачу на вкладке Omnipod</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Включено обнаружение часового пояса</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Включено напоминание об истечении срока действия</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">После активации POD издаст звуковой сигнал в определенное время</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Напомнить за… часов до окончания срока работы (72 часа)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Включено напоминание об истечении срока работы</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">После активации POD издаст звуковой сигнал в определенное время и за час до отключения</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Оповещение за... часов до выключения (80 часов)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Предупреждение о низком уровне в резервуаре включено</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">К-во единиц</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Автоматически заглушать прочитанные оповещения</string>
+    <string name="omnipod_common_preferences_category_other">Другое</string>
+    <string name="omnipod_common_preferences_category_alerts">Оповещения</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Звуковые сигналы подтверждения</string>
+    <string name="omnipod_common_preferences_category_notifications">Уведомления</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Звук для неопределенных уведомлений TBR включен</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Включено звуковое оповещение о неподтвержденных SMB </string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Звук для неопределенных уведомлений болюса включен</string>
+    <string name="omnipod_dash_use_bonding">Связать устройство на Android 15 по BT связи</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Нет активных Pod</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Выполняется настройка (ожидание активации Pod)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Выполняется настройка (ожидание ввода катетера)</string>
+    <string name="omnipod_common_pod_status_running">Выполняется</string>
+    <string name="omnipod_common_pod_status_normal">Норма</string>
+    <string name="omnipod_common_pod_status_suspended">Приостановлено</string>
+    <string name="omnipod_common_pod_status_pod_fault">Ошибка Pod</string>
+    <string name="omnipod_common_pod_status_inactive">Неактивирован</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Ошибка Pod: %1$03d %2$s</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_deactivate_pod">Деактивировать Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Завершить пользование Pod\'ом</string>
+    <string name="omnipod_common_cmd_set_bolus">Настроить болюс</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Отменить болюс</string>
+    <string name="omnipod_common_cmd_set_tbr">Установить временный базал</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Отменить временный базал (внутренний драйвер)</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Отменить временный базал</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Задать расписание базала</string>
+    <string name="omnipod_common_cmd_get_pod_status">Получить состояние Pod</string>
+    <string name="omnipod_common_cmd_get_pod_info">Получить информацию о Pod</string>
+    <string name="omnipod_common_cmd_set_time">Установить Время</string>
+    <string name="omnipod_common_cmd_configure_alerts">Сконфигурировать оповещения</string>
+    <string name="omnipod_common_cmd_silence_alerts">Заглушать сигналы оповещения</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Приостановить подачу</string>
+    <string name="omnipod_common_cmd_resume_delivery">Возобновить подачу</string>
+    <string name="omnipod_common_cmd_unknown_entry">Неизвестная запись</string>
+    <string name="omnipod_common_cmd_initialize_pod">Инициализировать Pod</string>
+    <string name="omnipod_common_cmd_insert_cannula">Вставить катетер</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Читать журнал импульсов</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Установить фейковый временный базал, так как Pod остановлен</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Отменить фейковый временный базал, который был создан из-за приостановки действия Pod</string>
+    <string name="omnipod_common_cmd_split_tbr">Разбить временный базаль из-за неясной ошибки при отмене</string>
+    <string name="omnipod_common_cmd_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
+    <string name="omnipod_common_alert_expiration">Срок работы Pod\'a истекает</string>
+    <string name="omnipod_common_alert_expiration_advisory">Срок работы Pod\'a истекает</string>
+    <string name="omnipod_common_alert_shutdown_imminent">Остановка неизбежна</string>
+    <string name="omnipod_common_alert_low_reservoir">В резервуаре мало инсулина</string>
+    <string name="omnipod_common_alert_unknown_alert">Неизвестное оповещение</string>
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Да</string>
+    <string name="omnipod_common_no">Нет</string>
+    <string name="omnipod_common_ok">OK</string>
+    <string name="omnipod_common_cancel">Отменить</string>
+    <string name="omnipod_common_warning">Внимание</string>
+    <string name="omnipod_common_disable_suspend_alerts">ОТКЛЮЧИТЬ ОПОВЕЩЕНИЯ ОБ ОСТАНОВЕ</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">Только что</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Менее минуты назад</string>
+    <string name="omnipod_common_composite_time">%1$s и %2$s</string>
+    <string name="omnipod_common_time_ago">%1$s назад</string>
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d мин</item>
+        <item quantity="many">%1$d мин</item>
+        <item quantity="other">%1$d мин</item>
+    </plurals>
+    <plurals name="omnipod_common_hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="few">%1$d ч</item>
+        <item quantity="many">%1$d ч</item>
+        <item quantity="other">%1$d ч</item>
+    </plurals>
+    <plurals name="omnipod_common_days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d д</item>
+        <item quantity="many">%1$d д</item>
+        <item quantity="other">%1$d д</item>
+    </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="one">Оповещений Pod: %1$s</item>
+        <item quantity="few">Оповещений Pod: %1$s</item>
+        <item quantity="many">Оповещений Pod: %1$s</item>
+        <item quantity="other">Оповещений Pod: %1$s</item>
+    </plurals>
+</resources>

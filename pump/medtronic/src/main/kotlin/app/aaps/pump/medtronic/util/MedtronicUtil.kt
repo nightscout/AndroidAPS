@@ -190,7 +190,7 @@ class MedtronicUtil @Inject constructor(
             frames.add(frameData)
             frame++
             start += BIG_FRAME_LENGTH - 1
-            if (start == data.size) {
+            if (start >= data.size) {
                 done = true
             }
         } while (!done)
@@ -201,6 +201,7 @@ class MedtronicUtil @Inject constructor(
             // b |= doneBit;
             frameData.add(b)
             checkAndAppendLastFrame(frameData)
+            frames.add(frameData)
         }
         return frames
     }
@@ -260,7 +261,7 @@ class MedtronicUtil @Inject constructor(
         }
 
         fun makeUnsignedShort(b2: Int, b1: Int): Int {
-            return b2 and 0xff shl 8 or b1 and 0xff
+            return ((b2 and 0xff) shl 8) or (b1 and 0xff)
         }
 
         fun getByteArrayFromUnsignedShort(shortValue: Int, returnFixedSize: Boolean): ByteArray {

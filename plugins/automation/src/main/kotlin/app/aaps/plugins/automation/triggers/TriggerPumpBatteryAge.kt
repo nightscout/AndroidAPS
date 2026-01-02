@@ -40,7 +40,7 @@ class TriggerPumpBatteryAge(injector: HasAndroidInjector) : Trigger(injector) {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
-        }?.toDouble() ?: 0.0
+        } ?: 0.0
         val pump = activePlugin.activePump
         if (!pump.pumpDescription.isBatteryReplaceable && !pump.isBatteryChangeLoggingEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())

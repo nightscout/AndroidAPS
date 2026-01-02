@@ -140,4 +140,10 @@
     <string name="triggerStepsCountLabel">Antall skritt</string>
     <string name="triggerStepsCountDesc">Antall skritt per %1$s minutter %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Varighet for måling</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Aktiver/deaktiver SMB</string>
+    <string name="changeSmbTo">Endre SMB til %1$s</string>
+    <string name="newSmbMode">Ny SMB-modus:</string>
+    <string name="on">PÅ</string>
+    <string name="off">AV</string>
 </resources>

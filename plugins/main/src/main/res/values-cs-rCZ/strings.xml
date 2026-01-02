@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Dočasný cíl byl úspěšně zrušen</string>
     <string name="smscommunicator_remote_commands_allowed">Povolit posílání příkazů přes SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Smyčka byla zakázána</string>
-    <string name="smscommunicator_loop_has_been_enabled">Smyčka byla povolena</string>
     <string name="smscommunicator_loop_is_enabled">Smyčka je povolena</string>
     <string name="smscommunicator_pump_connect_with_code">Chcete-li připojit pumpu, odpovězte pomocí SMS s kódem %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Připojení k pumpě selhalo</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Pumpa odpojena</string>
     <string name="smscommunicator_reconnect">Pumpa byla znovu připojena</string>
     <string name="smscommunicator_remote_command_not_allowed">Vzdálený příkaz není povolen</string>
+    <string name="smscommunicator_remote_command_not_possible">Vzdálený příkaz není možný</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Vzdálený bolus není momentálně povolen. Zkuste to později.</string>
     <string name="smscommunicator_basal_reply_with_code">Pro spuštění bazálu %1$.2f U/h na %2$d min odpovězte SMS s kódem %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Pro přepnutí profilu na %1$s %2$d%% odpovězte SMS s kódem %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Pro spuštění bazálu %1$d%% na %2$d min odpovězte SMS s kódem %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">K pozastavení smyčky na %1$d minut odpověz SMS s kódem %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Chcete-li obnovit smyčku, odpovězte SMS s kódem %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Chcete-li povolit smyčku, odpovězte SMS s kódem %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Chcete-li zakázat smyčku, odpovězte SMS s kódem %1$s</string>
     <string name="smscommunicator_tempbasal_set">Dočasný bazál %1$.2fU/h na %2$d minut spuštěn</string>
     <string name="smscommunicator_extended_set">Prodloužený bolus %1$.2fU na %2$d min úspěšně spuštěn</string>
@@ -130,7 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">MPRF</string>
-    <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
+    <string name="description_profile_local">Definujte profil popisující vaše potřeby inzulínu.</string>
     <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
     <string name="do_you_want_switch_profile">Chcete přepnout profil a zahodit změny provedené v aktuálním profilu?</string>
     <string name="save_or_reset_changes_first">Nejprve uložte nebo resetujte aktuální změny</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">Prodloužený bolus</string>
     <string name="extended_bolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="tools">Nástroje</string>
+    <string name="site_rotation">Střídání míst</string>
     <string name="nav_history_browser">Prohlížeč historie</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">stáří:</string>

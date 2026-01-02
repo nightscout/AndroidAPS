@@ -1,16 +1,15 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.DanaPump
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
-class DanaRSPacketBolusGetCalculationInformation(
-    injector: HasAndroidInjector
-) : DanaRSPacket(injector) {
-
-    @Inject lateinit var danaPump: DanaPump
+class DanaRSPacketBolusGetCalculationInformation @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val danaPump: DanaPump
+) : DanaRSPacket() {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_CALCULATION_INFORMATION

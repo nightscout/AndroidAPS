@@ -10,6 +10,7 @@
     <string name="bg_meter">Glucometar</string>
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->

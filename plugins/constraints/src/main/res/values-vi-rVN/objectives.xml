@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">Bắt đầu</string>
+    <string name="objectives_button_verify">Xác minh</string>
+    <string name="nth_objective">%1$d. Mục tiêu</string>
+    <string name="objectivenotstarted">Mục tiêu %1$d chưa được bắt đầu</string>
+    <string name="objectivenotfinished">Mục tiêu %1$d chưa hoàn thành</string>
+    <string name="objectives_0_objective">Thiết lập trực quan hóa và theo dõi, cũng như phân tích basal và các tỷ lệ</string>
+    <string name="objectives_0_gate">Xác minh rằng dữ liệu đường huyết (BG) có sẵn trong Nightscout và dữ liệu insulin từ bơm đang được tải lên</string>
+    <string name="objectives_0_learned">Bạn đã thực hiện thiết lập cơ bản cho hệ sinh thái AAPS. Nightscout không bắt buộc để AAPS hoạt động nhưng rất hữu ích cho việc báo cáo hoặc theo dõi bệnh nhân khác. Nếu bạn chỉ dùng Nightscout cho riêng mình thì không cần phải kết nối với NS mọi lúc. Bạn có thể thiết lập để tải dữ liệu, ví dụ chỉ khi có Wi-Fi ở nhà, nhằm tiết kiệm pin.</string>
+    <string name="objectives_openloop_objective">Bắt đầu với chế độ vòng hở (open loop)</string>
+    <string name="objectives_openloop_gate">Chạy ở chế độ Vòng hở (Open Loop) trong vài ngày và tự tay thực hiện nhiều basal tạm thời. Thiết lập và sử dụng các mục tiêu tạm thời và mục tiêu tạm thời mặc định (ví dụ cho hoạt động thể chất hoặc xử lý hạ đường huyết bằng carbs)</string>
+    <string name="objectives_openloop_learned">Chế độ Vòng hở (Open loop) có thể được sử dụng để đưa ra khuyến nghị nếu bạn không có bơm tương thích hoặc bạn chưa sẵn sàng chuyển sang chế độ vòng kín (closed loop).</string>
+    <string name="objectives_maxbasal_objective">Hiểu về chế độ vòng hở (open loop), bao gồm các khuyến nghị basal tạm thời của nó</string>
+    <string name="objectives_maxbasal_gate">Dựa trên kinh nghiệm đó, quyết định mức basal tối đa nên là bao nhiêu và thiết lập nó trên bơm cũng như trong phần tùy chọn (preferences). Ở chế độ đơn giản (simple mode), giá trị này được tính toán theo khuyến nghị trong wiki và không cần phải tự thiết lập.</string>
+    <string name="objectives_maxbasal">Thực hiện theo khuyến nghị</string>
+    <string name="objectives_maxbasal_learned">Chú ý đến các tính năng an toàn và điều chỉnh các tham số an toàn khi cần thiết.</string>
+    <string name="objectives_maxiobzero_objective">Bắt đầu đóng vòng lặp với chế độ Tạm ngưng khi đường huyết thấp</string>
+    <string name="objectives_maxiobzero_gate">Chạy ở chế độ vòng lặp kín với Chế độ Tạm ngưng khi đường huyết thấp (tức là IOB tối đa = 0 sẽ được đặt tự động) trong vài ngày mà không có quá nhiều sự kiện LGS.</string>
+    <string name="objectives_maxiobzero_learned">Đặt MaxIOB về 0 giúp ngăn hạ đường huyết và sẽ không bơm thêm insulin vượt quá tốc độ nền (trừ trường hợp IOB âm)</string>
+    <string name="objectives_maxiob_objective">Điều chỉnh vòng lặp kín, tăng Max IOB lên trên 0 và dần dần hạ mục tiêu đường huyết</string>
+    <string name="objectives_maxiob_gate">Chạy trong vài ngày, và ít nhất một đêm không có cảnh báo hạ đường huyết, trước khi hạ mục tiêu BG</string>
+    <string name="objectives_maxiob_learned">Cập nhật MaxIOB khi trẻ lớn lên. Đừng để hệ thống bơm nhiều insulin hơn lượng có thể bù bằng thức ăn = đặt giá trị quá cao là một ý tưởng tồi. Trong chế độ đơn giản, MaxIOB được tính tự động</string>
+    <string name="maxiobset">Đặt IOB tối đa đúng cách (Không cần trong chế độ đơn giản)</string>
+    <string name="objectives_autosens_objective">Điều chỉnh basal và các tỷ lệ nếu cần, sau đó bật auto-sens</string>
+    <string name="objectives_autosens_gate">1 tuần chạy vòng lặp thành công ban ngày với việc nhập carb đều đặn. Trong chế độ đơn giản, mặc định autosens được bật.</string>
+    <string name="objectives_autosens_learned">Nếu kết quả autosens của bạn không dao động quanh mức 100% thì có thể cấu hình (profile) của bạn chưa đúng.</string>
+    <string name="objectives_smb_objective">Bật thêm các tính năng để sử dụng ban ngày, chẳng hạn như SMB</string>
+    <string name="objectives_smb_gate">Bạn phải đọc wiki và tăng MaxIOB thì SMB mới hoạt động tốt! Một cách bắt đầu hợp lý là đặt MaxIOB = bolus trung bình mỗi bữa + 3 × basal tối đa trong ngày. Ở chế độ đơn giản, giá trị này được tính tự động theo khuyến nghị trong wiki nên không cần phải cài đặt.</string>
+    <string name="objectives_smb_learned">Mục tiêu của bạn là sử dụng SMB. Thuật toán Oref1 được thiết kế để hỗ trợ bạn với các liều bolus. Bạn không nên tiêm toàn bộ bolus cho bữa ăn mà chỉ một phần, rồi để AAPS tiêm phần còn lại nếu cần. Cách này giúp bạn có thêm khoảng an toàn khi ước lượng carb chưa chính xác. Bạn có biết rằng có thể cài đặt phần trăm kết quả của bộ tính bolus để giảm lượng bolus không?</string>
+    <string name="objectives_auto_objective">Bật tự động hóa (Automation)</string>
+    <string name="objectives_auto_gate">Đọc tài liệu để hiểu cách tự động hóa hoạt động. Thiết lập các quy tắc đơn giản đầu tiên. Thay vì hành động, hãy để AAPS chỉ hiển thị thông báo. Khi bạn chắc chắn tự động hóa được kích hoạt đúng thời điểm, hãy thay thông báo bằng hành động thật.
+(Xem thêm: https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Tự động hóa có thể là người trợ giúp tốt nhưng cũng có thể trở thành ‘ông chủ tồi’. Đừng lạm dụng. Đừng cố thay thế thuật toán cốt lõi. Hãy thử quy tắc với thông báo trước khi dùng thật. Thứ tự cũng có ảnh hưởng.</string>
+    <string name="objectives_bgavailableinns">Đường huyết có sẵn trong NS hoặc Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Trạng thái bơm có sẵn trong NS hoặc Tidepool</string>
+    <string name="objectives_manualenacts">Thực hiện thủ công</string>
+    <string name="accomplished">Hoàn thành: %1$s</string>
+    <string name="objectives_usage_objective">Học cách kiểm soát AAPS</string>
+    <string name="objectives_usage_gate">Thực hiện các hành động khác nhau trong AAPS</string>
+    <string name="objectives_usage_learned">Bạn đã học cách sử dụng các thao tác cơ bản của AAPS. Các điều khiển chính nằm trên màn hình Tổng quan (Overview), có thể truy cập bằng nhấp hoặc nhấn giữ; nhiều điều khiển khác nằm ở màn hình Hành động (Action). Bạn cũng nên biết cách đưa màn hình của plugin vào menu cuộn trên cùng hoặc hiển thị trong danh sách plugin đã bật ở góc trên bên trái.</string>
+    <string name="objectives_useprofileswitch">Đặt Cấu hình 90% trong 10 phút (nhấn giữ tên cấu hình trên màn hình Tổng quan – Overview)</string>
+    <string name="objectives_usedisconnectpump">Mô phỏng Tắm. Ngắt kết nối bơm trong 1 giờ (nhấn giữ trên Open Loop)</string>
+    <string name="objectives_usereconnectpump">… và kết nối lại theo cách tương tự</string>
+    <string name="objectives_usetemptarget">Tạo mục tiêu tạm thời tùy chỉnh với thời gian 10 phút (nhấn giữ mục tiêu hiện tại của bạn)</string>
+    <string name="objectives_useactions">Trong Config Builder, bật plugin Actions, đặt nó ở chế độ hiển thị và mở nội dung của nó từ menu trên cùng</string>
+    <string name="objectives_useloop">Hiển thị nội dung của plugin Loop</string>
+    <string name="objectives_usescale">Sử dụng chức năng thu phóng bằng cách nhấn giữ biểu đồ đường huyết</string>
+    <string name="objectives_exam_objective">Kiểm chứng kiến thức của bạn</string>
+    <string name="objectives_exam_gate">Nghiên cứu các câu hỏi. Bạn sẽ được đưa ra bốn câu trả lời có thể cho mỗi câu hỏi. Có thể có nhiều hơn một đáp án đúng. Vui lòng kiểm tra tất cả những đáp án đúng và chọn XÁC MINH (VERIFY).</string>
+    <string name="objectives_exam_learned_prerequisites">Bạn không cần phải là nhà phát triển, nhưng bạn cần Nightscout để hoàn thành các Mục tiêu (Objectives), một bơm tương thích và một máy tính để xây dựng AAPS lần đầu tiên cũng như cho mỗi lần cập nhật.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS có thể chạy ở chế độ ngoại tuyến (offline).</string>
+    <string name="objectives_exam_learned_basaltest">Cấu hình cần được xem xét và cập nhật. Cấu hình càng tốt = kết quả càng tốt.</string>
+    <string name="objectives_exam_learned_dia">DIA trong chế độ vòng kín (looping) có ý nghĩa khác (thời gian cho đến khi toàn bộ insulin được hấp thụ) so với trong liệu pháp bơm insulin cổ điển (thời gian cho đến khi phần lớn insulin được hấp thụ).</string>
+    <string name="objectives_exam_learned_isf">Bạn đã học được ý nghĩa của giá trị ISF và cách nó ảnh hưởng đến lượng insulin được sử dụng để điều chỉnh đường huyết.</string>
+    <string name="objectives_exam_learned_ic">Bạn đã học được ý nghĩa của giá trị IC và cách nó ảnh hưởng đến lượng insulin cần thiết để bù cho lượng carbs.</string>
+    <string name="objectives_exam_learned_hypott">Mục tiêu tạm thời Hypo (Hypo temp target) chỉ nên được sử dụng để tránh điều chỉnh quá mức sau hạ đường huyết, khi thường có IOB âm tích lũy. Cần xem xét thêm các biện pháp bổ sung để ngăn tình huống này lặp lại trong tương lai.</string>
+    <string name="objectives_exam_learned_profileswitch">Việc sử dụng tỷ lệ phần trăm không ảnh hưởng đến mục tiêu đường huyết, nhưng basal, ISF và IC sẽ được điều chỉnh để cung cấp nhiều insulin hơn (trên 100%%) hoặc ít insulin hơn (dưới 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Bằng cách sử dụng dịch chuyển thời gian trong chuyển đổi Cấu hình, bạn có thể điều chỉnh Cấu hình theo nhịp sinh học để thích ứng với những thay đổi bất thường, như việc thức dậy muộn.</string>
+    <string name="objectives_exam_learned_profileswitch4">Chỉ chỉnh sửa Cấu hình thôi là chưa đủ để áp dụng thay đổi. Bạn vẫn cần thực hiện chuyển đổi Cấu hình để kích hoạt các thay đổi.</string>
+    <string name="objectives_exam_learned_exercise">Bạn nên giảm lượng insulin trong cơ thể ít nhất 1 giờ trước khi bắt đầu tập thể dục bằng cách chọn Cấu hình dưới 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Thiết lập mục tiêu tạm thời cao hơn (higher temp target) ít nhất 1 giờ trước khi tập thể dục cũng giúp giảm lượng insulin trong cơ thể.</string>
+    <string name="objectives_exam_learned_noisycgm">Khi bạn không tin cậy vào giá trị từ CGM, bạn không nên sử dụng chế độ vòng kín mà không giám sát.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS cần biết rằng bơm không được kết nối để tính IOB chính xác.</string>
+    <string name="objectives_exam_learned_insulin">Việc cho hệ thống biết loại insulin đang có trong bơm là cần thiết vì nó ảnh hưởng đến việc tính toán IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Phát hiện độ nhạy là một phần của thuật toán, cho phép điều chỉnh liều insulin phù hợp với các tình huống khác nhau.</string>
+    <string name="objectives_exam_learned_objectives">Tiến trình của bạn trong các Mục tiêu được lưu cùng với các thiết lập khác và cần được sao lưu.</string>
+    <string name="objectives_exam_learned_objectives2">Luôn giữ bản xuất (export) cài đặt và file APK đã tạo ở ngoài điện thoại. Điện thoại có thể bị mất, hỏng, v.v. Một nơi tốt để lưu trữ có thể là bất kỳ dịch vụ lưu trữ đám mây nào có thể truy cập từ điện thoại. Trong trường hợp này, bạn có thể khôi phục AAPS trên thiết bị khác chỉ trong vài phút. Thực hành tốt là lưu giữ mật khẩu chính (master password) ở nơi an toàn, vì nếu không có nó thì bản sao lưu sẽ vô dụng. Điều tương tự cũng áp dụng cho các khóa ký (.jks file) và mật khẩu dùng để build AAPS. Những phần còn lại thì không quan trọng – bạn có thể tải lại từ internet bất cứ lúc nào.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Nếu bạn nhập sai dữ liệu vào AAPS hoặc dữ liệu không khớp với thực tế, hãy xử lý ngay lập tức. Điều này có thể dẫn đến nguy cơ tiêm quá liều insulin. AAPS luôn cần được cung cấp thông tin chính xác nhất có thể về carbohydrate, insulin, v.v.</string>
+    <string name="objectives_exam_learned_iob">Nếu bạn phân tích xem AAPS có hoạt động tốt với bạn hay không, việc theo dõi biểu đồ IOB có thể cung cấp cho bạn rất nhiều thông tin hữu ích.</string>
+    <string name="objectives_exam_learned_cob">Việc tính toán COB phụ thuộc vào mối quan hệ giữa ISF và IC. Tăng ISF hoặc giảm IC sẽ dẫn đến thời gian hấp thụ dài hơn. Tuy nhiên, khi chuyển Cấu hình bằng cách thay đổi phần trăm thì cả hai giá trị này đều thay đổi cùng lúc, và do đó thời gian hấp thụ không bị ảnh hưởng.</string>
+    <string name="objectives_exam_learned_breadgrams">Chỉ được phép nhập carbohydrate theo đơn vị gram.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs là sự thay thế cho bolus mở rộng (extended bolus) trong thế giới bơm insulin.</string>
+    <string name="objectives_exam_learned_nsclient">Giám sát và điều khiển từ xa là có thể, nhưng không phải tất cả các tính năng đều khả dụng từ xa.</string>
+    <string name="answerdisabledto">Trả lời bị vô hiệu hóa cho đến: %1$s</string>
+    <string name="wronganswer">Câu trả lời sai!</string>
+    <string name="unfinshed_button">Tiếp theo chưa hoàn thành</string>
+    <string name="requestcode">Mã yêu cầu: %1$s</string>
+    <string name="objectives_hint">(chọn tất cả các đáp án đúng)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="notconnected">Không kết nối với Internet</string>
+    <string name="failedretrievetime">Lấy thời gian thất bại</string>
+    <string name="requirementnotmet">Chưa đáp ứng yêu cầu của Mục tiêu (Objective)</string>
+    <string name="what_i_ve_learned">Những gì tôi đã học được:</string>
+    <string name="verify_master_password">Xác minh bạn biết mật khẩu chính</string>
+</resources>

@@ -140,4 +140,10 @@
     <string name="triggerStepsCountLabel">Conteggio Passi</string>
     <string name="triggerStepsCountDesc">Conteggio passi per %1$s minuti %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Durata Della Misurazione</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Attiva/disattiva SMB</string>
+    <string name="changeSmbTo">Modifica SMB in %1$s</string>
+    <string name="newSmbMode">Nuova modalità SMB:</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

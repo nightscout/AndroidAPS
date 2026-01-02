@@ -3,14 +3,13 @@
     <string name="equil_pump_description">Equil 5.3 alebo novšia pumpa</string>
     <!--  start  -->
     <string name="equil_basal_speed">Základný bazál</string>
-    <string name="equil_bolus_delivered">%1$.3f JI / %2$.3f JI podaných</string>
     <string name="equil_btn_cancel">Zrušiť</string>
     <string name="equil_btn_need">Potreba</string>
     <string name="equil_btn_skip">Preskočiť</string>
     <string name="equil_date_device">Posledné spojenie</string>
     <string name="equil_dressing">Vymeniť zásobník</string>
     <string name="equil_dressing_onkey_msg">Automatické pretáčanie piestu do východzej polohy. Po dosiahnutí dna sa automaticky zastaví. V prípade potreby akciu prerušte kliknutím na tlačítko \"Stop\".</string>
-    <string name="equil_finish">Dokončené</string>
+    <string name="equil_finish">Ukončiť</string>
     <string name="equil_next">Ďalšia</string>
     <string name="equil_hint_dressing">Táto operácia zastaví vydávanie inzulínu, a spôsobí pretočenie piestu do východzej polohy!</string>
     <string name="equil_history">História</string>
@@ -91,7 +90,6 @@
     <string name="equil_command_connect_no_response">Žiadna odpoveď od pumpy</string>
     <string name="equil_command__unknown">Neznámy stav príkazu</string>
     <string name="equil_install">Zaveďte kanylu a pripojte pumpu na telo</string>
-    <string name="equil_settings">Nastavenia</string>
     <string name="equil_settings_alarm_battery">Upozornenie na nízky stav batérie</string>
     <string name="equil_settings_alarm_insulin">Výstraha nízkej hladiny inzulínu</string>
     <string name="equil_init_insulin_error">Inicializácia zásobníka nie je dokončená</string>
@@ -122,11 +120,6 @@
     <string name="equil_history_item16">Batéria vybitá!</string>
     <string name="equil_history_item17">Obnovenie napájania</string>
     <string name="equil_history_item18">Zastavené abnormálne podávanie izulínu</string>
-    <string name="equil_common_short_status_last_connection">Posledné spoj: pred %1$d min</string>
-    <string name="equil_common_short_status_last_bolus">Posledný bolus: %1$sJI @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Doč. bazál: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Predl. bolus: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Zásobník: %1$sJI</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastaviť</string>
     <string name="equil_common_overview_button_resume_delivery">Obnoviť podávanie inzulínu</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fJI/h @%2$s (%3$d/%4$d minút)</string>
@@ -163,6 +156,7 @@ Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto s
     <string name="equil_set_pair_password">Nastaviť heslo pre spárovanie</string>
     <string name="equil_hint1">Po pripojení pumpy k základni zvoľte, či chcete vyprázdniť vzduch z vnútornej ihly.</string>
     <string name="equil_unbind">Zrušiť párovanie zariadenia</string>
+    <string name="equil_device_unpaired">Zariadenie odpárované</string>
     <string name="equil_assemble">Prosím, zostavte pumpu, naplnený zásobník a nabitú batériu</string>
     <string name="equil_devices_number">Zadajte ID novej pumpy</string>
     <string name="equil_insert">Prosím naplňte zásobník, pokiaľ sa na ihle neobjaví kvapka inzulínu</string>
@@ -172,7 +166,7 @@ Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto s
     <string name="equil_hint_dressing2">Vyberte pumpu zo základne</string>
     <string name="equil_unpair">Deaktivovať starú pumpu %1$s?</string>
     <string name="equil_pump_updated">Pumpa aktualizovaná</string>
-    <string name="equil_maxbolus_tips">Maximální povolený bolus v pumpe [%1$s JI]</string>
     <string name="equil_replace_reservoir">Zásobník je prázdny. Prosím vymeňte zásobník</string>
     <string name="error_mustbe6hexadidits">Musí byť 6 znakov z ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Príkaz na odpárovanie zlyhal. Pumpa bude aj tak odstránená. Heslo nastavené počas párovania nie je z pumpy odstránené.</string>
 </resources>

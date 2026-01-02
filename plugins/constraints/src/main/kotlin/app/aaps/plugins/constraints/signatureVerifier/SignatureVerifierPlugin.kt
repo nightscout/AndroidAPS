@@ -9,12 +9,13 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.signatureVerifier.keys.SignatureVerifierLongKey
 import org.spongycastle.util.encoders.Hex
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -41,17 +42,18 @@ import javax.inject.Singleton
 class SignatureVerifierPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val sp: SP,
+    preferences: Preferences,
     private val context: Context,
     private val uiInteraction: UiInteraction
-) : PluginBase(
+) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.signature_verifier),
-    aapsLogger, rh
+    ownPreferences = listOf(SignatureVerifierLongKey::class.java),
+    aapsLogger, rh, preferences
 ), PluginConstraints {
 
     private var handler: Handler? = null
@@ -81,6 +83,7 @@ class SignatureVerifierPlugin @Inject constructor(
 
     override fun onStop() {
         handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quit()
         handler = null
         super.onStop()
     }
@@ -170,13 +173,13 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun shouldDownloadCerts(): Boolean {
-        return System.currentTimeMillis() - sp.getLong(R.string.key_last_revoked_certs_check, 0L) >= UPDATE_INTERVAL
+        return System.currentTimeMillis() - preferences.get(SignatureVerifierLongKey.LastRevokedCertCheck) >= UPDATE_INTERVAL
     }
 
     @Throws(IOException::class) private fun downloadAndSaveRevokedCerts() {
         val download = downloadRevokedCerts()
         saveRevokedCerts(download)
-        sp.putLong(R.string.key_last_revoked_certs_check, System.currentTimeMillis())
+        preferences.put(SignatureVerifierLongKey.LastRevokedCertCheck, System.currentTimeMillis())
         synchronized(lock) { revokedCerts = parseRevokedCertsFile(download) }
     }
 

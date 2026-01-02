@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Events-->
+    <string name="bolus_delivering">Đang tiêm %1$.2f U</string>
+    <string name="bolus_delivered_successfully">Đã tiêm Bolus thành công %1$.2f U</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Thay trình điều khiển Bơm.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d phút trước</string>
+    <string name="secago">%1$d giây trước</string>
+    <string name="minago_long">%1$d phút trước</string>
+    <string name="hoursago">%1$.1f giờ trước</string>
+    <string name="days_ago">%1$.1f ngày trước</string>
+    <string name="days_ago_round">%1$.0f ngày trước</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="other">%1$s ngày %2$s giờ trước</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="other">%1$s giờ trước</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="other">%1$s phút trước</item>
+    </plurals>
+    <string name="seconds_ago">cách đây vài giây</string>
+    <string name="in_days">trong %1$.0f ngày</string>
+    <string name="in_days_round">trong %1$.0f ngày</string>
+    <string name="shorthour">h</string>
+    <string name="days">ngày</string>
+    <string name="hours">giờ</string>
+    <string name="unit_second">giây</string>
+    <string name="unit_minute">phút</string>
+    <string name="unit_hour">giờ</string>
+    <string name="unit_day">ngày</string>
+    <string name="unit_week">tuần</string>
+    <string name="unit_seconds">giây</string>
+    <string name="unit_minutes">phút</string>
+    <string name="unit_hours">giờ</string>
+    <string name="unit_days">ngày</string>
+    <string name="unit_weeks">tuần</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Sau ngày hôm nay</string>
+    <string name="tomorrow">Ngày mai</string>
+    <string name="today">Hôm nay</string>
+    <string name="yesterday">Hôm qua</string>
+    <!-- Rx -->
+    <string name="connecting_for">Đang kết nối trong %1$d giây</string>
+    <string name="handshaking">Đang bắt tay</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="authorized">Đã ủy quyền</string>
+    <string name="disconnecting">Ngắt kết nối</string>
+    <string name="waiting_for_disconnection">Đang chờ ngắt kết nối</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Đã tạo lúc: %1$s</string>
+    <string name="metadata_label_watchface_author">Tác giả: %1$s</string>
+    <string name="metadata_label_watchface_name">Tên: %1$s</string>
+    <string name="metadata_wear_import_filename">Tên tệp: %1$s</string>
+    <string name="metadata_label_plugin_version">Phiên bản plugin: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Tên: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Thông tin: %1$s</string>
+    <string name="pref_show_iob">Hiển thị IOB</string>
+    <string name="pref_show_detailed_iob">Hiển thị chi tiết IOB</string>
+    <string name="pref_show_cob">Hiển thị COB</string>
+    <string name="pref_show_delta">Hiển thị Delta</string>
+    <string name="pref_show_detailed_delta">Hiển thị chi tiết Delta</string>
+    <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
+    <string name="pref_show_tempTarget">Hiển thị mục tiêu tạm thời</string>
+    <string name="pref_show_reservoir_level">Hiển thị mức ống chứa</string>
+    <string name="pref_show_phone_battery">Hiển thị pin điện thoại</string>
+    <string name="pref_show_rig_battery">Hiển thị mức pin Rig</string>
+    <string name="pref_show_basal_rate">Hiển thị liều basal</string>
+    <string name="pref_show_loop_status">Hiển thị trạng thái vòng lặp</string>
+    <string name="pref_show_bg">Hiển thị đường huyết</string>
+    <string name="pref_show_bgi">Hiển thị BGI</string>
+    <string name="pref_show_direction_arrow">Hiển thị mũi tên xu hướng</string>
+    <string name="pref_show_ago">Hiển thị thời gian trước</string>
+    <string name="pref_show_week_number">Hiển thị số tuần</string>
+    <string name="pref_show_date">Hiển thị ngày</string>
+    <string name="pref_show_seconds">Hiển thị giây</string>
+    <string name="default_custom_watchface_comment">Mặt đồng hồ mặc định, bạn có thể nhấn nút EXPORT WATCHFACE để tạo mẫu</string>
+    <string name="default_custom_watchface_external_comment">Mặt đồng hồ mặc định bao gồm cả chế độ xem bên ngoài cho người theo dõi, bạn có thể nhấn nút EXPORT WATCHFACE để tạo mẫu</string>
+    <string name="wear_default_watchface">Mặt đồng hồ mặc định</string>
+    <string name="wear_more_watchfaces">Thêm mặt đồng hồ</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Vĩnh viễn</string>
+</resources>

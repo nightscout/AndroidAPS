@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Hết Insulin\nPatch đã bị hủy kích hoạt và việc truyền insulin đã dừng. Thay Patch ngay.</string>
+    <string name="string_a003">Patch hết hạn\nPatch đã bị hủy kích hoạt và việc truyền insulin đã dừng. Thay Patch ngay.</string>
+    <string name="string_a004">Tắc đường truyền\nPatch đã bị hủy kích hoạt và việc truyền insulin đã dừng. Thay Patch ngay.</string>
+    <string name="string_a005">Lỗi kiểm tra tự động khi bật nguồn\nPatch đã bị hủy kích hoạt. Thay Patch ngay.</string>
+    <string name="string_a007">Nhiệt độ không phù hợp\nViệc truyền insulin hoặc quá trình ‘Activate Patch’ đã dừng. Tránh nhiệt độ quá cao hoặc quá thấp ngay bây giờ.</string>
+    <string name="string_a016">Lỗi khi đưa kim vào\nKiểm tra vị trí núm điều khiển và nhấn ‘Thử lại’.</string>
+    <string name="string_a018">Lỗi pin Patch\nPatch đã bị vô hiệu hóa và\nviệc bơm insulin đã dừng. Thay Patch ngay bây giờ.</string>
+    <string name="string_a019">Lỗi pin Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a020">Lỗi kích hoạt Patch\nQuá trình ‘Kích hoạt Patch’ đã hết hạn. Nhấn ‘Xác nhận’ để vô hiệu hóa Patch hiện tại. Thay Patch ngay.</string>
+    <string name="string_a022">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a023">Lỗi Patch\nPatch đã bị vô hiệu hóa và\nviệc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a034">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a041">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a042">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a043">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a044">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a106">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a107">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a108">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a116">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a117">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_a118">Lỗi Patch\nPatch đã bị vô hiệu hóa và việc truyền insulin đã dừng. Vui lòng thay Patch ngay.</string>
+    <string name="string_b000">Thời gian hoạt động của Patch sẽ hết hạn vào %s. Hãy sẵn sàng thay Patch.</string>
+    <string name="string_b001">Kết thúc tạm dừng insulin\nNhấn \'Tiếp tục\' để khởi động lại việc bơm insulin.</string>
+    <string name="string_b003">Mức ống chứa thấp\nHãy sớm thay Patch.</string>
+    <string name="string_b005">Thời gian hoạt động của Patch đã hết hạn\nHãy thay Patch ngay bây giờ.</string>
+    <string name="string_b006">Patch sắp hết hạn\nHãy thay Patch ngay bây giờ.</string>
+    <string name="string_b012">Kích hoạt Patch chưa hoàn tất\nHoàn tất quá trình ‘Kích hoạt Patch\'.</string>
+    <string name="string_b018">Pin Patch yếu\nHãy sẵn sàng thay Patch.</string>
+</resources>

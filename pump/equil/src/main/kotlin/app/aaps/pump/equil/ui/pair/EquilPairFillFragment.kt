@@ -19,7 +19,6 @@ import app.aaps.pump.equil.manager.command.CmdStepSet
 import app.aaps.pump.equil.ui.dlg.EquilAutoDressingDlg
 import javax.inject.Inject
 
-// IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilPairFillFragment : EquilPairFragmentBase() {
 
     @Inject lateinit var profileFunction: ProfileFunction
@@ -37,26 +36,28 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     var auto: Boolean = false
-    private lateinit var buttonNext: Button
-    lateinit var buttonFill: Button
-    lateinit var lytAction: View
+    private var buttonFill: Button? = null
+    private var buttonFinish: Button? = null
+    private var lytAction: View? = null
     var intStep = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonNext = view.findViewById(R.id.button_next)
         buttonFill = view.findViewById(R.id.button_fill)
+        buttonFinish = view.findViewById(R.id.button_finish)
         lytAction = view.findViewById(R.id.lyt_action)
-        buttonNext.alpha = 0.3f
-        buttonNext.isClickable = false
-        buttonFill.setOnClickListener {
+        view.findViewById<Button>(R.id.button_next)?.let { buttonNext ->
+            buttonNext.alpha = 0.3f
+            buttonNext.isClickable = false
+        }
+        buttonFill?.setOnClickListener {
             context?.let {
                 auto = true
                 showAutoDlg()
                 setStep()
             }
         }
-        view.findViewById<Button>(R.id.button_finish).setOnClickListener {
+        buttonFinish?.setOnClickListener {
             context?.let {
                 val time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(
@@ -76,18 +77,23 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Remove listeners first (breaks View → Fragment reference)
+        buttonFill?.setOnClickListener(null)
+        buttonFinish?.setOnClickListener(null)
+        // Then null references (breaks Fragment → View reference)
+        lytAction = null
+        buttonFill = null
+        buttonFinish = null
+    }
+
     private fun showAutoDlg() {
         val dialogFragment = EquilAutoDressingDlg()
         dialogFragment.setDialogResultListener {
-            // binding.tvLimitReservoir.text = result.toString()
-            // changeInsulin()
             auto = false
-            // equilPumpPlugin.equilManager.closeBle();
         }
         dialogFragment.show(childFragmentManager, "autoDlg")
-
-        // EquilAutoDressingDlg().also { dialog ->
-        // }.show(supportFragmentManager, "autoDlg")
     }
 
     private fun dismissAutoDlg() {
@@ -103,21 +109,16 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
-        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
-
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
-                    // SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     intStep += EquilConst.EQUIL_STEP_FILL
                     readStatus()
                 } else {
-                    if (auto) {
-                        dismissAutoDlg()
-                    } else {
-                        dismissLoading()
-                    }
+                    if (auto) dismissAutoDlg()
+                    else dismissLoading()
                 }
             }
         })
@@ -125,7 +126,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
 
     private fun readStatus() {
         commandQueue.customCommand(
-            CmdResistanceGet(aapsLogger, sp, equilManager),
+            CmdResistanceGet(aapsLogger, preferences, equilManager),
             object : Callback() {
                 override fun run() {
                     if (activity == null) return
@@ -147,25 +148,18 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                         } else {
                             if (auto) {
                                 runOnUiThread {
-                                    buttonFill.visibility = View.GONE
-                                    lytAction.visibility = View.VISIBLE
+                                    buttonFill?.visibility = View.GONE
+                                    lytAction?.visibility = View.VISIBLE
                                 }
                                 dismissAutoDlg()
-                            } else {
-                                dismissLoading()
-                            }
+                            } else dismissLoading()
                         }
                     } else {
-                        if (auto) {
-                            dismissAutoDlg()
-                        } else {
-                            dismissLoading()
-                        }
-
+                        if (auto) dismissAutoDlg()
+                        else dismissLoading()
                     }
                 }
             }
         )
     }
-
 }

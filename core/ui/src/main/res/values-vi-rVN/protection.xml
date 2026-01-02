@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Yêu cầu xác thực</string>
+    <string name="biometric_description">Đặt ngón tay của bạn lên cảm biến vân tay để xác minh danh tính</string>
+    <string name="settings_protection">Thiết lập bảo mật</string>
+    <string name="application_protection">Bảo mật ứng dụng</string>
+    <string name="bolus_protection">Bảo mật liều Bolus</string>
+    <string name="settings_password">Cài đặt mật khẩu</string>
+    <string name="settings_pin">Cài đặt mã PIN</string>
+    <string name="application_password">Mật khẩu ứng dụng</string>
+    <string name="application_pin">Mã PIN ứng dụng</string>
+    <string name="bolus_password">Mật khẩu liều Bolus</string>
+    <string name="bolus_pin">Mã PIN liều Bolus</string>
+    <string name="protection_timeout_title">Thời gian lưu giữ mật khẩu và mã PIN [giây]</string>
+    <string name="protection_timeout_summary">Thời gian trước khi phải nhập mật khẩu hoặc mã PIN</string>
+    <string name="biometric">Sinh trắc học</string>
+    <string name="custom_password">Mật khẩu tùy chọn</string>
+    <string name="custom_pin">Mã PIN tùy chọn</string>
+    <string name="noprotection">Không bảo mật</string>
+    <string name="unsecure_fallback_biometric">Phương án dự phòng không an toàn</string>
+    <string name="unsecure_fallback_descriotion_biometric">Để bảo mật sinh trắc học hoạt động hiệu quả, cần phải đặt mật khẩu chính làm phương án dự phòng.\n\nVui lòng đặt mật khẩu chính!</string>
+    <string name="password_set">Mật khẩu đã được đặt!</string>
+    <string name="datastore_password_cleared">Mật khẩu dùng cho Xuất dữ liệu đã được xóa!</string>
+    <string name="pin_set">Mã PIN đã được đặt!</string>
+    <string name="password_not_set">Mật khẩu chưa được đặt</string>
+    <string name="pin_not_set">Mã PIN chưa được đặt</string>
+    <string name="password_not_changed">Mật khẩu chưa được thay đổi</string>
+    <string name="pin_not_changed">Mã PIN chưa được thay đổi</string>
+    <string name="pin_cleared">Đã xóa mã PIN!</string>
+    <string name="password_hint">Nhập mật khẩu tại đây</string>
+    <string name="pin_hint">Nhập mã PIN tại đây</string>
+    <string name="master_password_not_set">Chưa thiết lập mật khẩu chính</string>
+    <string name="aaps_directory_not_selected">Chưa chọn thư mục AAPS</string>
+</resources>

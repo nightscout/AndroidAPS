@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Lệnh đang được thực thi ngay bây giờ</string>
+    <string name="basal_value_below_minimum">Giá trị basal thấp hơn mức tối thiểu. Cấu hình chưa được thiết lập!</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Quá thấp</string>
+    <string name="low" comment="3.1-3.9">Thấp</string>
+    <string name="high" comment="10.0-13.9">Cao</string>
+    <string name="veryHigh" comment="above 13.9">Quá cao</string>
+    <string name="below" comment="below &quot;in range&quot;">Thấp hơn</string>
+    <string name="in_range">Trong phạm vi</string>
+    <string name="above" comment="above &quot;in range&quot;">Cao hơn</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Chi tiết 14 ngày</string>
+    <string name="day_tir">TIR trong ngày</string>
+    <string name="night_tir">TIR ban đêm</string>
+    <string name="carbs_short" comment="max 6 characters">Carbs</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">LastConn: %1$d min ago</string>
+    <string name="short_status_alert">Cảnh báo: %1$s</string>
+    <string name="short_status_last_bolus">LastBolus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Temp: %1$s</string>
+    <string name="short_status_extended">Ext: %1$s</string>
+    <string name="short_status_reservoir">Reserv: %1$dU</string>
+    <string name="short_status_battery">Batt: %1$d%%</string>
+    <string name="short_status_not_initialized">Bơm chưa sẵn sàng</string>
+</resources>

@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.max
+import kotlin.time.ExperimentalTime
 import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.Pump as ComboCtlPump
 
@@ -263,6 +264,7 @@ class ComboV2Fragment : DaggerFragment() {
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun updateLastBolusField(lastBolus: ComboCtlPump.LastBolus?, binding: Combov2FragmentBinding) {
         val currentTimestamp = System.currentTimeMillis()
 
@@ -291,6 +293,7 @@ class ComboV2Fragment : DaggerFragment() {
             )
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun updateCurrentTbrField(currentTbr: ComboCtlTbr?, binding: Combov2FragmentBinding) {
         val currentTimestamp = System.currentTimeMillis()
 

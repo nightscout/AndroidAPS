@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Ενσωμάτωση αντλίας Omnipod Dash (το νέο μοντέλο με μπλε καπάκι βελόνας - Bluetooth ενεργοποιημένο).</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Ιστορικό Pod</string>
+    <string name="omnipod_dash_history_item_description">Περιγραφή</string>
+    <string name="omnipod_dash_history_item_amount">Ποσότητα</string>
+    <string name="omnipod_dash_history_item_source">Πηγή</string>
+    <string name="omnipod_dash_history_item_date">Ημερομηνία</string>
+    <string name="omnipod_dash_history_type">Τύπος:</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Κατάσταση Bluetooth</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Διεύθυνση Bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Λογισμικό %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Ποιότητα σύνδεσης</string>
+    <string name="omnipod_dash_overview_delivery_status">Κατάσταση Παράδοσης</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Γεμίστε ένα νέο Pod
+        με αρκετή ινσουλίνη για 3 ημέρες.\n\nΑκούστε δύο μπιπ από το Pod κατά τη διάρκεια της πλήρωσης. Αυτά δείχνουν ότι έχει εισαχθεί η ελάχιστη ποσότητα 80U. Βεβαιωθείτε ότι αδειάσατε εντελώς τη γεμισμένη σύριγγα, ακόμα και μετά την ακοή των δύο μπιπ.\n\nΜετά την πλήρωση του Pod, παρακαλώ πατήστε <b>Επόμενο</b>.\n\n<b>Σημείωση:</b> μην αφαιρέσετε το καπάκι της βελόνας του Pod ακόμα.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Προσπάθεια σύζευξης με το νέο Pod και πλήρωσή του.\n\nΌταν ολοκληρωθεί επιτυχώς η διαδικασία αρχικοποίησης, μπορείτε να πατήσετε <b>Επόμενο</b>.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Ήχος όταν ενεργοποιηθεί ειδοποίηση αναστολής παράδοσης</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Αποτυχία σύνδεσης με την pod</string>
+    <string name="omnipod_dash_found_too_many_pods">Βρέθηκαν πολλά pods για ενεργοποίηση</string>
+    <string name="omnipod_dash_scan_failed">Αδυναμία εύρεσης διαθέσιμου pod για ενεργοποίηση</string>
+    <string name="omnipod_dash_generic_error">Γενικό σφάλμα: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Αποτυχία αποστολής της εντολής</string>
+    <string name="omnipod_dash_command_not_sent">Η εντολή δεν εστάλη</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Εντολή που δεν ελήφθη από το pod</string>
+    <string name="omnipod_dash_unknown">Άγνωστη κατάσταση της εντολής</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d λεπτά</string>
+    <string name="omnipod_common_alert_delivery_suspended">Η χορήγηση ινσουλίνης είναι σε αναστολή</string>
+    <string name="omnipod_common_history_total_delivered">Σύνολο παραδόθηκε: %1$.2f U</string>
+    <string name="omnipod_dash_connection_lost">Τελευταία σύνδεση με pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Ένα άλλο bolus παραδίδεται</string>
+    <string name="omnipod_dash_not_enough_insulin">Δεν υπάρχει αρκετή ινσουλίνη στη δεξαμενή</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Ανεπιβεβαίωτη εντολή</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Ζητήθηκε από το χρήστη</string>
+    <string name="profile_set_ok">Ρύθμιση προφίλ OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Δεν επιβεβαιώθηκε η αναστολή! Παρακαλώ χειροκίνητα ανανεώστε την κατάσταση του Pod από τη καρτέλα Omnipod και συνεχίστε τη χορήγηση αν χρειαστεί.</string>
+    <string name="insulin_delivery_suspended">Αναστολή χορήγησης ινσουλίνης</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Η ζώνη ώρας στο pod είναι διαφορετική από τη ζώνη ώρας στο τηλέφωνο. Ο βασικός ρυθμός είναι εσφαλμένος. Αλλάξτε το προφίλ για διόρθωση</string>
+    <string name="failed_to_set_the_new_basal_profile">Αποτυχία ορισμού του νέου προφίλ βασικού ρυθμού. Αναστολή χορήγησης</string>
+    <string name="setting_basal_profile_might_have_failed">Η ρύθμιση του βασικού προφίλ μπορεί να έχει αποτύχει. Η χορήγηση μπορεί να έχει ανασταλεί! Παρακαλώ ανανεώστε την κατάσταση του Pod χειροκίνητα από την καρτέλα Omnipod και συνεχίστε την χορήγηση αν χρειαστεί.</string>
+    <string name="bolus_delivery_status_uncertain">Αβέβαιη κατάσταση παράδοσης Bolus. Ανανεώστε την κατάσταση του pod για να επιβεβαιώσετε ή αρνηθείτε.</string>
+    <string name="temp_basal_out_of_sync">Η κατάσταση του Προσωρινού Ρυθμού δεν είναι όπως αναμενόταν! Αν ο Προσωρινός Ρυθμός εκτελούνταν προηγουμένως, πλέον έχει ακυρωθεί. Παρακαλώ ελέγξτε το ιστορικό χορήγησης ινσουλίνης και του pod</string>
+    <string name="checking_delivery_status">Έλεγχος κατάστασης χορήγησης</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Η ρύθμιση του βασικού ρυθμού μπορεί να έχει απέτυχε. Αν προηγουμένως εκτελούνταν ένας βασικός ρυθμός, έχει πλέον ακυρωθεί. Παρακαλώ ανανεώστε χειροκίνητα την κατάσταση του Pod από την καρτέλα Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Το αποτέλεσμα της ακύρωσης του προσωρινού βασικού ρυθμού είναι αβέβαιο</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ανεπιβεβαίωτη εντολή συνέχισηΈγχυσης. Παρακαλούμε ανανεώστε την κατάσταση του pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Η ακύρωση του προσωρινού βασικού ρυθμού μπορεί να έχει αποτύχει. Αν εκτελούνταν προηγουμένως ένας προσωρινός ρυθμός, αυτός μπορεί να έχει ακυρωθεί. Παρακαλώ ανανεώστε χειροκίνητα την κατάσταση του Pod από την καρτέλα Omnipod.</string>
+</resources>

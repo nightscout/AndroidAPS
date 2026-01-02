@@ -1,18 +1,25 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
+import javax.inject.Inject
 
-class DanaRSPacketBasalSetProfileBasalRate(
-    injector: HasAndroidInjector,
-    private var profileNumber: Int,
-    private var profileBasalRate: Array<Double>
-) : DanaRSPacket(injector) {
+class DanaRSPacketBasalSetProfileBasalRate @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : DanaRSPacket() {
+
+    private var profileNumber: Int = 0
+    private lateinit var profileBasalRate: Array<Double>
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_BASAL_RATE
         aapsLogger.debug(LTag.PUMPCOMM, "Setting new basal rates for profile $profileNumber")
+    }
+
+    fun with(profileNumber: Int, profileBasalRate: Array<Double>) = this.also {
+        this.profileNumber = profileNumber
+        this.profileBasalRate = profileBasalRate
     }
 
     override fun getRequestParams(): ByteArray {

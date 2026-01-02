@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Ryšio užmezgimui skirtas laikas baigėsi - iš naujo nustatykite bluetooth</string>
     <string name="pump_stopped">Pompa sustabdyta</string>
     <string name="pump_started">Pompa paleista</string>
-    <string name="short_status_last_connected">Pask. prijung: prieš %1$d min</string>
-    <string name="short_status_tbr">LBD: %1$d%% - %2$d / %3$d min</string>
-    <string name="short_status_extended">Ištęstas: %1$.2f / %2$.2f V %3$d min</string>
-    <string name="short_status_multiwave">Daugiabangis: %1$.2f / %2$.2f vv %3$d min</string>
-    <string name="short_status_tdd">BPD: %1$.2f</string>
-    <string name="short_status_reservoir">Rez.: %1$.2f vv</string>
-    <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
     <string name="ui_processor_software_version">UI procesoriaus programinės įrangos versija</string>
     <string name="pc_processor_software_version">PC procesoriaus programinės įrangos versija</string>

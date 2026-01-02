@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integrarea pompei pentru Omnipod Eros (modelul mai vechi cu un capac transparent de ac). Necesită un dispozitiv RileyLink cu versiunea de firmware cel puțin 2.0.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Afişare buton Jurnal Puls în meniul Gestionare Pod-uri</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Afişare buton Stare RileyLink în meniul Gestionare Pod-uri</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activare jurnalizare pentru schimbarea bateriei în Acțiuni</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări TBR incerte activat</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificări SMB incerte activat</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Sunet pentru notificări bolus incerte activat</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Istoric Pod</string>
+    <string name="omnipod_eros_history_item_description">Descriere</string>
+    <string name="omnipod_eros_history_item_source">Sursă</string>
+    <string name="omnipod_eros_history_item_date">Dată</string>
+    <string name="omnipod_eros_history_type">Tip:</string>
+    <string name="omnipod_eros_history_tbr_value">Rata: %1$.2f U, durata: %2$d min</string>
+    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">BaterieRL: %1$d</string>
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Adresa RileyLink invalidă.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Comunicarea a eșuat: verificarea integrității mesajului a eșuat</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Comunicarea a eşuat: a fost primit un pachet invalid de la Pod</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Comunicarea a eșuat: Pod-ul este într-o stare incorectă</string>
+    <string name="omnipod_eros_error_invalid_response">Comunicarea a eșuat: s-a primit un răspuns invalid de la Pod</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Comunicarea a eșuat: s-a primit un mesaj cu un număr de secvență invalid de la Pod</string>
+    <string name="omnipod_eros_error_invalid_message_address">Comunicarea a eșuat: s-a primit un mesaj cu o adresă invalidă de la Pod</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Comunicarea a eșuat: nu s-a reușit decodarea mesajului de la Pod</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Comunicarea a eșuat: resincronizarea cheii de securitate nu a reușit</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Comunicarea a eșuat: cheia de securitate nu poate fi sincronizată</string>
+    <string name="omnipod_eros_error_not_enough_data">Comunicarea a eșuat: nu s-au primit suficiente date de la Pod</string>
+    <string name="omnipod_eros_error_pod_fault">A fost detectată o eroare a Pod-ului (%1$03d %2$s). Vă rugăm să îl dezactivați pe acesta și să activați unul nou</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Comunicarea a eșuat: Pod-ul a returnat un răspuns de eroare</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Niciun răspuns de la RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RiluyLink întrerupt</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nu s-a primit răspuns de la Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Setarea profilului bazal a eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Setarea profilului bazal s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Setarea profilului basal a eşuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Este posibil ca anularea bazalei temporare să fi eșuat. Vă rugăm să actualizați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setarea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, ar fi putut fi anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setarea bazalei temporare s-ar putea sa fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Durata TBR trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Setarea timpului s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Setarea timpului a eșuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">Citirea jurnalului de puls a eșuat</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Eroare la schimbarea automată a orei în Pod. Ar trebui să sincronizezi manual timpul în secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operațiunea nu este posibilă.\n\nTrebuie să configuraţi Omnipod înainte de a putea efectua această operațiune.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Nu se poate verifica dacă bolusul a reuşit. Vă rugăm să verificați manual că Pod-ul poate bolusa ascultând click-urile. <b>Daca ești sigur ca bolus nu a reușit, ar trebui să ștergi manual intrarea bolus din Tratamente, chiar dacă dai click pe \'Oprește bolus\' acum!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nu s-a putut verifica dacă bolusul SMB (%1$.2f U) a reușit. <b>Daca sunteți sigur ca bolusul nu a reușit, ar trebui să ștergeți manual intrarea SMB din Tratamente.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">O rata bazală temporară rulează pe Pod, dar AAPS nu este la curent cu această bazală temporară. Vă rugăm să anulați manual bazala temporară.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">Stare RileyLink</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Se așteaptă conexiunea la RileyLink…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetează configurația RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">Citește Jurnal Puls</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Se citește Jurnal Puls…</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Jurnal Puls</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Jurnal Puls (copiat în clipboard)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">\nUmpleți noul Pod cu suficientă insulină pentru 3 zile.\n\nAr trebui sa auziți două beep-uri de la Pod în timpul procesului de umplere. Acestea indică faptul că cantitatea minimă de 80U a fost introdusă. Asigurați-vă ca ați golit complet seringa de umplere, chiar și după ce ați auzit două beep-uri.\n\nDupă umplerea Pod-ului, vă rugăm să apăsați <b>Următorul</b>.\n\n<b>Notă:</b> Nu scoateți capacul acului in acest moment.\n<b>Nota:</b>va rugam sa puneți RileyLink in poziție verticala și sa plasați Pod-ul la o distantă de câțiva centimetri de acesta.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Încercare de împerechere cu noul Pod și amorsare.\n\nAtunci când inițializarea s-a terminat cu succes, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Vă rugăm sa puneți RileyLInk în poziție verticala și sa plasați Pod-ul la câțiva centimetri distanta.</string>
+</resources>

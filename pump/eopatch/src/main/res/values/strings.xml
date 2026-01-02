@@ -1,12 +1,4 @@
 <resources>
-    <string name="key_eopatch_low_reservoir_reminders" translatable="false">eopatch_low_reservoir_reminders</string>
-    <string name="key_eopatch_expiration_reminders" translatable="false">eopatch_expiration_reminders</string>
-    <string name="key_eopatch_patch_buzzer_reminders" translatable="false">eopatch_patch_buzzer_reminders</string>
-    <string name="key_eopatch_patch_config" translatable="false">eopatch_patch_config</string>
-    <string name="key_eopatch_patch_state" translatable="false">eopatch_patch_state</string>
-    <string name="key_eopatch_bolus_current" translatable="false">eopatch_bolus_current</string>
-    <string name="key_eopatch_normal_basal" translatable="false">eopatch_normal_basal</string>
-    <string name="key_eopatch_temp_basal" translatable="false">eopatch_temp_basal</string>
     <string name="colon" translatable="false">:</string>
 
     <string name="eopatch">EOPatch2</string>

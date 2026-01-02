@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">חיבור משאבת Omnipod Eros (הדגם הישן, בו מכסה המחט שקוף). דרוש מכשיר ריילילינק עם גרסת קושחה 2.0 לפחות.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">הצג לחצן \"יומן פעימות\" בתפריט ניהול פוד</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">הצג לחצן \"סטטיסטיקת ריילילינק\" בתפריט ניהול פוד</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">אפשר רישום החלפת סוללה בפעולות</string>
+    <string name="omnipod_eros_preferences_category_riley_link">ריילילינק</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ברור מאופשרת</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">התראת צליל של SMB לא ברור מאופשרת</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ודאי מאופשרת</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">היסטוריית הפוד</string>
+    <string name="omnipod_eros_history_item_description">תיאור</string>
+    <string name="omnipod_eros_history_item_source">מקור</string>
+    <string name="omnipod_eros_history_item_date">תאריך</string>
+    <string name="omnipod_eros_history_type">סוג:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f יח\'</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
+    <string name="omnipod_eros_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
+    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">סול\' ריילי: %1$d</string>
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">כתובת ריילילינק לא חוקית.</string>
+    <string name="omnipod_eros_error_crc_mismatch">התקשורת נכשלה: אימות תקינות ההודעה נכשל</string>
+    <string name="omnipod_eros_error_invalid_packet_type">התקשורת נכשלה: התקבלה חבילת נתונים לא חוקית מהפוד</string>
+    <string name="omnipod_eros_error_invalid_progress_state">התקשורת נכשלה: הפוד במצב לא נכון</string>
+    <string name="omnipod_eros_error_invalid_response">התקשורת נכשלה: התקבלה תגובה לא חוקית מהפוד</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">התקשורת נכשלה: התקבלה הודעה עם רצף מספרים לא חוקי מהפוד</string>
+    <string name="omnipod_eros_error_invalid_message_address">התקשורת נכשלה: התקבלה הודעה עם כתובת לא חוקית מהפוד</string>
+    <string name="omnipod_eros_error_message_decoding_failed">התקשורת נכשלה: פענוח הודעה מהפוד נכשל</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">התקשורת נכשלה: נכשל סינכרון מחדש של nonce</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">התקשורת נכשלה: nonce לא מסונכרן</string>
+    <string name="omnipod_eros_error_not_enough_data">התקשורת נכשלה: לא התקבלו מספיק נתונים מהפוד</string>
+    <string name="omnipod_eros_error_pod_fault">נמצאה תקלת פוד (%1$03d %2$s) נא להשבית את הפוד ולהחליפו בחדש</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">התקשורת נכשלה: הפוד החזיר תגובת שגיאה</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">אין תגובה מריילילינק</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">ריילילינק הופרע</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">אין תגובה מהפוד</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">הגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">ייתכן שהגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">הגדרת הפרופיל הבזאלי נכשלה. ההזרקה מושהת! נא לחדש את ההזרקה ידנית בלשונית Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">ייתכן שביטול הבזאלי הזמני נכשל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">הגדרת בזאלי זמני נכשלה. אם בזאלי זמני הוחל קודם לכן, ייתכן שהוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">הגדרת בזאלי זמני כנראה נכשלה. אם בזאלי זמני הוחל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">משך של בזאלי זמני חייב להיות גדול מאפס וכפולה של %1$s דקות.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">ייתכן שהגדרת השעה נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">הגדרת השעה נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">קריאת יומן הפעימות נכשלה</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">לא ניתן לשנות את השעה בפוד באופן אוטומטי. יש לסנכרן באופן ידני את השעון בלשונית Omnipod.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\nיש להגדיר קודם את אומניפוד על מנת לבצע פעולה זו.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">לא ניתן לאמת שהבולוס הצליח. נא לאמת את מתן האינסולין ע\"י הקשבה לקליקים. <b>אם אתם בטוחים שהבולוס נכשל, עליכם למחוק את רשומת הבולוס מהטיפולים, גם אם לחצתם עכשיו על \'ביטול בולוס\'.</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">לא ניתן לאמת שבולוס SMB (%1$.2f יח\') הצליח. <b>אם אתם בטוחים שהבולוס נכשל, עליכם למחוק את רשומת ה-SMB מהטיפולים.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">בזאלי זמני מופעל בפוד אבל AAPS אינו מודע לבזאלי זמני זה. יש לבטל את הבזאלי הזמני באופן ידני.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">סטטיסטיקת ריילילינק</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">ממתין לחיבור לריילילינק…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">איפוס תצורת ריילילינק</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">קרא יומן פעימות</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">קורא יומן פעימות…</string>
+    <string name="omnipod_eros_pod_management_pulse_log">יומן פעימות</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">יומן פעימות (מועתק ללוח ההעתקה)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">מלאו פוד חדש עם מספיק אינסולין לשלושה ימים.\n\nהקשיבו לשני צפצופים מהפוד במהלך המילוי. הם מציינים שהכמות המינימלית של 80 יחידות הוכנסה. הקפידו לרוקן לחלוטין את מזרק המילוי, גם לאחר שמיעת שני הצפצופים.\n\nלאחר מילוי הפוד, יש ללחוץ <b>הבא</b>.\n\n<b>הערה:</b> נא לא להסיר עדיין את מכסה המחט.\n<b> הערה:</b> נא להניח את הריילילינק במצב עומד ובמרחק סנטימטרים בודדים מהפוד.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">מנסה לצמד את הפוד החדש ולאתחלו.\n\nכאשר תהליך האתחול יושלם, ניתן ללחוץ על <b>הבא</b>.\n\n<b>שימו לב:</b> נא למקם את הריילילינק במצב אנכי ולמקם את הפוד מספר סנטימטרים ממנו.</string>
+</resources>

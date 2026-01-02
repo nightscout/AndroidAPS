@@ -13,10 +13,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.ParcelUuid
 import android.view.View
 import android.view.ViewGroup
@@ -25,19 +22,20 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.databinding.DiaconnG8BlescannerActivityBinding
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import java.util.UUID
 import javax.inject.Inject
 
 class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
@@ -75,7 +73,7 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             bluetoothAdapter?.safeEnable()
             startScan()
         } else {
@@ -85,9 +83,14 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             stopScan()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.bleScannerListview.adapter = null
     }
 
     @SuppressLint("MissingPermission")
@@ -104,20 +107,18 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
                 .build()
 
             bluetoothLeScanner?.startScan(filters, settings, mBleScanCallback)
-        } catch (ignored: IllegalStateException) {
+        } catch (_: IllegalStateException) {
         } // ignore BT not on
 
     @SuppressLint("MissingPermission")
     private fun stopScan() =
         try {
             bluetoothLeScanner?.stopScan(mBleScanCallback)
-        } catch (ignored: IllegalStateException) {
+        } catch (_: IllegalStateException) {
         } // ignore BT not on
 
     private fun addBleDevice(device: BluetoothDevice?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             return
         }
@@ -129,7 +130,7 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             return
         }
         devices.add(item)
-        Handler(Looper.getMainLooper()).post { listAdapter?.notifyDataSetChanged() }
+        runOnUiThread { listAdapter?.notifyDataSetChanged() }
     }
 
     private val mBleScanCallback: ScanCallback = object : ScanCallback() {
@@ -172,8 +173,8 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
             @SuppressLint("MissingPermission")
             override fun onClick(v: View) {
-                sp.putString(R.string.key_diaconn_g8_address, item.device.address)
-                sp.putString(R.string.key_diaconn_g8_name, name.text.toString())
+                preferences.put(DiaconnStringNonKey.Address, item.device.address)
+                preferences.put(DiaconnStringNonKey.Name, name.text.toString())
                 item.device.createBond()
                 rxBus.send(EventDiaconnG8DeviceChange())
                 finish()
@@ -206,7 +207,7 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         private fun stringEquals(arg1: String, arg2: String): Boolean {
             return try {
                 arg1 == arg2
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 false
             }
         }

@@ -2,8 +2,9 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
+import javax.inject.Inject
 
-class PumpEnactResultObject(private val rh: ResourceHelper) : PumpEnactResult {
+class PumpEnactResultObject @Inject constructor(private val rh: ResourceHelper) : PumpEnactResult {
 
     override var success = false // request was processed successfully (but possible no change was needed)
     override var enacted = false // request was processed successfully and change has been made

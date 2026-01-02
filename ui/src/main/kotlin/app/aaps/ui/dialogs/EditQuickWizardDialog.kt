@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
@@ -146,13 +146,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 .build()
             timePicker.addOnPositiveButtonClickListener {
                 fromSeconds = (T.hours(timePicker.hour.toLong()).secs() + T.mins(timePicker.minute.toLong()).secs()).toInt()
-                binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
+                binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(fromSeconds))
             }
             timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
         fromSeconds = entry.validFrom()
-        binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
+        binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(fromSeconds))
 
         binding.to.setOnClickListener {
             val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
@@ -163,7 +163,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 .build()
             timePicker.addOnPositiveButtonClickListener {
                 toSeconds = (T.hours(timePicker.hour.toLong()).secs() + T.mins(timePicker.minute.toLong()).secs()).toInt()
-                binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
+                binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(toSeconds))
             }
             timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
@@ -233,7 +233,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.correctionInput.value = entry.percentage().toDouble()
 
         toSeconds = entry.validTo()
-        binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
+        binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())
         when (entry.device()) {

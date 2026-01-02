@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integracja z pompą Omnipod Eros (starszy model z przezroczystą osłonką igły). Wymaga urządzenia RileyLink z firmware w wersji przynajmniej 2.0.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pokaż przycisk Pulse Log w menu zarządzania Podem</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pokaż przycisk Statystyki RileyLink w menu zarządzania Podem</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Włącz rejestrowanie zmiany baterii w Akcjach</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Dźwięk dla niepewnych powiadomień TBR włączony</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Dźwięk dla niepewnych powiadomień SMB włączony</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Dźwięk dla niepewnych powiadomień o bolusie włączony</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Historia Poda</string>
+    <string name="omnipod_eros_history_item_description">Opis</string>
+    <string name="omnipod_eros_history_item_source">Źródło</string>
+    <string name="omnipod_eros_history_item_date">Data</string>
+    <string name="omnipod_eros_history_type">Typ:</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, Węgl.=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Dawka: %1$.2f U, Czas: %2$d min</string>
+    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RLBat: %1$d</string>
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Adres RileyLink niewłaściwy.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Komunikacja nie powiodła się: weryfikacja integralności komunikatu nie powiodła się</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Komunikacja nie powiodła się: odebrano niepoprawny pakiet (komunikat) z Poda</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Komunikacja nie powiodła się: Pod jest w niewłaściwym stanie</string>
+    <string name="omnipod_eros_error_invalid_response">Komunikacja nie powiodła się: odebrano niepoprawną odpowiedź (pakiet) z Poda</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Komunikacja nie powiodła się: odebrano komunikat z niepoprawnym numerem kolejnym z Poda</string>
+    <string name="omnipod_eros_error_invalid_message_address">Komunikacja nie powiodła się: odebrano komunikat z niepoprawną adresacją z Poda</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Komunikacja nie powiodła się: nie powiodło się dekodowanie komunikatu z Poda</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Komunikacja nie powiodła się: synchronizacja unikalnej liczby nie powiodła się</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Komunikacja nie powiodła się: unikalna liczba nie jest zsynchronizowana</string>
+    <string name="omnipod_eros_error_not_enough_data">Komunikacja nie powiodła się: brak wystarczającej ilości danych odebranych z Poda</string>
+    <string name="omnipod_eros_error_pod_fault">Wykryto błąd Poda (%1$03d %2$s). Proszę dezaktywować Poda i aktywować nowy</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Komunikacja nie powiodła się: Pod odpowiedział komunikatem o błędzie</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Brak odpowiedzi od RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink przerwany/wstrzymany</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Brak odpowiedzi z Poda</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Ustawianie profilu bazowego nie powiodło się. Podawanie mogło zostać zawieszone! W razie potrzeby proszę ręcznie odświeżyć status Poda na karcie Omnipod i wznowić podawanie.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Ustawianie profilu bazowego mogło się nie powieść. Podawanie mogło zostać zawieszone! W razie potrzeby proszę ręcznie odświeżyć status Poda na karcie Omnipod i wznowić podawanie.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Ustawianie profilu bazowego nie powiodło się. Podawanie jest zawieszone! Proszę ręcznie wznowić podawanie z karty Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Anulowanie tymczasowej dawki bazowej mogło zostać zakończone niepowodzeniem. Proszę ręcznie odświeżyć status Poda na karcie Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Ustawianie tymczasowej dawki bazowej nie powiodło się. Jeśli dawka tymczasowa była wcześniej podawana, mogła zostać anulowana. Proszę ręcznie odświeżyć status Poda na karcie Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Ustawienie bazy tymczasowej mogło się nie powieść. Jeśli baza tymczasowa była poprzednio uruchomiona, została anulowana. Proszę odświeżyć status Poda z zakładki Omnipod ręcznie.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Czas trwania TBR musi być większy od zera i być wielokrotnością %1$s minut.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Ustawianie czasu mogło się nie powieść. Podawanie mogło zostać zawieszone! W razie potrzeby proszę ręcznie odświeżyć status Poda na karcie Omnipod i wznowić podawanie.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Ustawianie czasu nie powiodło się. Podawanie jest zawieszone! Proszę ręcznie wznowić podawanie z karty Omnipod.</string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">Nie udało się odczytać Pulse Log</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nie powiodła się próba automatycznej zmiany czasu w Podzie. Należy ręcznie zsynchronizować czas na karcie Omnipod.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować Omnipod przed uruchomieniem tego działania.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Nie można sprawdzić, czy podano bolus. Proszę ręcznie sprawdzić, czy Twój Pod podaje bolus, słuchając kliknięć. <b>Jeśli jesteś pewien, że bolus się nie powiódł, to należy ręcznie usunąć wpis o bolusie z okna Leczenie, nawet jeśli klikniesz \'Anuluj bolus\' teraz!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nie można sprawdzić, czy powiodło się podawanie bolusa SMB (%1$.2f U). <b>Jeśli jesteś pewien, że Bolus nie został podany, należy ręcznie usunąć wpis o SMB z okna Leczenie.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Tymczasowa dawka bazowa jest uruchomiona w Podzie, ale AAPS nie posiada informacji o niej. Anuluj tymczasową dawkę bazową ręcznie.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">Statystyki RileyLink</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Oczekiwanie na połączenie RileyLink…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Przywróć konfigurację RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">Odczytaj Pulse Log</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Odczytywanie Pulse Log…</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Logi pulsów omnipod</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (skopiowany do schowka)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Napełnij nowego Poda ilością insuliny przewidzianą na 3 dni.\n\nNasłuchuj dwóch sygnałów dźwiękowych z Poda podczas procesu napełniania. Wskazują one, że minimalna ilość 80U została napełniona. Upewnij się, że ampułkostrzykawka jest całkowicie pusta, nawet po odsłuchaniu dwóch sygnałów dźwiękowych.\n\nPo napełnieniu Poda, proszę naciśnij <b>Dalej</b>.\n\n<b>Uwaga:</b> nie usuwaj w tym czasie osłonki igły Poda.\n<b>Uwaga:</b> proszę umieść RileyLink w pozycji pionowej i nie dalej niż kilkanaście centymetrów od niego.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Próbuję sparować z nowym Podem i wypełnić go.\n\nPo pomyślnym zakończeniu procesu inicjalizacji możesz nacisnąć <b>Dalej</b>.\n\n<b> Uwaga: </b> umieść RileyLink w pozycji pionowej i umieść Poda kilka centymetrów od niego.</string>
+</resources>

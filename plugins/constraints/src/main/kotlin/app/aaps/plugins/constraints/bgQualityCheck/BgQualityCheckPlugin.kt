@@ -67,7 +67,7 @@ class BgQualityCheckPlugin @Inject constructor(
     // Fallback to LGS if BG values are doubled
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (state == BgQualityCheck.State.DOUBLED)
-            maxIob.set(0.0, "Doubled values in BGSource", this)
+            maxIob.set(0.0, "Limiting max IOB to 0 U due to doubled values in BG Source", this)
         else
             maxIob
 

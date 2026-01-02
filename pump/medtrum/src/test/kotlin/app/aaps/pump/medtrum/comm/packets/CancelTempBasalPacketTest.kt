@@ -1,13 +1,16 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.pump.medtrum.MedtrumTestBase
+import app.aaps.pump.medtrum.comm.enums.BasalType
+import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import app.aaps.pump.medtrum.MedtrumTestBase
-import app.aaps.pump.medtrum.comm.enums.BasalType
 import org.junit.jupiter.api.Test
 
 class CancelTempBasalPacketTest : MedtrumTestBase() {
+
+    val medtrumTimeUtil = MedtrumTimeUtil()
 
     /** Test packet specific behavior */
 
@@ -17,6 +20,7 @@ class CancelTempBasalPacketTest : MedtrumTestBase() {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
                 it.dateUtil = dateUtil
+                it.medtrumTimeUtil = medtrumTimeUtil
             }
         }
     }

@@ -21,13 +21,14 @@ enum class Action(val colorGroup: ColorGroup) {
     LGS_LOOP_MODE(ColorGroup.Loop),
     OPEN_LOOP_MODE(ColorGroup.Loop),
     LOOP_DISABLED(ColorGroup.Loop),
-    LOOP_ENABLED(ColorGroup.Loop),
+    LOOP_RESUME(ColorGroup.Loop),
     LOOP_CHANGE(ColorGroup.Loop),
     LOOP_REMOVED(ColorGroup.Loop),
     RECONNECT(ColorGroup.Pump),
     DISCONNECT(ColorGroup.Pump),
     RESUME(ColorGroup.Loop),
     SUSPEND(ColorGroup.Loop),
+    PUMP_RUNNING(ColorGroup.Loop),
     HW_PUMP_ALLOWED(ColorGroup.Pump),
     CLEAR_PAIRING_KEYS(ColorGroup.Pump),
     ACCEPTS_TEMP_BASAL(ColorGroup.BasalTreatment),
@@ -36,7 +37,9 @@ enum class Action(val colorGroup: ColorGroup) {
     CANCEL_EXTENDED_BOLUS(ColorGroup.InsulinTreatment),
     CANCEL_TT(ColorGroup.TT),
     CAREPORTAL(ColorGroup.Careportal),
+    SENSOR_LOCATION(ColorGroup.Careportal),
     SITE_CHANGE(ColorGroup.Pump),
+    SITE_LOCATION(ColorGroup.Pump),
     RESERVOIR_CHANGE(ColorGroup.Pump),
     CALIBRATION(ColorGroup.Careportal),
     PRIME_BOLUS(ColorGroup.Pump),
@@ -88,6 +91,9 @@ enum class Action(val colorGroup: ColorGroup) {
     EXIT_AAPS(ColorGroup.Aaps),
     PLUGIN_ENABLED(ColorGroup.Aaps),
     PLUGIN_DISABLED(ColorGroup.Aaps),
+    RUNNING_MODE(ColorGroup.RunningMode),
+    RUNNING_MODE_REMOVED(ColorGroup.RunningMode),
+    RUNNING_MODE_UPDATED(ColorGroup.RunningMode),
     UNKNOWN(ColorGroup.Aaps)
     ;
 
@@ -105,6 +111,7 @@ enum class Action(val colorGroup: ColorGroup) {
         Loop,
         Careportal,
         Pump,
-        Aaps
+        Aaps,
+        RunningMode
     }
 }

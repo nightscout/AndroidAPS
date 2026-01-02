@@ -35,7 +35,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
-    <string name="setupwizard_loop_description">AAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Bu nedenle, yeni bir kullanıcı iseniz, muhtemelen en sonuncusu ile değil, AMA ile başlayabilirsiniz. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
     <string name="request">İstek</string>
     <string name="apsmode_title">APS modu</string>
-    <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="error_asking_for_permissions">İzin istenirken hata</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <!--    ConfigBuilder-->

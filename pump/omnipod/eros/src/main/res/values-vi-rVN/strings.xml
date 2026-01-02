@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Tích hợp bơm cho Omnipod Eros (mẫu cũ với nắp kim trong suốt). Yêu cầu thiết bị RileyLink với phiên bản firmware ít nhất 2.0.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Hiển thị nhật ký Pulse trong menu Quản lý Pod</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Hiển thị thống kê RileyLink trong menu Quản lý Pod</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">ChatGPT đã nói:
+
+Bật ghi nhật ký thay pin trong mục Actions</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Đã bật âm thanh thông báo TBR không chắc chắn</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Đã bật âm thanh thông báo SMB không chắc chắn</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Đã bật âm thanh thông báo Bolus không chắc chắn</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Lịch sử Pod</string>
+    <string name="omnipod_eros_history_item_description">Mô tả</string>
+    <string name="omnipod_eros_history_item_source">Nguồn</string>
+    <string name="omnipod_eros_history_item_date">Ngày</string>
+    <string name="omnipod_eros_history_type">Loại:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Tốc độ: %1$.2f U, thời gian: %2$d phút</string>
+    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RLBatt: %1$d</string>
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Địa chỉ RileyLink không hợp lệ.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Giao tiếp thất bại: xác minh toàn vẹn thông điệp không thành công</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Giao tiếp thất bại: nhận gói tin không hợp lệ từ Pod</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Giao tiếp thất bại: Pod đang ở trạng thái không đúng</string>
+    <string name="omnipod_eros_error_invalid_response">Giao tiếp thất bại: nhận phản hồi không hợp lệ từ Pod</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Giao tiếp thất bại: nhận thông điệp có số thứ tự không hợp lệ từ Pod</string>
+    <string name="omnipod_eros_error_invalid_message_address">Giao tiếp thất bại: nhận thông điệp có địa chỉ không hợp lệ từ Pod</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Giao tiếp thất bại: không giải mã được thông điệp từ Pod</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Giao tiếp thất bại: đồng bộ nonce không thành công</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Giao tiếp thất bại: nonce bị lệch đồng bộ</string>
+    <string name="omnipod_eros_error_not_enough_data">Giao tiếp thất bại: không nhận đủ dữ liệu từ Pod</string>
+    <string name="omnipod_eros_error_pod_fault">Phát hiện lỗi Pod (%1$03d %2$s). Vui lòng hủy kích hoạt Pod hiện tại và kích hoạt Pod mới</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Giao tiếp thất bại: Pod trả về phản hồi lỗi</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Không có phản hồi từ RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Kết nối RileyLink bị gián đoạn</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Không có phản hồi từ Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Thiết lập cấu hình basal thất bại. Việc truyền insulin có thể đã bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Việc thiết lập cấu hình basal có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Thiết lập cấu hình basal thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Việc hủy basal tạm thời có thể đã thất bại. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Thiết lập basal tạm thời thất bại. Nếu trước đó đã có basal tạm thời đang chạy, nó có thể đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Việc thiết lập basal tạm thời có thể đã thất bại. Nếu trước đó đã có basal tạm thời đang chạy, nó đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Thời lượng TBR phải lớn hơn 0 và là bội số của %1$s phút.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Việc cài đặt thời gian có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Cài đặt thời gian thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">Không đọc được nhật ký Pulse</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Không thay đổi thời gian trên Pod tự động được. Bạn nên đồng bộ thời gian thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Không thể thực hiện thao tác này.\n\nBạn cần cấu hình Omnipod trước khi có thể sử dụng chức năng này.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Không thể xác minh liệu bolus có thành công hay không. Vui lòng kiểm tra thủ công xem Pod có đang tiêm bolus bằng cách nghe tiếng nhấp (clicks). <b>Nếu bạn chắc chắn bolus không thành công, bạn nên xóa thủ công mục bolus trong Treatments, ngay cả khi bạn bấm \'Hủy bỏ bolus\' ngay bây giờ!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Không thể xác minh liệu bolus SMB (%1$.2f U) có thành công hay không. <b>Nếu bạn chắc chắn bolus không thành công, bạn nên xóa thủ công mục SMB trong Treatments.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Một basal tạm thời đang chạy trên Pod, nhưng AAPS không nhận biết được basal tạm thời này. Vui lòng hủy basal tạm thời thủ công.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">Thống kê RileyLink</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Đang chờ kết nối với RileyLink…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Đặt lại cấu hình RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">Đọc nhật ký Pulse</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Đang đọc nhật ký Pulse…</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Nhật ký Pulse</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Nhật ký Pulse (đã sao chép vào bộ nhớ tạm)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Đổ đầy một Pod mới với lượng insulin đủ cho 3 ngày.\n\nNghe hai tiếng “bíp” từ Pod trong quá trình đổ đầy. Đây là tín hiệu rằng **ít nhất 80U insulin đã được bơm vào**. Hãy chắc chắn **vắt hết xi-lanh** ngay cả sau khi nghe hai tiếng bíp.\n\nSau khi đổ đầy Pod, vui lòng nhấn <b>Tiếp theo</b>.\n\n<b>Lưu ý:</b> Không tháo nắp kim của Pod vào lúc này.\n<b>Lưu ý:</b> Đặt RileyLink ở vị trí thẳng đứng và đặt Pod cách RileyLink vài inch.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Đang cố gắng ghép nối với Pod mới và chuẩn bị priming.\n\nKhi quá trình khởi tạo hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.\n\n<b>Lưu ý:</b> Đặt RileyLink ở vị trí thẳng đứng và đặt Pod cách RileyLink vài inch.</string>
+</resources>

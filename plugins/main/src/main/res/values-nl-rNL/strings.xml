@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Tijdelijk streefdoel is geannuleerd</string>
     <string name="smscommunicator_remote_commands_allowed">Externe commando\'s toestaan via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop is uitgeschakeld</string>
-    <string name="smscommunicator_loop_has_been_enabled">Loop is ingeschakeld</string>
     <string name="smscommunicator_loop_is_enabled">Loop is ingeschakeld</string>
     <string name="smscommunicator_pump_connect_with_code">Om verbinding te maken met pomp antwoord met code %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Verbinding maken met pomp is mislukt</string>
@@ -66,7 +65,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Om een basaal van %1$d%% gedurende %2$d min te starten antwoord met code %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Om de loop te onderbreken gedurende %1$d minuten antwoord met de code %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Om loop te hervatten antwoord met code %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Om loop in te schakelen antwoord met code %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Om loop uit te schakelen antwoord met code %1$s</string>
     <string name="smscommunicator_tempbasal_set">Tijdelijk basaal %1$.2fE/uur voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_extended_set">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>
@@ -130,7 +128,6 @@
     <!-- Profile -->
     <string name="localprofile">Profiel</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Gebruik profiel(en) die je in AAPS aanmaakt en offline kunt gebruiken.</string>
     <string name="a11y_add_new_to_list">nieuwe toevoegen aan lijst</string>
     <string name="do_you_want_switch_profile">Wilt u van profiel wisselen en gemaakte wijzigingen aan het huidige profiel negeren?</string>
     <string name="save_or_reset_changes_first">Huidige wijzigingen eerst opslaan of resetten</string>

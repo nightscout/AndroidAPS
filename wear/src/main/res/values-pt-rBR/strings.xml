@@ -119,17 +119,12 @@
     <string name="color_name_black">preto</string>
     <string name="color_name_multicolor">multicor</string>
     <string name="pref_simplify_ui">Simplificar UI</string>
-    <string name="pref_simplify_ui_sum">Mostrar apenas o tempo e GLIC</string>
     <string name="pref_vibrate_hourly">Vibrar de hora em hora</string>
     <string name="pref_show_weeknumber">Mostrar número da semana</string>
-    <string name="digitalstyle_pref_your_style">Seu estilo:</string>
     <string name="digitalstyle_style_none">sem estilo</string>
     <string name="digitalstyle_style_minimal">estilo mínimo</string>
     <string name="digitalstyle_style_shape">estilo de forma</string>
     <string name="digitalstyle_style_full">estilo completo</string>
-    <string name="digitalstyle_pref_your_color">Sua cor:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Sua saturação da cor:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Opacidade da sua cor:</string>
     <string name="bolus_progress_channel_name">Progresso do Bolus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Progresso do bolus AAPS silencioso</string>
     <string name="bolus_progress_channel_description">Progresso do bolus e cancelamento</string>

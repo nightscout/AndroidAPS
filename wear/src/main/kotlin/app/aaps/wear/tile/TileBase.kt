@@ -2,43 +2,40 @@
 
 package app.aaps.wear.tile
 
+import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import androidx.wear.tiles.ActionBuilders
-import androidx.wear.tiles.ColorBuilders.argb
-import androidx.wear.tiles.DeviceParametersBuilders.DeviceParameters
-import androidx.wear.tiles.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
-import androidx.wear.tiles.DimensionBuilders.SpProp
-import androidx.wear.tiles.DimensionBuilders.dp
-import androidx.wear.tiles.DimensionBuilders.sp
-import androidx.wear.tiles.LayoutElementBuilders.Box
-import androidx.wear.tiles.LayoutElementBuilders.Column
-import androidx.wear.tiles.LayoutElementBuilders.FONT_WEIGHT_BOLD
-import androidx.wear.tiles.LayoutElementBuilders.FontStyle
-import androidx.wear.tiles.LayoutElementBuilders.Image
-import androidx.wear.tiles.LayoutElementBuilders.Layout
-import androidx.wear.tiles.LayoutElementBuilders.LayoutElement
-import androidx.wear.tiles.LayoutElementBuilders.Row
-import androidx.wear.tiles.LayoutElementBuilders.Spacer
-import androidx.wear.tiles.LayoutElementBuilders.Text
-import androidx.wear.tiles.ModifiersBuilders.Background
-import androidx.wear.tiles.ModifiersBuilders.Clickable
-import androidx.wear.tiles.ModifiersBuilders.Corner
-import androidx.wear.tiles.ModifiersBuilders.Modifiers
-import androidx.wear.tiles.ModifiersBuilders.Semantics
+import androidx.wear.protolayout.ActionBuilders
+import androidx.wear.protolayout.ColorBuilders.argb
+import androidx.wear.protolayout.DeviceParametersBuilders.DeviceParameters
+import androidx.wear.protolayout.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
+import androidx.wear.protolayout.DimensionBuilders.SpProp
+import androidx.wear.protolayout.DimensionBuilders.dp
+import androidx.wear.protolayout.DimensionBuilders.sp
+import androidx.wear.protolayout.LayoutElementBuilders.Box
+import androidx.wear.protolayout.LayoutElementBuilders.Column
+import androidx.wear.protolayout.LayoutElementBuilders.FONT_WEIGHT_BOLD
+import androidx.wear.protolayout.LayoutElementBuilders.FontStyle
+import androidx.wear.protolayout.LayoutElementBuilders.Image
+import androidx.wear.protolayout.LayoutElementBuilders.LayoutElement
+import androidx.wear.protolayout.LayoutElementBuilders.Row
+import androidx.wear.protolayout.LayoutElementBuilders.Spacer
+import androidx.wear.protolayout.LayoutElementBuilders.Text
+import androidx.wear.protolayout.ModifiersBuilders.Background
+import androidx.wear.protolayout.ModifiersBuilders.Clickable
+import androidx.wear.protolayout.ModifiersBuilders.Corner
+import androidx.wear.protolayout.ModifiersBuilders.Modifiers
+import androidx.wear.protolayout.ModifiersBuilders.Semantics
+import androidx.wear.protolayout.TimelineBuilders.Timeline
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.RequestBuilders.ResourcesRequest
-import androidx.wear.tiles.ResourceBuilders.AndroidImageResourceByResId
-import androidx.wear.tiles.ResourceBuilders.ImageResource
-import androidx.wear.tiles.ResourceBuilders.Resources
+import androidx.wear.tiles.ResourceBuilders
 import androidx.wear.tiles.TileBuilders.Tile
 import androidx.wear.tiles.TileService
-import androidx.wear.tiles.TimelineBuilders.Timeline
-import androidx.wear.tiles.TimelineBuilders.TimelineEntry
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import com.google.common.util.concurrent.ListenableFuture
@@ -55,13 +52,70 @@ private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter
 private val BUTTON_COLOR = R.color.gray_850
 private const val LARGE_SCREEN_WIDTH_DP = 210
 
+/**
+ * Data source for Wear OS tiles.
+ *
+ * Tiles are interactive glanceable surfaces that display information and actions
+ * directly on the watch face carousel. TileSource defines the contract for
+ * providing tile content, resources, and refresh behavior.
+ *
+ * Implementations provide:
+ * - Actions to display (buttons with icons and text)
+ * - Resource references for images
+ * - Refresh interval (how long tile data remains valid)
+ */
 interface TileSource {
 
-    fun getResourceReferences(resources: android.content.res.Resources): List<Int>
+    /**
+     * Get list of drawable resource IDs used by this tile.
+     *
+     * These resources are bundled with the tile and made available
+     * for rendering. Typically includes button icons and status indicators.
+     *
+     * @param resources Android resources for accessing drawables
+     * @return List of drawable resource IDs (e.g., R.drawable.ic_bolus)
+     */
+    fun getResourceReferences(resources: Resources): List<Int>
+
+    /**
+     * Get list of actions to display on the tile.
+     *
+     * Actions are rendered as interactive buttons. The tile layout
+     * automatically arranges 1-4 actions in appropriate grid patterns:
+     * - 1 action: Single centered button
+     * - 2 actions: Two buttons side-by-side
+     * - 3 actions: One on top, two on bottom
+     * - 4 actions: 2x2 grid
+     *
+     * @return List of 1-4 actions to display, or empty for no actions
+     */
     fun getSelectedActions(): List<Action>
+
+    /**
+     * Get validity duration for tile data in milliseconds.
+     *
+     * Determines how long the system can cache tile data before
+     * requesting a refresh. Shorter intervals ensure fresher data
+     * but consume more battery.
+     *
+     * @return Duration in milliseconds, or null for no automatic refresh
+     */
     fun getValidFor(): Long?
 }
 
+/**
+ * Defines an interactive action button on a Wear OS tile.
+ *
+ * Actions are rendered as circular buttons with icons and optional text.
+ * When tapped, they launch the specified activity with optional data payload.
+ *
+ * @param buttonText Primary text label displayed on the button (e.g., "Bolus")
+ * @param buttonTextSub Secondary text label displayed below primary (e.g., "5.2U")
+ * @param activityClass Fully qualified class name of activity to launch (e.g., "app.aaps.wear.MyActivity")
+ * @param iconRes Drawable resource ID for the button icon
+ * @param action Optional event data to pass to the launched activity
+ * @param message Optional message string to pass to the launched activity
+ */
 open class Action(
     val buttonText: String? = null,
     val buttonTextSub: String? = null,
@@ -71,8 +125,23 @@ open class Action(
     val message: String? = null,
 )
 
+/**
+ * Wear control state indicating whether remote control is enabled and data is available.
+ *
+ * Determines what content the tile displays:
+ * - ENABLED: Normal operation, show action buttons
+ * - DISABLED: Wear control not enabled in preferences, show message
+ * - NO_DATA: Wear control enabled but no data received from phone, show message
+ */
 enum class WearControl {
-    NO_DATA, ENABLED, DISABLED
+    /** No data received from phone yet */
+    NO_DATA,
+
+    /** Wear control enabled and data available, show actions */
+    ENABLED,
+
+    /** Wear control disabled in app preferences */
+    DISABLED
 }
 
 abstract class TileBase : TileService() {
@@ -97,15 +166,17 @@ abstract class TileBase : TileService() {
     ): ListenableFuture<Tile> = serviceScope.future {
         val actionsSelected = getSelectedActions()
         val wearControl = getWearControl()
+        val deviceParams = requestParams.deviceConfiguration
+
+        // Build layout using protolayout (non-deprecated)
+        val layoutElement = layout(wearControl, actionsSelected, deviceParams)
+
+        // Create protolayout Timeline from LayoutElement
+        val protoTimeline = Timeline.fromLayoutElement(layoutElement)
+
         val tile = Tile.Builder()
             .setResourcesVersion(resourceVersion)
-            .setTimeline(
-                Timeline.Builder().addTimelineEntry(
-                    TimelineEntry.Builder().setLayout(
-                        Layout.Builder().setRoot(layout(wearControl, actionsSelected, requestParams.deviceParameters!!)).build()
-                    ).build()
-                ).build()
-            )
+            .setTileTimeline(protoTimeline)
 
         val validFor = validFor()
         if (validFor != null) {
@@ -123,19 +194,20 @@ abstract class TileBase : TileService() {
         return source.getValidFor()
     }
 
-    @Deprecated("Deprecated in Java")
+    @Deprecated("Deprecated in TileService but still required for now")
     override fun onResourcesRequest(
         requestParams: ResourcesRequest
-    ): ListenableFuture<Resources> = serviceScope.future {
-        Resources.Builder()
+    ): ListenableFuture<ResourceBuilders.Resources> = serviceScope.future {
+        // Build resources using tiles (Resources are simple references, no complex UI)
+        ResourceBuilders.Resources.Builder()
             .setVersion(resourceVersion)
             .apply {
                 source.getResourceReferences(resources).forEach { resourceId ->
                     addIdToImageMapping(
                         resourceId.toString(),
-                        ImageResource.Builder()
+                        ResourceBuilders.ImageResource.Builder()
                             .setAndroidResourceByResId(
-                                AndroidImageResourceByResId.Builder()
+                                ResourceBuilders.AndroidImageResourceByResId.Builder()
                                     .setResourceId(resourceId)
                                     .build()
                             )
@@ -146,6 +218,24 @@ abstract class TileBase : TileService() {
             .build()
     }
 
+    /**
+     * Build the tile layout based on wear control state and selected actions.
+     *
+     * Layout algorithm:
+     * - DISABLED state: Show "Wear control not enabled" message
+     * - NO_DATA state: Show "No data" message
+     * - ENABLED state with actions: Arrange buttons in grid pattern:
+     *   - 1 action: Single centered button
+     *   - 2 actions: Two buttons side-by-side
+     *   - 3 actions: One on top row, two on bottom row
+     *   - 4 actions: 2x2 grid with vertical spacing
+     * - ENABLED state with no actions: Show "No configuration" message
+     *
+     * @param wearControl Current wear control state
+     * @param actions List of actions to display (0-4 actions)
+     * @param deviceParameters Screen dimensions and shape
+     * @return Layout element to render
+     */
     private fun layout(wearControl: WearControl, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
         if (wearControl == WearControl.DISABLED) {
             return Text.Builder()
@@ -209,6 +299,20 @@ abstract class TileBase : TileService() {
             .build()
     }
 
+    /**
+     * Create an interactive circular button for a tile action.
+     *
+     * The button consists of:
+     * - Circular background with diameter calculated for optimal screen fit
+     * - Icon scaled to 40% of button diameter
+     * - Optional primary and secondary text labels
+     * - Click handler that launches the specified activity
+     * - Accessibility semantics for screen readers
+     *
+     * @param action Action definition with icon, text, and launch target
+     * @param deviceParameters Screen dimensions for sizing calculations
+     * @return Box element containing the styled, interactive button
+     */
     private fun action(action: Action, deviceParameters: DeviceParameters): LayoutElement {
         val circleDiameter = circleDiameter(deviceParameters)
         val text = action.buttonText
@@ -288,6 +392,22 @@ abstract class TileBase : TileService() {
         return col.build()
     }
 
+    /**
+     * Calculate optimal circular button diameter for the device screen.
+     *
+     * Geometry:
+     * - Round screens: Use inscribed square method
+     *   - Diameter = (√2 - 1) × screen_height
+     *   - This fits buttons in corners of the inscribed square
+     * - Square screens: Use half-height
+     *   - Diameter = 0.5 × screen_height
+     *   - Allows 2×2 grid to fit comfortably
+     *
+     * Both formulas subtract spacing to prevent edge clipping.
+     *
+     * @param deviceParameters Screen dimensions and shape
+     * @return Button diameter in DP
+     */
     private fun circleDiameter(deviceParameters: DeviceParameters) = when (deviceParameters.screenShape) {
         SCREEN_SHAPE_ROUND -> ((sqrt(2f) - 1) * deviceParameters.screenHeightDp) - (2 * SPACING_ACTIONS)
         else               -> 0.5f * deviceParameters.screenHeightDp - SPACING_ACTIONS
@@ -300,6 +420,18 @@ abstract class TileBase : TileService() {
         return sp(if (isLargeScreen(deviceParameters)) 16f else 14f)
     }
 
+    /**
+     * Determine if device has a large screen (≥210dp width).
+     *
+     * Used to adjust text sizes for better readability:
+     * - Large screens: Larger text sizes (14-16sp)
+     * - Small screens: Smaller text sizes (12-14sp)
+     *
+     * Threshold based on typical Wear OS device classifications.
+     *
+     * @param deviceParameters Screen dimensions
+     * @return true if screen width ≥ 210dp
+     */
     private fun isLargeScreen(deviceParameters: DeviceParameters): Boolean {
         return deviceParameters.screenWidthDp >= LARGE_SCREEN_WIDTH_DP
     }

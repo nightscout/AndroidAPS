@@ -1,14 +1,16 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumTestBase
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import com.google.common.truth.Truth.assertThat
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Test
 
 class GetTimePacketTest : MedtrumTestBase() {
+
+    val medtrumTimeUtil = MedtrumTimeUtil()
 
     /** Test packet specific behavior */
 
@@ -17,6 +19,7 @@ class GetTimePacketTest : MedtrumTestBase() {
             if (it is GetTimePacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
+                it.medtrumTimeUtil = medtrumTimeUtil
             }
         }
     }
@@ -47,7 +50,7 @@ class GetTimePacketTest : MedtrumTestBase() {
         // Expected values
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
-        assertThat(medtrumPump.lastTimeReceivedFromPump).isEqualTo(MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(time))
+        assertThat(medtrumPump.lastTimeReceivedFromPump).isEqualTo(medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(time))
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {

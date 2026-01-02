@@ -3,17 +3,18 @@ package app.aaps.pump.medtrum.comm.packets
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_TIME_ZONE
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class SetTimeZonePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var medtrumPump: MedtrumPump
+    @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil
 
     private val offsetMinutes = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
 
@@ -22,7 +23,7 @@ class SetTimeZonePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
     }
 
     override fun getRequest(): ByteArray {
-        val time = MedtrumTimeUtil().getCurrentTimePumpSeconds()
+        val time = medtrumTimeUtil.getCurrentTimePumpSeconds()
         var calcOffset = offsetMinutes
         aapsLogger.debug(LTag.PUMPCOMM, "Requested offset: $calcOffset minutes")
         // Workaround for bug where it fails to set timezone > GMT + 12

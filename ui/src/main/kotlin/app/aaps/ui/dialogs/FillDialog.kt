@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
@@ -23,6 +24,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
@@ -32,14 +34,13 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogFillBinding
 import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
 
-class FillDialog : DialogFragmentWithDate() {
+class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
@@ -50,7 +51,6 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -157,7 +157,7 @@ class FillDialog : DialogFragmentWithDate() {
                         )
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
-                    if (siteChange)
+                    if (siteChange) {
                         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                             therapyEvent = TE(
                                 timestamp = eventTime,
@@ -172,6 +172,17 @@ class FillDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE)
                             ).filterNotNull()
                         ).subscribe()
+                        if (preferences.get(BooleanKey.SiteRotationManageCgm)) {
+                            SiteRotationDialog().also { srd ->
+                                srd.arguments = Bundle().also { args ->
+                                    args.putLong("time", eventTime)
+                                    args.putInt("siteMode", UiInteraction.SiteMode.EDIT.ordinal)
+                                    args.putInt("siteType", TE.Type.CANNULA_CHANGE.ordinal)
+                                }
+                                srd.show(fm, "SiteRotationViewDialog")
+                            }
+                        }
+                    }
                     if (insulinChange)
                     // add a second for case of both checked
                         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
@@ -187,7 +198,6 @@ class FillDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.TEType(TE.Type.INSULIN_CHANGE)
                             ).filterNotNull()
-
                         ).subscribe()
                 }, null)
             }

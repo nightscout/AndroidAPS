@@ -37,7 +37,7 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         val bolusAmountToBeDelivered = getShortToInt(bufferData) / 100.0
         val deliveredBolusAmount = getShortToInt(bufferData) / 100.0
 
-        diaconnG8Pump.isExtendedInProgress = result == 0
+        diaconnG8Pump.squareStatus = if (result == 0) 1 else 2 // 1=in progress, 2=stopped
         diaconnG8Pump.squareTime = settingMinutes
         diaconnG8Pump.squareInjTime = elapsedTime
         diaconnG8Pump.squareAmount = bolusAmountToBeDelivered

@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCod: %4$02X</string>
     <string name="processinghistory">Se procesează activitatea</string>
     <string name="danar_enableextendedbolus">Activează bolusuri extinse în pompă</string>
-    <string name="overview_bolusprogress_delivered">Livrat</string>
     <string name="overview_bolusprogress_stoped">Oprit</string>
     <string name="unsupportedfirmware">Soft pompă incompatibil</string>
     <string name="pumperror">Eroare a pompei</string>

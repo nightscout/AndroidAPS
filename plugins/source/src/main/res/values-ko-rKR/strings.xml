@@ -5,7 +5,6 @@
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
     <string name="source_xdrip">xDrip+ BG</string>
-    <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">\'자신만의 덱스콤 앱 만들기(BYODA)\'에서 BG 값을 수신합니다.</string>
@@ -26,6 +25,7 @@
     <string name="description_source_random_bg">무작위로 BG 데이터를 생성합니다 (데모 버전 전용)</string>
     <string name="random_bg_short">BG</string>
     <string name="direction">방향</string>
-    <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

@@ -33,13 +33,6 @@
     <string name="timeout_during_handshake">握手时超时-重启蓝牙</string>
     <string name="pump_stopped">泵停止了</string>
     <string name="pump_started">泵启动了</string>
-    <string name="short_status_last_connected">最后一次连接: %1$d 分钟前</string>
-    <string name="short_status_tbr">临时基础率: %1$d%% for %2$d / %3$d 分钟</string>
-    <string name="short_status_extended">扩展: %1$.2f / %2$.2f U 为 %3$d 分钟</string>
-    <string name="short_status_multiwave">多波: %1$.2f / %2$.2f U 持续时间 %3$d 分钟</string>
-    <string name="short_status_tdd">TDD(日输注总量): %1$.2f</string>
-    <string name="short_status_reservoir">储药器： %1$.2f U</string>
-    <string name="short_status_battery">电池: %1$d%%</string>
     <string name="release_software_version">发行软件版本</string>
     <string name="ui_processor_software_version">UI 处理器软件版本</string>
     <string name="pc_processor_software_version">PC 处理器软件版本</string>

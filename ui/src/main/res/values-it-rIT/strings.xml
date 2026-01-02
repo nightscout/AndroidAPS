@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Totale</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">Davanti</string>
+    <string name="site_back">Dietro</string>
+    <string name="site_man">Uomo</string>
+    <string name="site_woman">Donna</string>
+    <string name="site_child">Bambino</string>
+    <string name="user_profile">Profilo Utente</string>
+    <string name="user_profile_description">La descrizione del profilo utente viene utilizzata per mostrare i siti più frequenti disponibili per un uomo, una donna o un bambino</string>
+    <string name="site_management">Profilo Di Gestione Sito</string>
+    <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
+    <string name="select_site">Clicca qui sotto per selezionare il sito</string>
+    <string name="record_site_change">Registra Posizione Sito</string>
+    <string name="edit_site">Modifica</string>
+    <string name="record_site_location">Posizione Del Sito: %1$s</string>
+    <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
+    <string name="record_site_note">Note: %1$s</string>
+    <string name="delete_site_note">Nota eliminata</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">Usa colore nero</string>
     <string name="widget_configuration">Configurazione widget</string>
+    <string name="until_changed">Fino a Modifica</string>
+    <string name="limitations">Limitazioni</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>

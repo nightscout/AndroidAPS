@@ -125,4 +125,9 @@ class CryptoUtil @Inject constructor(
         }
     }
 
+    fun getRandomKey(length: Int): ByteArray {
+        val keybytes = ByteArray(length)
+        secureRandom.nextBytes(keybytes)
+        return keybytes
+    }
 }

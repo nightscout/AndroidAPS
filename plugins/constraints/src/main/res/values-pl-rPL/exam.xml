@@ -63,7 +63,6 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Wymagania wstępne</string>
     <string name="prerequisites_what">Co jest niezbędne do ustawienia i używania AAPS?</string>
-    <string name="prerequisites_computer">Komputer z zainstalowanym i skonfigurowanym programem Android Studio.</string>
     <string name="prerequisites_pump">Kompatybilna pompa insulinowa, jeśli planujesz uruchomienie pętli zamkniętej.</string>
     <string name="prerequisites_nightscout">Nightscout, aby zachować dziennik wszystkich danych i przeglądać ustawienia.</string>
     <string name="prerequisites_beanandroiddeveloper">Doświadczenie w programowaniu lub edycji kodu.</string>
@@ -97,7 +96,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid ® /Novolog ®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid ® /Humulin R ®/\"zwykła\" insulina ludzka.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">Wtyczki wrażliwości</string>
     <string name="sensitivity_adjust">Wtyczki wrażliwości pozwalają AAPS dostosować się do tymczasowych lub krótkotrwałych zmian wrażliwości na insulinę (na przykład zmian hormonalnych lub problemów z wchłanianiem w miejscu wkłucia).</string>

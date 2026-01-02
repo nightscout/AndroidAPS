@@ -54,7 +54,6 @@
     <string name="basaltest_fixed">Uma vez definido e validado, estes valores não deveriam mudar ao longo do tempo.</string>
     <string name="prerequisites_label">Pré-requisitos</string>
     <string name="prerequisites_what">O que é essencial para configurar e usar o AndroidAPS?</string>
-    <string name="prerequisites_computer">Um computador com o Android Studio instalado e configurado.</string>
     <string name="prerequisites_pump">Uma bomba de insulina compatível se você pretender usar o loop fechado.</string>
     <string name="prerequisites_nightscout">Nightscout, para manter um registro de todos os dados e revisar configurações.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiência na programação ou editação de código.</string>
@@ -81,7 +80,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/insulina humana regular.</string>
     <string name="sensitivity_label">Tópico: Plugins de Sensibilidade</string>
     <string name="sensitivity_adjust">Plugins de sensibilidade permitem ao AAPS ajustar de forma temporária ou por uma curta duração alterações na sensibilidade à insulina (por exemplo, mudanças hormonais ou problemas com absorção de insulina no local onde ela é aplicada).</string>
     <string name="sensitivity_edit">Os plugins de sensibilidade fornecem ao usuário sugestões de alterações nas taxas basais, relações I:C e ISF, que podem ser usadas para editar o perfil.</string>

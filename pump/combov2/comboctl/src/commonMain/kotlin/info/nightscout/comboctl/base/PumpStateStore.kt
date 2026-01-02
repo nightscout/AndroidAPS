@@ -312,7 +312,7 @@ interface PumpStateStore {
     fun setCurrentTbrState(pumpAddress: BluetoothAddress, currentTbrState: CurrentTbrState)
 }
 
-/*
+/**
  * Increments the nonce of a pump state associated with the given address.
  *
  * @param pumpAddress Bluetooth address of the pump state.

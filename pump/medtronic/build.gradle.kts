@@ -14,11 +14,12 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:libraries"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
-    implementation(project(":pump:pump-common"))
+    implementation(project(":pump:common"))
     implementation(project(":pump:rileylink"))
 
     testImplementation(project(":core:keys"))

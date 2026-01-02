@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder
 import dagger.android.DaggerActivity
@@ -48,13 +48,14 @@ abstract class MenuListActivity : DaggerActivity() {
         disposable += rxBus
             .toObservable(EventUpdateSelectedWatchface::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe { event: EventUpdateSelectedWatchface ->
+            .subscribe { _: EventUpdateSelectedWatchface ->
                 updateMenu()
             }
         updateMenu()
     }
 
     override fun onDestroy() {
+        findViewById<WearableRecyclerView>(R.id.action_list)?.adapter = null
         disposable.clear()
         super.onDestroy()
     }

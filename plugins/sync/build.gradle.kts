@@ -45,6 +45,7 @@ dependencies {
     api(libs.com.squareup.retrofit2.adapter.rxjava3)
     api(libs.com.squareup.retrofit2.converter.gson)
     api(libs.com.google.code.gson)
+    api(libs.net.openid.appauth)
 
     // DataLayerListenerService
     api(libs.com.google.android.gms.playservices.wearable)

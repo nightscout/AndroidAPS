@@ -32,11 +32,6 @@
     <string name="timeout_during_handshake">연결 시간 초과 - 블루투스 재설정</string>
     <string name="pump_stopped">펌프 중지</string>
     <string name="pump_started">펌프 시작</string>
-    <string name="short_status_last_connected">최신연결: %1$d 분전</string>
-    <string name="short_status_tbr">임시: %2$d / %3$d 분 동안 %1$d%%</string>
-    <string name="short_status_extended">확장: %3$d분 동안 %1$.2f / %2$.2f U</string>
-    <string name="short_status_multiwave">Multiwave: %3$d 분 동안 %1$.2f / %2$.2f U</string>
-    <string name="short_status_reservoir">잔여 인슐린 양 : %1$.2f U</string>
     <string name="release_software_version">출시 소프트웨어 버전</string>
     <string name="ui_processor_software_version">UI 프로세서 소프트웨어 버전</string>
     <string name="pc_processor_software_version">PC 프로세서 소프트웨어 버전</string>

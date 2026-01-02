@@ -23,7 +23,6 @@
     <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
     <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad de basal temporal</string>
-    <string name="closedmodedisabledinpreferences">Bucle cerrado deshabilitado en preferencias</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Bucle cerrado no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Bucle cerrado deshabilitado debido a la ejecución de un bolo extendido</string>
     <string name="smbalwaysdisabled">SMB siempre y después de carbohidratos desactivados porque la fuente activa de BG no soporta filtrado avanzado</string>

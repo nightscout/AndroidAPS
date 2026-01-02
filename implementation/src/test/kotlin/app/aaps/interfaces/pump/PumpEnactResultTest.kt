@@ -10,23 +10,23 @@ import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class PumpEnactResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        `when`(rh.gs(app.aaps.core.ui.R.string.success)).thenReturn("Success")
-        `when`(rh.gs(app.aaps.core.ui.R.string.enacted)).thenReturn("Enacted")
-        `when`(rh.gs(app.aaps.core.ui.R.string.comment)).thenReturn("Comment")
-        `when`(rh.gs(app.aaps.core.ui.R.string.configbuilder_insulin)).thenReturn("Insulin")
-        `when`(rh.gs(app.aaps.core.ui.R.string.smb_shortname)).thenReturn("SMB")
-        `when`(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)).thenReturn("U")
-        `when`(rh.gs(app.aaps.core.ui.R.string.cancel_temp)).thenReturn("Cancel temp basal")
-        `when`(rh.gs(app.aaps.core.ui.R.string.duration)).thenReturn("Duration")
-        `when`(rh.gs(app.aaps.core.ui.R.string.percent)).thenReturn("Percent")
-        `when`(rh.gs(app.aaps.core.ui.R.string.absolute)).thenReturn("Absolute")
+        whenever(rh.gs(app.aaps.core.ui.R.string.success)).thenReturn("Success")
+        whenever(rh.gs(app.aaps.core.ui.R.string.enacted)).thenReturn("Enacted")
+        whenever(rh.gs(app.aaps.core.ui.R.string.comment)).thenReturn("Comment")
+        whenever(rh.gs(app.aaps.core.ui.R.string.configbuilder_insulin)).thenReturn("Insulin")
+        whenever(rh.gs(app.aaps.core.ui.R.string.smb_shortname)).thenReturn("SMB")
+        whenever(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)).thenReturn("U")
+        whenever(rh.gs(app.aaps.core.ui.R.string.cancel_temp)).thenReturn("Cancel temp basal")
+        whenever(rh.gs(app.aaps.core.ui.R.string.duration)).thenReturn("Duration")
+        whenever(rh.gs(app.aaps.core.ui.R.string.percent)).thenReturn("Percent")
+        whenever(rh.gs(app.aaps.core.ui.R.string.absolute)).thenReturn("Absolute")
     }
 
     @Test fun successTest() {

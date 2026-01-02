@@ -63,7 +63,7 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/ru/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Предварительные требования</string>
     <string name="prerequisites_what">Что необходимо для настройки и использования AAPS?</string>
-    <string name="prerequisites_computer">Компьютер с установленной и настроенной Android Studio.</string>
+    <string name="prerequisites_build">Способ создания AAPS. Либо через браузер или компьютер с установленной Android Studio.</string>
     <string name="prerequisites_pump">Совместимая инсулиновая помпа, если вы планируете использовать замкнутый цикл.</string>
     <string name="prerequisites_nightscout">Nightscout, для записи всех данных и обзора настроек.</string>
     <string name="prerequisites_beanandroiddeveloper">Опыт программирования или редактирования кода.</string>

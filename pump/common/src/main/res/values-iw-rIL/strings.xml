@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\\או מנהל ההתקן.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">לא מאותחל</string>
+    <string name="pump_status_initialized">מאותחל</string>
+    <string name="pump_status_encrypt">מצפין תקשורת</string>
+    <string name="pump_status_ready">מוכן</string>
+    <string name="pump_status_busy">עסוק</string>
+    <string name="pump_status_suspended">מושהה</string>
+    <string name="pump_status_executing_command">מבצע פקודה</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">בזאלים</string>
+    <string name="history_group_configuration">תצורות</string>
+    <string name="history_group_notification">התראות</string>
+    <string name="history_group_statistic">סטטיסטיקה</string>
+    <string name="history_group_unknown">לא ידועים</string>
+    <string name="history_group_all">הכול</string>
+    <string name="history_group_bolus">בולוסים</string>
+    <string name="history_group_prime">תיחול</string>
+    <string name="history_group_alarm">התראות</string>
+    <string name="history_group_glucose">גלוקוז</string>
+    <string name="history_group_base">בסיס</string>
+    <string name="history_group_other">אחר</string>
+    <string name="history_group_events">כל האירועים</string>
+    <string name="history_group_events_no_stat">אירועים(ללא סטטיסטיקה)</string>
+    <!-- Time -->
+    <string name="time_today">היום</string>
+    <string name="time_last_hour">בשעה האחרונה</string>
+    <string name="time_last_3_hours">ב-3 השעות האחרונות</string>
+    <string name="time_last_6_hours">ב-6 השעות האחרונות</string>
+    <string name="time_last_12_hours">ב-12 השעות האחרונות</string>
+    <string name="time_last_2_days">ביומיים אחרונים</string>
+    <string name="time_last_4_days">ב-4 הימים האחרונים</string>
+    <string name="time_last_week">בשבוע שעבר</string>
+    <string name="time_last_month">בחודש שעבר</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">סריקה</string>
+    <string name="ble_config_scan_stop">עצור</string>
+    <string name="ble_config_scan_selected">נבחר</string>
+    <string name="ble_config_scan_scanning">סורק</string>
+    <string name="ble_config_scan_finished">הסריקה הושלמה</string>
+    <string name="ble_config_scan_error">שגיאת סריקה: %1$d</string>
+    <string name="ble_config_remove">הסרה</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">סוג:</string>
+    <plurals name="duration_days">
+        <item quantity="one">יום %1$d</item>
+        <item quantity="two">יומיים</item>
+        <item quantity="many">%1$d ימים</item>
+        <item quantity="other">%1$d ימים</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">שעה</item>
+        <item quantity="two">שעתיים</item>
+        <item quantity="many">%1$d שעות</item>
+        <item quantity="other">%1$d שעות</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">לפני שעה</item>
+        <item quantity="two">לפני שעתיים</item>
+        <item quantity="many">לפני %1$d שעות</item>
+        <item quantity="other">לפני %1$d שעות</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">לפני יום אחד</item>
+        <item quantity="two">לפני יומיים</item>
+        <item quantity="many">לפני %1$d ימים</item>
+        <item quantity="other">לפני %1$d ימים</item>
+    </plurals>
+</resources>

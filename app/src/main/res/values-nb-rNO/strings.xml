@@ -6,7 +6,7 @@
     <string name="save">Lagre</string>
     <string name="wear">Klokke</string>
     <string name="nav_about">Om</string>
-    <string name="sensitivity_warning">Hvis du slår på Autosense-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil Karbo-avvik bli identifisert feil som sensitivitetsendring !!</string>
+    <string name="sensitivity_warning">Hvis du slår på Autosens-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil Karbo-avvik bli identifisert feil som sensitivitetsendring !!</string>
     <string name="invalid">UGYLDIG</string>
     <string name="gradually_increase_notification_volume">Øk volumet gradvis for alarmer og varsler</string>
     <string name="localalertsettings_title">Lokale varsler</string>

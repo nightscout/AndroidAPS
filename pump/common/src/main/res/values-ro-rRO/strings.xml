@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operațiunea nu este suportată de către pompă și/sau driver.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Neiniţializat</string>
+    <string name="pump_status_initialized">Pornit</string>
+    <string name="pump_status_encrypt">Criptare comunicație</string>
+    <string name="pump_status_ready">Gata</string>
+    <string name="pump_status_busy">Ocupat</string>
+    <string name="pump_status_suspended">Suspendat</string>
+    <string name="pump_status_executing_command">Executare comandă</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazale</string>
+    <string name="history_group_configuration">Configurații</string>
+    <string name="history_group_notification">Notificări</string>
+    <string name="history_group_statistic">Statistici</string>
+    <string name="history_group_unknown">Necunoscute</string>
+    <string name="history_group_all">Toate</string>
+    <string name="history_group_bolus">Bolusuri</string>
+    <string name="history_group_prime">Amorsare</string>
+    <string name="history_group_alarm">Alarme</string>
+    <string name="history_group_glucose">Glicemie</string>
+    <string name="history_group_base">Bază</string>
+    <string name="history_group_other">Altul</string>
+    <string name="history_group_events">Toate evenimentele</string>
+    <string name="history_group_events_no_stat">Evenimente (fără Status)</string>
+    <!-- Time -->
+    <string name="time_today">Astăzi</string>
+    <string name="time_last_hour">Ultima Oră</string>
+    <string name="time_last_3_hours">Ultimele 3 ore</string>
+    <string name="time_last_6_hours">Ultimele 6 ore</string>
+    <string name="time_last_12_hours">Ultimele 12 ore</string>
+    <string name="time_last_2_days">Ultimele 2 zile</string>
+    <string name="time_last_4_days">Ultimele 4 zile</string>
+    <string name="time_last_week">Săptămâna trecută</string>
+    <string name="time_last_month">Ultima lună</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Scanare</string>
+    <string name="ble_config_scan_selected">Selectat</string>
+    <string name="ble_config_scan_scanning">Scanează</string>
+    <string name="ble_config_scan_finished">Scanare terminată</string>
+    <string name="ble_config_scan_error">Eroare la scanare: %1$d</string>
+    <string name="ble_config_remove">Șterge</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Tip:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d zile</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d oră</item>
+        <item quantity="few">%1$d ore</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">%1$d ore în urmă</item>
+        <item quantity="few">%1$d ore în urmă</item>
+        <item quantity="other">%1$d ore în urmă</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">cu %1$d zile în urmă</item>
+        <item quantity="few">%1$d zile în urmă</item>
+        <item quantity="other">%1$d zile în urmă</item>
+    </plurals>
+</resources>

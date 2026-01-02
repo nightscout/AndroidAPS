@@ -14,6 +14,7 @@ import app.aaps.ui.activities.fragments.TreatmentsBolusCarbsFragment
 import app.aaps.ui.activities.fragments.TreatmentsCareportalFragment
 import app.aaps.ui.activities.fragments.TreatmentsExtendedBolusesFragment
 import app.aaps.ui.activities.fragments.TreatmentsProfileSwitchFragment
+import app.aaps.ui.activities.fragments.TreatmentsRunningModeFragment
 import app.aaps.ui.activities.fragments.TreatmentsTempTargetFragment
 import app.aaps.ui.activities.fragments.TreatmentsTemporaryBasalsFragment
 import app.aaps.ui.activities.fragments.TreatmentsUserEntryFragment
@@ -29,6 +30,7 @@ import app.aaps.ui.dialogs.InsulinDialog
 import app.aaps.ui.dialogs.LoopDialog
 import app.aaps.ui.dialogs.ProfileSwitchDialog
 import app.aaps.ui.dialogs.ProfileViewerDialog
+import app.aaps.ui.dialogs.SiteRotationDialog
 import app.aaps.ui.dialogs.TempBasalDialog
 import app.aaps.ui.dialogs.TempTargetDialog
 import app.aaps.ui.dialogs.TreatmentDialog
@@ -55,6 +57,7 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesProfileViewerDialog(): ProfileViewerDialog
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
+    @ContributesAndroidInjector abstract fun contributesSiteRotationDialog(): SiteRotationDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
@@ -81,5 +84,6 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsUserEntryFragment(): TreatmentsUserEntryFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsRunningModeFragment(): TreatmentsRunningModeFragment
 
 }

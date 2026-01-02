@@ -37,7 +37,9 @@ internal data class RemoteTreatment(
     @SerializedName("protein") val protein: Int? = null,               // number... Amount of protein given.
     @SerializedName("fat") val fat: Int? = null,                       // number... Amount of fat given.
     @SerializedName("insulin") val insulin: Double? = null,            // number... Amount of insulin, if any.
+    /** Duration in minutes */
     @SerializedName("duration") val duration: Long? = null,             // number... Duration in minutes.
+    /** Duration in milliseconds */
     @SerializedName("durationInMilliseconds") val durationInMilliseconds: Long? = null, // number... Duration in milliseconds.
     @SerializedName("preBolus") val preBolus: Int? = null,             // number... How many minutes the bolus was given before the meal started.
     @SerializedName("splitNow") val splitNow: Int? = null,             // number... Immediate part of combo bolus (in percent).
@@ -48,6 +50,11 @@ internal data class RemoteTreatment(
     @SerializedName("targetBottom") val targetBottom: Double? = null,  // number... Bottom limit of temporary target.
     @SerializedName("profile") val profile: String? = null,            // string Name of the profile to which the pump has been switched.
     @SerializedName("reason") val reason: String? = null,              // string For example the reason why the profile has been switched or why the temporary target has been set.
+    @SerializedName("mode") val mode: String? = null,                  // string RunningMode
+    @SerializedName("location") val location: String? = null,              // string Location for site management defined in TE.Location
+    @SerializedName("arrow") val arrow: String? = null,                 // string Arrow for site management defined in TE.Arrow
+    @SerializedName("autoForced") val autoForced: Boolean? = null,     // boolean RunningMode
+    @SerializedName("reasons") val reasons: String? = null,            // string RunningMode
     @SerializedName("notes") val notes: String? = null,                // string Description/notes of treatment.
     @SerializedName("enteredBy") val enteredBy: String? = null,        // string Who entered the treatment.
 
@@ -63,7 +70,7 @@ internal data class RemoteTreatment(
     @SerializedName("originalCustomizedName") val originalCustomizedName: String? = null, // string "Effective Profile Switch"
     @SerializedName("originalTimeshift") val originalTimeshift: Long? = null,  // long "Effective Profile Switch"
     @SerializedName("originalPercentage") val originalPercentage: Int? = null, // int "Effective Profile Switch"
-    @SerializedName("originalDuration") val originalDuration: Long? = null,    // long "Effective Profile Switch"
+    @SerializedName("originalDuration") val originalDuration: Long? = null,    // long "Effective Profile Switch", RunningMode
     @SerializedName("originalEnd") val originalEnd: Long? = null,              // long "Effective Profile Switch"
 
     @SerializedName("bolusCalculatorResult") val bolusCalculatorResult: String? = null, // string "Bolus Wizard" json toString ex "bolusCalculatorResult": "{\"basalIOB\":-0.247,\"bolusIOB\":-1.837,\"carbs\":45.0,\"carbsInsulin\":9.0,\"cob\":0.0,\"cobInsulin\":0.0,\"dateCreated\":1626202788810,\"glucoseDifference\":44.0,\"glucoseInsulin\":0.8979591836734694,\"glucoseTrend\":5.5,\"glucoseValue\":134.0,\"ic\":5.0,\"id\":331,\"interfaceIDs_backing\":{\"nightscoutId\":\"60ede2a4c574da0004a3869d\"},\"isValid\":true,\"isf\":49.0,\"note\":\"\",\"otherCorrection\":0.0,\"percentageCorrection\":90,\"profileName\":\"Tuned 13/01 90%Lyum\",\"superbolusInsulin\":0.0,\"targetBGHigh\":90.0,\"targetBGLow\":90.0,\"timestamp\":1626202783325,\"totalInsulin\":7.34,\"trendInsulin\":0.336734693877551,\"utcOffset\":7200000,\"version\":1,\"wasBasalIOBUsed\":true,\"wasBolusIOBUsed\":true,\"wasCOBUsed\":true,\"wasGlucoseUsed\":true,\"wasSuperbolusUsed\":false,\"wasTempTargetUsed\":false,\"wasTrendUsed\":true,\"wereCarbsUsed\":false}",

@@ -49,7 +49,6 @@
     <string name="smscommunicator_tt_canceled">Временна цел успешно спряна</string>
     <string name="smscommunicator_remote_commands_allowed">Позволи отдалечени команди чрез SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">APS е деактивиран</string>
-    <string name="smscommunicator_loop_has_been_enabled">APS е активиран</string>
     <string name="smscommunicator_loop_is_enabled">APS е включен</string>
     <string name="smscommunicator_pump_connect_with_code">За свързване с помпа отговорете с код %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Връзката с помпата е неуспешна</string>
@@ -65,7 +64,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">За да стартирате базал от %1$d%%Е/ч за %2$d мин отговорете с код %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">За да спрете APS за %1$d минути отговорете с код %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">За възстановяване на кръга отговорете с код %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">За активирнае на кръга отговорете с код %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">За изключване на кръга отговорете с код %1$s</string>
     <string name="smscommunicator_tempbasal_set">Временен базал от %1$.2fЕ/ч за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_extended_set">Удължен болус %1$.2fU за %2$d мин стартиран успешно</string>
@@ -129,7 +127,6 @@
     <!-- Profile -->
     <string name="localprofile">Профил</string>
     <string name="localprofile_shortname">ЛПр</string>
-    <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
     <string name="a11y_add_new_to_list">Добавяне към списък</string>
     <string name="do_you_want_switch_profile">Искате да смените профила и премахнете на промените, направени в текущия профил?</string>
     <string name="save_or_reset_changes_first">Първо запазете или се откажете от промените</string>
@@ -220,6 +217,8 @@
     <string name="thirdcarbsincrement">Стойност на третия бърз бутон [гр]</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Временна цел по подразбиране</string>
+    <string name="eatingsoon_duration">За хранене (мин)</string>
+    <string name="eatingsoon_target">За хранене цел</string>
     <string name="fill_bolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>

@@ -5,13 +5,12 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.StringUtil
 import app.aaps.pump.common.sync.PumpDbEntry
@@ -34,11 +33,10 @@ import app.aaps.pump.medtronic.data.dto.TempBasalProcessDTO
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.defs.PumpBolusType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
-import app.aaps.pump.medtronic.util.MedtronicConst
+import app.aaps.pump.medtronic.keys.MedtronicLongNonKey
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.android.HasAndroidInjector
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
@@ -57,15 +55,12 @@ import javax.inject.Singleton
 //
 @Singleton
 class MedtronicHistoryData @Inject constructor(
-    val injector: HasAndroidInjector,
-    val aapsLogger: AAPSLogger,
-    val sp: SP,
-    val rh: ResourceHelper,
-    val rxBus: RxBus,
-    val activePlugin: ActivePlugin,
-    val medtronicUtil: MedtronicUtil,
+    private val aapsLogger: AAPSLogger,
+    private val preferences: Preferences,
+    private val rh: ResourceHelper,
+    private val medtronicUtil: MedtronicUtil,
     private val medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder,
-    val medtronicPumpStatus: MedtronicPumpStatus,
+    private val medtronicPumpStatus: MedtronicPumpStatus,
     private val pumpSync: PumpSync,
     private val pumpSyncStorage: PumpSyncStorage,
     private val uiInteraction: UiInteraction,
@@ -207,11 +202,11 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
 
-        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime)
+        preferences.put(MedtronicLongNonKey.LastPumpHistoryEntry, pheLast.atechDateTime)
         var dt: LocalDateTime? = null
         try {
             dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime)
-        } catch (ex: Exception) {
+        } catch (_: Exception) {
             aapsLogger.error("Problem decoding date from last record: $pheLast")
         }
         if (dt != null) {
@@ -481,7 +476,7 @@ class MedtronicHistoryData @Inject constructor(
         if (lastPrimeRecord != null) {
             uploadCareportalEventIfFoundInHistory(
                 lastPrimeRecord,
-                MedtronicConst.Statistics.LastPrime,
+                MedtronicLongNonKey.LastPrime,
                 TE.Type.CANNULA_CHANGE
             )
         }
@@ -502,7 +497,7 @@ class MedtronicHistoryData @Inject constructor(
         if (lastRewindRecord != null) {
             uploadCareportalEventIfFoundInHistory(
                 lastRewindRecord,
-                MedtronicConst.Statistics.LastRewind,
+                MedtronicLongNonKey.LastRewind,
                 TE.Type.INSULIN_CHANGE
             )
         }
@@ -530,14 +525,14 @@ class MedtronicHistoryData @Inject constructor(
         if (lastBatteryChangeRecord != null) {
             uploadCareportalEventIfFoundInHistory(
                 lastBatteryChangeRecord,
-                MedtronicConst.Statistics.LastBatteryChange,
+                MedtronicLongNonKey.LastBatteryChange,
                 TE.Type.PUMP_BATTERY_CHANGE
             )
         }
     }
 
-    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
-        val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
+    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: LongNonPreferenceKey, eventType: TE.Type) {
+        val lastPrimeFromAAPS = preferences.get(eventSP)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
             val result = pumpSync.insertTherapyEventIfNewWithTimestamp(
                 DateTimeUtil.toMillisFromATD(historyRecord.atechDateTime),
@@ -555,7 +550,7 @@ class MedtronicHistoryData @Inject constructor(
                 )
             )
 
-            sp.putLong(eventSP, historyRecord.atechDateTime)
+            preferences.put(eventSP, historyRecord.atechDateTime)
         }
     }
 
@@ -600,22 +595,22 @@ class MedtronicHistoryData @Inject constructor(
 
             val bolusDTO = bolus.decodedData["Object"] as BolusDTO
             //var type: BS.Type = BS.Type.NORMAL
-            var multiwave = false
+            var multiWave = false
 
             if (bolusDTO.bolusType == PumpBolusType.Extended) {
-                addExtendedBolus(bolus, bolusDTO, multiwave)
+                addExtendedBolus(bolus, bolusDTO, multiWave)
                 continue
             } else if (bolusDTO.bolusType == PumpBolusType.Multiwave) {
-                multiwave = true
+                multiWave = true
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "Multiwave bolus from pump, extended bolus and normal bolus will be added."))
-                addExtendedBolus(bolus, bolusDTO, multiwave)
+                addExtendedBolus(bolus, bolusDTO, multiWave)
             }
 
-            val deliveredAmount: Double = if (multiwave) bolusDTO.immediateAmount!! else bolusDTO.deliveredAmount
+            val deliveredAmount: Double = if (multiWave) bolusDTO.immediateAmount!! else bolusDTO.deliveredAmount
 
             var temporaryId: Long? = null
 
-            if (!multiwave) {
+            if (!multiWave) {
                 @Suppress("Unchecked_Cast")
                 val entryWithTempId = findDbEntry(bolus, boluses as MutableList<PumpDbEntry>) as PumpDbEntryBolus?
 

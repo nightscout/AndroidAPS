@@ -5,7 +5,6 @@
     <string name="error">Hata</string>
     <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
     <string name="invalid_input">Geçersiz bilgi girişi</string>
-    <string name="bolus_delivering">%1$.2f Ü gönderiliyor</string>
     <string name="constraint_applied">Sınırlaması uygulanır!</string>
     <string name="tempbasals_iobtotal_label_string">Toplam AİNS:</string>
     <string name="tt_label">GH</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f Ü/sa</string>
     <string name="pump_not_initialized_profile_not_set">Pompa başlatılamadı, profil oluşturulmamış!</string>
     <string name="failed_update_basal_profile">Bazal profiliniz güncellenemedi</string>
-    <string name="bolus_delivered_successfully">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="no_valid_basal_rate">Pompadan okunan geçerli bir bazal oranı yok</string>
     <string name="limiting_iob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="loop_disabled">DÖNGÜ KISITLAMALARDAN DEVREDIŞI BIRAKILDI</string>
@@ -91,7 +89,6 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Dışa aktarma ayarları</string>
     <string name="disableloop">Döngüyü devre dışı bırak</string>
-    <string name="enableloop">Döngüyü etkinleştir</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
     <string name="suspendloop">Döngüyü duraklat</string>
     <string name="duration_min_label">Süre [min]</string>
@@ -105,7 +102,6 @@
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">Yükleniyor…</string>
     <string name="notes_label">Notlar</string>
     <string name="remove_button">Kaldır</string>
     <string name="add_new">Yeni ekle</string>
@@ -167,7 +163,6 @@
     <string name="canceling_tbr_failed">Geçici bazal iptali başarısız oldu</string>
     <string name="canceling_eb_failed">Yayma bolusun iptal edilmesi başarısız oldu</string>
     <string name="virtualpump_uploadstatus_title">Pompa durumunu NS veya Tidepool\'a yükleyin</string>
-    <string name="suspendloop_label">Döngüyü Devre Dışı bırakma/Askıya alma</string>
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <string name="loopstatus_targets">HEDEFLER:</string>
     <string name="loopstatus_OAPS_result">OAPS SONUCU:</string>
@@ -297,7 +292,6 @@
     <string name="uel_lgs_loop_mode">LGS DÖNGÜ MODU</string>
     <string name="uel_open_loop_mode">AÇIK DÖNGÜ MODU</string>
     <string name="uel_loop_disabled">DÖNGÜ DEVRE DIŞI</string>
-    <string name="uel_loop_enabled">DÖNGÜ ETKİN</string>
     <string name="uel_reconnect">YENİDEN BAĞLAN</string>
     <string name="uel_disconnect">BAĞLANTIYI KES</string>
     <string name="uel_resume">DEVAM ET</string>
@@ -596,4 +590,5 @@
     <string name="rate_percent_duration">Oran: %1$.2f Ü/s (%2$.2f%%) Süre: %3$d dk</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f%% (%2$.2f Ü/s)<br><b>Süre</b>: %3$d dk<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/s (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
+    <!--    Playback-->
 </resources>

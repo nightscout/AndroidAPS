@@ -1,11 +1,11 @@
 package app.aaps.pump.equil.manager.command
 
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.equil.R
-import java.util.ArrayList
 import java.util.Objects
 
-class PumpEvent(private var port: Int, private var type: Int, private var level: Int, var comment: String) {
+class PumpEvent(@get:VisibleForTesting var port: Int, @get:VisibleForTesting var type: Int, @get:VisibleForTesting var level: Int, var comment: String) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

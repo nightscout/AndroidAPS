@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.fragment.app.FragmentManager
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
@@ -21,6 +22,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
@@ -32,7 +34,7 @@ import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
 
-class CareDialog : DialogFragmentWithDate() {
+class CareDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -233,6 +235,16 @@ class CareDialog : DialogFragmentWithDate() {
                     note = notes,
                     listValues = valuesWithUnit.filterNotNull()
                 ).subscribe()
+                if (therapyEvent.type == TE.Type.SENSOR_CHANGE &&  preferences.get(BooleanKey.SiteRotationManageCgm)) {
+                    SiteRotationDialog().also { srd ->
+                        srd.arguments = Bundle().also { args ->
+                            args.putLong("time", therapyEvent.timestamp)
+                            args.putInt("siteMode", UiInteraction.SiteMode.EDIT.ordinal)
+                            args.putInt("siteType", TE.Type.SENSOR_CHANGE.ordinal)
+                        }
+                        srd.show(fm, "SiteRotationViewDialog")
+                    }
+                }
             }, null)
         }
         return true

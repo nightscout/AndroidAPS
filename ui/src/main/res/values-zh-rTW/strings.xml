@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">活動監視器</string>
     <string name="do_you_want_reset_stats">您要重置活動統計嗎？</string>
-    <string name="do_you_want_recalculate_tdd_stats">您要重新計算 TDD 統計嗎？</string>
+    <string name="do_you_want_recalculate_tdd_stats">您要重新計算每日總劑量統計嗎？</string>
     <string name="statistics">統計資料</string>
     <string name="calculation_in_progress">計算中</string>
     <string name="invalid_age">年齡輸入無效</string>
@@ -37,6 +37,23 @@
     <string name="format_cob_ic">%1$.1f g IC：%2$.1f</string>
     <string name="format_carbs_ic">%1$.0f g IC：%2$.1f</string>
     <string name="treatments_wizard_total_label">總計</string>
+    <!-- SiteRotationDialog -->
+    <string name="site_front">前面</string>
+    <string name="site_back">後面</string>
+    <string name="site_man">男性</string>
+    <string name="site_woman">女性</string>
+    <string name="site_child">兒童</string>
+    <string name="user_profile">使用者個人檔案</string>
+    <string name="user_profile_description">使用者個人檔案說明用於顯示男性、女性或兒童最常見的可用部位</string>
+    <string name="site_management">部位管理設定檔</string>
+    <string name="site_management_description">在此設定您要管理幫浦部位、CGM 部位，或兩者。此設定會在每次偵測到新的項目時，自動顯示部位管理對話視窗</string>
+    <string name="select_site">請在下方點擊以選擇部位</string>
+    <string name="record_site_change">記錄部位位置</string>
+    <string name="edit_site">編輯</string>
+    <string name="record_site_location">部位位置：%1$s</string>
+    <string name="record_site_arrow">位置箭頭：%1$s</string>
+    <string name="record_site_note">備註：%1$s</string>
+    <string name="delete_site_note">備註已刪除</string>
     <!-- FillDialog -->
     <string name="fill_warning">請確保數量符合您的輸液套件規範！</string>
     <string name="record_pump_site_change">紀錄幫浦位置更換</string>
@@ -121,7 +138,7 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">僅在手錶上</string>
     <string name="a11y_only_on_phone">僅在手機上</string>
-    <string name="quickwizard_settings">QuickWizard 設定</string>
+    <string name="quickwizard_settings">快速響導設定</string>
     <string name="overview_edit_quickwizard_button_text">按鈕文字</string>
     <string name="overview_edit_quickwizard_valid">有效：</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
@@ -137,6 +154,8 @@
     <!--    Widget-->
     <string name="use_black_color">使用黑色</string>
     <string name="widget_configuration">小工具設定</string>
+    <string name="until_changed">直到更改</string>
+    <string name="limitations">限制</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>兩者皆是</item>
         <item>僅正值</item>

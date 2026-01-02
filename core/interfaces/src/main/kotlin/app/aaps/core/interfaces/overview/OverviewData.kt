@@ -60,6 +60,7 @@ interface OverviewData {
     var absoluteBasalGraphSeries: SeriesData
 
     var temporaryTargetSeries: SeriesData
+    var runningModesSeries: SeriesData
 
     var maxIAValue: Double
     val actScale: Scale

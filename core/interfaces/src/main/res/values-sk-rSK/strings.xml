@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
+    <string name="bolus_delivering">Podávanie %1$.2fJI</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2fJI podaný úspešne</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Ovládač pumpy zmenený.</string>
     <!--    DateUtil-->
-    <string name="minago">pred %1$d min</string>
+    <string name="minago">pred %1$dm</string>
+    <string name="secago">pred %1$ds</string>
     <string name="minago_long">pred %1$d minútami</string>
-    <string name="hoursago">pred %1$.1f h</string>
+    <string name="hoursago">pred %1$.1fh</string>
     <string name="days_ago">Pred %1$.1f dňami</string>
     <string name="days_ago_round">Pred %1$.0f dňami</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">pred %1$s dňom %2$s hodinami</item>
+        <item quantity="few">pred %1$s dňami %2$s hodinami</item>
+        <item quantity="many">pred %1$s dňami %2$s hodinami</item>
+        <item quantity="other">pred %1$s dňami %2$s hodinami</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">pred %1$s hodinou</item>
+        <item quantity="few">pred %1$s hodinami</item>
+        <item quantity="many">pred %1$s hodinami</item>
+        <item quantity="other">pred %1$s hodinami</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">pred chvíľou</item>
+        <item quantity="few">pred %1$s minútami</item>
+        <item quantity="many">pred %1$s minútami</item>
+        <item quantity="other">pred %1$s minútami</item>
+    </plurals>
+    <string name="seconds_ago">pred niekoľkými sekundami</string>
     <string name="in_days">za %1$.0f dní</string>
     <string name="in_days_round">za %1$.0f dní</string>
     <string name="shorthour">h</string>
@@ -33,6 +56,7 @@
     <string name="connecting_for">Pripájanie %1$d sek</string>
     <string name="handshaking">Overovanie</string>
     <string name="connected">Pripojené</string>
+    <string name="authorized">Autorizované</string>
     <string name="disconnecting">Odpájanie</string>
     <string name="waiting_for_disconnection">Čakám na odpojenie</string>
     <!-- Custom Watchface -->
@@ -69,4 +93,5 @@
     <string name="temp_basal_absolute_rate">%1$.2f JI/h @%2$s %3$d/%4$d</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d</string>
     <string name="temp_basal_extended_bolus">E %1$.2f JI/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Navždy</string>
 </resources>

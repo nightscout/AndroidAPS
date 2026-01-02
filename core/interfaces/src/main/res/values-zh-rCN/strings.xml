@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">泵驱动程序已变更</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d 分钟前</string>
     <string name="minago_long">%1$d 分钟前</string>
-    <string name="hoursago">%1$.1f 小时前</string>
     <string name="days_ago">%1$.1f 天前</string>
     <string name="days_ago_round">%1$.0f 天前</string>
     <string name="in_days">在 %1$.0f 天内</string>

@@ -3,14 +3,13 @@
     <string name="equil_pump_description">Equil 5.3 nebo novější pumpa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Základní bazál</string>
-    <string name="equil_bolus_delivered">Vydáno %1$.3f U / %2$.3f U</string>
     <string name="equil_btn_cancel">Zrušit</string>
     <string name="equil_btn_need">Potřeba</string>
     <string name="equil_btn_skip">Přeskočit</string>
     <string name="equil_date_device">Poslední připojení</string>
     <string name="equil_dressing">Vyměnit zásobník</string>
     <string name="equil_dressing_onkey_msg">Automatické přetáčení pístu do výchozí polohy. Po dosažení dna se automaticky zastaví. V případě potřeby akci přerušte kliknutím na tlačítko \"Stop\".</string>
-    <string name="equil_finish">Dokončeno</string>
+    <string name="equil_finish">Dokončit</string>
     <string name="equil_next">Další</string>
     <string name="equil_hint_dressing">Tato operace zastaví vydávání inzulínu, a způsobí přetočení pístu do výchozí polohy!</string>
     <string name="equil_history">Historie</string>
@@ -91,7 +90,6 @@
     <string name="equil_command_connect_no_response">Žádná odpověď z pumpy</string>
     <string name="equil_command__unknown">Neznámý stav příkazu</string>
     <string name="equil_install">Zaveďte kanylu a připojte pumpu na tělo</string>
-    <string name="equil_settings">Nastavení</string>
     <string name="equil_settings_alarm_battery">Upozornění na nízký stav baterie</string>
     <string name="equil_settings_alarm_insulin">Výstraha nízké hladiny inzulinu</string>
     <string name="equil_init_insulin_error">Inicializace zásobníku není dokončena</string>
@@ -122,11 +120,6 @@
     <string name="equil_history_item16">Vybitá baterie!</string>
     <string name="equil_history_item17">Obnovení napájení</string>
     <string name="equil_history_item18">Zastaveno abnormální podávání izulínu</string>
-    <string name="equil_common_short_status_last_connection">Posl. spoj. před: %1$d min</string>
-    <string name="equil_common_short_status_last_bolus">Posl. bolus: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Doč. bazál: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Prodl. bolus: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Zásobník: %1$sU</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastavit</string>
     <string name="equil_common_overview_button_resume_delivery">Obnovit podávání inzulínu</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2f U/h @%2$s (%3$d/%4$d min)</string>
@@ -163,6 +156,7 @@ Pravidlo pro tvorbu hesla: musí být 4 znaky dlouhé a musí obsahovat znaky z 
     <string name="equil_set_pair_password">Nastavit heslo pro párování</string>
     <string name="equil_hint1">Po připojení pumpy k základně zvolte, zda chcete vyprázdnit vzduch z vnitřní jehly.</string>
     <string name="equil_unbind">Zrušit párování zařízení</string>
+    <string name="equil_device_unpaired">Zařízení odpárováno</string>
     <string name="equil_assemble">Prosím, sestavte pumpu, naplněný zásobník a nabitou baterii</string>
     <string name="equil_devices_number">Zadejte ID nové pumpy</string>
     <string name="equil_insert">Prosím naplňte zásobník, dokud se na jehle neobjeví kapička inzulínu</string>
@@ -172,7 +166,7 @@ Pravidlo pro tvorbu hesla: musí být 4 znaky dlouhé a musí obsahovat znaky z 
     <string name="equil_hint_dressing2">Vyjměte pumpu ze základny</string>
     <string name="equil_unpair">Deaktivivat starou pumpu %1$s?</string>
     <string name="equil_pump_updated">Pumpa aktualizována</string>
-    <string name="equil_maxbolus_tips">Maximální povolený bolus v pumpě [%1$s U]</string>
     <string name="equil_replace_reservoir">Zásobník je prázdný. Prosím vyměňte zásobník</string>
     <string name="error_mustbe6hexadidits">Musí mít 6 znaků z ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Příkaz pro odpárování se nezdařil. Pumpa bude přesto odstraněna. Heslo nastavené během párování není z pumpy odebráno.</string>
 </resources>

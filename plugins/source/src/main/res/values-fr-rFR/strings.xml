@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">Gly NS</string>
     <string name="description_source_ns_client">Télécharge les glycémies depuis Nightscout</string>
     <string name="source_xdrip">xDrip+ Glycémie</string>
-    <string name="description_source_xdrip">Recevoir les glycémies depuis xDrip+.</string>
+    <string name="description_source_xdrip">Recevoir des valeurs de glycémie depuis xDrip+ et des applications compatibles (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée (BYODA).</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">Créer un événement \"Insertion de capteur MGC\" dans Careportal automatiquement lors de la réception de \"démarrage capteur\" à partir de la diffusion locale de la source des glycémies</string>
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">Interval de temps entre les glycémies (min)</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Recevoir les glycémies de l’application Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Recevoir les glycémies depuis l\'application Syai Tag.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Recevoir les glycémies de l’application Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Application SI</string>
+    <string name="description_source_patched_si_app">Recevoir des données de glucose de l\'application Patched Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Application Sino</string>
+    <string name="description_source_patched_sino_app">Recevoir des données de glucose de l\'application Patched Sino.</string>
 </resources>

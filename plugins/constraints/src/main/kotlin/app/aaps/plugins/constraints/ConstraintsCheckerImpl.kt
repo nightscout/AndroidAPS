@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.constraints.ConstraintObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,14 +41,14 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isLgsAllowed(): Constraint<Boolean> = isLgsAllowed(ConstraintObject(true, aapsLogger))
+    override fun isLgsForced(): Constraint<Boolean> = isLgsForced(ConstraintObject(false, aapsLogger))
 
-    override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+    override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
         for (p in constraintsPlugins) {
             val constraint = p as PluginConstraints
             if (!p.isEnabled()) continue
-            constraint.isLgsAllowed(value)
+            constraint.isLgsForced(value)
         }
         return value
     }
@@ -201,7 +202,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         applyExtendedBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
 
     override fun getMaxCarbsAllowed(): Constraint<Int> =
-        applyCarbsConstraints(ConstraintObject(Int.MAX_VALUE, aapsLogger))
+        applyCarbsConstraints(ConstraintObject(HardLimits.MAX_CARBS, aapsLogger))
 
     override fun getMaxIOBAllowed(): Constraint<Double> =
         applyMaxIOBConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))

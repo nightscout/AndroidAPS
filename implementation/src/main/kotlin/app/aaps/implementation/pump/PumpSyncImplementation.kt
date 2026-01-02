@@ -24,8 +24,10 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewNotification
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.R
 import app.aaps.implementation.extensions.toUeSource
@@ -36,7 +38,7 @@ import javax.inject.Inject
 class PumpSyncImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
@@ -55,14 +57,14 @@ class PumpSyncImplementation @Inject constructor(
                 syncStopExtendedBolusWithPumpId(dateUtil.now(), dateUtil.now(), it.pumpType, it.pumpSerial)
             }
         }
-        sp.remove(app.aaps.core.utils.R.string.key_active_pump_type)
-        sp.remove(app.aaps.core.utils.R.string.key_active_pump_serial_number)
-        sp.remove(app.aaps.core.utils.R.string.key_active_pump_change_timestamp)
+        preferences.remove(StringNonKey.ActivePumpType)
+        preferences.remove(StringNonKey.ActivePumpSerialNumber)
+        preferences.remove(LongNonKey.ActivePumpChangeTimestamp)
     }
 
     override fun verifyPumpIdentification(type: PumpType, serialNumber: String): Boolean {
-        val storedType = sp.getString(app.aaps.core.utils.R.string.key_active_pump_type, "")
-        val storedSerial = sp.getString(app.aaps.core.utils.R.string.key_active_pump_serial_number, "")
+        val storedType = preferences.get(StringNonKey.ActivePumpType)
+        val storedSerial = preferences.get(StringNonKey.ActivePumpSerialNumber)
         if (activePlugin.activePump is VirtualPump) return true
         if (type.description == storedType && serialNumber == storedSerial) return true
         aapsLogger.debug(LTag.PUMP, "verifyPumpIdentification failed for $type $serialNumber")
@@ -78,16 +80,16 @@ class PumpSyncImplementation @Inject constructor(
      * @return true if data is allowed
      */
     private fun confirmActivePump(timestamp: Long, type: PumpType, serialNumber: String, showNotification: Boolean = true): Boolean {
-        val storedType = sp.getString(app.aaps.core.utils.R.string.key_active_pump_type, "")
-        val storedSerial = sp.getString(app.aaps.core.utils.R.string.key_active_pump_serial_number, "")
-        val storedTimestamp = sp.getLong(app.aaps.core.utils.R.string.key_active_pump_change_timestamp, 0L)
+        val storedType = preferences.get(StringNonKey.ActivePumpType)
+        val storedSerial = preferences.get(StringNonKey.ActivePumpSerialNumber)
+        val storedTimestamp = preferences.get(LongNonKey.ActivePumpChangeTimestamp)
 
         // If no value stored assume we start using new pump from now
         if (storedType.isEmpty() || storedSerial.isEmpty()) {
             aapsLogger.debug(LTag.PUMP, "Registering new pump ${type.description} $serialNumber")
-            sp.putString(app.aaps.core.utils.R.string.key_active_pump_type, type.description)
-            sp.putString(app.aaps.core.utils.R.string.key_active_pump_serial_number, serialNumber)
-            sp.putLong(app.aaps.core.utils.R.string.key_active_pump_change_timestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
+            preferences.put(StringNonKey.ActivePumpType, type.description)
+            preferences.put(StringNonKey.ActivePumpSerialNumber, serialNumber)
+            preferences.put(LongNonKey.ActivePumpChangeTimestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
             return timestamp > dateUtil.now() - T.mins(1).msecs() // allow first record to be 1 min old
         }
 
@@ -144,7 +146,7 @@ class PumpSyncImplementation @Inject constructor(
                 )
             },
             profile = profileFunction.getProfile(),
-            serialNumber = sp.getString(app.aaps.core.utils.R.string.key_active_pump_serial_number, "")
+            serialNumber = preferences.get(StringNonKey.ActivePumpSerialNumber)
         )
     }
 
@@ -319,8 +321,8 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
     }
 
-    override fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
-        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
+    override fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String, ignorePumpIds: Boolean): Boolean {
+        if (!ignorePumpIds && !confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         return persistenceLayer.syncPumpCancelTemporaryBasalIfAny(timestamp, endPumpId, pumpType, pumpSerial)
             .map { result -> result.updated.isNotEmpty() }
             .blockingGet()

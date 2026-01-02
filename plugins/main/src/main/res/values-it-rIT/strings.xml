@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
     <string name="smscommunicator_remote_commands_allowed">Consenti comandi remoti tramite SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Il loop è stato disabilitato</string>
-    <string name="smscommunicator_loop_has_been_enabled">Il loop è stato abilitato</string>
     <string name="smscommunicator_loop_is_enabled">Il loop è abilitato</string>
     <string name="smscommunicator_pump_connect_with_code">Per connettere il micro rispondi col codice %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Connessione al micro fallita</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Micro disconnesso</string>
     <string name="smscommunicator_reconnect">Micro riconnesso</string>
     <string name="smscommunicator_remote_command_not_allowed">Il comando da remoto non è permesso</string>
+    <string name="smscommunicator_remote_command_not_possible">Il comando remoto non è possibile</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolo remoto non disponibile. Riprova più tardi.</string>
     <string name="smscommunicator_basal_reply_with_code">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Per passare al profilo %1$s %2$d%% rispondi col codice %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Per riprendere il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Per abilitare il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Per disabilitare il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_tempbasal_set">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
     <string name="smscommunicator_extended_set">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
@@ -130,7 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">Profilo</string>
     <string name="localprofile_shortname">PL</string>
-    <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
+    <string name="description_profile_local">Definire un profilo che descriva il tuo fabbisogno di insulina.</string>
     <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
     <string name="do_you_want_switch_profile">Vuoi cambiare profilo e scartare le modifiche apportate al profilo corrente?</string>
     <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">Bolo esteso</string>
     <string name="extended_bolus_cancel_button">Cancella bolo esteso</string>
     <string name="tools">Strumenti</string>
+    <string name="site_rotation">Rotazione del Sito</string>
     <string name="nav_history_browser">Storico</string>
     <string name="sensor_label">Sensore</string>
     <string name="age_label">età:</string>
@@ -191,10 +191,10 @@
     <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
     <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
     <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
-    <string name="graph_scale_6h">6 ore</string>
-    <string name="graph_scale_12h">12 ore</string>
-    <string name="graph_scale_18h">18 ore</string>
-    <string name="graph_scale_24h">24 ore</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
     <string name="graph_long_scale_6h">6 ore</string>
     <string name="graph_long_scale_12h">12 ore</string>
     <string name="graph_long_scale_18h">18 ore</string>

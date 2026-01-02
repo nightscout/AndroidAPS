@@ -1,11 +1,14 @@
 package app.aaps.wear.complications
 
-/*
- * Created by dlvoy on 2019-11-12
+/**
+ * Light Wallpaper Complication
+ *
+ * Displays light-themed wallpaper image
+ * Asset: watch_light.jpg
+ *
  */
 class WallpaperLightComplication : WallpaperComplication() {
 
     override val wallpaperAssetsFileName: String = "watch_light.jpg"
     override fun getProviderCanonicalName(): String = WallpaperLightComplication::class.java.canonicalName!!
-    override fun getComplicationAction(): ComplicationAction = ComplicationAction.NONE
 }

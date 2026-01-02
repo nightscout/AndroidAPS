@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Midlertidig mål ble fjernet</string>
     <string name="smscommunicator_remote_commands_allowed">Tillat fjernstyring via SMS-meldinger</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop har blitt deaktivert</string>
-    <string name="smscommunicator_loop_has_been_enabled">Loop har blitt aktivert</string>
     <string name="smscommunicator_loop_is_enabled">Loop er aktivert</string>
     <string name="smscommunicator_pump_connect_with_code">For å koble til pumpen, svar med kode %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Tilkobling til pumpen mislyktes</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Pumpe frakoblet</string>
     <string name="smscommunicator_reconnect">Pumpen tilkoblet igjen</string>
     <string name="smscommunicator_remote_command_not_allowed">Fjernstyringskommando er ikke tillatt</string>
+    <string name="smscommunicator_remote_command_not_possible">Fjernstyringskommando er ikke mulig</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Fjernstyringsbolus er ikke tilgjengelig. Prøv igjen senere.</string>
     <string name="smscommunicator_basal_reply_with_code">For å starte basal %1$.2f E/t i %2$d minutter, svar med kode %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">For å bytte profil til %1$s %2$d%%, svar med kode %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">For å starte basal %1$d%% i %2$d minutter, svar med kode %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">For å pause loop i %1$d minutter, svar med kode %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">For å gjenoppta loop, svar med kode %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">For å aktivere loop, svar med kode %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">For å deaktivere loop, svar med kode %1$s</string>
     <string name="smscommunicator_tempbasal_set">Vellykket start av midl. basal %1$.2fE/t i %2$d minutter</string>
     <string name="smscommunicator_extended_set">Vellykket start av forlenget bolus %1$.2fE i %2$d minutter</string>
@@ -130,16 +129,16 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
+    <string name="description_profile_local">Definer en profil som beskriver ditt insulinbehov.</string>
     <string name="a11y_add_new_to_list">legg til ny i liste</string>
     <string name="do_you_want_switch_profile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
     <string name="save_or_reset_changes_first">Lagre eller nullstill gjeldende endringer først</string>
     <string name="delete_current_profile">Slette gjeldende profil?</string>
     <string name="units_colon">Enheter:</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
-    <string name="error_in_ic_values">Feil i IK-faktoren</string>
+    <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
     <string name="error_in_basal_values">Feil i basalverdiene</string>
-    <string name="error_in_target_values">Feil i BS målverdier</string>
+    <string name="error_in_target_values">Feil i målverdier</string>
     <string name="error_in_isf_values">Feil i ISF-verdien</string>
     <string name="profile_name_contains_dot">Noen av profilnavnene inneholder punktum.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="tools">Verktøy</string>
+    <string name="site_rotation">Rotasjon av stedsområder</string>
     <string name="nav_history_browser">Historikk</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">alder:</string>

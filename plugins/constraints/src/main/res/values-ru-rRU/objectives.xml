@@ -16,9 +16,12 @@
     <string name="objectives_maxbasal">Выполните рекомендуемое действие</string>
     <string name="objectives_maxbasal_learned">Примите меры предосторожности и корректируйте, если необходимо, параметры безопасности.</string>
     <string name="objectives_maxiobzero_objective">Начинаем замыкать цикл с прекращением подачи инсулина при низких значениях ГК (режим Low Glucose Suspend)</string>
+    <string name="objectives_maxiobzero_gate">Запускать в замкнутом цикле в режиме приостановки на низкой ГК (макс. IOB = 0 устанавливается автоматически) на несколько дней при отсутствии множества таких событий.</string>
     <string name="objectives_maxiobzero_learned">Установка MaxIOB на нуль предотвращает гипо и не добавит инсулина выше базальной скорости (за исключением отрицательных значений IOB)</string>
     <string name="objectives_maxiob_objective">Настройка замкнутого цикла с поднятием величины maxIOB выше 0 и постепенным понижением целевой ГК</string>
     <string name="objectives_maxiob_gate">Использовать систему на протяжении нескольких дней и по крайней мере 1 ночь без срабатывания оповещений о низкой ГК</string>
+    <string name="objectives_maxiob_learned">Обновляйте MaxIOB по мере роста ребенка. Не позволяйте системе давать больше инсулина, чем можно покрывать едой = слишком высокое значение - не лучшее решение. MaxIOB рассчитывается автоматически в простом режиме</string>
+    <string name="maxiobset">MaxIOB задан корректно (Не требуется в простом режиме)</string>
     <string name="objectives_autosens_objective">Настраиваем базал и коэффициенты с последующей активацией auto-sens</string>
     <string name="objectives_autosens_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
     <string name="objectives_autosens_learned">Если результаты расчетов auto-sense не колеблются около 100%, то, возможно, ваш профиль неверный.</string>

@@ -35,7 +35,6 @@
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Hacer cambio de perfil</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
-    <string name="setupwizard_loop_description">Presionar el botón de abajo para permitir que AAPS pueda sugerir/realizar cambios en la insulina basal</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres un nuevo usuario, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
     <string name="request">Solicitar</string>
     <string name="apsmode_title">Modo APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <string name="error_asking_for_permissions">Error al solicitar los permisos</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>
     <!--    ConfigBuilder-->

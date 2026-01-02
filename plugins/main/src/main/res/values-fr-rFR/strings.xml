@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Cible Temp annulée avec succès</string>
     <string name="smscommunicator_remote_commands_allowed">Autoriser les commandes à distance par SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">La Boucle a été désactivée</string>
-    <string name="smscommunicator_loop_has_been_enabled">La Boucle a été activée</string>
     <string name="smscommunicator_loop_is_enabled">La Boucle est activée</string>
     <string name="smscommunicator_pump_connect_with_code">Pour connecter la pompe, renvoyez le code %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Echec de la connexion pompe</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Pompe déconnectée</string>
     <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remote_command_not_allowed">La commande à distance n\'est pas autorisée</string>
+    <string name="smscommunicator_remote_command_not_possible">Commande à distance impossible</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus à distance non disponible. Réessayez plus tard.</string>
     <string name="smscommunicator_basal_reply_with_code">Pour démarrer la basal de %1$.2f U/h pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Pour changer le profil vers %1$s %2$d%%, renvoyez le code %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Pour démarrer la Basal %1$d%% pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Pour suspendre la boucle pendant %1$d min, renvoyez le code %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Pour reprendre la boucle, renvoyez le code %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Pour activer la boucle, renvoyez le code %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Pour désactiver la boucle, renvoyez le code %1$s</string>
     <string name="smscommunicator_tempbasal_set">Démarrage réussi pour %1$.2fU/h de basal temp pour %2$d min</string>
     <string name="smscommunicator_extended_set">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
@@ -130,7 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">PL</string>
-    <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
+    <string name="description_profile_local">Définissez un profil décrivant vos besoins en insuline.</string>
     <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
     <string name="do_you_want_switch_profile">Voulez-vous changer de profil et annuler les modifications faites dans le profil actuel ?</string>
     <string name="save_or_reset_changes_first">Sauver ou réinitialiser les modifications actuelles en premier</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">Bolus étendu</string>
     <string name="extended_bolus_cancel_button">Annuler Bolus étendu</string>
     <string name="tools">Outils</string>
+    <string name="site_rotation">Rotation du site</string>
     <string name="nav_history_browser">Historique</string>
     <string name="sensor_label">Capteur</string>
     <string name="age_label">âge:</string>

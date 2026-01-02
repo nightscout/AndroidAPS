@@ -2,11 +2,11 @@ package app.aaps.wear.watchfaces.utils
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.WINDOW_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Point
 import android.graphics.Typeface
 import android.os.BatteryManager
 import android.view.WindowManager
@@ -15,8 +15,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
-import com.ustwo.clockwise.common.WatchMode
-import com.ustwo.clockwise.wearable.WatchFace
 import javax.inject.Inject
 
 class SimpleUi @Inject constructor(
@@ -34,13 +32,16 @@ class SimpleUi @Inject constructor(
     private val colorDarkHigh = ContextCompat.getColor(context, R.color.dark_highColor)
     private var colorDarkMid = ContextCompat.getColor(context, R.color.dark_midColor)
     private var colorDarkLow = ContextCompat.getColor(context, R.color.dark_lowColor)
-    private val displaySize = Point()
+    private var displayWidth = 0
+    private var displayHeight = 0
     private lateinit var callback: () -> Unit
 
     fun onCreate(callback: () -> Unit) {
         this.callback = callback
-        @Suppress("DEPRECATION")
-        (context.getSystemService(WatchFace.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
+        val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
+        val bounds = windowManager.currentWindowMetrics.bounds
+        displayWidth = bounds.width()
+        displayHeight = bounds.height()
         setupBatteryReceiver()
         setupUi()
     }
@@ -64,9 +65,9 @@ class SimpleUi @Inject constructor(
     }
 
     fun onDraw(canvas: Canvas, singleBg: EventData.SingleBg) {
-        canvas.drawRect(0f, 0f, displaySize.x.toFloat(), displaySize.y.toFloat(), mBackgroundPaint)
-        val xHalf = displaySize.x / 2f
-        val yThird = displaySize.y / 3f
+        canvas.drawRect(0f, 0f, displayWidth.toFloat(), displayHeight.toFloat(), mBackgroundPaint)
+        val xHalf = displayWidth / 2f
+        val yThird = displayHeight / 3f
 
         mSvgPaint.isStrikeThruText = isOutdated(singleBg)
         mSvgPaint.color = getBgColour(singleBg.sgvLevel)
@@ -85,8 +86,9 @@ class SimpleUi @Inject constructor(
     }
 
     fun onDestroy() {
-        if (batteryReceiver != null) {
-            context.unregisterReceiver(batteryReceiver)
+        batteryReceiver?.let {
+            context.unregisterReceiver(it)
+            batteryReceiver = null
         }
     }
 
@@ -133,6 +135,11 @@ class SimpleUi @Inject constructor(
                 }
             }
             context.registerReceiver(batteryReceiver, intentBatteryFilter)
+        } else {
+            batteryReceiver?.let {
+                context.unregisterReceiver(it)
+                batteryReceiver = null
+            }
         }
     }
 

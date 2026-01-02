@@ -2,7 +2,6 @@ package app.aaps.implementation.queue
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.work.WorkerParameters
@@ -19,11 +18,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeEnable
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +39,6 @@ class QueueWorker internal constructor(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var config: Config
@@ -56,14 +55,16 @@ class QueueWorker internal constructor(
         var connectionStartTime = lastCommandTime
         try {
             while (true) {
+                if (isStopped) return Result.failure()
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 //  Manifest.permission.BLUETOOTH_CONNECT
-                if (config.PUMPDRIVERS && pump !is VirtualPump && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT")) {
+                if (config.PUMPDRIVERS && pump !is VirtualPump)
+                    if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT") || androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_SCAN")) {
+                        ToastUtils.errorToast(context, R.string.need_connect_permission)
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
-                        SystemClock.sleep(1000)
+                        SystemClock.sleep(5000)
                         continue
                     }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
@@ -74,12 +75,12 @@ class QueueWorker internal constructor(
 
                     //BLUETOOTH-WATCHDOG
                     var watchdog = preferences.get(BooleanKey.PumpBtWatchdog)
-                    val lastWatchdog = sp.getLong(app.aaps.core.utils.R.string.key_btwatchdog_lastbark, 0L)
+                    val lastWatchdog = preferences.get(LongNonKey.BtWatchdogLastBark)
                     watchdog = watchdog && System.currentTimeMillis() - lastWatchdog > Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000
                     if (watchdog) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "BT watchdog - toggling the phone bluetooth")
                         //write time
-                        sp.putLong(app.aaps.core.utils.R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
+                        preferences.put(LongNonKey.BtWatchdogLastBark, System.currentTimeMillis())
                         //toggle BT
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
@@ -118,6 +119,12 @@ class QueueWorker internal constructor(
                     aapsLogger.debug(LTag.PUMPQUEUE, "connect")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
                     pump.connect("Connection needed")
+                    SystemClock.sleep(1000)
+                    continue
+                }
+                if (pump.isBusy()) {
+                    aapsLogger.debug(LTag.PUMPQUEUE, "busy")
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
                     SystemClock.sleep(1000)
                     continue
                 }
@@ -164,7 +171,7 @@ class QueueWorker internal constructor(
             }
         } finally {
             if (wakeLock?.isHeld == true) wakeLock.release()
-            aapsLogger.debug(LTag.PUMPQUEUE, "thread end")
+            aapsLogger.debug(LTag.PUMPQUEUE, "work end")
         }
     }
 }

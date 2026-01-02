@@ -23,7 +23,7 @@ class RealPumpTest {
         @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
         @Inject lateinit var objectivesPlugin: ObjectivesPlugin
         @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-        @Inject lateinit var sp: SP
+        @Inject lateinit var preferences: Preferences
 
         @Rule
         @JvmField

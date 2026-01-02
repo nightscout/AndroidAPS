@@ -9,8 +9,7 @@ plugins {
 dependencies {
     testImplementation(kotlin("test"))
     testImplementationFromCatalog("org-junit-jupiter")
-    testImplementationFromCatalog("org.junit-jupiter-api")
-    testImplementationFromCatalog("org-json")
+    testImplementationFromCatalog("org-junit-jupiter-api")
     testImplementationFromCatalog("org-mockito-junit-jupiter")
     testImplementationFromCatalog("org-mockito-kotlin")
     testImplementationFromCatalog("joda-time")
@@ -22,7 +21,6 @@ dependencies {
     androidTestImplementationFromCatalog("androidx-test-rules")
     androidTestImplementationFromCatalog("com-google-truth")
     androidTestImplementationFromCatalog("androidx-uiautomator")
-    androidTestImplementationFromCatalog("org-mockito-core")
     androidTestImplementationFromCatalog("org-mockito-android")
     androidTestImplementationFromCatalog("org-mockito-kotlin")
 }
@@ -43,8 +41,8 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Test>().configureEach {
+    failOnNoDiscoveredTests = false
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    forkEvery = 20
 }
 
 android {

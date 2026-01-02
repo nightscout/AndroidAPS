@@ -9,6 +9,9 @@ plugins {
 
 android {
     namespace = "app.aaps.shared.tests"
+    defaultConfig {
+        minSdk = Versions.minSdk
+    }
 }
 
 dependencies {
@@ -18,7 +21,9 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:validators"))
     implementation(project(":implementation"))
+    implementation(project(":plugins:aps"))
     implementation(project(":shared:impl"))
 
 

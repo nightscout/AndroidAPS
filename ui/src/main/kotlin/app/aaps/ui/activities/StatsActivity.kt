@@ -105,5 +105,14 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.resetActivity.setOnClickListener(null)
+        binding.resetTdd.setOnClickListener(null)
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
     }
 }

@@ -1,11 +1,12 @@
 package app.aaps.pump.danaRv2.comm
 
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.danaR.comm.DanaRTestBase
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class MsgCheckValueRv2Test : app.aaps.pump.danaR.comm.DanaRTestBase() {
+class MsgCheckValueRv2Test : DanaRTestBase() {
 
     @Test
     fun runTest() {

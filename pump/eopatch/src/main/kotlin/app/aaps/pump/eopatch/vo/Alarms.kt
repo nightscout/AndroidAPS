@@ -1,9 +1,9 @@
 package app.aaps.pump.eopatch.vo
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.GsonHelper
 import app.aaps.pump.eopatch.alarm.AlarmCode
-import app.aaps.pump.eopatch.code.SettingKeys
+import app.aaps.pump.eopatch.keys.EopatchStringNonKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -98,9 +98,9 @@ class Alarms : IPreference<Alarms> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP) {
+    override fun flush(preferences: Preferences) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
-        sp.putString(SettingKeys.ALARMS, jsonStr)
+        preferences.put(EopatchStringNonKey.Alarms, jsonStr)
         subject.onNext(this)
     }
 

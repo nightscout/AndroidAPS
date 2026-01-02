@@ -1,6 +1,5 @@
 package app.aaps.pump.danars
 
-import android.content.SharedPreferences
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -8,15 +7,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.validators.preferences.AdaptiveClickPreference
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveListPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringKey
 import com.google.common.truth.Truth.assertThat
@@ -25,12 +15,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
 class DanaRSPluginTest : DanaRSTestBase() {
 
-    @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -40,57 +30,10 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
-    init {
-        addInjector {
-            if (it is AdaptiveDoublePreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-                it.config = config
-            }
-            if (it is AdaptiveIntentPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-            if (it is AdaptiveUnitPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-                it.config = config
-            }
-            if (it is AdaptiveStringPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-            if (it is AdaptiveListPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-            if (it is AdaptiveListIntPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-            if (it is AdaptiveClickPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPreferences
-            }
-        }
-    }
-
-
     @Test
     fun basalRateShouldBeLimited() {
-        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
         val c = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         danaRSPlugin.applyBasalConstraints(c, validProfile)
@@ -101,8 +44,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @Test
     fun percentBasalRateShouldBeLimited() {
-        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
         val c = ConstraintObject(Int.MAX_VALUE, aapsLogger)
         danaRSPlugin.applyBasalPercentConstraints(c, validProfile)
@@ -113,32 +56,15 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @BeforeEach
     fun prepareMocks() {
-        Mockito.`when`(preferences.get(DanaStringKey.DanaRsName)).thenReturn("")
-        Mockito.`when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
-        Mockito.`when`(rh.gs(eq(app.aaps.core.ui.R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
-        Mockito.`when`(rh.gs(eq(app.aaps.core.ui.R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
+        whenever(preferences.get(DanaStringKey.RsName)).thenReturn("")
+        whenever(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
+        whenever(rh.gs(eq(app.aaps.core.ui.R.string.limitingbasalratio), anyOrNull(), anyOrNull())).thenReturn("limitingbasalratio")
+        whenever(rh.gs(eq(app.aaps.core.ui.R.string.limitingpercentrate), anyOrNull(), anyOrNull())).thenReturn("limitingpercentrate")
 
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                context,
-                rh,
-                constraintChecker,
-                profileFunction,
-                commandQueue,
-                danaPump,
-                pumpSync,
-                preferences,
-                detailedBolusInfoStorage,
-                temporaryBasalStorage,
-                fabricPrivacy,
-                dateUtil,
-                uiInteraction,
-                danaHistoryDatabase,
-                decimalFormatter,
-                instantiator
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, profileFunction, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
+                fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider
             )
     }
 

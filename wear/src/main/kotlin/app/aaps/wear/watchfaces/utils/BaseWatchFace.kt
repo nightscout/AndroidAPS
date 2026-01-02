@@ -1,12 +1,14 @@
-@file:Suppress("DEPRECATION")
-
 package app.aaps.wear.watchfaces.utils
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.os.VibrationEffect
 import android.os.Vibrator
-import android.support.wearable.watchface.WatchFaceStyle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
@@ -17,38 +19,33 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
-import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.wear.R
-import app.aaps.wear.data.RawDisplayData
+import app.aaps.wear.data.ComplicationData
+import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
-import app.aaps.wear.interaction.utils.Persistence
-import com.ustwo.clockwise.common.WatchFaceTime
-import com.ustwo.clockwise.common.WatchMode
-import com.ustwo.clockwise.common.WatchShape
-import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.floor
 
-/**
- * Created by emmablack on 12/29/14.
- * Updated by andrew-warrington on 02-Jan-2018.
- * Refactored by dlvoy on 2019-11-2019
- * Refactored by MilosKozak 24/04/2022
- * Updated by Philoul to manage external data 06/11/2024
- */
-
+@SuppressLint("Deprecated")
 abstract class BaseWatchFace : WatchFace() {
 
-    @Inject lateinit var persistence: Persistence
+    @Inject lateinit var complicationDataRepository: ComplicationDataRepository
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -57,16 +54,73 @@ abstract class BaseWatchFace : WatchFace() {
     @Inject lateinit var simpleUi: SimpleUi
 
     private var disposable = CompositeDisposable()
-    private val rawData = RawDisplayData()
+    private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    protected val singleBg get() = rawData.singleBg
-    protected val status get() = rawData.status
-    private val treatmentData get() = rawData.treatmentData
-    private val graphData get() = rawData.graphData
+    // DataStore as single source of truth - using EventData models directly
+    private var complicationData: ComplicationData = ComplicationData()
 
+    /**
+     * Blood glucose data for all three datasets (primary + 2 followers).
+     *
+     * Array indices:
+     * - [0]: Primary AAPS instance
+     * - [1]: AAPSClient1 follower (if enabled)
+     * - [2]: AAPSClient2 follower (if enabled)
+     *
+     * Each entry contains current BG, trend arrow, delta, and range info.
+     */
+    protected val singleBg
+        get() = arrayOf(
+            complicationData.bgData,
+            complicationData.bgData1,
+            complicationData.bgData2
+        )
+
+    /**
+     * Status data for all three datasets (primary + 2 followers).
+     *
+     * Array indices:
+     * - [0]: Primary AAPS instance
+     * - [1]: AAPSClient1 follower (if enabled)
+     * - [2]: AAPSClient2 follower (if enabled)
+     *
+     * Each entry contains IOB, COB, basal rate, battery, loop status, etc.
+     */
+    protected val status
+        get() = arrayOf(
+            complicationData.statusData,
+            complicationData.statusData1,
+            complicationData.statusData2
+        )
+
+    /**
+     * Treatment history (boluses, temp basals, extended boluses).
+     * Used to render treatment markers on graphs.
+     */
+    private val treatmentData get() = complicationData.treatmentData
+
+    /**
+     * Historical BG graph data points.
+     * Used to render the glucose trend line on watchface charts.
+     */
+    private val graphData get() = complicationData.graphData
+
+    /**
+     * Inflate the watchface layout from XML and return its ViewBinding.
+     *
+     * Called once during first render (lazy initialization). The returned binding
+     * provides type-safe access to all views in the watchface layout.
+     *
+     * Deferred from onCreate() to avoid deadlock when AndroidX WatchFace
+     * creates headless engine on background thread (requires main thread Handler).
+     *
+     * @param inflater LayoutInflater from the service context
+     * @return ViewBinding for the watchface layout (e.g., ActivityHomeBinding)
+     */
     abstract fun inflateLayout(inflater: LayoutInflater): ViewBinding
 
-    private val displaySize = Point()
+    private var displayWidth = 0
+    private var displayHeight = 0
 
     var loopLevel = -1
     var loopLevelExt1 = -1
@@ -106,6 +160,7 @@ abstract class BaseWatchFace : WatchFace() {
     private var sgvTapTime: Long = 0
     private var chartTapTime: Long = 0
     private var mainMenuTapTime: Long = 0
+    private var lastMenuOpenTime: Long = 0
 
     // related endTime manual layout
     var layoutView: View? = null
@@ -123,49 +178,61 @@ abstract class BaseWatchFace : WatchFace() {
         AndroidInjection.inject(this)
         super.onCreate()
         simpleUi.onCreate(::forceUpdate)
-        @Suppress("DEPRECATION")
-        (getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
-        specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY)
-        specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY)
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        val bounds = windowManager.currentWindowMetrics.bounds
+        displayWidth = bounds.width()
+        displayHeight = bounds.height()
+        specW = View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY)
+        specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displayHeight, View.MeasureSpec.EXACTLY)
         disposable += rxBus
             .toObservable(EventWearPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe { event: EventWearPreferenceChange ->
+            .subscribe { _: EventWearPreferenceChange ->
                 simpleUi.updatePreferences()
-                if (layoutSet) setDataFields()
+                if (::binding.isInitialized && layoutSet) setDataFields()
                 invalidate()
             }
-        disposable += rxBus
-            .toObservable(EventData.Status::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
-                // this event is received as last batch of data
-                rawData.updateFromPersistence(persistence)
-                if (!simpleUi.isEnabled(currentWatchMode) || !needUpdate()) {
+
+        // Layout inflation deferred to first render to avoid deadlock in headless engine creation
+        // AndroidX WatchFace creates headless engine on background thread, and layout inflation
+        // with LineChartView requires main thread Handler. We'll initialize on first onDraw().
+
+        // Load initial data synchronously (like old persistence.updateFromPersistence())
+        runBlocking {
+            complicationData = complicationDataRepository.complicationData.first()
+        }
+
+        // Observe DataStore for updates
+        watchfaceScope.launch {
+            complicationDataRepository.complicationData.collect { data ->
+                complicationData = data
+                // Only update if binding is initialized
+                if (::binding.isInitialized && (!simpleUi.isEnabled(currentWatchMode) || !needUpdate())) {
                     setupCharts()
                     setDataFields()
                 }
                 invalidate()
             }
-        rawData.updateFromPersistence(persistence)
-        persistence.turnOff()
+        }
 
-        val inflater = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater)
-        val bindLayout = inflateLayout(inflater)
-        binding = WatchfaceViewAdapter.getBinding(bindLayout)
-        layoutView = binding.root
-        performViewSetup()
         rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
     }
 
     private fun forceUpdate() {
-        setDataFields()
+        if (::binding.isInitialized) {
+            setDataFields()
+        }
         invalidate()
     }
 
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
+        // Only respond to actual taps (tapType=2), ignore touch-down (tapType=0) and other events
+        if (tapType != 2) {
+            return
+        }
+
         binding.chart?.let { chart ->
-            if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
+            if (x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
                 if (eventTime - chartTapTime < 800) {
                     changeChartTimeframe()
                 }
@@ -173,17 +240,27 @@ abstract class BaseWatchFace : WatchFace() {
                 return
             }
         }
+
         binding.sgv?.let { mSgv ->
-            val extra = (mSgv.right - mSgv.left) / 2
-            if (tapType == TAP_TYPE_TAP && x + extra >= mSgv.left && x - extra <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
-                if (eventTime - sgvTapTime < 800) {
-                    startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            if (x >= mSgv.left && x <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
+                if (eventTime - sgvTapTime < 800 && sgvTapTime != 0L) {
+                    if (eventTime - lastMenuOpenTime > 2000) {
+                        lastMenuOpenTime = eventTime
+                        val intent = Intent(this, MainMenuActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                        startActivity(intent)
+                    }
+                    sgvTapTime = 0
+                } else {
+                    sgvTapTime = eventTime
                 }
-                sgvTapTime = eventTime
+                return
             }
         }
+
         binding.chartZoomTap?.let { mChartTap ->
-            if (tapType == TAP_TYPE_TAP && x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
+            if (x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
                 if (eventTime - chartTapTime < 800) {
                     changeChartTimeframe()
                 }
@@ -191,31 +268,41 @@ abstract class BaseWatchFace : WatchFace() {
                 return
             }
         }
+
         binding.mainMenuTap?.let { mMainMenuTap ->
-            if (tapType == TAP_TYPE_TAP && x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
-                if (eventTime - mainMenuTapTime < 800) {
-                    startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            if (x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
+                if (eventTime - mainMenuTapTime < 800 && mainMenuTapTime != 0L) {
+                    if (eventTime - lastMenuOpenTime > 2000) {
+                        lastMenuOpenTime = eventTime
+                        val intent = Intent(this, MainMenuActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                        startActivity(intent)
+                    }
+                    mainMenuTapTime = 0
+                } else {
+                    mainMenuTapTime = eventTime
                 }
-                mainMenuTapTime = eventTime
                 return
             }
         }
     }
 
     open fun changeChartTimeframe() {
-        var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
-        timeframe = timeframe % 5 + 1
-        sp.putString(R.string.key_chart_time_frame, timeframe.toString())
+        val currentTimeframe = sp.getString(R.string.key_chart_time_frame, "3").toIntOrNull() ?: 3
+        val newTimeframe = currentTimeframe % 5 + 1
+        sp.putString(R.string.key_chart_time_frame, newTimeframe.toString())
+        setupCharts()  // Rebuild the chart with new timeframe
+        invalidate()   // Trigger redraw
     }
 
-    override fun getWatchFaceStyle(): WatchFaceStyle {
-        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
-    }
+    // getWatchFaceStyle removed - not used in AndroidX API (tap events always accepted)
 
-    override fun onLayout(shape: WatchShape, screenBounds: Rect, screenInsets: WindowInsets) {
-        super.onLayout(shape, screenBounds, screenInsets)
-        layoutView?.onApplyWindowInsets(screenInsets)
-        bIsRound = screenInsets.isRound
+    override fun onLayout(shape: WatchShape, screenBounds: Rect, screenInsets: WindowInsets?) {
+        screenInsets?.let {
+            layoutView?.onApplyWindowInsets(it)
+            bIsRound = it.isRound
+        }
     }
 
     private fun performViewSetup() {
@@ -236,11 +323,12 @@ abstract class BaseWatchFace : WatchFace() {
             return "--"
         }
         val minutesAgo = floor(timeSince(id) / (1000 * 60)).toInt()
-        return minutesAgo.toString() + "'"
+        return "$minutesAgo'"
     }
 
     override fun onDestroy() {
         disposable.clear()
+        watchfaceScope.cancel()
         simpleUi.onDestroy()
         super.onDestroy()
     }
@@ -250,13 +338,23 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onDraw(canvas: Canvas) {
+        // Lazy initialization of layout on first render (called on main thread)
+        // This avoids deadlock during headless engine creation on background thread
+        if (!::binding.isInitialized) {
+            val inflater = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater)
+            val bindLayout = inflateLayout(inflater)
+            binding = WatchfaceViewAdapter.getBinding(bindLayout)
+            layoutView = binding.root
+            performViewSetup()
+        }
+
         if (simpleUi.isEnabled(currentWatchMode)) {
             simpleUi.onDraw(canvas, singleBg[0])
         } else {
             if (layoutSet) {
                 binding.mainLayout.measure(specW, specH)
-                val y = if (forceSquareCanvas) displaySize.x else displaySize.y // Square Steampunk
-                binding.mainLayout.layout(0, 0, displaySize.x, y)
+                val y = if (forceSquareCanvas) displayWidth else displayHeight // Square Steampunk
+                binding.mainLayout.layout(0, 0, displayWidth, y)
                 binding.mainLayout.draw(canvas)
             }
         }
@@ -272,20 +370,19 @@ abstract class BaseWatchFace : WatchFace() {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    @Suppress("DEPRECATION")
     private fun checkVibrateHourly(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         val hourlyVibratePref = sp.getBoolean(R.string.key_vibrate_hourly, false)
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
             aapsLogger.info(LTag.WEAR, "hourlyVibratePref", "true --> $newTime")
-            val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+            val vibrator = getSystemService(Vibrator::class.java)
             val vibrationPattern = longArrayOf(0, 150, 125, 100)
-            vibrator.vibrate(vibrationPattern, -1)
+            val vibrationEffect = VibrationEffect.createWaveform(vibrationPattern, -1)
+            vibrator?.vibrate(vibrationEffect)
         }
     }
 
-    @SuppressLint("SetTextI18n")
     open fun setDataFields() {
+        if (!::binding.isInitialized) return
         detailedIob = sp.getBoolean(R.string.key_show_detailed_iob, false)
         val showBgi = sp.getBoolean(R.string.key_show_bgi, false)
         val detailedDelta = sp.getBoolean(R.string.key_show_detailed_delta, false)
@@ -462,34 +559,45 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun on24HourFormatChanged(is24HourFormat: Boolean) {
-        if (!simpleUi.isEnabled(currentWatchMode)) {
+        if (::binding.isInitialized && !simpleUi.isEnabled(currentWatchMode)) {
             setDataFields()
         }
         invalidate()
     }
 
     private fun setDateAndTime() {
-        binding.time?.text = if (binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
-        binding.hour?.text = dateUtil.hourString()
-        binding.minute?.text = dateUtil.minuteString()
-        binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
-        binding.dayName?.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".")
-        binding.day?.text = dateUtil.dayString()
-        binding.month?.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
-        binding.timePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
-        binding.timePeriod?.text = dateUtil.amPm()
-        binding.weekNumber?.visibility = sp.getBoolean(R.string.key_show_week_number, false).toVisibility()
-        binding.weekNumber?.text = "(" + dateUtil.weekString() + ")"
-        if (showSecond)
-            setSecond()
+        if (!::binding.isInitialized) {
+            aapsLogger.warn(LTag.WEAR, "setDateAndTime: binding not initialized, skipping")
+            return
+        }
+        try {
+            binding.time?.text = if (binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
+            binding.hour?.text = dateUtil.hourString()
+            binding.minute?.text = dateUtil.minuteString()
+            binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
+            binding.dayName?.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".")
+            binding.day?.text = dateUtil.dayString()
+            binding.month?.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
+            binding.timePeriod?.visibility = DateFormat.is24HourFormat(this).not().toVisibility()
+            binding.timePeriod?.text = dateUtil.amPm()
+            binding.weekNumber?.visibility = sp.getBoolean(R.string.key_show_week_number, false).toVisibility()
+            binding.weekNumber?.text = "(" + dateUtil.weekString() + ")"
+            if (showSecond)
+                setSecond()
+        } catch (e: UninitializedPropertyAccessException) {
+            aapsLogger.error(LTag.WEAR, "setDateAndTime: Unexpected UninitializedPropertyAccessException even though ::binding.isInitialized returned true", e)
+            return
+        }
     }
 
     open fun setSecond() {
+        if (!::binding.isInitialized) return
         binding.time?.text = if (binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (showSecond) ":" + dateUtil.secondString() else ""
         binding.second?.text = dateUtil.secondString()
     }
 
     open fun updateSecondVisibility() {
+        if (!::binding.isInitialized) return
         binding.second?.visibility = showSecond.toVisibility()
     }
 
@@ -503,6 +611,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun strikeThroughSgvIfNeeded() {
+        if (!::binding.isInitialized) return
         binding.sgv?.let { mSgv ->
             if (ageLevel() <= 0 && singleBg[0].timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -518,6 +627,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onWatchModeChanged(watchMode: WatchMode) {
+        if (!::binding.isInitialized) return
         updateSecondVisibility()    // will show second if enabledSecond and Interactive mode, hide in other situation
         setSecond()                 // will remove second from main date and time if not in Interactive mode
         lowResMode = isLowRes(watchMode)
@@ -531,8 +641,46 @@ abstract class BaseWatchFace : WatchFace() {
         return watchMode == WatchMode.LOW_BIT || watchMode == WatchMode.LOW_BIT_BURN_IN
     }
 
+    /**
+     * Apply dark color theme to watchface elements.
+     *
+     * Called when user preference is set to dark mode (default).
+     * Implementations should set colors for all watchface elements:
+     * - Text colors (time, date, BG, status)
+     * - Graph colors (grid, BG line, treatments)
+     * - Background and divider colors
+     *
+     * Dark theme typically uses lighter text on dark backgrounds for
+     * AMOLED power savings and better night visibility.
+     */
     protected abstract fun setColorDark()
+
+    /**
+     * Apply bright color theme to watchface elements.
+     *
+     * Called when user preference is set to bright mode.
+     * Implementations should set colors for all watchface elements:
+     * - Text colors (time, date, BG, status)
+     * - Graph colors (grid, BG line, treatments)
+     * - Background and divider colors
+     *
+     * Bright theme typically uses darker text on lighter backgrounds
+     * for better outdoor visibility in sunlight.
+     */
     protected abstract fun setColorBright()
+
+    /**
+     * Apply low-resolution color theme for ambient mode.
+     *
+     * Called when watchface is in ambient (always-on) mode.
+     * Implementations should:
+     * - Use only black and white colors (no colors/anti-aliasing)
+     * - Simplify gradients to solid colors
+     * - Reduce visual complexity
+     * - Optimize for AMOLED burn-in prevention
+     *
+     * Required by Wear OS ambient mode guidelines.
+     */
     protected abstract fun setColorLowRes()
     private fun missedReadingAlert() {
         val minutesSince = floor(timeSince() / (1000 * 60)).toInt()
@@ -546,8 +694,9 @@ abstract class BaseWatchFace : WatchFace() {
         if (simpleUi.isEnabled(currentWatchMode)) {
             return
         }
+        if (!::binding.isInitialized) return
         if (binding.chart != null && graphData.entries.isNotEmpty()) {
-            val timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
+            val timeframe = sp.getString(R.string.key_chart_time_frame, "3").toIntOrNull() ?: 3  // Changed from getInt
             val bgGraphBuilder =
                 if (lowResMode)
                     BgGraphBuilder(
@@ -572,4 +721,5 @@ abstract class BaseWatchFace : WatchFace() {
         mLastDirection = singleBg[0].sgvString
         return true
     }
+
 }

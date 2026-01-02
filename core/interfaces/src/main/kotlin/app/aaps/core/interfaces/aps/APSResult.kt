@@ -7,6 +7,8 @@ import org.json.JSONObject
 
 interface APSResult {
 
+    fun with(result: RT): APSResult
+
     var date: Long
     var reason: String
     var rate: Double

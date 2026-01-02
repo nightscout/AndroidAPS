@@ -97,15 +97,7 @@
     <string name="combov2_pair_with_pump_summary">צימוד AndroidAPS ואנדרואיד עם משאבת Accu-Chek combo שאינה מצומדת</string>
     <string name="combov2_unpair_pump_summary">ביטול צימוד AndroidAPS ואנדרואיד ממשאבת Accu-Chek combo המצומדת</string>
     <string name="combov2_connection_error">שגיאת חיבור: %1$s</string>
-    <string name="combov2_short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
     <string name="combov2_short_status_alert">התראה: %s</string>
-    <string name="combov2_short_status_last_bolus">בולוס אחרון: %1$s ב-%2$s</string>
-    <string name="combov2_short_status_temp_basal">בזאלי זמני: %s</string>
-    <string name="combov2_short_status_reservoir">מכל: %d יח\'</string>
-    <string name="combov2_short_status_battery_state_empty">ריק</string>
-    <string name="combov2_short_status_battery_state_low">נמוכה</string>
-    <string name="combov2_short_status_battery_state_full">מלא</string>
-    <string name="combov2_short_status_battery_state">סול\': %s</string>
     <string name="combov2_automatic_reservoir_entry">זיהוי אוטומטי ורישום החלפת מכל אינסולין</string>
     <string name="combov2_automatic_battery_entry">זיהוי אוטומטי ורישום החלפת סוללה</string>
     <string name="combov2_timezone_changed">אזור הזמן שונה</string>

@@ -140,4 +140,10 @@
     <string name="triggerStepsCountLabel">Počet krokov</string>
     <string name="triggerStepsCountDesc">Počet krokov za %1$s minút %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trvanie merania</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Povoliť/zakázať SMB</string>
+    <string name="changeSmbTo">Zmeniť SMB na %1$s</string>
+    <string name="newSmbMode">Nový režim SMB:</string>
+    <string name="on">ZAP</string>
+    <string name="off">VYP</string>
 </resources>

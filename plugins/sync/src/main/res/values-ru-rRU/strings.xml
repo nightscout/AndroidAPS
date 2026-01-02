@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Использовать мобильное подключение</string>
     <string name="ns_wifi">Использовать WiFi соединение</string>
     <string name="ns_wifi_ssids">SSID для Wi-Fi</string>
@@ -22,7 +22,7 @@
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">ЗАГРУЗ</string>
     <string name="ns_malfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NS не имеет разрешения внести изменения. неверный API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">клиент NS</string>
@@ -49,19 +49,19 @@
     <string name="ns_receive_profile_store">Принимать хранилище профилей</string>
     <string name="ns_receive_profile_store_summary">Синхронизировать профили из редактора NS профиля в локальный профиль</string>
     <string name="ns_receive_temp_target">Получить временные цели</string>
-    <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
+    <string name="ns_receive_temp_target_summary">Принимать временные цели, введенные через NS или AAPSClient</string>
     <string name="ns_receive_profile_switch">Получать переключения профиля</string>
-    <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
-    <string name="ns_receive_offline_event">Принимать события APS автономно</string>
-    <string name="ns_receive_offline_event_summary">Принимать события APS введенные через NS или клиент NS автономно</string>
+    <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или AAPSClient</string>
+    <string name="ns_receive_running_mode">Принимать режимы работы</string>
+    <string name="ns_receive_running_mode_summary">Принимать режимы работы, вводимые через NS или AAPSClient</string>
     <string name="ns_receive_tbr_eb">Получать временную базальную скорость TBR и пролонгированный болюс EB</string>
     <string name="ns_receive_tbr_eb_summary">Принять TBR и EB введеные с другого устройства</string>
     <string name="ns_receive_insulin">Принимать инсулин</string>
-    <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
+    <string name="ns_receive_insulin_summary">Принимать инсулин, вводимый через NS или AAPSClient (не подается, только рассчитывается как активный IOB)</string>
     <string name="ns_receive_carbs">Принимать углеводы</string>
-    <string name="ns_receive_carbs_summary">Принимать углеводы, введенные через NS или NSClient</string>
+    <string name="ns_receive_carbs_summary">Принимать углеводы, вводимые через NS или AAPSClient</string>
     <string name="ns_receive_therapy_events">Принимать события терапии</string>
-    <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
+    <string name="ns_receive_therapy_events_summary">Принимать события терапии (замену катетера, инсулина, батареи и т. д.) вводимые через NS или AAPSClient</string>
     <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
     <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
     <string name="ns_sync_slow">Замедлить выгрузку</string>
@@ -75,17 +75,11 @@
     <string name="ns_use_ws_title">Подключаться к веб-сокету</string>
     <string name="ns_use_ws_summary">Активация означает: более быстрое обновление, получение оповещений и объявлений, более высокое потребление заряда батареи по аналогии с v1. Все остальные загрузчики NS будут использовать протокол v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Имя пользователя Tidepool, обычно ваш адрес электронной почты</string>
-    <string name="title_tidepool_username">Имя пользователя</string>
-    <string name="summary_tidepool_password">Ваш пароль для входа в Tidepool</string>
-    <string name="title_tidepool_password">Пароль для входа</string>
-    <string name="title_tidepool_test_login">Тест входа в Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Если активировано, загрузки перейдут на https://int-app.tidepool.org вместо обычного https://app.tidepool.org/</string>
+    <string name="summary_tidepool_dev_servers">Если включено, выгрузка будет направлена на тестовые серверы вместо обычных</string>
     <string name="title_tidepool_dev_servers">Использовать серверы интеграции (тест)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
-    <string name="remove_all">Удалить всё</string>
     <string name="upload_now">Выгрузить (передать данные) сейчас</string>
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
@@ -124,9 +118,15 @@
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
     <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
+    <string name="wear_action_tempt_cancel_message">Отменить действие ВЦ?</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
+    <string name="wear_action_tempt_zero_message">Нулевая ВЦ - отменить выполнение Временной Цели?</string>
     <string name="wear_action_tempt_min_bg_error">Мин ГК вне диапазона!</string>
     <string name="wear_action_tempt_max_bg_error">Макс ГК вне диапазона!</string>
+    <string name="wear_action_tempt_range_error">Недопустимый диапазон: значение Низкой цели (%1$s) не может быть больше Высокой цели (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">ВЦ\n\nМин:%1$s\nМакс:%2$sПродолжительность:%3$d мин</string>
+    <string name="wear_action_tempt_manual_message">ВЦ \n\n Цель: %1$s Продолжительность: %2$d мин</string>
+    <string name="wear_action_tempt_preset_message">ВЦ \n\n Причина: %1$s\n Цель: %2$s\n Продолжительность: %3$d мин</string>
     <string name="no_success">неуспешно - проверьте телефон</string>
     <string name="wear_settings">Настройки смарт-часов на Wear OS</string>
     <string name="wearcontrol_title">Контроль с часов</string>
@@ -157,6 +157,7 @@
     <string name="grams_short">г</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Активный профиль не установлен!</string>
+    <string name="profile_message">Профиль: %1$s\nСдвиг по времени: %2$d h\n Процент: %3$d%%\n Продолжительность: %4$d мин</string>
     <string name="target_only_aps_mode">Цели применяются только в режиме APS!</string>
     <string name="no_history">Нет данных истории!</string>
     <string name="temp_target">Врем. цель</string>
@@ -169,6 +170,7 @@
     <string name="last_aps_result_na">Последний результат недоступен!</string>
     <string name="loop_status_closed">ЗАМКНУТЫЙ ЦИКЛ</string>
     <string name="loop_status_open">ОТКРЫТЫЙ ЦИКЛ</string>
+    <string name="loop_status_lgs">Приостановка на Низких</string>
     <string name="loop_status_disabled">ЦИКЛ ВЫКЛЮЧЕН</string>
     <string name="aps">APS</string>
     <string name="last_run">Предыдущее выполнение</string>
@@ -177,4 +179,24 @@
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
     <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient не выполняет такие запросы</string>
+    <string name="wear_action_loop_state_requires_duration">Для этого требуется указать продолжительность</string>
+    <string name="wear_action_loop_state_pump_suspended">Помпа остановлена!</string>
+    <string name="wear_action_loop_state_profile_invalid">Недопустимый профиль!</string>
+    <string name="wear_action_loop_state_unauthorized">Повторите попытку.</string>
+    <string name="wear_action_loop_state_invalid">Запрошено неверное состояние цикла</string>
+    <string name="wear_action_loop_state_title">СОСТОЯНИЕ ЦИКЛА</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\n Продолжительность: %2$d мин</string>
+    <string name="wear_action_loop_state_now_closed">Закрыто</string>
+    <string name="wear_action_loop_state_now_lgs">Приостановка на Низких</string>
+    <string name="wear_action_loop_state_now_open">Открыто</string>
+    <string name="wear_action_loop_state_now_suspended">Приостановлено</string>
+    <string name="wear_action_loop_state_now_resumed">Возобновлено</string>
+    <string name="wear_action_loop_state_now_disabled">Неактивно</string>
+    <string name="wear_action_loop_state_now_pump_suspended">Работа помпы приостановлена</string>
+    <string name="wear_action_loop_state_now_superbolus">Суперболюс</string>
+    <string name="wear_action_loop_state_now_invalid">Недопустимое состояние</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Помпа отключена</string>
+    <string name="garmin_request_key">Ключ запроса</string>
+    <string name="garmin_request_key_summary">Дополнительный ключ для безопасности соединения HTTP между устройством Garmin и AAPS.</string>
 </resources>

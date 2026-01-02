@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
-    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
-
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
-    <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
+    <string name="description_source_xdrip">Receive BG values from xDrip+ and compatible apps (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
@@ -34,10 +31,13 @@
     <string name="bgsource_log_sensor_change_summary">Create event \"CGM Sensor Insert\" in Careportal automatically on received sensor start from BG source local broadcast</string>
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">BG generation interval minutes</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Receive glucose data from Ottai App.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai Tag App.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai/Ottai App.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Receive glucose data from Patched Sibionic SI App.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
 </resources>

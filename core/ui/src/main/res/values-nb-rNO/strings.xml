@@ -5,7 +5,6 @@
     <string name="error">Feil</string>
     <string name="profile_set_ok">Basalprofil i pumpen er oppdatert</string>
     <string name="invalid_input">Ugyldige verdier</string>
-    <string name="bolus_delivering">Leverer %1$.2f E</string>
     <string name="constraint_applied">Begrensning benyttet!</string>
     <string name="tempbasals_iobtotal_label_string">Totalt IOB:</string>
     <string name="tt_label">TT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
     <string name="pump_not_initialized_profile_not_set">Pumpen er ikke startet, ingen profil valgt!</string>
     <string name="failed_update_basal_profile">Klarte ikke å oppdatere basalprofil</string>
-    <string name="bolus_delivered_successfully">Bolus på %1$.2f E ble levert</string>
     <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
@@ -74,7 +72,7 @@
     <string name="basal_label">Basal</string>
     <string name="target_label">Målverdi</string>
     <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
-    <string name="ic_long_label">Insulin-karbohydratfaktor (IK)</string>
+    <string name="ic_long_label">Insulin-til-karbohydratforhold (IK)</string>
     <string name="isf_long_label">Insulinsensitivitetsfaktor (ISF)</string>
     <string name="basal_long_label">Basaldose</string>
     <string name="target_long_label">Blodsukkermål</string>
@@ -91,7 +89,7 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Eksporter innstillinger</string>
     <string name="disableloop">Stans loop</string>
-    <string name="enableloop">Aktiver loop</string>
+    <string name="disabled_loop">Deaktivert loop</string>
     <string name="resumeloop">Gjenoppta loop</string>
     <string name="suspendloop">Pause loop</string>
     <string name="duration_min_label">Varighet [min]</string>
@@ -119,8 +117,10 @@
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpen er pauset</string>
+    <string name="pump_running">Pumpe i drift</string>
     <string name="notconfigured">Ikke konfigurert</string>
     <string name="loopsuspended">Loop pauset</string>
+    <string name="loop_suspended_by_dst">Loop suspendert av DST (Sommertid)</string>
     <string name="trend_arrow">Trendpil</string>
     <string name="a11y_autosens_label">Autosens</string>
     <string name="required">nødv</string>
@@ -155,19 +155,23 @@
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="invalid">UGYLDIG</string>
     <string name="login">Login</string>
+    <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
+    <string name="site_rotation">Rotasjon av stedsområder</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Avbryt midlertidig mål</string>
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åpen Loop</string>
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
+    <string name="pump_disconnected">Pumpe frakoblet</string>
+    <string name="pump_suspended">Pumpe pauset</string>
+    <string name="mode_reverted">Modus tilbakestilt</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IK</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Kunne ikke avbryte midlertidig basal</string>
     <string name="canceling_eb_failed">Kunne ikke avbryte forlenget bolus</string>
     <string name="virtualpump_uploadstatus_title">Last opp pumpestatus til NS eller Tidepool</string>
-    <string name="suspendloop_label">Deaktivert/pauset loop</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
     <string name="loopstatus_targets">MÅLVERDIER:</string>
     <string name="loopstatus_OAPS_result">OAPS resultat:</string>
@@ -220,6 +224,8 @@
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
     <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
     <string name="cgm_sensor_insert">Bytte av CGM-sensor</string>
+    <string name="careportal_pump_site_management">Pumpeområder</string>
+    <string name="careportal_cgm_site_management">CGM-områder</string>
     <string name="careportal_cgmsensorstart">CGM sensorstart</string>
     <string name="careportal_cgm_sensor_stop">CGM sensorstopp</string>
     <string name="careportal_dad_alert">Logg varsel fra diabetes-hund</string>
@@ -235,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Bytte pumpebatteri</string>
     <string name="temporary_target">Midlertidig mål</string>
+    <string name="running_mode">Kjøremodus</string>
     <string name="careportal_temporarytargetvalue">Midlertidig målverdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt midlertidig mål</string>
     <string name="boluswizard">Boluskalkulator</string>
@@ -252,6 +259,39 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Registrer</string>
+    <string name="location_front_right_upper_chest">Høyre bryst</string>
+    <string name="location_front_left_upper_chest">Venstre bryst</string>
+    <string name="location_side_right_upper_arm">Øvre høyre ytterside av armen</string>
+    <string name="location_side_left_upper_arm">Øvre venstre ytterside av armen</string>
+    <string name="location_back_right_upper_arm">Øvre høyre bakside av armen</string>
+    <string name="location_back_left_upper_arm">Øvre venstre bakside av armen</string>
+    <string name="location_side_right_upper_abdomen">Øvre høyre ytterside av magen</string>
+    <string name="location_side_left_upper_abdomen">Øvre venstre ytterside av magen</string>
+    <string name="location_side_right_lower_abdomen">Nedre høyre ytterside av magen</string>
+    <string name="location_side_left_lower_abdomen">Nedre venstre ytterside av magen</string>
+    <string name="location_front_right_upper_abdomen">Øvre høyre framside av magen</string>
+    <string name="location_front_left_upper_abdomen">Øvre venstre framside av magen</string>
+    <string name="location_front_right_lower_abdomen">Nedre høyre framside av magen</string>
+    <string name="location_front_left_lower_abdomen">Nedre venstre framside av magen</string>
+    <string name="location_back_right_buttock">Høyre rumpe</string>
+    <string name="location_back_left_buttock">Venstre rumpe</string>
+    <string name="location_side_right_upper_thigh">Øvre høyre ytterside av låret</string>
+    <string name="location_side_left_upper_thigh">Øvre venstre ytterside av låret</string>
+    <string name="location_side_right_lower_thigh">Nedre høyre ytterside av låret</string>
+    <string name="location_side_left_lower_thigh">Nedre venstre ytterside av låret</string>
+    <string name="location_front_right_upper_thigh">Øvre høyre framside av låret</string>
+    <string name="location_front_left_upper_thigh">Øvre venstre framside av låret</string>
+    <string name="location_front_right_lower_thigh">Nedre høyre framside av låret</string>
+    <string name="location_front_left_lower_thigh">Nedre venstre framside av låret</string>
+    <string name="arrow_up">Opp</string>
+    <string name="arrow_up_right">Opp til høyre</string>
+    <string name="arrow_right">Høyre</string>
+    <string name="arrow_down_right">Ned til høyre</string>
+    <string name="arrow_down">Ned</string>
+    <string name="arrow_down_left">Ned til venstre</string>
+    <string name="arrow_left">Venstre</string>
+    <string name="arrow_up_left">Opp til venstre</string>
+    <string name="arrow_center">Midten</string>
     <!--    Command-->
     <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
     <!--    PumpEnactResult-->
@@ -297,7 +337,8 @@
     <string name="uel_lgs_loop_mode">LGS LOOP-MODUS</string>
     <string name="uel_open_loop_mode">ÅPEN LOOP-MODUS</string>
     <string name="uel_loop_disabled">LOOP DEAKTIVERT</string>
-    <string name="uel_loop_enabled">LOOP AKTIVERT</string>
+    <string name="uel_loop_resumed">LOOP GJENOPPTATT</string>
+    <string name="uel_pump_running">PUMPE I DRIFT</string>
     <string name="uel_reconnect">KOBLE TIL</string>
     <string name="uel_disconnect">KOBLE FRA</string>
     <string name="uel_resume">GJENOPPTA</string>
@@ -310,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
     <string name="uel_cancel_tt">AVBRYT MIDLERTIDIG MÅL</string>
     <string name="uel_careportal">HELSEPORTAL</string>
+    <string name="uel_sensor_location">SENSORPLASSERING</string>
     <string name="uel_site_change">BYTTE SLANGESETT</string>
+    <string name="uel_site_location">STEDSPLASSERING</string>
     <string name="uel_reservoir_change">BYTTE RESERVOAR</string>
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
@@ -373,6 +416,9 @@
     <string name="uel_loop_change">LOOP ENDRET</string>
     <string name="uel_loop_removed">LOOP FJERNET</string>
     <string name="uel_other">ANNET</string>
+    <string name="uel_running_mode">KJØREMODUS</string>
+    <string name="uel_running_mode_removed">KJØREMODUS SLETTET</string>
+    <string name="uel_running_mode_updarted">KJØREMODUS OPPDATERT</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil lavt mål</string>
     <string name="profile_high_target">Profil høyt mål</string>
@@ -383,7 +429,7 @@
     <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
     <string name="current_basal_value">Nåværende basalverdi</string>
-    <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
+    <string name="profile_carbs_ratio_value">Profilens insulin-til-karbohydratforhold (IK)</string>
     <string name="valuelimitedto">%1$.2f begrenset til %2$.2f</string>
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
@@ -596,4 +642,6 @@
     <string name="rate_percent_duration">Dose: %1$.2f E/t (%2$.2f%%) Varighet: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dose</b>: %1$.2f%% (%2$.2f E/t)<br><b>Varighet</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dose</b>: %1$.2f E/t (%2$.2f%%) <br><b>Varighet</b>: %3$d min<br>]]></string>
+    <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS spiller av lyd"</string>
 </resources>

@@ -16,4 +16,8 @@
     <string name="day_tir">זמן בטווח ביום</string>
     <string name="night_tir">זמן בטווח בלילה</string>
     <string name="carbs_short" comment="max 6 characters">פחמימות</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
+    <string name="short_status_last_bolus">בולוס אחרון: %1$s יח\' ב-%2$s</string>
+    <string name="short_status_not_initialized">המשאבה לא מאותחלת</string>
 </resources>

@@ -11,14 +11,15 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
+import app.aaps.pump.diaconn.keys.DiaconnIntKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
@@ -50,6 +51,17 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.saveAlarm.setOnClickListener(null)
+        binding.saveLcdOnTime.setOnClickListener(null)
+        binding.saveLang.setOnClickListener(null)
+        binding.saveBolusSpeed.setOnClickListener(null)
+        binding.beepAndAlarm.adapter = null
+        binding.alarmIntesity.adapter = null
+        binding.beepAndAlarm.onItemSelectedListener = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DiaconnG8UserOptionsActivityBinding.inflate(layoutInflater)
@@ -65,7 +77,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
 
         binding.saveBolusSpeed.setOnClickListener { onSaveBolusSpeedClick() }
 
-        val spBolusSpeed = sp.getString(getString(R.string.key_diaconn_g8_bolusspeed), "5")
+        val spBolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
 
         binding.bolusSpeed.setParams(spBolusSpeed.toDouble(), 1.0, 8.0, 1.0, DecimalFormat("1"), true, binding.saveBolusSpeed)
 
@@ -149,9 +161,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         diaconnG8Pump.bolusSpeed = intSpeed
         diaconnG8Pump.speed = intSpeed
         diaconnG8Pump.setUserOptionType = DiaconnG8Pump.BOLUS_SPEED
-        sp.putString(R.string.key_diaconn_g8_bolusspeed, intSpeed.toString())
-        sp.putBoolean(R.string.key_diaconn_g8_is_bolus_speed_sync, false)
-
+        preferences.put(DiaconnIntKey.BolusSpeed, intSpeed)
         ToastUtils.okToast(context, "Save Success!")
     }
 

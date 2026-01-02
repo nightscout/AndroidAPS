@@ -21,7 +21,6 @@
     <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
     <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
-    <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
     <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>

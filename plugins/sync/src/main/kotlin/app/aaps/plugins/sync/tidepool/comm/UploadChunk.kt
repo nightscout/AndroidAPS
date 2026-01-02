@@ -10,9 +10,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.sync.R
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
 import app.aaps.plugins.sync.tidepool.elements.BloodGlucoseElement
@@ -21,6 +20,7 @@ import app.aaps.plugins.sync.tidepool.elements.ProfileElement
 import app.aaps.plugins.sync.tidepool.elements.SensorGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.WizardElement
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
+import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import java.util.LinkedList
 import javax.inject.Inject
@@ -30,7 +30,7 @@ import kotlin.math.min
 
 @Singleton
 class UploadChunk @Inject constructor(
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
@@ -81,13 +81,13 @@ class UploadChunk @Inject constructor(
     }
 
     fun getLastEnd(): Long {
-        val result = sp.getLong(R.string.key_tidepool_last_end, 0)
+        val result = preferences.get(TidepoolLongNonKey.LastEnd)
         return max(result, dateUtil.now() - T.months(2).msecs())
     }
 
     fun setLastEnd(time: Long) {
         if (time > getLastEnd()) {
-            sp.putLong(R.string.key_tidepool_last_end, time)
+            preferences.put(TidepoolLongNonKey.LastEnd, time)
             val friendlyEnd = dateUtil.dateAndTimeString(time)
             rxBus.send(EventTidepoolStatus(("Marking uploaded data up to $friendlyEnd")))
             aapsLogger.debug(LTag.TIDEPOOL, "Updating last end to: " + dateUtil.dateAndTimeString(time))
@@ -148,7 +148,7 @@ class UploadChunk @Inject constructor(
 
     private fun newInstanceOrNull(ps: EPS): ProfileElement? = try {
         ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil, profileUtil)
-    } catch (e: Throwable) {
+    } catch (_: Throwable) {
         null
     }
 

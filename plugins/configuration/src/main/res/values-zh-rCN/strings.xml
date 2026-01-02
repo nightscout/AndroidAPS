@@ -43,7 +43,6 @@
     <string name="identification">身份识别 (email邮件地址, FaceBook账号 或 Discord账号等等)</string>
     <string name="request">请求</string>
     <string name="apsmode_title">APS模式</string>
-    <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此设备似乎不支持电池优化白名单 - 您可能会遇到性能问题。</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">配置生成器</string>

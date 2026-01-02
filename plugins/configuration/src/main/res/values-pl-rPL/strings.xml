@@ -35,7 +35,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Zmień profil</string>
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
-    <string name="setupwizard_loop_description">Naciśnij przycisk poniżej, by umożliwić AAPS sugerowanie/wprowadzenie zmian insuliny bazowej</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="request">Żądanie</string>
     <string name="apsmode_title">Tryb APS</string>
-    <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="error_asking_for_permissions">Wystąpił błąd podczas żądania uprawnień</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->

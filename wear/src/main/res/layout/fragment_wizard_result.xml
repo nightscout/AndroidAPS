@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    app:boxedEdges="all">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <!-- Summary Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="4dp"
+                app:cardBackgroundColor="@color/primary_dark"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/wizard_total_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wizard_total_insulin"
+                        android:textSize="12sp"
+                        android:textColor="#B0BEC5"
+                        android:gravity="center" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:id="@+id/wizard_total_insulin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0.0"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/units_short"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginStart="4dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/wizard_carbs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/wizard_carbs_format"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/carbs"
+                        android:gravity="center" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Calculation Details Table - Collapsible -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/calculation_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                app:cardBackgroundColor="@color/background_dark"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <!-- Calculation Header - Always Visible, Clickable -->
+                    <LinearLayout
+                        android:id="@+id/calculation_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="6dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/wizard_calculation"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#B0BEC5" />
+
+                        <TextView
+                            android:id="@+id/expand_icon"
+                            android:contentDescription="@string/expand_calculation_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="▼"
+                            android:textSize="12sp"
+                            android:textColor="#B0BEC5"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="0dp" />
+                    </LinearLayout>
+
+                    <!-- Expandable Calculation Details -->
+                    <LinearLayout
+                        android:id="@+id/calculation_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!-- Settings Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingVertical="2dp"
+                            android:layout_marginTop="4dp">
+
+                            <TextView
+                                android:id="@+id/wizard_settings"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="IC: 10g/U | ISF: 40"
+                                android:textSize="11sp"
+                                android:textColor="#B0BEC5" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="3dp"
+                            android:background="@color/divider" />
+
+                        <!-- Dynamic calculation rows will be added here -->
+                        <LinearLayout
+                            android:id="@+id/wizard_calculation_rows"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <!-- Rows added dynamically -->
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Swipe Left to Confirm Hint -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wizard_swipe_left_confirm"
+                    android:textSize="11sp"
+                    android:textColor="#90A4AE"
+                    android:alpha="0.9"
+                    android:gravity="center"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- Three animated-looking arrows pointing left -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="◀"
+                        android:textSize="16sp"
+                        android:textColor="#4CAF50"
+                        android:alpha="0.4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="◀"
+                        android:textSize="16sp"
+                        android:textColor="#66BB6A"
+                        android:alpha="0.6"
+                        android:layout_marginStart="2dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="◀"
+                        android:textSize="16sp"
+                        android:textColor="#66BB6A"
+                        android:alpha="0.9"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.wear.widget.BoxInsetLayout>

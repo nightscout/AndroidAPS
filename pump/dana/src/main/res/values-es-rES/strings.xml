@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModelo: %2$02X\nProtocol: %3$02X\nCódigo: %4$02X</string>
     <string name="processinghistory">Procesando evento</string>
     <string name="danar_enableextendedbolus">Habilitar bolos extendidos en bomba</string>
-    <string name="overview_bolusprogress_delivered">Entregado</string>
     <string name="overview_bolusprogress_stoped">Detenido</string>
     <string name="unsupportedfirmware">Firmware de la bomba no soportado</string>
     <string name="pumperror">Error de bomba</string>

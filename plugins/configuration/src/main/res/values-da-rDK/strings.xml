@@ -34,7 +34,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Skift profil</string>
     <string name="exitwizard">Spring opsætningsguiden over</string>
-    <string name="setupwizard_loop_description">Tryk på knappen nedenfor for at aktivere at AAPS foreslår/foretager basale ændringer</string>
     <string name="setupwizard_sensitivity_description">Følsomhedsplugin bruges til detektering af følsomhed og COB beregning. For mere info besøg:</string>
     <string name="setupwizard_aps_description">Vælg en fra tilgængelige algoritmer. De er sorteret fra ældste til nyeste. Nyere algoritme er normalt mere kraftfulde og mere aggressive. Så hvis du er ny looper bør du sandsynligvis starte med AMA og ikke med den nyeste. Glem ikke at læse OpenAPS dokumentationen og konfigurere den før brug.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurer venligst din RileyLink nedenfor. Når du har valgt en RileyLink, vil det være muligt at fortsætte opsætningen, når RileyLink-status er \"Tilsluttet\". Dette kan tage et minut.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
     <string name="request">Anmod</string>
     <string name="apsmode_title">APS Tilstand</string>
-    <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
     <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--    ConfigBuilder-->

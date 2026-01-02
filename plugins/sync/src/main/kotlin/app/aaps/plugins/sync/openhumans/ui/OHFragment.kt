@@ -48,9 +48,9 @@ class OHFragment : DaggerFragment() {
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        stateLiveData.observe(this) { state ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        stateLiveData.observe(viewLifecycleOwner) { state ->
             if (state == null) {
                 setup.visibility = View.VISIBLE
                 logout.visibility = View.GONE

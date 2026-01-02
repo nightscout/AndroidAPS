@@ -63,7 +63,7 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Requisitos previos</string>
     <string name="prerequisites_what">¿Qué es esencial para configurar y utilizar AAPS?</string>
-    <string name="prerequisites_computer">Una computadora con Android Studio instalado y configurado.</string>
+    <string name="prerequisites_build">Una forma de construir AAPS. Ya sea a través de un navegador o un ordenador con Android Studio instalado.</string>
     <string name="prerequisites_pump">Una bomba de insulina compatible, si planeas usar el sistema en modo bucle cerrado.</string>
     <string name="prerequisites_nightscout">Nightscout, para tener un registro de los datos y revisar los parámetros de configuración.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiencia programando o editando código.</string>
@@ -97,7 +97,7 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/\"insulina humana estándar\".</string>
+    <string name="insulin_actrapid">Actrapid®/Humulin R®/insulina humana \"regular\".</string>
     <string name="insulin_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">Plugins de sensibilidad</string>
     <string name="sensitivity_adjust">Los plugins de sensibilidad permiten a AAPS ajustarse para cambios temporales o de corta duración en la sensibilidad a la insulina (por ejemplo, cambios hormonales o problemas con la absorción en el sitio de infusión).</string>

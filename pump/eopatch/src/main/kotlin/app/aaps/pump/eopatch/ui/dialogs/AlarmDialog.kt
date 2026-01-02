@@ -163,9 +163,14 @@ class AlarmDialog : DaggerDialogFragment() {
         disposable = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
+    }
+
     override fun dismiss() {
         super.dismissAllowingStateLoss()
-        handler.removeCallbacksAndMessages(null)
         helperActivity?.finish()
     }
 

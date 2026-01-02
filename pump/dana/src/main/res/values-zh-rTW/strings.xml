@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\n型號：%2$02X\n協議：%3$02X\n代碼：%4$02X</string>
     <string name="processinghistory">處理事件</string>
     <string name="danar_enableextendedbolus">啟用幫浦上的延長注射</string>
-    <string name="overview_bolusprogress_delivered">已注射</string>
     <string name="overview_bolusprogress_stoped">已停止</string>
     <string name="unsupportedfirmware">不支援的幫浦韌體</string>
     <string name="pumperror">幫浦錯誤</string>

@@ -35,7 +35,6 @@
     <string name="profile">檔案</string>
     <string name="doprofileswitch">切換檔案</string>
     <string name="exitwizard">跳過設定嚮導</string>
-    <string name="setupwizard_loop_description">按下面的按鈕啟用AAPS建議/進行基礎變更</string>
     <string name="setupwizard_sensitivity_description">敏感度外掛用於敏感度偵測和COB計算。更多資訊請查看：</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">從可用的算法中選擇一個。它們按從舊到新的順序排列。較新的算法通常更強大和更積極。因此，如果您是新手循環用戶，可能會從AMA開始，而不是最新的。請勿忘記閱讀OpenAPS文檔並在使用前進行配置。</string>
@@ -51,7 +50,6 @@
     <string name="identification">標識（電子郵件、FB或Discord暱稱等）</string>
     <string name="request">請求</string>
     <string name="apsmode_title">APS模式</string>
-    <string name="setupwizard_preferred_aps_mode">首選APS模式</string>
     <string name="error_asking_for_permissions">請求權限時出錯</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->

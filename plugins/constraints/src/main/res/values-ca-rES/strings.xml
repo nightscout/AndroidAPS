@@ -9,7 +9,6 @@
     <!-- Safety -->
     <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
-    <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
     <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
     <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>

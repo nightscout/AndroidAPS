@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integrazione del microinfusore Omnipod Dash (il nuovo modello, con il Bluetooth e con la protezione ago di colore blu).</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Storico pod</string>
+    <string name="omnipod_dash_history_item_description">Descrizione</string>
+    <string name="omnipod_dash_history_item_amount">Quantità</string>
+    <string name="omnipod_dash_history_item_source">Origine</string>
+    <string name="omnipod_dash_history_item_date">Data</string>
+    <string name="omnipod_dash_history_type">Tipo:</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Stato bluetooth</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Indirizzo bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Qualità connessione</string>
+    <string name="omnipod_dash_overview_delivery_status">Stato erogazione</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Riempi il nuovo pod con abbastanza insulina per 3 giorni.\n\nResta in ascolto di due bip dal pod durante il processo di riempimento. Questi indicano che è stata inserita la quantità minima di 80U. Assicurati di svuotare completamente la siringa di riempimento, anche dopo aver sentito i due segnali acustici.\n\nDopo il riempimento del pod, premi <b>Avanti</b>.\n\n<b>Nota:</b> non rimuovere la protezione dell\'ago del pod in questo momento.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentativo di associazione nuovo pod e caricamento.\n\nQuando il processo di inizializzazione è stato completato con successo, puoi premere <b>Avanti</b>.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Suono notifica sospensione erogazione abilitato</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Impossibile connettersi al pod</string>
+    <string name="omnipod_dash_found_too_many_pods">Trovati troppi pod per l\'attivazione</string>
+    <string name="omnipod_dash_scan_failed">Nessun pod disponibile per l\'attivazione trovato</string>
+    <string name="omnipod_dash_generic_error">Errore generico: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">L\'invio del comando è fallito</string>
+    <string name="omnipod_dash_command_not_sent">Comando non inviato</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Comando non ricevuto dal pod</string>
+    <string name="omnipod_dash_unknown">Stato sconosciuto per il comando</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minuti</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_alert_delivery_suspended">L\'erogazione di insulina è sospesa</string>
+    <string name="omnipod_common_history_total_delivered">Totale erogato: %1$.2f U</string>
+    <string name="omnipod_dash_connection_lost">Connessione col pod persa</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Altro bolo in erogazione</string>
+    <string name="omnipod_dash_not_enough_insulin">Insulina nel serbatoio insufficiente</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comando non confermato</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Richiesto da utente</string>
+    <string name="profile_set_ok">Impostazione profilo OK</string>
+    <string name="suspend_delivery_is_unconfirmed">La sospensione dell\'erogazione non è confermata! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
+    <string name="insulin_delivery_suspended">Erogazione insulina sospesa</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Il fuso orario sul pod è diverso dal fuso orario sul telefono. La velocità basale non è corretta. Cambia il profilo per correggere</string>
+    <string name="failed_to_set_the_new_basal_profile">Impossibile impostare il nuovo profilo basale. Erogazione sospesa</string>
+    <string name="setting_basal_profile_might_have_failed">L\'Impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
+    <string name="bolus_delivery_status_uncertain">Stato erogazione bolo incerto. Ricarica lo stato del pod per confermare o negare.</string>
+    <string name="temp_basal_out_of_sync">Lo stato della basale temporanea non è come previsto! Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Controlla lo storico del pod e l\'insulina erogata</string>
+    <string name="checking_delivery_status">Controllo stato erogazione</string>
+    <string name="setting_temp_basal_might_have_basal_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Cancellazione basale temporanea: risultato incerto</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comando resumeDelivery non confermato. Aggiorna lo stato del pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">La cancellazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+</resources>

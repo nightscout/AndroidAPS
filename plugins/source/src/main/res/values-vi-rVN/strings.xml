@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Tải dữ liệu đường huyết (BG) từ Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Nhận giá trị đường huyết (BG) từ xDrip+ và các ứng dụng tương thích (như Juggluco, v.v.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Nhận đường huyết từ ứng dụng \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Nhận giá trị đường huyết từ Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Nhận giá trị đường huyết (BG) từ 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Nhận đường huyết từ ứng dụng Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Nhận gá trị từ ứng dụng Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Nhận giá trị từ ứng dụng Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Nhận giá trị đường huyết từ ứng dụng Tomato (thiết bị MiaoMiao)</string>
+    <string name="random_bg">Random BG</string>
+    <string name="description_source_random_bg">Tạo dữ liệu đường huyết ngẫu nhiên (chỉ dùng cho chế độ Demo)</string>
+    <string name="random_bg_short">Đường huyết</string>
+    <string name="bgsource_settings">Cài đặt nguồn dữ liệu đường huyết</string>
+    <string name="bgsource_log_sensor_change_title">Chấp nhận khởi động cảm biến</string>
+    <string name="bgsource_log_sensor_change_summary">Tự động tạo sự kiện “CGM Sensor Insert” trong Careportal khi nhận được tín hiệu khởi động cảm biến từ nguồn BG (local broadcast)</string>
+    <string name="direction">direction</string>
+    <string name="bg_generation_interval_minutes">Chu kỳ tạo đường huyết (phút)</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Ứng dụng SI</string>
+    <string name="description_source_patched_si_app">Nhận dữ liệu đường huyết từ ứng dụng SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Ứng dụng Sino</string>
+    <string name="description_source_patched_sino_app">Nhận dữ liệu đường huyết từ ứng dụng Sino.</string>
+</resources>

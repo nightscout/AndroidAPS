@@ -1,7 +1,7 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.LongPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.LongPreferenceKey
 
 enum class DanaLongKey(
     override val key: String,
@@ -16,8 +16,9 @@ enum class DanaLongKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : LongPreferenceKey {
 
-    DanaRsLastClearKeyRequest("rs_last_clear_key_request", 0),
+    LastClearKeyRequest("rs_last_clear_key_request", 0),
 }

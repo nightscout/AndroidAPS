@@ -1,3 +1,5 @@
+import kotlin.math.min
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
@@ -10,7 +12,7 @@ plugins {
 android {
     namespace = "app.aaps.shared.impl"
     defaultConfig {
-        minSdk = Versions.wearMinSdk  // for wear
+        minSdk = min(Versions.minSdk, Versions.wearMinSdk)
     }
 }
 
@@ -18,6 +20,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
+    implementation(project(":core:utils"))
 
     //Logger
     api(libs.org.slf4j.api)

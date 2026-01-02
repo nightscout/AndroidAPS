@@ -37,6 +37,7 @@
     <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
     <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
     <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>

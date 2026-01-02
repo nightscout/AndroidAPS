@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModelis: %2$02X\nProtokolas: %3$02X\nKodas: %4$02X</string>
     <string name="processinghistory">Apdorojama</string>
     <string name="danar_enableextendedbolus">Aktyvuoti ištęstinius bolusus pompoje</string>
-    <string name="overview_bolusprogress_delivered">Suleista</string>
     <string name="overview_bolusprogress_stoped">Sustabdyta</string>
     <string name="unsupportedfirmware">Pompos programinės įrangos versija nepalaikoma</string>
     <string name="pumperror">Pompos klaida</string>

@@ -16,4 +16,5 @@
     <string name="day_tir">Dzienny TIR</string>
     <string name="night_tir">Nocny TIR</string>
     <string name="carbs_short" comment="max 6 characters">Węglowodany</string>
+    <!--    PumpStatusGenerator-->
 </resources>

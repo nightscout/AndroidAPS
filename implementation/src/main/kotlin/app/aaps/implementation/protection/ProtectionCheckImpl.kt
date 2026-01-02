@@ -4,18 +4,16 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.Reusable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @Reusable
 class ProtectionCheckImpl @Inject constructor(
-    private val sp: SP,
     private val preferences: Preferences,
     private val passwordCheck: PasswordCheck,
     private val dateUtil: DateUtil
@@ -24,21 +22,21 @@ class ProtectionCheckImpl @Inject constructor(
     private var lastAuthorization = mutableListOf(0L, 0L, 0L)
 
     private val passwordsResourceIDs = listOf(
-        StringKey.ProtectionSettingsPassword.key,
-        StringKey.ProtectionApplicationPassword.key,
-        StringKey.ProtectionBolusPassword.key
+        StringKey.ProtectionSettingsPassword,
+        StringKey.ProtectionApplicationPassword,
+        StringKey.ProtectionBolusPassword
     )
 
     private val pinsResourceIDs = listOf(
-        StringKey.ProtectionSettingsPin.key,
-        StringKey.ProtectionApplicationPin.key,
-        StringKey.ProtectionBolusPin.key
+        StringKey.ProtectionSettingsPin,
+        StringKey.ProtectionApplicationPin,
+        StringKey.ProtectionBolusPin
     )
 
     private val protectionTypeResourceIDs = listOf(
-        IntKey.ProtectionTypeSettings.key,
-        IntKey.ProtectionTypeApplication.key,
-        IntKey.ProtectionTypeBolus.key
+        IntKey.ProtectionTypeSettings,
+        IntKey.ProtectionTypeApplication,
+        IntKey.ProtectionTypeBolus
     )
 
     private val titlePassResourceIDs = listOf(
@@ -57,12 +55,12 @@ class ProtectionCheckImpl @Inject constructor(
         if (activeSession(protection)) {
             return false
         }
-        return when (ProtectionCheck.ProtectionType.entries[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
+        return when (ProtectionCheck.ProtectionType.entries[preferences.get(protectionTypeResourceIDs[protection.ordinal])]) {
             ProtectionCheck.ProtectionType.NONE            -> false
             ProtectionCheck.ProtectionType.BIOMETRIC       -> true
             ProtectionCheck.ProtectionType.MASTER_PASSWORD -> preferences.get(StringKey.ProtectionMasterPassword) != ""
-            ProtectionCheck.ProtectionType.CUSTOM_PASSWORD -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
-            ProtectionCheck.ProtectionType.CUSTOM_PIN      -> sp.getString(pinsResourceIDs[protection.ordinal], "") != ""
+            ProtectionCheck.ProtectionType.CUSTOM_PASSWORD -> preferences.get(passwordsResourceIDs[protection.ordinal]) != ""
+            ProtectionCheck.ProtectionType.CUSTOM_PIN      -> preferences.get(pinsResourceIDs[protection.ordinal]) != ""
         }
     }
 
@@ -91,7 +89,7 @@ class ProtectionCheckImpl @Inject constructor(
             return
         }
 
-        when (ProtectionCheck.ProtectionType.entries[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
+        when (ProtectionCheck.ProtectionType.entries[preferences.get(protectionTypeResourceIDs[protection.ordinal])]) {
             ProtectionCheck.ProtectionType.NONE            ->
                 ok?.run()
 
@@ -102,7 +100,7 @@ class ProtectionCheckImpl @Inject constructor(
                 passwordCheck.queryPassword(
                     activity,
                     app.aaps.core.ui.R.string.master_password,
-                    StringKey.ProtectionMasterPassword.key,
+                    StringKey.ProtectionMasterPassword,
                     { onOk(protection); ok?.run() },
                     { cancel?.run() },
                     { fail?.run() })

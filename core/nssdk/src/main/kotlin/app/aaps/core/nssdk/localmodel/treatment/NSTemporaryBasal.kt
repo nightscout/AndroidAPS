@@ -20,6 +20,7 @@ data class NSTemporaryBasal(
     override val pumpType: String?,
     override val pumpSerial: String?,
     override var app: String? = null,
+    /** Duration in milliseconds */
     val duration: Long,
     val rate: Double,            // when sending to NS always convertedToAbsolute(timestamp, profile)
     val isAbsolute: Boolean,

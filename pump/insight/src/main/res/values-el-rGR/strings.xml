@@ -32,12 +32,6 @@
     <string name="timeout_during_handshake">Τέλος χρόνου κατά τη διάρκεια handshake - επαναφορά bluetooth</string>
     <string name="pump_stopped">Η αντλία σταμάτησε</string>
     <string name="pump_started">Η αντλία ξεκίνησε</string>
-    <string name="short_status_last_connected">Τελευταία σύνδεση: %1$d λεπτά πριν</string>
-    <string name="short_status_tbr">TBR: %1$d%% για %2$d / %3$d λεπτά</string>
-    <string name="short_status_extended">Εκτεταμένο: %1$.2f / %2$.2f U για %3$d λεπτά</string>
-    <string name="short_status_multiwave">Συνδυαστικό: %1$.2f / %2$.2f U για %3$d λεπτά</string>
-    <string name="short_status_reservoir">Υπόλοιπο μονάδων:%1$.2fU</string>
-    <string name="short_status_battery">Μπατ.:%1$d%%</string>
     <string name="release_software_version">Έκδοση λογισμικού</string>
     <string name="ui_processor_software_version">Έκδοση λογισμικού επεξεργαστή UI</string>
     <string name="pc_processor_software_version">Έκδοση λογισμικού επεξεργαστή PC</string>

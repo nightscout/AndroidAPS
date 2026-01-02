@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Vypršal čas na pripojenie - reštartuj Bluetooth</string>
     <string name="pump_stopped">Pumpa zastavená</string>
     <string name="pump_started">Pumpa spustená</string>
-    <string name="short_status_last_connected">Posledné spoj: pred %1$d min</string>
-    <string name="short_status_tbr">Doč. bazál: %1$d%% na %2$d / %3$d min</string>
-    <string name="short_status_extended">Predl. bolus: %1$.2f / %2$.2f JI na %3$d min</string>
-    <string name="short_status_multiwave">Duálny bolus: %1$.2f / %2$.2f JI na %3$d min</string>
-    <string name="short_status_tdd">CDD: %1$.2f</string>
-    <string name="short_status_reservoir">Zásobník: %1$.2f JI</string>
-    <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="release_software_version">Verzia softwaru</string>
     <string name="ui_processor_software_version">Verzia softwaru UI procesora</string>
     <string name="pc_processor_software_version">Verzia softwaru PC procesora</string>

@@ -28,6 +28,8 @@ import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
+import app.aaps.pump.common.extensions.stringResource
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import app.aaps.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -41,10 +43,9 @@ import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import dagger.android.support.DaggerFragment
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
-import app.aaps.pump.common.extensions.stringResource
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.Locale
 import javax.inject.Inject
 
 class MedtronicFragment : DaggerFragment() {
@@ -176,7 +177,14 @@ class MedtronicFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        handler.removeCallbacks(refreshLoop)
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    @Synchronized
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
     }
 
     @Synchronized
@@ -193,9 +201,9 @@ class MedtronicFragment : DaggerFragment() {
         binding.rlStatus.text =
             when {
                 rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> rh.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + rh.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                rileyLinkServiceData.rileyLinkServiceState.isConnecting()                      -> "{fa-bluetooth-b spin}   " + rh.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isError() && rileyLinkError == null -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isError() && rileyLinkError != null -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
                 else                                                                           -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
             }
         binding.rlStatus.setTextColor(rh.gac(context, if (rileyLinkError != null) app.aaps.core.ui.R.attr.warningColor else app.aaps.core.ui.R.attr.defaultTextColor))
@@ -327,12 +335,14 @@ class MedtronicFragment : DaggerFragment() {
 
         // battery
         if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {
-            binding.pumpStateBattery.text = "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  "
+            binding.pumpStateBattery.text = medtronicPumpStatus.batteryRemaining?.let { "{fa-battery-" + it / 25 + "}" } ?: rh.gs(app.aaps.core.ui.R.string.unknown)
         } else {
             binding.pumpStateBattery.text =
-                "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  " + medtronicPumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", medtronicPumpStatus.batteryVoltage)
+                (medtronicPumpStatus.batteryRemaining?.let { "{fa-battery-" + it / 25 + "}  " + it + "%" } ?: "") +
+                    String.format(Locale.getDefault(), "  (%.2f V)", medtronicPumpStatus.batteryVoltage)
+
         }
-        warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25, 10)
+        warnColors.setColorInverse(binding.pumpStateBattery, (medtronicPumpStatus.batteryRemaining?.toDouble() ?: 100.0), 25, 10)
 
         // reservoir
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)

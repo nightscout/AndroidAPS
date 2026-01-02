@@ -11,7 +11,7 @@ class DanaPumpTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        sut = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
+        sut = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
     }
 
     @Test

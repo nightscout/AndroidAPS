@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
+    <string name="bolus_delivering">Entregando %1$.2fU</string>
+    <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado con éxito</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>
     <!--    DateUtil-->
-    <string name="minago">hace %1$d m</string>
+    <string name="minago">Hace %1$dm</string>
+    <string name="secago">Hace %1$ds</string>
     <string name="minago_long">Hace %1$d minutos</string>
-    <string name="hoursago">hace %1$.1f h</string>
+    <string name="hoursago">Hace %1$.1fh</string>
     <string name="days_ago">Hace %1$.1f día</string>
     <string name="days_ago_round">Hace %1$.0f días</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">hace %1$s día %2$s horas</item>
+        <item quantity="other">hace %1$s días %2$s horas</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">hace %1$s hora</item>
+        <item quantity="other">hace %1$s horas</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">hace un momento</item>
+        <item quantity="other">hace %1$s minutos</item>
+    </plurals>
+    <string name="seconds_ago">hace unos segundos</string>
     <string name="in_days">en %1$.0f días</string>
     <string name="in_days_round">en %1$.0f días</string>
     <string name="shorthour">h</string>
@@ -33,6 +50,7 @@
     <string name="connecting_for">Conectando durante %1$d s</string>
     <string name="handshaking">Estableciendo comunicación</string>
     <string name="connected">Conectado</string>
+    <string name="authorized">Autorizado</string>
     <string name="disconnecting">Desconectando</string>
     <string name="waiting_for_disconnection">Esperando para desconectarse</string>
     <!-- Custom Watchface -->
@@ -69,4 +87,5 @@
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Para siempre</string>
 </resources>

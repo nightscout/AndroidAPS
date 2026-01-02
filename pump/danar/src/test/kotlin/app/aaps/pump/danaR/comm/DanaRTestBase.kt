@@ -15,10 +15,11 @@ import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
-import org.mockito.Mockito.anyBoolean
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doNothing
+import org.mockito.kotlin.whenever
 
 open class DanaRTestBase : TestBaseWithProfile() {
 
@@ -35,12 +36,12 @@ open class DanaRTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
-        doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
-        doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
-        doNothing().`when`(danaRKoreanPlugin).setFragmentVisible(anyObject(), anyBoolean())
-        doNothing().`when`(danaRPlugin).setFragmentVisible(anyObject(), anyBoolean())
-        `when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
+        danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
+        doNothing().whenever(danaRKoreanPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
+        doNothing().whenever(danaRPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
+        doNothing().whenever(danaRKoreanPlugin).setFragmentVisible(anyOrNull(), anyBoolean())
+        doNothing().whenever(danaRPlugin).setFragmentVisible(anyOrNull(), anyBoolean())
+        whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 
     init {

@@ -104,15 +104,7 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_unpair_pump_summary">Koppla bort AndroidAPS och Android från den nuvarande parkopplade Accu-Chek Combo-pumpen</string>
     <string name="combov2_unknown_tbr_detected">Okänd temp basal upptäcktes och stoppades; procentsats: %1$d%%; återstående varaktighet: %2$s</string>
     <string name="combov2_connection_error">Anslutningsfel: %1$s</string>
-    <string name="combov2_short_status_last_connection">Sen ansl: %1$d min sedan</string>
     <string name="combov2_short_status_alert">Varning: %s</string>
-    <string name="combov2_short_status_last_bolus">Senaste Bolus: %1$s U @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
-    <string name="combov2_short_status_reservoir">Res: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">tom</string>
-    <string name="combov2_short_status_battery_state_low">låg</string>
-    <string name="combov2_short_status_battery_state_full">full</string>
-    <string name="combov2_short_status_battery_state">Batt.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Auto-detektera och ange byte av insulinreservoar automatiskt</string>
     <string name="combov2_automatic_battery_entry">Auto-detektera och ange byte av batteri automatiskt</string>
     <string name="combov2_timezone_changed">Tidszon ändrad</string>

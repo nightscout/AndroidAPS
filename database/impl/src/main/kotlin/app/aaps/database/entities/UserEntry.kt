@@ -46,8 +46,9 @@ data class UserEntry(
         LGS_LOOP_MODE,
         OPEN_LOOP_MODE,
         LOOP_DISABLED,
-        LOOP_ENABLED,
+        LOOP_RESUME,
         LOOP_CHANGE,
+        PUMP_RUNNING,
         LOOP_REMOVED,
         RECONNECT,
         DISCONNECT,
@@ -61,7 +62,9 @@ data class UserEntry(
         CANCEL_EXTENDED_BOLUS,
         CANCEL_TT,
         CAREPORTAL,
+        SENSOR_LOCATION,
         SITE_CHANGE,
+        SITE_LOCATION,
         RESERVOIR_CHANGE,
         CALIBRATION,
         PRIME_BOLUS,
@@ -113,6 +116,9 @@ data class UserEntry(
         EXIT_AAPS,
         PLUGIN_ENABLED,
         PLUGIN_DISABLED,
+        RUNNING_MODE,
+        RUNNING_MODE_REMOVED,
+        RUNNING_MODE_UPDATED,
         UNKNOWN
         ;
     }
@@ -130,6 +136,7 @@ data class UserEntry(
         TempBasalDialog,
         CalibrationDialog,
         FillDialog,
+        SiteRotationDialog,
         BgCheck,
         SensorInsert,
         BatteryChange,
@@ -187,6 +194,8 @@ data class UserEntry(
         Overview,           //From OverViewPlugin
         Ottai,              //From Ottai plugin
         SyaiTag,            //From Syai Tag plugin
+        SiBionic,
+        Sino,
         Stats,              //From Stat Activity
         Aaps,               // MainApp
         BgFragment,

@@ -22,4 +22,5 @@ abstract class VirtualPumpModule {
 
         @Binds fun bindVirtualPump(virtualPumpPlugin: VirtualPumpPlugin): VirtualPump
     }
+
 }

@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Įspėjimas apie insulino trūkumą</string>
     <string name="needbatteryreplace">Būtina pakeisti bateriją</string>
     <string name="needinsullinreplace">Būtina pakeisti insuliną</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>
     <string name="diaconn_g8_loginsulinchange_summary">Įtraukti į terapijos skiltį įvykį „Insulino pakeitimas“, jei jis aptinkamas istorijoje</string>
     <string name="diaconn_g8_logcanulachange_title">Įrašyti kaniulės pakeitimą</string>

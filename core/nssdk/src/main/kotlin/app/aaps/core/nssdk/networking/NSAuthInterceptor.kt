@@ -61,7 +61,7 @@ internal class NSAuthInterceptor(private val refreshToken: String, private val r
 
     private fun testCanRefresh(initialResponse: Response) {
         // Todo: use proper reason code once it is supplied by remote
-        if (initialResponse.body?.string()?.contains(MESSAGE_DATE_HEADER_OUT_OF_TOLERANCE) == true) {
+        if (initialResponse.body.string().contains(MESSAGE_DATE_HEADER_OUT_OF_TOLERANCE)) {
             throw DateHeaderOutOfToleranceException("Data header out of tolerance")
         }
     }

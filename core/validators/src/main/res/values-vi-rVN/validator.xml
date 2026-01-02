@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Chỉ được phép nhập các chữ số.</string>
+    <string name="error_only_numeric_digits_range_allowed">Chỉ được phép nhập các chữ số trong khoảng %1$s - %2$s.</string>
+    <string name="error_this_field_cannot_contain_special_character">Trường này không được chứa ký tự đặc biệt nào</string>
+    <string name="error_only_standard_letters_are_allowed">Chỉ được phép nhập các chữ cái chuẩn</string>
+    <string name="error_field_must_not_be_empty">Trường này không được để trống</string>
+    <string name="error_email_address_not_valid">Địa chỉ email không hợp lệ</string>
+    <string name="error_creditcard_number_not_valid">Số thẻ tín dụng không hợp lệ</string>
+    <string name="error_phone_not_valid">Số điện thoại không hợp lệ</string>
+    <string name="error_domain_not_valid">Tên miền không hợp lệ</string>
+    <string name="error_ip_not_valid">Địa chỉ IP không hợp lệ</string>
+    <string name="error_url_not_valid">Địa chỉ Url không hợp lệ</string>
+    <string name="error_notvalid_personname">Tên hoặc họ không hợp lệ.</string>
+    <string name="error_notvalid_personfullname">Họ và tên không hợp lệ.</string>
+    <string name="error_date_not_valid">Định dạng không hợp lệ</string>
+    <string name="error_mustbe4digitnumber">Phải là số gồm 4 chữ số</string>
+    <string name="error_mustbe6digitnumber">Phải là số gồm 6 chữ số</string>
+    <string name="error_mustbe12hexadidits">Phải gồm 12 ký tự trong tập ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Phải gồm 8 ký tự trong tập ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Không đạt độ dài tối thiểu</string>
+    <string name="error_pin_not_valid">Mã Pin phải gồm 3 đến 6 chữ số, không được trùng nhau hoặc theo dãy liên tiếp</string>
+</resources>

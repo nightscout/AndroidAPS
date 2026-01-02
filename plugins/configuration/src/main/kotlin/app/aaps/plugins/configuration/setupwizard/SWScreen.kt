@@ -1,21 +1,22 @@
 package app.aaps.plugins.configuration.setupwizard
 
+import androidx.appcompat.app.AppCompatActivity
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class SWScreen(val injector: HasAndroidInjector, private var header: Int) {
+class SWScreen @Inject constructor(private val rh: ResourceHelper) {
 
-    @Inject lateinit var rh: ResourceHelper
+    private var header: Int = 0
 
     var items: MutableList<SWItem> = ArrayList()
     var validator: (() -> Boolean)? = null
     var visibility: (() -> Boolean)? = null
     var skippable = false
 
-    init {
-        injector.androidInjector().inject(this)
+    fun with(header: Int): SWScreen {
+        this.header = header
+        return this
     }
 
     fun getHeader(): String {
@@ -42,7 +43,7 @@ class SWScreen(val injector: HasAndroidInjector, private var header: Int) {
         return this
     }
 
-    fun processVisibility() {
-        for (i in items) i.processVisibility()
+    fun processVisibility(activity: AppCompatActivity) {
+        for (i in items) i.processVisibility(activity)
     }
 }

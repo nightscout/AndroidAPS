@@ -21,7 +21,6 @@
     <string name="limitingextendedbolus">Begränsar förlängd bolus till %1$.1f U p.g.a. %2$s</string>
     <string name="limitingcarbs">Begränsar kolhydrater till %1$d g pga %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen kan inte hantera temp basaler</string>
-    <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inaktiverat.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop-läget inaktiverat pga att en förlängd bolus är aktiv</string>
     <string name="smbalwaysdisabled">SMB Alltid På och SMB Efter Kolhydrater är inaktiverat pga att den aktiva BG-källan inte stöder avancerad filtrering</string>

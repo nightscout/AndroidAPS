@@ -11,6 +11,7 @@
     <string name="application_expired">Истек срок действия приложения</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
+    <string name="version_expire">Версия %1$s истекает %2$s и переходит в режим приостановки на низких</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Используются пересчитанные данные</string>
@@ -22,7 +23,6 @@
     <string name="limitingextendedbolus">Ограничиваю пролонгированный болюс до %1$.1f ед. из-за %2$s</string>
     <string name="limitingcarbs">Ограничение углеводов до %1$d г из-за %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
-    <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>

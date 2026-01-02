@@ -153,6 +153,7 @@ class GarminSimulatorClient(
     }
 
     override fun dispose() {
+        executor.shutdown()
         connections.forEach { c -> c.dispose() }
         connections.clear()
         serverSocket.close()

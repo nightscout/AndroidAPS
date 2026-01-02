@@ -49,7 +49,6 @@
     <string name="smscommunicator_tt_canceled">Midlertidig mål er annulleret succesfuldt</string>
     <string name="smscommunicator_remote_commands_allowed">Tillad fjernkommandoer via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop er blevet deaktiveret</string>
-    <string name="smscommunicator_loop_has_been_enabled">Loop er blevet aktiveret</string>
     <string name="smscommunicator_loop_is_enabled">Loop er aktiveret</string>
     <string name="smscommunicator_pump_connect_with_code">For at forbinde pumpen svar med koden %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Forbindelse til pumpe mislykkedes</string>
@@ -65,7 +64,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">For at starte basal %1$d%% i %2$d minutter svar med kode %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">For at suspendere loop i %1$d minutter svar med kode %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">For at genoptage loop svar med koden %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">For at aktivere loop svar med kode %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">For at deaktivere loop, svar med kode %1$s</string>
     <string name="smscommunicator_tempbasal_set">Temp basal %1$.2fE/t i %2$d min startet med succes</string>
     <string name="smscommunicator_extended_set">Udvidet bolus %1$.2f IE for %2$d min er startet succesfuldt</string>
@@ -129,7 +127,6 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definér en profil, der er tilgængelig offline.</string>
     <string name="a11y_add_new_to_list">tilføj ny til listen</string>
     <string name="do_you_want_switch_profile">Vil du skifte profil og kassere ændringer, der er foretaget i den aktuelle profil?</string>
     <string name="save_or_reset_changes_first">Gem eller nulstil aktuelle ændringer først</string>

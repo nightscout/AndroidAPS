@@ -35,7 +35,6 @@
     <string name="profile">Profiel</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
-    <string name="setupwizard_loop_description">Druk op de knop hieronder om AAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
     <string name="request">Verzoek</string>
     <string name="apsmode_title">APS Mode</string>
-    <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="error_asking_for_permissions">Fout bij het vragen van toestemming</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <!--    ConfigBuilder-->

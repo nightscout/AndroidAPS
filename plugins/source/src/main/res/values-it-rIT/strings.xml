@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">BG NS</string>
     <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
     <string name="source_xdrip">BG xDrip+</string>
-    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
+    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+ e app compatibili (Juggluco ecc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">Crea evento \"CGM Sensore Inserito\" in Careportal automaticamente all\'avvio del sensore ricevuto dalla trasmissione locale sorgente BG</string>
     <string name="direction">direzione</string>
     <string name="bg_generation_interval_minutes">Minuti intervallo generazione glicemia</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Ricevi dati di glucosio dall\'app Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Ricevi dati di glucosio dall\'app Ottai.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">App SI</string>
+    <string name="description_source_patched_si_app">Ricevi i dati di glucosio dall\'app Sibionic SI patchata.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">App Sino</string>
+    <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>
 </resources>

@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
+    <string name="bolus_delivering">正在注射 %1$.2fU</string>
+    <string name="bolus_delivered_successfully">注射 %1$.2fU 已成功完成</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">幫浦驅動程式已更改。</string>
     <!--    DateUtil-->
     <string name="minago">%1$d 分鐘前</string>
+    <string name="secago">%1$d 秒前</string>
     <string name="minago_long">%1$d 分鐘前</string>
     <string name="hoursago">%1$.1f 小時前</string>
     <string name="days_ago">%1$.1f 天前</string>
     <string name="days_ago_round">%1$.0f 天前</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="other">One
+%1$s 天 %2$s 小時前
+Other
+
+%1$s 天 %2$s 小時前</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="other">One
+%1$s 小時前
+
+Other
+%1$s 小時前</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="other">One
+剛剛
+
+Other
+%1$s 分鐘前</item>
+    </plurals>
+    <string name="seconds_ago">幾秒前</string>
     <string name="in_days">%1$.0f 天內</string>
     <string name="in_days_round">%1$.0f 天內</string>
     <string name="shorthour">小時</string>
@@ -33,6 +59,7 @@
     <string name="connecting_for">連線中 %1$d 秒</string>
     <string name="handshaking">交握中</string>
     <string name="connected">已連線</string>
+    <string name="authorized">已授權</string>
     <string name="disconnecting">斷線中</string>
     <string name="waiting_for_disconnection">等待斷線</string>
     <!-- Custom Watchface -->
@@ -69,4 +96,5 @@
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">永遠</string>
 </resources>

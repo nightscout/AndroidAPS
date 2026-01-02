@@ -35,12 +35,6 @@
     <string name="timeout_during_handshake">Durată timp expirat pe timpul negocierii - resetare bluetooth</string>
     <string name="pump_stopped">Pompă oprită</string>
     <string name="pump_started">Pompă pornită</string>
-    <string name="short_status_last_connected">Ultima conexiune: acum %1$d min</string>
-    <string name="short_status_tbr">TBR: %1$d%% pentru %2$d / %3$d min</string>
-    <string name="short_status_extended">Extins: %1$.2f / %2$.2f U pentru %3$d min</string>
-    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U pentru %3$d min</string>
-    <string name="short_status_reservoir">Rezervor: %1$.2fU</string>
-    <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="release_software_version">Versiunea de software</string>
     <string name="ui_processor_software_version">Versiunea softwareului procesor UI</string>
     <string name="pc_processor_software_version">Versiunea software procesor PC</string>

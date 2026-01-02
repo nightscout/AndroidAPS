@@ -16,4 +16,5 @@
     <string name="day_tir">TNA de dia</string>
     <string name="night_tir">TNA de noite</string>
     <string name="carbs_short" comment="max 6 characters">Hidratos de carbono</string>
+    <!--    PumpStatusGenerator-->
 </resources>

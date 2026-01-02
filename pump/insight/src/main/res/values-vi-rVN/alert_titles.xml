@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_title">Tiêm liều bolus</string>
+    <string name="alert_r2_title">Liều Bolus chưa thực hiện</string>
+    <string name="alert_r3_title">Báo thức</string>
+    <string name="alert_r4_title">Thay bộ dây truyền</string>
+    <string name="alert_r7_title">TBR đã hoàn tất</string>
+    <string name="alert_w31_title">Ống chứa insulin sắp hết</string>
+    <string name="alert_w32_title">Pin yếu</string>
+    <string name="alert_w33_title">Thời gian/ngày không hợp lệ</string>
+    <string name="alert_w34_title">Hết hạn bảo hành</string>
+    <string name="alert_w36_title">TBR đã bị hủy</string>
+    <string name="alert_w38_title">Liều Bolus đã bị hủy</string>
+    <string name="alert_w39_title">Cảnh báo thời gian mượn(tạm)</string>
+    <string name="alert_m20_title">Chưa lắp ống chứa insulin</string>
+    <string name="alert_m21_title">Ống insulin đã hết</string>
+    <string name="alert_m22_title">Pin hết</string>
+    <string name="alert_m23_title">Tắt tự động – bơm đã dừng</string>
+    <string name="alert_m24_title">Tắc insulin</string>
+    <string name="alert_m25_title">Hết thời gian mượn(tạm) – kết thúc hoạt động</string>
+    <string name="alert_m26_title">Thay ống chứa insulin chưa hoàn tất</string>
+    <string name="alert_m27_title">Tải dữ liệu thất bại</string>
+    <string name="alert_m28_title">Hết thời gian chế độ tạm dừng</string>
+    <string name="alert_m29_title">Chưa chọn loại pin</string>
+    <string name="alert_m30_title">Chưa chọn loại ống chứa insulin</string>
+    <string name="alert_e6_title">Lỗi cơ học</string>
+    <string name="alert_e10_title">Lỗi Rewind</string>
+    <string name="alert_e13_title">Lỗi ngôn ngữ</string>
+</resources>

@@ -5,7 +5,6 @@
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
-    <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
     <string name="dexcom_app_patched">Patchad Dexcom-app</string>
     <string name="dexcom_short">Dex</string>
     <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
@@ -26,6 +25,7 @@
     <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
     <string name="random_bg_short">BG</string>
     <string name="direction">riktning</string>
-    <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -30,6 +31,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -41,7 +43,6 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogCarbsBinding
 import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -66,7 +67,6 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -143,7 +143,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
         binding.duration.setParams(
             savedInstanceState?.getDouble("duration")
-                ?: 0.0, 0.0, 10.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+                ?: 0.0, 0.0, HardLimits.MAX_CARBS_DURATION_HOURS.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
 
         binding.carbs.setParams(
@@ -184,8 +184,33 @@ class CarbsDialog : DialogFragmentWithDate() {
         }
 
         iobCobCalculator.ads.actualBg()?.let { bgReading ->
-            if (bgReading.recalculated < 72)
-                binding.hypoTt.isChecked = true
+
+            if (bgReading.recalculated < 72) {
+
+                val activeTT = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
+
+                var shouldAutoCheckHypo = true
+
+                if (activeTT != null) {
+
+                    val activeTarget = activeTT.highTarget
+                    val now = System.currentTimeMillis()
+                    val remainingDurationMin =
+                        ((activeTT.timestamp + activeTT.duration) - now) / 60000
+
+                    // Prevent auto-checking HypoTT when:
+                    // 1. Active TT target is above Constants.ALLOW_SMB_WITH_HIGH_TT
+                    // 2. Active TT lasts longer than the hypoTT preset
+                    if (activeTarget > Constants.ALLOW_SMB_WITH_HIGH_TT && remainingDurationMin > hypoTTDuration) {
+                        shouldAutoCheckHypo = false
+                    }
+                }
+
+                if (shouldAutoCheckHypo) {
+                    binding.hypoTt.isChecked = true
+                }
+            }
         }
         binding.hypoTt.setOnClickListener {
             binding.activityTt.isChecked = false
@@ -350,12 +375,12 @@ class CarbsDialog : DialogFragmentWithDate() {
                         uel.log(
                             action = if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, source = Sources.CarbDialog,
                             note = notes,
-                            listValues = listOf(
+                            listValues = listOfNotNull(
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.Gram(carbsAfterConstraints),
                                 ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
                                 ValueWithUnit.Hour(duration).takeIf { duration != 0 }
-                            ).filterNotNull()
+                            )
                         )
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

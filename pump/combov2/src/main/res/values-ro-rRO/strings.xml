@@ -104,15 +104,7 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_unpair_pump_summary">Desperechează AndroidAPS și Android de pompa Accu-Chek Combo asociată în prezent</string>
     <string name="combov2_unknown_tbr_detected">RBT necunoscută a fost detectată și oprită; procentaj: %1$d%%; durată rămasă: %2$s</string>
     <string name="combov2_connection_error">Eroare conexiune: %1$s</string>
-    <string name="combov2_short_status_last_connection">UltimaConexiune: acum %1$d min</string>
     <string name="combov2_short_status_alert">Alertă: %s</string>
-    <string name="combov2_short_status_last_bolus">UltimulBolus: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">BazalaTemporara: %s</string>
-    <string name="combov2_short_status_reservoir">Rezervor: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">gol</string>
-    <string name="combov2_short_status_battery_state_low">hipo</string>
-    <string name="combov2_short_status_battery_state_full">completă</string>
-    <string name="combov2_short_status_battery_state">Bat.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetectează şi introdu automat schimbarea rezervorului de insulină</string>
     <string name="combov2_automatic_battery_entry">Autodetectează și introdu automat schimbarea bateriei</string>
     <string name="combov2_timezone_changed">Fus orar schimbat</string>

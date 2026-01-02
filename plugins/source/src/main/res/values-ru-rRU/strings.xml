@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">ГК с NS</string>
     <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
     <string name="source_xdrip">ГК с xDrip+ </string>
-    <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
+    <string name="description_source_xdrip">Получать значения ГК от xDrip+ и совместимых приложений (Juggluco и т.д.).</string>
     <string name="dexcom_app_patched">Самост собран прилож Dexcom</string>
     <string name="dexcom_short">ССП DEXCOM</string>
     <string name="description_source_dexcom">Получать данные ГК от \'Самостоятельно собранного приложения Dexcom\'.</string>
@@ -25,12 +25,18 @@
     <string name="random_bg">Случайные значения ГК</string>
     <string name="description_source_random_bg">Генерировать случайные данные ГК (только демо-режим)</string>
     <string name="random_bg_short">ГК</string>
+    <string name="bgsource_settings">Параметры источника ГК</string>
+    <string name="bgsource_log_sensor_change_title">Принять запуск датчика</string>
+    <string name="bgsource_log_sensor_change_summary">Автоматически создавать событие \"Установка сенсора\" в Портале терапии при локальном оповещении о запуске датчика от источника ГК</string>
     <string name="direction">направление</string>
     <string name="bg_generation_interval_minutes">Интервал генерации ГК в мин</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Получать данные о ГК от приложения Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Получать уровень ГК из приложения Syai Tag.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Получать данные гликемии от приложения Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Получать данные из патч приложения Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Получать данные от патч-приложения Sino App.</string>
 </resources>

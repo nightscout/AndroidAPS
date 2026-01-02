@@ -38,12 +38,27 @@ class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
     }
 
     private fun createViewsForSettings() {
+        // Clear listeners from existing views before removing
+        for (i in 0 until binding.placeholder.childCount) {
+            val child = binding.placeholder.getChildAt(i) as? LinearLayout
+            child?.findViewById<CheckBox>(R.id.logsettings_visibility)?.setOnClickListener(null)
+        }
         binding.placeholder.removeAllViews()
-        for (element in l.getLogElements()) {
+        for (element in l.logElements()) {
             val logViewHolder = LogViewHolder(element)
             binding.placeholder.addView(logViewHolder.baseView)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.reset.setOnClickListener(null)
+        // Clear all checkbox listeners
+        for (i in 0 until binding.placeholder.childCount) {
+            val child = binding.placeholder.getChildAt(i) as? LinearLayout
+            child?.findViewById<CheckBox>(R.id.logsettings_visibility)?.setOnClickListener(null)
+        }
     }
 
     internal inner class LogViewHolder(element: LogElement) {

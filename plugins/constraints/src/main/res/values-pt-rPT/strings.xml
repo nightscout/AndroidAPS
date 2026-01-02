@@ -9,7 +9,6 @@
     <!-- Safety -->
     <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
-    <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
     <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>

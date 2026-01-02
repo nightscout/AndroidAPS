@@ -1,10 +1,11 @@
 package app.aaps.pump.danaRv2.comm
 
+import app.aaps.pump.danaR.comm.DanaRTestBase
 import app.aaps.pump.danarv2.comm.MsgStatusAPSV2
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class MsgStatusAPSRv2Test : app.aaps.pump.danaR.comm.DanaRTestBase() {
+class MsgStatusAPSRv2Test : DanaRTestBase() {
 
     @Test
     fun runTest() {

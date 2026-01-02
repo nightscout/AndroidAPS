@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
-    <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receber valores de glicemia do aplicativo BYODA.</string>
@@ -15,6 +14,7 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Receber valores de Glicose da app Tomato (dispositivo MiaoMiao)</string>
-    <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

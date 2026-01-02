@@ -47,7 +47,7 @@ class LocationServiceHelper @Inject constructor(
 
         try {
             context.bindService(Intent(context, LocationService::class.java), connection, Context.BIND_AUTO_CREATE)
-        } catch (ignored: RuntimeException) {
+        } catch (_: RuntimeException) {
             // This is probably a broadcast receiver context even though we are calling getApplicationContext().
             // Just call startForegroundService instead since we cannot bind a service to a
             // broadcast receiver context. The service also have to call startForeground in

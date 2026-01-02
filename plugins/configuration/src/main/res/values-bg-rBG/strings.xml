@@ -34,7 +34,6 @@
     <string name="profile">Профил</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
-    <string name="setupwizard_loop_description">Натиснете бутона отдолу за да включите AAPS да прави предложения/промени на базлни промени</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
@@ -47,7 +46,6 @@
     <string name="identification">Идентификация (имейл, Фейсбук или Дискорд и др.)</string>
     <string name="request">Искане</string>
     <string name="apsmode_title">APS режим</string>
-    <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="error_asking_for_permissions">Грешка искане за разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <!--    ConfigBuilder-->

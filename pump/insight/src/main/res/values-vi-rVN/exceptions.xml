@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_failed">Kết nối không thành công</string>
+    <string name="connection_lost">Mất kết nối</string>
+    <string name="pairing_rejected">Ghép nối bị từ chối</string>
+    <string name="socket_creation_failed">Tạo kết nối thất bại</string>
+    <string name="timeout">Hết giờ</string>
+    <string name="maximum_number_of_bolus_type_already_running">Số lượng tối đa của loại bolus này đã đang chạy</string>
+    <string name="no_active_tbr_to_cancel">Không có TBR đang hoạt động để hủy</string>
+    <string name="no_active_tbr_to_change">Không có TBR đang hoạt động để thay đổi</string>
+    <string name="no_such_bolus_to_cancel">Không có liều bolus nào để hủy</string>
+    <string name="pump_already_in_that_state_exception">Pump đã ở trạng thái này</string>
+    <string name="run_mode_not_allowed">Không được phép ở chế độ chạy</string>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Bewerking niet ondersteund door pomp en/of driver.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Niet geïnitialiseerd</string>
+    <string name="pump_status_initialized">Geïnitialiseerd</string>
+    <string name="pump_status_encrypt">Communicatie wordt versleutelen</string>
+    <string name="pump_status_ready">Gereed</string>
+    <string name="pump_status_busy">Bezig</string>
+    <string name="pump_status_suspended">Onderbroken</string>
+    <string name="pump_status_executing_command">Commando uitvoeren</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basaalstanden</string>
+    <string name="history_group_configuration">Instellingen</string>
+    <string name="history_group_notification">Meldingen</string>
+    <string name="history_group_statistic">Statistieken</string>
+    <string name="history_group_unknown">Onbekend</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Bolussen</string>
+    <string name="history_group_prime">Vullen</string>
+    <string name="history_group_alarm">Alarmen</string>
+    <string name="history_group_base">Basis</string>
+    <string name="history_group_other">Anders</string>
+    <string name="history_group_events">Alle gebeurtenissen</string>
+    <string name="history_group_events_no_stat">Gebeurtenissen (geen status)</string>
+    <!-- Time -->
+    <string name="time_today">Vandaag</string>
+    <string name="time_last_hour">Afgelopen uur</string>
+    <string name="time_last_3_hours">Laatste 3 uur</string>
+    <string name="time_last_6_hours">Laatste 6 uur</string>
+    <string name="time_last_12_hours">Laatste 12 uur</string>
+    <string name="time_last_2_days">Afgelopen 2 dagen</string>
+    <string name="time_last_4_days">Afgelopen 4 dagen</string>
+    <string name="time_last_week">Vorige week</string>
+    <string name="time_last_month">Vorige maand</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Scannen</string>
+    <string name="ble_config_scan_selected">Geselecteerd</string>
+    <string name="ble_config_scan_scanning">Scannen</string>
+    <string name="ble_config_scan_finished">Scannen voltooid</string>
+    <string name="ble_config_scan_error">Scanfout: %1$d</string>
+    <string name="ble_config_remove">Verwijderen</string>
+    <!-- Pump History -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagen</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d uren</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">%1$d uur geleden</item>
+        <item quantity="other">%1$d uur geleden</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d dag geleden</item>
+        <item quantity="other">%1$d dagen geleden</item>
+    </plurals>
+</resources>

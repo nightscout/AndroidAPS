@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Error -->
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Potvrda</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_errors">Greške</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Otkaži</string>
+    <string name="omnipod_common_wizard_button_next">Sljedeći</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Izlaz</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_category_other">Ostalo</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_suspended">Suspendiran</string>
+    <!-- Omnipod - Commands -->
+    <!-- Omnipod - Alerts -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">U redu</string>
+    <string name="omnipod_common_cancel">Otkaži</string>
+    <!-- Omnipod - Times -->
+    <plurals name="omnipod_common_days">
+        <item quantity="one">%1$d dan</item>
+        <item quantity="few">%1$d dana</item>
+        <item quantity="other">%1$d dana</item>
+    </plurals>
+</resources>

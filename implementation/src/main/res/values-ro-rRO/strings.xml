@@ -16,4 +16,5 @@
     <string name="day_tir">TIR ziua</string>
     <string name="night_tir">TIR noapte</string>
     <string name="carbs_short" comment="max 6 characters">Carbohidrați</string>
+    <!--    PumpStatusGenerator-->
 </resources>

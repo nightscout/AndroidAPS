@@ -14,14 +14,15 @@ import androidx.lifecycle.Lifecycle
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.databinding.TidepoolFragmentBinding
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
+import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -32,17 +33,18 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var tidepoolUploader: TidepoolUploader
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var authFlowOut: AuthFlowOut
 
     companion object {
 
         const val ID_MENU_LOGIN = 530
-        const val ID_MENU_SEND_NOW = 531
-        const val ID_MENU_REMOVE_ALL = 532
-        const val ID_MENU_FULL_SYNC = 533
+        const val ID_MENU_LOGOUT = 531
+        const val ID_MENU_SEND_NOW = 532
+        const val ID_MENU_FULL_SYNC = 534
     }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -61,8 +63,8 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         menu.add(Menu.FIRST, ID_MENU_LOGIN, 0, rh.gs(app.aaps.core.ui.R.string.login)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_LOGOUT, 0, rh.gs(app.aaps.core.ui.R.string.logout)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.upload_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-        menu.add(Menu.FIRST, ID_MENU_REMOVE_ALL, 0, rh.gs(R.string.remove_all)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         MenuCompat.setGroupDividerEnabled(menu, true)
     }
@@ -70,7 +72,13 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             ID_MENU_LOGIN      -> {
-                tidepoolUploader.doLogin(false)
+                authFlowOut.doTidePoolInitialLogin("menu")
+                true
+            }
+
+            ID_MENU_LOGOUT      -> {
+                authFlowOut.clearAllSavedData()
+                tidepoolUploader.resetInstance()
                 true
             }
 
@@ -79,13 +87,8 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            ID_MENU_REMOVE_ALL -> {
-                rxBus.send(EventTidepoolResetData())
-                true
-            }
-
             ID_MENU_FULL_SYNC  -> {
-                sp.putLong(R.string.key_tidepool_last_end, 0)
+                preferences.put(TidepoolLongNonKey.LastEnd, 0)
                 true
             }
 
@@ -105,7 +108,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     private fun updateGui() {
         tidepoolPlugin.updateLog()
         _binding?.log?.text = tidepoolPlugin.textLog
-        _binding?.status?.text = tidepoolUploader.connectionStatus.name
+        _binding?.status?.text = authFlowOut.connectionStatus.name
         _binding?.log?.text = tidepoolPlugin.textLog
         _binding?.logScrollview?.fullScroll(ScrollView.FOCUS_DOWN)
     }

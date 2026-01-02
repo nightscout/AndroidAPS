@@ -5,19 +5,21 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.extensions.safeGetSerializableExtra
-import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import javax.inject.Inject
 
 class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
+    @Inject lateinit var rh: ResourceHelper
+
+    private var equilMenuProvider: MenuProvider? = null
 
     companion object {
 
@@ -39,7 +41,7 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
         setContentView(R.layout.equil_pair_activity)
 
         // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
+        equilMenuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
@@ -52,7 +54,8 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
 
                     else              -> false
                 }
-        })
+        }
+        equilMenuProvider?.let { addMenuProvider(it) }
 
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.startEquilActivationFragment)
@@ -70,8 +73,7 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
     private fun setStartDestination(@IdRes startDestination: Int) {
         this.startDestination = startDestination
         val navController = getNavController()
-        val navInflater = navController.navInflater
-        val graph = navInflater.inflate(R.navigation.equil_pair_navigation_graph)
+        val graph = navController.navInflater.inflate(R.navigation.equil_pair_navigation_graph)
         graph.setStartDestination(startDestination)
         navController.graph = graph
     }
@@ -82,27 +84,18 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
     }
 
     fun exitActivityAfterConfirmation() {
-        if (getNavController().previousBackStackEntry == null) {
-            finish()
-        } else {
-            AlertDialog.Builder(this, app.aaps.core.ui.R.style.DialogTheme)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(getString(R.string.equil_common_wizard_exit_confirmation_title))
-                .setMessage(getString(R.string.equil_common_wizard_exit_confirmation_text))
-                .setPositiveButton(getString(app.aaps.core.ui.R.string.yes)) { _, _ -> finish() }
-                .setNegativeButton(getString(app.aaps.core.ui.R.string.no), null)
-                .show()
-        }
+        if (getNavController().previousBackStackEntry == null) finish()
+        else OKDialog.showConfirmation(this, rh.gs(R.string.equil_common_wizard_exit_confirmation_text), { finish() }, null)
     }
 
     private fun getNavController(): NavController =
         (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
-    fun getTotalDefinedNumberOfSteps(): Int {
-        return 6
+    override fun onDestroy() {
+        super.onDestroy()
+        equilMenuProvider?.let { removeMenuProvider(it) }
     }
 
-    fun getActualNumberOfSteps(): Int {
-        return 6
-    }
+    fun getTotalDefinedNumberOfSteps(): Int = 6
+    fun getActualNumberOfSteps(): Int = 6
 }

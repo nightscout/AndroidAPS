@@ -141,10 +141,16 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
-
     <!--    Steps count-->
     <string name="triggerStepsCountLabel">Steps Count</string>
     <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
+
+    <!--    SMB mode-->
+    <string name="changeSmbState">Enable/disable SMB</string>
+    <string name="changeSmbTo">Change SMB to %1$s</string>
+    <string name="newSmbMode">New SMB mode:</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 
 </resources>

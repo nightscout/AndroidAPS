@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.tidepool.comm
 
-import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.DatasetReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.UploadReplyMessage
 import okhttp3.RequestBody
@@ -21,16 +20,11 @@ interface TidepoolApiService {
 
     @Headers(
         "User-Agent: AAPS- " + "1.0",
-        "X-Tidepool-Client-Name: info.nightscout.androidaps",
-        "X-Tidepool-Client-Version: 0.1.0"
+        "X-Tidepool-Client-Name: aaps",
+        "X-Tidepool-Client-Version: 0.2.0"
     )
 
-    @POST("/auth/login")
-    fun getLogin(@Header("Authorization") secret: String): Call<AuthReplyMessage>
-
-    @DELETE("/v1/users/{userId}/data")
-    fun deleteAllData(@Header(SESSION_TOKEN_HEADER) token: String, @Path("userId") id: String): Call<DatasetReplyMessage>
-
+    @Suppress("unused")
     @DELETE("/v1/datasets/{dataSetId}")
     fun deleteDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
 
@@ -42,6 +36,7 @@ interface TidepoolApiService {
         @Query("size") size: Int
     ): Call<List<DatasetReplyMessage>>
 
+    @Suppress("unused")
     @GET("/v1/datasets/{dataSetId}")
     fun getDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
 
@@ -51,6 +46,7 @@ interface TidepoolApiService {
     @POST("/v1/datasets/{sessionId}/data")
     fun doUpload(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<UploadReplyMessage>
 
+    @Suppress("unused")
     @PUT("/v1/datasets/{sessionId}")
     fun closeDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
 

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
-    <string name="minago">%1$d хв тому</string>
     <string name="minago_long">%1$d хвилин тому</string>
-    <string name="hoursago">%1$.1f год. тому</string>
     <string name="days_ago">%1$.1f днів тому</string>
     <string name="days_ago_round">%1$.0f днів тому</string>
     <string name="in_days">через %1$.0f днів</string>

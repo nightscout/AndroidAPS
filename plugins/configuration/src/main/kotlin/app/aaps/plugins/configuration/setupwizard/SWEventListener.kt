@@ -1,42 +1,38 @@
 package app.aaps.plugins.configuration.setupwizard
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import androidx.appcompat.app.AppCompatActivity
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventStatus
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
-import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class SWEventListener(
-    injector: HasAndroidInjector,
-    clazz: Class<out EventStatus>
-) : SWItem(injector, Type.LISTENER) {
+class SWEventListener @Inject constructor(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    rxBus: RxBus,
+    preferences: Preferences,
+    passwordCheck: PasswordCheck
+) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
-    private val disposable = CompositeDisposable()
     private var textLabel = 0
     private var status = ""
-    private var textView: TextView? = null
+    private var textId: Int = 0
     private var visibilityValidator: (() -> Boolean)? = null
 
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var context: Context
+    lateinit var clazz: Class<out EventStatus>
 
-    // TODO: Adrian how to clear disposable in this case?
-    init {
-        disposable += rxBus
-            .toObservable(clazz)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event: Any ->
-                status = (event as EventStatus).getStatus(context)
-                @SuppressLint("SetTextI18n")
-                textView?.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
-            }
+    fun with(clazz: Class<out EventStatus>, swDefinition: SWDefinition): SWEventListener {
+        this.clazz = clazz
+        swDefinition.addListener(this)
+        return this
     }
 
     override fun label(label: Int): SWEventListener {
@@ -57,13 +53,25 @@ class SWEventListener(
     @SuppressLint("SetTextI18n")
     override fun generateDialog(layout: LinearLayout) {
         val context = layout.context
-        textView = TextView(context)
-        textView?.id = View.generateViewId()
-        textView?.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
+        val textView = TextView(context)
+        textView.id = View.generateViewId()
+        textId = textView.id
+        textView.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
         layout.addView(textView)
     }
 
-    override fun processVisibility() {
+    override fun processVisibility(activity: AppCompatActivity) {
+        val textView = activity.findViewById<TextView>(textId)
         if (visibilityValidator?.invoke() == false) textView?.visibility = View.GONE else textView?.visibility = View.VISIBLE
+    }
+
+    fun updateFromEvent(event: EventStatus, activity: AppCompatActivity) {
+        if (event.javaClass.name == clazz.name) {
+            activity.findViewById<TextView>(textId)?.let { textView ->
+                status = event.getStatus(textView.context!!)
+                @SuppressLint("SetTextI18n")
+                textView.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
+            }
+        }
     }
 }

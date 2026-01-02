@@ -24,10 +24,19 @@ class SyncNsTherapyEventTransaction(private val therapyEvents: List<TherapyEvent
                     database.therapyEventDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
-                if (current.duration != therapyEvent.duration && nsClientMode) {
+                // Allow update duration to shorter only
+                if (current.duration != therapyEvent.duration && nsClientMode && therapyEvent.duration < current.duration) {
                     current.duration = therapyEvent.duration
                     database.therapyEventDao.updateExistingEntry(current)
                     result.updatedDuration.add(current)
+                }
+                // allow SiteRotation Update
+                if (current.location != therapyEvent.location || current.arrow != therapyEvent.arrow || current.note != therapyEvent.note) {
+                    current.location = therapyEvent.location
+                    current.arrow = therapyEvent.arrow
+                    current.note = therapyEvent.note
+                    database.therapyEventDao.updateExistingEntry(current)
+                    result.updatedSite.add(current)
                 }
                 continue
             }
@@ -52,6 +61,7 @@ class SyncNsTherapyEventTransaction(private val therapyEvents: List<TherapyEvent
 
         val updatedNsId = mutableListOf<TherapyEvent>()
         val updatedDuration = mutableListOf<TherapyEvent>()
+        val updatedSite = mutableListOf<TherapyEvent>()
         val inserted = mutableListOf<TherapyEvent>()
         val invalidated = mutableListOf<TherapyEvent>()
     }

@@ -1,18 +1,25 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
+import javax.inject.Inject
 
-open class DanaRSPacketBasalSetTemporaryBasal(
-    injector: HasAndroidInjector,
-    private var temporaryBasalRatio: Int = 0,
+open class DanaRSPacketBasalSetTemporaryBasal @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : DanaRSPacket() {
+
+    private var temporaryBasalRatio: Int = 0
     private var temporaryBasalDuration: Int = 0
-) : DanaRSPacket(injector) {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL
         aapsLogger.debug(LTag.PUMPCOMM, "Setting temporary basal of $temporaryBasalRatio% for $temporaryBasalDuration hours")
+    }
+
+    fun with(temporaryBasalRatio: Int = 0, temporaryBasalDuration: Int = 0) = this.also {
+        this.temporaryBasalRatio = temporaryBasalRatio
+        this.temporaryBasalDuration = temporaryBasalDuration
     }
 
     override fun getRequestParams(): ByteArray {

@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    android:text="@string/equil_change"-->
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_hint1"
         android:layout_width="wrap_content"
@@ -14,7 +12,8 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_hint2"
@@ -23,7 +22,6 @@
         android:layout_marginTop="24dp"
         android:padding="12dp"
         android:text="@string/equil_unpair"
-        android:textColor="@color/red"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +29,6 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/btns_console"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,29 +40,15 @@
         app:contentPadding="2dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_finish"
+            style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="64dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/equil_finish" />
 
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_next"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:text="@string/equil_finish"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_delete"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:text="@string/delete"/>
-        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

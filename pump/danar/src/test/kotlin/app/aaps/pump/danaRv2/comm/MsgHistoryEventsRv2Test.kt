@@ -1,10 +1,11 @@
 package app.aaps.pump.danaRv2.comm
 
+import app.aaps.pump.danaR.comm.DanaRTestBase
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class MsgHistoryEventsRv2Test : app.aaps.pump.danaR.comm.DanaRTestBase() {
+class MsgHistoryEventsRv2Test : DanaRTestBase() {
 
     @Test fun runTest() {
         val packet = MsgHistoryEventsV2(injector, 0)

@@ -23,7 +23,6 @@
     <string name="limitingextendedbolus">Bolus étendu limité à %1$.1f U à cause de %2$s</string>
     <string name="limitingcarbs">Limiter les glucides %1$d g à cause de %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
-    <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
     <string name="closed_loop_disabled_with_eb">Boucle fermée désactivée à cause du bolus étendu</string>
     <string name="smbalwaysdisabled">SMB toujours et post-ingestion de glucides désactivé car la source de glycémies actuelle ne supporte pas de filtrage avancé</string>

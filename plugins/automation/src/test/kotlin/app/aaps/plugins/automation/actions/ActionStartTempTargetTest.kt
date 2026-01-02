@@ -12,8 +12,11 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionStartTempTargetTest : ActionsTestBase() {
@@ -22,7 +25,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(rh.gs(R.string.starttemptarget)).thenReturn("Start temp target")
+        whenever(rh.gs(R.string.starttemptarget)).thenReturn("Start temp target")
 
         sut = ActionStartTempTarget(injector)
     }
@@ -66,11 +69,11 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         val updated = mutableListOf<TT>().apply {
         }
 
-        `when`(
-            persistenceLayer.insertAndCancelCurrentTemporaryTarget(argThatKotlin {
-                it.copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
+        whenever(
+            persistenceLayer.insertAndCancelCurrentTemporaryTarget(argThat {
+                copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
                     .contentEqualsTo(expectedTarget)
-            }, anyObject(), anyObject(), anyObject(), anyObject())
+            }, anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
         ).thenReturn(Single.just(PersistenceLayer.TransactionResult<TT>().apply {
             inserted.addAll(inserted)
             updated.addAll(updated)
@@ -81,7 +84,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
                 assertThat(result.success).isTrue()
             }
         })
-        Mockito.verify(persistenceLayer, Mockito.times(1)).insertAndCancelCurrentTemporaryTarget(anyObject(), anyObject(), anyObject(), anyObject(), anyObject())
+        verify(persistenceLayer, times(1)).insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 
     @Test fun hasDialogTest() {

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d min în urmă</string>
     <string name="minago_long">%1$d minute în urmă</string>
-    <string name="hoursago">%1$.1f ore în urmă</string>
     <string name="days_ago">%1$.1f zile în urmă</string>
     <string name="days_ago_round">%1$.0f zile în urmă</string>
     <string name="in_days">în %1$.0f zile</string>

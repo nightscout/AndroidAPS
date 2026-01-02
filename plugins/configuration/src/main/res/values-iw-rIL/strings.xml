@@ -34,7 +34,6 @@
     <string name="profile">פרופיל</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="exitwizard">דלג על אשף ההתקנה</string>
-    <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע\\לבצע שינויים במינון הבזאלי</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
     <string name="request">בקשה</string>
     <string name="apsmode_title">מצב APS</string>
-    <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <!--    ConfigBuilder-->

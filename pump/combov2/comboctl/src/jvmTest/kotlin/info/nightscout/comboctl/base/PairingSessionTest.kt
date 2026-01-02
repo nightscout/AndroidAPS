@@ -1,21 +1,27 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.comboctl.base.testUtils.TestBluetoothDevice
 import info.nightscout.comboctl.base.testUtils.TestPumpStateStore
+import info.nightscout.comboctl.base.testUtils.newConditionVariable
 import info.nightscout.comboctl.base.testUtils.runBlockingWithWatchdog
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-class PairingSessionTest {
+class PairingSessionTest : TestBase() {
     enum class PacketDirection {
         SEND,
         RECEIVE
     }
 
     data class PairingTestSequenceEntry(val direction: PacketDirection, val packet: TransportLayer.Packet) {
+
         override fun toString(): String {
             return if (packet.command == TransportLayer.Command.DATA) {
                 try {
@@ -35,8 +41,10 @@ class PairingSessionTest {
     }
 
     private class PairingTestComboIO(val pairingTestSequence: List<PairingTestSequenceEntry>) : ComboIO {
+
         private var curSequenceIndex = 0
-        private val barrier = Channel<Unit>(capacity = Channel.CONFLATED)
+        private val mutex = Mutex()
+        private val conditionVariable = mutex.newConditionVariable()
 
         var expectedEndOfSequenceReached: Boolean = false
             private set
@@ -66,8 +74,14 @@ class PairingSessionTest {
             while (true) {
                 // Suspend indefinitely if we reached the expected
                 // end of sequence. See send() below for details.
-                if (expectedEndOfSequenceReached)
-                    barrier.receive()
+                if (expectedEndOfSequenceReached) {
+                    mutex.unlock()
+                    try {
+                        awaitCancellation()
+                    } finally {
+                        mutex.lock()
+                    }
+                }
 
                 if (curSequenceIndex >= pairingTestSequence.size) {
                     testErrorOccurred = true
@@ -78,7 +92,7 @@ class PairingSessionTest {
                 if (sequenceEntry.direction != expectedPacketDirection) {
                     // Wait until we get the signal from a send() or receive()
                     // call that we can resume here.
-                    barrier.receive()
+                    conditionVariable.await()
                     continue
                 }
 
@@ -88,7 +102,7 @@ class PairingSessionTest {
             }
         }
 
-        override suspend fun send(dataToSend: List<Byte>) {
+        override suspend fun send(dataToSend: List<Byte>) = mutex.withLock {
             try {
                 val sequenceEntry = getNextSequenceEntry(PacketDirection.SEND)
                 println("Next sequence entry: $sequenceEntry")
@@ -117,7 +131,7 @@ class PairingSessionTest {
                 }
 
                 // Signal to the other, suspended coroutine that it can resume now.
-                barrier.trySend(Unit)
+                conditionVariable.signal()
             } catch (e: CancellationException) {
                 throw e
             } catch (t: Throwable) {
@@ -126,14 +140,14 @@ class PairingSessionTest {
             }
         }
 
-        override suspend fun receive(): List<Byte> {
+        override suspend fun receive(): List<Byte> = mutex.withLock {
             try {
                 val sequenceEntry = getNextSequenceEntry(PacketDirection.RECEIVE)
                 println("Next sequence entry: $sequenceEntry")
 
                 // Signal to the other, suspended coroutine that it can resume now.
-                barrier.trySend(Unit)
-                return sequenceEntry.packet.toByteList()
+                conditionVariable.signal()
+                return@withLock sequenceEntry.packet.toByteList()
             } catch (e: CancellationException) {
                 throw e
             } catch (t: Throwable) {
@@ -217,7 +231,8 @@ class PairingSessionTest {
                     nonce = Nonce(byteArrayListOfInts(0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
                     payload = byteArrayListOfInts(
                         0x54, 0x9E, 0xF7, 0x7D, 0x8D, 0x27, 0x48, 0x0C, 0x1D, 0x11, 0x43, 0xB8, 0xF7, 0x08, 0x92, 0x7B,
-                        0xF0, 0xA3, 0x75, 0xF3, 0xB4, 0x5F, 0xE2, 0xF3, 0x46, 0x63, 0xCD, 0xDD, 0xC4, 0x96, 0x37, 0xAC),
+                        0xF0, 0xA3, 0x75, 0xF3, 0xB4, 0x5F, 0xE2, 0xF3, 0x46, 0x63, 0xCD, 0xDD, 0xC4, 0x96, 0x37, 0xAC
+                    ),
                     machineAuthenticationCode = MachineAuthCode(byteArrayListOfInts(0x25, 0xA0, 0x26, 0x47, 0x29, 0x37, 0xFF, 0x66))
                 )
             ),
@@ -231,7 +246,8 @@ class PairingSessionTest {
                     address = 0x10.toByte(),
                     nonce = Nonce(byteArrayListOfInts(0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
                     payload = byteArrayListOfInts(
-                        0x08, 0x29, 0x00, 0x00, 0x53, 0x48, 0x49, 0x45, 0x4C, 0x44, 0x20, 0x54, 0x61, 0x62, 0x6C, 0x65, 0x74),
+                        0x08, 0x29, 0x00, 0x00, 0x53, 0x48, 0x49, 0x45, 0x4C, 0x44, 0x20, 0x54, 0x61, 0x62, 0x6C, 0x65, 0x74
+                    ),
                     machineAuthenticationCode = MachineAuthCode(byteArrayListOfInts(0x99, 0xED, 0x58, 0x29, 0x54, 0x6A, 0xBB, 0x35))
                 )
             ),
@@ -245,7 +261,8 @@ class PairingSessionTest {
                     address = 0x01.toByte(),
                     nonce = Nonce(byteArrayListOfInts(0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
                     payload = byteArrayListOfInts(
-                        0x59, 0x99, 0xD4, 0x01, 0x50, 0x55, 0x4D, 0x50, 0x5F, 0x31, 0x30, 0x32, 0x33, 0x30, 0x39, 0x34, 0x37),
+                        0x59, 0x99, 0xD4, 0x01, 0x50, 0x55, 0x4D, 0x50, 0x5F, 0x31, 0x30, 0x32, 0x33, 0x30, 0x39, 0x34, 0x37
+                    ),
                     machineAuthenticationCode = MachineAuthCode(byteArrayListOfInts(0x6E, 0xF4, 0x4D, 0xFE, 0x35, 0x6E, 0xFE, 0xB4))
                 )
             ),

@@ -1,20 +1,11 @@
 package app.aaps.pump.danars.comm
 
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.DateUtil
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import org.joda.time.IllegalInstantException
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
 
-open class DanaRSPacket(protected var injector: HasAndroidInjector) {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var uiInteraction: UiInteraction
+open class DanaRSPacket() {
 
     var isReceived = false
         private set
@@ -83,7 +74,7 @@ open class DanaRSPacket(protected var injector: HasAndroidInjector) {
                 intFromBuff(buff, offset + 4, 1),
                 intFromBuff(buff, offset + 5, 1)
             ).millis
-        } catch (e: IllegalInstantException) {
+        } catch (_: IllegalInstantException) {
             // expect
             // org.joda.time.IllegalInstantException: Illegal instant due to time zone offset transition (daylight savings time 'gap')
             // add 1 hour
@@ -165,10 +156,5 @@ open class DanaRSPacket(protected var injector: HasAndroidInjector) {
             }
             return data
         }
-    }
-
-    init {
-        @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
     }
 }

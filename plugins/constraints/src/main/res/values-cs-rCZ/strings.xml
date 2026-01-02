@@ -23,7 +23,6 @@
     <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U z důvodu %2$s</string>
     <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
-    <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
     <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
     <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
     <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>

@@ -26,7 +26,6 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogExtendedbolusBinding
 import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -42,7 +41,6 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private var _binding: DialogExtendedbolusBinding? = null

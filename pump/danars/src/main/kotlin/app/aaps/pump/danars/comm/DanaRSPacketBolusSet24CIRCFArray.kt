@@ -1,31 +1,32 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.pump.dana.DanaPump
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 import kotlin.math.round
 
-class DanaRSPacketBolusSet24CIRCFArray(
-    injector: HasAndroidInjector,
-    private val profile: Profile?
-) : DanaRSPacket(injector) {
+class DanaRSPacketBolusSet24CIRCFArray @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val danaPump: DanaPump,
+    private val profileUtil: ProfileUtil
+) : DanaRSPacket() {
 
-    @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var profileUtil: ProfileUtil
+    private lateinit var profile: Profile
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_24_CIR_CF_ARRAY
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 
+    fun with(profile: Profile) = this.also { this.profile = profile }
+
     override fun getRequestParams(): ByteArray {
         val request = ByteArray(96)
-        profile ?: return request // profile is null only in hash table
         val cfStart = 24 * 2
         for (i in 0..23) {
             var isf = profile.getIsfMgdlTimeFromMidnight(i * 3600)

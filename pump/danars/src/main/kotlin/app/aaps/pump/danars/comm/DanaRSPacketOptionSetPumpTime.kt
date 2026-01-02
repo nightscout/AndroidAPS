@@ -1,21 +1,26 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class DanaRSPacketOptionSetPumpTime(
-    injector: HasAndroidInjector,
+class DanaRSPacketOptionSetPumpTime @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    dateUtil: DateUtil
+) : DanaRSPacket() {
+
     private var time: Long = 0
-) : DanaRSPacket(injector) {
-
     var error = 0
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME
         aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + dateUtil.dateAndTimeAndSecondsString(time))
     }
+
+    fun with(time: Long) = this.also { this.time = time }
 
     override fun getRequestParams(): ByteArray {
         val date = DateTime(time)

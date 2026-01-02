@@ -23,7 +23,6 @@
     <string name="limitingextendedbolus">Begrenser forlenget bolus til %1$.1f E på grunn av %2$s</string>
     <string name="limitingcarbs">Begrenser karbohydrater til %1$d g på grunn av %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke midl. basaler</string>
-    <string name="closedmodedisabledinpreferences">Lukket Loop er deaktivert i innstillinger</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
     <string name="smbalwaysdisabled">SMB alltid på og SMB etter karbohydrater er deaktivert fordi BS-kilden ikke støtter avansert filtrering</string>

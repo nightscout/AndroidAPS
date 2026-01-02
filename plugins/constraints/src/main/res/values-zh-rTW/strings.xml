@@ -23,13 +23,12 @@
     <string name="limitingextendedbolus">由於 %2$s，將延長注射限製為 %1$.1f U</string>
     <string name="limitingcarbs">由於 %2$s，將碳水化合物限制為 %1$d g</string>
     <string name="pumpisnottempbasalcapable">幫浦無法使用臨時基礎速率</string>
-    <string name="closedmodedisabledinpreferences">偏好設定中已停用閉環模式</string>
     <string name="closed_loop_disabled_on_dev_branch">運行開發版本。閉環已停用。</string>
     <string name="closed_loop_disabled_with_eb">由於運行延長注射已停用閉環</string>
     <string name="smbalwaysdisabled">由於啟用的血糖來源不支援高級過濾，SMB將在碳水化合物結束後停用</string>
     <string name="smbnotallowedinopenloopmode">在開環模式中不允許SMB</string>
     <string name="maxvalueinpreferences">偏好設定中的最大值</string>
-    <string name="hardlimit">硬限制</string>
+    <string name="hardlimit">硬性限制</string>
     <string name="treatmentssafety_title">治療安全</string>
     <!-- Objectives -->
     <string name="completed_well_done">完成，做得好！</string>

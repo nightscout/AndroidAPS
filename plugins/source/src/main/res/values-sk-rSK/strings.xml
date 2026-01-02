@@ -5,7 +5,7 @@
     <string name="ns_client_bg_short">NS GL</string>
     <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
     <string name="source_xdrip">xDrip+ glykémia</string>
-    <string name="description_source_xdrip">Prijímať hodnoty glykémií z xDrip+.</string>
+    <string name="description_source_xdrip">Prijímať hodnoty glykémie z xDrip+ a kompatibilných aplikácí (Juggluco atď.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">Automaticky vytvoriť udalosť „Výmena senzora“ v časti Starostlivosť pri spustení senzora zo zdroja glykémie pomocou lokálneho odosielania dát</string>
     <string name="direction">smer</string>
     <string name="bg_generation_interval_minutes">Interval generovania glykémie v minútach</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Prijímanie glykémií z aplikácie Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Prijímanie glykémií z aplikácie Syai Tag.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Prijímať glykémie z aplikáce Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplikácia SI</string>
+    <string name="description_source_patched_si_app">Prijímať glykémie z upravenej aplikácie Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplikácia Sino</string>
+    <string name="description_source_patched_sino_app">Prijímať glykémie z upravenej aplikácie Sino.</string>
 </resources>

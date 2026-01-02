@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Lavt insulin niveau</string>
     <string name="needbatteryreplace">Batteriudskiftning er påkrævet</string>
     <string name="needinsullinreplace">Insulin udskiftning er påkrævet</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Log reservoir skift</string>
     <string name="diaconn_g8_loginsulinchange_summary">Tilføj \"Insulin Skift\" begivenhed til careportal, når de registreres i historik</string>
     <string name="diaconn_g8_logcanulachange_title">Log indstik skift</string>

@@ -19,7 +19,7 @@
     <string name="sensitivity_raises_target_summary">Hvis det oppdages økt sensitivitet, vil målverdi for blodsukkeret økes</string>
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="openapsma_no_glucose_data">Ingen BS data tilgjengelig</string>
-    <string name="openaps_no_as_data">Ingen data tilgjengelig for autosens</string>
+    <string name="openaps_no_as_data">Ingen data tilgjengelig for Autosens</string>
     <string name="dynisf_shortname">DISF</string>
     <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Utfører</string>
@@ -48,11 +48,11 @@
     <string name="openapsma_max_basal_summary">Denne verdien kalles max basal i OpenAPS</string>
     <string name="openapsma_max_iob_title">Maksimum basal IOB som OpenAPS kan levere [E]</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Maks IOB av OpenAPS\nAAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien.</string>
-    <string name="openapsama_autosens_adjust_targets_summary">Standard verdi: sann\nGir autosens tillatelse til å justere BS-mål, i tillegg til ISF og basaler.</string>
-    <string name="openapsama_autosens_adjust_targets">Autosens justerer også BS målverdier</string>
+    <string name="openapsama_autosens_adjust_targets_summary">Standard verdi: sann\nGir Autosens tillatelse til å justere BS-mål, i tillegg til ISF og basaler.</string>
+    <string name="openapsama_autosens_adjust_targets">Autosens justerer BS-målverdier også</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standardverdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en innstilling for standard karboabsorpsjonsvirkning per 5 minutter. Standard forventet er 3mg/dl/5min. Dette påvirker hvor raskt COB avtar, og hvor mye karboabsorpsjon antas ved beregning av fremtidig forventet BS, når BS faller mer enn forventet, eller når det ikke stiger så mye som forventet.</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine basaler til maks 3x av din høyeste basalverdi. Du vil trolig ikke behøve å endre denne verdien, men les og forstå hva som menes med \"3x max daglig; 4x gjeldende\" som sikkerhetsinnstilling.</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine temp basal til max 4 ganger din nåværende basal dose, uansett hva som er maks basal i pumpen. Dette er for å unngå at man setter farlige høye maks basaldoser uten at man har forstått algoritmene. Når du taket i denne begrensningen bør du i stedet fokusere på å endre andre innstillinger.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3. Dette er en viktig sikkerhetsbegrensning i OpenAPS. Det den gjør er å begrense de midlertidige basaldosene dine til 3 ganger din profils høyeste basalrate. Du vil sannsynligvis ikke trenge å endre dette, men det er viktig å være klar over at det er dette som menes med \"3x maks daglig; 4x nåværende\" når det snakkes om sikkerhetsgrenser.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4. Dette er den andre halvdelen av de viktige sikkerhetsbegrensningene i OpenAPS, “3x maks daglig; 4x nåværende”. Dette betyr at din midlertidige basaldose, uavhengig av maks basal som er satt på pumpen din, ikke kan være høyere enn dette tallet ganger det nåværende nivået på din profils basaldose. Dette er for å hindre at brukere havner i farlige situasjoner ved å sette altfor høye maks basaler før de forstår hvordan algoritmen fungerer. Igjen, standardverdien er 4x; de fleste trenger aldri å endre dette, og vil heller måtte justere andre innstillinger hvis de føler at de “stanger mot” denne sikkerhetsgrensen.</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Standard verdi: 2\nBolus-slumre er aktivt etter at du har gitt en måltidsbolus slik at loop ikke skal forsøke å sette lav-temp når du nettopp har spist. I dette eksempelet brukes standardverdi på 2, så med en DIA på 3 timer vil bolus-slumre begrensningen gradvis forsvinne etter 1.5 timer (3DIA / 2).</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Advarsel!\nNormalt vil du ikke trenge å endre verdiene under. Vennligst TRYKK HER og LES teksten for å være sikker på at du FORSTÅR konsekvensene før du gjør endringer.</string>
     <string name="always_use_short_avg">Bruk alltid kort gjennomsnittlig delta i stedet for enkel delta</string>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <!-- PumpCommon - Pump Status -->
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bázis</string>
+    <string name="history_group_statistic">Statisztikák</string>
+    <string name="history_group_glucose">Glükóz</string>
+    <string name="history_group_other">Egyéb</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Keresés</string>
+    <string name="ble_config_scan_stop">Leállít</string>
+    <string name="ble_config_scan_selected">Kiválasztott</string>
+    <string name="ble_config_scan_scanning">Keresés</string>
+    <string name="ble_config_scan_finished">Keresés befejezve</string>
+    <string name="ble_config_scan_error">Hiba kereséskor: %1$d</string>
+    <string name="ble_config_remove">Eltávolít</string>
+    <!-- Pump History -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d nap</item>
+        <item quantity="other">%1$d nap</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d óra</item>
+        <item quantity="other">%1$d óra</item>
+    </plurals>
+</resources>

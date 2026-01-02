@@ -9,7 +9,6 @@
     <string name="pump_status_timeout_comm">Time-out op de communicatie</string>
     <string name="pump_status_pump_unreachable">Pomp niet bereikbaar</string>
     <string name="pump_status_invalid_config">Ongeldige configuratie</string>
-    <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Scannen</string>
     <string name="riley_link_ble_config_scan_stop">Stop</string>

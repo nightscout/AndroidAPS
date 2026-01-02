@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="2dp"
+    android:gravity="center_vertical">
+
+    <View
+        android:id="@+id/calc_row_indicator"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/indicator_dot" />
+
+    <TextView
+        android:id="@+id/calc_row_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Label"
+        android:textSize="12sp"
+        android:textColor="#E0E0E0"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/calc_row_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+0.0 U"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF" />
+</LinearLayout>

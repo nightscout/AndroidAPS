@@ -16,4 +16,5 @@
     <string name="day_tir">일 TIR</string>
     <string name="night_tir">밤 TIR</string>
     <string name="carbs_short" comment="max 6 characters">탄수화물</string>
+    <!--    PumpStatusGenerator-->
 </resources>

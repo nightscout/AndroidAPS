@@ -162,6 +162,6 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
 
     private fun createPendingIntent(alarmCode: AlarmCode, flag: Int): PendingIntent? {
         val intent = Intent(mContext, OsAlarmReceiver::class.java).setData(getUri(alarmCode))
-        return PendingIntent.getBroadcast(mContext, 1, intent, flag)
+        return PendingIntent.getBroadcast(mContext, 1, intent, PendingIntent.FLAG_IMMUTABLE or flag)
     }
 }

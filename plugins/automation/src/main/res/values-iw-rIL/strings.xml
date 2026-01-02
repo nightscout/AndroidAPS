@@ -121,4 +121,5 @@
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה בוטלה</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

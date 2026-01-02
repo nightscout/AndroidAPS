@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 class IntentWearToMobile(context: Context, command: String) : Intent(context, DataLayerListenerServiceWear::class.java) {
     init {
         action = DataLayerListenerServiceWear.INTENT_WEAR_TO_MOBILE
-        addFlags(FLAG_ACTIVITY_NEW_TASK)
         putExtras(Bundle().also { bundle ->
             bundle.putString(DataLayerListenerServiceWear.KEY_ACTION_DATA, command)
         })

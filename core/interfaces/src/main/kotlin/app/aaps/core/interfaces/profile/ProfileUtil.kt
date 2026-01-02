@@ -6,7 +6,7 @@ import app.aaps.core.data.pump.defs.PumpType
 interface ProfileUtil {
 
     /**
-     * Units selected in [app.aaps.core.interfaces.sharedPreferences.SP]
+     * Units selected in sharedPreferences
      *
      * @return GlucoseUnit for UI
      */

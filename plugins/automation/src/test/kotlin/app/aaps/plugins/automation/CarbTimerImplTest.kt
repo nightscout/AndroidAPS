@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.services.LocationServiceHelper
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.ui.TimerUtil
@@ -24,7 +24,9 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 class CarbTimerImplTest : TestBase() {
 
@@ -53,12 +55,12 @@ class CarbTimerImplTest : TestBase() {
     private lateinit var automationPlugin: AutomationPlugin
 
     @BeforeEach fun init() {
-        Mockito.`when`(rh.gs(anyInt())).thenReturn("")
-        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(rh.gs(anyInt())).thenReturn("")
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         timerUtil = TimerUtil(context)
         automationPlugin = AutomationPlugin(
-            injector, rh, context, preferences, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
+            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
         )
     }
 
@@ -70,6 +72,6 @@ class CarbTimerImplTest : TestBase() {
         assertThat(automationPlugin.size()).isEqualTo(0)
 
         automationPlugin.scheduleTimeToEatReminder(1)
-        Mockito.verify(context, Mockito.times(1)).startActivity(any())
+        verify(context, times(1)).startActivity(any())
     }
 }

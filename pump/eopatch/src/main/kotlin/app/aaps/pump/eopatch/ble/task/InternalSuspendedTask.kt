@@ -19,7 +19,6 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -78,7 +77,7 @@ class InternalSuspendedTask @Inject constructor(
 
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
-            commandQueue.cancelTempBasal(true, object : Callback() {
+            commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
                 override fun run() {
                     basalCheckSubject.onNext(true)
                 }
@@ -99,7 +98,7 @@ class InternalSuspendedTask @Inject constructor(
     private fun getInternalSuspendTime(): Single<Long> {
         return INTERNAL_SUSPEND_TIME_GET.get()
             .doOnSuccess(Consumer { response: PatchInternalSuspendTimeResponse -> this.checkResponse(response) })
-            .map<Long>(Function { obj: PatchInternalSuspendTimeResponse -> obj.totalSeconds })
+            .map(Function { obj: PatchInternalSuspendTimeResponse -> obj.totalSeconds })
     }
 
     @Synchronized fun enqueue(isNowBolusActive: Boolean, isExtBolusActive: Boolean, isTempBasalActive: Boolean) {

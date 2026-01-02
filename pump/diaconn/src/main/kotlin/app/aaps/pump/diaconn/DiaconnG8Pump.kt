@@ -4,8 +4,8 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import javax.inject.Inject
@@ -177,8 +177,7 @@ class DiaconnG8Pump @Inject constructor(
     var resultErrorCode: Int = 0 // last start bolus erroCode
 
     // Bolus settings
-    var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
-    var bolusAmountToBeDelivered = 0.0 // amount to be delivered
+    var bolusingDetailedBolusInfo: DetailedBolusInfo? = null // actually delivered treatment
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus finished
     var bolusStopForced = false // bolus forced to stop by user
@@ -216,7 +215,7 @@ class DiaconnG8Pump @Inject constructor(
 
     // 1. pump setting info
     var systemRemainInsulin = 0.0 // 인슐린 잔량
-    var systemRemainBattery = 0 // 배터리 잔량(0~100%)
+    var systemRemainBattery: Int? = null // 배터리 잔량(0~100%)
     var systemBasePattern = 0 // 기저주입 패턴(0=없음, 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
     var systemTbStatus = 0 // 임시기저 상태(1=임시기저 중, 2=임시기저 해제)
     var systemInjectionMealStatus = 0 // 식사주입 상태(1=주입중, 2=주입상태아님)

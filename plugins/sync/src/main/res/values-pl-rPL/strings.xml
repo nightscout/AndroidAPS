@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Używaj danych komórkowych</string>
     <string name="ns_wifi">Używaj Wi-Fi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -21,22 +21,18 @@
     <string name="unsupported_ns_version">Niewspierana wersja Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Usterka NSClient. Spróbuj zrestartować NS i NSClient.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT nie ma uprawnień do zapisu. Błędny API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Restart</string>
-    <string name="ns_client_title">NSClientV1</string>
-    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">Wprowadź swój adres URL Nightscout (np.: https://twojastrona.twojaplatforma.domena.pl)</string>
     <string name="ns_client_secret_title">Nightscout API secret</string>
     <string name="ns_client_secret_dialog_message">Wprowadź API secret swojego Nightscouta (minimum 12 znaków zapisanych w zmiennych środowiskowych Nightscout lub w ustawieniach platformy która dostarcza Ci Nightscout)</string>
     <string name="nsclient_token_title">Token dostępu do Nightscout</string>
-    <string name="nsclient_token_dialog_message">Wprowadź token dostępu do Nightscouta, wgenerowany (z rolą admin) na Twojej stronie Nightscout -> Menu hamburger ≡ -> Narzędzia administratora -> Obiekty (minimum 17 znaków, to NIE JEST nie twój API secret do Nightscouta!)</string>
+    <string name="nsclient_token_dialog_message">Wprowadź token dostępu do Nightscouta, wgenerowany (z rolą admin) na Twojej stronie Nightscout -&gt; Menu hamburger ≡ -&gt; Narzędzia administratora -&gt; Obiekty (minimum 17 znaków, to NIE JEST nie twój API secret do Nightscouta!)</string>
     <string name="deliver_now">Dostarcz teraz</string>
     <string name="queue">Kolejka:</string>
     <string name="status">Status:</string>
@@ -49,19 +45,12 @@
     <string name="ns_receive_profile_store">Odbieraj zapisane profile</string>
     <string name="ns_receive_profile_store_summary">Synchronizuj profile z edytorem profilów NS</string>
     <string name="ns_receive_temp_target">Odbieraj cele tymczasowe</string>
-    <string name="ns_receive_temp_target_summary">Akceptuj cele tymczasowe wprowadzone przez NS lub NSClient</string>
     <string name="ns_receive_profile_switch">Odbieraj zmiany profilu</string>
-    <string name="ns_receive_profile_switch_summary">Akceptuj zmiany profilu wprowadzone przez NS lub NSClient</string>
-    <string name="ns_receive_offline_event">Odbieraj zdarzenia o rozłączeniu APS</string>
-    <string name="ns_receive_offline_event_summary">Akceptuj zdarzenia o rozłączeniu APS wprowadzone przez NS lub NSClient</string>
     <string name="ns_receive_tbr_eb">Otrzymuj TBR i EB</string>
     <string name="ns_receive_tbr_eb_summary">Akceptuj TBR (bazy tymczasowe) i EB (bolusy przedłużone) wprowadzone przez inną instancję</string>
     <string name="ns_receive_insulin">Odbieraj wpisy o insulinie</string>
-    <string name="ns_receive_insulin_summary">Akceptuj wpisy o insulinie wprowadzone przez NS lub NSClient (insulina nie zostanie podana, jedynie obliczona do IOB)</string>
     <string name="ns_receive_carbs">Odbieraj wpisy o węglowodanach</string>
-    <string name="ns_receive_carbs_summary">Akceptuj węglowodany wprowadzone przez NS lub NSClient</string>
     <string name="ns_receive_therapy_events">Odbieraj zdarzenia związane z leczeniem</string>
-    <string name="ns_receive_therapy_events_summary">Akceptuj zdarzenia związane z leczeniem (kaniula, insulina, zmiana baterii itp.) wprowadzone przez NS lub NSClient</string>
     <string name="ns_receive_cgm">Odbieraj/uzupełnij dane CGM</string>
     <string name="ns_receive_cgm_summary">Akceptuj dane CGM z NS</string>
     <string name="ns_sync_slow">Wysyłaj dane wolniej</string>
@@ -75,17 +64,10 @@
     <string name="ns_use_ws_title">Połącz używając websockets</string>
     <string name="ns_use_ws_summary">Włączenie tej opcji oznacza: szybsze aktualizacje, otrzymywanie alarmów i powiadomień z NS oraz większe zużycie baterii, podobne do v1. Wszystkie inne źródła nadające do NS muszą używać protokołu v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Twoja nazwa użytkownika Tidepool, zwykle Twój adres e-mail</string>
-    <string name="title_tidepool_username">Login nazwa użytkownika</string>
-    <string name="summary_tidepool_password">Twoje hasło logowania do Tidepool</string>
-    <string name="title_tidepool_password">Hasło logowania</string>
-    <string name="title_tidepool_test_login">Sprawdź dostęp do Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Jeśli ta opcja jest włączona, przesyłanie będzie dostępne na https://int-app.tidepool.org zamiast zwykłego https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Użyj serwerów integracyjnych (testowych)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Prześlij dane do Tidepool</string>
-    <string name="remove_all">Usuń wszystko</string>
     <string name="upload_now">Prześlij teraz</string>
     <string name="not_connected">Nie połączono</string>
     <string name="read_only">Tylko do odczytu</string>

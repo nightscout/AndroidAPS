@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
+    <string name="bolus_delivering">Toedienen van %1$.2fE</string>
+    <string name="bolus_delivered_successfully">Bolus van %1$.2fE succesvol toegediend</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d m geleden</string>
+    <string name="minago">%1$dm geleden</string>
+    <string name="secago">%1$ds geleden</string>
     <string name="minago_long">%1$d minuten geleden</string>
-    <string name="hoursago">%1$.1f uur geleden</string>
+    <string name="hoursago">%1$.1fu geleden</string>
     <string name="days_ago">%1$.1f dagen geleden</string>
     <string name="days_ago_round">%1$.0f dagen geleden</string>
+    <string name="seconds_ago">seconden geleden</string>
     <string name="in_days">over %1$.0f dagen</string>
     <string name="in_days_round">binnen %1$.0f dagen</string>
     <string name="shorthour">u</string>
@@ -33,6 +38,7 @@
     <string name="connecting_for">Verbonden gedurende %1$d s</string>
     <string name="handshaking">Handshaking</string>
     <string name="connected">Verbonden</string>
+    <string name="authorized">Geautoriseerd</string>
     <string name="disconnecting">Verbinding aan het verbreken</string>
     <string name="waiting_for_disconnection">Wachten op het loskoppelen</string>
     <!-- Custom Watchface -->
@@ -69,4 +75,5 @@
     <string name="temp_basal_absolute_rate">%1$.2f E/u @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f E/u @%2$s %3$d/%4$d min</string>
+    <string name="forever">Voor altijd</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Brug mobilforbindelse</string>
     <string name="ns_wifi">Brug Wi-Fi-forbindelse</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -19,10 +19,8 @@
     <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient funktionsfejl. Overvej NS og NSClient genstart.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT har ingen skrivetilladelse. Forkert API-secret?</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Genstart</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -38,19 +36,12 @@
     <string name="ns_receive_profile_store">Modtag profil lager</string>
     <string name="ns_receive_profile_store_summary">Synkronisér profiler fra NS</string>
     <string name="ns_receive_temp_target">Modtag midlertidige mål</string>
-    <string name="ns_receive_temp_target_summary">Accepter midlertidige mål indtastet gennem NS eller NSClient</string>
     <string name="ns_receive_profile_switch">Modtag profil skift</string>
-    <string name="ns_receive_profile_switch_summary">Accepter profil skift indtastet gennem NS eller NSClient</string>
-    <string name="ns_receive_offline_event">Modtag APS offline begivenheder</string>
-    <string name="ns_receive_offline_event_summary">Accepter APS Offline begivenheder indtastet gennem NS eller NSClient</string>
     <string name="ns_receive_tbr_eb">Modtag TBR og EB</string>
     <string name="ns_receive_tbr_eb_summary">Accepter TBR og EB indtastet gennem en anden instans</string>
     <string name="ns_receive_insulin">Modtag insulin</string>
-    <string name="ns_receive_insulin_summary">Accepter insulin via NS eller NSClient (det er ikke afgivet, kun beregnet til IOB)</string>
     <string name="ns_receive_carbs">Modtag kulhydrater</string>
-    <string name="ns_receive_carbs_summary">Accepter kulhydrater indtastet gennem NS eller NSClient</string>
     <string name="ns_receive_therapy_events">Modtag behandlingshændelser</string>
-    <string name="ns_receive_therapy_events_summary">Accepter terapihændelser (Kanyle, insulin, batteriskift osv.), der indtastes gennem NS eller NSClient</string>
     <string name="ns_receive_cgm">Modtag/tilbagefyld CGM-data</string>
     <string name="ns_receive_cgm_summary">Accepter CGM-data fra NS</string>
     <string name="ns_sync_slow">Reducer upload hastighed</string>
@@ -64,17 +55,10 @@
     <string name="ns_use_ws_title">Opret forbindelse til websockets</string>
     <string name="ns_use_ws_summary">Aktivering betyder: hurtigere opdateringer, modtagelse af alarmer og meddelelser og højere batteriforbrug svarende til v1. Alle andre uploadere til NS skal bruge v3-protokollen.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Dit brugernavn til Tidepool, normalt din e-mailadresse</string>
-    <string name="title_tidepool_username">Login Brugernavn</string>
-    <string name="summary_tidepool_password">Din Tidepool login adgangskode</string>
-    <string name="title_tidepool_password">Login Adgangskode</string>
-    <string name="title_tidepool_test_login">Test Tidepool Login</string>
-    <string name="summary_tidepool_dev_servers">Hvis aktiveret, vil uploads gå til https://int-app.tidepool.org i stedet for den almindelige https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Brug Integration (test) servere</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Uploader data til Tidepool</string>
-    <string name="remove_all">Fjern alle</string>
     <string name="upload_now">Upload nu</string>
     <string name="not_connected">Ikke tilsluttet</string>
     <string name="read_only">Skrivebeskyttet</string>

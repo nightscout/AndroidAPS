@@ -3,10 +3,11 @@ package app.aaps.pump.medtrum
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.stats.TddCalculator
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 
 open class MedtrumTestBase : TestBaseWithProfile() {
 
@@ -18,7 +19,7 @@ open class MedtrumTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        Mockito.`when`(sp.getString(R.string.key_active_alarms, "")).thenReturn("")
-        medtrumPump = MedtrumPump(aapsLogger, rh, sp, preferences, dateUtil, pumpSync, temporaryBasalStorage)
+        whenever(preferences.get(MedtrumStringNonKey.ActiveAlarms)).thenReturn("")
+        medtrumPump = MedtrumPump(aapsLogger, rh, preferences, dateUtil, pumpSync, temporaryBasalStorage)
     }
 }

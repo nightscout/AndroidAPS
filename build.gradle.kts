@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     repositories {
-        google()
         mavenCentral()
+        google()
     }
     dependencies {
         classpath(libs.com.android.tools.build)
@@ -25,19 +25,22 @@ plugins {
     alias(libs.plugins.klint)
     alias(libs.plugins.moduleDependencyGraph)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler) apply false
+    id(libs.plugins.android.test.get().pluginId) apply false
+    id(libs.plugins.kotlin.android.get().pluginId) apply false
 }
 
 allprojects {
     repositories {
-        google()
         mavenCentral()
-        maven("https://maven.google.com")
+        google()
         maven("https://jitpack.io")
     }
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
             freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
             freeCompilerArgs.add("-Xjvm-default=all") //Support @JvmDefault
             jvmTarget.set(Versions.jvmTarget)
         }

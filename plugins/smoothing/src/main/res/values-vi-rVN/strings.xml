@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">SMOOTH</string>
+    <string name="exponential_smoothing_name">Làm mượt theo cấp số nhân</string>
+    <string name="description_exponential_smoothing">"Thuật toán làm mượt theo hàm mũ bậc hai"</string>
+    <string name="avg_smoothing_name">Làm mượt trung bình</string>
+    <string name="description_avg_smoothing">"Thuật toán làm mượt trung bình, giá trị mới nhất không bị ảnh hưởng"</string>
+    <string name="no_smoothing_name">Không làm mượt</string>
+    <string name="description_no_smoothing">"Không thực hiện làm mượt trên dữ liệu đường huyết đầu vào. Sử dụng tùy chọn này khi bạn đã có dữ liệu đã được lọc, ví dụ từ BYODA G6."</string>
+</resources>

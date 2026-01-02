@@ -2,11 +2,11 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
-    <string name="description_source_xdrip">Preuzima podatke o GUK-a s xDrip+.</string>
     <string name="description_source_glimp">Primajte vrijednosti GUK-a od Glimpa.</string>
     <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
-    <!-- Patched Ottai App -->
     <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

@@ -17,43 +17,38 @@ import app.aaps.core.graph.data.LineGraphSeries
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.graph.data.ScaledDataPoint
 import app.aaps.core.graph.data.TimeAsXAxisLabelFormatter
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.Series
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 
-@Suppress("UNCHECKED_CAST") class GraphData(
-    injector: HasAndroidInjector,
-    private val graph: GraphView,
-    private val overviewData: OverviewData
+@Suppress("UNCHECKED_CAST")
+class GraphData @Inject constructor(
+    private val profileFunction: ProfileFunction,
+    private val preferences: Preferences,
+    private val rh: ResourceHelper
 ) {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var rh: ResourceHelper
 
     private var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
-    private val units: GlucoseUnit
+    private val units: GlucoseUnit get() = profileFunction.getUnits()
     private val series: MutableList<Series<*>> = ArrayList()
 
-    init {
-        injector.androidInjector().inject(this)
-        units = profileFunction.getUnits()
+    private lateinit var graph: GraphView
+    private lateinit var overviewData: OverviewData
+
+    fun with(graph: GraphView, overviewData: OverviewData): GraphData = this.also {
+        it.graph = graph
+        it.overviewData = overviewData
     }
 
     fun addBucketedData() {
@@ -105,6 +100,10 @@ import kotlin.math.max
 
     fun addTargetLine() {
         addSeries(overviewData.temporaryTargetSeries as LineGraphSeries<DataPoint>)
+    }
+
+    fun addRunningModes() {
+        addSeries(overviewData.runningModesSeries as PointsWithLabelGraphSeries<DataPoint>)
     }
 
     fun addTreatments(context: Context?) {
@@ -266,8 +265,8 @@ import kotlin.math.max
     private fun addSeries(s: Series<*>) = series.add(s)
 
     fun performUpdate() {
-        // clear old data
-        graph.series.clear()
+        // clear old data - use removeAllSeries() to properly detach GraphView from series
+        graph.removeAllSeries()
 
         // add pre calculated series
         for (s in series) {
@@ -284,6 +283,7 @@ import kotlin.math.max
 
         // draw it
         graph.onDataChanged(false, false)
+        series.clear()
     }
 
     fun addHeartRate(useForScale: Boolean, scale: Double) {

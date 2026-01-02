@@ -25,7 +25,7 @@ abstract class EquilHistoryDatabase : RoomDatabase() {
         const val VERSION = 11
         fun build(context: Context) =
             Room.databaseBuilder(context.applicationContext, EquilHistoryDatabase::class.java, "equil_database.db")
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(false)
                 .build()
     }
 }

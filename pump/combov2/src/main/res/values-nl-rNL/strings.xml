@@ -104,15 +104,7 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_unpair_pump_summary">Ontkoppel AndroidAPS en Android van de huidige Accu-Chek Combo pomp</string>
     <string name="combov2_unknown_tbr_detected">Onbekende TBR werd gedetecteerd en gestopt; percentage: %1$d%%; resterende duur: %2$s</string>
     <string name="combov2_connection_error">Verbindingsfout:</string>
-    <string name="combov2_short_status_last_connection">Laatste verbinding: %1$d min geleden</string>
     <string name="combov2_short_status_alert">Waarschuwing: %s</string>
-    <string name="combov2_short_status_last_bolus">Laatste bolus: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Tijdelijk: %s</string>
-    <string name="combov2_short_status_reservoir">Reservoir: %dE</string>
-    <string name="combov2_short_status_battery_state_empty">leeg</string>
-    <string name="combov2_short_status_battery_state_low">laag</string>
-    <string name="combov2_short_status_battery_state_full">vol</string>
-    <string name="combov2_short_status_battery_state">Batt: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetect en voer automatisch de vervanging van het insulinereservoir in</string>
     <string name="combov2_automatic_battery_entry">Automatisch batterijwijziging detecteren en automatisch invoeren</string>
     <string name="combov2_timezone_changed">Tijdzone is gewijzigd</string>

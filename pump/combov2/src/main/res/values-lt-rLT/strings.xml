@@ -103,15 +103,7 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_unpair_pump_summary">Atsieti AndroidAPS ir Android nuo dabartinės susietos Accu-Chek Combo pompos</string>
     <string name="combov2_unknown_tbr_detected">Aptikta ir sustabdyta nežinoma laikina bazė: %1$d%%; likęs laikas: %2$s</string>
     <string name="combov2_connection_error">Sujungimo klaida: %1$s</string>
-    <string name="combov2_short_status_last_connection">Pask. prisijung.: prieš %1$d min</string>
     <string name="combov2_short_status_alert">Perspėjimas: %s</string>
-    <string name="combov2_short_status_last_bolus">Pask.bolusas: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Laik.bazė: %s</string>
-    <string name="combov2_short_status_reservoir">Rezerv: %dvv</string>
-    <string name="combov2_short_status_battery_state_empty">tuščia</string>
-    <string name="combov2_short_status_battery_state_low">senka</string>
-    <string name="combov2_short_status_battery_state_full">pilna</string>
-    <string name="combov2_short_status_battery_state">Bat: %s</string>
     <string name="combov2_automatic_reservoir_entry">Automatiškai aptikti ir registruoti insulino rezervuaro keitimą</string>
     <string name="combov2_automatic_battery_entry">Automatiškai aptikti ir registruoti baterijos keitimą</string>
     <string name="combov2_timezone_changed">Laiko juosta pakeista</string>

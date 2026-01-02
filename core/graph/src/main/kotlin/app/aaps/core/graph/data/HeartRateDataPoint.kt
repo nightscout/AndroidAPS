@@ -16,7 +16,7 @@ class HeartRateDataPoint(
 
     override val label: String = ""
     override val duration = data.duration
-    override val shape = Shape.HEARTRATE
+    override val shape = Shape.HEART_RATE
     override val size = 10f
     override val paintStyle: Paint.Style = Paint.Style.FILL
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">השתמש באינטרנט סלולרי</string>
     <string name="ns_wifi">השתמש בחיבור WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -21,16 +21,12 @@
     <string name="unsupported_ns_version">גרסה לא נתמכת של Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">מעלה</string>
-    <string name="ns_malfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">ל-NSClient אין הרשאת כתיבה. סיסמת API שגויה?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">כתובת URL:</string>
     <string name="restart">הפעל מחדש</string>
-    <string name="ns_client_title">NSClientV1</string>
-    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">כתובת נייטסקאוט</string>
     <string name="ns_client_url_dialog_message">רשמו את כתובת הנייטסקאוט שלכם (לדוגמה https://yoursitename.yourplatform.com)</string>
     <string name="ns_client_secret_title">סיסמת נייטסקאוט (API SECRET)</string>
@@ -49,19 +45,12 @@
     <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
     <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
     <string name="ns_receive_temp_target">קבל ערכי מטרה זמניים</string>
-    <string name="ns_receive_temp_target_summary">קבלת ערכי מטרה זמניים שהוגדרו בנייטסקאוט או ב-NSClient</string>
     <string name="ns_receive_profile_switch">קבל החלפות פרופיל</string>
-    <string name="ns_receive_profile_switch_summary">קבלת החלפות פרופיל שהוגדרו בנייטסקאוט או ב-NSClient</string>
-    <string name="ns_receive_offline_event">אחזר אירועים לא מקוונים</string>
-    <string name="ns_receive_offline_event_summary">קבל אירועים לא מקוונים שנרשמו דרך נייטסקאוט או NSClient</string>
     <string name="ns_receive_tbr_eb">קבל מינון בזאלי זמני ובולוס מושהה</string>
     <string name="ns_receive_tbr_eb_summary">קבל מינוני בזאלי זמני ובולוסים מושהים שהופעלו ממכשיר עוקב</string>
     <string name="ns_receive_insulin">קבל אינסולין</string>
-    <string name="ns_receive_insulin_summary">קבלת אינסולין שהוזן באמצעות נייטסקאוט או NSClient (הוא לא מוזרק, רק מחושב רק כאינסולין פעיל)</string>
     <string name="ns_receive_carbs">קבל פחמימות</string>
-    <string name="ns_receive_carbs_summary">קבלת פחמימות שנרשמו בנייטסקאוט או ב-NSClient</string>
     <string name="ns_receive_therapy_events">קבל אירועי טיפול</string>
-    <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
     <string name="ns_receive_cgm">קבל\\טען נתוני סנסור מנייטסקאוט</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
     <string name="ns_sync_slow">האט העלאות</string>
@@ -75,17 +64,11 @@
     <string name="ns_use_ws_title">התחבר ל-websockets</string>
     <string name="ns_use_ws_summary">משמעות ההפעלה: עדכונים, קבלת התראות והודעות במהירות גבוהה יותר תוך צריכת סוללה גבוהה יותר, בדומה ל-v1. כל שאר המעלים ל-NS חייבים להשתמש בפרוטוקול v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>
-    <string name="title_tidepool_username">שם משתמש להתחברות</string>
-    <string name="summary_tidepool_password">סיסמת ההתחברות ל-Tidepool</string>
-    <string name="title_tidepool_password">סיסמת התחברות</string>
-    <string name="title_tidepool_test_login">בדיקת התחברות ל-Tidepool</string>
-    <string name="summary_tidepool_dev_servers">אם האפשרות מופעלת, נתונים יועלו לכתובת https://int-app.tidepool.org במקום https://app.tidepool.org/</string>
+    <string name="summary_tidepool_dev_servers">אם האפשרות מופעלת, נתונים יישלחו לשרתי ניסוי במקום לשרתים הרגילים</string>
     <string name="title_tidepool_dev_servers">שימוש בשרתי אינטגרציה (בדיקה)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">מעלה נתונים ל-Tidepool</string>
-    <string name="remove_all">הסר הכל</string>
     <string name="upload_now">העלה עכשיו</string>
     <string name="not_connected">לא מחובר</string>
     <string name="read_only">לקריאה בלבד</string>

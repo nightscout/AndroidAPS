@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">펌프 및/또는 드라이버가 작동을 지원하지 않습니다.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">초기화되지 않음</string>
+    <string name="pump_status_initialized">초기화됨</string>
+    <string name="pump_status_encrypt">통신 암호화</string>
+    <string name="pump_status_ready">준비</string>
+    <string name="pump_status_busy">사용 중</string>
+    <string name="pump_status_suspended">중지됨</string>
+    <string name="pump_status_executing_command">명령 실행 중</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basal</string>
+    <string name="history_group_configuration">환경설정</string>
+    <string name="history_group_notification">알림</string>
+    <string name="history_group_statistic">통계</string>
+    <string name="history_group_unknown">알수없음</string>
+    <string name="history_group_all">모든</string>
+    <string name="history_group_prime">교체</string>
+    <string name="history_group_alarm">알람</string>
+    <string name="history_group_glucose">혈당</string>
+    <string name="history_group_base">기본</string>
+    <string name="history_group_other">기타</string>
+    <string name="history_group_events">모든 이벤트</string>
+    <string name="history_group_events_no_stat">이벤트 (통계 제외)</string>
+    <!-- Time -->
+    <string name="time_today">오늘</string>
+    <string name="time_last_hour">지난 1시간</string>
+    <string name="time_last_3_hours">지난 3시간</string>
+    <string name="time_last_6_hours">지난 6시간</string>
+    <string name="time_last_12_hours">지난 12시간</string>
+    <string name="time_last_2_days">지난 2일</string>
+    <string name="time_last_4_days">지난 4일</string>
+    <string name="time_last_week">지난 주</string>
+    <string name="time_last_month">지난 달</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">스캔하기</string>
+    <string name="ble_config_scan_stop">정지</string>
+    <string name="ble_config_scan_selected">선택됨</string>
+    <string name="ble_config_scan_scanning">스캔중</string>
+    <string name="ble_config_scan_finished">스캔 완료</string>
+    <string name="ble_config_scan_error">스캔 에러: %1$d</string>
+    <string name="ble_config_remove">삭제</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">종류:</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d 일</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d 시간</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="other">%1$d 시간 전</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="other">%1$d 일 전</item>
+    </plurals>
+</resources>

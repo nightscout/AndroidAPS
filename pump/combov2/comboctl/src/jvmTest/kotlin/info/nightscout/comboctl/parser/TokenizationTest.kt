@@ -1,11 +1,13 @@
 package info.nightscout.comboctl.parser
 
+import app.aaps.shared.tests.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TokenizationTest {
+class TokenizationTest : TestBase() {
+
     @Test
     fun checkBasicPatternMatch() {
         // Try to match the LARGE_BASAL symbol pattern in the testFrameMainScreenWithTimeSeparator.

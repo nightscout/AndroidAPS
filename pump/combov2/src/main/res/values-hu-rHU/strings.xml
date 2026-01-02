@@ -3,6 +3,4 @@
     <string name="combov2_setting_basal_profile_cmddesc">Bázisprofil beállítása</string>
     <string name="combov2_bolus_delivery_failed">Bólus beadása nem sikerült. Úgy tűnik, hogy nem került bólus beadásra. A biztonság érdekében ellenőrizze a pumpát, hogy elkerülje a dupla bólust, majd ismételt bólust. A hibák elkerülése érdekében a bólusokat a rendszer nem próbálja újra automatikusan beadni.</string>
     <string name="combov2_battery_low_warning">Pumpa eleme merülőben</string>
-    <string name="combov2_short_status_battery_state_empty">üres</string>
-    <string name="combov2_short_status_battery_state_low">alacsony</string>
 </resources>

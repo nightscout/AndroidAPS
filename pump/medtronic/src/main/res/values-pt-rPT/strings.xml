@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Bólus Máximo na Bomba (U)</string>
     <string name="medtronic_pump_max_basal">Basal Máxima na Bomba (U/h)</string>
     <string name="medtronic_pump_encoding">Codificação Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">EUA &amp; Canadá (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Internacional (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codificação de Software 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificação de Hardware 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Acordar e Sintonizar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Limpar Bloqueio de Bólus</string>
     <string name="medtronic_custom_action_reset_rileylink">Reiniciar configuração RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lítio (Visualização estendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Visualização estendida)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
-    <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">atrás</string>
     <string name="medtronic_notification_check_time_date">Necessário atualizar relógio da bomba</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Ligado</string>
-    <string name="common_off">Desligado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
     <string name="set_neutral_temps_summary">Se activado, cancela a basal temporária antes de perfazer uma hora. Este método evita que as bombas Medtronic emitam um sinal sonoro e/ou vibrem quando a basal temporária se estende por mais de uma hora.</string>

@@ -103,15 +103,7 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_unpair_pump_summary">Usuń parowanie AAPS i Androida z aktualnie sparowanej pompy Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Nieznany TBR został wykryty i zatrzymany; procent: %1$d%%; pozostały czas trwania: %2$s</string>
     <string name="combov2_connection_error">Błąd połączenia: %1$s</string>
-    <string name="combov2_short_status_last_connection">Ost.Poł.: %1$d m. temu</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>
-    <string name="combov2_short_status_last_bolus">Ost.Bolus: %1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Tymcz.: %s</string>
-    <string name="combov2_short_status_reservoir">Zbior.: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">pusty</string>
-    <string name="combov2_short_status_battery_state_low">niskie</string>
-    <string name="combov2_short_status_battery_state_full">pełna</string>
-    <string name="combov2_short_status_battery_state">Bat.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Automatyczne wykrywanie i wprowadzanie wpisu o zmianie zasobnika insuliny</string>
     <string name="combov2_automatic_battery_entry">Automatyczne wykrywanie i wprowadzanie wpisu o zmianie baterii</string>
     <string name="combov2_timezone_changed">Zmieniono strefę czasową</string>

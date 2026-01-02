@@ -65,6 +65,11 @@ class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.saveUserOptions.setOnClickListener(null)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DanarUserOptionsActivityBinding.inflate(layoutInflater)

@@ -34,7 +34,6 @@
     <string name="profile">프로파일</string>
     <string name="doprofileswitch">프로파일 변경 실행</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
-    <string name="setupwizard_loop_description">아래 버튼을 눌러 AAPS가 기본적인 변경을 제안/실행할 수 있도록 합니다</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
     <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하세요. 과거부터 최신의 순으로 정렬이 되어 있습니다. 일반적으로 새로운 알고리즘은 보다 강력하고 공격적입니다. 따라서 당신이 신규 사용자라면 최신의 알고리즘보단 AMA로 시작하는것이 나을 수 있습니다. 사용 전에 OpenAPS 문서를 읽어보고 설정하는 것을 잊지마세요.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">하단의 RileyLink를 설정하십시오. RileyLink를 선택한 뒤, RileyLink 상태가 \"연결됨\"이 되고 나면 설정을 계속 할 수 있습니다. 이 작업은 금방 진행됩니다.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">신원 증명 (이메일, FB, 또는 Discord nick 등)</string>
     <string name="request">요청</string>
     <string name="apsmode_title">APS 모드</string>
-    <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
     <string name="error_asking_for_permissions">사용 권한을 묻는 중 오류가 발생했습니다</string>
     <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <!--    ConfigBuilder-->

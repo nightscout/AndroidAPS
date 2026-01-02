@@ -11,6 +11,7 @@ data class TE(
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    /** Duration in milliseconds */
     var duration: Long = 0,
     var type: Type,
     var note: String? = null,
@@ -18,6 +19,8 @@ data class TE(
     var glucose: Double? = null,
     var glucoseType: MeterType? = null,
     var glucoseUnit: GlucoseUnit,
+    var location: Location? = null,
+    var arrow: Arrow? = null
 ) : HasIDs {
 
     fun contentEqualsTo(other: TE): Boolean =
@@ -109,6 +112,59 @@ data class TE(
         companion object {
 
             fun fromString(text: String?) = entries.firstOrNull { it.text == text } ?: NONE
+        }
+    }
+
+    @Suppress("unused")
+    enum class Location(val text: String, val pump: Boolean = true) {
+        FRONT_RIGHT_UPPER_CHEST("Front Right Upper Chest", false),
+        FRONT_LEFT_UPPER_CHEST("Front Left Upper Chest", false),
+        SIDE_RIGHT_UPPER_ARM("Side Right Upper Arm"),
+        SIDE_LEFT_UPPER_ARM("Side Left Upper Arm"),
+        BACK_RIGHT_UPPER_ARM("Back Right Upper Arm"),
+        BACK_LEFT_UPPER_ARM("Back Left Upper Arm"),
+        SIDE_RIGHT_UPPER_ABDOMEN("Side Right Upper Abdomen"),
+        SIDE_LEFT_UPPER_ABDOMEN("Side Left Upper Abdomen"),
+        SIDE_RIGHT_LOWER_ABDOMEN("Side Right Lower Abdomen"),
+        SIDE_LEFT_LOWER_ABDOMEN("Side Left Lower Abdomen"),
+        FRONT_RIGHT_UPPER_ABDOMEN("Front Right Upper Abdomen"),
+        FRONT_LEFT_UPPER_ABDOMEN("Front Left Upper Abdomen"),
+        FRONT_RIGHT_LOWER_ABDOMEN("Front Right Lower Abdomen"),
+        FRONT_LEFT_LOWER_ABDOMEN("Front Left Lower Abdomen"),
+        BACK_RIGHT_BUTTOCK("Back Right Buttock"),
+        BACK_LEFT_BUTTOCK("Back Left Buttock"),
+        FRONT_RIGHT_UPPER_THIGH("Front Right Upper Thigh"),
+        FRONT_LEFT_UPPER_THIGH("Front Left Upper Thigh"),
+        FRONT_RIGHT_LOWER_THIGH("Front Right Lower Thigh"),
+        FRONT_LEFT_LOWER_THIGH("Front Left Lower Thigh"),
+        SIDE_RIGHT_UPPER_THIGH("Side Right Upper Thigh"),
+        SIDE_LEFT_UPPER_THIGH("Side Left Upper Thigh"),
+        SIDE_RIGHT_LOWER_THIGH("Side Right Lower Thigh"),
+        SIDE_LEFT_LOWER_THIGH("Side Left Lower Thigh"),
+        NONE("<none>", false);
+
+        companion object{
+
+            fun fromString(text: String?) = Location.entries.firstOrNull { it.text == text } ?: NONE
+        }
+    }
+
+    @Suppress("unused")
+    enum class Arrow(val text: String) {
+        UP("Up"),
+        UP_RIGHT("Up Right"),
+        RIGHT("Right"),
+        DOWN_RIGHT("Down Right"),
+        DOWN("Down"),
+        DOWN_LEFT("Down Left"),
+        LEFT("Left"),
+        UP_LEFT("Up Left"),
+        CENTER("Center"),
+        NONE("<none>");
+
+        companion object{
+
+            fun fromString(text: String?) = Arrow.entries.firstOrNull { it.text == text } ?: NONE
         }
     }
 

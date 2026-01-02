@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Usar conexión móvil</string>
     <string name="ns_wifi">Usar conexión WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -21,8 +21,8 @@
     <string name="unsupported_ns_version">Versión de Nightscout no soportada</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
-    <!-- NSClient -->
+    <string name="ns_malfunction">NSClient fallando. Considera reiniciar Nightscout y NSClient.</string>
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
@@ -49,19 +49,19 @@
     <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfiles desde el editor de perfiles de Nightscout</string>
     <string name="ns_receive_temp_target">Recibir objetivos temporales</string>
-    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante Nightscout o NSClient</string>
+    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante Nightscout o AAPSClient</string>
     <string name="ns_receive_profile_switch">Recibir cambios de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante Nightscout o NSClient</string>
-    <string name="ns_receive_offline_event">Recibir eventos de desconexión de APS</string>
-    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante Nightscout o NSClient</string>
+    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante Nightscout o AAPSClient</string>
+    <string name="ns_receive_running_mode">Recibir eventos en modo ejecución</string>
+    <string name="ns_receive_running_mode_summary">Aceptar eventos en modo ejecución registrados a través de Nightscout o AAPSClient</string>
     <string name="ns_receive_tbr_eb">Recibir TBR y EB</string>
     <string name="ns_receive_tbr_eb_summary">Aceptar TBR y EB ingresados mediante otra instancia</string>
     <string name="ns_receive_insulin">Recibir insulina</string>
-    <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante Nightscout o NSClient (no se entrega, sólo se calcula para IOB)</string>
+    <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante Nightscout o AAPSClient (no se entrega, sólo se calcula para IOB)</string>
     <string name="ns_receive_carbs">Recibir carbohidratos</string>
-    <string name="ns_receive_carbs_summary">Aceptar carbohidratos añadidos mediante Nightscout o NSClient</string>
+    <string name="ns_receive_carbs_summary">Aceptar carbohidratos registrados mediante Nightscout o AAPSClient</string>
     <string name="ns_receive_therapy_events">Recibir eventos de tratamientos</string>
-    <string name="ns_receive_therapy_events_summary">Aceptar registros de terapia (cánula, insulina, cambios de batería, etc.) añadidos mediante Nightscout o NSClient</string>
+    <string name="ns_receive_therapy_events_summary">Aceptar eventos de terapia (cánula, insulina, cambios de batería, etc.) registrados mediante Nightscout o AAPSClient</string>
     <string name="ns_receive_cgm">Recibir/Rellenar datos del MCG</string>
     <string name="ns_receive_cgm_summary">Aceptar valores MCG desde Nightscout</string>
     <string name="ns_sync_slow">Ralentizar subidas</string>
@@ -75,17 +75,11 @@
     <string name="ns_use_ws_title">Conectar a websockets</string>
     <string name="ns_use_ws_summary">Activarlo significa: actualizaciones más rápidas, recepción de alarmas y avisos con un mayor consumo de batería, similar a v1. El resto de cargadores a NS deben utilizar el protocolo v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Tu nombre de usuario de Tidepool, normalmente tu dirección de correo electrónico</string>
-    <string name="title_tidepool_username">Nombre de usuario</string>
-    <string name="summary_tidepool_password">Tu contraseña de acceso a Tidepool</string>
-    <string name="title_tidepool_password">Contraseña de inicio de sesión</string>
-    <string name="title_tidepool_test_login">Prueba de acceso Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Si está habilitado, las subidas irán a https://int-app.tidepool.org en lugar de a https://app.tidepool.org/</string>
+    <string name="summary_tidepool_dev_servers">Si se activa, las subidas irán a los servidores de prueba en lugar de a los servidores habituales</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integración (prueba)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carga datos a Tidepool</string>
-    <string name="remove_all">Eliminar todos</string>
     <string name="upload_now">Subir ahora</string>
     <string name="not_connected">No conectado</string>
     <string name="read_only">Sólo lectura</string>
@@ -176,6 +170,7 @@
     <string name="last_aps_result_na">¡Último resultado no disponible!</string>
     <string name="loop_status_closed">BUCLE CERRADO</string>
     <string name="loop_status_open">LAZO ABIERTO</string>
+    <string name="loop_status_lgs">LGS</string>
     <string name="loop_status_disabled">BUCLE DESACTIVADO</string>
     <string name="aps">APS</string>
     <string name="last_run">Última ejecución</string>
@@ -191,7 +186,6 @@
     <string name="wear_action_loop_state_unauthorized">Por favor, inténtalo de nuevo.</string>
     <string name="wear_action_loop_state_invalid">Etado del lazo solicitado inválido</string>
     <string name="wear_action_loop_state_title">ESTADO DEL LAZO</string>
-    <string name="wear_action_loop_state_changed">%1$s</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuración: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Cerrado</string>
     <string name="wear_action_loop_state_now_lgs">LGS</string>
@@ -199,11 +193,10 @@
     <string name="wear_action_loop_state_now_suspended">Suspendido</string>
     <string name="wear_action_loop_state_now_resumed">Reanudado</string>
     <string name="wear_action_loop_state_now_disabled">Desactivado</string>
-    <string name="wear_action_loop_state_now_enabled">Habilitado</string>
+    <string name="wear_action_loop_state_now_pump_suspended">Bomba suspendida</string>
     <string name="wear_action_loop_state_now_superbolus">Superbolo</string>
     <string name="wear_action_loop_state_now_invalid">Inválido</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Bomba desconectada</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Bomba reconectada</string>
     <string name="garmin_request_key">Solicitar clave</string>
     <string name="garmin_request_key_summary">Clave opcional para securizar la comunicación HTTP entre el dispositivo Garmin y AAPS.</string>
 </resources>

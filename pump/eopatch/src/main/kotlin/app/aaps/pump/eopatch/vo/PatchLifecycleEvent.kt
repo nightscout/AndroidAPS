@@ -40,6 +40,18 @@ class PatchLifecycleEvent {
         return "PatchLifecycleEvent(lifeCycle=$lifeCycle, timestamp=$timestamp)"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as PatchLifecycleEvent
+        // Compare only lifeCycle, not timestamp, as timestamps can differ for equivalent states
+        return lifeCycle == other.lifeCycle
+    }
+
+    override fun hashCode(): Int {
+        return lifeCycle.hashCode()
+    }
+
     constructor(lifeCycle: PatchLifecycle) {
         Preconditions.checkNotNull(lifeCycle)
         this.lifeCycle = lifeCycle

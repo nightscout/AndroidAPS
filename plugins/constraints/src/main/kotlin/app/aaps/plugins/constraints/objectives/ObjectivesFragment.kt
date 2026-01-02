@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNtpStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
@@ -50,7 +49,6 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
@@ -91,28 +89,33 @@ class ObjectivesFragment : DaggerFragment() {
             scrollToCurrentObjective()
         }
         scrollToCurrentObjective()
-        startUpdateTimer()
     }
 
-    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventObjectivesUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
+        startUpdateTimer()
     }
 
-    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
         handler.removeCallbacksAndMessages(null)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
+    }
+
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.recyclerview.adapter = null
         _binding = null
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="dynisf_adjust_sensitivity">啟用基於TDD的敏感度比率，用於調整基礎率和血糖目標</string>
-    <string name="dynisf_adjust_sensitivity_summary">使用最近24小時TDD/7天TDD計算敏感度比率，用於增加或減少基礎率，並在啟用這些選項時調整血糖目標，與Autosens的方式相同。建議從關閉此選項開始</string>
+    <string name="dynisf_adjust_sensitivity">啟用基於每日總劑量的敏感度比率，用於調整基礎率和血糖目標</string>
+    <string name="dynisf_adjust_sensitivity_summary">使用最近24小時劑量/7天劑量計算敏感度比率，用於增加或減少基礎率，並在啟用這些選項時調整血糖目標，與Autosens的方式相同。建議從關閉此選項開始</string>
     <string name="dyn_isf_adjust_title" formatted="false">動態ISF調整係數%</string>
     <string name="dyn_isf_adjust_summary" formatted="false">動態ISF的調整係數。設置超過100％以進行更積極的矯正劑量，設置低於100％以進行較不積極的矯正。</string>
     <string name="high_temptarget_raises_sensitivity_title">高臨時目標提高敏感度</string>
@@ -121,7 +121,7 @@
     <string name="loop_smb_set_by_pump_label">幫浦設置的SMB</string>
     <string name="loop_open_mode_min_change">最小請求變更 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">開環模式將彈出新變更請求，僅當變更超過此值的百分比。預設值為20%</string>
-    <string name="fallback_smb_no_tdd">總每日劑量（TDD）資料不足，回退到使用 SMB 模式。</string>
+    <string name="fallback_smb_no_tdd">每日總劑量資料不足，回退到使用 SMB 模式。</string>
     <string name="fallback_to_isf_no_tdd">回退使用設定檔敏感度(ISF)。資料不足，原因：%1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">幫助調整檔案（ISF、碳水化合物比率和基礎率）</string>

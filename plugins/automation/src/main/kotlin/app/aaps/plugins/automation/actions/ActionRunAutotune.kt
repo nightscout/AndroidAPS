@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -52,11 +52,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
                     message = R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
-                callback.result(instantiator.providePumpEnactResult().success(autotunePlugin.lastRunSuccess).comment(message)).run()
+                callback.result(pumpEnactResultProvider.get().success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
                 message = R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
-                callback.result(instantiator.providePumpEnactResult().success(false).comment(message)).run()
+                callback.result(pumpEnactResultProvider.get().success(false).comment(message)).run()
             }
         }.start()
         return

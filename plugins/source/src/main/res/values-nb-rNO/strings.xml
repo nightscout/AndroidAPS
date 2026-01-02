@@ -5,23 +5,23 @@
     <string name="ns_client_bg_short">NS BS</string>
     <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
     <string name="source_xdrip">xDrip+ BS</string>
-    <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
+    <string name="description_source_xdrip">Motta BS-verdier fra xDrip+ og kompatible apper (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Motta BS-verdier fra \'Build Your Own Dexcom App\'.</string>
+    <string name="description_source_dexcom">Motta BS-verdier fra appen \'Build Your Own Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
     <string name="mm640g">MM640G</string>
     <string name="description_source_mm640g">Motta BS-verdier fra 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Motta BS-verdier fra Poctech app</string>
+    <string name="description_source_poctech">Motta BS-verdier fra appen Poctech</string>
     <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Motta BS verdier fra Glunovo app</string>
+    <string name="description_source_glunovo">Motta BS-verdier fra appen Glunovo</string>
     <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Motta BS-verdier fra Intelligo-app</string>
+    <string name="description_source_intelligo">Motta BS-verdier fra appen Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Motta BS-verdier fra Tomato app (MiaoMiao enhet)</string>
+    <string name="description_source_tomato">Motta BS-verdier fra appen Tomato (MiaoMiao-enhet)</string>
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
     <string name="random_bg_short">BS</string>
@@ -30,10 +30,13 @@
     <string name="bgsource_log_sensor_change_summary">Opprett hendelsen \"Bytte av CGM-sensor\" i helseportal automatisk ved mottak av sensorstart fra BS-kildens lokal kringkasting</string>
     <string name="direction">retning</string>
     <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Motta glukosedata fra appen Ottai.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Motta glukosedata fra appen Syai Tag.</string>
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Motta blodsukkerverdier fra Syai/Ottai App.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI app</string>
+    <string name="description_source_patched_si_app">Motta BS-verdier fra den patchede appen Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino app</string>
+    <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>
 </resources>

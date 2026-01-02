@@ -35,7 +35,6 @@
     <string name="profile">Профиль</string>
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="exitwizard">Пропустить Мастер установки</string>
-    <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="request">Запрос</string>
     <string name="apsmode_title">Режим APS</string>
-    <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
     <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <!--    ConfigBuilder-->

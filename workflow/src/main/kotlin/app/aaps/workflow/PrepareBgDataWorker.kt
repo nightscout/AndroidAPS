@@ -12,9 +12,10 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,7 @@ class PrepareBgDataWorker(
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var dateUtil: DateUtil
 
     class PrepareBgData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
@@ -49,7 +51,7 @@ class PrepareBgDataWorker(
         for (bg in data.overviewData.bgReadingsArray) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > data.overviewData.maxBgValue) data.overviewData.maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(bg, profileUtil, rh))
+            bgListArray.add(GlucoseValueDataPoint(bg, profileUtil, rh, dateUtil))
         }
         bgListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })

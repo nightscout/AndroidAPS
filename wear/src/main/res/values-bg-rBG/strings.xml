@@ -124,18 +124,13 @@
     <string name="color_name_black">черно</string>
     <string name="color_name_multicolor">многоцветно</string>
     <string name="pref_simplify_ui">Опростен интерфейс</string>
-    <string name="pref_simplify_ui_sum">Показвай само време и КЗ</string>
     <string name="pref_vibrate_hourly">Вибрира почасово</string>
     <string name="pref_show_weeknumber">Показване на номер седмица</string>
     <string name="custom_pref_show_seconds">Показвай секунди</string>
-    <string name="digitalstyle_pref_your_style">Вашият стил:</string>
     <string name="digitalstyle_style_none">Няма избран стил</string>
     <string name="digitalstyle_style_minimal">минимален стил</string>
     <string name="digitalstyle_style_shape">форма на стил</string>
     <string name="digitalstyle_style_full">пълен стил</string>
-    <string name="digitalstyle_pref_your_color">Вашият цвят:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Насищане на цвета:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Вашата цветна прозрачност:</string>
     <string name="bolus_progress_channel_name">AAPS Прогрес на болуса</string>
     <string name="bolus_progress_silent_channel_name">AAPS Прогрес на болуса Безшумно</string>
     <string name="bolus_progress_channel_description">Прогрес на болуса и отказ</string>
@@ -144,7 +139,6 @@
     <string name="simple_ui_charging">По време на зареждане</string>
     <string name="simple_ui_always_on">Режим Постоянно включен</string>
     <string name="simple_ui_always_on_charging">Винаги включен по време на зареждане</string>
-    <string name="temp_target_eating_soon">Хранене</string>
     <string name="temp_target_hypo">Хипоглекимия</string>
     <string name="temp_target_activity">Физ.активност</string>
     <string name="temp_target_manual">Друго</string>

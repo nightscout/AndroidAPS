@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.ui.extensions.runOnUiThread
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.RunMode
@@ -16,13 +19,11 @@ import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.manager.command.CmdInsulinGet
 import app.aaps.pump.equil.manager.command.CmdModelSet
+import app.aaps.pump.equil.manager.command.CmdSettingSet
 
-// IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilPairConfirmFragment : EquilPairFragmentBase() {
 
-    override fun getLayoutId(): Int {
-        return R.layout.equil_pair_confirm_fragment
-    }
+    override fun getLayoutId(): Int = R.layout.equil_pair_confirm_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,47 +73,50 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
         }
     }
 
-    override fun getNextPageActionId(): Int? {
-        return null
-    }
+    override fun getNextPageActionId(): Int? = null
 
-    override fun getIndex(): Int {
-        return 6
-    }
+    override fun getIndex(): Int = 6
 
     private fun setModel() {
         showLoading()
-        commandQueue.customCommand(CmdModelSet(RunMode.RUN.command, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdModelSet(RunMode.RUN.command, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "setModel result====" + result.success + "====")
+                dismissLoading()
                 if (result.success) {
-                    dismissLoading()
-                    equilManager.setRunMode(RunMode.RUN)
-                    toSave()
-                } else {
-                    dismissLoading()
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                }
+                    SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                    setLimits()
+                } else ToastUtils.errorToast(requireContext(), rh.gs(R.string.equil_error))
             }
         })
     }
 
-    private fun getCurrentInsulin() {
+    private fun setLimits() {
         showLoading()
-        commandQueue.customCommand(CmdInsulinGet(aapsLogger, sp, equilManager), object : Callback() {
+        val profile = pumpSync.expectedPumpState().profile ?: return
+        commandQueue.customCommand(CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
+                aapsLogger.debug(LTag.PUMPCOMM, "setLimits result====" + result.success + "====")
+                dismissLoading()
                 if (result.success) {
-                    if (activity == null)
-                        return
+                    equilManager.setRunMode(RunMode.RUN)
+                    toSave()
+                } else ToastUtils.errorToast(requireContext(), rh.gs(R.string.equil_error))
+            }
+        })
+    }
+    private fun getCurrentInsulin() {
+        showLoading()
+        commandQueue.customCommand(CmdInsulinGet(aapsLogger, preferences, equilManager), object : Callback() {
+            override fun run() {
+                if (activity == null) return
+                dismissLoading()
+                if (result.success) {
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-                    dismissLoading()
                     setModel()
-                } else {
-                    dismissLoading()
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                }
+                } else ToastUtils.errorToast(requireContext(), rh.gs(R.string.equil_error))
             }
         })
     }

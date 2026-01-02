@@ -102,17 +102,12 @@
     <string name="color_name_black">negre</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Simplificar la interfície</string>
-    <string name="pref_simplify_ui_sum">Mostrar només l\'hora i la glucosa</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar nr. de setmana</string>
-    <string name="digitalstyle_pref_your_style">Estil:</string>
     <string name="digitalstyle_style_none">sense estil</string>
     <string name="digitalstyle_style_minimal">estil minimalista</string>
     <string name="digitalstyle_style_shape">estil forma</string>
     <string name="digitalstyle_style_full">estil complet</string>
-    <string name="digitalstyle_pref_your_color">Color:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Saturació color:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Opacitat color:</string>
     <string name="bolus_progress_channel_name">Progressió bolus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Progressió bolus AAPS silenciós</string>
     <string name="bolus_progress_channel_description">Progressió i cancel·lació de bolus</string>

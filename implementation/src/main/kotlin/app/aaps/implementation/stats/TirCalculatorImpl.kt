@@ -3,11 +3,11 @@ package app.aaps.implementation.stats
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.util.LongSparseArray
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
+import androidx.collection.LongSparseArray
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileUtil

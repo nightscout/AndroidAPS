@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nМодель: %2$02X\nПротокол: %3$02X\nКод: %4$02X</string>
     <string name="processinghistory">Обработка события</string>
     <string name="danar_enableextendedbolus">Активировать пролонгированные болюсы на помпе</string>
-    <string name="overview_bolusprogress_delivered">Болюс подан</string>
     <string name="overview_bolusprogress_stoped">остановлено</string>
     <string name="unsupportedfirmware">Неподдерживаемая версия прошивки помпы</string>
     <string name="pumperror">ошибка помпы</string>

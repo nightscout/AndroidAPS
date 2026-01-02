@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.provider.Settings
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -30,17 +29,16 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
@@ -51,8 +49,8 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
@@ -71,7 +69,6 @@ import app.aaps.plugins.configuration.maintenance.dialogs.PrefImportSummaryDialo
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Reusable
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +76,6 @@ import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 /**
  * Created by mike on 03.07.2016.
@@ -87,7 +83,7 @@ import kotlin.system.exitProcess
 
 @Reusable
 class ImportExportPrefsImpl @Inject constructor(
-    private var log: AAPSLogger,
+    private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
     private val preferences: Preferences,
@@ -99,11 +95,11 @@ class ImportExportPrefsImpl @Inject constructor(
     private val androidPermission: AndroidPermission,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: FileListProvider,
-    private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
     private val dataWorkerStorage: DataWorkerStorage,
+    private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder
 ) : ImportExportPrefs {
 
@@ -146,9 +142,8 @@ class ImportExportPrefsImpl @Inject constructor(
     private fun detectUserName(context: Context): String {
         // based on https://medium.com/@pribble88/how-to-get-an-android-device-nickname-4b4700b3068c
         val n1 = Settings.System.getString(context.contentResolver, "bluetooth_name")
-        val n2 = if (context.applicationContext.applicationInfo.targetSdkVersion <= Build.VERSION_CODES.S) Settings.Secure.getString(context.contentResolver, "bluetooth_name") else null
         val n3 = try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
             } else null
         } catch (_: Exception) {
@@ -163,12 +158,12 @@ class ImportExportPrefsImpl @Inject constructor(
         val defaultPatientName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
 
         // name we detect from OS
-        val systemName = n1 ?: n2 ?: n3 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
+        val systemName = n1 ?: n3 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
         return if (patientName.isNotEmpty() && patientName != defaultPatientName) patientName else systemName
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, { password ->
+        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -180,7 +175,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
     ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword.key, passwordExplanation, passwordWarning, { password ->
+        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
                                            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -226,7 +221,7 @@ class ImportExportPrefsImpl @Inject constructor(
         // Ask for entering password and store when successfully entered
         TwoMessagesAlertDialog.showAlert(
             activity, rh.gs(app.aaps.core.ui.R.string.nav_export),
-            rh.gs(R.string.export_to) + " " + fileToExport.name + " ?",
+            rh.gs(R.string.export_to) + " " + fileToExport.name + "?",
             rh.gs(R.string.password_preferences_encrypt_prompt), {
                 askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled)
                 { password ->
@@ -240,7 +235,7 @@ class ImportExportPrefsImpl @Inject constructor(
         if (!assureMasterPasswordSet(activity, R.string.import_setting)) return
         TwoMessagesAlertDialog.showAlert(
             activity, rh.gs(R.string.import_setting),
-            rh.gs(R.string.import_from) + " " + fileToImport.name + " ?",
+            rh.gs(R.string.import_from) + " " + fileToImport.name + "?",
             rh.gs(app.aaps.core.ui.R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import
@@ -282,22 +277,25 @@ class ImportExportPrefsImpl @Inject constructor(
         try {
             val entries: MutableMap<String, String> = mutableMapOf()
             for ((key, value) in sp.getAll()) {
-                entries[key] = value.toString()
+                if (preferences.isExportableKey(key))
+                    entries[key] = value.toString()
+                else
+                    aapsLogger.warn(LTag.CORE, "Not exportable key: $key $value")
             }
             val prefs = Prefs(entries, prepareMetadata(context))
             encryptedPrefsFormat.savePreferences(newFile, prefs, password)
             resultOk = true // Assuming export was executed successfully (or it would have thrown an exception)
 
         } catch (e: FileNotFoundException) {
-            log.error(LTag.CORE, "Unhandled exception: file not found", e)
+            aapsLogger.error(LTag.CORE, "Unhandled exception: file not found", e)
         } catch (e: IOException) {
-            log.error(LTag.CORE, "Unhandled exception: IO exception", e)
+            aapsLogger.error(LTag.CORE, "Unhandled exception: IO exception", e)
         } catch (e: PrefFileNotFoundError) {
-            log.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
+            aapsLogger.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
         } catch (e: PrefIOError) {
-            log.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
+            aapsLogger.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
         }
-        log.debug(LTag.CORE, "savePreferences: $resultOk")
+        aapsLogger.debug(LTag.CORE, "savePreferences: $resultOk")
         return resultOk
     }
 
@@ -344,7 +342,7 @@ class ImportExportPrefsImpl @Inject constructor(
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            log.error(LTag.CORE, "Internal android framework exception", e)
+            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
         }
     }
 
@@ -360,7 +358,7 @@ class ImportExportPrefsImpl @Inject constructor(
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            log.error(LTag.CORE, "Internal android framework exception", e)
+            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
         }
     }
 
@@ -396,6 +394,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
                     PrefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
                         if (importPossible) {
+                            activePlugin.beforeImport()
                             sp.clear()
                             for ((key, value) in prefs.values) {
                                 if (value == "true" || value == "false") {
@@ -404,7 +403,7 @@ class ImportExportPrefsImpl @Inject constructor(
                                     sp.putString(key, value)
                                 }
                             }
-
+                            activePlugin.afterImport()
                             restartAppAfterImport(activity)
                         } else {
                             // for impossible imports it should not be called
@@ -416,9 +415,9 @@ class ImportExportPrefsImpl @Inject constructor(
 
             } catch (e: PrefFileNotFoundError) {
                 ToastUtils.errorToast(activity, rh.gs(R.string.filenotfound) + " " + importFile)
-                log.error(LTag.CORE, "Unhandled exception", e)
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
             } catch (e: PrefIOError) {
-                log.error(LTag.CORE, "Unhandled exception", e)
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
                 ToastUtils.errorToast(activity, e.message)
             }
         }
@@ -458,7 +457,6 @@ class ImportExportPrefsImpl @Inject constructor(
         params: WorkerParameters
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
-        @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var rh: ResourceHelper
         @Inject lateinit var prefFileList: FileListProvider
         @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="app.aaps.weardata.permission" />
@@ -49,6 +50,26 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true"
+            tools:node="replace">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!--  Setting host bellow prevents callback because of missing /.well-known/assetlinks.json                  android:host=""-->
+                <data
+                    android:path="/callback/tidepool"
+                    android:scheme="aaps"
+                    tools:ignore="AppLinkUrlError" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="app.aaps.plugins.sync.tidepool.auth.AuthFlowIn"
+            android:exported="true" />
 
     </application>
 

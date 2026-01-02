@@ -44,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="showPreviousPage"
             android:text="@string/previous_button" />
 
         <View
@@ -57,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="showNextPage"
             android:text="@string/next_button" />
 
         <Button
@@ -65,7 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="finishSetupWizard"
             android:text="@string/setupwizard_finish" />
 
     </LinearLayout>

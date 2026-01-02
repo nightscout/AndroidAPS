@@ -26,6 +26,8 @@ dependencies {
     api(libs.androidx.core)
 
     testImplementation(kotlin("test"))
+    testImplementation(project(":shared:tests"))
+
     testImplementation(libs.io.kotlintest.runner.junit5)
     testRuntimeOnly(libs.org.junit.jupiter.engine)
 }

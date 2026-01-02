@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">יעד זמני בוטל בהצלחה</string>
     <string name="smscommunicator_remote_commands_allowed">אפשר שליטה מרחוק באמצעות SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">הלולאה הושבתה</string>
-    <string name="smscommunicator_loop_has_been_enabled">הלולאה הופעלה</string>
     <string name="smscommunicator_loop_is_enabled">לולאה פעילה</string>
     <string name="smscommunicator_pump_connect_with_code">לחיבור המשאבה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_pump_connect_fail">החיבור אל המשאבה נכשל</string>
@@ -66,7 +65,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">להפעלת בזאלי %1$d%% למשך %2$d דקות הקש קוד %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">להשהיית הלולאה למשך %1$d דקות יש להשיב עם הקוד %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">להפעלת הלולאה מחדש יש להשיב עם הקוד %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">כדי לאפשר הלולאה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">להשבתת הלולאה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_tempbasal_set">בזאלי זמני %1$.2f יחידות\\שעה למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_extended_set">בולוס ממושך %1$.2f יחידות למשך %2$d דקות הופעל בהצלחה</string>
@@ -130,7 +128,6 @@
     <!-- Profile -->
     <string name="localprofile">פרופיל</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
     <string name="a11y_add_new_to_list">הוסף לרשימה</string>
     <string name="do_you_want_switch_profile">האם ברצונכם להחליף את הפרופיל ולזנוח את השינויים שבוצעו בפרופיל הנוכחי?</string>
     <string name="save_or_reset_changes_first">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>

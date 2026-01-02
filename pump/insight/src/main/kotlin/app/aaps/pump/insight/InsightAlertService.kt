@@ -6,7 +6,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -84,12 +83,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     @SuppressWarnings("deprecation", "RedundantSuppression")
     override fun onCreate() {
         super.onCreate()
-        vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(VIBRATOR_SERVICE) as Vibrator
-        }
+        vibrator = (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
         bindService(Intent(this, InsightConnectionService::class.java), serviceConnection, BIND_AUTO_CREATE)
         alertLiveData.value = null
     }
@@ -257,21 +251,21 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         val description = alertUtils.getAlertDescription(alert)
         if (description != null) notificationBuilder.setContentText(HtmlHelper.fromHtml(description).toString())
         val fullScreenIntent = Intent(this, InsightAlertActivity::class.java)
-        val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         notificationBuilder.setFullScreenIntent(fullScreenPendingIntent, true)
         when (alert.alertStatus) {
             AlertStatus.ACTIVE  -> {
                 val muteIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "mute")
-                val mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                 notificationBuilder.addAction(0, resourceHelper.gs(app.aaps.core.ui.R.string.mute), mutePendingIntent)
                 val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
-                val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                 notificationBuilder.addAction(0, resourceHelper.gs(app.aaps.core.ui.R.string.confirm), confirmPendingIntent)
             }
 
             AlertStatus.SNOOZED -> {
                 val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
-                val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                 notificationBuilder.addAction(0, resourceHelper.gs(app.aaps.core.ui.R.string.confirm), confirmPendingIntent)
             }
 

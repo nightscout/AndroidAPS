@@ -3,19 +3,14 @@ package app.aaps.core.ui.dialogs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object OKDialog {
-
-    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
-        Handler(Looper.getMainLooper()).post(it)
-    }
 
     @SuppressLint("InflateParams")
     fun show(context: Context, title: String, message: String, runOnDismiss: Boolean = false, runnable: Runnable? = null) {

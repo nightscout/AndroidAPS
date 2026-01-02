@@ -70,6 +70,13 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
         disposable.clear()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.recyclerview.adapter = null
+        binding.reload.setOnClickListener(null)
+        binding.typeList.onItemClickListener = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DiaconnG8HistoryActivityBinding.inflate(layoutInflater)

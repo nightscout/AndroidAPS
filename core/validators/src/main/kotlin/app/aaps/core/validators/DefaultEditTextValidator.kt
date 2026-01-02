@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.validators.validators.AlphaNumericValidator
@@ -44,7 +45,6 @@ class DefaultEditTextValidator : EditTextValidator {
     private var testErrorString: String? = null
     private var emptyAllowed = false
     private lateinit var editTextView: EditText
-    private var tw: TextWatcher? = null
     private var defaultEmptyErrorString: String? = null
 
     private var testType: Int
@@ -99,37 +99,39 @@ class DefaultEditTextValidator : EditTextValidator {
 
     private fun setEditText(editText: EditText) {
         editTextView = editText
-        editText.addTextChangedListener(getTextWatcher())
+        editText.addTextChangedListener(textWatcher)
+        editText.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(view: View) {}
+
+            override fun onViewDetachedFromWindow(view: View) {
+                editText.removeOnAttachStateChangeListener(this)
+                editText.removeTextChangedListener(textWatcher)
+            }
+        })
     }
 
-    override fun getTextWatcher(): TextWatcher? {
-        if (tw == null) {
-            tw = object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {
-                    testValidity()
-                }
+    val textWatcher =
+        object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                testValidity()
+            }
 
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { /* not needed */
-                }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { /* not needed */
+            }
 
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (!TextUtils.isEmpty(s) && isErrorShown) {
-                        try {
-                            val textInputLayout = editTextView.parent as TextInputLayout
-                            textInputLayout.isErrorEnabled = false
-                        } catch (e: Throwable) {
-                            editTextView.error = null
-                        }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (!TextUtils.isEmpty(s) && isErrorShown) {
+                    try {
+                        val textInputLayout = editTextView.parent as TextInputLayout
+                        textInputLayout.isErrorEnabled = false
+                    } catch (_: Throwable) {
+                        editTextView.error = null
                     }
                 }
             }
         }
-        return tw!!
-    }
 
-    override fun isEmptyAllowed(): Boolean {
-        return emptyAllowed
-    }
+    override fun isEmptyAllowed(): Boolean = emptyAllowed
 
     override fun resetValidators(context: Context) {
         // its possible the context may have changed so re-get the defaultEmptyErrorString
@@ -197,12 +199,12 @@ class DefaultEditTextValidator : EditTextValidator {
                             @Suppress("Unchecked_Cast")
                             it as Class<out Validator>
                         }!!
-                    } catch (e: ClassNotFoundException) {
+                    } catch (_: ClassNotFoundException) {
                         throw RuntimeException(String.format("Unable to load class for custom validator (%s).", classType))
                     }
                     try {
                         customValidatorClass.getConstructor(String::class.java).newInstance(testErrorString)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         throw RuntimeException(String.format("Unable to construct custom validator (%s) with argument: %s", classType, testErrorString))
                     }
                 }
@@ -287,7 +289,7 @@ class DefaultEditTextValidator : EditTextValidator {
                     val parent = editTextView.parent as TextInputLayout
                     parent.isErrorEnabled = true
                     parent.error = mValidator.errorMessage
-                } catch (e: Throwable) {
+                } catch (_: Throwable) {
                     editTextView.error = mValidator.errorMessage
                 }
             }
@@ -299,7 +301,7 @@ class DefaultEditTextValidator : EditTextValidator {
         get() = try {
             editTextView.parent as TextInputLayout
             true // might sound like a bug. but there's no way to know if the error is shown (not with public api)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             !TextUtils.isEmpty(editTextView.error)
         }
 

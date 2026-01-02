@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:title="@string/tile_settings"
+        android:key="header" />
+
     <ListPreference
         android:defaultValue="wizard"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_1"
-        android:title="@string/tile_action_1" />
+        android:title="@string/tile_action_1"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="treatment"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_2"
-        android:title="@string/tile_action_2" />
+        android:title="@string/tile_action_2"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="carbs"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_3"
-        android:title="@string/tile_action_3" />
+        android:title="@string/tile_action_3"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="temp_target"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_4"
-        android:title="@string/tile_action_4" />
+        android:title="@string/tile_action_4"
+        android:summary="%s" />
 
 </PreferenceScreen>

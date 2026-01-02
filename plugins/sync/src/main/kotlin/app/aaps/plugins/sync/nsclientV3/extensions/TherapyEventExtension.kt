@@ -22,6 +22,8 @@ fun NSTherapyEvent.toTherapyEvent(): TE =
         glucose = glucose,
         glucoseType = glucoseType.toMeterType(),
         duration = duration,
+        location = TE.Location.fromString(location),
+        arrow = TE.Arrow.fromString(arrow),
         ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
@@ -50,6 +52,8 @@ fun TE.toNSTherapyEvent(): NSTherapyEvent =
         glucose = glucose,
         glucoseType = glucoseType.toNSMeterType(),
         duration = duration,
+        location = location?.text,
+        arrow = arrow?.text,
         identifier = ids.nightscoutId,
         pumpId = ids.pumpId,
         pumpType = ids.pumpType?.name,

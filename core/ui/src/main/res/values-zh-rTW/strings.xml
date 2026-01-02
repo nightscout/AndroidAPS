@@ -5,7 +5,6 @@
     <string name="error">錯誤</string>
     <string name="profile_set_ok">幫浦中的基礎率設定已更新</string>
     <string name="invalid_input">輸入資料無效</string>
-    <string name="bolus_delivering">正在注射 %1$.2f U</string>
     <string name="constraint_applied">已套用限制！</string>
     <string name="tempbasals_iobtotal_label_string">總 IOB：</string>
     <string name="tt_label">臨時目標</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">幫浦未初始化，設定檔未設置！</string>
     <string name="failed_update_basal_profile">更新基礎率設定失敗</string>
-    <string name="bolus_delivered_successfully">注射 %1$.2f U 已成功送達</string>
     <string name="no_valid_basal_rate">未從幫浦讀取到有效的基礎率</string>
     <string name="limiting_iob">因 %2$s 限制 IOB 為 %1$.1f U</string>
     <string name="loop_disabled">循環因限制已停用</string>
@@ -35,7 +33,7 @@
     <string name="statuslights">狀態燈</string>
     <string name="do_ns_upload_title">將血糖資料上傳至 NS 伺服器</string>
     <string name="configbuilder_insulin">胰島素</string>
-    <string name="value_unavailable_short">無法使用</string>
+    <string name="value_unavailable_short">n/a</string>
     <string name="master_password">主密碼</string>
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
@@ -50,7 +48,7 @@
     <string name="aps_mode_title">APS 模式</string>
     <string name="extended_bolus">延長注射</string>
     <string name="paused">已暫停</string>
-    <string name="tdd_total">總 TDD</string>
+    <string name="tdd_total">總每日劑量</string>
     <string name="tdd_old_data">舊資料</string>
     <string name="goingtodeliver">將注射 %1$.2f U</string>
     <string name="waitingforpump">等待幫浦</string>
@@ -91,7 +89,7 @@
     <string name="alarm">警報</string>
     <string name="exportsettings">匯出設定</string>
     <string name="disableloop">停用循環</string>
-    <string name="enableloop">啟用循環</string>
+    <string name="disabled_loop">循環停用</string>
     <string name="resumeloop">恢復循環</string>
     <string name="suspendloop">暫停循環</string>
     <string name="duration_min_label">持續時間 [分鐘]</string>
@@ -119,8 +117,10 @@
     <string name="duration_label">持續時間</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">幫浦已暫停</string>
+    <string name="pump_running">幫浦運行中</string>
     <string name="notconfigured">未配置</string>
     <string name="loopsuspended">循環已暫停</string>
+    <string name="loop_suspended_by_dst">因夏令時間切換，循環已暫停</string>
     <string name="trend_arrow">趨勢箭頭</string>
     <string name="a11y_autosens_label">自動感應(autosens)</string>
     <string name="required">需要</string>
@@ -155,19 +155,23 @@
     <string name="treatments_wizard_basaliob_label">基礎率 IOB</string>
     <string name="invalid">無效</string>
     <string name="login">登入</string>
+    <string name="logout">登出</string>
     <string name="prime_fill">注射/填充</string>
+    <string name="site_rotation">部位輪替</string>
     <string name="overview_insulin_label">胰島素</string>
     <string name="stoptemptarget">停止臨時目標</string>
     <string name="closedloop">閉環</string>
     <string name="openloop">開環</string>
     <string name="lowglucosesuspend">低血糖暫停(LGS)</string>
+    <string name="pump_disconnected">幫浦已中斷連線</string>
+    <string name="pump_suspended">幫浦已暫停</string>
+    <string name="mode_reverted">模式已還原</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">取消臨時基礎失敗</string>
     <string name="canceling_eb_failed">取消延長注射失敗</string>
     <string name="virtualpump_uploadstatus_title">上傳幫浦狀態到 NS 或 Tidepool</string>
-    <string name="suspendloop_label">停用/暫停循環</string>
     <string name="iob_label">IOB 活性胰島素</string>
     <string name="loopstatus_targets">目標：</string>
     <string name="loopstatus_OAPS_result">OAPS 結果：</string>
@@ -220,6 +224,8 @@
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
     <string name="cgm_sensor_insert">CGM 傳感器植入</string>
+    <string name="careportal_pump_site_management">幫浦植入部位</string>
+    <string name="careportal_cgm_site_management">CGM 植入部位</string>
     <string name="careportal_cgmsensorstart">CGM 傳感器啟動</string>
     <string name="careportal_cgm_sensor_stop">CGM 傳感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警報</string>
@@ -235,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS 離線</string>
     <string name="pump_battery_change">幫浦電池更換</string>
     <string name="temporary_target">臨時目標</string>
+    <string name="running_mode">運行模式</string>
     <string name="careportal_temporarytargetvalue">臨時目標值</string>
     <string name="careportal_temporarytargetcancel">臨時目標取消</string>
     <string name="boluswizard">注射嚮導</string>
@@ -252,6 +259,39 @@
     <string name="loop">循環</string>
     <string name="ns">NS</string>
     <string name="record">紀錄</string>
+    <string name="location_front_right_upper_chest">右胸</string>
+    <string name="location_front_left_upper_chest">左胸</string>
+    <string name="location_side_right_upper_arm">右上臂外側</string>
+    <string name="location_side_left_upper_arm">左上臂外側</string>
+    <string name="location_back_right_upper_arm">右上臂後側</string>
+    <string name="location_back_left_upper_arm">左上臂後側</string>
+    <string name="location_side_right_upper_abdomen">右上腹部外側</string>
+    <string name="location_side_left_upper_abdomen">左上腹部外側</string>
+    <string name="location_side_right_lower_abdomen">右下腹部外側</string>
+    <string name="location_side_left_lower_abdomen">左下腹部外側</string>
+    <string name="location_front_right_upper_abdomen">右上腹部前側</string>
+    <string name="location_front_left_upper_abdomen">左上腹部前側</string>
+    <string name="location_front_right_lower_abdomen">右下腹部前側</string>
+    <string name="location_front_left_lower_abdomen">左下腹部前側</string>
+    <string name="location_back_right_buttock">右臀部</string>
+    <string name="location_back_left_buttock">左臀部</string>
+    <string name="location_side_right_upper_thigh">右大腿外側上部</string>
+    <string name="location_side_left_upper_thigh">左大腿外側上部</string>
+    <string name="location_side_right_lower_thigh">右大腿外側下部</string>
+    <string name="location_side_left_lower_thigh">左大腿外側下部</string>
+    <string name="location_front_right_upper_thigh">右大腿前側上部</string>
+    <string name="location_front_left_upper_thigh">左大腿前側上部</string>
+    <string name="location_front_right_lower_thigh">右大腿前側下部</string>
+    <string name="location_front_left_lower_thigh">左大腿前側下部</string>
+    <string name="arrow_up">上</string>
+    <string name="arrow_up_right">右上</string>
+    <string name="arrow_right">右</string>
+    <string name="arrow_down_right">右下</string>
+    <string name="arrow_down">下</string>
+    <string name="arrow_down_left">左下</string>
+    <string name="arrow_left">左</string>
+    <string name="arrow_up_left">左上</string>
+    <string name="arrow_center">中心</string>
     <!--    Command-->
     <string name="connectiontimedout">連線逾時</string>
     <!--    PumpEnactResult-->
@@ -264,18 +304,18 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g 額外碳水化合物需要在 %2$d 分鐘內</string>
     <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">累積 TDD</string>
-    <string name="expweight">指數加權 TDD</string>
+    <string name="cumulative_tdd">累積每日總劑量</string>
+    <string name="expweight">指數加權每日總劑量</string>
     <string name="basalrate">基礎率</string>
     <string name="bolus">注射</string>
-    <string name="tdd">每日總劑量(TDD)</string>
+    <string name="tdd">每日總劑量</string>
     <string name="ratio">比率</string>
     <string name="amount_days">天數</string>
     <string name="weight">權重</string>
     <string name="warning_Message">如果使用注射進行注射/填充，可能不準確！</string>
     <string name="olddata_Message">舊資料，請按「重新載入」</string>
-    <string name="tbb">總基礎胰島素基礎量(TBB)</string>
-    <string name="tbb2">總基礎胰島素基礎量(TBB) * 2</string>
+    <string name="tbb">總基礎胰島素基礎量</string>
+    <string name="tbb2">總基礎胰島素基礎量 * 2</string>
     <!--    Ntp-->
     <string name="timedetection">時間偵測</string>
     <!-- User Entry -->
@@ -297,7 +337,8 @@
     <string name="uel_lgs_loop_mode">低血糖暫停循環模式</string>
     <string name="uel_open_loop_mode">開環模式</string>
     <string name="uel_loop_disabled">循環停用</string>
-    <string name="uel_loop_enabled">循環啟用</string>
+    <string name="uel_loop_resumed">循環已恢復</string>
+    <string name="uel_pump_running">幫浦運行中</string>
     <string name="uel_reconnect">重新連線</string>
     <string name="uel_disconnect">斷線</string>
     <string name="uel_resume">恢復</string>
@@ -310,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">取消延長注射</string>
     <string name="uel_cancel_tt">取消臨時目標</string>
     <string name="uel_careportal">照護</string>
+    <string name="uel_sensor_location">傳感器位置</string>
     <string name="uel_site_change">更換位置</string>
+    <string name="uel_site_location">部位位置</string>
     <string name="uel_reservoir_change">更換儲存器</string>
     <string name="uel_calibration">校正</string>
     <string name="uel_prime_bolus">注射注射</string>
@@ -373,6 +416,9 @@
     <string name="uel_loop_change">循環已更改</string>
     <string name="uel_loop_removed">循環已移除</string>
     <string name="uel_other">其他</string>
+    <string name="uel_running_mode">運行模式</string>
+    <string name="uel_running_mode_removed">已移除運行模式</string>
+    <string name="uel_running_mode_updarted">已更新運模式</string>
     <!-- HardLimits -->
     <string name="profile_low_target">設定檔低目標</string>
     <string name="profile_high_target">設定檔高目標</string>
@@ -397,7 +443,7 @@
     <string name="deactivate">停用</string>
     <string name="update_time">更新時間</string>
     <string name="load_history">載入歷史 %1$d</string>
-    <string name="load_tdds">載入 TDDs</string>
+    <string name="load_tdds">載入每日總劑量</string>
     <string name="set_profile">設置設定檔</string>
     <string name="set_user_settings">設置使用者設定</string>
     <string name="smb_bolus_u">SMB 注射 %1$.2f U</string>
@@ -593,4 +639,6 @@
     <string name="rate_percent_duration">速率：%1$.2f U/h（%2$.2f%%）持續時間：%3$d 分鐘</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f%%（%2$.2f U/h）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f U/h（%2$.2f%%）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
+    <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS 播放音檔"</string>
 </resources>

@@ -1,16 +1,25 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Suppress("SpellCheckingInspection")
-class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate) {
+@Singleton
+class Objective2 @Inject constructor(
+    preferences: Preferences,
+    rh: ResourceHelper,
+    dateUtil: DateUtil,
+) : Objective(preferences, rh, dateUtil, "exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate) {
 
     init {
         tasks.add(
             ExamTask(this, R.string.prerequisites_label, R.string.prerequisites_what, "prerequisites")
                 .option(Option(R.string.prerequisites_nightscout, true))
-                .option(Option(R.string.prerequisites_computer, true))
+                .option(Option(R.string.prerequisites_build, true))
                 .option(Option(R.string.prerequisites_pump, true))
                 .option(Option(R.string.prerequisites_beanandroiddeveloper, false))
                 .hint(Hint(R.string.prerequisites_hint1))

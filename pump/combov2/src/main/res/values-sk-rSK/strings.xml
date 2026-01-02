@@ -103,15 +103,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_unpair_pump_summary">Zrušiť párovanie AndroidAPS a Androidu v súčasnej dobe spárovanej Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Neznámy dočasný bazál bol zistený a zastavený. Percentuálna hodnota: %1$d%%; zostávajúca doba trvania: %2$s</string>
     <string name="combov2_connection_error">Chyba pripojenia: %1$s</string>
-    <string name="combov2_short_status_last_connection">Posledné spoj: pred %1$d min</string>
     <string name="combov2_short_status_alert">Upozornenie: %s</string>
-    <string name="combov2_short_status_last_bolus">Posledný bolus: %1$sJI @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Doč. bazál: %s</string>
-    <string name="combov2_short_status_reservoir">Zásobník: %dJI</string>
-    <string name="combov2_short_status_battery_state_empty">prázdny</string>
-    <string name="combov2_short_status_battery_state_low">nízka</string>
-    <string name="combov2_short_status_battery_state_full">plná</string>
-    <string name="combov2_short_status_battery_state">Bat: %s</string>
     <string name="combov2_automatic_reservoir_entry">Detekovať a vložiť automaticky výmenu zásobníka</string>
     <string name="combov2_automatic_battery_entry">Detekovať a vložiť automaticky výmenu batérie</string>
     <string name="combov2_timezone_changed">Časové pásmo zmenené</string>

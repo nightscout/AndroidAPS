@@ -35,7 +35,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
     <string name="exitwizard">Přeskočit průvodce</string>
-    <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AAPS povolit navrhovat nebo provádět změny bazálu</string>
     <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
     <string name="request">Požadavek</string>
     <string name="apsmode_title">Typ smyčky</string>
-    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <!--    ConfigBuilder-->

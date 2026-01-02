@@ -1,9 +1,11 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class NonceTest {
+class NonceTest : TestBase() {
+
     @Test
     fun checkDefaultNonceIncrement() {
         // Increment the nonce by the default amount of 1.
@@ -30,11 +32,13 @@ class NonceTest {
     fun checkNonceWraparound() {
         // Increment a nonce that is high enough to cause a wrap-around.
 
-        val firstNonce = Nonce(listOf(
-            0xFA.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(),
-            0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(),
-            0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte()
-        ))
+        val firstNonce = Nonce(
+            listOf(
+                0xFA.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(),
+                0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(),
+                0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte()
+            )
+        )
         val secondNonce = firstNonce.getIncrementedNonce(incrementAmount = 10)
         val expectedSecondNonce = Nonce(listOf(0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00))
 

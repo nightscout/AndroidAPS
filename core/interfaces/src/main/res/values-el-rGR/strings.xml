@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Ο οδηγός της αντλίας άλλαξε.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d λ πριν</string>
     <string name="minago_long">%1$d λεπτά πριν</string>
-    <string name="hoursago">%1$.1f ω πριν</string>
     <string name="days_ago">%1$.1f ημέρες πριν</string>
     <string name="days_ago_round">%1$.0f ημέρες πριν</string>
     <string name="in_days">σε %1$.0f ημέρες</string>

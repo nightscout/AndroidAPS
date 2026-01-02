@@ -37,6 +37,7 @@
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
     <string name="treatments_wizard_total_label">Viso</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
     <string name="record_pump_site_change">Įrašas apie infuzijos rinkinio keitimą</string>

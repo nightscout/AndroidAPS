@@ -5,7 +5,6 @@
     <string name="error">에러</string>
     <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
     <string name="invalid_input">사용할수 없는 입력 데이터</string>
-    <string name="bolus_delivering">%1$.2f U 주입 중</string>
     <string name="constraint_applied">제한 적용!</string>
     <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
     <string name="tt_label">임시목표</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">펌프가 초기화와 프로파일 설정이 되지 않았습니다!</string>
     <string name="failed_update_basal_profile">Basal 프로파일 갱신 실패</string>
-    <string name="bolus_delivered_successfully">Bolus %1$.2f U이 성공적으로 주입되었습니다</string>
     <string name="no_valid_basal_rate">펌프에서 유효한 Basal양을 읽을 수 없습니다.</string>
     <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="loop_disabled">제한으로 인해 LOOP가 사용불가합니다.</string>
@@ -90,7 +88,6 @@
     <string name="loopisdisabled">Loop가 중지중입니다.</string>
     <string name="alarm">알람</string>
     <string name="disableloop">Loop 중지하기</string>
-    <string name="enableloop">Loop 실행하기</string>
     <string name="resumeloop">Loop 재실행</string>
     <string name="suspendloop">Loop 일시중지</string>
     <string name="duration_min_label">기간 [min]</string>
@@ -104,7 +101,6 @@
     <string name="name_short">이름:</string>
     <string name="time">시간</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
-    <string name="loading">로딩 중 …</string>
     <string name="notes_label">노트</string>
     <string name="remove_button">삭제</string>
     <string name="add_new">새로 추가하기</string>
@@ -165,7 +161,6 @@
     <string name="canceling_tbr_failed">임시 basal 취소 실패</string>
     <string name="canceling_eb_failed">확장 Bolus 취소 실패</string>
     <string name="virtualpump_uploadstatus_title">NS에 펌프상태 업로드하기</string>
-    <string name="suspendloop_label">중지 또는 일시중지된 loop</string>
     <string name="iob_label">활성 인슐린 (IOB)</string>
     <string name="loopstatus_targets">목표:</string>
     <string name="loopstatus_OAPS_result">OAPS 결과:</string>
@@ -284,7 +279,6 @@
     <string name="uel_lgs_loop_mode">LGS loop 모드</string>
     <string name="uel_open_loop_mode">Open loop 모드</string>
     <string name="uel_loop_disabled">Loop 사용하지 않음</string>
-    <string name="uel_loop_enabled">Loop 사용함</string>
     <string name="uel_reconnect">재연결</string>
     <string name="uel_disconnect">연결 끊기</string>
     <string name="uel_resume">재시작</string>
@@ -556,4 +550,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <!--    Playback-->
 </resources>

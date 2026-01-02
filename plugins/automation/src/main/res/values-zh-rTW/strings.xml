@@ -140,4 +140,10 @@
     <string name="triggerStepsCountLabel">步數統計</string>
     <string name="triggerStepsCountDesc">每 %1$s 分鐘的步數統計 %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">測量持續時間</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">啟用/停用 SMB</string>
+    <string name="changeSmbTo">更改 SMB 為 %1$s</string>
+    <string name="newSmbMode">新 SMB 模式：</string>
+    <string name="on">開</string>
+    <string name="off">關</string>
 </resources>

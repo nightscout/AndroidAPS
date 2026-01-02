@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">Pump không hỗ trợ thao tác này. Vui lòng chỉ dùng giao diện AndroidAPS!</string>
+    <string name="waiting_1_minute">Đang chờ %1$d/%2$d giây trước khi thử kết nối lại</string>
+</resources>

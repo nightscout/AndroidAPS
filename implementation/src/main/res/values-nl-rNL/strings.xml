@@ -16,4 +16,5 @@
     <string name="day_tir">TIR overdag</string>
     <string name="night_tir">TIR \'s nachts</string>
     <string name="carbs_short" comment="max 6 characters">Koolhydraten</string>
+    <!--    PumpStatusGenerator-->
 </resources>

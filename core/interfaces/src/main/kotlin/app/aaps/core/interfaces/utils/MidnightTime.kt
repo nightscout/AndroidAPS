@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.utils
 
-import android.util.LongSparseArray
 import androidx.annotation.VisibleForTesting
+import androidx.collection.LongSparseArray
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime

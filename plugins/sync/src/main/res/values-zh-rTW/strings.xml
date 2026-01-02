@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">使用行動網路連線</string>
     <string name="ns_wifi">使用 WiFi 連線</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -21,8 +21,8 @@
     <string name="unsupported_ns_version">不支援的 Nightscout 版本</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient 故障。請考慮重新啟動 NS 和 NSClient。</string>
-    <!-- NSClient -->
+    <string name="ns_malfunction">NSClient 發生異常。請考慮重新啟動 NS 與 NSClient。</string>
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT 沒有寫入權限。API 密碼錯誤？</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
@@ -49,19 +49,19 @@
     <string name="ns_receive_profile_store">接收設定檔存儲</string>
     <string name="ns_receive_profile_store_summary">從 NS 設定檔編輯器同步設定檔</string>
     <string name="ns_receive_temp_target">接收臨時目標</string>
-    <string name="ns_receive_temp_target_summary">接受通過 NS 或 NSClient 輸入的臨時目標</string>
+    <string name="ns_receive_temp_target_summary">接受通過 NS 或 AAPSClient 輸入的臨時目標</string>
     <string name="ns_receive_profile_switch">接收設定檔切換</string>
-    <string name="ns_receive_profile_switch_summary">接受通過 NS 或 NSClient 輸入的設定檔切換</string>
-    <string name="ns_receive_offline_event">接收 APS 離線事件</string>
-    <string name="ns_receive_offline_event_summary">接受通過 NS 或 NSClient 輸入的 APS 離線事件</string>
+    <string name="ns_receive_profile_switch_summary">接受通過 NS 或 AAPSClient 輸入的個人設定切換</string>
+    <string name="ns_receive_running_mode">接收運行模式事件</string>
+    <string name="ns_receive_running_mode_summary">接受通過 NS 或 AAPSClient 輸入的運行模式事件</string>
     <string name="ns_receive_tbr_eb">接收臨時基礎率和 EB</string>
     <string name="ns_receive_tbr_eb_summary">接受通過另一實例輸入的臨時基礎率和 EB</string>
     <string name="ns_receive_insulin">接收胰島素</string>
-    <string name="ns_receive_insulin_summary">接受通過 NS 或 NSClient 輸入的胰島素（僅計算 IOB，不會實際注射）</string>
+    <string name="ns_receive_insulin_summary">接受通過 NS 或 AAPSClient 輸入的胰島素（不會實際送出，只計算在 IOB 中）</string>
     <string name="ns_receive_carbs">接收碳水化合物</string>
-    <string name="ns_receive_carbs_summary">接受通過 NS 或 NSClient 輸入的碳水化合物</string>
+    <string name="ns_receive_carbs_summary">接受通過 NS 或 AAPSClient 輸入的碳水化合物</string>
     <string name="ns_receive_therapy_events">接收治療事件</string>
-    <string name="ns_receive_therapy_events_summary">接受通過 NS 或 NSClient 輸入的治療事件（導管更換、胰島素、電池更換等）</string>
+    <string name="ns_receive_therapy_events_summary">接受通過 NS 或 AAPSClient 輸入的治療事件（導管、胰島素、更換電池等）</string>
     <string name="ns_receive_cgm">接收/補充 CGM 資料</string>
     <string name="ns_receive_cgm_summary">接受來自 NS 的 CGM 資料</string>
     <string name="ns_sync_slow">放慢上傳速度</string>
@@ -75,17 +75,11 @@
     <string name="ns_use_ws_title">連線到 Websockets</string>
     <string name="ns_use_ws_summary">啟用意味著：更快的更新、接收警報和公告以及更高的電池消耗，類似於 v1。所有其他上傳器到 NS 必須使用 v3 協議。</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">您的 Tidepool 登錄用戶名，通常是您的電子郵件地址</string>
-    <string name="title_tidepool_username">登錄用戶名</string>
-    <string name="summary_tidepool_password">您的 Tidepool 登錄密碼</string>
-    <string name="title_tidepool_password">登錄密碼</string>
-    <string name="title_tidepool_test_login">測試 Tidepool 登錄</string>
-    <string name="summary_tidepool_dev_servers">如果啟用，上傳將轉到 https://int-app.tidepool.org 而不是一般的 https://app.tidepool.org/</string>
+    <string name="summary_tidepool_dev_servers">若啟用，資料上傳將會發送至測試伺服器，而非一般的伺服器。</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">將資料上傳到 Tidepool</string>
-    <string name="remove_all">移除全部</string>
     <string name="upload_now">立即上傳</string>
     <string name="not_connected">未連線</string>
     <string name="read_only">唯讀</string>
@@ -121,7 +115,7 @@
     <string name="pump_status">幫浦狀態</string>
     <string name="loop_status">循環狀態</string>
     <string name="wizard_result">計算嚮導:\n胰島素: %1$.2fU\n碳水化合物: %2$dg</string>
-    <string name="quick_wizard_not_available">所選的快速嚮導不再可用，請重新整理您的磁磚</string>
+    <string name="quick_wizard_not_available">所選的快速嚮導不再可用，請重新整理您的資訊方塊</string>
     <string name="quick_wizard_message">快速嚮導: %1$s\n胰島素: %2$.2fU\n碳水化合物: %3$dg</string>
     <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
     <string name="wear_action_tempt_cancel_message">取消執行中的臨時目標？</string>
@@ -176,6 +170,7 @@
     <string name="last_aps_result_na">最後結果不可用！</string>
     <string name="loop_status_closed">閉環</string>
     <string name="loop_status_open">開環</string>
+    <string name="loop_status_lgs">LGS</string>
     <string name="loop_status_disabled">循環停用</string>
     <string name="aps">APS</string>
     <string name="last_run">上次運行</string>
@@ -191,7 +186,6 @@
     <string name="wear_action_loop_state_unauthorized">請再試一次。</string>
     <string name="wear_action_loop_state_invalid">請求的循環狀態無效</string>
     <string name="wear_action_loop_state_title">循環狀態</string>
-    <string name="wear_action_loop_state_changed">%1$s</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\n時長：%2$d 分鐘</string>
     <string name="wear_action_loop_state_now_closed">已關閉</string>
     <string name="wear_action_loop_state_now_lgs">LGS</string>
@@ -199,11 +193,10 @@
     <string name="wear_action_loop_state_now_suspended">已暫停</string>
     <string name="wear_action_loop_state_now_resumed">已恢復</string>
     <string name="wear_action_loop_state_now_disabled">已停用</string>
-    <string name="wear_action_loop_state_now_enabled">已啟用</string>
+    <string name="wear_action_loop_state_now_pump_suspended">幫浦已暫停</string>
     <string name="wear_action_loop_state_now_superbolus">超級注射</string>
     <string name="wear_action_loop_state_now_invalid">無效</string>
     <string name="wear_action_loop_state_now_pump_disconnected">幫浦已中斷連線</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">幫浦已重新連線</string>
     <string name="garmin_request_key">請求金鑰</string>
     <string name="garmin_request_key_summary">可選金鑰，用來加密 Garmin 裝置與 AAPS 的 HTTP 通訊。</string>
 </resources>

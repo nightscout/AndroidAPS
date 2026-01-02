@@ -7,11 +7,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
@@ -108,21 +107,19 @@ class AndroidPermissionImpl @Inject constructor(
     @Synchronized
     override fun notifyForBtConnectPermission(activity: FragmentActivity) {
         if (activePlugin.activePump !is VirtualPump)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                //  Manifest.permission.BLUETOOTH_CONNECT
-                if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
-                    uiInteraction.addNotification(
-                        id = Notification.PERMISSION_BT,
-                        text = rh.gs(app.aaps.core.ui.R.string.need_connect_permission),
-                        level = Notification.URGENT,
-                        actionButtonId = R.string.request,
-                        action = { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) },
-                        validityCheck = { permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN) }
-                    )
-                else {
-                    activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-                    uiInteraction.dismissNotification(Notification.PERMISSION_BT)
-                }
+        //  Manifest.permission.BLUETOOTH_CONNECT
+            if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
+                uiInteraction.addNotification(
+                    id = Notification.PERMISSION_BT,
+                    text = rh.gs(app.aaps.core.ui.R.string.need_connect_permission),
+                    level = Notification.URGENT,
+                    actionButtonId = R.string.request,
+                    action = { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) },
+                    validityCheck = { permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN) }
+                )
+            else {
+                activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                uiInteraction.dismissNotification(Notification.PERMISSION_BT)
             }
     }
 
@@ -190,7 +187,7 @@ class AndroidPermissionImpl @Inject constructor(
                     // Launch the settings activity if the user prefers
                     val intent = Intent(
                         Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + activity.packageName)
+                        ("package:" + activity.packageName).toUri()
                     )
                     activity.startActivity(intent)
                 },

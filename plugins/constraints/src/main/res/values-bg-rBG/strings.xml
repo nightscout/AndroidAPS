@@ -21,12 +21,6 @@
     <string name="limitingextendedbolus">Ограничаване на удължения болус до %1$.1f Е, поради %2$s</string>
     <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
-    <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
-    <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
-    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
-    <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
-    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
-    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
     <string name="hardlimit">твърд лимит</string>
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <!-- Objectives -->

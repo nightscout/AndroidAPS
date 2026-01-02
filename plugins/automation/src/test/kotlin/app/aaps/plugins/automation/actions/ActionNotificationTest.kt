@@ -10,9 +10,9 @@ import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionNotificationTest : TestBaseWithProfile() {
@@ -28,16 +28,16 @@ class ActionNotificationTest : TestBaseWithProfile() {
                 it.rxBus = rxBus
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
-                it.instantiator = instantiator
+                it.pumpEnactResultProvider = pumpEnactResultProvider
             }
         }
     }
 
     @BeforeEach
     fun setup() {
-        `when`(rh.gs(app.aaps.core.ui.R.string.notification)).thenReturn("Notification")
-        `when`(rh.gs(eq(R.string.notification_message), any())).thenReturn("Notification: %s")
-        `when`(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
+        whenever(rh.gs(app.aaps.core.ui.R.string.notification)).thenReturn("Notification")
+        whenever(rh.gs(eq(R.string.notification_message), any())).thenReturn("Notification: %s")
+        whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
             .thenReturn(Single.just(PersistenceLayer.TransactionResult()))
 
         sut = ActionNotification(injector)
@@ -62,8 +62,8 @@ class ActionNotificationTest : TestBaseWithProfile() {
                 assertThat(result.success).isTrue()
             }
         })
-        //Mockito.verify(rxBus, Mockito.times(2)).send(anyObject())
-        //Mockito.verify(repository, Mockito.times(1)).runTransaction(any(Transaction::class.java))
+        //verify(rxBus, times(2)).send(anyOrNull())
+        //verify(repository, times(1)).runTransaction(any(Transaction::class.java))
     }
 
     @Test fun hasDialogTest() {

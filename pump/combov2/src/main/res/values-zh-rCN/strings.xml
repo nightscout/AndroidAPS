@@ -13,9 +13,4 @@
     <string name="combov2_bolus_delivery_failed">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d 分钟剩余)</string>
     <string name="combov2_battery_low_warning">泵电池电量不足</string>
-    <string name="combov2_short_status_last_connection">上次连接: %1$d 分钟以前</string>
-    <string name="combov2_short_status_temp_basal">临时: %s</string>
-    <string name="combov2_short_status_reservoir">储药器v: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">空的</string>
-    <string name="combov2_short_status_battery_state_low">低</string>
 </resources>

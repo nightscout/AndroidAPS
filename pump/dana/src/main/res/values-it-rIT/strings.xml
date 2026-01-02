@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModello: %2$02X\nProtocollo: %3$02X\nCodice: %4$02X</string>
     <string name="processinghistory">Elaborazione</string>
     <string name="danar_enableextendedbolus">Abilita bolo esteso sul micro</string>
-    <string name="overview_bolusprogress_delivered">Erogato</string>
     <string name="overview_bolusprogress_stoped">Stoppato</string>
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
     <string name="pumperror">Errore micro</string>

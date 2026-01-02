@@ -1,5 +1,8 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntentPreferenceKey
+
 enum class IntentKey(
     override val key: String,
     override val defaultedBySM: Boolean = false,
@@ -8,7 +11,8 @@ enum class IntentKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 
     ApsLinkToDocs(key = "link_to_docs"),

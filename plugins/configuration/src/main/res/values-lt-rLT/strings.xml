@@ -35,7 +35,6 @@
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
-    <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Jei esate pradedantysis vartotojas, pradėkite nuo AMA. Būtinai perskaitykite dokumentaciją ir sukonfigūruokite algoritmą prieš naudojimą.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
-    <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
     <string name="error_asking_for_permissions">Leidimo užklausos klaida</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--    ConfigBuilder-->

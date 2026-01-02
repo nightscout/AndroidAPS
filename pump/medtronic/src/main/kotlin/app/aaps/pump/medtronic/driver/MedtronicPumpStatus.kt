@@ -2,10 +2,10 @@ package app.aaps.pump.medtronic.driver
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.common.data.PumpStatus
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -13,8 +13,8 @@ import app.aaps.pump.common.sync.PumpDbEntryTBR
 import app.aaps.pump.medtronic.defs.BasalProfileStatus
 import app.aaps.pump.medtronic.defs.BatteryType
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
-import app.aaps.pump.medtronic.util.MedtronicConst
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
+import app.aaps.pump.medtronic.keys.MedtronicLongNonKey
+import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -25,15 +25,13 @@ import javax.inject.Singleton
  */
 @Singleton
 class MedtronicPumpStatus @Inject constructor(
-    private val rh: ResourceHelper,
-    private val sp: SP,
+    preferences: Preferences,
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil
 ) : PumpStatus(PumpType.MEDTRONIC_522_722) {
 
     var errorDescription: String? = null
-    lateinit var serialNumber: String //? = null
-    var pumpFrequency: String? = null
+    var serialNumber: String = preferences.get(MedtronicStringPreferenceKey.Serial)
     var maxBolus: Double? = null
     var maxBasal: Double? = null
     var runningTBR: PumpDbEntryTBR? = null
@@ -53,18 +51,14 @@ class MedtronicPumpStatus @Inject constructor(
     var basalProfileStatus = BasalProfileStatus.NotInitialized
     var batteryType = BatteryType.None
 
-    override fun initSettings() {
+    init {
         activeProfileName = "STD"
         reservoirRemainingUnits = 75.0
         batteryRemaining = 75
         if (medtronicPumpMap.isEmpty()) createMedtronicPumpMap()
         if (medtronicDeviceTypeMap.isEmpty()) createMedtronicDeviceTypeMap()
-        lastConnection = sp.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L)
+        lastConnection = preferences.get(MedtronicLongNonKey.LastGoodPumpCommunicationTime)
         lastDataTime = lastConnection
-        val serial = sp.getStringOrNull(MedtronicConst.Prefs.PumpSerial, null)
-        if (serial != null) {
-            serialNumber = serial
-        }
     }
 
     private fun createMedtronicDeviceTypeMap() {
@@ -104,20 +98,7 @@ class MedtronicPumpStatus @Inject constructor(
             return 0.0
         }
 
-    // Battery type
-    private var batteryTypeByDescMap: MutableMap<String, BatteryType?> = HashMap()
-
-    fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType {
-        if (batteryTypeByDescMap.isEmpty()) {
-            for (value in BatteryType.entries) {
-                batteryTypeByDescMap[rh.gs(value.description)] = value
-            }
-        }
-        return batteryTypeByDescMap[batteryTypeStr] ?: BatteryType.None
-    }
-
-    override val errorInfo: String
-        get() = if (errorDescription == null) "-" else errorDescription!!
+    override val errorInfo: String get() = errorDescription ?: "-"
 
     val tbrRemainingTime: Int?
         get() {
@@ -136,8 +117,4 @@ class MedtronicPumpStatus @Inject constructor(
             val timeMinutes = (tempBasalEnd!! - System.currentTimeMillis()) / (1000 * 60)
             return timeMinutes.toInt()
         }
-
-    init {
-        initSettings()
-    }
 }

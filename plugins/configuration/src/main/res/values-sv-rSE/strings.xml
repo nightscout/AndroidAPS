@@ -34,7 +34,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
-    <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AAPS föreslå/göra basalförändringar</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">Identifiering (e-post, FB, Discord-namn etc)</string>
     <string name="request">Begäran</string>
     <string name="apsmode_title">APS-läge</string>
-    <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="error_asking_for_permissions">Fel vid begäran om behörigheter</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <!--    ConfigBuilder-->

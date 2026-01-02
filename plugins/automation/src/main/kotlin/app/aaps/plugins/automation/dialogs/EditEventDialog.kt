@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
@@ -37,6 +38,7 @@ class EditEventDialog : BaseDialog() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var rh: ResourceHelper
 
     private var actionListAdapter: ActionListAdapter? = null
     private lateinit var event: AutomationEventObject
@@ -191,14 +193,14 @@ class EditEventDialog : BaseDialog() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val action = event.actions[position]
-            holder.bind(action, this, position)
+            holder.bind(action, this, position, rh)
         }
 
         override fun getItemCount(): Int = event.actions.size
 
         inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-            fun bind(action: Action, recyclerView: RecyclerView.Adapter<ViewHolder>, position: Int) {
+            fun bind(action: Action, recyclerView: RecyclerView.Adapter<ViewHolder>, position: Int, rh: ResourceHelper) {
                 if (!event.readOnly)
                     view.findViewById<LinearLayout>(R.id.automation_layoutText).setOnClickListener {
                         if (action.hasDialog()) {
@@ -220,6 +222,15 @@ class EditEventDialog : BaseDialog() {
                 }
                 view.findViewById<ImageView>(R.id.automation_action_image).setImageResource(action.icon())
                 view.findViewById<TextView>(R.id.automation_viewActionTitle).text = action.shortDescription()
+                view.setBackgroundColor(
+                    rh.gac(
+                        context,
+                        when (action.isValid()) {
+                            true  -> app.aaps.core.ui.R.attr.validActions
+                            false -> app.aaps.core.ui.R.attr.actionsError
+                        }
+                    )
+                )
             }
         }
     }

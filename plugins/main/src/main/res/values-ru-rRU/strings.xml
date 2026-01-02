@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Временная цель успешно отменена</string>
     <string name="smscommunicator_remote_commands_allowed">Разрешить команды через смс</string>
     <string name="smscommunicator_loop_has_been_disabled">Зцикл остановлен</string>
-    <string name="smscommunicator_loop_has_been_enabled">Зцикл активирован</string>
     <string name="smscommunicator_loop_is_enabled">Зцикл работает</string>
     <string name="smscommunicator_pump_connect_with_code">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Ошибка подключения к помпе</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Связь с помпой отключена</string>
     <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remote_command_not_allowed">Удаленная команда не разрешена</string>
+    <string name="smscommunicator_remote_command_not_possible">Удаленное управление недоступно</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Удаленный болюс недоступен, повторите попытку позже.</string>
     <string name="smscommunicator_basal_reply_with_code">Для начала подачи базала %1$.2f ед./ч на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Для переключения профиля на %1$s %2$d%% ответьте кодом %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Для начала подачи базала %1$d%% на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Чтобы возобновить цикл ответьте кодом %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Чтобы включить цикл ответьте кодом %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Чтобы отключить цикл ответьте кодом %1$s</string>
     <string name="smscommunicator_tempbasal_set">Врем. базал %1$.2f%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_extended_set">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
@@ -130,7 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">Профиль</string>
     <string name="localprofile_shortname">ЛП</string>
-    <string name="description_profile_local">Задайте профиль, доступный в автономном режиме.</string>
+    <string name="description_profile_local">Определите профиль с описанием потребности в инсулине.</string>
     <string name="a11y_add_new_to_list">добавить новый в список</string>
     <string name="do_you_want_switch_profile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
     <string name="save_or_reset_changes_first">Сначала сохраните или сбросьте текущие изменения</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">Пролонгированный болюс</string>
     <string name="extended_bolus_cancel_button">Отменить пролонгированный болюс</string>
     <string name="tools">Инструменты</string>
+    <string name="site_rotation">Вращение места установки</string>
     <string name="nav_history_browser">Просмотр журнала</string>
     <string name="sensor_label">Сенсор</string>
     <string name="age_label">возраст:</string>

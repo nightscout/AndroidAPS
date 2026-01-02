@@ -3,20 +3,15 @@ package app.aaps.core.ui.dialogs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import androidx.annotation.StringRes
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 // if you need error dialog - duplicate to ErrorDialog and make it and use: AppThemeErrorDialog & R.drawable.ic_header_error instead
 
 object WarningDialog {
-
-    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
-        Handler(Looper.getMainLooper()).post(it)
-    }
 
     @SuppressLint("InflateParams")
     fun showWarning(context: Context, title: String, message: String, @StringRes positiveButton: Int = -1, ok: (() -> Unit)? = null, cancel: (() -> Unit)? = null) {

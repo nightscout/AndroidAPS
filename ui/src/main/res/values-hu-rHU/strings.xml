@@ -12,6 +12,7 @@
     <string name="bg_sensor">Szenzor</string>
     <!-- WizardDialog -->
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->

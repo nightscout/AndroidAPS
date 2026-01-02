@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">泵上的最大大剂量（U）</string>
     <string name="medtronic_pump_max_basal">泵上的最大基础率(U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic公司的编码</string>
-    <string name="medtronic_pump_frequency_us_ca">美国 &amp; 加拿大 (916MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">全球 (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">软件 4b6b 编码</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">硬件 4b6b 编码</string>
     <string name="medtronic_custom_action_wake_and_tune">唤醒和调整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除大剂量锁定</string>
     <string name="medtronic_custom_action_reset_rileylink">重置 RileyLink 配置</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nizn">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nimh">镍氢电池 (扩展视图)</string>
-    <string name="medtronic_bolus_debugging">大剂量/治疗调试</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 电池</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">之前</string>
     <string name="medtronic_notification_check_time_date">泵的时间需要更新</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">开启</string>
-    <string name="common_off">关闭</string>
     <string name="pump_time_updated">泵时间已经更新</string>
     <string name="set_neutral_temps_title">设置中性临时基础率</string>
     <string name="set_neutral_temps_summary">如果启用，它将在每小时结束前取消临时基础率。 此方法可帮助阻止某些泵在一小时内进行蜂鸣/振动。</string>

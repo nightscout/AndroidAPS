@@ -7,18 +7,19 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.waitMillis
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsShared.extensions.onlyNsIdAdded
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,7 +29,6 @@ import javax.inject.Singleton
 
 @Singleton
 class DataSyncSelectorV1 @Inject constructor(
-    private val sp: SP,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
@@ -53,7 +53,7 @@ class DataSyncSelectorV1 @Inject constructor(
         var ebsRemaining: Long = -1L,
         var pssRemaining: Long = -1L,
         var epssRemaining: Long = -1L,
-        var oesRemaining: Long = -1L
+        var rmsRemaining: Long = -1L
     ) {
 
         fun size(): Long =
@@ -69,11 +69,11 @@ class DataSyncSelectorV1 @Inject constructor(
                 ebsRemaining +
                 pssRemaining +
                 epssRemaining +
-                oesRemaining
+                rmsRemaining
     }
 
     private val queueCounter = QueueCounter()
-    private val isPaused get() = sp.getBoolean(R.string.key_ns_paused, false)
+    private val isPaused get() = preferences.get(NsclientBooleanKey.NsPaused)
 
     override fun queueSize(): Long = queueCounter.size()
 
@@ -92,19 +92,19 @@ class DataSyncSelectorV1 @Inject constructor(
         }
         rxBus.send(EventNSClientUpdateGuiStatus())
         if (preferences.get(BooleanKey.NsClientUploadData) && !isPaused) {
-            queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
-            queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
-            queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
-            queueCounter.ttsRemaining = (persistenceLayer.getLastTemporaryTargetId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
-            queueCounter.foodsRemaining = (persistenceLayer.getLastFoodId() ?: 0L) - sp.getLong(R.string.key_ns_food_last_synced_id, 0)
-            queueCounter.gvsRemaining = (persistenceLayer.getLastGlucoseValueId() ?: 0L) - sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
-            queueCounter.tesRemaining = (persistenceLayer.getLastTherapyEventId() ?: 0L) - sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
-            queueCounter.dssRemaining = (persistenceLayer.getLastDeviceStatusId() ?: 0L) - sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
-            queueCounter.tbrsRemaining = (persistenceLayer.getLastTemporaryBasalId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
-            queueCounter.ebsRemaining = (persistenceLayer.getLastExtendedBolusId() ?: 0L) - sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
-            queueCounter.pssRemaining = (persistenceLayer.getLastProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
-            queueCounter.epssRemaining = (persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
-            queueCounter.oesRemaining = (persistenceLayer.getLastOfflineEventId() ?: 0L) - sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
+            queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - preferences.get(NsclientLongKey.BolusLastSyncedId)
+            queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - preferences.get(NsclientLongKey.CarbsLastSyncedId)
+            queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)
+            queueCounter.ttsRemaining = (persistenceLayer.getLastTemporaryTargetId() ?: 0L) - preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)
+            queueCounter.foodsRemaining = (persistenceLayer.getLastFoodId() ?: 0L) - preferences.get(NsclientLongKey.FoodLastSyncedId)
+            queueCounter.gvsRemaining = (persistenceLayer.getLastGlucoseValueId() ?: 0L) - preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)
+            queueCounter.tesRemaining = (persistenceLayer.getLastTherapyEventId() ?: 0L) - preferences.get(NsclientLongKey.TherapyEventLastSyncedId)
+            queueCounter.dssRemaining = (persistenceLayer.getLastDeviceStatusId() ?: 0L) - preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)
+            queueCounter.tbrsRemaining = (persistenceLayer.getLastTemporaryBasalId() ?: 0L) - preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)
+            queueCounter.ebsRemaining = (persistenceLayer.getLastExtendedBolusId() ?: 0L) - preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)
+            queueCounter.pssRemaining = (persistenceLayer.getLastProfileSwitchId() ?: 0L) - preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)
+            queueCounter.epssRemaining = (persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L) - preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
+            queueCounter.rmsRemaining = (persistenceLayer.getLastRunningModeId() ?: 0L) - preferences.get(NsclientLongKey.RunningModeLastSyncedId)
             rxBus.send(EventNSClientUpdateGuiQueue())
             val boluses = scope.async { processChangedBoluses() }
             val carbs = scope.async { processChangedCarbs() }
@@ -118,7 +118,7 @@ class DataSyncSelectorV1 @Inject constructor(
             val foods = scope.async { processChangedFoods() }
             val tes = scope.async { processChangedTherapyEvents() }
             val dss = scope.async { processChangedDeviceStatuses() }
-            val oes = scope.async { processChangedOfflineEvents() }
+            val rms = scope.async { processChangedRunningModes() }
             val ps = scope.async { processChangedProfileStore() }
 
             boluses.await()
@@ -133,7 +133,7 @@ class DataSyncSelectorV1 @Inject constructor(
             foods.await()
             tes.await()
             dss.await()
-            oes.await()
+            rms.await()
             ps.await()
         }
         rxBus.send(EventNSClientUpdateGuiStatus())
@@ -141,28 +141,28 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     override fun resetToNextFullSync() {
-        sp.remove(R.string.key_ns_glucose_value_last_synced_id)
-        sp.remove(R.string.key_ns_temporary_basal_last_synced_id)
-        sp.remove(R.string.key_ns_temporary_target_last_synced_id)
-        sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
-        sp.remove(R.string.key_ns_food_last_synced_id)
-        sp.remove(R.string.key_ns_bolus_last_synced_id)
-        sp.remove(R.string.key_ns_carbs_last_synced_id)
-        sp.remove(R.string.key_ns_bolus_calculator_result_last_synced_id)
-        sp.remove(R.string.key_ns_therapy_event_last_synced_id)
-        sp.remove(R.string.key_ns_profile_switch_last_synced_id)
-        sp.remove(R.string.key_ns_effective_profile_switch_last_synced_id)
-        sp.remove(R.string.key_ns_offline_event_last_synced_id)
-        sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
+        preferences.remove(NsclientLongKey.GlucoseValueLastSyncedId)
+        preferences.remove(NsclientLongKey.TemporaryBasalLastSyncedId)
+        preferences.remove(NsclientLongKey.TemporaryTargetLastSyncedId)
+        preferences.remove(NsclientLongKey.ExtendedBolusLastSyncedId)
+        preferences.remove(NsclientLongKey.FoodLastSyncedId)
+        preferences.remove(NsclientLongKey.BolusLastSyncedId)
+        preferences.remove(NsclientLongKey.CarbsLastSyncedId)
+        preferences.remove(NsclientLongKey.BolusCalculatorLastSyncedId)
+        preferences.remove(NsclientLongKey.TherapyEventLastSyncedId)
+        preferences.remove(NsclientLongKey.ProfileSwitchLastSyncedId)
+        preferences.remove(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
+        preferences.remove(NsclientLongKey.RunningModeLastSyncedId)
+        preferences.remove(NsclientLongKey.ProfileStoreLastSyncedId)
 
         val lastDeviceStatusDbId = persistenceLayer.getLastDeviceStatusId()
-        if (lastDeviceStatusDbId != null) sp.putLong(R.string.key_ns_device_status_last_synced_id, lastDeviceStatusDbId)
-        else sp.remove(R.string.key_ns_device_status_last_synced_id)
+        if (lastDeviceStatusDbId != null) preferences.put(NsclientLongKey.DeviceStatusLastSyncedId, lastDeviceStatusDbId)
+        else preferences.remove(NsclientLongKey.DeviceStatusLastSyncedId)
     }
 
     private fun confirmLastBolusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_bolus_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.BolusLastSyncedId)) {
+            preferences.put(NsclientLongKey.BolusLastSyncedId, lastSynced)
         }
     }
 
@@ -171,9 +171,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastBolusId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.BolusLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_bolus_last_synced_id, 0)
+                preferences.put(NsclientLongKey.BolusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.bolusesRemaining = lastDbId - startId
@@ -209,8 +209,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_carbs_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.CarbsLastSyncedId)) {
+            preferences.put(NsclientLongKey.CarbsLastSyncedId, lastSynced)
         }
     }
 
@@ -219,9 +219,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastCarbsId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.CarbsLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_carbs_last_synced_id, 0)
+                preferences.put(NsclientLongKey.CarbsLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.carbsRemaining = lastDbId - startId
@@ -257,8 +257,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)) {
+            preferences.put(NsclientLongKey.BolusCalculatorLastSyncedId, lastSynced)
         }
     }
 
@@ -267,9 +267,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastBolusCalculatorResultId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
+                preferences.put(NsclientLongKey.BolusCalculatorLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.bcrRemaining = lastDbId - startId
@@ -305,8 +305,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_temporary_target_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)) {
+            preferences.put(NsclientLongKey.TemporaryTargetLastSyncedId, lastSynced)
         }
     }
 
@@ -315,9 +315,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastTemporaryTargetId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_temporary_target_last_synced_id, 0)
+                preferences.put(NsclientLongKey.TemporaryTargetLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.ttsRemaining = lastDbId - startId
@@ -353,8 +353,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastFoodIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_food_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_food_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.FoodLastSyncedId)) {
+            preferences.put(NsclientLongKey.FoodLastSyncedId, lastSynced)
         }
     }
 
@@ -363,9 +363,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastFoodId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_food_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.FoodLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_food_last_synced_id, 0)
+                preferences.put(NsclientLongKey.FoodLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.foodsRemaining = lastDbId - startId
@@ -401,8 +401,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_glucose_value_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)) {
+            preferences.put(NsclientLongKey.GlucoseValueLastSyncedId, lastSynced)
         }
     }
 
@@ -411,9 +411,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastGlucoseValueId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_glucose_value_last_synced_id, 0)
+                preferences.put(NsclientLongKey.GlucoseValueLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.gvsRemaining = lastDbId - startId
@@ -451,8 +451,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_therapy_event_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.TherapyEventLastSyncedId)) {
+            preferences.put(NsclientLongKey.TherapyEventLastSyncedId, lastSynced)
         }
     }
 
@@ -461,9 +461,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastTherapyEventId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.TherapyEventLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_therapy_event_last_synced_id, 0)
+                preferences.put(NsclientLongKey.TherapyEventLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.tesRemaining = lastDbId - startId
@@ -499,8 +499,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_device_status_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)) {
+            preferences.put(NsclientLongKey.DeviceStatusLastSyncedId, lastSynced)
         }
     }
 
@@ -509,9 +509,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastDeviceStatusId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_device_status_last_synced_id, 0)
+                preferences.put(NsclientLongKey.DeviceStatusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.dssRemaining = lastDbId - startId
@@ -530,8 +530,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)) {
+            preferences.put(NsclientLongKey.TemporaryBasalLastSyncedId, lastSynced)
         }
     }
 
@@ -540,9 +540,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastTemporaryBasalId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
+                preferences.put(NsclientLongKey.TemporaryBasalLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.tbrsRemaining = lastDbId - startId
@@ -581,8 +581,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)) {
+            preferences.put(NsclientLongKey.ExtendedBolusLastSyncedId, lastSynced)
         }
     }
 
@@ -591,9 +591,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastExtendedBolusId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
+                preferences.put(NsclientLongKey.ExtendedBolusLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.ebsRemaining = lastDbId - startId
@@ -632,8 +632,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_profile_switch_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)) {
+            preferences.put(NsclientLongKey.ProfileSwitchLastSyncedId, lastSynced)
         }
     }
 
@@ -642,9 +642,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastProfileSwitchId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_profile_switch_last_synced_id, 0)
+                preferences.put(NsclientLongKey.ProfileSwitchLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.pssRemaining = lastDbId - startId
@@ -680,8 +680,8 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, lastSynced)
+        if (lastSynced > preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)) {
+            preferences.put(NsclientLongKey.EffectiveProfileSwitchLastSyncedId, lastSynced)
         }
     }
 
@@ -690,9 +690,9 @@ class DataSyncSelectorV1 @Inject constructor(
         while (cont) {
             if (isPaused) return
             val lastDbId = persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+            var startId = preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+                preferences.put(NsclientLongKey.EffectiveProfileSwitchLastSyncedId, 0)
                 startId = 0
             }
             queueCounter.epssRemaining = lastDbId - startId
@@ -727,48 +727,48 @@ class DataSyncSelectorV1 @Inject constructor(
         }
     }
 
-    private fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
-        if (lastSynced > sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)) {
-            sp.putLong(R.string.key_ns_offline_event_last_synced_id, lastSynced)
+    private fun confirmLastRunningModeIdIfGreater(lastSynced: Long) {
+        if (lastSynced > preferences.get(NsclientLongKey.RunningModeLastSyncedId)) {
+            preferences.put(NsclientLongKey.RunningModeLastSyncedId, lastSynced)
         }
     }
 
-    private suspend fun processChangedOfflineEvents() {
+    private suspend fun processChangedRunningModes() {
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = persistenceLayer.getLastOfflineEventId() ?: 0L
-            var startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
+            val lastDbId = persistenceLayer.getLastRunningModeId() ?: 0L
+            var startId = preferences.get(NsclientLongKey.RunningModeLastSyncedId)
             if (startId > lastDbId) {
-                sp.putLong(R.string.key_ns_offline_event_last_synced_id, 0)
+                preferences.put(NsclientLongKey.RunningModeLastSyncedId, 0)
                 startId = 0
             }
-            queueCounter.oesRemaining = lastDbId - startId
+            queueCounter.rmsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            persistenceLayer.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
-                aapsLogger.info(LTag.NSCLIENT, "Loading OfflineEvent data Start: $startId ${oe.first} forID: ${oe.second.id} ")
-                val dataPair = DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id)
+            persistenceLayer.getNextSyncElementRunningMode(startId).blockingGet()?.let { rm ->
+                aapsLogger.info(LTag.NSCLIENT, "Loading RunningMode data Start: $startId ${rm.first} forID: ${rm.second.id} ")
+                val dataPair = DataSyncSelector.PairRunningMode(rm.first, rm.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    oe.first.id == oe.second.id && oe.first.ids.nightscoutId != null ->
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Loaded from NS: ${oe.second.id} ")
+                    rm.first.id == rm.second.id && rm.first.ids.nightscoutId != null ->
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring RunningMode. Loaded from NS: ${rm.second.id} ")
                     // only NsId changed, no need to upload
-                    oe.first.onlyNsIdAdded(oe.second)                                ->
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.second.id} ")
+                    rm.first.onlyNsIdAdded(rm.second)                                ->
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring RunningMode. Only NS id changed ID: ${rm.second.id} ")
                     // without nsId = create new
-                    oe.first.ids.nightscoutId == null                                -> {
+                    rm.first.ids.nightscoutId == null                                -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // existing with nsId = update
-                    oe.first.ids.nightscoutId != null                                -> {
+                    rm.first.ids.nightscoutId != null                                -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                 }
-                if (cont) confirmLastOfflineEventIdIfGreater(oe.second.id)
+                if (cont) confirmLastRunningModeIdIfGreater(rm.second.id)
             } ?: run {
                 cont = false
             }
@@ -776,22 +776,22 @@ class DataSyncSelectorV1 @Inject constructor(
     }
 
     private fun confirmLastProfileStore(lastSynced: Long) {
-        sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, lastSynced)
+        preferences.put(NsclientLongKey.ProfileStoreLastSyncedId, lastSynced)
     }
 
     override fun profileReceived(timestamp: Long) {
-        sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, timestamp)
+        preferences.put(NsclientLongKey.ProfileStoreLastSyncedId, timestamp)
     }
 
     private suspend fun processChangedProfileStore() {
         if (isPaused) return
-        val lastSync = sp.getLong(R.string.key_ns_profile_store_last_synced_timestamp, 0)
-        val lastChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)
+        val lastSync = preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)
+        val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
             if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return
             val profileStore = activePlugin.activeProfileSource.profile
-            val profileJson = profileStore?.data ?: return
+            val profileJson = profileStore?.getData() ?: return
             // add for v3
             if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)
                 profileJson.put("date", profileStore.getStartDate())

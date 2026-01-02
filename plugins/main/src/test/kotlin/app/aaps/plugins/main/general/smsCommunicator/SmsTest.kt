@@ -5,15 +5,15 @@ import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class SmsTest : TestBase() {
 
     @Test fun doTests() {
-        val smsMessage = Mockito.mock(SmsMessage::class.java)
-        `when`(smsMessage.originatingAddress).thenReturn("aNumber")
-        `when`(smsMessage.messageBody).thenReturn("aBody")
+        val smsMessage: SmsMessage = mock()
+        whenever(smsMessage.originatingAddress).thenReturn("aNumber")
+        whenever(smsMessage.messageBody).thenReturn("aBody")
         var sms = Sms(smsMessage)
         assertThat(sms.phoneNumber).isEqualTo("aNumber")
         assertThat(sms.text).isEqualTo("aBody")

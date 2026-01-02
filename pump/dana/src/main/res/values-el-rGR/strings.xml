@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nΜοντέλο: %2$02X\nΠρωτόκολλο: %3$02X\nΚωδικός: %4$02X</string>
     <string name="processinghistory">Επεξεργασία συμβάντος</string>
     <string name="danar_enableextendedbolus">Ενεργοποιήστε εκτεταμμένο bolus στην αντλία</string>
-    <string name="overview_bolusprogress_delivered">Παραδόθηκε</string>
     <string name="overview_bolusprogress_stoped">Σταμάτησε</string>
     <string name="unsupportedfirmware">Μη υποστηριζόμενη έκδοση στην αντλία</string>
     <string name="pumperror">Σφάλμα Αντλίας</string>

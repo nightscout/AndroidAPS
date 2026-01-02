@@ -1,15 +1,17 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.dana.DanaPump
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class DanaRSPacketOptionGetPumpUTCAndTimeZone(
-    injector: HasAndroidInjector
-) : DanaRSPacket(injector) {
+class DanaRSPacketOptionGetPumpUTCAndTimeZone @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil
+) : DanaRSPacket() {
 
     @Inject lateinit var danaPump: DanaPump
 

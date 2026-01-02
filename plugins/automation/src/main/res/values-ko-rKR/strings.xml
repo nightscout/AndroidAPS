@@ -119,4 +119,5 @@
     <string name="autotune_run_with_error">마지막 Autotune 실행시 오류가 발생했습니다</string>
     <string name="autotune_run_cancelled">Autotune의 또 다른 실행이 감지되었습니다, 실행이 취소되었습니다</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

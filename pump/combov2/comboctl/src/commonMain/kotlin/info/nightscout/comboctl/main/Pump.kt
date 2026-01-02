@@ -24,8 +24,6 @@ import info.nightscout.comboctl.base.Tbr
 import info.nightscout.comboctl.base.TransportLayer
 import info.nightscout.comboctl.base.toStringWithDecimal
 import info.nightscout.comboctl.base.withFixedYearFrom
-import info.nightscout.comboctl.main.Pump.CommandExecutionAttemptsFailedException
-import info.nightscout.comboctl.main.Pump.Event
 import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
@@ -42,19 +40,21 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.asTimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.number
 import kotlinx.datetime.offsetAt
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.absoluteValue
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.time.toDuration
 
 private val logger = Logger.get("Pump")
@@ -526,19 +526,19 @@ class Pump(
 
         object BatteryLow : Event()
         object ReservoirLow : Event()
-        data class QuickBolusRequested(
+        data class QuickBolusRequested @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val bolusAmount: Int
         ) : Event()
 
-        data class QuickBolusInfused(
+        data class QuickBolusInfused @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val bolusAmount: Int
         ) : Event()
 
-        data class StandardBolusRequested(
+        data class StandardBolusRequested @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val manual: Boolean,
@@ -546,7 +546,7 @@ class Pump(
             val standardBolusReason: StandardBolusReason
         ) : Event()
 
-        data class StandardBolusInfused(
+        data class StandardBolusInfused @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val manual: Boolean,
@@ -554,21 +554,21 @@ class Pump(
             val standardBolusReason: StandardBolusReason
         ) : Event()
 
-        data class ExtendedBolusStarted(
+        data class ExtendedBolusStarted @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int
         ) : Event()
 
-        data class ExtendedBolusEnded(
+        data class ExtendedBolusEnded @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int
         ) : Event()
 
-        data class MultiwaveBolusStarted(
+        data class MultiwaveBolusStarted @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val totalBolusAmount: Int,
@@ -576,7 +576,7 @@ class Pump(
             val totalDurationMinutes: Int
         ) : Event()
 
-        data class MultiwaveBolusEnded(
+        data class MultiwaveBolusEnded @OptIn(ExperimentalTime::class) constructor(
             val bolusId: Long,
             val timestamp: Instant,
             val totalBolusAmount: Int,
@@ -585,7 +585,7 @@ class Pump(
         ) : Event()
 
         data class TbrStarted(val tbr: Tbr) : Event()
-        data class TbrEnded(val tbr: Tbr, val timestampWhenTbrEnded: Instant) : Event()
+        data class TbrEnded @OptIn(ExperimentalTime::class) constructor(val tbr: Tbr, val timestampWhenTbrEnded: Instant) : Event()
         data class UnknownTbrDetected(
             val tbrPercentage: Int,
             val remainingTbrDurationInMinutes: Int
@@ -773,7 +773,7 @@ class Pump(
      * @property bolusAmount Bolus amount, in 0.1 IU units.
      * @property timestamp Timestamp of the bolus delivery.
      */
-    data class LastBolus(val bolusId: Long, val bolusAmount: Int, val timestamp: Instant)
+    data class LastBolus @OptIn(ExperimentalTime::class) constructor(val bolusId: Long, val bolusAmount: Int, val timestamp: Instant)
 
     private var _lastBolusFlow = MutableStateFlow<LastBolus?>(null)
 
@@ -1267,6 +1267,7 @@ class Pump(
      * @throws AlertScreenException if alerts occurs during this call, and they
      *   aren't a W6 warning (those are handled by this function).
      */
+    @OptIn(ExperimentalTime::class)
     suspend fun setTbr(
         percentage: Int,
         durationInMinutes: Int,
@@ -1892,7 +1893,7 @@ class Pump(
      *           integer are the 3 most significant fractional digits of the
      *           decimal amount.
      */
-    data class TDDHistoryEntry(val date: Instant, val totalDailyAmount: Int)
+    data class TDDHistoryEntry @OptIn(ExperimentalTime::class) constructor(val date: Instant, val totalDailyAmount: Int)
 
     /**
      * [ProgressReporter] flow for keeping track of the progress of [fetchTDDHistory].
@@ -1910,6 +1911,7 @@ class Pump(
      * @throws AlertScreenException if alerts occurs during this call, and
      *   they aren't a W6 warning (those are handled by this function).
      */
+    @OptIn(ExperimentalTime::class)
     suspend fun fetchTDDHistory() = executeCommand<List<TDDHistoryEntry>>(
         pumpMode = PumpIO.Mode.REMOTE_TERMINAL,
         isIdempotent = true,
@@ -2517,6 +2519,7 @@ class Pump(
 
     // The block allows callers to perform their own processing for each
     // history delta entry, for example to check for unaccounted boluses.
+    @OptIn(ExperimentalTime::class)
     private fun scanHistoryDeltaForBolusToEmit(
         historyDelta: List<ApplicationLayer.CMDHistoryEvent>,
         reasonForLastStandardBolusInfusion: StandardBolusReason = StandardBolusReason.NORMAL,
@@ -2677,6 +2680,7 @@ class Pump(
             logger(LogLevel.DEBUG) { "No last bolus found in history delta" }
     }
 
+    @OptIn(ExperimentalTime::class)
     private suspend fun performOnConnectChecks() {
         require(currentPumpUtcOffset != null)
 
@@ -3119,6 +3123,7 @@ class Pump(
 
     // If the pump is suspended, there is no insulin delivery. Model this
     // as a 0% TBR that started just now and lasts for 60 minutes.
+    @OptIn(ExperimentalTime::class)
     private fun reportPumpSuspendedTbr() =
         reportStartedTbr(Tbr(timestamp = Clock.System.now(), percentage = 0, durationInMinutes = 60, Tbr.Type.COMBO_STOPPED))
 
@@ -3132,6 +3137,7 @@ class Pump(
         _currentTbrFlow.value = tbr
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun reportOngoingTbrAsStopped() {
         val currentTbrState = pumpStateStore.getCurrentTbrState(bluetoothDevice.address)
         if (currentTbrState is CurrentTbrState.TbrStarted) {
@@ -3233,7 +3239,7 @@ class Pump(
             waitUntilScreenAppears(rtNavigationContext, ParsedScreen.TimeAndDateSettingsMonthScreen::class)
             adjustQuantityOnScreen(
                 rtNavigationContext,
-                targetQuantity = newPumpLocalDateTime.monthNumber,
+                targetQuantity = newPumpLocalDateTime.month.number,
                 longRTButtonPressPredicate = longRTButtonPressPredicate,
                 cyclicQuantityRange = 12,
                 incrementSteps = arrayOf(Pair(0, 1))
@@ -3251,7 +3257,7 @@ class Pump(
             waitUntilScreenAppears(rtNavigationContext, ParsedScreen.TimeAndDateSettingsDayScreen::class)
             adjustQuantityOnScreen(
                 rtNavigationContext,
-                targetQuantity = newPumpLocalDateTime.dayOfMonth,
+                targetQuantity = newPumpLocalDateTime.day,
                 longRTButtonPressPredicate = longRTButtonPressPredicate,
                 incrementSteps = arrayOf(Pair(0, 1))
             ) { parsedScreen ->
@@ -3271,6 +3277,7 @@ class Pump(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun estimateDateTimeSetDurationFrom(
         currentPumpDateTime: Instant,
         currentSystemDateTime: Instant,
@@ -3318,8 +3325,8 @@ class Pump(
         val hourDistance = calcCyclicDistance(currentLocalPumpDateTime.hour, currentLocalSystemDateTime.hour, 24)
         val minuteDistance = calcCyclicDistance(currentLocalPumpDateTime.minute, currentLocalSystemDateTime.minute, 60)
         val yearDistance = calcNormalDistance(currentLocalPumpDateTime.year, currentLocalSystemDateTime.year)
-        val monthDistance = calcCyclicDistance(currentLocalPumpDateTime.monthNumber, currentLocalSystemDateTime.monthNumber, 12)
-        val dayDistance = calcNormalDistance(currentLocalPumpDateTime.dayOfMonth, currentLocalSystemDateTime.dayOfMonth)
+        val monthDistance = calcCyclicDistance(currentLocalPumpDateTime.month.number, currentLocalSystemDateTime.month.number, 12)
+        val dayDistance = calcNormalDistance(currentLocalPumpDateTime.day, currentLocalSystemDateTime.day)
         val totalDistance = hourDistance + minuteDistance + yearDistance + monthDistance + dayDistance
 
         val estimatedDuration =
@@ -3436,7 +3443,7 @@ class Pump(
                                 100
                             } else {
                                 val currentQuantityDistance = currentDuration - durationInMinutes
-                                (100 - currentQuantityDistance * 100 / initialQuantityDistance!!).coerceIn(0, 100)
+                                (100 - currentQuantityDistance * 100 / initialQuantityDistance).coerceIn(0, 100)
                             }
                             setTbrProgressReporter.setCurrentProgressStage(RTCommandProgressStage.SettingTBRDuration(settingProgress))
                         }

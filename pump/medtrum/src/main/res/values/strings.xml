@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
-    <string name="key_pump_state" translatable="false">pump_state</string>
-    <string name="key_active_alarms" translatable="false">active_alarms</string>
-    <string name="key_last_connection" translatable="false">last_connection</string>
-    <string name="key_bolus_start_time" translatable="false">bolus_start_time</string>
-    <string name="key_bolus_amount_to_be_delivered" translatable="false">bolus_amount_to_be_delivered</string>
-    <string name="key_last_bolus_time" translatable="false">last_bolus_time</string>
-    <string name="key_last_bolus_amount" translatable="false">last_bolus_amount</string>
-    <string name="key_session_token" translatable="false">medtrum_session_token</string>
-    <string name="key_patch_id" translatable="false">patch_id</string>
-    <string name="key_device_type" translatable="false">device_type</string>
-    <string name="key_sw_version" translatable="false">sw_version</string>
-    <string name="key_patch_start_time" translatable="false">patch_start_time</string>
-    <string name="key_actual_basal_profile" translatable="false">actual_basal_profile</string>
-    <string name="key_current_sequence_number" translatable="false">current_sequence_number</string>
-    <string name="key_synced_sequence_number" translatable="false">synced_sequence_number</string>
-    <string name="key_pump_time_zone_offset" translatable="false">pump_time_zone_offset</string>
-
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Pump integration for Medtrum Nano and Medtrum 300U</string>
@@ -46,6 +29,7 @@
     <string name="fw_version_label">FW version</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch expires</string>
+    <string name="patch_activation_time_label">Activation</string>
     <string name="refresh_label">Refresh</string>
     <string name="reset_alarms_label">Reset alarms</string>
     <string name="change_patch_label">Change Patch</string>

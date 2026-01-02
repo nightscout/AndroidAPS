@@ -1,6 +1,7 @@
 package info.nightscout.comboctl.base
 
-import kotlinx.datetime.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Data class containing details about a TBR (temporary basal rate).
@@ -30,7 +31,7 @@ import kotlinx.datetime.Instant
  * @property durationInMinutes Duration of the TBR, in minutes.
  * @property type Type of this TBR.
  */
-data class Tbr(val timestamp: Instant, val percentage: Int, val durationInMinutes: Int, val type: Type) {
+data class Tbr @OptIn(ExperimentalTime::class) constructor(val timestamp: Instant, val percentage: Int, val durationInMinutes: Int, val type: Type) {
 
     enum class Type(val stringId: String) {
         /**

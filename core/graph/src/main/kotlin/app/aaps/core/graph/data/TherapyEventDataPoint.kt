@@ -45,7 +45,6 @@ class TherapyEventDataPoint(
                 data.type == TE.Type.FINGER_STICK_BG_VALUE -> Shape.BGCHECK
                 data.type == TE.Type.ANNOUNCEMENT          -> Shape.ANNOUNCEMENT
                 data.type == TE.Type.SETTINGS_EXPORT       -> Shape.SETTINGS_EXPORT
-                data.type == TE.Type.APS_OFFLINE           -> Shape.OPENAPS_OFFLINE
                 data.type == TE.Type.EXERCISE              -> Shape.EXERCISE
                 duration > 0                               -> Shape.GENERAL_WITH_DURATION
                 else                                       -> Shape.GENERAL
@@ -60,7 +59,6 @@ class TherapyEventDataPoint(
             TE.Type.NS_MBG                -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_NS_MBG)
             TE.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_FINGER_STICK_BG_VALUE)
             TE.Type.EXERCISE              -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_EXERCISE)
-            TE.Type.APS_OFFLINE           -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_APS_OFFLINE) and -0x7f000001
             else                          -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_Default)
         }
     }

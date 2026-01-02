@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Mobiele verbinding gebruiken</string>
     <string name="ns_wifi">Gebruik WiFi verbinding</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -21,16 +21,12 @@
     <string name="unsupported_ns_version">Niet ondersteunde versie van Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT heeft geen schrijfrechten. Verkeerde API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Herstart</string>
-    <string name="ns_client_title">NSClientV1</string>
-    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">Voer je Nightscout URL in (bijv. https://jouwwebsitenaam.jouwplatform.dom)</string>
     <string name="ns_client_secret_title">Nightscout API secret</string>
@@ -49,19 +45,12 @@
     <string name="ns_receive_profile_store">Ontvang profiel opslag</string>
     <string name="ns_receive_profile_store_summary">Synchroniseer profielen van NS profiel editor</string>
     <string name="ns_receive_temp_target">Ontvang tijdelijke doelen</string>
-    <string name="ns_receive_temp_target_summary">Accepteer tijdelijke doelen ingevoerd in NS of NSClient</string>
     <string name="ns_receive_profile_switch">Ontvang profielwissels</string>
-    <string name="ns_receive_profile_switch_summary">Accepteer profielwissels zoals ingevoerd in NS of NSClient</string>
-    <string name="ns_receive_offline_event">Ontvang APS offline gebeurtenissen</string>
-    <string name="ns_receive_offline_event_summary">Accepteer APS offline gebeurtenissen die zijn ingevoerd via NS of NSClient</string>
     <string name="ns_receive_tbr_eb">Ontvang TBR en EB</string>
     <string name="ns_receive_tbr_eb_summary">Accepteer TBR en EB ingevoerd vanaf een andere bron</string>
     <string name="ns_receive_insulin">Ontvang insuline</string>
-    <string name="ns_receive_insulin_summary">Accepteer insuline zoals ingevoerd in NS of NSClient (insuline wordt niet toegediend, het wordt alleen in IOB calculatie meegenomen)</string>
     <string name="ns_receive_carbs">Ontvang koolhydraten</string>
-    <string name="ns_receive_carbs_summary">Accepteer koolhydraten ingevoerd in NS of NSClient</string>
     <string name="ns_receive_therapy_events">Accepteer behandelingen</string>
-    <string name="ns_receive_therapy_events_summary">Accepteer behandelingen (cannule, insuline, batterijwissel etc) ingevoerd via NS of NSClient</string>
     <string name="ns_receive_cgm">Ontvang / backfill CGM gegevens</string>
     <string name="ns_receive_cgm_summary">Accepteer CGM data van NS</string>
     <string name="ns_sync_slow">Vertraag uploads</string>
@@ -75,17 +64,10 @@
     <string name="ns_use_ws_title">Verbind met websockets</string>
     <string name="ns_use_ws_summary">Inschakelen betekent: snellere updates, ontvangen van alarmen, aankondigingen en een hoger batterijverbruik, vergelijkbaar met v1. Alle andere uploaders naar NS moeten gebruik maken van het v3 protocol.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
-    <string name="title_tidepool_username">Inlog gebruikersnaam</string>
-    <string name="summary_tidepool_password">Uw Tidepool login wachtwoord</string>
-    <string name="title_tidepool_password">Login wachtwoord</string>
-    <string name="title_tidepool_test_login">Test Tidepool Login</string>
-    <string name="summary_tidepool_dev_servers">Indien ingeschakeld zullen uploads gaan naar https://int-app.tidepool.org in plaats van de reguliere https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
-    <string name="remove_all">Alles verwijderen</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>

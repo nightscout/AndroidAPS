@@ -3,6 +3,7 @@ package app.aaps.receivers
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
+import androidx.annotation.VisibleForTesting
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,9 +19,10 @@ import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
-import app.aaps.plugins.source.OttaiPlugin
+import app.aaps.plugins.source.PatchedSiAppPlugin
+import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
-import app.aaps.plugins.source.SyaiTagPlugin
+import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import dagger.android.DaggerBroadcastReceiver
@@ -34,9 +36,13 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+        processIntent(context, intent)
+    }
+
+    @VisibleForTesting
+    fun processIntent(context: Context, intent: Intent) {
         val bundle = intent.extras ?: return
         aapsLogger.debug(LTag.CORE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
-
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
                 OneTimeWorkRequest.Builder(XdripSourcePlugin.XdripSourceWorker::class.java)
@@ -57,7 +63,6 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     }.build()).build()
 
             Intents.TOMATO_BG                         ->
-                @Suppress("SpellCheckingInspection")
                 OneTimeWorkRequest.Builder(TomatoPlugin.TomatoWorker::class.java)
                     .setInputData(Data.Builder().also {
                         it.copyDouble("com.fanqies.tomatofn.Extras.BgEstimate", bundle)
@@ -71,15 +76,23 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                         it.copyString("data", bundle)
                     }.build()).build()
 
-            Intents.OTTAI_APP                       ->
-                OneTimeWorkRequest.Builder(OttaiPlugin.OttaiWorker::class.java)
+            Intents.OTTAI_APP, Intents.OTTAI_APP_CN,
+            Intents.SYAI_APP                          ->
+                OneTimeWorkRequest.Builder(SyaiPlugin.SyaiWorker::class.java)
                     .setInputData(Data.Builder().also {
                         it.copyString("collection", bundle)
                         it.copyString("data", bundle)
                     }.build()).build()
 
-            Intents.SYAI_TAG_APP                       ->
-                OneTimeWorkRequest.Builder(SyaiTagPlugin.SyaiTagWorker::class.java)
+            Intents.SI_APP                            ->
+                OneTimeWorkRequest.Builder(PatchedSiAppPlugin.PatchedSiAppWorker::class.java)
+                    .setInputData(Data.Builder().also {
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
+                    }.build()).build()
+
+            Intents.SINO_APP                          ->
+                OneTimeWorkRequest.Builder(PatchedSinoAppPlugin.PatchedSinoAppWorker::class.java)
                     .setInputData(Data.Builder().also {
                         it.copyString("collection", bundle)
                         it.copyString("data", bundle)
@@ -100,5 +113,4 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         // Sometimes the schedule fail
         KeepAliveWorker.scheduleIfNotRunning(context, aapsLogger, fabricPrivacy)
     }
-
 }

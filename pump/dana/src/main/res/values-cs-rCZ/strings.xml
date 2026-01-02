@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKód: %4$02X</string>
     <string name="processinghistory">Zpracovávám</string>
     <string name="danar_enableextendedbolus">Povolit kombinované bolusy v pumpě</string>
-    <string name="overview_bolusprogress_delivered">Podáno</string>
     <string name="overview_bolusprogress_stoped">Zastaveno</string>
     <string name="unsupportedfirmware">Nepodporovaný firmware v pumpě</string>
     <string name="pumperror">Chyba pumpy</string>

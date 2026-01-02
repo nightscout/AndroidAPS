@@ -9,7 +9,7 @@ import java.text.DecimalFormat
 class MinutesNumberPicker(context: Context, attrs: AttributeSet? = null) : NumberPicker(context, attrs) {
 
     fun setParams(initValue: Double, minValue: Double, maxValue: Double, step: Double, allowZero: Boolean, okButton: Button? = null) {
-        super.setParams(initValue, minValue, maxValue, step, null, allowZero, okButton)
+        super.setParams(initValue, minValue, maxValue, step, null, allowZero, okButton, null)
     }
 
     override fun updateEditText() {

@@ -1,9 +1,10 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TwofishTest {
+class TwofishTest : TestBase() {
 
     // The test datasets in the unit tests below originate from the
     // Two-Fish known answers test dataset (the twofish-kat.zip
@@ -50,6 +51,7 @@ class TwofishTest {
         // Two-Fish known answers test dataset. 128-bit keysize.
 
         class TestVector(key: String, plaintext: String, ciphertext: String) {
+
             val keyArray: ByteArray
             val plaintextArray: ByteArray
             val ciphertextArray: ByteArray

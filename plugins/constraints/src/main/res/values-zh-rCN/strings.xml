@@ -9,7 +9,6 @@
     <!-- Safety -->
     <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
     <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
-    <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
     <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
     <string name="closed_loop_disabled_with_eb">由于运行扩展大剂量而禁用了闭环</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled 因为实时的血糖来源不支持高级筛选</string>

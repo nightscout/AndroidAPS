@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModell: %2$02X\nProtokoll: %3$02X\nKod: %4$02X</string>
     <string name="processinghistory">Behandlar</string>
     <string name="danar_enableextendedbolus">Aktivera förlängd bolus i pumpen</string>
-    <string name="overview_bolusprogress_delivered">Levererad</string>
     <string name="overview_bolusprogress_stoped">Stoppad</string>
     <string name="unsupportedfirmware">Pumpens firmware stöds inte</string>
     <string name="pumperror">Pumpfel</string>

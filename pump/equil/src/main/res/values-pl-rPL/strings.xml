@@ -3,14 +3,12 @@
     <string name="equil_pump_description">Pompa Equil 5.3 lub nowsza </string>
     <!--  start  -->
     <string name="equil_basal_speed">Baza podstawowa</string>
-    <string name="equil_bolus_delivered">Podano %1$.3f U / %2$.3f U</string>
     <string name="equil_btn_cancel">Anuluj</string>
     <string name="equil_btn_need">Potrzeba</string>
     <string name="equil_btn_skip">Pomiń</string>
     <string name="equil_date_device">Ostatnie połączenie</string>
     <string name="equil_dressing">Zmień zbiornik</string>
     <string name="equil_dressing_onkey_msg">Automatycznie przesuwam tłok na dno zbiornika. Zatrzyma się sam po dotarciu na dół. Kliknij \'Zatrzymaj\', aby w razie potrzeby przerwać.</string>
-    <string name="equil_finish">Ukończono</string>
     <string name="equil_next">Dalej</string>
     <string name="equil_hint_dressing">Ta operacja zatrzyma podawanie insuliny i spowoduje cofnięcie tłoka pompy do dołu!</string>
     <string name="equil_history">Historia</string>
@@ -91,7 +89,6 @@
     <string name="equil_command_connect_no_response">Brak odpowiedzi z pompy</string>
     <string name="equil_command__unknown">Nieznany stan polecenia</string>
     <string name="equil_install">Wprowadź pompę do organizmu</string>
-    <string name="equil_settings">Ustawienia</string>
     <string name="equil_settings_alarm_battery">Alarm słabej baterii</string>
     <string name="equil_settings_alarm_insulin">Alarm o niskim poziomie zbiornika insuliny</string>
     <string name="equil_init_insulin_error">Inicjalizacja zbiornika nie została zakończona</string>
@@ -122,11 +119,6 @@
     <string name="equil_history_item16">Bateria rozładowana!</string>
     <string name="equil_history_item17">Reset przy włączeniu</string>
     <string name="equil_history_item18">Nieprawidłowa infuzja zatrzymana</string>
-    <string name="equil_common_short_status_last_connection">Ost.Poł.: %1$d m. temu</string>
-    <string name="equil_common_short_status_last_bolus">Ost.Bolus: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Tymcz.: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Rozsz.: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Zbiornik: %1$sU</string>
     <string name="equil_common_overview_button_suspend_delivery">Zawieś</string>
     <string name="equil_common_overview_button_resume_delivery">Wznów podawanie</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
@@ -171,7 +163,6 @@
     <string name="equil_hint_dressing2">Proszę usuń pompę z płytki bazowej</string>
     <string name="equil_unpair">Dezaktywować starą pompę %1$s?</string>
     <string name="equil_pump_updated">Pompa zaktualizowana</string>
-    <string name="equil_maxbolus_tips">Maksymalny dozwolony bolus w pompie [%1$sU]</string>
     <string name="equil_replace_reservoir">Zbiornik jest pusty. Proszę wymienić zbiornik</string>
     <string name="error_mustbe6hexadidits">Musi składać się z 6 znaków spośród: ABCDEF0123456789</string>
 </resources>

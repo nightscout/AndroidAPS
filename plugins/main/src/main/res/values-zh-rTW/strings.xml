@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">臨時目標取消成功</string>
     <string name="smscommunicator_remote_commands_allowed">允許通過SMS進行遠端命令</string>
     <string name="smscommunicator_loop_has_been_disabled">循環已停用</string>
-    <string name="smscommunicator_loop_has_been_enabled">循環已啟用</string>
     <string name="smscommunicator_loop_is_enabled">循環已啟用</string>
     <string name="smscommunicator_pump_connect_with_code">要連線幫浦請回覆代碼 %1$s</string>
     <string name="smscommunicator_pump_connect_fail">連線幫浦失敗</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">幫浦已中斷連線</string>
     <string name="smscommunicator_reconnect">幫浦已重新連線</string>
     <string name="smscommunicator_remote_command_not_allowed">不允許遠端命令</string>
+    <string name="smscommunicator_remote_command_not_possible">無法進行遠端指令</string>
     <string name="smscommunicator_remote_bolus_not_allowed">遠端注射不可用。請稍後再試。</string>
     <string name="smscommunicator_basal_reply_with_code">要開始基礎速率 %1$.2f U/h 持續 %2$d 分鐘請回覆代碼 %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">要將設定檔切換為 %1$s %2$d%% 請回覆代碼 %3$s</string>
@@ -66,7 +66,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">要開始基礎速率 %1$d%% 持續 %2$d 分鐘請回覆代碼 %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">要暫停循環 %1$d 分鐘請回覆代碼 %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">要恢復循環請回覆代碼 %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">要啟用循環請回覆代碼 %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">要停用循環請回覆代碼 %1$s</string>
     <string name="smscommunicator_tempbasal_set">臨時基礎速率 %1$.2fU/h 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_extended_set">延長注射 %1$.2fU 持續 %2$d 分鐘已成功開始</string>
@@ -130,7 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">設定檔</string>
     <string name="localprofile_shortname">設定</string>
-    <string name="description_profile_local">定義一個可離線使用的配置。</string>
+    <string name="description_profile_local">建立描述你胰島素需求的設定檔。</string>
     <string name="a11y_add_new_to_list">添加新項到列表</string>
     <string name="do_you_want_switch_profile">您是否要切換設定檔，並放棄對目前設定檔所做的更改？</string>
     <string name="save_or_reset_changes_first">首先儲存或重置目前更改</string>
@@ -163,6 +162,7 @@
     <string name="extended_bolus_button">延長注射</string>
     <string name="extended_bolus_cancel_button">取消延長注射</string>
     <string name="tools">工具</string>
+    <string name="site_rotation">部位輪替</string>
     <string name="nav_history_browser">歷史瀏覽器</string>
     <string name="sensor_label">傳感器</string>
     <string name="age_label">時間：</string>

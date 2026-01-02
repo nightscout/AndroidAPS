@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Sẽ đổi sang giờ mùa hè trong vòng 24 giờ tới</string>
+    <string name="dst_loop_disabled_warning">Thay đổi giờ mùa hè cách đây chưa đến 3 giờ - Vòng lặp kín đã bị vô hiệu</string>
+    <string name="dst_loop_disabled_error">Thay đổi giờ mùa hè (DST) xảy ra cách đây chưa đến 3 giờ. Vòng lặp kín đã bị tạm vô hiệu và sẽ tự động bật lại sau 3 giờ kể từ khi thay đổi giờ DST</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Giải phóng ít nhất %1$d MB từ bộ nhớ trong! Đã tắt vòng lặp!</string>
+    <!-- Version Checker -->
+    <string name="application_expired">Ứng dụng hết hạn</string>
+    <string name="running_invalid_version">Chúng tôi phát hiện bạn đang chạy phiên bản không hợp lệ. Vòng lặp đã bị vô hiệu hóa!</string>
+    <string name="versionavailable">Phiên bản %1$s khả dụng</string>
+    <string name="version_expire">Phiên bản %1$s sẽ hết hạn vào %2$s và sẽ chuyển sang chế độ LGS</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Dữ liệu được tính toán lại đã sử dụng</string>
+    <string name="bg_too_close">Giá trị BG quá sát nhau:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">tính toán lại</string>
+    <string name="a11y_bg_quality_doubles">mục nhập kép</string>
+    <string name="a11y_bg_quality_flat">Dữ liệu bằng phẳng. Được coi là sai</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Giới hạn liều bolus mở rộng ở %1$.1f U vì %2$s</string>
+    <string name="limitingcarbs">Hạn chế carbs ở mức %1$d g vì %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pump không hỗ trợ basal tạm thời</string>
+    <string name="closed_loop_disabled_on_dev_branch">Đang chạy phiên bản phát triển. Vòng lặp kín đã bị vô hiệu hóa.</string>
+    <string name="closed_loop_disabled_with_eb">Vòng lặp kín bị vô hiệu hóa do đang chạy bolus mở rộng</string>
+    <string name="smbalwaysdisabled">SMB luôn bật và SMB sau khi ăn đã bị vô hiệu hóa vì nguồn BG hiện tại không hỗ trợ lọc nâng cao</string>
+    <string name="smbnotallowedinopenloopmode">SMB không được phép trong chế độ vòng lặp mở</string>
+    <string name="maxvalueinpreferences">giá trị tối đa trong phần Tùy chọn(preferences)</string>
+    <string name="hardlimit">giới hạn cứng</string>
+    <string name="treatmentssafety_title">An toàn trong điều trị</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Đã hoàn thành, làm tốt lắm!</string>
+    <string name="not_completed_yet">Chưa hoàn thành</string>
+    <string name="time_elapsed">Thời gian đã qua</string>
+    <string name="hasbgdata">BG có sẵn từ nguồn đã chọn</string>
+    <string name="synchaswritepermission">Dịch vụ đồng bộ hóa đã được cấp quyền ghi dữ liệu</string>
+    <string name="loopenabled">Vòng lặp đã được kích hoạt</string>
+    <string name="apsselected">APS đã được chọn</string>
+    <string name="closedmodeenabled">Đã bật chế độ vòng lặp kín</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Chương trình đào tạo</string>
+    <string name="doyouwantresetstart">Bạn có muốn đặt lại mục tiêu khởi động không? Tiến trình của bạn có thể sẽ bị mất.</string>
+    <string name="objectives_next_button">Tiếp theo</string>
+    <string name="objectives_previous_button">Trước đó</string>
+    <string name="objectives_button_unfinish">Đặt lại trạng thái đã hoàn thành</string>
+    <string name="objectives_button_unstart">Đặt lại trạng thái đã bắt đầu</string>
+</resources>

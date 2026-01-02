@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.comboctl.base.testUtils.TestComboIO
 import info.nightscout.comboctl.base.testUtils.TestPumpStateStore
 import info.nightscout.comboctl.base.testUtils.WatchdogTimeoutException
@@ -16,7 +17,7 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class TransportLayerTest {
+class TransportLayerTest : TestBase() {
 
     @Test
     fun parsePacketData() {

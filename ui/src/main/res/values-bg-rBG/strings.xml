@@ -5,7 +5,7 @@
     <string name="temp_target_short">Вр.цел</string>
     <string name="dialog_canceled">Диалогът е анулиран</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
-    <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
+    <string name="start_eating_soon_tt">Старт на вр. цел за хранене</string>
     <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
     <string name="time_offset">времево отместване</string>
     <string name="unit_minute_short">мин</string>
@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Мониторинг на активност</string>
     <string name="do_you_want_reset_stats">Искате да нулирате статистиката?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Искате ли да преизчисля данните за ОДД?</string>
     <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="invalid_age">Невалидна възраст</string>
@@ -36,6 +37,7 @@
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
     <string name="treatments_wizard_total_label">Общо</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
     <string name="record_pump_site_change">Запис смяна на сет</string>
@@ -121,7 +123,24 @@
     <string name="a11y_only_on_watch">само на часовник</string>
     <string name="a11y_only_on_phone">само на смартфон</string>
     <string name="quickwizard_settings">Настройки Бърз достъп</string>
+    <string name="overview_edit_quickwizard_button_text">Текст на бутона</string>
     <string name="overview_edit_quickwizard_valid">Валиден:</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Само при позитивен инсулин</string>
+    <string name="overview_edit_quickwizard_superbolus">Суперболус</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Процентът е много висок!</string>
     <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
+    <string name="additional_ecarbs">Добави уд въглехидрати</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Включете в калкулация:</string>
+    <string name="constraints_violation">Ограниченията са нарушени</string>
+    <string name="change_your_input">Променете въведенето!</string>
+    <string name="confirm_treatment">Моля потвърдете</string>
+    <string name="recalculate">Преизчисляване</string>
     <!--    Widget-->
+    <string name="use_black_color">Използвай черен цвят</string>
+    <string name="widget_configuration">Конфигурация на уиджет</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>И двете</item>
+        <item>Само положителни</item>
+        <item>Само отрицателни</item>
+    </string-array>
 </resources>

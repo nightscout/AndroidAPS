@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">泵和/或驱动程序不支持此操作。</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">尚未初始化</string>
+    <string name="pump_status_initialized">已初始化</string>
+    <string name="pump_status_encrypt">正在加密通信</string>
+    <string name="pump_status_ready">就绪</string>
+    <string name="pump_status_busy">忙碌</string>
+    <string name="pump_status_suspended">挂起</string>
+    <string name="pump_status_executing_command">正在执行指令</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">基础率</string>
+    <string name="history_group_configuration">配置</string>
+    <string name="history_group_notification">通知</string>
+    <string name="history_group_statistic">统计信息</string>
+    <string name="history_group_unknown">未知</string>
+    <string name="history_group_all">全部</string>
+    <string name="history_group_bolus">大剂量</string>
+    <string name="history_group_prime">充盈</string>
+    <string name="history_group_alarm">告警</string>
+    <string name="history_group_glucose">血糖</string>
+    <string name="history_group_base">基础信息</string>
+    <string name="history_group_other">其他</string>
+    <string name="history_group_events">所有</string>
+    <string name="history_group_events_no_stat">事件 (无统计)</string>
+    <!-- Time -->
+    <string name="time_today">今天</string>
+    <string name="time_last_hour">上个小时</string>
+    <string name="time_last_3_hours">过去3小时</string>
+    <string name="time_last_6_hours">过去6小时</string>
+    <string name="time_last_12_hours">过去12小时</string>
+    <string name="time_last_2_days">过去2天</string>
+    <string name="time_last_4_days">过去4天</string>
+    <string name="time_last_week">过去一周</string>
+    <string name="time_last_month">上个月</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">扫描</string>
+    <string name="ble_config_scan_stop">停止</string>
+    <string name="ble_config_scan_selected">已选中</string>
+    <string name="ble_config_scan_scanning">扫描中</string>
+    <string name="ble_config_scan_finished">扫描完成</string>
+    <string name="ble_config_scan_error">扫描错误: %1$d</string>
+    <string name="ble_config_remove">删除</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">类型：</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d 天</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d 小时</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="other">%1$d 小时前</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="other">%1$d 天前</item>
+    </plurals>
+</resources>

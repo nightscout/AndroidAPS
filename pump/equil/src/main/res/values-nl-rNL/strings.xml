@@ -3,14 +3,12 @@
     <string name="equil_pump_description">Equil 5.3 of nieuwere Patch Pomp </string>
     <!--  start  -->
     <string name="equil_basal_speed">Basis basaal</string>
-    <string name="equil_bolus_delivered">%1$.3f E / %2$.3f E toegediend</string>
     <string name="equil_btn_cancel">Annuleren</string>
     <string name="equil_btn_need">Nodig</string>
     <string name="equil_btn_skip">Overslaan</string>
     <string name="equil_date_device">Laatste verbinding</string>
     <string name="equil_dressing">Vervang reservoir</string>
     <string name="equil_dressing_onkey_msg">De zuiger automatisch naar de bodem van het reservoir aan het verplaatsen. Deze zal automatisch stoppen in de eindstand. Klik op \'Stop\' om te onderbreken indien nodig.</string>
-    <string name="equil_finish">Voltooid</string>
     <string name="equil_next">Volgende</string>
     <string name="equil_hint_dressing">Deze operatie zal de toediening van de insuline stopzetten en de zuiger van de pomp terugplaatsen naar de bodem van het reservoir!</string>
     <string name="equil_history">Geschiedenis</string>
@@ -91,7 +89,6 @@
     <string name="equil_command_connect_no_response">Geen reactie van de pomp</string>
     <string name="equil_command__unknown">Onbekende status van de opdracht</string>
     <string name="equil_install">Plaats de pomp op het lichaam</string>
-    <string name="equil_settings">Instellingen</string>
     <string name="equil_settings_alarm_battery">Alarm bij bijna lege batterij</string>
     <string name="equil_settings_alarm_insulin">Alarm bij bijna leeg reservoir</string>
     <string name="equil_init_insulin_error">Initialisatie van het reservoir is niet voltooid</string>
@@ -122,11 +119,6 @@
     <string name="equil_history_item16">Batterij leeg!</string>
     <string name="equil_history_item17">Power-on Reset</string>
     <string name="equil_history_item18">Abnormale toediening gestopt</string>
-    <string name="equil_common_short_status_last_connection">Laatste verbinding: %1$d min geleden</string>
-    <string name="equil_common_short_status_last_bolus">Laatste bolus: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Tijdelijk: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Verlengd: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Reservoir: %1$sE</string>
     <string name="equil_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="equil_common_overview_button_resume_delivery">Insulinetoediening hervatten</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fE/u @%2$s (%3$d/%4$d min)</string>
@@ -165,7 +157,6 @@
     <string name="equil_hint_dressing2">Haal de pomp los van de bodemplaat</string>
     <string name="equil_unpair">Oude pomp %1$s deactiveren?</string>
     <string name="equil_pump_updated">Pomp bijgewerkt</string>
-    <string name="equil_maxbolus_tips">Max toegestane bolus in pomp [%1$sE]</string>
     <string name="equil_replace_reservoir">Het reservoir is leeg. Vervang het reservoir</string>
     <string name="error_mustbe6hexadidits">Moet 6 tekens bevatten uit ABCDEF0123456789</string>
 </resources>

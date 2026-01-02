@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCode: %4$02X</string>
     <string name="processinghistory">Processing event</string>
     <string name="danar_enableextendedbolus">Enable extended boluses on pump</string>
-    <string name="overview_bolusprogress_delivered">Delivered</string>
     <string name="overview_bolusprogress_stoped">Stopped</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="pumperror">Pump Error</string>

@@ -8,9 +8,9 @@ import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.PreferenceChange
 import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
@@ -26,7 +26,7 @@ data class NewEntries(
     val effectiveProfileSwitches: List<EffectiveProfileSwitch>,
     val extendedBoluses: List<ExtendedBolus>,
     val glucoseValues: List<GlucoseValue>,
-    val offlineEvents: List<OfflineEvent>,
+    val runningModes: List<RunningMode>,
     val preferencesChanges: List<PreferenceChange>,
     val profileSwitches: List<ProfileSwitch>,
     val temporaryBasals: List<TemporaryBasal>,

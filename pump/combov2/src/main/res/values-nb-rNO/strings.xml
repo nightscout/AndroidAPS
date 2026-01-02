@@ -104,15 +104,7 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_unpair_pump_summary">Koble fra AndroidAPS og Android fra den ilkoblede Accu-Chek Combo pumpen</string>
     <string name="combov2_unknown_tbr_detected">Ukjent TBR ble oppdaget og stoppet; prosent: %1$d%%, gjenværende varighet: %2$s</string>
     <string name="combov2_connection_error">Tilkoblingsfeil: %1$s</string>
-    <string name="combov2_short_status_last_connection">Siste tilkobling: %1$d min siden</string>
     <string name="combov2_short_status_alert">Varsel: %s</string>
-    <string name="combov2_short_status_last_bolus">LastBolus: %1$s E @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Midl. basal: %s</string>
-    <string name="combov2_short_status_reservoir">Reservoar: %d E</string>
-    <string name="combov2_short_status_battery_state_empty">tom</string>
-    <string name="combov2_short_status_battery_state_low">lavt</string>
-    <string name="combov2_short_status_battery_state_full">full</string>
-    <string name="combov2_short_status_battery_state">Batt: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetekter og automatisk registrer bytte av insulireservoar</string>
     <string name="combov2_automatic_battery_entry">Autodetekter og automatisk registrer batteribytte</string>
     <string name="combov2_timezone_changed">Tidssone endret</string>

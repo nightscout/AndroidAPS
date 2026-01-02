@@ -3,18 +3,17 @@ package app.aaps.pump.equil.manager.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
-import java.lang.StringBuilder
 
 class CmdBasalGet(
     var profile: Profile,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     override fun getFirstData(): ByteArray {
         val indexByte = Utils.intToBytes(pumpReqIndex)
@@ -46,7 +45,7 @@ class CmdBasalGet(
         val rspBasal = Utils.bytesToHex(rspByte)
         aapsLogger.debug(LTag.PUMPCOMM, "CmdBasalGet==$currentBasal====\n==$rspBasal")
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             enacted = currentBasal.toString() == rspBasal
             (this as Object).notify()
         }

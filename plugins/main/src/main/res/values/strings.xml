@@ -52,7 +52,6 @@
     <string name="smscommunicator_tt_canceled">Temp Target canceled successfully</string>
     <string name="smscommunicator_remote_commands_allowed">Allow remote commands via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop has been disabled</string>
-    <string name="smscommunicator_loop_has_been_enabled">Loop has been enabled</string>
     <string name="smscommunicator_loop_is_enabled">Loop is enabled</string>
     <string name="smscommunicator_pump_connect_with_code">To connect pump reply with code %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Connection to pump failed</string>
@@ -60,6 +59,7 @@
     <string name="smscommunicator_pump_disconnected">Pump disconnected</string>
     <string name="smscommunicator_reconnect">Pump reconnected</string>
     <string name="smscommunicator_remote_command_not_allowed">Remote command is not allowed</string>
+    <string name="smscommunicator_remote_command_not_possible">Remote command is not possible</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Remote bolus not available. Try again later.</string>
     <string name="smscommunicator_basal_reply_with_code">To start basal %1$.2f U/h for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">To switch profile to %1$s %2$d%% reply with code %3$s</string>
@@ -68,7 +68,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">To start basal %1$d%% for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">To suspend loop for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">To resume loop reply with code %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">To enable loop reply with code %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">To disable loop reply with code %1$s</string>
     <string name="smscommunicator_tempbasal_set">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extended_set">Extended bolus %1$.2fU for %2$d min started successfully</string>
@@ -140,7 +139,7 @@
     <!-- Profile -->
     <string name="localprofile">Profile</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Define a profile which is available offline.</string>
+    <string name="description_profile_local">Define a profile describing your insulin needs.</string>
     <string name="a11y_add_new_to_list">add new to list</string>
     <string name="do_you_want_switch_profile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
@@ -174,6 +173,7 @@
     <string name="extended_bolus_button">Extended Bolus</string>
     <string name="extended_bolus_cancel_button">Cancel Extended Bolus</string>
     <string name="tools">Tools</string>
+    <string name="site_rotation">Site Rotation</string>
     <string name="nav_history_browser">History browser</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">age:</string>
@@ -277,7 +277,6 @@
     <string name="run_question">Run %s?</string>
 
     <!--    OverviewMenu-->
-    <string name="key_graph_config" translatable="false">graphconfig</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_heartRate">Heart Rate</string>

@@ -29,6 +29,7 @@ dependencies {
     testImplementation(project(":pump:danar"))
     testImplementation(project(":pump:danars"))
     testImplementation(project(":pump:virtual"))
+    testImplementation(project(":shared:impl"))
     testImplementation(project(":shared:tests"))
 
     // Phone checker

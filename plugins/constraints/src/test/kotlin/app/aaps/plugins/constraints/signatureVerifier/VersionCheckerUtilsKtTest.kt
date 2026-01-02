@@ -2,10 +2,10 @@ package app.aaps.plugins.constraints.signatureVerifier
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
@@ -15,20 +15,20 @@ import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
 class VersionCheckerUtilsKtTest : TestBase() {
 
     private lateinit var versionCheckerUtils: VersionCheckerUtilsImpl
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var config: Lazy<Config>
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var preferences: Preferences
 
     private fun generateSupportedVersions(): String =
         "{\n" +
@@ -48,7 +48,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     @BeforeEach fun setup() {
         val definition = VersionDefinition { JSONObject(generateSupportedVersions()) }
-        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, sp, rh, config, dateUtil, uiInteraction, definition)
+        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, uiInteraction, definition)
     }
 
     @Test
@@ -248,10 +248,10 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     @BeforeEach
     fun `set time`() {
-        `when`(dateUtil.now()).thenReturn(10000000000L)
+        whenever(dateUtil.now()).thenReturn(10000000000L)
         assertThat(dateUtil.now()).isEqualTo(10000000000L)
 
-        `when`(rh.gs(anyInt(), anyString())).thenReturn("")
+        whenever(rh.gs(anyInt(), anyString())).thenReturn("")
     }
 
 }

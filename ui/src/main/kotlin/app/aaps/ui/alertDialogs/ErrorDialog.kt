@@ -104,10 +104,15 @@ class ErrorDialog : DaggerDialogFragment() {
         _binding = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
+    }
+
     override fun dismiss() {
         super.dismissAllowingStateLoss()
         helperActivity?.finish()
-        handler.removeCallbacksAndMessages(null)
     }
 
     private fun startAlarm() {

@@ -28,5 +28,5 @@ abstract class EquilHistoryPumpDao {
     abstract fun createOrUpdate(danaHistoryRecord: EquilHistoryPump)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(danaHistoryRecord: EquilHistoryPump): Long
+    abstract fun insert(equilHistoryRecord: EquilHistoryPump): Long
 }

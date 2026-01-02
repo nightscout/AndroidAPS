@@ -139,4 +139,5 @@
     <string name="triggerStepsCountLabel">Žingsniai</string>
     <string name="triggerStepsCountDesc">Žingsnių skaičius per %1$s min %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trukmė</string>
+    <!--    SMB mode-->
 </resources>

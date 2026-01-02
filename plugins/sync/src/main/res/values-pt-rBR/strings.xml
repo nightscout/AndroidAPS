@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Usar conexão móvel</string>
     <string name="ns_wifi">Utilizar conexão Wi-Fi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -19,10 +19,8 @@
     <string name="unsupported_ns_version">Versão não suportada do Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT não tem permissão de escrita. Senha da API errada?</string>
-    <string name="ns_client">NSCliente</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -38,19 +36,12 @@
     <string name="ns_receive_profile_store">Receber perfil armazenado</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfis vindo do editor de perfis do NS</string>
     <string name="ns_receive_temp_target">Receber alvos temporários</string>
-    <string name="ns_receive_temp_target_summary">Aceitar alvos temporários inseridos através do NS ou NSClient</string>
     <string name="ns_receive_profile_switch">Receber trocas de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceitar trocas de perfil inseridas através de NS ou NSClient</string>
-    <string name="ns_receive_offline_event">Receber eventos APS offline</string>
-    <string name="ns_receive_offline_event_summary">Aceitar eventos APS offline inseridos através de NS ou NSClient</string>
     <string name="ns_receive_tbr_eb">Receber taxa basal temporária (TBT) e bolus estendido (e-bolus ou BE)</string>
     <string name="ns_receive_tbr_eb_summary">Aceitar taxa basal temporária (TBT) e bolus estendido (BE) informados por outra instância</string>
     <string name="ns_receive_insulin">Receber insulina</string>
-    <string name="ns_receive_insulin_summary">Aceitar insulina inserida através de NS ou NSClient (não é administrada, apenas serve para o cálculo da IA)</string>
     <string name="ns_receive_carbs">Receber carboidratos</string>
-    <string name="ns_receive_carbs_summary">Aceitar carboidratos inseridos através de NS ou NSClient</string>
     <string name="ns_receive_therapy_events">Receber eventos de terapia</string>
-    <string name="ns_receive_therapy_events_summary">Aceitar eventos de terapia (cânula, insulina, troca de bateria etc) inseridos através de NS ou NSClient</string>
     <string name="ns_receive_cgm">Receber dados recentes e dados antigos do CGM</string>
     <string name="ns_receive_cgm_summary">Aceitar dados de CGM do NS</string>
     <string name="ns_sync_slow">Desacelerar os envios de dados</string>
@@ -64,17 +55,10 @@
     <string name="ns_use_ws_title">Conectar a websockets</string>
     <string name="ns_use_ws_summary">Habilitar significa: atualizações mais rápidas, recebimento de alarmes e anúncios e maior consumo de bateria, semelhante à versão 1. Todos os outros carregadores para o NS devem usar o protocolo v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
-    <string name="title_tidepool_username">Nome de Utilizador</string>
-    <string name="summary_tidepool_password">Palavra-passe da conta Tidepool</string>
-    <string name="title_tidepool_password">Palavra-passe</string>
-    <string name="title_tidepool_test_login">Teste de Conta Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Se activado, envio será para https://int-app.tidepool.org em vez do habitual https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
-    <string name="remove_all">Remover todos</string>
     <string name="upload_now">Enviar agora</string>
     <string name="not_connected">Não conectado</string>
     <string name="read_only">Somente leitura</string>

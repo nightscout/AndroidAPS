@@ -5,7 +5,7 @@ import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 
 class ActionStopProcessingTest : ActionsTestBase() {
 
@@ -14,7 +14,7 @@ class ActionStopProcessingTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
 
-        `when`(rh.gs(R.string.stop_processing)).thenReturn("Stop processing")
+        whenever(rh.gs(R.string.stop_processing)).thenReturn("Stop processing")
         sut = ActionStopProcessing(injector)
     }
 

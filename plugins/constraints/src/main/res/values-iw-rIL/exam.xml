@@ -54,7 +54,6 @@
     <string name="basaltest_fixed">לאחר שהוגדרו ואומתו, ערכים אלה אינם צריכים להשתנות לאורך הזמן.</string>
     <string name="prerequisites_label">דרישות מקדימות</string>
     <string name="prerequisites_what">מה חיוני להגדרה ולשימוש ב-AndroidAPS?</string>
-    <string name="prerequisites_computer">מחשב עם Android Studio מותקן ומוגדר.</string>
     <string name="prerequisites_pump">משאבת אינסולין מתאימה אם אתם מתכננים להפעיל לולאה סגורה.</string>
     <string name="prerequisites_nightscout">נייטסקאוט, כדי לשמור יומן של כל הנתונים וסקירה של ההגדרות.</string>
     <string name="prerequisites_beanandroiddeveloper">ניסיון בתכנות או בעריכת קוד.</string>
@@ -84,7 +83,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/ אינסולין אנושי \"רגיל\".</string>
     <string name="sensitivity_label">תוספי רגישות</string>
     <string name="sensitivity_adjust">תוספי רגישות מאפשרים ל-AndroidAPS לפצות על שינויים זמניים או קצרים ברגישות לאינסולין (לדוגמה משינויים הורמונליים או בעיות עם קליטה באתר העירוי).</string>
     <string name="sensitivity_edit">תוספי רגישות מספקים למשתמש הצעות לשינויים למינוני הבזאלי, יחסי התיקון והפחמימות, שאיתם ניתן לערוך את הפרופיל.</string>

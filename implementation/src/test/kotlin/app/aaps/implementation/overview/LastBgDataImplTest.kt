@@ -14,7 +14,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 
 class LastBgDataImplTest : TestBaseWithProfile() {
 
@@ -29,11 +29,11 @@ class LastBgDataImplTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
+        whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         sut = LastBgDataImpl(rh, dateUtil, persistenceLayer, profileFunction, preferences, iobCobCalculator)
-        Mockito.`when`(preferences.get(UnitDoubleKey.OverviewLowMark)).thenReturn(80.0)
-        Mockito.`when`(preferences.get(UnitDoubleKey.OverviewHighMark)).thenReturn(180.0)
-        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(preferences.get(UnitDoubleKey.OverviewLowMark)).thenReturn(80.0)
+        whenever(preferences.get(UnitDoubleKey.OverviewHighMark)).thenReturn(180.0)
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }
 
     @Test
@@ -41,22 +41,22 @@ class LastBgDataImplTest : TestBaseWithProfile() {
         val bucketedData: MutableList<InMemoryGlucoseValue> = mutableListOf()
         bucketedData.add(InMemoryGlucoseValue(time, 70.0, sourceSensor = SourceSensor.UNKNOWN))
         // no data
-        Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
-        Mockito.`when`(persistenceLayer.getLastGlucoseValue()).thenReturn(null)
+        whenever(autosensDataStore.bucketedData).thenReturn(null)
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(null)
         assertThat(sut.lastBg()).isNull()
         assertThat(sut.isLow()).isFalse()
         assertThat(sut.isHigh()).isFalse()
 
         // no bucketed but in db
-        Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
-        Mockito.`when`(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)
+        whenever(autosensDataStore.bucketedData).thenReturn(null)
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)
         assertThat(sut.lastBg()?.value).isEqualTo(200.0)
         assertThat(sut.isLow()).isFalse()
         assertThat(sut.isHigh()).isTrue()
 
         // in bucketed
-        Mockito.`when`(autosensDataStore.bucketedData).thenReturn(bucketedData)
-        Mockito.`when`(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)
+        whenever(autosensDataStore.bucketedData).thenReturn(bucketedData)
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)
         assertThat(sut.lastBg()?.value).isEqualTo(70.0)
         assertThat(sut.isLow()).isTrue()
         assertThat(sut.isHigh()).isFalse()
@@ -65,16 +65,16 @@ class LastBgDataImplTest : TestBaseWithProfile() {
     @Test
     fun isActualBg() {
         // no bucketed but in db
-        Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
-        Mockito.`when`(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)
-        Mockito.`when`(dateUtil.now()).thenReturn(time + T.mins(1).msecs())
+        whenever(autosensDataStore.bucketedData).thenReturn(null)
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(glucoseValue)
+        whenever(dateUtil.now()).thenReturn(time + T.mins(1).msecs())
         assertThat(sut.isActualBg()).isTrue()
-        Mockito.`when`(dateUtil.now()).thenReturn(time + T.mins(9).msecs() + 1)
+        whenever(dateUtil.now()).thenReturn(time + T.mins(9).msecs() + 1)
         assertThat(sut.isActualBg()).isFalse()
 
         // no data
-        Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
-        Mockito.`when`(persistenceLayer.getLastGlucoseValue()).thenReturn(null)
+        whenever(autosensDataStore.bucketedData).thenReturn(null)
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(null)
         assertThat(sut.isActualBg()).isFalse()
     }
 }

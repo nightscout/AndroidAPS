@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">מגבלת זמן במהלך לחיצת יד - אתחול בלוטות\'</string>
     <string name="pump_stopped">המשאבה נעצרה</string>
     <string name="pump_started">המשאבה הופעלה</string>
-    <string name="short_status_last_connected">חיבור אחרון: לפני %1$d דק\'</string>
-    <string name="short_status_tbr">בזאלי זמני: %1$d%% במשך %2$d / %3$d דק\'</string>
-    <string name="short_status_extended">בולוס ממושך: %1$.2f / %2$.2f יח\'\ במשך %3$d דקות</string>
-    <string name="short_status_multiwave">בולוס רב שלבי: %1$.2f / %2$.2f יח\' למשך %3$d דק\'</string>
-    <string name="short_status_tdd">מינון כולל: %1$.2f</string>
-    <string name="short_status_reservoir">מכל: %1$.2f יח\'</string>
-    <string name="short_status_battery">סול\': %1$d%%</string>
     <string name="release_software_version">גרסת תוכנה</string>
     <string name="ui_processor_software_version">גרסת תוכנת מעבד הממשק</string>
     <string name="pc_processor_software_version">גרסת תוכנת מעבד המחשב</string>

@@ -13,7 +13,6 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -25,7 +24,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.packet.BatteryWarningReportPacket
@@ -35,6 +33,7 @@ import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.InjectionBlockReportPacket
 import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
+import dagger.android.HasAndroidInjector
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -88,9 +87,7 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
@@ -121,7 +118,7 @@ class BLECommonService @Inject internal constructor(
         }
 
         if (device.bondState == BluetoothDevice.BOND_NONE) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 device.createBond()
                 SystemClock.sleep(10000)
             }
@@ -144,9 +141,7 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return
         }

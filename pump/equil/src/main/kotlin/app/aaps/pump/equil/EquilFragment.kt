@@ -14,20 +14,17 @@ import androidx.fragment.app.DialogFragment
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
-import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
@@ -36,8 +33,9 @@ import app.aaps.pump.equil.databinding.EquilFraBinding
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.EquilManager
-import app.aaps.pump.equil.manager.command.*
-import app.aaps.pump.equil.ui.*
+import app.aaps.pump.equil.manager.command.CmdModelSet
+import app.aaps.pump.equil.ui.EquilHistoryRecordActivity
+import app.aaps.pump.equil.ui.EquilUnPairDetachActivity
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import app.aaps.pump.equil.ui.pair.EquilPairActivity
 import dagger.android.support.DaggerFragment
@@ -52,16 +50,13 @@ class EquilFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
-    @Inject lateinit var warnColors: WarnColors
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var equilManager: EquilManager
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -112,13 +107,19 @@ class EquilFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        handler.removeCallbacks(refreshLoop)
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
     }
 
     @SuppressLint("SetTextI18n")
@@ -130,16 +131,13 @@ class EquilFragment : DaggerFragment() {
             binding.battery.text = equilManager.equilState?.battery.toString() + "%"
             binding.insulinReservoir.text = equilManager.equilState?.currentInsulin.toString()
             binding.basalSpeed.text = String.format(rh.gs(R.string.equil_unit_u_hours), equilPumpPlugin.baseBasalRate)
-            binding.firmwareVersion.text = equilManager.equilState?.firmwareVersion?.toString()
+            binding.firmwareVersion.text = equilManager.equilState?.firmwareVersion
             equilManager.equilState?.startInsulin?.let {
                 if (it == -1) {
                     binding.totalDelivered.text = "-"
                 } else {
                     val totalDelivered = it - (equilManager.equilState?.currentInsulin ?: 0)
-                    binding.totalDelivered.text = String.format(
-                        rh.gs(R.string.equil_unit_u),
-                        totalDelivered.toString()
-                    )
+                    binding.totalDelivered.text = rh.gs(R.string.equil_unit_u, totalDelivered.toString())
                 }
             }
 
@@ -259,7 +257,7 @@ class EquilFragment : DaggerFragment() {
             tempMode = RunMode.SUSPEND
         }
         showLoading()
-        commandQueue.customCommand(CmdModelSet(tempMode.command, aapsLogger, sp, equilManager), object : Callback() {
+        commandQueue.customCommand(CmdModelSet(tempMode.command, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 dismissLoading()
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)

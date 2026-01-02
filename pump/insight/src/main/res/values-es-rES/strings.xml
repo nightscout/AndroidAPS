@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Tiempo de emparejamiento excedido - Reiniciar bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="short_status_last_connected">Última conexión: hace %1$d minutos</string>
-    <string name="short_status_tbr">TBR: %1$d%% por %2$d / %3$d min</string>
-    <string name="short_status_extended">Extendido: %1$.2f / %2$.2f U durante %3$d min</string>
-    <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reservorio.: %1$.2f U</string>
-    <string name="short_status_battery">Batería.: %1$d%%</string>
     <string name="release_software_version">Versión de software</string>
     <string name="ui_processor_software_version">Versión de software de procesador de interfaz de usuario</string>
     <string name="pc_processor_software_version">Versión del software del procesador de PC</string>

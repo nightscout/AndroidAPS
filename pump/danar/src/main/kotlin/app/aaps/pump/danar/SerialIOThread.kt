@@ -10,6 +10,7 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MessageHashTableBase
 import app.aaps.pump.utils.CRC
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import kotlin.math.max
@@ -40,7 +41,11 @@ class SerialIOThread(
                 val availableBytes = mInputStream.available()
                 // Ask for 1024 byte (or more if available)
                 val newData = ByteArray(max(1024, availableBytes))
-                val gotBytes = mInputStream.read(newData)
+                val gotBytes = try {
+                    mInputStream.read(newData)
+                } catch (_: IOException) {
+                    break
+                }
                 // When we are here there is some new data available
                 appendToBuffer(newData, gotBytes)
 

@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_remove_items"
+        android:icon="@drawable/ic_trash"
+        android:title="@string/remove_items"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_show_invalidated"
+        android:icon="@drawable/ic_visibility"
+        android:title="@string/show_invalidated"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_hide_invalidated"
+        android:title="@string/hide_invalidated"
+        android:icon="@drawable/ic_visibility_off"
+        app:showAsAction="ifRoom" />
+
+</menu>

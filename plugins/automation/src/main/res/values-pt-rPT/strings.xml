@@ -114,4 +114,5 @@
     <string name="error_setting_reminder">Erro ao configurar alarme futuro</string>
     <!--    Autotune-->
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

@@ -49,7 +49,6 @@
     <string name="smscommunicator_tt_canceled">임시 목표 취소가 완료되었습니다</string>
     <string name="smscommunicator_remote_commands_allowed">SMS 원격 명령 사용하기</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop가 중지되었습니다.</string>
-    <string name="smscommunicator_loop_has_been_enabled">Loop가 실행되었습니다.</string>
     <string name="smscommunicator_loop_is_enabled">Loop가 실행중입니다.</string>
     <string name="smscommunicator_pump_connect_with_code">코드 %1$s을(를) 사용하여 펌프에 연결하기</string>
     <string name="smscommunicator_pump_connect_fail">펌프에 연결하지 못했습니다.</string>
@@ -65,7 +64,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">%2$d 분 동안 Basal %1$d%% 주입하려면 %3$s을 입력하고 답장하세요</string>
     <string name="smscommunicator_suspend_reply_with_code">%1$d분동안 Loop 일시중지하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_loop_resume_reply_with_code">코드 %1$s을(를) 사용하여 loop의 작동 다시 시작하기</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">코드 %1$s을(를) 사용하여 loop의 작동 활성화하기</string>
     <string name="smscommunicator_loop_disable_reply_with_code">코드 %1$s을(를) 사용하여 loop의 작동 비활성화하기</string>
     <string name="smscommunicator_tempbasal_set">Temp Basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extended_set">Extended bolus %1$.2fU for %2$d min started successfully</string>
@@ -129,7 +127,6 @@
     <!-- Profile -->
     <string name="localprofile">프로파일</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">오프라인에서 사용 가능한 프로파일을 정의하십시오.</string>
     <string name="a11y_add_new_to_list">목록에 새로운 것 추가하기</string>
     <string name="do_you_want_switch_profile">프로파일을 변경하고 현재 프로파일에 대한 변경 사항을 버리시겠습니까?</string>
     <string name="save_or_reset_changes_first">우선 현재 변경사항을을 저장하거나 재설정하세요</string>

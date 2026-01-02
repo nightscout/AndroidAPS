@@ -22,7 +22,6 @@
     <string name="limitingextendedbolus">מגביל בולוס ממושך ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="limitingcarbs">הגבלת פחמימות ל-%1$d גר\' בגלל %2$s</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
-    <string name="closedmodedisabledinpreferences">מצב לולאה סגור מושבת בהעדפות</string>
     <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
     <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>

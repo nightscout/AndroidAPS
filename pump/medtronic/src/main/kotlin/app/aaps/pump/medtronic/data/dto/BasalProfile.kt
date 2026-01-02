@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.utils.pump.ByteUtil
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.util.MedtronicUtil
+import com.google.gson.annotations.Expose
 import org.joda.time.Instant
 import java.util.Locale
 
@@ -137,14 +137,14 @@ class BasalProfile {
 
     // TODO: this function must be expanded to include changes in which profile is in use.
     // and changes to the profiles themselves.
-    fun getEntryForTime(`when`: Instant): BasalProfileEntry {
+    fun getEntryForTime(whenever: Instant): BasalProfileEntry {
         var rval = BasalProfileEntry()
         val entries = getEntries()
         if (entries.isEmpty()) {
             aapsLogger.warn(
                 LTag.PUMPCOMM, String.format(
                     Locale.ENGLISH, "getEntryForTime(%s): table is empty",
-                    `when`.toDateTime().toLocalTime().toString("HH:mm")
+                    whenever.toDateTime().toLocalTime().toString("HH:mm")
                 )
             )
             return rval
@@ -155,7 +155,7 @@ class BasalProfile {
             aapsLogger.debug(LTag.PUMPCOMM, "getEntryForTime: Only one entry in profile")
             return rval
         }
-        val localMillis = `when`.toDateTime().toLocalTime().millisOfDay
+        val localMillis = whenever.toDateTime().toLocalTime().millisOfDay
         var done = false
         var i = 1
         while (!done) {
@@ -163,7 +163,7 @@ class BasalProfile {
             if (DEBUG_BASALPROFILE) {
                 aapsLogger.debug(
                     LTag.PUMPCOMM, String.format(
-                        Locale.ENGLISH, "Comparing 'now'=%s to entry 'start time'=%s", `when`.toDateTime().toLocalTime()
+                        Locale.ENGLISH, "Comparing 'now'=%s to entry 'start time'=%s", whenever.toDateTime().toLocalTime()
                             .toString("HH:mm"), entry.startTime!!.toString("HH:mm")
                     )
                 )
@@ -184,7 +184,7 @@ class BasalProfile {
         if (DEBUG_BASALPROFILE) {
             aapsLogger.debug(
                 LTag.PUMPCOMM, String.format(
-                    Locale.ENGLISH, "getEntryForTime(%s): Returning entry: rate=%.3f (%s), start=%s (%d)", `when`
+                    Locale.ENGLISH, "getEntryForTime(%s): Returning entry: rate=%.3f (%s), start=%s (%d)", whenever
                         .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, ByteUtil.getHex(rval.rate_raw),
                     rval.startTime!!.toString("HH:mm"), rval.startTime_raw
                 )

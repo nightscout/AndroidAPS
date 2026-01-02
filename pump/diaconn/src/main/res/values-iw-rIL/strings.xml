@@ -64,8 +64,6 @@
     <string name="insulinlackwarning">אזהרת מחסור באינסולין</string>
     <string name="needbatteryreplace">נדרשת החלפת סוללה</string>
     <string name="needinsullinreplace">נדרשת החלפת אינסולין</string>
-    <string name="pumpversion">גרסת משאבה</string>
-    <string name="pumpserialno">מספר סידורי של המשאבה</string>
     <string name="diaconn_g8_loginsulinchange_title">רישום החלפת מכל</string>
     <string name="diaconn_g8_loginsulinchange_summary">הוסף אירוע \"החלפת אינסולין\" לפורטל הטיפולים כשימצא בהיסטוריה</string>
     <string name="diaconn_g8_logcanulachange_title">רישום החלפת מחט</string>

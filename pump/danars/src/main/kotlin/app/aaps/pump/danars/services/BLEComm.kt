@@ -14,11 +14,12 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.SystemClock
 import android.util.Base64
 import androidx.core.app.ActivityCompat
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -29,14 +30,15 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.extensions.scanForActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaLongKey
-import app.aaps.pump.dana.keys.DanaString2Key
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.activities.EnterPinActivity
@@ -44,10 +46,9 @@ import app.aaps.pump.danars.activities.PairingHelperActivity
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
+import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
 import app.aaps.pump.danars.events.EventDanaRSPairingSuccess
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -55,7 +56,6 @@ import javax.inject.Singleton
 
 @Singleton
 class BLEComm @Inject internal constructor(
-    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,
@@ -67,7 +67,8 @@ class BLEComm @Inject internal constructor(
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val configBuilder: ConfigBuilder
 ) {
 
     companion object {
@@ -102,14 +103,13 @@ class BLEComm @Inject internal constructor(
     var isConnecting = false
     private var encryptedDataRead = false
     private var encryptedCommandSent = false
+    private var pumpCheckSent = false  // Guard against duplicate ENCRYPTION__PUMP_CHECK
     private var uartRead: BluetoothGattCharacteristic? = null
     private var uartWrite: BluetoothGattCharacteristic? = null
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
@@ -131,16 +131,30 @@ class BLEComm @Inject internal constructor(
             return false
         }
         if (device.bondState == BluetoothDevice.BOND_NONE) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 device.createBond()
                 SystemClock.sleep(10000)
             }
             return false
         }
+        // Close any existing connection before starting a new one to prevent overlapping states
+        if (bluetoothGatt != null) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Closing existing bluetoothGatt before new connection from: $from")
+            try {
+                bluetoothGatt?.disconnect()
+                SystemClock.sleep(200)  // Brief delay to allow cleanup
+                bluetoothGatt?.close()
+                bluetoothGatt = null
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "Error closing existing connection: ${e.message}")
+            }
+        }
+
         isConnected = false
         encryption = EncryptionType.ENCRYPTION_DEFAULT
         encryptedDataRead = false
         encryptedCommandSent = false
+        pumpCheckSent = false  // Reset the guard flag for new connection
         isConnecting = true
         bufferLength = 0
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
@@ -157,9 +171,7 @@ class BLEComm @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return
         }
@@ -168,30 +180,35 @@ class BLEComm @Inject internal constructor(
         if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_BLE5) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
-            val lastClearRequest = preferences.get(DanaLongKey.DanaRsLastClearKeyRequest)
+            val lastClearRequest = preferences.get(DanaLongKey.LastClearKeyRequest)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
                 removeBond()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys postponed")
-                preferences.put(DanaLongKey.DanaRsLastClearKeyRequest, dateUtil.now())
+                preferences.put(DanaLongKey.LastClearKeyRequest, dateUtil.now())
             }
         }
         if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_RSv3) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
-            val lastClearRequest = preferences.get(DanaLongKey.DanaRsLastClearKeyRequest)
+            val lastClearRequest = preferences.get(DanaLongKey.LastClearKeyRequest)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
+                /*
                 aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys !!!")
-                preferences.remove(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-                preferences.remove(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
-                preferences.remove(DanaString2Key.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName)
+                preferences.remove(DanaStringComposedKey.V3RandomParingKey, danaRSPlugin.mDeviceName)
+                preferences.remove(DanaStringComposedKey.V3ParingKey, danaRSPlugin.mDeviceName)
+                preferences.remove(DanaStringComposedKey.V3RandomSyncKey, danaRSPlugin.mDeviceName)
                 ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
+                */
+                // Behavior change - Try to restart app
+                context.scanForActivity()?.finish()
+                configBuilder.exitApp("Dana BLE encryption failed", Sources.Maintenance, true)
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys postponed")
-                preferences.put(DanaLongKey.DanaRsLastClearKeyRequest, dateUtil.now())
+                preferences.put(DanaLongKey.LastClearKeyRequest, dateUtil.now())
             }
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection
@@ -208,11 +225,12 @@ class BLEComm @Inject internal constructor(
         isConnected = false
         encryptedDataRead = false
         encryptedCommandSent = false
+        pumpCheckSent = false  // Reset for next connection attempt
         SystemClock.sleep(2000)
     }
 
     private fun removeBond() {
-        preferences.getIfExists(DanaStringKey.DanaMacAddress)?.let { address ->
+        preferences.getIfExists(DanaStringKey.MacAddress)?.let { address ->
             bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
                 try {
                     device.javaClass.getMethod("removeBond").invoke(device)
@@ -282,13 +300,19 @@ class BLEComm @Inject internal constructor(
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification enabled=$enabled")
         if (bluetoothAdapter == null || bluetoothGatt == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "BluetoothAdapter not initialized_ERROR")
             isConnecting = false
             isConnected = false
             encryptedDataRead = false
             encryptedCommandSent = false
+            pumpCheckSent = false
+            return
+        }
+        // Don't proceed if we're not in the right state (prevents late callbacks from old connections)
+        if (enabled && !isConnecting) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Ignoring setCharacteristicNotification - not in connecting state")
             return
         }
         bluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
@@ -373,6 +397,7 @@ class BLEComm @Inject internal constructor(
             encryption = EncryptionType.ENCRYPTION_DEFAULT
             encryptedDataRead = false
             encryptedCommandSent = false
+            pumpCheckSent = false  // Reset for next connection attempt
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
         }
@@ -404,7 +429,7 @@ class BLEComm @Inject internal constructor(
             if (isConnected && (encryption == EncryptionType.ENCRYPTION_RSv3 || encryption == EncryptionType.ENCRYPTION_BLE5))
                 bleEncryption.decryptSecondLevelPacket(receivedData).also {
                     encryptedDataRead = true
-                    preferences.put(DanaLongKey.DanaRsLastClearKeyRequest, 0L)
+                    preferences.put(DanaLongKey.LastClearKeyRequest, 0L)
                 }
             else receivedData
         addToReadBuffer(incomingBuffer)
@@ -514,12 +539,21 @@ class BLEComm @Inject internal constructor(
     }
 
     // 1st packet v1 v3 message sent to pump after connect
+    @Synchronized
     private fun sendConnect() {
+        // Guard against duplicate ENCRYPTION__PUMP_CHECK packets during rapid reconnection
+        if (pumpCheckSent) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "ENCRYPTION__PUMP_CHECK already sent for this connection, ignoring duplicate call")
+            return
+        }
+
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
             uiInteraction.addNotification(Notification.DEVICE_NOT_PAIRED, rh.gs(R.string.pairfirst), Notification.URGENT)
             return
         }
+
+        pumpCheckSent = true  // Mark that we've sent the PUMP_CHECK for this connection attempt
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__PUMP_CHECK (0x00)" + " " + DanaRSPacket.toHexString(bytes))
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
@@ -533,7 +567,7 @@ class BLEComm @Inject internal constructor(
             encryption = EncryptionType.ENCRYPTION_DEFAULT
             danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
-            val pairingKey = preferences.get(DanaString2Key.DanaRsParingKey, danaRSPlugin.mDeviceName)
+            val pairingKey = preferences.get(DanaStringComposedKey.ParingKey, danaRSPlugin.mDeviceName)
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
             if (pairingKey.isNotEmpty()) {
                 sendPasskeyCheck(pairingKey)
@@ -549,7 +583,7 @@ class BLEComm @Inject internal constructor(
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             // grab randomSyncKey
-            preferences.put(DanaString2Key.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
+            preferences.put(DanaStringComposedKey.V3RandomSyncKey, danaRSPlugin.mDeviceName, value = String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
 
             if (danaPump.hwModel == 0x05) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -569,9 +603,9 @@ class BLEComm @Inject internal constructor(
             danaPump.protocol = decryptedBuffer[7].toInt()
             val pairingKey = DanaRSPacket.asciiStringFromBuff(decryptedBuffer, 8, 6) // used while bonding
             if (decryptedBuffer[8] != 0.toByte())
-                preferences.put(DanaString2Key.DanaRsBle5PairingKey, danaRSPlugin.mDeviceName, pairingKey)
+                preferences.put(DanaStringComposedKey.Ble5PairingKey, danaRSPlugin.mDeviceName, value = pairingKey)
 
-            val storedPairingKey = preferences.get(DanaString2Key.DanaRsBle5PairingKey, danaRSPlugin.mDeviceName)
+            val storedPairingKey = preferences.get(DanaStringComposedKey.Ble5PairingKey, danaRSPlugin.mDeviceName)
             if (storedPairingKey.isBlank()) {
                 removeBond()
                 disconnect("Non existing pairing key")
@@ -625,13 +659,13 @@ class BLEComm @Inject internal constructor(
     // 2nd packet v3
     // 0x00 Start encryption, 0x01 Request pairing
     private fun sendV3PairingInformation() {
-        val randomPairingKey = preferences.get(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-        val pairingKey = preferences.get(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+        val randomPairingKey = preferences.get(DanaStringComposedKey.V3RandomParingKey, danaRSPlugin.mDeviceName)
+        val pairingKey = preferences.get(DanaStringComposedKey.V3ParingKey, danaRSPlugin.mDeviceName)
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
             var tRandomSyncKey: Byte = 0
-            val randomSyncKey = preferences.get(DanaString2Key.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName)
+            val randomSyncKey = preferences.get(DanaStringComposedKey.V3RandomSyncKey, danaRSPlugin.mDeviceName)
             if (randomSyncKey.isNotEmpty()) {
                 tRandomSyncKey = randomSyncKey.toInt(16).toByte()
             }
@@ -644,7 +678,7 @@ class BLEComm @Inject internal constructor(
 
     // 2nd packet BLE5
     private fun sendBLE5PairingInformation() {
-        val params = ByteArray(4) { 0.toByte() }
+        val params = ByteArray(4)
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, params, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__TIME_INFORMATION BLE5" + " " + DanaRSPacket.toHexString(bytes))
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
@@ -667,8 +701,8 @@ class BLEComm @Inject internal constructor(
         } else if (encryption == EncryptionType.ENCRYPTION_RSv3) {
             // decryptedBuffer[2] : 0x00 OK  0x01 Error, No pairing
             if (decryptedBuffer[2] == 0x00.toByte()) {
-                val randomPairingKey = preferences.get(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-                val pairingKey = preferences.get(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+                val randomPairingKey = preferences.get(DanaStringComposedKey.V3RandomParingKey, danaRSPlugin.mDeviceName)
+                val pairingKey = preferences.get(DanaStringComposedKey.V3ParingKey, danaRSPlugin.mDeviceName)
                 if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
                     // expecting successful connect
                     isConnected = true
@@ -723,8 +757,8 @@ class BLEComm @Inject internal constructor(
 
     // 3rd packet v3 : only after entering PIN codes
     fun finishV3Pairing() {
-        val randomPairingKey = preferences.get(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-        val pairingKey = preferences.get(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+        val randomPairingKey = preferences.get(DanaStringComposedKey.V3RandomParingKey, danaRSPlugin.mDeviceName)
+        val pairingKey = preferences.get(DanaStringComposedKey.V3ParingKey, danaRSPlugin.mDeviceName)
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
@@ -750,7 +784,7 @@ class BLEComm @Inject internal constructor(
         sendTimeInfo()
         val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
         // store pairing key to preferences
-        preferences.put(DanaString2Key.DanaRsParingKey, danaRSPlugin.mDeviceName, DanaRSPacket.bytesToHex(pairingKey))
+        preferences.put(DanaStringComposedKey.ParingKey, danaRSPlugin.mDeviceName, value = DanaRSPacket.bytesToHex(pairingKey))
         aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key: " + DanaRSPacket.bytesToHex(pairingKey))
     }
 
@@ -852,7 +886,7 @@ class BLEComm @Inject internal constructor(
     // process common packet response
     private fun processMessage(decryptedBuffer: ByteArray) {
         val originalCommand = processedMessage?.command ?: 0xFFFF
-        val receivedCommand = DanaRSPacket(injector).getCommand(decryptedBuffer)
+        val receivedCommand = DanaRSPacket().getCommand(decryptedBuffer)
         val message: DanaRSPacket? = if (originalCommand == receivedCommand) {
             // it's response to last message
             processedMessage

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operácia nepodporovaná pumpou a/alebo ovládačom.</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Nie je inicializovaný</string>
+    <string name="pump_status_initialized">Inicializované</string>
+    <string name="pump_status_encrypt">Šifrovanie komunikácie</string>
+    <string name="pump_status_ready">Pripravený</string>
+    <string name="pump_status_busy">Zaneprázdnený</string>
+    <string name="pump_status_suspended">Pozastavené</string>
+    <string name="pump_status_executing_command">Vykonávanie príkazu</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazály</string>
+    <string name="history_group_configuration">Konfigurácie</string>
+    <string name="history_group_notification">Notifikácie</string>
+    <string name="history_group_statistic">Štatistiky</string>
+    <string name="history_group_unknown">Neznáme</string>
+    <string name="history_group_all">Všetko</string>
+    <string name="history_group_bolus">Bolusy</string>
+    <string name="history_group_prime">Plnenie</string>
+    <string name="history_group_alarm">Alarmy</string>
+    <string name="history_group_glucose">Glykémia</string>
+    <string name="history_group_base">Základ</string>
+    <string name="history_group_other">Iné</string>
+    <string name="history_group_events">Všetky udalosti</string>
+    <string name="history_group_events_no_stat">Udalosti (bez štatistík)</string>
+    <!-- Time -->
+    <string name="time_today">Dnes</string>
+    <string name="time_last_hour">Posledná hodina</string>
+    <string name="time_last_3_hours">Posledné 3 hodiny</string>
+    <string name="time_last_6_hours">Posledných 6 hodín</string>
+    <string name="time_last_12_hours">Posledných 12 hodín</string>
+    <string name="time_last_2_days">Posledné 2 dni</string>
+    <string name="time_last_4_days">Posledné 4 dni</string>
+    <string name="time_last_week">Posledný týždeň</string>
+    <string name="time_last_month">Posledný mesiac</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Vyhľadávanie</string>
+    <string name="ble_config_scan_stop">Zastaviť</string>
+    <string name="ble_config_scan_selected">Vybrané</string>
+    <string name="ble_config_scan_scanning">Vyhľadávanie</string>
+    <string name="ble_config_scan_finished">Vyhľadávanie dokončené</string>
+    <string name="ble_config_scan_error">Chyba vyhľadávania: %1$d</string>
+    <string name="ble_config_remove">Vymazať</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Typ:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d deň</item>
+        <item quantity="few">%1$d dní</item>
+        <item quantity="many">%1$d dní</item>
+        <item quantity="other">%1$d dní</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodín</item>
+        <item quantity="many">%1$d hodín</item>
+        <item quantity="other">%1$d hodín</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">Pred %1$d hodinou</item>
+        <item quantity="few">Pred %1$d hodinami</item>
+        <item quantity="many">Pred %1$d hodinami</item>
+        <item quantity="other">Pred %1$d hodinami</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">Pred %1$d dňom</item>
+        <item quantity="few">Pred %1$d dňami</item>
+        <item quantity="many">Pred %1$d dňami</item>
+        <item quantity="other">Pred %1$d dňami</item>
+    </plurals>
+</resources>

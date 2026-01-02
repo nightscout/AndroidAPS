@@ -34,7 +34,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Schimbă profilul</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
-    <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configuraţi RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuaţi setarea odată ce starea RieyLink este \"Connected\". Acest lucru ar putea dura un minut.\n</string>
@@ -47,7 +46,6 @@
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <string name="request">Cerință</string>
     <string name="apsmode_title">Mod APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="error_asking_for_permissions">Eroare în solicitarea permisiunilor</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <!--    ConfigBuilder-->

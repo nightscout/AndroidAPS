@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
+    <string name="bolus_delivering">Подается %1$.2fед</string>
+    <string name="bolus_delivered_successfully">Болюс %1$.2fед. введен успешно</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d мин. назад</string>
+    <string name="secago">%1$d сек назад</string>
     <string name="minago_long">%1$d минут назад</string>
     <string name="hoursago">%1$.1fч. назад</string>
     <string name="days_ago">%1$s дн назад</string>
     <string name="days_ago_round">%1$s дн назад</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s день %2$s час назад</item>
+        <item quantity="few">%1$s дня %2$s часа назад</item>
+        <item quantity="many">%1$s дней %2$s часов назад</item>
+        <item quantity="other">%1$s дней %2$s часов назад</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s час назад</item>
+        <item quantity="few">%1$s часа назад</item>
+        <item quantity="many">%1$s часов назад</item>
+        <item quantity="other">%1$s часов назад</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">только что</item>
+        <item quantity="few">%1$s минуты назад</item>
+        <item quantity="many">%1$s минут назад</item>
+        <item quantity="other">%1$s минут назад</item>
+    </plurals>
+    <string name="seconds_ago">секунды назад</string>
     <string name="in_days">через %1$.0f дн</string>
     <string name="in_days_round">через %1$.0f дн</string>
     <string name="shorthour">ч</string>
@@ -33,6 +56,7 @@
     <string name="connecting_for">Связь установлена за %1$d сек</string>
     <string name="handshaking">Подтверждение связи</string>
     <string name="connected">соединение установлено</string>
+    <string name="authorized">Авторизовано</string>
     <string name="disconnecting">разъединение</string>
     <string name="waiting_for_disconnection">Ожидание разъединения</string>
     <!-- Custom Watchface -->
@@ -69,4 +93,5 @@
     <string name="temp_basal_absolute_rate">%1$.2f ед/ч @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f ед/ч @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f ед/ч @%2$s %3$d/%4$d мин</string>
+    <string name="forever">Навсегда</string>
 </resources>

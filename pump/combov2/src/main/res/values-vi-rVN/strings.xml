@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Kết nối và điều khiển trực tiếp bơm Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Không thể kết nối với bơm</string>
+    <string name="combov2_not_paired">Chưa ghép đôi với bơm</string>
+    <string name="combov2_warning">Cảnh báo của Combo</string>
+    <string name="combov2_error">Lỗi Combo</string>
+    <string name="combov2_warning_4">Gọi đường dây nóng để cập nhật</string>
+    <string name="combov2_warning_10">Lỗi Bluetooth, hãy ghép đôi lại</string>
+    <string name="combov2_error_1">Hết insulin trong ống chứa</string>
+    <string name="combov2_error_2">Hết Pin</string>
+    <string name="combov2_error_4">Tắc kim/ống dẫn insulin</string>
+    <string name="combov2_error_5">Kết thúc chế độ bơm dự phòng</string>
+    <string name="combov2_error_6">Lỗi cơ học</string>
+    <string name="combov2_error_7">Lỗi mạch điện tử</string>
+    <string name="combov2_error_8">Mất nguồn điện</string>
+    <string name="combov2_error_9">Kết thúc chế độ bơm cho mượn</string>
+    <string name="combov2_error_10">Lỗi ống chứa insulin</string>
+    <string name="combov2_error_11">Bộ dây truyền chưa được làm đầy</string>
+    <string name="combov2_extended_bolus_not_supported">Không hỗ trợ liều bolus mở rộng</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Ghép đôi với bơm</string>
+    <string name="combov2_unpair_pump_title">Hủy ghép đôi bơm</string>
+    <string name="combov2_driver_state_label">Trạng thái trình điều khiển</string>
+    <string name="combov2_current_activity_label">Hoạt động hiện tại</string>
+    <string name="bluetooth_address">Địa chỉ Bluetooth</string>
+    <string name="combov2_start_pairing">Bắt đầu ghép nối</string>
+    <string name="combov2_pairing_in_progress">Đang ghép nối Combo</string>
+    <string name="combov2_pairing_start_steps">Các bước để thực hiện ghép đôi với Combo:\n\n
+1. Trên bơm, vào Cài đặt Bluetooth.\n
+2. Kiểm tra xem có thiết bị nào đã được ghép đôi chưa; nếu có, vào màn hình \"Delete device\" trên bơm để delete/unpair thiết bị đó.\n
+3. Vào màn hình \"Add device\" trên bơm và bắt đầu quá trình ghép đôi trên bơm.\n
+4. Nhấn nút \"Start pairing\" bên dưới để khởi động quá trình ghép đôi trong AndroidAPS.\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Sau một lúc, tên điện thoại sẽ hiển thị trên màn hình bơm; nhấn nút CHECK để xác nhận.\n\n
+Khi quá trình ghép đôi hoàn tất, xác nhận ghép đôi thành công trên bơm và quay lại màn hình chính của bơm bằng cách nhấn nút CHECK hai lần.\n\n
+Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
+1. Nhấn Back hoặc nút \"Cancel Pairing\".\n
+2. Hủy ghép đôi trên bơm Combo (nhấn đồng thời hai nút UP và MENU để hủy ghép đôi).\n
+3. Thử ghép đôi lại từ đầu</string>
+    <string name="combov2_enter_pin">Nhập PIN</string>
+    <string name="combov2_cancel_pairing">Hủy ghép nối</string>
+    <string name="combov2_pin_hint">Mã PIN 10 chữ số</string>
+    <string name="combov2_pairing_finished_successfully">Đã ghép nối thành công với Combo</string>
+    <string name="combov2_pairing_cancelled">Ghép nối với Combo đã bị hủy bởi người dùng</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Đã hết thời gian quét Combo</string>
+    <string name="combov2_pairing_failed_due_to_error">Ghép nối thất bại do lỗi: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Ghép nối bị hủy do nguyên nhân không xác định</string>
+    <string name="combov2_pairing_invalid_pin_length">"Mã PIN ghép nối sai: cần %1$d chữ số, nhưng nhận được %2$d"</string>
+    <string name="combov2_scanning_for_pump">Đang quét tìm bơm</string>
+    <string name="combov2_establishing_bt_connection">Đang thiết lập kết nối Bluetooth (lần thử số %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Đang khởi tạo kết nối với bơm</string>
+    <string name="combov2_pairing_pump_requests_pin">Bơm yêu cầu mã PIN 10 chữ số</string>
+    <string name="combov2_pairing_finishing">Đang hoàn thành ghép nối</string>
+    <string name="combov2_no_connection_for_n_mins">Mất kết nối %1$d phút</string>
+    <string name="combov2_less_than_one_minute_ago">Chưa đến một phút trước</string>
+    <string name="combov2_setting_current_pump_time">Đặt giờ hiện tại cho bơm</string>
+    <string name="combov2_setting_current_pump_date">Đặt ngày hiện tại cho bơm</string>
+    <string name="combov2_not_initialized">Chưa khởi tạo</string>
+    <string name="combov2_checking_pump">Đang kiểm tra bơm</string>
+    <string name="combov2_ready">Sẵn sàng</string>
+    <string name="combov2_suspended">Bị tạm dừng</string>
+    <string name="combov2_pump_is_suspended">Bơm đã tạm dừng</string>
+    <string name="combov2_executing_command">Đang thực thi lệnh</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Đang lấy cấu hình basal</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Đang cài đặt cấu hình basal</string>
+    <string name="combov2_setting_tbr_cmddesc">Đang cài đặt TBR %1$d%% trong %2$d phút</string>
+    <string name="combov2_cancelling_tbr">Đang hủy TBR hiện tại</string>
+    <string name="combov2_delivering_bolus_cmddesc">Đang tiêm bolus %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Đang lấy lịch sử TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Đang cập nhật ngày giờ bơm</string>
+    <string name="combov2_updating_pump_status_cmddesc">Đang cập nhật trạng thái bơm</string>
+    <string name="combov2_pairing_pin_failure">Mã PIN không hợp lệ. Kiểm tra xem có nhập sai không. Nếu tình trạng này tiếp diễn, hãy hủy và thử ghép nối lại.</string>
+    <string name="combov2_discovery_duration">Thời gian quét (tính bằng giây)</string>
+    <string name="combov2_verbose_logging">Bật ghi nhật ký chi tiết Combo</string>
+    <string name="combov2_getting_basal_profile">Đang lấy cấu hình basal; đã đọc %1$d hệ số</string>
+    <string name="combov2_setting_basal_profile">Đang thiết lập cấu hình basal; đã ghi %1$d hệ số</string>
+    <string name="combov2_delivering_bolus">Đang tiêm bolus (%1$.1f trong %2$.1f U đã tiêm)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Không thể tiêm – bơm đang bị tạm ngưng</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Insulin trong bình chứa không đủ</string>
+    <string name="combov2_bolus_cancelled">Liều Bolus đã bị hủy</string>
+    <string name="combov2_bolus_delivery_failed">Tiêm liều bolus thất bại. Có vẻ như bolus chưa được tiêm. Để chắc chắn, vui lòng kiểm tra trực tiếp trên bơm để tránh tiêm bolus hai lần, sau đó thực hiện lại bolus. Để phòng tránh lỗi phần mềm, hệ thống sẽ không tự động thử tiêm lại bolus.</string>
+    <string name="combov2_bolus_not_delivered">Liều Bolus chưa được tiêm</string>
+    <string name="combov2_cannot_access_pump_data">Không thể truy cập dữ liệu bơm; cần ghép nối lại bơm</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Phát hiện các liều bolus không được ghi nhận. Hủy bolus vì lý do an toàn.</string>
+    <string name="combov2_incorrect_active_basal_profile">Hồ sơ basal đang kích hoạt không đúng; profile 1 phải là hồ sơ đang kích hoạt, không phải profile %1$d</string>
+    <string name="combov2_unrecognized_alert">Cảnh báo Combo không được nhận dạng</string>
+    <string name="combov2_combo_alert">Cảnh báo Combo</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d phút còn lại)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (còn dưới 1 phút)</string>
+    <string name="combov2_load_tdds_cancelled">Việc tải tổng liều insulin hằng ngày (TDD) bị hủy</string>
+    <string name="combov2_retrieving_tdds_failed">Không lấy được TDD</string>
+    <string name="combov2_battery_low_warning">Pin của bơm yếu</string>
+    <string name="combov2_reservoir_low_warning">Mức insulin trong bình bơm thấp</string>
+    <string name="combov2_setting_tbr_succeeded">Cài đặt TBR thành công</string>
+    <string name="combov2_setting_tbr_failed">Cài đặt TBR không thành công</string>
+    <string name="combov2_set_emulated_100_tbr">Đặt TBR giả lập 100%</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Để TBR mô phỏng 100% hoàn tất</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Bỏ qua yêu cầu TBR 100% dư thừa</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Gặp giới hạn bất ngờ khi điều chỉnh TBR: phần trăm mục tiêu là %1$d%%, nhưng đạt giới hạn ở %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Không thể đặt TBR tuyệt đối khi basal nền bằng 0</string>
+    <string name="combov2_pair_with_pump_summary">Ghép nối AndroidAPS/Android với bơm Combo chưa ghép</string>
+    <string name="combov2_unpair_pump_summary">Hủy ghép nối AndroidAPS và Android khỏi bơm Accu-Chek Combo đã ghép nối</string>
+    <string name="combov2_unknown_tbr_detected">Phát hiện TBR không xác định và đã dừng; phần trăm: %1$d%%; thời gian còn lại: %2$s</string>
+    <string name="combov2_connection_error">Lỗi kết nối: %1$s</string>
+    <string name="combov2_short_status_alert">Cảnh báo: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Tự động phát hiện và nhập thay đổi bình chứa insulin</string>
+    <string name="combov2_automatic_battery_entry">Tự động phát hiện và nhập thay pin</string>
+    <string name="combov2_timezone_changed">Múi giờ đã thay đổi</string>
+    <string name="combov2_datetime_changed">Ngày và/hoặc giờ đã thay đổi</string>
+    <string name="combov2_dst_started">Giờ mùa hè (DST) đã bắt đầu</string>
+    <string name="combov2_dst_ended">Giờ mùa hè (DST) đã kết thúc</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Không thể kết nối với bơm vì bơm báo lỗi. Người dùng cần xử lý lỗi trên bơm, sau đó chờ 5 phút hoặc nhấn nút Làm mới (Refresh) trong tab Driver.</string>
+    <string name="combov2_refresh_pump_status_after_error">Cập nhật trạng thái bơm sau khi bơm báo lỗi</string>
+    <string name="combov2_go_back">Quay lại</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Không thể thực hiện ghép đôi vì driver chưa được khởi tạo. Điều này thường xảy ra do chưa cấp quyền Bluetooth. Vui lòng quay lại, cấp quyền Bluetooth, sau đó thử ghép đôi lại.</string>
+    <string name="combov2_bluetooth_disabled">Không thể khởi động driver – Bluetooth đang tắt</string>
+    <string name="combov2_bluetooth_not_supported">Driver không thể chạy – thiết bị này không hỗ trợ Bluetooth</string>
+</resources>

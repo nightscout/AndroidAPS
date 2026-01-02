@@ -18,17 +18,17 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.databinding.LoopFragmentBinding
 import app.aaps.plugins.aps.extensions.toHtml
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
-import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -39,13 +39,12 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var loop: Loop
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var injector: HasAndroidInjector
 
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 501
@@ -97,7 +96,6 @@ class LoopFragment : DaggerFragment(), MenuProvider {
             else        -> false
         }
 
-    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += rxBus
@@ -116,19 +114,23 @@ class LoopFragment : DaggerFragment(), MenuProvider {
                        }, fabricPrivacy::logException)
 
         updateGUI()
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseloop, true)
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
     }
 
-    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        handler.removeCallbacksAndMessages(null)
     }
 
-    @Synchronized
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.swipeRefresh?.setOnRefreshListener(null)
         _binding = null
     }
 
@@ -163,7 +165,6 @@ class LoopFragment : DaggerFragment(), MenuProvider {
         }
     }
 
-    @Synchronized
     private fun clearGUI() {
         binding.request.text = ""
         binding.constraints.text = ""

@@ -342,6 +342,21 @@
                 app:columnCount="2">
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/site_rotation"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_site_rotation"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/site_rotation"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="6" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/history_browser"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -351,7 +366,7 @@
                     android:paddingEnd="0dp"
                     android:text="@string/nav_history_browser"
                     android:textSize="11sp"
-                    app:layout_column="0"
+                    app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="6" />
@@ -366,10 +381,10 @@
                     android:paddingEnd="0dp"
                     android:text="@string/tdd"
                     android:textSize="11sp"
-                    app:layout_column="1"
+                    app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="6" />
+                    app:layout_row="7" />
 
             </androidx.gridlayout.widget.GridLayout>
 

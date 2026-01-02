@@ -24,8 +24,8 @@ class SyncNsCarbsTransaction(private val carbs: List<Carbs>, private val nsClien
                     database.carbsDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
-                // and change duration
-                if (current.duration != carb.duration && nsClientMode) {
+                // and change duration to shorter only
+                if (current.duration != carb.duration && nsClientMode && carb.duration < current.duration) {
                     current.amount = carb.amount
                     current.duration = carb.duration
                     database.carbsDao.updateExistingEntry(current)
@@ -35,6 +35,26 @@ class SyncNsCarbsTransaction(private val carbs: List<Carbs>, private val nsClien
             }
 
             // not known nsId
+            // Check by pumpId + pumpType + pumpSerial (primary deduplication - prevents NS duplicate _id records)
+            val existingByPumpId = if (carb.interfaceIDs.pumpId != null && carb.interfaceIDs.pumpType != null && carb.interfaceIDs.pumpSerial != null) {
+                database.carbsDao.findByPumpIds(carb.interfaceIDs.pumpId!!, carb.interfaceIDs.pumpType!!, carb.interfaceIDs.pumpSerial!!)
+            } else {
+                null
+            }
+
+            if (existingByPumpId != null) {
+                // Same pump carb exists, just update/add the new nsId
+                if (existingByPumpId.interfaceIDs.nightscoutId == null) {
+                    existingByPumpId.interfaceIDs.nightscoutId = carb.interfaceIDs.nightscoutId
+                    existingByPumpId.isValid = carb.isValid
+                    database.carbsDao.updateExistingEntry(existingByPumpId)
+                    result.updatedNsId.add(existingByPumpId)
+                }
+                // If existing already has a different nsId, this is a duplicate NS record - ignore it
+                continue
+            }
+
+            // Fallback: check by timestamp (for manual carbs without pumpId)
             val existing = database.carbsDao.findByTimestamp(carb.timestamp)
             if (existing != null && existing.interfaceIDs.nightscoutId == null) {
                 // the same record, update nsId only

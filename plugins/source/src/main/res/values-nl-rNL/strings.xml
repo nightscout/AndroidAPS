@@ -5,7 +5,6 @@
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
-    <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
@@ -30,10 +29,7 @@
     <string name="bgsource_log_sensor_change_summary">Maak automatisch een gebeurtenis \"CGM Sensor Insert\" aan in de Careportal bij het ontvangen van een sensor start bericht van een lokale BG bron</string>
     <string name="direction">richting</string>
     <string name="bg_generation_interval_minutes">Interval BG generatie minuten</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Ontvang glucose-gegevens van de Ottai App.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Ontvang glucose gegevens van de Syai Tag App.</string>
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

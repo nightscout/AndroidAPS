@@ -4,8 +4,9 @@ import org.json.JSONObject
 
 interface ProfileStore {
 
-    val data: JSONObject
+    fun with(data: JSONObject): ProfileStore
 
+    fun getData(): JSONObject
     fun getStartDate(): Long
     fun getDefaultProfile(): PureProfile?
     fun getDefaultProfileJson(): JSONObject?

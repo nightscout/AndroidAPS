@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom attributes from WearPreferenceActivity library -->
+    <!-- https://github.com/denley/WearPreferenceActivity -->
+
+    <declare-styleable name="ListItemLayout">
+        <attr name="pref_icon_circle_color" format="color" />
+        <attr name="pref_icon_circle_color_selected" format="color" />
+        <attr name="pref_icon_circle_border_color" format="dimension" />
+        <attr name="pref_icon_circle_border_width" format="dimension" />
+        <attr name="pref_icon_circle_radius" format="dimension" />
+        <attr name="pref_icon_circle_radius_focused" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="ListPreference">
+        <attr name="wear_entryAsSummary" format="boolean" />
+        <attr name="wear_entryIcons" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="Preference">
+        <attr name="wear_icon" format="reference" />
+        <attr name="wear_title" format="string" />
+        <attr name="wear_summary" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="TwoStatePreference">
+        <attr name="wear_iconOn" format="reference" />
+        <attr name="wear_iconOff" format="reference" />
+        <attr name="wear_summaryOn" format="string" />
+        <attr name="wear_summaryOff" format="string" />
+    </declare-styleable>
+</resources>

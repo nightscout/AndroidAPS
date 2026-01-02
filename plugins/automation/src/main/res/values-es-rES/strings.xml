@@ -140,4 +140,10 @@
     <string name="triggerStepsCountLabel">Número de pasos</string>
     <string name="triggerStepsCountDesc">Número de pasos por %1$s minutos %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Duración de la medición</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Activar/desactivar SMB</string>
+    <string name="changeSmbTo">Cambiar SMB a %1$s</string>
+    <string name="newSmbMode">Nuevo modo SMB:</string>
+    <string name="on">ACTIVADO</string>
+    <string name="off">DESACTIVADO</string>
 </resources>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйверът на помпата е променен.</string>
     <!--    DateUtil-->
-    <string name="minago">преди %1$d мин</string>
     <string name="minago_long">Преди %1$d минути</string>
-    <string name="hoursago">преди %1$.1f ч</string>
     <string name="days_ago">преди %1$.1f дни</string>
     <string name="days_ago_round">преди %1$.0f дни</string>
     <string name="in_days">за %1$.0f дни</string>
@@ -42,12 +41,15 @@
     <string name="metadata_wear_import_filename">Име на файла: %1$s</string>
     <string name="metadata_label_plugin_version">Plugin версия: %1$s</string>
     <string name="metadata_label_watchface_name_version">Име: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Информация: %1$s</string>
     <string name="pref_show_iob">Покажи IOB</string>
     <string name="pref_show_detailed_iob">Покажи подробен IOB</string>
     <string name="pref_show_cob">Покажи COB</string>
     <string name="pref_show_delta">Покажи Делта</string>
     <string name="pref_show_detailed_delta">Показвай подробна делта</string>
     <string name="pref_show_avgdelta">Покажи средна делта</string>
+    <string name="pref_show_tempTarget">Покажи временна цел</string>
+    <string name="pref_show_reservoir_level">Покажи ниво на резервоар</string>
     <string name="pref_show_phone_battery">Покажи батерия на телефон</string>
     <string name="pref_show_rig_battery">Покажи батерия на устройство</string>
     <string name="pref_show_basal_rate">Покажи базал</string>
@@ -56,6 +58,9 @@
     <string name="pref_show_bgi">Покажи BGI</string>
     <string name="pref_show_direction_arrow">Покажи делта стрелка</string>
     <string name="pref_show_ago">Покажи \"преди\"</string>
+    <string name="pref_show_week_number">Показване на номер седмица</string>
+    <string name="pref_show_date">Покажи дата</string>
+    <string name="pref_show_seconds">Покажи секунди</string>
     <string name="default_custom_watchface_comment">Watchface по подразбиране, можете да изберете бутон ЕКСПОРТИРАНЕ НА WATCHFACE за създаване на шаблон</string>
     <string name="wear_default_watchface">Watchface по подразбиране</string>
 </resources>

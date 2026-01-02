@@ -5,7 +5,6 @@
     <string name="ns_client_bg_short">NS KŞ</string>
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
     <string name="source_xdrip">xDrip+ KŞ</string>
-    <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
@@ -30,10 +29,7 @@
     <string name="bgsource_log_sensor_change_summary">Sensör KŞ kaynağından yerel yayına başladığında Careportal\'da otomatik olarak \"CGM Sensör Ekleme\" etkinliği oluşur</string>
     <string name="direction">yön</string>
     <string name="bg_generation_interval_minutes">KŞ belirleme aralıkları (dk.)</string>
-    <!-- Patched Ottai App -->
-    <string name="ottai_app">Ottai</string>
-    <string name="description_source_patched_ottai_app">Ottai Uygulamasından glikoz verilerini alın.</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Syai Tag Uygulamasından glikoz verilerini alın.</string>
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
 </resources>

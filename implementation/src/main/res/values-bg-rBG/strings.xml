@@ -16,4 +16,5 @@
     <string name="day_tir">Дневен TIR</string>
     <string name="night_tir">Нощен TIR</string>
     <string name="carbs_short" comment="max 6 characters">Въглехидрати</string>
+    <!--    PumpStatusGenerator-->
 </resources>

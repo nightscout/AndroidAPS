@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Pomyślnie anulowano cel tymczasowy</string>
     <string name="smscommunicator_remote_commands_allowed">Zezwalaj na komendy zdalne via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Pętla (Loop) została wyłączona</string>
-    <string name="smscommunicator_loop_has_been_enabled">Pętla (Loop) została włączona</string>
     <string name="smscommunicator_loop_is_enabled">Pętla (Loop) jest włączona</string>
     <string name="smscommunicator_pump_connect_with_code">Aby podłączyć pompę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Połączenie z pompą nie powiodło się</string>
@@ -66,7 +65,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Aby rozpocząć bolus przedłużony %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Aby wstrzymać pętle na %1$d minut odpowiedz kodem %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Aby wznowić pętlę odpowiedz kodem %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Aby włączyć pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Aby wyłączyć pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_tempbasal_set">Tymczasowa baza %1$.2fU/h przez %2$d min rozpoczęta</string>
     <string name="smscommunicator_extended_set">Bolus przedłużony %1$.2fU na %2$d min. rozpoczęty pomyślnie</string>
@@ -130,7 +128,6 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Zdefiniuj profil, który jest dostępny offline.</string>
     <string name="a11y_add_new_to_list">dodaj nowy do listy</string>
     <string name="do_you_want_switch_profile">Czy chcesz przełączyć profil i porzucić zmiany wprowadzone w bieżącym profilu?</string>
     <string name="save_or_reset_changes_first">Najpierw zapisz lub wycofaj bieżące zmiany</string>

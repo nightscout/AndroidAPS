@@ -21,7 +21,6 @@ import app.aaps.wear.R
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.heartrate.HeartRateListener
 import app.aaps.wear.interaction.ConfigurationActivity
-import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.wearStepCount.StepCountListener
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
@@ -48,7 +47,6 @@ import javax.inject.Inject
 class DataLayerListenerServiceWear : WearableListenerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var persistence: Persistence
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -106,6 +104,8 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
         scope.cancel()
         disposable.clear()
     }

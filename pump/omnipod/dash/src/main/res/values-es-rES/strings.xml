@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integración de bombas de insulina Omnipod Dash (el nuevo modelo, con bluetooth habilitado de tapa azul)</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Historial del POD</string>
+    <string name="omnipod_dash_history_item_description">Descripción</string>
+    <string name="omnipod_dash_history_item_amount">Cantidad</string>
+    <string name="omnipod_dash_history_item_source">Origen</string>
+    <string name="omnipod_dash_history_item_date">Fecha</string>
+    <string name="omnipod_dash_history_type">Tipo:</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Estado de bluetooth</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Dirección bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Calidad de la conexión</string>
+    <string name="omnipod_dash_overview_delivery_status">Estado de entrega</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Rellena un nuevo Pod
+        con suficiente insulina para 3 días.\n\nEscucha dos pitidos del Pod durante el proceso de llenado. Esto indica que se ha insertado la cantidad mínima de 85U. Asegúrate de vaciar completamente la jeringa, incluso después de escuchar los dos pitidos.\n\nDespués de llenar el Pod, por favor, pulse <b>Siguiente</b>.\n\n<b>Nota:</b> No retires el capuchón de la aguja del Pod en este momento.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Intentando emparejar el nuevo Pod y prepararlo.\n\nCuando el proceso de inicialización se haya completado con éxito, puedes pulsar <b>Siguiente</b>.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sonido cuando la notificación suspendida de entrega está activada</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Error al conectar con el POD</string>
+    <string name="omnipod_dash_found_too_many_pods">Se han encontrado demasiados pods para su activación</string>
+    <string name="omnipod_dash_scan_failed">No se pudo encontrar un pod disponible para la activación</string>
+    <string name="omnipod_dash_generic_error">Error genérico: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Error al enviar el comando</string>
+    <string name="omnipod_dash_command_not_sent">Comando no enviado</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Comando no recibido por el POD</string>
+    <string name="omnipod_dash_unknown">Estado desconocido para el comando</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutos</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_alert_delivery_suspended">Suspendida la entrega de insulina</string>
+    <string name="omnipod_common_history_total_delivered">Total entregado: %1$.2f U</string>
+    <string name="omnipod_dash_connection_lost">Conexión perdida con el pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Otro bolo está siendo entregado</string>
+    <string name="omnipod_dash_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comando no confirmado</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
+    <string name="profile_set_ok">Perfil configurado correctamente</string>
+    <string name="suspend_delivery_is_unconfirmed">¡La entrega de insulina no está confirmada! Por favor, actualica manualmente el estado del Pod desde la pestaña Omnipod y reanúdela si es necesario.</string>
+    <string name="insulin_delivery_suspended">Suspensión de la administración de insulina</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">La zona horaria en pod es diferente de la zona horaria del teléfono. La tasa basal no es correcta. Se debe cambiar el perfil para corregirlo</string>
+    <string name="failed_to_set_the_new_basal_profile">Error al establecer el nuevo perfil basal. Entrega suspendida</string>
+    <string name="setting_basal_profile_might_have_failed">El ajuste del perfil basal puede haber fallado. Es posible que se haya suspendido el suministro. Actualice manualmente el estado del Pod desde la pestaña Omnipod y reanude el suministro si es necesario</string>
+    <string name="bolus_delivery_status_uncertain">Estado de entrega de bolo incierto. Actualice el estado del bolo para confirmarlo o rechazarlo</string>
+    <string name="temp_basal_out_of_sync">El estado de la basal temporal no es el esperado. Si se estaba ejecutando anteriormente una basal temporal, se ha cancelado. Por favor, comprueba la insulina suministrada y el historial de pod</string>
+    <string name="checking_delivery_status">Comprobando el estado de la entrega</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Establecer la basal temporal podría haber fallado. Si se estaba ejecutando una basal temporal, se ha cancelado. Actualice manualmente el estado del Pod desde la pestaña Omnipod</string>
+    <string name="cancel_temp_basal_result_is_uncertain">El resultado de cancelar la basal temporal es incierto</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">El comando \"ContinuarEntrega\" no se encuentra confirmado. Por favor, actualice el estado del pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Puede que haya fallado la cancelación de la basal temporal. Si anteriormente se estaba ejecutando una basal temporal, es posible que se haya cancelado. Actualice manualmente el estado del Pod desde la pestaña Omnipod.</string>
+</resources>

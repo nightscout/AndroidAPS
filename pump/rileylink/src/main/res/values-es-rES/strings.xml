@@ -9,7 +9,10 @@
     <string name="pump_status_timeout_comm">Tiempo de espera agotado en la comunicación</string>
     <string name="pump_status_pump_unreachable">Bomba inaccesible</string>
     <string name="pump_status_invalid_config">Configuración inválida</string>
-    <!-- RL keys -->
+    <string name="medtronic_pump_encoding_4b6b_local">Codificación de software 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificación de hardware 4b6b</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">En todo el mundo (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Escanear</string>
     <string name="riley_link_ble_config_scan_stop">Detener</string>

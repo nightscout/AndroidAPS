@@ -8,16 +8,17 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.graph.data.InMemoryGlucoseValueDataPoint
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)
@@ -31,8 +32,9 @@ internal class InMemoryGlucoseValueDataPointTest {
 
     @BeforeEach
     fun setup() {
-        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        Mockito.`when`(rh.gac(any(), any())).thenReturn(Color.GREEN)
+        MockitoAnnotations.openMocks(this)
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(rh.gac(any(), any())).thenReturn(Color.GREEN)
     }
 
     @Test

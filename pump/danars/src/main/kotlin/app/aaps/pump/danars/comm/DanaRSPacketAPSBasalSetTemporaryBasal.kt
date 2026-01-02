@@ -1,13 +1,15 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
+import javax.inject.Inject
+import kotlin.math.max
+import kotlin.math.min
 
-class DanaRSPacketAPSBasalSetTemporaryBasal(
-    injector: HasAndroidInjector,
-    private var percent: Int
-) : DanaRSPacket(injector) {
+class DanaRSPacketAPSBasalSetTemporaryBasal @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : DanaRSPacket() {
 
     var temporaryBasalRatio = 0
     var temporaryBasalDuration = 0
@@ -15,17 +17,17 @@ class DanaRSPacketAPSBasalSetTemporaryBasal(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL
-        aapsLogger.debug(LTag.PUMPCOMM, "New message: percent: $percent")
+        aapsLogger.debug(LTag.PUMPCOMM, "New message: APS Temp basal start")
+    }
 
-        if (percent < 0) percent = 0
-        if (percent > 500) percent = 500
-        temporaryBasalRatio = percent
+    fun with(percent: Int) = this.also {
+        temporaryBasalRatio = min(max(percent, 0), 500)
         if (percent < 100) {
             temporaryBasalDuration = PARAM30MIN
-            aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start percent: $percent duration 30 min")
+            aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start percent: $temporaryBasalRatio duration 30 min")
         } else {
             temporaryBasalDuration = PARAM15MIN
-            aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start percent: $percent duration 15 min")
+            aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start percent: $temporaryBasalRatio duration 15 min")
         }
     }
 

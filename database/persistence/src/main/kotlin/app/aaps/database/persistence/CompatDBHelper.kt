@@ -10,8 +10,8 @@ import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
-import app.aaps.core.interfaces.rx.events.EventOfflineChange
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventRunningModeChange
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
@@ -26,8 +26,8 @@ import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -113,9 +113,9 @@ class CompatDBHelper @Inject constructor(
                 aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged $ps")
                 rxBus.send(EventProfileSwitchChanged())
             }
-            it.filterIsInstance<OfflineEvent>().firstOrNull()?.let { oe ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventOfflineChange $oe")
-                rxBus.send(EventOfflineChange())
+            it.filterIsInstance<RunningMode>().firstOrNull()?.let { rm ->
+                aapsLogger.debug(LTag.DATABASE, "Firing RunningModeChange $rm")
+                rxBus.send(EventRunningModeChange())
             }
             it.filterIsInstance<DeviceStatus>().firstOrNull()?.let { ds ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventDeviceStatusChange $ds")

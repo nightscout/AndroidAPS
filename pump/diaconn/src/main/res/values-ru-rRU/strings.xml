@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Предупреждение об отсутствии инсулина</string>
     <string name="needbatteryreplace">Требуется замена батареи</string>
     <string name="needinsullinreplace">Требуется замена картриджа с инсулином</string>
-    <string name="pumpversion">версия помпы</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Отслеживать замену резервуара</string>
     <string name="diaconn_g8_loginsulinchange_summary">Добавить событие \"Замена инсулина\" в портал терапии при обнаружении в хронологии</string>
     <string name="diaconn_g8_logcanulachange_title">Отслеживать замену катетера помпы в журнале</string>

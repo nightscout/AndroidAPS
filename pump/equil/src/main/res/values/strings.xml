@@ -1,28 +1,17 @@
 <resources>
-    <string name="key_equil_devices" translatable="false">key_equil_devices</string>
-    <string name="key_equil_password" translatable="false">key_equil_password</string>
-    <string name="key_equil_alarm_battery_10" translatable="false">key_equil_alarm_battery_10</string>
-    <string name="key_equil_alarm_insulin_10" translatable="false">key_equil_alarm_insulin_10</string>
-    <string name="key_equil_alarm_insulin_5" translatable="false">key_equil_alarm_insulin_5</string>
-    <string name="key_equil_basal_set" translatable="false">key_equil_basal_set</string>
-    <string name="key_equil_state" translatable="false">key_equil_state1</string>
-    <string name="key_equil_pair_password" translatable="false">key_equil_pair_password</string>
-
-
     <string name="equil_name">Equil 5.3</string>
     <string name="equil_name_short">EQ</string>
     <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
 
     <!--  start  -->
     <string name="equil_basal_speed">Base basal</string>
-    <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U Delivered</string>
     <string name="equil_btn_cancel">Cancel</string>
     <string name="equil_btn_need">Need</string>
     <string name="equil_btn_skip">Skip</string>
     <string name="equil_date_device">Last connection</string>
     <string name="equil_dressing">Change reservoir</string>
     <string name="equil_dressing_onkey_msg">Automatically moving the plunger to the reservoir bottom. It will stop automatically upon reaching the bottom. Click \'Stop\' to interrupt if needed.</string>
-    <string name="equil_finish">Completed</string>
+    <string name="equil_finish">Finish</string>
     <string name="equil_next">Next</string>
 
     <string name="equil_hint_dressing">This operation will stop insulin infusion and cause the pump plunger to retract to the bottom!</string>
@@ -118,7 +107,6 @@
 
     <string name="equil_command__unknown">The unknown status of the command</string>
     <string name="equil_install">Implant the pump into the body"</string>
-    <string name="equil_settings">Settings</string>
     <string name="equil_settings_alarm_battery">Low battery alarm</string>
     <string name="equil_settings_alarm_insulin">Low drug storage alarm</string>
     <string name="equil_init_insulin_error">Initialization of the reservoir is not complete</string>
@@ -153,11 +141,6 @@
     <string name="equil_history_item18">Abnormal infusion stopped</string>
 
 
-    <string name="equil_common_short_status_last_connection">LastConn: %1$d min ago</string>
-    <string name="equil_common_short_status_last_bolus">LastBolus: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Temp: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Extended: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Reservoir: %1$sU</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspend</string>
     <string name="equil_common_overview_button_resume_delivery">Resume delivery</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
@@ -191,6 +174,7 @@
 
 
     <string name="equil_unbind">Unpair device</string>
+    <string name="equil_device_unpaired">Device unpaired</string>
     <string name="equil_assemble">Please assemble the pump, the filled reservoir and the charged battery</string>
     <string name="equil_devices_number">Enter new pump ID</string>
     <string name="equil_insert">Please prime the reservoir until there is a drop of insulin on the needle tip</string>
@@ -201,8 +185,8 @@
     <string name="equil_unpair">Deactivate old pump %1$s?</string>
     <string name="equil_pump_updated">Pump updated</string>
 
-    <string name="equil_maxbolus_tips">Max allowed bolus in pump [%1$sU]</string>
     <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
     <string name="sixhexanumber" translatable="false">^[A-F0-9]{6}$</string>
     <string name="error_mustbe6hexadidits">Must be 6 characters of ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Unpair command failed. Pump will be removed anyway. Password set during pairing is not removed from the pump.</string>
 </resources>

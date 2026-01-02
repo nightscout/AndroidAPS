@@ -1,24 +1,14 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketOptionGetUserOptionTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketOptionGetUserOption) {
-                it.aapsLogger = aapsLogger
-                it.danaPump = danaPump
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketOptionGetUserOption(packetInjector)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketOptionGetUserOption(aapsLogger, danaPump)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding

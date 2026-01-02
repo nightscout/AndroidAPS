@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">펌프 드라이버가 변경되었습니다.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d 분 전</string>
     <string name="minago_long">%1$d분 전</string>
-    <string name="hoursago">%1$.1f 시간 전</string>
     <string name="days_ago">%1$.1f일 전</string>
     <string name="days_ago_round">%1$.0f 일 전</string>
     <string name="in_days">%1$.0f 일 이내에</string>

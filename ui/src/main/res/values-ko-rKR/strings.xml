@@ -36,6 +36,7 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">합계</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
     <string name="record_pump_site_change">펌프 위치 변경 기록</string>

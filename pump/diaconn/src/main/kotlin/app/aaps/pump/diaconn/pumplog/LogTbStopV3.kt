@@ -1,7 +1,6 @@
 package app.aaps.pump.diaconn.pumplog
 
-import okhttp3.internal.and
-import org.apache.commons.lang3.StringUtils
+import app.aaps.pump.common.utils.and
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -37,9 +36,7 @@ class LogTbStopV3 private constructor(
         sb.append(", kind=").append(kind.toInt())
         sb.append(", tbInjectRateRatio=").append(tbInjectRateRatio and 0xffff)
         sb.append(", reason=").append(reason.toInt())
-        if (!StringUtils.equals(tbDttm, PumpLogUtil.getDttm("ffffffff"))) {
-            sb.append(", tbDttm=").append(tbDttm)
-        }
+        if (tbDttm != PumpLogUtil.getDttm("ffffffff")) sb.append(", tbDttm=").append(tbDttm)
         sb.append('}')
         return sb.toString()
     }

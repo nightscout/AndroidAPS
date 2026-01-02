@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="connection_settings_title">连接设置</string>
     <string name="ns_wifi_allowed_ssids">允许的 SSIDs (分号分隔)</string>
@@ -14,10 +14,8 @@
     <string name="unsupported_ns_version">不支持的 Nightscout 版本</string>
     <string name="openaps_short">OpenAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT 没有写权限。可能是NS的 API 密钥输错了？</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL网址：</string>
     <string name="restart">重新启动</string>
     <string name="ns_client_url_title">Nightscout URL(网址)</string>
@@ -33,19 +31,12 @@
     <string name="ns_receive_profile_store">接收存储用户配置</string>
     <string name="ns_receive_profile_store_summary">同步NS配置文件编辑器的用户配置到本地。</string>
     <string name="ns_receive_temp_target">接收临时目标</string>
-    <string name="ns_receive_temp_target_summary">允许通过NS或NS客户端接收血糖的临时目标值。</string>
     <string name="ns_receive_profile_switch">接收用户配置文件切换</string>
-    <string name="ns_receive_profile_switch_summary">允许通过NS或NS客户端接收用户配置文件切换。</string>
-    <string name="ns_receive_offline_event">接收 APS 离线事件</string>
-    <string name="ns_receive_offline_event_summary">允许通过NS或NS客户端接收APS 离线事件。</string>
     <string name="ns_receive_tbr_eb">接收TBR 和 EB</string>
     <string name="ns_receive_tbr_eb_summary">接受通过另一个实例输入 TBR 和 EB</string>
     <string name="ns_receive_insulin">接收胰岛素输注</string>
-    <string name="ns_receive_insulin_summary">允许通过NS或 NS客户端接收胰岛素输注 (它并不会输注胰岛素，只计算为活性胰岛素IOB)</string>
     <string name="ns_receive_carbs">接收碳水化合物</string>
-    <string name="ns_receive_carbs_summary">允许通过NS或NS客户端接收碳水化合物输入。</string>
     <string name="ns_receive_therapy_events">接收治疗事件</string>
-    <string name="ns_receive_therapy_events_summary">允许通过NS或NS客户端接收(导管更换、胰岛素更换、电池更换等) 护理事件</string>
     <string name="ns_receive_cgm">接收/回填CGM数据</string>
     <string name="ns_receive_cgm_summary">接受来自NS 的 CGM 数据</string>
     <string name="ns_sync_slow">放慢上传速度</string>
@@ -57,17 +48,10 @@
     <string name="ns_log_app_started_event">记录app启动事件到NS服务器</string>
     <string name="copy_existing_values">复制 NS 设置(如果存在的话)？</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>
-    <string name="title_tidepool_username">登录用户名</string>
-    <string name="summary_tidepool_password">登录密码</string>
-    <string name="title_tidepool_password">登录密码</string>
-    <string name="title_tidepool_test_login">测试Tidepool登录</string>
-    <string name="summary_tidepool_dev_servers">如果启用，则上载将转到https://intapp.tidepool.org，而不是常规https://app.tidepool.org/。</string>
     <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">数据上传到Tidepool</string>
-    <string name="remove_all">删除全部</string>
     <string name="upload_now">现在上传</string>
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->

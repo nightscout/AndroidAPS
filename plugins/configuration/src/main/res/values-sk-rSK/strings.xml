@@ -35,7 +35,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="exitwizard">Preskočiť sprievodcu</string>
-    <string name="setupwizard_loop_description">Stlačte tlačidlo nižšie, pre povolenie, aby mohlo AndroidAPS navrhovať, alebo robiť zmeny bazálu</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
@@ -51,7 +50,6 @@
     <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
     <string name="request">Požiadavka</string>
     <string name="apsmode_title">APS mód</string>
-    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <!--    ConfigBuilder-->

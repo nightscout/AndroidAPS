@@ -7,7 +7,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 
 open class DanaRSTestBase : TestBaseWithProfile() {
 
@@ -17,7 +17,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        Mockito.`when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
+        whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
     }
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
@@ -50,6 +50,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
+        danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
     }
 }

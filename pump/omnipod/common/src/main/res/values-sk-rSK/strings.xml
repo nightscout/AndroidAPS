@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Správa Podu</string>
+    <string name="omnipod_common_pod_management_heading_actions">Akcie</string>
+    <string name="omnipod_common_pod_management_heading_tools">Nástroje</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Aktivovať Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Deaktivovať Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Vyradiť Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Pokiaľ zahodíte Pod, už s ním nebudete môcť komunikovať. Mali by ste to urobiť iba vtedy, pokiaľ celá komunikácia s Podom trvalo zlyháva. Pokiaľ stále môžete komunikovať s Podom, použite možnosť <b>Deaktivovať Pod</b>.\n\nPokiaľ si prajete pokračovať, uistite sa prosím, že odstránite Pod z tela!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Prehrať testovacie pípnutie</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Prehrávanie testovacieho pípnutia…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">História Podu</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Žiadny aktívny Pod</string>
+    <string name="omnipod_common_error_set_basal_failed">Nastavenie bazálneho profilu zlyhalo.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Podanie bolusu nebolo úspešné.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Nepodarilo sa nastaviť bazálny profil: bol prijatý prázdny profil. Uistite sa, že ste aktivovali svoj bazálny profil.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Žiadny bazálny profil nie je aktívny. Uistite sa, že ste aktivovali svoj bazálny profil.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Nepodporovaný vlastný príkaz: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Nepodarilo sa obnoviť stav</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Nepodarilo se aktualizovať stav pri spustení</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Nepodarilo sa potvrdiť výstrahy</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Nepodarilo sa pozastaviť podávanie inzulínu</string>
+    <string name="omnipod_common_error_failed_to_set_time">Nepodarilo sa nastaviť čas</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Podávanie inzulínu sa nepodarilo spustiť</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Nepodarilo sa inicializovať Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Nepodarilo sa vložiť kanylu</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Bol prekročený čas aktivácie Podu. Tento Pod sa už nedá aktivovať.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Nepodarilo sa overiť priebeh aktivácie. Skúste to znova.</string>
+    <string name="omnipod_common_error_pod_suspended">Pod pozastavený</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Nepodarilo se prehrať testovacie pípnutie</string>
+    <string name="omnipod_common_error_time_out_of_sync">Čas na Pode nie je synchronizovaný. Aktualizujte prosím čas na záložke Omnipod.</string>
+    <string name="omnipod_common_error_unexpected_exception">Došlo k neočakávanej chybe. Prosíme o jej nahlásenie! (%1$s: %2$s).</string>
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Potvrdenie</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Nastavenie výstrahy bolo v Pode aktualizované.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">Čas na Pode bol aktualizovaný.</string>
+    <string name="omnipod_common_confirmation_suspended_delivery">Všetko podávanie inzulínu bolo pozastavené.</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">Aktívne výstrahy boli potvrdené.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">Podávanie inzulínu bolo obnovené.</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Nastavenie času</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Pozastavenia</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Pokračovať v dodávaní inzulínu</string>
+    <string name="omnipod_common_overview_button_pod_management">Správa Podu</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Stíšiť alarmy</string>
+    <string name="omnipod_common_overview_pod_status">Stav Podu</string>
+    <string name="omnipod_common_overview_total_delivered">Celkovo podané</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f JI</string>
+    <string name="omnipod_common_overview_pod_unique_id">Jedinečné ID</string>
+    <string name="omnipod_common_overview_lot_number">Číslo šarže</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Poradové číslo</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Expirácia Podu</string>
+    <string name="omnipod_common_overview_last_connection">Posledné spojenie</string>
+    <string name="omnipod_common_overview_last_bolus">Posledný bolus</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Dočasná bazálna dávka</string>
+    <string name="omnipod_common_overview_base_basal_rate">Základná hodnota bazálu</string>
+    <string name="omnipod_common_overview_reservoir">Zásobník</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Výstrahy aktívneho Podu</string>
+    <string name="omnipod_common_overview_firmware_version">Verzia firmvéru</string>
+    <string name="omnipod_common_overview_time_on_pod">Čas na Pode</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fJI/h @%2$s (%3$d/%4$d minút)</string>
+    <string name="omnipod_common_overview_reservoir_value">Zostáva %1$.2f JI</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Zostáva viac ako 50 JI</string>
+    <string name="omnipod_common_overview_errors">Chyby</string>
+    <string name="omnipod_common_uncertain">neznáme</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Zrušiť</string>
+    <string name="omnipod_common_wizard_button_finish">Dokončiť</string>
+    <string name="omnipod_common_wizard_button_next">Ďalšia</string>
+    <string name="omnipod_common_wizard_button_retry">Opakovať</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Deaktivovať Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Vyradiť Pod</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Doposiaľ ste nedokončili všetky kroky. Ste si istý, že chcete ukončiť prácu?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Ukončiť</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Naplniť Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inicializovať Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Nasaďte Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Pripravte infúzne miesto. Odstráňte krytku ihly a náplasti a nalepte Pod.\n\nPokiaľ sa kanyla odlepí, stlačíte <b>Zrušiť</b> a zahoďte Pod.\n\nStlačte <b>Ďalšia</b> pre vloženie kanyly a spustenie bazálu.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Keď stlačíte <b>OK</b>, kanyla se vloží. Uistite sa, že ste pripojili Pod k infuznemu miestu.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Vložiť kanylu</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Snažím sa nastaviť počiatočný základný bazál a vložiť kanylu.\n\nPo úspešnom vložení kanyly môžete stlačiť tlačítko <b>Ďalšia</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod aktivovaný</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Pod je teraz aktívny.\n\nVáš bazál bol naprogramovaný a kanyla bola vložená.\n\nOverte prosím, že kanyla bola vložená správne a prípadne vymeňte Pod.</string>
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktivovať Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Stlačte<b>Ďalšia</b> pre deaktiváciu Podu.\n\n<b>Poznámka:</b> Úplne zastavíte podávanie inzulínu a deaktivujete Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktivácia Podu</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktivácia Podu.\n\nPo úspešnom dokončení deaktivácie môžete stlačiť <b>Ďalšia</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivovaný</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod deaktivovaný.\n\nOdstráňte Pod z tela a znehodnoťte ho.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod vyradený</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Stav Podu bol vyradený. Podávanie inzulínu nebolo pozastavené, pretože Pod nebol riadne deaktivovaný!\n\nOdstráňte Pod z vašeho tela a recyklujte ho.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Pokiaľ tento Pod vyradíte, nebudete s ním už mocť komunikovať. Túto operáciu by ste mali urobiť iba v prípade, že celá komunikácia s týmto Podom trvale zlyháva. Naozaj chcete vyradiť Pod?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Vyradiť Pod</string>
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Pípnutie pri boluse povolené</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Pípnutie pri bazále povolené</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Pípnutie pri SMB povolené</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Pípnutie pri TBR povolené</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Zobraziť tlačítko \"Pozastaviť podávanie\" na záložke Omnipod</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Letný čas / Detekcia časového pásma povolená</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Pripomenutie vypršania platnosti povolené</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Pokiaľ je povolené, Pod bude pípať, keď bude dosiahnutý zadaný čas</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Pripomenutie v hodinách pred vypršaním platnosti (72 hodín)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Upozornenie na vypršanie platnosti povolené</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Pokiaľ je povolené, Pod bude pípať, keď bude dosiahnutý zadaný čas a 1 hodinu pred vypnutím</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Upozornenie v hodinách pred vypnutím (80 hodín)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Upozornenie na nízký stav zásobníka povolené</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Počet jednotiek</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Automaticky potvrdzovať výstrahy Podu</string>
+    <string name="omnipod_common_preferences_category_other">Iné</string>
+    <string name="omnipod_common_preferences_category_alerts">Výstrahy</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Potvrdzovacie pípnutia</string>
+    <string name="omnipod_common_preferences_category_notifications">Notifikácie</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Zvuk upozornenia pre neistý dočasný bazál povolený</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Zvuk upozornenia pre neistý SMB povolený</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Zvuk upozornenia pre neistý bolus povolený</string>
+    <string name="omnipod_dash_use_bonding">Spárované BT zariadenie na Android 15</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Žiadny aktívny Pod</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Prebieha inštalácia (čaká sa na aktiváciu Podu)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Inštalácia prebieha (čaká sa na vloženie kanyly)</string>
+    <string name="omnipod_common_pod_status_running">V prevádzke</string>
+    <string name="omnipod_common_pod_status_normal">Normálny</string>
+    <string name="omnipod_common_pod_status_suspended">Pozastavené</string>
+    <string name="omnipod_common_pod_status_pod_fault">Chyba Podu</string>
+    <string name="omnipod_common_pod_status_inactive">Neaktívny</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Chyba Podu: %1$03d %2$s</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_deactivate_pod">Deaktivovať Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Vyradiť Pod</string>
+    <string name="omnipod_common_cmd_set_bolus">Nastavovanie bolusu</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Zrušiť bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Nastavovanie dočasného bazálu</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Zrušiť dočasný bazál (interne ovládačom)</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Zrušiť dočasný bazál</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Nastaviť plán bazálu</string>
+    <string name="omnipod_common_cmd_get_pod_status">Zistiť stav Podu</string>
+    <string name="omnipod_common_cmd_get_pod_info">Zistiť informácie o Pode</string>
+    <string name="omnipod_common_cmd_set_time">Nastaviť čas</string>
+    <string name="omnipod_common_cmd_configure_alerts">Nastaviť výstrahy</string>
+    <string name="omnipod_common_cmd_silence_alerts">Stíšiť alarmy</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Pozastaviť dodávanie inzulínu</string>
+    <string name="omnipod_common_cmd_resume_delivery">Pokračovať v dodávaní inzulínu</string>
+    <string name="omnipod_common_cmd_unknown_entry">Neznáma položka</string>
+    <string name="omnipod_common_cmd_initialize_pod">Inicializovať Pod</string>
+    <string name="omnipod_common_cmd_insert_cannula">Vložiť kanylu</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Čítať protokol pulzov</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nastaviť falošný dočasný bazál, pretože Pod je pozastavený</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Zrušiť falošný dočasný bazál ktorý bol vytvorený, pretože Pod bol pozastavený</string>
+    <string name="omnipod_common_cmd_split_tbr">Rozdeliť dočasný bazál kvôli neistej chybe pri zrušení</string>
+    <string name="omnipod_common_cmd_play_test_beep">Prehrať testovacie pípnutie</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Pripomienka ukončenia párovania</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Pripomienka ukončenia nastavenia</string>
+    <string name="omnipod_common_alert_expiration">Pod čoskoro expiruje</string>
+    <string name="omnipod_common_alert_expiration_advisory">Pod čoskoro expiruje</string>
+    <string name="omnipod_common_alert_shutdown_imminent">Vypnutie je bezprostredné</string>
+    <string name="omnipod_common_alert_low_reservoir">Nízka hladina zásobníka</string>
+    <string name="omnipod_common_alert_unknown_alert">Neznáma výstraha</string>
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Áno</string>
+    <string name="omnipod_common_no">Nie</string>
+    <string name="omnipod_common_ok">OK</string>
+    <string name="omnipod_common_cancel">Zrušiť</string>
+    <string name="omnipod_common_warning">Upozornenie</string>
+    <string name="omnipod_common_disable_suspend_alerts">Vypnúť upozornenia o pozastavení</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">Pred chvíľou</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Pred menej ako minútou</string>
+    <string name="omnipod_common_composite_time">%1$s a %2$s</string>
+    <string name="omnipod_common_time_ago">pred %1$s min</string>
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d minúta</item>
+        <item quantity="few">%1$d minút</item>
+        <item quantity="many">%1$d minút</item>
+        <item quantity="other">%1$d minút</item>
+    </plurals>
+    <plurals name="omnipod_common_hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodín</item>
+        <item quantity="many">%1$d hodín</item>
+        <item quantity="other">%1$d hodín</item>
+    </plurals>
+    <plurals name="omnipod_common_days">
+        <item quantity="one">%1$d deň</item>
+        <item quantity="few">%1$d dní</item>
+        <item quantity="many">%1$d dní</item>
+        <item quantity="other">%1$d dní</item>
+    </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="one">Výstraha Podu: %1$s</item>
+        <item quantity="few">Výstrahy Podu: %1$s</item>
+        <item quantity="many">Výstrahy Podu: %1$s</item>
+        <item quantity="other">Výstrahy Podu: %1$s</item>
+    </plurals>
+</resources>

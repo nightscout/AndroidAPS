@@ -6,7 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerTimeRangeTest : TriggerTestBase() {
@@ -17,8 +17,8 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     fun mock() {
         now = 754 // in minutes from midnight
         val nowMills = MidnightTime.calcMidnightPlusMinutes(now.toInt())
-        `when`(dateUtil.now()).thenReturn(nowMills)
-        `when`(rh.gs(R.string.timerange_value)).thenReturn("Time is between %1\$s and %2\$s")
+        whenever(dateUtil.now()).thenReturn(nowMills)
+        whenever(rh.gs(R.string.timerange_value)).thenReturn("Time is between %1\$s and %2\$s")
     }
 
     @Test
@@ -62,7 +62,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     }
 
     @Test fun friendlyDescriptionTest() {
-        assertThat(TriggerTimeRange(injector).friendlyDescription()).isEqualTo("Time is between 12:34PM and 12:34PM")
+        assertThat(TriggerTimeRange(injector).friendlyDescription()).isEqualTo("Time is between 12:34 PM and 12:34 PM")
     }
 
     @Test fun iconTest() {

@@ -4,13 +4,14 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventChargingState
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -48,6 +49,12 @@ class ReceiverDelegate @Inject constructor(
             .toObservable(EventChargingState::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev -> onChargingStateChange(ev) }, fabricPrivacy::logException)
+        // Until the app is fully initialized, some EventConnectivityOptionChanged may be lost
+        // Send again when app is initialized
+        disposable += rxBus
+            .toObservable(EventAppInitialized::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ rxBus.send(EventConnectivityOptionChanged("App start", receiverStatusStore.isConnected)) }, fabricPrivacy::logException)
     }
 
     fun grabReceiversState() {
@@ -97,7 +104,7 @@ class ReceiverDelegate @Inject constructor(
         val newAllowedState = allowedChargingState == true && allowedNetworkState == true
         if (newAllowedState != allowed) {
             allowed = newAllowedState
-            if (allowed) blockingReason = ""
+            if (allowed) blockingReason = "Connected"
             rxBus.send(EventConnectivityOptionChanged(blockingReason, receiverStatusStore.isConnected))
         }
     }

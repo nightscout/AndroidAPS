@@ -32,6 +32,27 @@ class SyncNsBolusTransaction(private val boluses: List<Bolus>) : Transaction<Syn
             }
 
             // not known nsId
+            // Check by pumpId + pumpType + pumpSerial (primary deduplication - prevents NS duplicate _id records)
+            val existingByPumpId = if (bolus.interfaceIDs.pumpId != null && bolus.interfaceIDs.pumpType != null && bolus.interfaceIDs.pumpSerial != null) {
+                database.bolusDao.findByPumpIds(bolus.interfaceIDs.pumpId!!, bolus.interfaceIDs.pumpType!!, bolus.interfaceIDs.pumpSerial!!)
+            } else {
+                null
+            }
+
+            if (existingByPumpId != null) {
+                // Same pump bolus exists, just update/add the new nsId
+                if (existingByPumpId.interfaceIDs.nightscoutId == null) {
+                    existingByPumpId.interfaceIDs.nightscoutId = bolus.interfaceIDs.nightscoutId
+                    existingByPumpId.isValid = bolus.isValid
+                    existingByPumpId.amount = bolus.amount
+                    database.bolusDao.updateExistingEntry(existingByPumpId)
+                    result.updatedNsId.add(existingByPumpId)
+                }
+                // If existing already has a different nsId, this is a duplicate NS record - ignore it
+                continue
+            }
+
+            // Fallback: check by timestamp (for manual boluses without pumpId)
             val existing = database.bolusDao.findByTimestamp(bolus.timestamp)
             if (existing != null && existing.interfaceIDs.nightscoutId == null) {
                 // the same record, update nsId only and amount

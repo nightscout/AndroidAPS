@@ -1,11 +1,12 @@
 package app.aaps.wear.interaction.menus
 
+import android.content.Intent
 import android.os.Bundle
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
-import app.aaps.core.interfaces.rx.weardata.EventData.ActionLoopStatus
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionPumpStatus
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionTddStatus
 import app.aaps.wear.R
+import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
 
 class StatusMenuActivity : MenuListActivity() {
@@ -25,7 +26,11 @@ class StatusMenuActivity : MenuListActivity() {
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.status_pump) -> rxBus.send(EventWearToMobile(ActionPumpStatus(System.currentTimeMillis())))
-            getString(R.string.status_loop) -> rxBus.send(EventWearToMobile(ActionLoopStatus(System.currentTimeMillis())))
+            getString(R.string.status_loop) -> {
+                // Launch new detailed status activity
+                val intent = Intent(this, LoopStatusActivity::class.java)
+                startActivity(intent)
+            }
             getString(R.string.status_tdd)  -> rxBus.send(EventWearToMobile(ActionTddStatus(System.currentTimeMillis())))
         }
     }

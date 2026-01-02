@@ -32,12 +32,6 @@
     <string name="timeout_during_handshake">Temps d\'espera excedit en establir la connexió - Reiniciar bluetooth</string>
     <string name="pump_stopped">Bomba aturada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="short_status_last_connected">Darrera connexió: fa %1$d min</string>
-    <string name="short_status_tbr">TBR: %1$d%% durant %2$d / %3$d min</string>
-    <string name="short_status_extended">Estès: %1$.2f / %2$.2f U durant %3$d min</string>
-    <string name="short_status_multiwave">Multiona: %1$.2f / %2$.2f U durant %3$d min</string>
-    <string name="short_status_reservoir">Reservori.: %1$.2f U</string>
-    <string name="short_status_battery">Bateria.: %1$d%%</string>
     <string name="release_software_version">Versió de software</string>
     <string name="ui_processor_software_version">Versió de software del processador d\'interfície d\'usuari</string>
     <string name="pc_processor_software_version">Versió de software del processador del PC</string>

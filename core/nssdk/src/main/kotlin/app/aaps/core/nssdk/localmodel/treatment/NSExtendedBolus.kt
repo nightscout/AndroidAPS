@@ -20,6 +20,7 @@ data class NSExtendedBolus(
     override val pumpType: String?,
     override val pumpSerial: String?,
     override var app: String? = null,
+    /** Duration in milliseconds */
     val duration: Long,
     val enteredinsulin: Double,
     val isEmulatingTempBasal: Boolean?,

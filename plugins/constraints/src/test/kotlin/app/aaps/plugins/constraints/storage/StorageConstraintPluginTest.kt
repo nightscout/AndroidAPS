@@ -8,10 +8,10 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 
 class StorageConstraintPluginTest : TestBase() {
 
@@ -22,7 +22,7 @@ class StorageConstraintPluginTest : TestBase() {
 
     @BeforeEach fun prepareMock() {
         storageConstraintPlugin = StorageConstraintPlugin(aapsLogger, rh, uiInteraction)
-        `when`(rh.gs(anyInt(), anyLong())).thenReturn("")
+        whenever(rh.gs(anyInt(), anyLong())).thenReturn("")
     }
 
     class MockedStorageConstraintPlugin(

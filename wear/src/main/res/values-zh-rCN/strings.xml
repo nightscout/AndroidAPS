@@ -119,17 +119,12 @@
     <string name="color_name_black">黑色</string>
     <string name="color_name_multicolor">彩色</string>
     <string name="pref_simplify_ui">简化界面</string>
-    <string name="pref_simplify_ui_sum">仅显示时间和血糖</string>
     <string name="pref_vibrate_hourly">按小时振动</string>
     <string name="pref_show_weeknumber">显示星期几</string>
-    <string name="digitalstyle_pref_your_style">您的样式：</string>
     <string name="digitalstyle_style_none">无样式</string>
     <string name="digitalstyle_style_minimal">简约样式</string>
     <string name="digitalstyle_style_shape">几何样式</string>
     <string name="digitalstyle_style_full">完整样式</string>
-    <string name="digitalstyle_pref_your_color">您的颜色：</string>
-    <string name="digitalstyle_pref_your_color_saturation">您的颜色饱和度：</string>
-    <string name="digitalstyle_pref_your_color_opacity">您的颜色透明度：</string>
     <string name="bolus_progress_channel_name">AAPS大剂量进度</string>
     <string name="bolus_progress_silent_channel_name">AAPS大剂量输注禁音</string>
     <string name="bolus_progress_channel_description">大剂量输注与取消</string>

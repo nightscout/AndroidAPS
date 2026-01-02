@@ -1,27 +1,36 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.dana.DanaPump
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import javax.inject.Inject
 
-class DanaRSPacketAPSSetEventHistory(
-    injector: HasAndroidInjector,
-    private var packetType: Int,
-    private var time: Long,
-    private var param1: Int,
-    private var param2: Int
-) : DanaRSPacket(injector) {
+class DanaRSPacketAPSSetEventHistory @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    dateUtil: DateUtil,
+    private val danaPump: DanaPump
+) : DanaRSPacket() {
 
-    @Inject lateinit var danaPump: DanaPump
+    private var packetType: Int = 0
+    private var time: Long = 0
+    private var param1: Int = 0
+    private var param2: Int = 0
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY
-        if ((packetType == DanaPump.HistoryEntry.CARBS.value || packetType == DanaPump.HistoryEntry.BOLUS.value) && param1 <= 0) param1 = 0
         aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + dateUtil.dateAndTimeAndSecondsString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
+    }
+
+    fun with(packetType: Int, time: Long, param1: Int, param2: Int) = this.also {
+        it.packetType = packetType
+        it.time = time
+        it.param1 = param1
+        it.param2 = param2
+        if ((packetType == DanaPump.HistoryEntry.CARBS.value || packetType == DanaPump.HistoryEntry.BOLUS.value) && param1 <= 0) it.param1 = 0
     }
 
     override fun getRequestParams(): ByteArray {
@@ -50,7 +59,7 @@ class DanaRSPacketAPSSetEventHistory(
             aapsLogger.error(LTag.PUMPCOMM, "Set history entry result: $result ERROR!!!")
         } else {
             failed = false
-            aapsLogger.debug(LTag.PUMPCOMM, "Set history entry result: $result")
+            aapsLogger.debug(LTag.PUMPCOMM, "Set history entry result: OK")
         }
     }
 

@@ -104,4 +104,5 @@
     <string name="time_to_bolus">Hora d’aplicar bolus!\nExecuteu l\'assistent de bolus i torneu a fer els càlculs.</string>
     <!--    Autotune-->
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

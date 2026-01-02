@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Použít mobilní připojení</string>
     <string name="ns_wifi">Použít WiFi připojení</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -22,7 +22,7 @@
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="ns_malfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSClient nedostal oprávnění k zápisu. Špatné API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
@@ -49,19 +49,19 @@
     <string name="ns_receive_profile_store">Přijímat úložiště profilu</string>
     <string name="ns_receive_profile_store_summary">Synchronizovat profily z editoru profilu v NS</string>
     <string name="ns_receive_temp_target">Přijímat dočasné cíle</string>
-    <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_temp_target_summary">Přijmout dočasné cíle zadané prostřednictvím NS nebo AAPSClienta</string>
     <string name="ns_receive_profile_switch">Přijímat přepnutí profilu</string>
-    <string name="ns_receive_profile_switch_summary">Přijmout přepnutí profilu zadané prostřednictvím NS nebo NSClienta</string>
-    <string name="ns_receive_offline_event">Přijímat události APS offline</string>
-    <string name="ns_receive_offline_event_summary">Přijmout APS offline události zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_profile_switch_summary">Přijmout přepnutí profilu zadané prostřednictvím NS nebo AAPSClienta</string>
+    <string name="ns_receive_running_mode">Přijímat události režimu smyčky</string>
+    <string name="ns_receive_running_mode_summary">Přijmout události režimu smyčky zadané prostřednictvím NS nebo AAPSClienta</string>
     <string name="ns_receive_tbr_eb">Přijímat dočasný bazál a kombinovany bolus</string>
     <string name="ns_receive_tbr_eb_summary">Přijmout dočasný bazál a kombo bolus zadaný přes jinou instanci</string>
     <string name="ns_receive_insulin">Přijímat inzulín</string>
-    <string name="ns_receive_insulin_summary">Přijmout inzulín vložený přes NS nebo NSClient (není dodán, pouze započítán do IOB)</string>
+    <string name="ns_receive_insulin_summary">Přijmout inzulín vložený přes NS nebo AAPSClienta (není dodán, pouze započítán do IOB)</string>
     <string name="ns_receive_carbs">Přijímat sacharidy</string>
-    <string name="ns_receive_carbs_summary">Přijmout sacharidy vložené prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_carbs_summary">Přijmout sacharidy vložené prostřednictvím NS nebo AAPSClienta</string>
     <string name="ns_receive_therapy_events">Přijímat události</string>
-    <string name="ns_receive_therapy_events_summary">Přijmout léčebné události (výměna setu, inzulínu, baterie atd.) zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_therapy_events_summary">Přijmout léčebné události (výměna setu, inzulínu, baterie atd.) zadané prostřednictvím NS nebo AAPSClienta</string>
     <string name="ns_receive_cgm">Přijímat/doplňovat glykémie</string>
     <string name="ns_receive_cgm_summary">Přijmout CGM data z NS</string>
     <string name="ns_sync_slow">Zpomalit odesílání</string>
@@ -75,17 +75,11 @@
     <string name="ns_use_ws_title">Připojit k websocketům</string>
     <string name="ns_use_ws_summary">Povolení znamená: rychlejší aktualizace, příjem alarmů a oznámení a vyšší spotřebu baterie podobnou v1. Všechny ostatní aplikace nahrávající do NS musí používat také protokol v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Vaše uživatelské jméno na Tidepoolu, obvykle vaše e-mailová adresa</string>
-    <string name="title_tidepool_username">Uživatelské jméno</string>
-    <string name="summary_tidepool_password">Heslo na Tidepoolu</string>
-    <string name="title_tidepool_password">Heslo</string>
-    <string name="title_tidepool_test_login">Otestovat přihlášení na Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Pokud je povoleno, data budou nahrávána na https://int-app.tidepool.org místo na https://app.tidepool.org/</string>
+    <string name="summary_tidepool_dev_servers">Pokud je tato možnost povolena, data budou nahrávána na testovací servery, nikoli na běžné</string>
     <string name="title_tidepool_dev_servers">Používat testovací servery</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávání dat do Tidepoolu</string>
-    <string name="remove_all">Odstranit vše</string>
     <string name="upload_now">Nahrát nyní</string>
     <string name="not_connected">Nepřipojeno</string>
     <string name="read_only">Jen pro čtení</string>
@@ -176,6 +170,7 @@
     <string name="last_aps_result_na">Poslední výsledek není k dispozici!</string>
     <string name="loop_status_closed">UZAVŘENÁ SMYČKA</string>
     <string name="loop_status_open">OTEVŘENÁ SMYČKA</string>
+    <string name="loop_status_lgs">OCHRANA PŘED NÍZKOU GLYKÉMIÍ</string>
     <string name="loop_status_disabled">SMYČKA ZAKÁZÁNA</string>
     <string name="aps">APS</string>
     <string name="last_run">Poslední spuštění</string>
@@ -191,7 +186,6 @@
     <string name="wear_action_loop_state_unauthorized">Zkuste to prosím znovu.</string>
     <string name="wear_action_loop_state_invalid">Neplatný požadavek na stav smyčky</string>
     <string name="wear_action_loop_state_title">STAV SMYČKY</string>
-    <string name="wear_action_loop_state_changed">%1$s</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nTrvání: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Uzavřená</string>
     <string name="wear_action_loop_state_now_lgs">LGS</string>
@@ -199,11 +193,10 @@
     <string name="wear_action_loop_state_now_suspended">Pozastaveno</string>
     <string name="wear_action_loop_state_now_resumed">Obnoveno</string>
     <string name="wear_action_loop_state_now_disabled">Zakázáno</string>
-    <string name="wear_action_loop_state_now_enabled">Povoleno</string>
+    <string name="wear_action_loop_state_now_pump_suspended">Pumpa pozastavena</string>
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Neplatný</string>
     <string name="wear_action_loop_state_now_pump_disconnected">Pumpa odpojena</string>
-    <string name="wear_action_loop_state_now_pump_reconnected">Pumpa byla znovu připojena</string>
     <string name="garmin_request_key">Vyžadovaný klíč</string>
     <string name="garmin_request_key_summary">Volitelný klíč pro zabezpečení HTTP komunikace mezi zařízením Garmin a AAPS.</string>
 </resources>
