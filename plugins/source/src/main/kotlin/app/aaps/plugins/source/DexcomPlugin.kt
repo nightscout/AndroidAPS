@@ -28,7 +28,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
-import app.aaps.plugins.source.fragments.BGSourceFragment
+import app.aaps.plugins.source.BGSourceFragment
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

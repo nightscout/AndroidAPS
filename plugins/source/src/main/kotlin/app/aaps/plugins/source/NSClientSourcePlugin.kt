@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.plugins.source.fragments.BGSourceFragment
+import app.aaps.plugins.source.BGSourceFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -31,9 +31,9 @@ class EversenseTransmitterSettings {
 
     var predictiveAlarmEnabled: Boolean = true
     var predictiveHighAlarmEnabled: Boolean = true
-    var predictiveHighAlarmThreshold: Int = 70
+    var predictiveHighAlarmThreshold: Int = 180
     var predictiveHighAlarmMinutes: Int = 5
     var predictiveLowAlarmEnabled: Boolean = true
-    var predictiveLowAlarmThreshold: Int = 180
+    var predictiveLowAlarmThreshold: Int = 70
     var predictiveLowAlarmMinutes: Int = 5
 }

@@ -33,7 +33,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.isRunningTest
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.plugins.source.fragments.BGSourceFragment
+import app.aaps.plugins.source.BGSourceFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.security.SecureRandom
 import java.util.Calendar

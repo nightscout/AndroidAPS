@@ -41,8 +41,7 @@
         
         <androidx.preference.Preference
             app:key="eversense_settings_glucose"
-            app:title="Transmitter settings"
-            app:fragment="app.aaps.plugins.cgm.eversense.GlucoseSettingsFragment" />
+            app:title="Transmitter settings" />
 
         <androidx.preference.Preference
             app:key="eversense_connect"

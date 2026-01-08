@@ -3,7 +3,7 @@ package app.aaps.plugins.source.di
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.plugins.source.fragments.BGSourceFragment
+import app.aaps.plugins.source.BGSourceFragment
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
