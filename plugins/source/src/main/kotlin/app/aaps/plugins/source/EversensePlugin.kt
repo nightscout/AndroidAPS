@@ -34,7 +34,7 @@ class EversensePlugin @Inject constructor(
         .fragmentClass(BGSourceFragment::class.java.name)
         // Fix: Explicitly point to the core object R file
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_blooddrop_48)
-        .preferencesId(R.xml.eversense_preferences)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.source_eversense)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_eversense),
