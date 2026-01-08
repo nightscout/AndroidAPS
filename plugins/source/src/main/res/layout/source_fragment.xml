@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="2dp"
-    tools:context=".fragments.BGSourceFragment">
+    tools:context=".BGSourceFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

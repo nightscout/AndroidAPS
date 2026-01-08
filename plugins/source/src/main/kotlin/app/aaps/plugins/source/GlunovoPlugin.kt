@@ -25,7 +25,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.keys.GlunovoLongKey
-import app.aaps.plugins.source.fragments.BGSourceFragment
+import app.aaps.plugins.source.BGSourceFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
