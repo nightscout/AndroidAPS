@@ -30,14 +30,16 @@
     <string name="bgsource_log_sensor_change_summary">Create event \"CGM Sensor Insert\" in Careportal automatically on received sensor start from BG source local broadcast</string>
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">BG generation interval minutes</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
     <string name="description_source_patched_si_app">Receive glucose data from Patched Sibionic SI App.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
-    <string name="syai_tag_app">Syai Tag</string>
-    <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai Tag App.</string>
+    <!-- Eversense plugin -->
     <string name="source_eversense">Eversense</string>
     <string name="description_source_eversense">Eversense E3/365 driver</string>
     <string name="eversense_information_title">Information</string>
