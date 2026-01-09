@@ -13,6 +13,9 @@ import com.nightscout.eversense.callbacks.EversenseWatcher
 import com.nightscout.eversense.models.EversenseState
 import com.nightscout.eversense.models.EversenseTransmitterSettings
 import com.nightscout.eversense.packets.EversenseE3Communicator
+import com.nightscout.eversense.util.EversenseLogger
+import com.nightscout.eversense.util.EversenseScanner
+import com.nightscout.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
 
 class EversenseCGMPlugin {

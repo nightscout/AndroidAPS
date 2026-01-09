@@ -8,7 +8,7 @@ import com.nightscout.eversense.packets.EversensePacket
 @EversensePacket(
     requestId = EversenseE3Packets.ReadSingleByteSerialFlashRegisterCommandId,
     responseId = EversenseE3Packets.ReadSingleByteSerialFlashRegisterResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class GetSettingPredictiveHighEnabledPacket : EversenseBasePacket() {

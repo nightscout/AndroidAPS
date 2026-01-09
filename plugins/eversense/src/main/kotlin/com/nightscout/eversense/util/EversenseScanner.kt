@@ -1,9 +1,8 @@
-package com.nightscout.eversense
+package com.nightscout.eversense.util
 
 import android.annotation.SuppressLint
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import android.util.Log
 import com.nightscout.eversense.callbacks.EversenseScanCallback
 import com.nightscout.eversense.models.EversenseScanResult
 

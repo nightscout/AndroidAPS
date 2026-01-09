@@ -9,7 +9,7 @@ import com.nightscout.eversense.packets.e3.util.EversenseE3Parser
 @EversensePacket(
     requestId = EversenseE3Packets.ReadTwoByteSerialFlashRegisterCommandId,
     responseId = EversenseE3Packets.ReadTwoByteSerialFlashRegisterResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class GetSettingGlucoseHighThresholdPacket : EversenseBasePacket() {

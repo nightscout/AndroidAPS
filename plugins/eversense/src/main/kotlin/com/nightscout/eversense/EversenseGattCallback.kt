@@ -18,6 +18,14 @@ import java.util.UUID
 import java.util.concurrent.Executors
 import kotlin.jvm.Throws
 import androidx.core.content.edit
+import com.nightscout.eversense.packets.Eversense365Communicator
+import com.nightscout.eversense.packets.e365.AuthIdentityPacket
+import com.nightscout.eversense.packets.e365.AuthStartPacket
+import com.nightscout.eversense.packets.e365.AuthWhoAmIPacket
+import com.nightscout.eversense.util.EversenseCrypto365Util
+import com.nightscout.eversense.util.EversenseHttp365Util
+import com.nightscout.eversense.util.EversenseLogger
+import com.nightscout.eversense.util.StorageKeys
 
 class EversenseGattCallback(
     private val plugin: EversenseCGMPlugin,
@@ -45,6 +53,7 @@ class EversenseGattCallback(
 
     private var payloadSize: Int = 20
     private var security: EversenseSecurityType = EversenseSecurityType.None
+    private var cryptoUtil = EversenseCrypto365Util(preferences)
     var currentPacket: EversenseBasePacket? = null
 
     fun isConnected(): Boolean {
@@ -208,8 +217,8 @@ class EversenseGattCallback(
                 packet.appendData(data.toUByteArray())
                 packet.notifyAll()
             } else {
-                if (packetAnnotation.responseType != data[1]) {
-                    EversenseLogger.warning(TAG, "Incorrect responseType received - Expected: ${packetAnnotation.responseType}, got: ${data[1]}")
+                if (packetAnnotation.typeId != data[1]) {
+                    EversenseLogger.warning(TAG, "Incorrect responseType received - Expected: ${packetAnnotation.typeId}, got: ${data[1]}")
                     return
                 }
 
@@ -232,7 +241,7 @@ class EversenseGattCallback(
             throw EversenseWriteException("requestCharacteristic is empty")
         }
 
-        val requestData = packet.buildRequest() ?:run {
+        val requestData = packet.buildRequest(cryptoUtil) ?:run {
             throw EversenseWriteException("Failed to build request data...")
         }
 
@@ -275,8 +284,54 @@ class EversenseGattCallback(
         EversenseE3Communicator.fullSync(this, preferences, plugin.watchers)
     }
 
+    @SuppressLint("MissingPermission")
     private fun authV2flow() {
-        // TODO: Implement
+        try {
+            if (!cryptoUtil.generateKeyPairIfNotExists()) {
+                bluetoothGatt?.disconnect()
+                return
+            }
+
+            if (!cryptoUtil.canUseShortcut()) {
+                val whoAmI = writePacket<AuthWhoAmIPacket.Response>(AuthWhoAmIPacket())
+
+                val authSession = EversenseHttp365Util.login(preferences) ?:run {
+                    bluetoothGatt?.disconnect()
+                    return
+                }
+
+                val fleet = EversenseHttp365Util.getFleetSecretV2(
+                    accessToken = authSession.access_token,
+                    serialNumber = whoAmI.serialNumber,
+                    nonce = whoAmI.nonce,
+                    flags = whoAmI.flags,
+                    publicKey = cryptoUtil.getClientPublicKey()
+                ) ?:run {
+                    bluetoothGatt?.disconnect()
+                    return
+                }
+
+                writePacket<AuthIdentityPacket.Response>(
+                    AuthIdentityPacket(fleet.Result.Certificate?.hexToByteArray() ?: byteArrayOf())
+                )
+
+                cryptoUtil.allowUseShortcut()
+            }
+
+            val signature = cryptoUtil.generateEphem() ?:run {
+                bluetoothGatt?.disconnect()
+                return
+            }
+
+            val session = writePacket<AuthStartPacket.Response>(AuthStartPacket(cryptoUtil.getStartSecret(signature)))
+            cryptoUtil.generateSessionKey(session.sessionPublicKey)
+
+            EversenseLogger.info(TAG, "Ready for full sync!!")
+            Eversense365Communicator.fullSync(this, preferences, plugin.watchers)
+        } catch(exception: Exception) {
+            EversenseLogger.error(TAG, "[365] Failed to do authV2 - $exception")
+            bluetoothGatt?.disconnect()
+        }
     }
 
     @SuppressLint("MissingPermission")

@@ -9,7 +9,7 @@ import com.nightscout.eversense.packets.e3.util.EversenseE3Writer
 @EversensePacket(
     requestId = EversenseE3Packets.WriteSingleByteSerialFlashRegisterCommandId,
     responseId = EversenseE3Packets.WriteSingleByteSerialFlashRegisterResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class SetSettingRateFallingEnabledPacket(private val enabled: Boolean) : EversenseBasePacket() {

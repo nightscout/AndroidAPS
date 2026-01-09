@@ -3,8 +3,8 @@ package com.nightscout.eversense.packets
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.nightscout.eversense.EversenseGattCallback
-import com.nightscout.eversense.EversenseLogger
-import com.nightscout.eversense.StorageKeys
+import com.nightscout.eversense.util.EversenseLogger
+import com.nightscout.eversense.util.StorageKeys
 import com.nightscout.eversense.callbacks.EversenseWatcher
 import com.nightscout.eversense.enums.EversenseType
 import com.nightscout.eversense.models.EversenseCGMResult

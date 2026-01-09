@@ -9,7 +9,7 @@ import com.nightscout.eversense.packets.e3.util.EversenseE3Writer
 @EversensePacket(
     requestId = EversenseE3Packets.WriteTwoByteSerialFlashRegisterCommandId,
     responseId = EversenseE3Packets.WriteTwoByteSerialFlashRegisterResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class SetSettingGlucoseLowThresholdPacket(private val threshold: Int) : EversenseBasePacket() {
