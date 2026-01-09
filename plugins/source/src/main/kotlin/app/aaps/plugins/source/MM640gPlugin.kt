@@ -18,8 +18,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.source.BGSourceFragment
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException

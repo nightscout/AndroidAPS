@@ -40,4 +40,9 @@
     <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai Tag App.</string>
     <string name="source_eversense">Eversense</string>
     <string name="description_source_eversense">Eversense E3/365 driver</string>
+    <string name="eversense_information_title">Information</string>
+    <string name="eversense_information_connected">Connected</string>
+    <string name="eversense_information_battery">Battery percentage</string>
+    <string name="eversense_information_insertion_date">Insertion date</string>
+    <string name="eversense_information_last_sync">Last synchronisation</string>
 </resources>
