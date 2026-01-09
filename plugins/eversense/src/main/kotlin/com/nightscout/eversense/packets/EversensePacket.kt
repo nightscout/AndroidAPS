@@ -10,7 +10,7 @@ annotation class EversensePacket(
     val responseId: Byte,
 
     /** The expected response id for this packet. Only relevant for 365 packets */
-    val responseType: Byte,
+    val typeId: Byte,
 
     /** The required security protocol */
     val securityType: EversenseSecurityType

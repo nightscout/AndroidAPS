@@ -1,6 +1,6 @@
 package com.nightscout.eversense.packets.e3
 
-import com.nightscout.eversense.EversenseLogger
+import com.nightscout.eversense.util.EversenseLogger
 import com.nightscout.eversense.enums.EversenseSecurityType
 import com.nightscout.eversense.packets.EversenseBasePacket
 import com.nightscout.eversense.packets.EversensePacket
@@ -11,7 +11,7 @@ import kotlin.math.abs
 @EversensePacket(
     requestId = EversenseE3Packets.ReadCurrentTransmitterDateAndTimeCommandId,
     responseId = EversenseE3Packets.ReadCurrentTransmitterDateAndTimeResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class GetCurrentDatetimePacket : EversenseBasePacket() {

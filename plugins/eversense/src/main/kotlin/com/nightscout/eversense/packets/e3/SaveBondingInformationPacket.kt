@@ -7,7 +7,7 @@ import com.nightscout.eversense.packets.EversensePacket
 @EversensePacket(
     requestId = EversenseE3Packets.SaveBLEBondingInformationCommandId,
     responseId = EversenseE3Packets.SaveBLEBondingInformationResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class SaveBondingInformationPacket : EversenseBasePacket() {

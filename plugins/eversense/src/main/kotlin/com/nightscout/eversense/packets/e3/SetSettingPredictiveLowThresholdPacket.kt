@@ -4,13 +4,12 @@ import com.nightscout.eversense.enums.EversenseE3Memory
 import com.nightscout.eversense.enums.EversenseSecurityType
 import com.nightscout.eversense.packets.EversenseBasePacket
 import com.nightscout.eversense.packets.EversensePacket
-import com.nightscout.eversense.packets.e3.util.EversenseE3Parser
 import com.nightscout.eversense.packets.e3.util.EversenseE3Writer
 
 @EversensePacket(
     requestId = EversenseE3Packets.WriteTwoByteSerialFlashRegisterCommandId,
     responseId = EversenseE3Packets.WriteTwoByteSerialFlashRegisterResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class SetSettingPredictiveLowThresholdPacket(private val threshold: Int) : EversenseBasePacket() {

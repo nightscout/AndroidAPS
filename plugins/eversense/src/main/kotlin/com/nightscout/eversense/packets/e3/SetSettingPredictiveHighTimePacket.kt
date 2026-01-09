@@ -8,7 +8,7 @@ import com.nightscout.eversense.packets.EversensePacket
 @EversensePacket(
     requestId = EversenseE3Packets.WriteSingleByteSerialFlashRegisterCommandId,
     responseId = EversenseE3Packets.WriteSingleByteSerialFlashRegisterResponseId,
-    responseType = 0,
+    typeId = 0,
     securityType = EversenseSecurityType.None
 )
 class SetSettingPredictiveHighTimePacket(private val minutes: Int) : EversenseBasePacket() {

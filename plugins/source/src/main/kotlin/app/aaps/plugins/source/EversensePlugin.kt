@@ -1,7 +1,6 @@
 package app.aaps.plugins.source
 
 import android.content.Context
-import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
@@ -18,7 +17,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import com.nightscout.eversense.EversenseCGMPlugin
 import com.nightscout.eversense.callbacks.EversenseWatcher
 import com.nightscout.eversense.enums.EversenseType
