@@ -244,7 +244,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.bolusPulsesDelivered
 
     private val basalPulsesDelivered: Short?
-        // Compute basal pulses delivered by subtracting bolus pulses from total pulses delivered
+        // Compute basal pulses (including corrections) by subtracting user bolus pulses from total
         get() = pulsesDelivered?.let { total ->
             bolusPulsesDelivered?.let { bolus ->
                 (total - bolus).toShort()
@@ -320,6 +320,63 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             logger.debug(LTag.PUMP, "  total integrated delivery: ${"%.4f".format(total)}U")
         }
     }
+
+    override fun needsBasalCorrection(): Boolean {
+        val correctionThreshold = -PodConstants.POD_PULSE_BOLUS_UNITS / 2  // -0.025U
+        
+        if (!isActivationCompleted) return false  // Don't correct during activation/priming
+        if (isSuspended || isPodKaput) return false
+
+        // Check cooldown: 2 minutes minimum between corrections (prevents rapid corrections while allowing timely response)
+        podState.lastBasalCorrectionTime?.let {
+            if (System.currentTimeMillis() - it < 2 * 60 * 1000L) return false
+        }
+
+        // Compute drift once for efficiency
+        val drift = basalDrift
+
+        // Reset if drift exceeds boundaries (over-delivery or severe under-delivery)
+        if (drift >= PodConstants.POD_PULSE_BOLUS_UNITS * 2 || drift <= -PodConstants.POD_PULSE_BOLUS_UNITS * 2) {
+            logger.warn(
+                LTag.PUMP,
+                "Resetting basal drift: drift=${"%.3f".format(drift)}U, " +
+                    "expected=${"%.3f".format(podState.basalExpected ?: 0.0)}U -> actual=${"%.3f".format(basalDelivered)}U"
+            )
+            podState.basalExpected = basalDelivered
+            store()
+            return false
+        }
+
+        // No correction if drift too small
+        if (drift > correctionThreshold) {
+            return false
+        }
+
+        // Safety check: don't correct when TBR = 0 (algorithm explicitly requested zero insulin)
+        // Except zero temp due to bolus delivery, allow corrections in that case
+        if (tempBasal?.rate == 0.0) {
+            val timeSinceLastBolus = podState.lastBolus?.startTime?.let { System.currentTimeMillis() - it }
+            if (timeSinceLastBolus == null || timeSinceLastBolus >= 5 * 60 * 1000L) {
+                return false
+            }
+        }
+
+        // Correction triggers when: -0.10U < drift <= -0.025U and no zero-TBR (unless recent bolus)
+        return true
+    }
+
+    override var lastBasalCorrectionTime: Long?
+        get() = podState.lastBasalCorrectionTime
+        set(value) {
+            podState.lastBasalCorrectionTime = value
+            store()
+        }
+
+    override var basalCorrectionInProgress: Boolean
+        get() = podState.basalCorrectionInProgress
+        set(value) {
+            podState.basalCorrectionInProgress = value
+        }
 
     override val lastStatusResponseReceived: Long
         get() = podState.lastStatusResponseReceived
@@ -733,10 +790,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             }
         } ?: basalDelivered.takeIf { isActivationCompleted }
         
-        // Update bolus pulses delivered
+        // Update bolus pulses delivered (exclude basal corrections)
         podState.bolusPulsesDelivered = podState.bolusPulsesDelivered?.let {
             podState.pulsesDelivered
-                ?.takeIf { podState.lastBolus?.deliveryComplete == false }
+                ?.takeIf { podState.lastBolus?.deliveryComplete == false && !podState.basalCorrectionInProgress }
                 ?.let { previousTotalPulses ->
                     (it + calculateBolusPulseIncrease(
                         previousTotalPulses,
@@ -967,6 +1024,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var lastBolus: OmnipodDashPodStateManager.LastBolus? = null,
 
         var bolusPulsesDelivered: Short? = null,  // Cumulative count of bolus pulses for basal tracking
-        var basalExpected: Double? = null  // Initialized to actual on first drift calculation
+        var basalExpected: Double? = null,  // Initialized to actual on first drift calculation
+        
+        var lastBasalCorrectionTime: Long? = null,  // Timestamp of last basal correction attempt (for cooldown)
+        @Transient var basalCorrectionInProgress: Boolean = false  // Transient flag: true while basal correction is delivering
     ) : Serializable
 }

@@ -138,6 +138,10 @@ interface OmnipodDashPodStateManager {
 
     fun updateLowReservoirAlertSettings(lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Completable
 
+    var lastBasalCorrectionTime: Long?
+    var basalCorrectionInProgress: Boolean
+    fun needsBasalCorrection(): Boolean
+
     data class ActiveCommand(
         val sequence: Short,
         val createdRealtime: Long,
