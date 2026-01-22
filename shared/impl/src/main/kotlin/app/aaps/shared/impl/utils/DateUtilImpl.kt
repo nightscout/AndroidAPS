@@ -1,7 +1,9 @@
 package app.aaps.shared.impl.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.collection.LongSparseArray
+import androidx.preference.PreferenceManager
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -130,10 +132,29 @@ class DateUtilImpl @Inject constructor(
     }
 
     override fun dateStringShort(mills: Long): String {
-        val pattern = if (AndroidDateFormat.is24HourFormat(context)) "dd/MM" else "MM/dd"
-        val formatter = DateTimeFormatter.ofPattern(pattern)
-        return Instant.ofEpochMilli(mills).atZone(systemZone).format(formatter)
+        val appLocale = currentAppLocale
+        val pattern = context.createConfigurationContext(
+            Configuration(context.resources.configuration).apply { setLocale(appLocale) }
+        ).getString(R.string.date_format_short)
+        return Instant.ofEpochMilli(mills).atZone(systemZone).format(DateTimeFormatter.ofPattern(pattern))
     }
+
+    /** Get the current app locale based on AAPS language settings (replicates LocaleHelper.currentLocale). */
+    private val currentAppLocale: Locale
+        get() {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val language = if (prefs.getBoolean("simple_mode", true)) "default"
+            else prefs.getString("language", "default") ?: "default"
+            
+            return when {
+                language == "default" -> Locale.getDefault()
+                language.contains("_") -> Locale.Builder()
+                    .setLanguage(language.substring(0, 2))
+                    .setRegion(language.substring(3, 5))
+                    .build()
+                else -> Locale.Builder().setLanguage(language).build()
+            }
+        }
 
     override fun timeString(): String = timeString(now())
     override fun timeString(mills: Long): String {

@@ -48,6 +48,7 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="date_format_short">dd/MM</string>
 
     <!-- Rx -->
     <string name="connecting_for">Connecting for %1$d s</string>
