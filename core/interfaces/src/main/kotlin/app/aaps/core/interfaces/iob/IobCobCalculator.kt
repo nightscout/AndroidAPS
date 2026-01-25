@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 
 interface IobCobCalculator {
@@ -16,13 +17,13 @@ interface IobCobCalculator {
     fun getMealDataWithWaitingForCalculationFinish(): MealData
     fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
 
-    fun calculateFromTreatmentsAndTemps(toTime: Long, profile: Profile): IobTotal
+    fun calculateFromTreatmentsAndTemps(toTime: Long, profile: EffectiveProfile): IobTotal
 
     fun calculateDetectionStart(from: Long, limitDataToOldestAvailable: Boolean): Long
 
     fun getBasalData(profile: Profile, fromTime: Long): BasalData
 
-    fun calculateIobArrayInDia(profile: Profile): Array<IobTotal>
+    fun calculateIobArrayInDia(profile: EffectiveProfile): Array<IobTotal>
     fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exerciseMode: Boolean, halfBasalExerciseTarget: Int, isTempTarget: Boolean): Array<IobTotal>
     fun iobArrayToString(array: Array<IobTotal>): String
 

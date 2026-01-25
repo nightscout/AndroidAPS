@@ -29,6 +29,6 @@ data class NSEffectiveProfileSwitch(
     val originalPercentage: Int,
     /** Duration in milliseconds */
     val originalDuration: Long,
-    val originalEnd: Long
-
+    val originalEnd: Long,
+    val iCfg: NSICfg?
 ) : NSTreatment

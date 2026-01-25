@@ -23,6 +23,7 @@ data class PS(
     var percentage: Int, // 1 ~ XXX [%]
     /** Duration in milliseconds */
     var duration: Long,
+    /** Applied insulin configuration */
     var iCfg: ICfg
 ) : HasIDs {
 
@@ -56,7 +57,8 @@ data class PS(
             profileName == other.profileName &&
             timeshift == other.timeshift &&
             percentage == other.percentage &&
-            duration == other.duration
+            duration == other.duration &&
+            iCfg == other.iCfg
 
     fun onlyNsIdAdded(previous: PS): Boolean =
         previous.id != id &&

@@ -25,6 +25,7 @@ data class EPS(
     var originalPercentage: Int, // 1 ~ XXX [%]
     var originalDuration: Long, // [milliseconds]
     var originalEnd: Long, // not used (calculated from duration)
+    /** Applied insulin configuration */
     var iCfg: ICfg
 ) : HasIDs {
 
@@ -42,7 +43,8 @@ data class EPS(
             originalTimeshift == other.originalTimeshift &&
             originalPercentage == other.originalPercentage &&
             originalDuration == other.originalDuration &&
-            originalEnd == other.originalEnd
+            originalEnd == other.originalEnd &&
+            iCfg == other.iCfg
 
     fun onlyNsIdAdded(previous: EPS): Boolean =
         previous.id != id &&
