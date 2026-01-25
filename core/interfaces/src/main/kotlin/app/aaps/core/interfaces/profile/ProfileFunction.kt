@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.profile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -36,12 +37,12 @@ interface ProfileFunction {
     /**
      * Get effective (active) profile confirmed by pump for "now"
      */
-    fun getProfile(): Profile?
+    fun getProfile(): EffectiveProfile?
 
     /**
      * Get effective (active) profile confirmed by pump for time
      */
-    fun getProfile(time: Long): Profile?
+    fun getProfile(time: Long): EffectiveProfile?
 
     /**
      * Get requested profile by user (profile must not be active yet)
@@ -68,7 +69,7 @@ interface ProfileFunction {
      * @param timestamp         expected time
      * @return null if profile cannot be created from profile store
      */
-    fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): PS?
+    fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long, iCfg: ICfg): PS?
 
     /**
      * Create a new circadian profile switch request based on provided profile
@@ -87,7 +88,7 @@ interface ProfileFunction {
      */
     fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
-        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>, iCfg: ICfg
     ): Boolean
 
     /**

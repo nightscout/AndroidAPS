@@ -1,8 +1,10 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
 import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -30,7 +32,7 @@ fun EPS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 
-fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
+fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, insulinFallback: Insulin): EPS? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -50,6 +52,20 @@ fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
     val pumpType = PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
+    val insulinLabel = JsonHelper.safeGetStringAllowNull(jsonObject, "insulinLabel", null)
+    val insulinEndTime = JsonHelper.safeGetLongAllowNull(jsonObject, "insulinEndTime")
+    val insulinPeakTime = JsonHelper.safeGetLongAllowNull(jsonObject, "insulinPeakTime")
+    val concentration = JsonHelper.safeGetDoubleAllowNull(jsonObject, "concentration")
+
+    val iCfg =
+        if (insulinLabel != null && insulinEndTime != null && insulinPeakTime != null && concentration != null) ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration)
+        else ICfg(
+            insulinLabel = insulinFallback.friendlyName,
+            insulinEndTime = (insulinFallback.dia * 60 * 60 * 1000).toLong(),
+            insulinPeakTime = (insulinFallback.peak * 60 * 1000).toLong(),
+            concentration = 1.0
+        )
+
     if (timestamp == 0L) return null
     val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
@@ -67,7 +83,7 @@ fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
         originalPercentage = originalPercentage,
         originalDuration = originalDuration,
         originalEnd = originalEnd,
-        iCfg = profileSealed.iCfg,
+        iCfg = iCfg,
         isValid = isValid
     ).also {
         it.ids.nightscoutId = id

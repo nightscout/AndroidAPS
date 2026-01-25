@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -50,7 +52,7 @@ fun PS.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalForma
    "mgdl":98
 }
  */
-fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, localProfileManager: LocalProfileManager): PS? {
+fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, localProfileManager: LocalProfileManager, insulinFallback: Insulin): PS? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -78,6 +80,20 @@ fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, localProfi
         } else pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
+    val insulinLabel = JsonHelper.safeGetStringAllowNull(jsonObject, "insulinLabel", null)
+    val insulinEndTime = JsonHelper.safeGetLongAllowNull(jsonObject, "insulinEndTime")
+    val insulinPeakTime = JsonHelper.safeGetLongAllowNull(jsonObject, "insulinPeakTime")
+    val concentration = JsonHelper.safeGetDoubleAllowNull(jsonObject, "concentration")
+
+    val iCfg =
+        if (insulinLabel != null && insulinEndTime != null && insulinPeakTime != null && concentration != null) ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration)
+        else ICfg(
+            insulinLabel = insulinFallback.friendlyName,
+            insulinEndTime = (insulinFallback.dia * 60 * 60 * 1000).toLong(),
+            insulinPeakTime = (insulinFallback.peak * 60 * 1000).toLong(),
+            concentration = 1.0
+        )
+
     return PS(
         timestamp = timestamp,
         basalBlocks = profileSealed.basalBlocks,
@@ -89,7 +105,7 @@ fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, localProfi
         timeshift = timeshift,
         percentage = percentage,
         duration = originalDuration ?: T.mins(duration).msecs(),
-        iCfg = profileSealed.iCfg,
+        iCfg = iCfg,
         isValid = isValid
     ).also {
         it.ids.nightscoutId = id

@@ -31,5 +31,6 @@ data class NSProfileSwitch(
     val percentage: Int?,
     /** Duration in milliseconds */
     val duration: Long?,
-    val originalDuration: Long?
+    val originalDuration: Long?,
+    val iCfg: NSICfg?
 ) : NSTreatment
