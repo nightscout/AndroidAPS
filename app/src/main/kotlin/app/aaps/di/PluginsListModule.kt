@@ -16,10 +16,7 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
-import app.aaps.plugins.insulin.InsulinLyumjevPlugin
-import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
-import app.aaps.plugins.insulin.InsulinOrefRapidActingPlugin
-import app.aaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
+import app.aaps.plugins.insulin.InsulinPlugin
 import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
@@ -107,25 +104,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(30)
-    abstract fun bindInsulinOrefRapidActingPlugin(plugin: InsulinOrefRapidActingPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(40)
-    abstract fun bindInsulinOrefUltraRapidActingPlugin(plugin: InsulinOrefUltraRapidActingPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(42)
-    abstract fun bindInsulinLyumjevPlugin(plugin: InsulinLyumjevPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(50)
-    abstract fun bindInsulinOrefFreePeakPlugin(plugin: InsulinOrefFreePeakPlugin): PluginBase
+    abstract fun bindInsulinPlugin(plugin: InsulinPlugin): PluginBase
 
     @Binds
     @AllConfigs

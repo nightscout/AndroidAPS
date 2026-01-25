@@ -16,6 +16,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.LoopDialog          -> Sources.LoopDialog
         UserEntry.Sources.TempBasalDialog     -> Sources.TempBasalDialog
         UserEntry.Sources.CalibrationDialog   -> Sources.CalibrationDialog
+        UserEntry.Sources.ConcentrationDialog -> Sources.ConcentrationDialog
         UserEntry.Sources.FillDialog          -> Sources.FillDialog
         UserEntry.Sources.SiteRotationDialog  -> Sources.SiteRotationDialog
         UserEntry.Sources.BgCheck             -> Sources.BgCheck
@@ -41,6 +42,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Glunovo             -> Sources.Glunovo
         UserEntry.Sources.Intelligo           -> Sources.Intelligo
         UserEntry.Sources.Xdrip               -> Sources.Xdrip
+        UserEntry.Sources.Insulin             -> Sources.Insulin
         UserEntry.Sources.Ottai    -> Sources.Ottai
         UserEntry.Sources.SyaiTag  -> Sources.SyaiTag
         UserEntry.Sources.SiBionic -> Sources.SiBionic
@@ -98,6 +100,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.LoopDialog          -> UserEntry.Sources.LoopDialog
         Sources.TempBasalDialog     -> UserEntry.Sources.TempBasalDialog
         Sources.CalibrationDialog   -> UserEntry.Sources.CalibrationDialog
+        Sources.ConcentrationDialog -> UserEntry.Sources.ConcentrationDialog
         Sources.FillDialog          -> UserEntry.Sources.FillDialog
         Sources.SiteRotationDialog  -> UserEntry.Sources.SiteRotationDialog
         Sources.BgCheck             -> UserEntry.Sources.BgCheck
@@ -164,6 +167,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.BgFragment          -> UserEntry.Sources.BgFragment
         Sources.Garmin              -> UserEntry.Sources.Garmin
         Sources.Database            -> UserEntry.Sources.Database
+        Sources.Insulin             -> UserEntry.Sources.Insulin
         Sources.Unknown             -> UserEntry.Sources.Unknown
     }
 

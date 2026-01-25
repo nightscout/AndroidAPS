@@ -97,6 +97,13 @@ interface PersistenceLayer {
     suspend fun getBolusByNSId(nsId: String): BS?
 
     /**
+     * Get all boluses
+     *
+     * @return List of all boluses
+     */
+    suspend fun getBoluses(): List<BS>
+
+    /**
      * Get boluses from time (suspend variant)
      *
      * @param startTime from
@@ -452,6 +459,13 @@ interface PersistenceLayer {
 
     // EPS
     /**
+     * Get all effective profile switches from db
+     *
+     * @return List of effective profile switches
+     */
+    suspend fun getEffectiveProfileSwitches(): List<EPS>
+
+    /**
      *  Get effective profile switch record with lowest timestamp
      *  @return effective profile switch
      */
@@ -519,7 +533,7 @@ interface PersistenceLayer {
      *
      * @param effectiveProfileSwitch record
      */
-    suspend fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS): TransactionResult<EPS>
+    suspend fun insertOrUpdateEffectiveProfileSwitch(effectiveProfileSwitch: EPS): TransactionResult<EPS>
 
     /**
      * Invalidate record with id

@@ -169,6 +169,7 @@ private object PreviewConfig : Config {
     override fun ignoreNightscoutV3Errors(): Boolean = false
     override fun doNotSendSmsOnProfileChange(): Boolean = false
     override fun enableAutotune(): Boolean = false
+    override fun enableInsulinConcentration(): Boolean = false
     override fun disableLeakCanary(): Boolean = true
 }
 

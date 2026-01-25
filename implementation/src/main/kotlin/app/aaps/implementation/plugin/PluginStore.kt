@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
@@ -31,6 +32,7 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.R
+import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,6 +40,7 @@ import javax.inject.Singleton
 class PluginStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
+    private val pumpWithConcentration: Lazy<PumpWithConcentration>
 ) : ActivePlugin {
 
     companion object {
@@ -232,7 +235,14 @@ class PluginStore @Inject constructor(
     override val activeAPS: APS
         get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
-    override val activePump: Pump
+    override val activePump: PumpWithConcentration
+        get() = pumpWithConcentration.get()
+
+    /**
+     * Points to real pump plugin selected in ConfigBuilder
+     * For use only from [app.aaps.implementation.pump.PumpWithConcentrationImpl]
+     */
+    override val activePumpInternal: Pump
         get() = activePumpStore
         // Following line can be used only during initialization
             ?: getTheOneEnabledInArray(getSpecificPluginsList(PluginType.PUMP), PluginType.PUMP) as Pump?

@@ -331,7 +331,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
 
                         // Pump setup button in bottom bar
-                        val pumpPlugin = activePlugin.activePump as PluginBase
+                        val pumpPlugin = activePlugin.activePumpInternal as PluginBase
                         val showPumpSetup = !activePlugin.activePump.isInitialized() && pumpPlugin.hasComposeContent()
                         val pumpSetupIcon = if (showPumpSetup) pumpPlugin.pluginDescription.icon ?: Pump else null
                         val pumpSetupLabel = if (showPumpSetup) stringResource(pumpPlugin.pluginDescription.pluginName) else null
@@ -867,7 +867,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(AppRoute.PumpSetup.route) {
-                        val pumpPlugin = activePlugin.activePump as PluginBase
+                        val pumpPlugin = activePlugin.activePumpInternal as PluginBase
                         val composeContent = pumpPlugin.getComposeContent()
                         if (composeContent is ComposablePluginContent) {
                             val navigateBack: @Composable () -> Unit = {

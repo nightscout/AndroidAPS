@@ -25,7 +25,7 @@ import java.util.TimeZone
         Index("id"),
         Index("referenceId"),
         Index("timestamp"),
-        Index("isValid")
+        Index("nightscoutId")
     ]
 )
 data class EffectiveProfileSwitch(
