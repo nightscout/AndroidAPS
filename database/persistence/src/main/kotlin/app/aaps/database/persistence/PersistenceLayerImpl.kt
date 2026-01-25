@@ -62,6 +62,7 @@ import app.aaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransac
 import app.aaps.database.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransaction
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
+import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateRunningModeTransaction
@@ -256,6 +257,10 @@ class PersistenceLayerImpl @Inject constructor(
     override suspend fun getLastBolusId(): Long? = withContext(Dispatchers.IO) {
         repository.getLastBolusId()
     }
+
+    override suspend fun getBoluses(): List<BS> =
+        repository.getBoluses()
+            .map { it.fromDb() }.toList()
 
     override suspend fun getBolusByNSId(nsId: String): BS? = withContext(Dispatchers.IO) {
         repository.getBolusByNSId(nsId)?.fromDb()
@@ -951,13 +956,17 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getLastEffectiveProfileSwitchId()
     }
 
-    override suspend fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
+    override suspend fun insertOrUpdateEffectiveProfileSwitch(effectiveProfileSwitch: EPS): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
         try {
-            val result = repository.runTransactionForResultSuspend(InsertEffectiveProfileSwitchTransaction(effectiveProfileSwitch.toDb()))
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateEffectiveProfileSwitchTransaction(effectiveProfileSwitch.toDb()))
             val transactionResult = PersistenceLayer.TransactionResult<EPS>()
             result.inserted.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
                 transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated EffectiveProfileSwitch $it")
+                transactionResult.updated.add(it.fromDb())
             }
             transactionResult
         } catch (e: Exception) {
@@ -1047,6 +1056,9 @@ class PersistenceLayerImpl @Inject constructor(
     override suspend fun getProfileSwitchActiveAt(timestamp: Long): PS? = withContext(Dispatchers.IO) {
         repository.getProfileSwitchActiveAt(timestamp)?.fromDb()
     }
+
+    override suspend fun getEffectiveProfileSwitches(): List<EPS> =
+        repository.getAllEffectiveProfileSwitches().map { it.fromDb() }
 
     override suspend fun getProfileSwitchByNSId(nsId: String): PS? = withContext(Dispatchers.IO) {
         repository.findProfileSwitchByNSId(nsId)?.fromDb()

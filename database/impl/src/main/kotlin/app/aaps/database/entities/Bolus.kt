@@ -21,13 +21,10 @@ import java.util.TimeZone
         )],
     indices = [
         Index("id"),
-        Index("isValid"),
-        Index("temporaryId"),
         Index("pumpId"),
-        Index("pumpSerial"),
-        Index("pumpType"),
         Index("referenceId"),
-        Index("timestamp")
+        Index("timestamp"),
+        Index("nightscoutId")
     ]
 )
 data class Bolus(
@@ -46,7 +43,7 @@ data class Bolus(
     var notes: String? = null,
     var isBasalInsulin: Boolean = false,
     @Embedded
-    var insulinConfiguration: InsulinConfiguration? = null
+    var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTime {
 
     enum class Type {

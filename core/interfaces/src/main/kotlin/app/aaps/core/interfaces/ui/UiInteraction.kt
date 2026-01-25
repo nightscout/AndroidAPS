@@ -6,6 +6,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
 
 /**
@@ -28,6 +29,9 @@ interface UiInteraction {
 
     /** The activity for showing bolus progress. */
     val bolusProgressHelperActivity: Class<*>
+
+    /** The activity to manage insulin concentration confirmation and corresponding insulinSwitchDialog and profileSwitchDialog. */
+    val concentrationActivity: Class<*>
 
     /** A generic activity that can host a single fragment. */
     val singleFragmentActivity: Class<*>
@@ -80,6 +84,11 @@ interface UiInteraction {
     fun runAlarm(status: String, title: String, @RawRes soundId: Int = 0)
 
     /**
+     * Shows concentration confirmation dialog
+     */
+    fun runInsulinConfirmation()
+
+    /**
      * Triggers an update of the application widget.
      * @param context The context.
      * @param from A string indicating the source of the update request.
@@ -105,8 +114,9 @@ interface UiInteraction {
      * Shows the profile switch dialog.
      * @param fragmentManager The fragment manager to use.
      * @param profileName Optional pre-selected profile name.
+     * @param iCfg Optional iCfg to be used within EPS
      */
-    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null)
+    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null, iCfg: ICfg? = null)
 
     /**
      * Shows the temporary basal dialog.
@@ -127,10 +137,24 @@ interface UiInteraction {
     fun runInsulinDialog(fragmentManager: FragmentManager)
 
     /**
+     * Shows the insulin switch dialog
+     * @param fragmentManager The fragment manager to use.
+     * @param concentration Optional filter insulin with selected concentration
+     * @param iCfg Optional pre-selected insulin configuration
+     */
+    fun runInsulinSwitchDialog(fragmentManager: FragmentManager, concentration: Double? = null, iCfg: ICfg? = null)
+
+    /**
      * Shows the calibration dialog.
      * @param fragmentManager The fragment manager to use.
      */
     fun runCalibrationDialog(fragmentManager: FragmentManager)
+
+    /**
+     * Shows concentration Dialog
+     * @param fragmentManager The fragment manager to use.
+     */
+    fun runConcentrationDialog(fragmentManager: FragmentManager)
 
     /**
      * Shows the carbs dialog.

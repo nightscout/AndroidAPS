@@ -104,6 +104,10 @@
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>
+    <string name="insulin_name_label">INS Name</string>
+    <string name="concentration_label">Concentration</string>
+    <string name="format_concentration">U%1$.0f</string>
+    <string name="peak_label">Peak</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -179,6 +183,8 @@
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">REMOVE</string>
     <string name="activate_profile">Activate profile</string>
+    <string name="activate_insulin">Activate insulin</string>
+    <string name="confirm_concentration">Confirm concentration</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
@@ -207,7 +213,14 @@
     <string name="pump_suspend">Suspend pump</string>
     <string name="pump_resume">Resume pump</string>
     <string name="mode_reverted">Mode reverted</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="select_insulin">Select Insulin</string>
+    <string name="select_pump_insulin">Select Pump Insulin</string>
+    <string name="select_pen_insulin">Select Insulin</string>
+    <string name="insulin_template">Template</string>
     <string name="dia">DIA</string>
+    <string name="peak">Peak</string>
+    <string name="concentration">Concentration</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Canceling of temporary basal failed</string>
@@ -254,6 +267,15 @@
     <string name="duration">Duration</string>
     <string name="reason">Reason</string>
     <string name="nochangerequested">No change requested</string>
+
+    <!--    Concentration-->
+    <string name="ins_concentration_confirmed">Insulin %1$s confirmed</string>
+    <string name="ins_concentration_unchanged">Insulin %1$s confirmed, Target Insulin concentration %2$s has been cancelled</string>
+    <string name="insulin_concentration_label">Insulin: U</string>
+    <string name="concentration_title">For safety reason, you should confirm Insulin concentration put within your pump on each Reservoir Change to enable close loop:\n    - Previous Insulin concentration was: %1$s</string>
+    <string name="concentration_title2">This is a safety parameter which can lead to under or overdosing!\nCan you please confirm Insulin concentration put within your pump?\n    - Previous Insulin Concentration was: %1$s\n    - new Insulin Insulin Concentration is: %2$s\nYou should select insulin and do a ProfileSwitch to confirm the new insulin concentration.</string>
+    <string name="concentration_not_confirmed">Insulin concentration is not confirmed or incorrect.\nClosed Loop is disabled</string>
+    <string name="concentration_confirmation">Confirm Insulin Concentration</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>
@@ -510,6 +532,11 @@
     <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
     <string name="uel_loop_change">LOOP CHANGED</string>
     <string name="uel_loop_removed">LOOP REMOVED</string>
+    <string name="uel_new_insulin">NEW INSULIN</string>
+    <string name="uel_change_pump_insulin">CHANGE PUMP INSULIN</string>
+    <string name="uel_store_insulin">STORE INSULIN</string>
+    <string name="uel_change_insulin_concentration">CHANGE INSULIN CONCENTRATION</string>
+    <string name="uel_insulin_removed">INSULIN REMOVED</string>
     <string name="uel_other">OTHER</string>
     <string name="uel_running_mode">RUNNING MODE</string>
     <string name="uel_running_mode_removed">RUNNING MODE REMOVED</string>
@@ -522,6 +549,8 @@
     <string name="temp_target_high_target">Temporary target top value</string>
     <string name="temp_target_value">Temporary target value</string>
     <string name="profile_dia">Profile DIA value</string>
+    <string name="insulin_dia">Insulin DIA value</string>
+    <string name="insulin_peak">Insulin Peak value</string>
     <string name="profile_sensitivity_value">Profile sensitivity value</string>
     <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
     <string name="current_basal_value">Current basal value</string>
@@ -697,6 +726,7 @@
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
     <string name="ok">OK</string>
+    <string name="next">Next</string>
     <string name="cancel">Cancel</string>
     <string name="dismiss">Dismiss</string>
     <string name="yes">Yes</string>

@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -85,7 +86,7 @@ class RunningConfigurationImpl @Inject constructor(
                 notificationManager.post(NotificationId.NSCLIENT_VERSION_DOES_NOT_MATCH, R.string.nsclient_version_does_not_match)
         }
         configuration.insulin?.let {
-            val insulin = Insulin.InsulinType.fromInt(it)
+            val insulin = InsulinType.fromInt(it)
             for (p in activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)) {
                 val insulinPlugin = p as Insulin
                 if (insulinPlugin.id == insulin) {

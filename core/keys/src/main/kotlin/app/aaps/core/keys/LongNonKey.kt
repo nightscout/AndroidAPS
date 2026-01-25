@@ -12,5 +12,7 @@ enum class LongNonKey(
     BtWatchdogLastBark("bt_watchdog_last", 0L),
     ActivePumpChangeTimestamp("active_pump_change_timestamp", 0L),
     LastCleanupRun("last_cleanup_run", 0L),
+    LastInsulinConfirmation("last_insulin_confirmation", 0L),
+    LastInsulinChange("last_insulin_change", 0L),
 }
 

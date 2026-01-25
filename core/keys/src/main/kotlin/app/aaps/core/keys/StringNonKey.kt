@@ -21,6 +21,7 @@ enum class StringNonKey(
     PumpCommonTbrStorage(key = "pump_sync_storage_tbr", defaultValue = ""),
     TempTargetPresets(key = "temp_target_presets", defaultValue = "[]"),
     QuickLaunchActions(key = "quick_launch_actions", defaultValue = "[{\"type\":\"wizard\"},{\"type\":\"quick_launch_config\"}]"),
+    InsulinConfiguration("insulin_configuration","{}"),
 
     // Google Drive settings (internal, no preferences UI)
     GoogleDriveStorageType(key = "google_drive_storage_type", defaultValue = "local"),

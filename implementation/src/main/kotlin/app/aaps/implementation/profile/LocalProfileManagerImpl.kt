@@ -82,7 +82,6 @@ class LocalProfileManagerImpl @Inject constructor(
         if (numOfProfiles == 0 || currentProfileIndex >= numOfProfiles) return null
         val profile = JSONObject()
         with(_profiles[currentProfileIndex]) {
-            profile.put("dia", dia)
             profile.put("carbratio", ic)
             profile.put("sens", isf)
             profile.put("basal", basal)
@@ -109,9 +108,6 @@ class LocalProfileManagerImpl @Inject constructor(
 
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(_profiles[currentProfileIndex]) {
-            if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
-                errors.add(ProfileValidationError(ProfileErrorType.DIA, rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), dia)))
-            }
             if (name.isEmpty()) {
                 errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.missing_profile_name)))
             }
@@ -177,7 +173,6 @@ class LocalProfileManagerImpl @Inject constructor(
                     LocalProfileManager.SingleProfile(
                         name = name,
                         mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
-                        dia = preferences.get(ProfileComposedDoubleKey.LocalProfileNumberedDia, i),
                         ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
                         isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),
                         basal = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)),
@@ -199,7 +194,6 @@ class LocalProfileManagerImpl @Inject constructor(
             _profiles[i].run {
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
                 preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
-                preferences.put(ProfileComposedDoubleKey.LocalProfileNumberedDia, i, value = dia)
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
                 preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
@@ -260,7 +254,6 @@ class LocalProfileManagerImpl @Inject constructor(
         return LocalProfileManager.SingleProfile(
             name = verifiedName,
             mgdl = profile.units == GlucoseUnit.MGDL,
-            dia = pureJson.getDouble("dia"),
             ic = pureJson.getJSONArray("carbratio"),
             isf = pureJson.getJSONArray("sens"),
             basal = pureJson.getJSONArray("basal"),
@@ -281,7 +274,6 @@ class LocalProfileManagerImpl @Inject constructor(
             LocalProfileManager.SingleProfile(
                 name = Constants.LOCAL_PROFILE + free,
                 mgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL,
-                dia = Constants.defaultDIA,
                 ic = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
                 isf = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
                 basal = JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
@@ -344,7 +336,6 @@ class LocalProfileManagerImpl @Inject constructor(
             for (i in 0 until numOfProfiles) {
                 _profiles[i].run {
                     val profile = JSONObject()
-                    profile.put("dia", dia)
                     profile.put("carbratio", ic)
                     profile.put("sens", isf)
                     profile.put("basal", basal)
