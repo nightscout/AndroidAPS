@@ -715,6 +715,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
+                            val iCfg = activePlugin.activeInsulin.iCfg          // use Current running iCfg, changing iCfg with Automation not allowed
                             if (profileFunction.createProfileSwitch(
                                     profileStore = store,
                                     profileName = list[pIndex - 1] as String,
@@ -725,7 +726,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     action = Action.PROFILE_SWITCH,
                                     source = Sources.SMS,
                                     note = rh.gs(R.string.sms_profile_switch_created),
-                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created)))
+                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))),
+                                    iCfg = iCfg
                                 )
                             ) {
                                 val replyText = rh.gs(R.string.sms_profile_switch_created)

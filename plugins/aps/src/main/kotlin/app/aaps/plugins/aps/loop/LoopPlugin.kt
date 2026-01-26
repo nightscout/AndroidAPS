@@ -116,7 +116,6 @@ class LoopPlugin @Inject constructor(
     private val context: Context,
     private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
-    private val virtualPump: VirtualPump,
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val receiverStatusStore: ReceiverStatusStore,
@@ -928,9 +927,7 @@ class LoopPlugin @Inject constructor(
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 
-    private fun allowPercentage(): Boolean {
-        return virtualPump.isEnabled()
-    }
+    private fun allowPercentage(): Boolean = activePlugin.activePump.selectedActivePump() is VirtualPump
 
     /**
      * Simulate pump disconnection
