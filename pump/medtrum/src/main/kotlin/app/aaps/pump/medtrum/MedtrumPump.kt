@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -433,7 +434,7 @@ class MedtrumPump @Inject constructor(
                 }
                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = basalStartTime,
-                    rate = adjustedBasalRate,
+                    rate = PumpRate(adjustedBasalRate),
                     duration = duration,
                     isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
                     type = temporaryBasalInfo?.type,
@@ -454,7 +455,7 @@ class MedtrumPump @Inject constructor(
                 }
                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = basalStartTime,
-                    rate = 0.0,
+                    rate = PumpRate(0.0),
                     duration = T.mins(FAKE_TBR_LENGTH).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -526,7 +527,7 @@ class MedtrumPump @Inject constructor(
     private fun setFakeTBR() {
         val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
-            rate = 0.0,
+            rate = PumpRate(0.0),
             duration = T.mins(FAKE_TBR_LENGTH).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,

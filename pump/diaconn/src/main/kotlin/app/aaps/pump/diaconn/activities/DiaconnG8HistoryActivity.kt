@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -33,7 +32,6 @@ import javax.inject.Inject
 
 class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue

@@ -18,7 +18,10 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -117,7 +120,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     override fun isBusy(): Boolean = false
 
     // Pump interface
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (executionService == null) {
             aapsLogger.error("setNewBasalProfile sExecutionService is null")
@@ -144,7 +147,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         return result
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!isInitialized()) return true
         if (danaPump.pumpProfiles == null) return true
         val basalValues = if (danaPump.basal48Enable) 48 else 24
@@ -162,9 +165,9 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override val lastDataTime: Long get() = danaPump.lastConnection
     override val lastBolusTime: Long? get() = danaPump.lastBolusTime
-    override val lastBolusAmount: Double? get() = danaPump.lastBolusAmount
+    override val lastBolusAmount: PumpInsulin? get() = PumpInsulin(danaPump.lastBolusAmount)
     override val baseBasalRate: Double get() = danaPump.currentBasal
-    override val reservoirLevel: Double get() = danaPump.reservoirRemainingUnits
+    override val reservoirLevel: PumpInsulin get() = PumpInsulin(danaPump.reservoirRemainingUnits)
     override val batteryLevel: Int? get() = danaPump.batteryRemaining
 
     override fun stopBolusDelivering() {
@@ -175,10 +178,9 @@ abstract class AbstractDanaRPlugin protected constructor(
         executionService?.bolusStop()
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
         val result = pumpEnactResultProvider.get()
-        percentReq = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percentReq, aapsLogger), profile).value()
         if (percentReq < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
@@ -207,7 +209,7 @@ abstract class AbstractDanaRPlugin protected constructor(
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK")
             pumpSync.syncTemporaryBasalWithPumpId(
                 danaPump.tempBasalStart,
-                danaPump.tempBasalPercent.toDouble(),
+                PumpRate(danaPump.tempBasalPercent.toDouble()),
                 danaPump.tempBasalDuration,
                 false,
                 tbrType,
@@ -260,7 +262,7 @@ abstract class AbstractDanaRPlugin protected constructor(
             if (!preferences.get(DanaBooleanKey.UseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
             pumpSync.syncExtendedBolusWithPumpId(
                 danaPump.extendedBolusStart,
-                danaPump.extendedBolusAmount,
+                PumpRate(danaPump.extendedBolusAmount),
                 danaPump.extendedBolusDuration,
                 preferences.get(DanaBooleanKey.UseExtended),
                 danaPump.extendedBolusStart,

@@ -9,7 +9,6 @@ import app.aaps.core.data.time.T.Companion.secs
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressData.stopPressed
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -67,7 +66,6 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var messageHashTableRv2: MessageHashTableRv2
-    @Inject lateinit var profileFunction: ProfileFunction
 
     override fun messageHashTable() = messageHashTableRv2
 
@@ -98,7 +96,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingextendedbolusstatus)))
             mSerialIOThread?.sendMessage(exStatusMsg)
             danaPump.lastConnection = System.currentTimeMillis()
-            val profile = profileFunction.getProfile()
+            val profile = pumpSync.expectedPumpState().profile
             val pump = activePlugin.activePump
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))

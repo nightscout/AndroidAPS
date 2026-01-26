@@ -27,11 +27,13 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -815,7 +817,7 @@ class ComboV2Plugin @Inject constructor(
         // State and status are automatically updated via the associated flows.
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!isInitialized()) {
             aapsLogger.error(LTag.PUMP, "Cannot set profile since driver is not initialized")
 
@@ -891,7 +893,7 @@ class ComboV2Plugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!isInitialized())
             return true
 
@@ -902,7 +904,7 @@ class ComboV2Plugin @Inject constructor(
 
     @OptIn(ExperimentalTime::class)
     override val lastBolusTime: Long? get() = lastBolusUIFlow.value?.timestamp?.toEpochMilliseconds()
-    override val lastBolusAmount: Double? get() = lastBolusUIFlow.value?.bolusAmount?.cctlBolusToIU()
+    override val lastBolusAmount: PumpInsulin? get() = lastBolusUIFlow.value?.bolusAmount?.cctlBolusToIU()?.let { PumpInsulin(it) }
     override val baseBasalRate: Double
         get() {
             val currentHour = DateTime().hourOfDay().get()
@@ -914,8 +916,8 @@ class ComboV2Plugin @Inject constructor(
     // pump again and resets the current pump state.
 
     private var _reservoirLevel: Double? = null
-    override val reservoirLevel: Double
-        get() = _reservoirLevel ?: 0.0
+    override val reservoirLevel: PumpInsulin
+        get() = PumpInsulin(_reservoirLevel ?: 0.0)
 
     private var _batteryLevel: Int? = null
     override val batteryLevel: Int?
@@ -1114,7 +1116,7 @@ class ComboV2Plugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Bolus delivery stopped")
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = false
 
@@ -1165,7 +1167,7 @@ class ComboV2Plugin @Inject constructor(
         return pumpEnactResult
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val pumpEnactResult = pumpEnactResultProvider.get()
         pumpEnactResult.isPercent = true
 
@@ -1826,7 +1828,7 @@ class ComboV2Plugin @Inject constructor(
             is ComboCtlPump.Event.QuickBolusInfused    -> {
                 pumpSync.syncBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),
-                    event.bolusAmount.cctlBolusToIU(),
+                    PumpInsulin(event.bolusAmount.cctlBolusToIU()),
                     BS.Type.NORMAL,
                     event.bolusId,
                     PumpType.ACCU_CHEK_COMBO,
@@ -1842,7 +1844,7 @@ class ComboV2Plugin @Inject constructor(
                 }
                 pumpSync.syncBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),
-                    event.bolusAmount.cctlBolusToIU(),
+                    PumpInsulin(event.bolusAmount.cctlBolusToIU()),
                     bolusType,
                     event.bolusId,
                     PumpType.ACCU_CHEK_COMBO,
@@ -1853,7 +1855,7 @@ class ComboV2Plugin @Inject constructor(
             is ComboCtlPump.Event.ExtendedBolusStarted -> {
                 pumpSync.syncExtendedBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),
-                    event.totalBolusAmount.cctlBolusToIU(),
+                    PumpRate(event.totalBolusAmount.cctlBolusToIU()),
                     event.totalDurationMinutes.toLong() * 60 * 1000,
                     false,
                     event.bolusId,
@@ -1883,7 +1885,7 @@ class ComboV2Plugin @Inject constructor(
                 }
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = tbrStartTimestampInMs,
-                    rate = event.tbr.percentage.toDouble(),
+                    rate = PumpRate(event.tbr.percentage.toDouble()),
                     duration = event.tbr.durationInMinutes.toLong() * 60 * 1000,
                     isAbsolute = false,
                     type = tbrType,

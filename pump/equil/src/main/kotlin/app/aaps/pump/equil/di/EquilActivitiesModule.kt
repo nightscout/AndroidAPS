@@ -12,7 +12,6 @@ import app.aaps.pump.equil.ui.pair.EquilPairAirFragment
 import app.aaps.pump.equil.ui.pair.EquilPairAssembleFragment
 import app.aaps.pump.equil.ui.pair.EquilPairAttachFragment
 import app.aaps.pump.equil.ui.pair.EquilPairConfirmFragment
-import app.aaps.pump.equil.ui.pair.EquilPairFillFragment
 import app.aaps.pump.equil.ui.pair.EquilPairFragmentBase
 import app.aaps.pump.equil.ui.pair.EquilPairSerialNumberFragment
 import dagger.Module
@@ -32,7 +31,6 @@ abstract class EquilActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesEquilPairFragment(): EquilPairFragmentBase
     @ContributesAndroidInjector abstract fun contributesEquilPairAssembleFragment(): EquilPairAssembleFragment
     @ContributesAndroidInjector abstract fun contributesEquilPairSerialNumberFragment(): EquilPairSerialNumberFragment
-    @ContributesAndroidInjector abstract fun contributesEquilPairFillFragment(): EquilPairFillFragment
     @ContributesAndroidInjector abstract fun contributesEquilPairConfirmFragment(): EquilPairConfirmFragment
     @ContributesAndroidInjector abstract fun contributesEquilPairAttachFragment(): EquilPairAttachFragment
     @ContributesAndroidInjector abstract fun contributesEquilPairAirFragment(): EquilPairAirFragment

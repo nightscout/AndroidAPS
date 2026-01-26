@@ -12,20 +12,23 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
@@ -89,7 +92,8 @@ class EopatchPumpPlugin @Inject constructor(
     private val normalBasalManager: NormalBasalManager,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck,
-    @EopatchPluginQualifier private val viewModelFactory: ViewModelProvider.Factory
+    @EopatchPluginQualifier private val viewModelFactory: ViewModelProvider.Factory,
+    private val ch: ConcentrationHelper
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -219,7 +223,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         mLastDataTime = System.currentTimeMillis()
         if (patchConfig.isActivated) {
             if (preferenceManager.patchState.isTempBasalActive) {
@@ -269,7 +273,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         // if (!patchManager.isActivated) {
         //     return true
         // }
@@ -281,12 +285,12 @@ class EopatchPumpPlugin @Inject constructor(
 
     override val lastDataTime: Long get() = mLastDataTime
     override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: Double? get() = null
+    override val lastBolusAmount: PumpInsulin? get() = null
     override val baseBasalRate: Double
         get() =
             if (!patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused) 0.0
             else normalBasalManager.normalBasal.getCurrentSegment()?.doseUnitPerHour?.toDouble() ?: 0.05
-    override val reservoirLevel: Double get() = if (!patchConfig.isActivated) 0.0 else preferenceManager.patchState.remainedInsulin.toDouble()
+    override val reservoirLevel: PumpInsulin get() = PumpInsulin(if (!patchConfig.isActivated) 0.0 else preferenceManager.patchState.remainedInsulin.toDouble())
     override val batteryLevel: Int? get() = if (patchConfig.isActivated) preferenceManager.patchState.batteryLevel() else null
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -312,7 +316,7 @@ class EopatchPumpPlugin @Inject constructor(
             SystemClock.sleep(100)
             if (patchManagerExecutor.patchConnectionState.isConnected) {
                 val delivering = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
-                rxBus.send(EventOverviewBolusProgress(rh, delivered = delivering, id = detailedBolusInfo.id))
+                rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(delivering), id = detailedBolusInfo.id))
             }
         } while (!preferenceManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
@@ -340,7 +344,7 @@ class EopatchPumpPlugin @Inject constructor(
         )
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: ${absoluteRate.toFloat()}, durationInMinutes: ${durationInMinutes.toLong()}, enforceNew: $enforceNew")
         if (preferenceManager.patchState.isNormalBasalAct) {
             mLastDataTime = System.currentTimeMillis()
@@ -351,7 +355,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .doOnSuccess {
                     pumpSync.syncTemporaryBasalWithPumpId(
                         timestamp = dateUtil.now(),
-                        rate = absoluteRate,
+                        rate = PumpRate(absoluteRate),
                         duration = T.mins(durationInMinutes.toLong()).msecs(),
                         isAbsolute = true,
                         type = tbrType,
@@ -373,7 +377,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalPercent - percent: $percent, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         if (preferenceManager.patchState.isNormalBasalAct && percent != 0) {
             mLastDataTime = System.currentTimeMillis()
@@ -384,7 +388,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .doOnSuccess {
                     pumpSync.syncTemporaryBasalWithPumpId(
                         timestamp = dateUtil.now(),
-                        rate = percent.toDouble(),
+                        rate = PumpRate(percent.toDouble()),
                         duration = T.mins(durationInMinutes.toLong()).msecs(),
                         isAbsolute = false,
                         type = tbrType,
@@ -414,7 +418,7 @@ class EopatchPumpPlugin @Inject constructor(
                 mLastDataTime = System.currentTimeMillis()
                 pumpSync.syncExtendedBolusWithPumpId(
                     timestamp = dateUtil.now(),
-                    amount = insulin,
+                    rate = PumpRate(insulin),
                     duration = T.mins(durationInMinutes.toLong()).msecs(),
                     isEmulatingTB = false,
                     pumpId = dateUtil.now(),

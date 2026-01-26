@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
@@ -19,11 +18,8 @@ import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdDevicesGet
 import app.aaps.pump.equil.manager.command.CmdStepSet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
-import javax.inject.Inject
 
 class EquilPairAirFragment : EquilPairFragmentBase() {
-
-    @Inject lateinit var profileFunction: ProfileFunction
 
     private var buttonAir: Button? = null
     private var buttonFinish: Button? = null
@@ -124,7 +120,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun setProfile() {
-        val profile = profileFunction.getProfile()
+        val profile = pumpSync.expectedPumpState().profile
         if (profile == null) {
             setTime()
             return
