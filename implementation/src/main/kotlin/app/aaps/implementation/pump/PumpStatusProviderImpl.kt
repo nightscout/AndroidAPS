@@ -32,7 +32,7 @@ class PumpStatusProviderImpl @Inject constructor(
 
     override fun shortStatus(veryShort: Boolean): String {
         val pump = activePlugin.activePump
-
+        val iCfg = activePlugin.activeInsulin.iCfg
         val lines = mutableListOf<String>()
         if (!pump.isInitialized())
             lines += rh.gs(R.string.short_status_not_initialized)
@@ -49,7 +49,7 @@ class PumpStatusProviderImpl @Inject constructor(
                 pump.lastBolusTime?.let { lastBolusTimestamp ->
                     lines += rh.gs(
                         R.string.short_status_last_bolus,
-                        decimalFormatter.to2Decimal(lastBolusAmount),
+                        decimalFormatter.to2Decimal(lastBolusAmount.iU(iCfg.concentration)),
                         dateUtil.timeString(lastBolusTimestamp)
                     )
                 }
@@ -85,7 +85,7 @@ class PumpStatusProviderImpl @Inject constructor(
         val runningMode = runBlocking { persistenceLayer.getRunningModeActiveAt(now) }
 
         val pumpJson = JSONObject()
-            .put("reservoir", pump.reservoirLevel.toInt())
+            .put("reservoir", pump.reservoirLevel.iU(profile.insulinConcentration()).toInt())
             .put("clock", dateUtil.toISOString(now))
         val battery = JSONObject().putIfThereIsValue("percent", pump.batteryLevel)
         val status = JSONObject()
@@ -94,7 +94,7 @@ class PumpStatusProviderImpl @Inject constructor(
         val extended = JSONObject()
             .put("Version", config.VERSION_NAME + "-" + config.BUILD_VERSION)
             .putIfThereIsValue("LastBolus", dateUtil.dateAndTimeStringNullable(pump.lastBolusTime))
-            .putIfThereIsValue("LastBolusAmount", pump.lastBolusAmount)
+            .putIfThereIsValue("LastBolusAmount", pump.lastBolusAmount?.iU(profile.insulinConcentration()))
             .putIfThereIsValue("TempBasalAbsoluteRate", expectedPumpState.temporaryBasal?.convertedToAbsolute(now, profile))
             .putIfThereIsValue("TempBasalStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.temporaryBasal?.timestamp))
             .putIfThereIsValue("TempBasalRemaining", expectedPumpState.temporaryBasal?.plannedRemainingMinutes)
