@@ -2,6 +2,7 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -54,6 +55,7 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var ch: ConcentrationHelper
 
     var injector: HasAndroidInjector
     var buffer = ByteArray(512)

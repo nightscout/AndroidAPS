@@ -6,7 +6,6 @@ import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
@@ -17,11 +16,8 @@ import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.manager.command.CmdResistanceGet
 import app.aaps.pump.equil.manager.command.CmdStepSet
 import app.aaps.pump.equil.ui.dlg.EquilAutoDressingDlg
-import javax.inject.Inject
 
 class EquilPairFillFragment : EquilPairFragmentBase() {
-
-    @Inject lateinit var profileFunction: ProfileFunction
 
     override fun getLayoutId(): Int {
         return R.layout.equil_pair_fill_fragment

@@ -30,12 +30,13 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.Diaconn
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -254,7 +255,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     override fun isBusy(): Boolean = false
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (!isInitialized()) {
             notificationManager.post(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED, app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set, level = NotificationLevel.URGENT)
@@ -278,7 +279,7 @@ class DiaconnG8Plugin @Inject constructor(
         }
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!isInitialized()) return true
         if (diaconnG8Pump.pumpProfiles == null) return true
         val basalValues = 24
@@ -295,10 +296,10 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override val lastBolusTime: Long get() = diaconnG8Pump.lastBolusTime
-    override val lastBolusAmount: Double get() = diaconnG8Pump.lastBolusAmount
+    override val lastBolusAmount: PumpInsulin get() = PumpInsulin(diaconnG8Pump.lastBolusAmount)
     override val lastDataTime: Long get() = diaconnG8Pump.lastConnection
     override val baseBasalRate: Double get() = diaconnG8Pump.baseAmount
-    override val reservoirLevel: Double get() = diaconnG8Pump.systemRemainInsulin
+    override val reservoirLevel: PumpInsulin get() = PumpInsulin(diaconnG8Pump.systemRemainInsulin)
     override val batteryLevel: Int? get() = diaconnG8Pump.systemRemainBattery
 
     @Synchronized
@@ -329,12 +330,11 @@ class DiaconnG8Plugin @Inject constructor(
 
     // This is called from APS
     @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
-        val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
-        val doLowTemp = absoluteAfterConstrain < baseBasalRate
-        val doHighTemp = absoluteAfterConstrain > baseBasalRate
+        val doTempOff = baseBasalRate - absoluteRate == 0.0
+        val doLowTemp = absoluteRate < baseBasalRate
+        val doHighTemp = absoluteRate > baseBasalRate
         if (doTempOff) {
             // If temp in progress
             if (diaconnG8Pump.isTempBasalInProgress) {
@@ -357,10 +357,10 @@ class DiaconnG8Plugin @Inject constructor(
             if (diaconnG8Pump.isTempBasalInProgress) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running")
                 // Correct basal already set ?
-                if (diaconnG8Pump.tempBasalAbsoluteRate == absoluteAfterConstrain && diaconnG8Pump.tempBasalRemainingMin > 4) {
+                if (diaconnG8Pump.tempBasalAbsoluteRate == absoluteRate && diaconnG8Pump.tempBasalRemainingMin > 4) {
                     if (!enforceNew) {
                         result.success = true
-                        result.absolute = absoluteAfterConstrain
+                        result.absolute = absoluteRate
                         result.enacted = false
                         result.duration = diaconnG8Pump.tempBasalRemainingMin
                         result.isPercent = false
@@ -372,15 +372,15 @@ class DiaconnG8Plugin @Inject constructor(
             }
             temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), absoluteRate, true, tbrType, 0L, 0L))
             // Convert duration from minutes to hours
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteAfterConstrain U for $durationInMinutes mins (doLowTemp || doHighTemp)")
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteRate U for $durationInMinutes mins (doLowTemp || doHighTemp)")
             val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
-                diaconnG8Service?.tempBasalShortDuration(absoluteAfterConstrain, durationInMinutes) == true
+                diaconnG8Service?.tempBasalShortDuration(absoluteRate, durationInMinutes) == true
             } else {
                 val durationInHours = max(durationInMinutes / 60.0, 1.0)
-                diaconnG8Service?.tempBasal(absoluteAfterConstrain, durationInHours) == true
+                diaconnG8Service?.tempBasal(absoluteRate, durationInHours) == true
             }
 
-            if (connectionOK && diaconnG8Pump.isTempBasalInProgress && diaconnG8Pump.tempBasalAbsoluteRate == absoluteAfterConstrain) {
+            if (connectionOK && diaconnG8Pump.isTempBasalInProgress && diaconnG8Pump.tempBasalAbsoluteRate == absoluteRate) {
                 result.enacted = true
                 result.success = true
                 result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
@@ -401,20 +401,8 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     @Synchronized
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        return if (percent == 0) {
-            setTempBasalAbsolute(0.0, durationInMinutes, profile, enforceNew, tbrType)
-        } else {
-            var absoluteValue = profile.getBasal() * (percent / 100.0)
-            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue)
-            aapsLogger.warn(
-                LTag.PUMP,
-                "setTempBasalPercent [DiaconnG8Plugin] - You are trying to use setTempBasalPercent with percent other then 0% ($percent). This will start setTempBasalAbsolute, with calculated value ($absoluteValue). Result might not be 100% correct."
-            )
-            setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType)
-        }
-
-    }
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+        error("Pump doesn't support percent basal rate")
 
     @Synchronized
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {

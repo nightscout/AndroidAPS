@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -33,7 +32,9 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
@@ -312,7 +313,7 @@ class MedtrumPlugin @Inject constructor(
         }
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         // New profile will be set when patch is activated
         if (!isInitialized()) return pumpEnactResultProvider.get().success(true).enacted(true)
 
@@ -326,7 +327,7 @@ class MedtrumPlugin @Inject constructor(
         }
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!isInitialized()) return true
         var result = false
         val profileBytes = medtrumPump.buildMedtrumProfileArray(profile)
@@ -344,9 +345,9 @@ class MedtrumPlugin @Inject constructor(
 
     override val lastDataTime: Long get() = medtrumPump.lastConnection
     override val lastBolusTime: Long get() = medtrumPump.lastBolusTime
-    override val lastBolusAmount: Double get() = medtrumPump.lastBolusAmount
+    override val lastBolusAmount: PumpInsulin get() = PumpInsulin(medtrumPump.lastBolusAmount)
     override val baseBasalRate: Double get() = medtrumPump.baseBasalRate
-    override val reservoirLevel: Double get() = medtrumPump.reservoir
+    override val reservoirLevel: PumpInsulin get() = PumpInsulin(medtrumPump.reservoir)
     override val batteryLevel: Int? = null // We cannot determine battery level (yet)
 
     @Synchronized
@@ -380,12 +381,12 @@ class MedtrumPlugin @Inject constructor(
     }
 
     @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         // round rate to pump rate
-        val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
+        val pumpRate = absoluteRate
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
         val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) == true
         return if (connectionOK
@@ -405,7 +406,7 @@ class MedtrumPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalPercent - percent: $percent, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         return pumpEnactResultProvider.get().success(false).enacted(false).comment("Medtrum driver does not support percentage temp basals")
     }

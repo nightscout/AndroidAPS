@@ -17,14 +17,14 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
-import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -199,7 +199,7 @@ class EquilPumpPlugin @Inject constructor(
         if (equilManager.isActivationCompleted()) commandQueue.customCommand(CmdModeAndHistoryGet(), null)
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "setNewBasalProfile")
         val mode = equilManager.equilState?.runMode
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
@@ -211,7 +211,7 @@ class EquilPumpPlugin @Inject constructor(
         return pumpEnactResultProvider.get().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run))
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         return if (!equilManager.isActivationCompleted()) {
             // When no Pod is active, return true here in order to prevent AAPS from setting a profile
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
@@ -221,10 +221,10 @@ class EquilPumpPlugin @Inject constructor(
 
     override val lastDataTime: Long get() = equilManager.equilState?.lastDataTime ?: 0L
     override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: Double? get() = null
+    override val lastBolusAmount: PumpInsulin? get() = null
 
     override val baseBasalRate: Double get() = if (isSuspended()) 0.0 else equilManager.equilState?.basalSchedule?.rateAt(toDuration(DateTime.now())) ?: 0.0
-    override val reservoirLevel: Double get() = equilManager.equilState?.currentInsulin?.toDouble() ?: 0.0
+    override val reservoirLevel: PumpInsulin get() = PumpInsulin(equilManager.equilState?.currentInsulin?.toDouble() ?: 0.0)
     override val batteryLevel: Int? get() = equilManager.equilState?.battery
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -254,7 +254,6 @@ class EquilPumpPlugin @Inject constructor(
     override fun setTempBasalAbsolute(
         absoluteRate: Double,
         durationInMinutes: Int,
-        profile: Profile,
         enforceNew: Boolean,
         tbrType: TemporaryBasalType
     ): PumpEnactResult {
@@ -325,22 +324,8 @@ class EquilPumpPlugin @Inject constructor(
 
     override fun stopConnecting() {}
 
-    override fun setTempBasalPercent(
-        percent: Int,
-        durationInMinutes: Int,
-        profile: Profile,
-        enforceNew: Boolean,
-        tbrType: TemporaryBasalType
-    ): PumpEnactResult {
-        aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent $percent $durationInMinutes ")
-        return if (percent == 0) {
-            setTempBasalAbsolute(0.0, durationInMinutes, profile, enforceNew, tbrType)
-        } else {
-            var absoluteValue = profile.getBasal() * (percent / 100.0)
-            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue)
-            setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType)
-        }
-    }
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult =
+        error("Pump doesn't support percent basal rate")
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "setExtendedBolus $insulin, $durationInMinutes")

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -46,7 +45,6 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     private lateinit var binding: EquilUnpairDetachActivityBinding
-    @Inject lateinit var profileFunction: ProfileFunction
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -19,12 +19,14 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.OmnipodDash
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.Command
@@ -106,7 +108,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     commandQueue: CommandQueue,
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
     private val rxBus: RxBus,
@@ -176,7 +177,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
-                    rate = 0.0,
+                    rate = PumpRate(0.0),
                     duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -350,7 +351,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (tbr == null || tbr.rate != 0.0) {
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
-                    rate = 0.0,
+                    rate = PumpRate(0.0),
                     duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -366,7 +367,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     val bolusHistoryEntry = history.getById(historyId)
                     val sync = pumpSync.syncBolusWithPumpId(
                         timestamp = bolusHistoryEntry.createdAt,
-                        amount = deliveredUnits,
+                        amount = PumpInsulin(deliveredUnits),
                         pumpId = bolusHistoryEntry.pumpId(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber(),
@@ -397,7 +398,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         Completable.complete()
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
             return pumpEnactResultProvider.get().success(true).enacted(true)
         }
@@ -509,7 +510,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!podStateManager.isActivationCompleted) {
             // prevent setBasal requests
             return true
@@ -525,7 +526,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override val lastBolusTime: Long? get() = podStateManager.lastBolus?.startTime
-    override val lastBolusAmount: Double? get() = podStateManager.lastBolus?.requestedUnits
+    override val lastBolusAmount: PumpInsulin? get() = podStateManager.lastBolus?.requestedUnits?.let { PumpInsulin(it) }
     override val lastDataTime: Long get() = podStateManager.lastUpdatedSystem
     override val baseBasalRate: Double
         get() {
@@ -538,16 +539,18 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 ret
         }
 
-    override val reservoirLevel: Double
+    override val reservoirLevel: PumpInsulin
         get() {
             if (podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)) {
-                return 0.0
+                return PumpInsulin(0.0)
             }
 
             // Omnipod only reports reservoir level when there's < 1023 pulses left
-            return podStateManager.pulsesRemaining?.let {
-                it * PodConstants.POD_PULSE_BOLUS_UNITS
-            } ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+            return PumpInsulin(
+                podStateManager.pulsesRemaining?.let {
+                    it * PodConstants.POD_PULSE_BOLUS_UNITS
+                } ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+            )
         }
 
     // Omnipod Dash doesn't report it's battery level. We return 0 here and hide related fields in the UI
@@ -562,7 +565,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
             val requestedBolusAmount = detailedBolusInfo.insulin
-            if (requestedBolusAmount > reservoirLevel) {
+            if (requestedBolusAmount > reservoirLevel.cU) {
                 return pumpEnactResultProvider.get()
                     .success(false)
                     .enacted(false)
@@ -769,7 +772,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val historyEntry = history.getById(activeCommand.historyId)
         val ret = pumpSync.syncBolusWithPumpId(
             timestamp = historyEntry.createdAt,
-            amount = requestedBolusAmount,
+            amount = PumpInsulin(requestedBolusAmount),
             type = bolusType,
             pumpId = historyEntry.pumpId(),
             pumpType = PumpType.OMNIPOD_DASH,
@@ -789,7 +792,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun setTempBasalAbsolute(
         absoluteRate: Double,
         durationInMinutes: Int,
-        profile: Profile,
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
@@ -861,7 +863,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         )
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
-            rate = absoluteRate,
+            rate = PumpRate(absoluteRate),
             duration = T.mins(durationInMinutes).msecs(),
             isAbsolute = true,
             type = tbrType,
@@ -896,17 +898,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalPercent(
-        percent: Int,
-        durationInMinutes: Int,
-        profile: Profile,
-        enforceNew: Boolean,
-        tbrType: PumpSync.TemporaryBasalType
-    ): PumpEnactResult {
-        // TODO i18n
-        return pumpEnactResultProvider.get().success(false).enacted(false)
-            .comment("Omnipod Dash driver does not support percentage temp basals")
-    }
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+        error("Pump doesn't support percent basal rate")
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // TODO i18n
@@ -1046,7 +1039,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun resumeDelivery(): PumpEnactResult {
-        return profileFunction.getProfile()?.let {
+        return pumpSync.expectedPumpState().profile?.let {
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
                 historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY, basalProfileRecord = BasalValuesRecord(it.getBasalValues().toList())),
@@ -1084,7 +1077,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun handleTimeChange(): PumpEnactResult {
-        return profileFunction.getProfile()?.let {
+        return pumpSync.expectedPumpState().profile?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
         } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment("No profile active")
     }
@@ -1368,7 +1361,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 } else {
                     pumpSync.syncBolusWithPumpId(
                         timestamp = historyEntry.createdAt,
-                        amount = 0.0,
+                        amount = PumpInsulin(0.0),
                         pumpId = historyEntry.pumpId(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber(),
@@ -1389,7 +1382,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         val bolusHistoryEntry = history.getById(historyId)
                         val sync = pumpSync.syncBolusWithPumpId(
                             timestamp = bolusHistoryEntry.createdAt,
-                            amount = deliveredUnits,
+                            amount = PumpInsulin(deliveredUnits),
                             pumpId = bolusHistoryEntry.pumpId(),
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = serialNumber(),
