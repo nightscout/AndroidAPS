@@ -76,6 +76,8 @@
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
+    <string name="fill_warning_concentration">A correction factor has been applied because of Insulin %1$s to deliver the expected volume of insulin:</string>
+    <string name="fill_warning_concentration2">Modified Bolus</string>
 
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>

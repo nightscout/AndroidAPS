@@ -145,7 +145,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activePlugin.getSpecificPluginsList(PluginType.LOOP).forEach { addPreferencesIfEnabled(it, rootKey, config.APS) }
             addPreferencesIfEnabled(activePlugin.activeAPS as PluginBase, rootKey, config.APS)
             addPreferencesIfEnabled(activePlugin.activeSensitivity as PluginBase, rootKey)
-            addPreferencesIfEnabled(activePlugin.activePump as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activePumpInternal as PluginBase, rootKey)
             addPumpScreen(rootKey)
             addPreferencesIfEnabled(activePlugin.activeInsulin as PluginBase, rootKey)
             activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { addPreferencesIfEnabled(it, rootKey) }

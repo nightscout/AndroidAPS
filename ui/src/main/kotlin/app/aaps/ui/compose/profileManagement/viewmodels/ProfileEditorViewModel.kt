@@ -60,8 +60,6 @@ data class ProfileUiState(
     val supportsDynamicIc: Boolean = false,
     val basalMin: Double = 0.01,
     val basalMax: Double = 10.0,
-    val diaMin: Double = 5.0,
-    val diaMax: Double = 10.0,
     val icMin: Double = 0.5,
     val icMax: Double = 100.0,
     val isfMin: Double = 2.0,
@@ -131,8 +129,6 @@ class ProfileEditorViewModel @Inject constructor(
                 supportsDynamicIc = aps.supportsDynamicIc(),
                 basalMin = pumpDescription.basalMinimumRate,
                 basalMax = pumpDescription.basalMaximumRate.coerceAtMost(10.0),
-                diaMin = hardLimits.minDia(),
-                diaMax = hardLimits.maxDia(),
                 icMin = hardLimits.minIC(),
                 icMax = hardLimits.maxIC(),
                 isfMin = if (isMgdl) HardLimits.MIN_ISF else HardLimits.MIN_ISF / 18.0,
@@ -160,11 +156,6 @@ class ProfileEditorViewModel @Inject constructor(
 
     fun updateProfileName(name: String) {
         localProfileManager.currentProfile()?.name = name
-        markEdited()
-    }
-
-    fun updateDia(dia: Double) {
-        localProfileManager.currentProfile()?.dia = dia
         markEdited()
     }
 
@@ -338,7 +329,6 @@ class ProfileEditorViewModel @Inject constructor(
         return SingleProfileState(
             name = name,
             mgdl = mgdl,
-            dia = dia,
             ic = ic.toTimeValueList(),
             isf = isf.toTimeValueList(),
             basal = basal.toTimeValueList(),

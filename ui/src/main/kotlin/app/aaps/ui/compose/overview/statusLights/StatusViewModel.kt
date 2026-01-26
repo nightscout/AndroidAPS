@@ -74,7 +74,7 @@ class StatusViewModel @Inject constructor(
 
             // Build status items (without expensive TDD calculation)
             val sensorStatus = buildSensorStatus()
-            val insulinStatus = buildInsulinStatus(isPatchPump, pumpDescription.maxResorvoirReading.toDouble())
+            val insulinStatus = buildInsulinStatus(isPatchPump, pumpDescription.maxReservoirReading.toDouble())
             val cannulaStatus = buildCannulaStatus(isPatchPump, includeTddCalculation = false)
             val batteryStatus = if (!isPatchPump || pumpDescription.useHardwareLink) {
                 buildBatteryStatus()
@@ -134,7 +134,7 @@ class StatusViewModel @Inject constructor(
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         }
         val pump = activePlugin.activePump
-        val reservoirLevel = pump.reservoirLevel
+        val reservoirLevel = pump.reservoirLevel.iU(activePlugin.activeInsulin.iCfg.concentration)
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
 
         val level: String? = if (reservoirLevel > 0) {

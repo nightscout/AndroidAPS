@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
@@ -52,6 +53,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var profileFunction: ProfileFunction
 
     private var queryingProtection = false
     private var _binding: DialogTreatmentBinding? = null
@@ -139,6 +141,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String?> = LinkedList()
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
+        val profile = profileFunction.getProfile() ?: error("Profile not defined")
 
         if (insulinAfterConstraints > 0) {
             actions.add(
@@ -185,7 +188,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         if (detailedBolusInfo.insulin > 0)
                             lifecycleScope.launch {
                                 persistenceLayer.insertOrUpdateBolus(
-                                    bolus = detailedBolusInfo.createBolus(),
+                                    bolus = detailedBolusInfo.createBolus(profile.iCfg),
                                     action = action,
                                     source = Sources.TreatmentDialog,
                                     note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
