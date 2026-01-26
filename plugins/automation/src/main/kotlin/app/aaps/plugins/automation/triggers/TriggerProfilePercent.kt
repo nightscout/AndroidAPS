@@ -60,12 +60,6 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
                 return true
             }
         }
-        if (profile is ProfileSealed.Pure) {
-            if (comparator.value.check(100, pct.value.roundToInt())) {
-                aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
-                return true
-            }
-        }
         aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
         return false
     }

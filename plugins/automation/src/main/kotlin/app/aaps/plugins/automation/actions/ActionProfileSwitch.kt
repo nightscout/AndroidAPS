@@ -2,6 +2,7 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
@@ -27,6 +28,8 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var dateUtil: DateUtil
 
     var inputProfileName: InputProfileName = InputProfileName(rh, localProfileManager, "")
+    val iCfg: ICfg
+        get() = activePlugin.activeInsulin.iCfg         // use Current running iCfg, changing iCfg with Automation not allowed
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
@@ -68,7 +71,8 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             listValues = listOf(
                 ValueWithUnit.SimpleString(inputProfileName.value),
                 ValueWithUnit.Percent(100)
-            )
+            ),
+            iCfg = iCfg
         )
         callback.result(pumpEnactResultProvider.get().success(result).comment(app.aaps.core.ui.R.string.ok)).run()
     }

@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -138,8 +139,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                                event.isChanged(DoubleKey.ApsSmbMin5MinCarbsImpact.key) ||
                                event.isChanged(DoubleKey.AbsorptionCutOff.key) ||
                                event.isChanged(DoubleKey.AutosensMax.key) ||
-                               event.isChanged(DoubleKey.AutosensMin.key) ||
-                               event.isChanged(IntKey.InsulinOrefPeak.key)
+                               event.isChanged(DoubleKey.AutosensMin.key)
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange")
                            }
@@ -256,7 +256,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 
     override fun calculateDetectionStart(from: Long, limitDataToOldestAvailable: Boolean): Long {
         val profile = profileFunction.getProfile(from)
-        val dia = profile?.dia ?: Constants.defaultDIA
+        val dia = profile?.iCfg?.dia ?: Constants.defaultDIA
         val oldestDataAvailable = oldestDataAvailable()
         val getBGDataFrom: Long
         if (limitDataToOldestAvailable) {
@@ -266,7 +266,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         return getBGDataFrom
     }
 
-    override fun calculateFromTreatmentsAndTemps(toTime: Long, profile: Profile): IobTotal {
+    override fun calculateFromTreatmentsAndTemps(toTime: Long, profile: EffectiveProfile): IobTotal {
         val now = System.currentTimeMillis()
         val time = ads.roundUpTime(toTime)
         val cacheHit = iobTable[time]
@@ -284,10 +284,10 @@ class IobCobCalculatorPlugin @Inject constructor(
             duration = 240 * 60 * 1000L,
             rate = 0.0,
             isAbsolute = true,
-            type = TB.Type.NORMAL
+            type = TB.Type.NORMAL,
         )
         if (t.timestamp < time) {
-            val calc = t.iobCalc(time, profile, activePlugin.activeInsulin)
+            val calc = t.iobCalc(time, profile)
             basalIobWithZeroTemp.plus(calc)
         }
         basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round()
@@ -317,7 +317,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         if (t.timestamp < time) {
             val profile = profileFunction.getProfile(t.timestamp)
             if (profile != null) {
-                val calc = t.iobCalc(time, profile, lastAutosensResult, exerciseMode, halfBasalExerciseTarget, isTempTarget, activePlugin.activeInsulin)
+                val calc = t.iobCalc(time, profile, lastAutosensResult, exerciseMode, halfBasalExerciseTarget, isTempTarget)
                 basalIobWithZeroTemp.plus(calc)
             }
         }
@@ -408,11 +408,11 @@ class IobCobCalculatorPlugin @Inject constructor(
         return result
     }
 
-    override fun calculateIobArrayInDia(profile: Profile): Array<IobTotal> {
+    override fun calculateIobArrayInDia(profile: EffectiveProfile): Array<IobTotal> {
         // predict IOB out to DIA plus 30m
         var time = System.currentTimeMillis()
         time = ads.roundUpTime(time)
-        val len = ((profile.dia * 60 + 30) / 5).toInt()
+        val len = ((profile.iCfg.dia * 60 + 30) / 5).toInt()
         val array = Array(len) { IobTotal(0) }
         for ((pos, i) in (0 until len).withIndex()) {
             val t = time + i * 5 * 60000
@@ -530,7 +530,7 @@ class IobCobCalculatorPlugin @Inject constructor(
      *  Time range to the past for IOB calculation
      *  @return milliseconds
      */
-    private fun range(): Long = ((profileFunction.getProfile()?.dia ?: Constants.defaultDIA) * 60 * 60 * 1000).toLong()
+    private fun range(): Long = ((profileFunction.getProfile()?.iCfg?.dia ?: Constants.defaultDIA) * 60 * 60 * 1000).toLong()
 
     override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil.now())
 
@@ -545,8 +545,6 @@ class IobCobCalculatorPlugin @Inject constructor(
      */
     private fun calculateIobFromBolusToTime(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
-        val profile = profileFunction.getProfile() ?: return total
-        val dia = profile.dia
         val divisor = preferences.get(DoubleKey.ApsAmaBolusSnoozeDivisor)
         assert(divisor > 0)
 
@@ -554,7 +552,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 
         boluses.forEach { t ->
             if (t.isValid && t.timestamp < toTime) {
-                val tIOB = t.iobCalc(activePlugin, toTime, dia)
+                val tIOB = t.iobCalc(toTime)
                 total.iob += tIOB.iobContrib
                 total.activity += tIOB.activityContrib
                 if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
@@ -563,7 +561,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                     // multiply the time the treatment is seen active.
                     val timeSinceTreatment = toTime - t.timestamp
                     val snoozeTime = t.timestamp + (timeSinceTreatment * divisor).toLong()
-                    val bIOB = t.iobCalc(activePlugin, snoozeTime, dia)
+                    val bIOB = t.iobCalc(snoozeTime)
                     total.bolussnooze += bIOB.iobContrib
                 }
             }
@@ -588,7 +586,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                     e.duration = newDuration
                 }
                 val profile = profileFunction.getProfile(e.timestamp) ?: return total
-                val calc = e.iobCalc(toTime, profile, activePlugin.activeInsulin)
+                val calc = e.iobCalc(toTime, profile)
                 total.plus(calc)
             }
         }
@@ -609,9 +607,10 @@ class IobCobCalculatorPlugin @Inject constructor(
                 timestamp = i,
                 amount = running * 5.0 / 60.0,
                 type = BS.Type.NORMAL,
-                isBasalInsulin = true
+                isBasalInsulin = true,
+                iCfg = profile.iCfg
             )
-            val iob = bolus.iobCalc(activePlugin, toTime, profile.dia)
+            val iob = bolus.iobCalc(toTime)
             total.basaliob += iob.iobContrib
             total.activity += iob.activityContrib
             i += T.mins(5).msecs()
@@ -633,7 +632,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             if (t.timestamp > toTime) continue
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
             if (t.end > now) t.duration = now - t.timestamp
-            val calc = t.iobCalc(toTime, profile, activePlugin.activeInsulin)
+            val calc = t.iobCalc(toTime, profile)
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basalIob);
             total.plus(calc)
         }
@@ -649,7 +648,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                     e.amount *= newDuration.toDouble() / e.duration
                     e.duration = newDuration
                 }
-                val calc = e.iobCalc(toTime, profile, activePlugin.activeInsulin)
+                val calc = e.iobCalc(toTime, profile)
                 totalExt.plus(calc)
             }
             // Convert to basal iob
@@ -672,7 +671,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             if (t.timestamp > toTime) continue
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
             if (t.end > now) t.duration = now - t.timestamp
-            val calc = t.iobCalc(toTime, profile, lastAutosensResult, exerciseMode, halfBasalExerciseTarget, isTempTarget, activePlugin.activeInsulin)
+            val calc = t.iobCalc(toTime, profile, lastAutosensResult, exerciseMode, halfBasalExerciseTarget, isTempTarget)
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basalIob);
             total.plus(calc)
         }
@@ -688,7 +687,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                     e.amount *= newDuration.toDouble() / e.duration
                     e.duration = newDuration
                 }
-                val calc = e.iobCalc(toTime, profile, lastAutosensResult, exerciseMode, halfBasalExerciseTarget, isTempTarget, activePlugin.activeInsulin)
+                val calc = e.iobCalc(toTime, profile, lastAutosensResult, exerciseMode, halfBasalExerciseTarget, isTempTarget)
                 totalExt.plus(calc)
             }
             // Convert to basal iob

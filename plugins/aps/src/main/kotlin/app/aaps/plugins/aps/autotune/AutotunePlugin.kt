@@ -7,6 +7,7 @@ import android.view.View
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -14,7 +15,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -155,7 +155,7 @@ class AutotunePlugin @Inject constructor(
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile
         }
-        val localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
+        val localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, activePlugin.activeInsulin.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
 
         log("Start Autotune with $daysBack days back")
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
@@ -254,6 +254,7 @@ class AutotunePlugin @Inject constructor(
                     value = ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
+                val iCfg = activePlugin.activeInsulin.iCfg      // use Current running iCfg, changing iCfg with Automation not allowed
                 tunedP.profileStore(circadian)?.let { profileStore ->
                     if (profileFunction.createProfileSwitch(
                             profileStore = profileStore,
@@ -265,7 +266,8 @@ class AutotunePlugin @Inject constructor(
                             action = Action.PROFILE_SWITCH,
                             source = Sources.Automation,
                             note = rh.gs(app.aaps.core.ui.R.string.autotune),
-                            listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName))
+                            listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
+                            iCfg = iCfg
                         )
                     ) log("Profile Switch succeed ${tunedP.profileName}")
                     rxBus.send(EventLocalProfileChanged())
@@ -348,16 +350,16 @@ class AutotunePlugin @Inject constructor(
 
             val peakTime: Int = insulinInterface.peak
             when {
-                insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
-                insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")
+                insulinInterface.id === InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
+                insulinInterface.id === InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")
 
-                insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV            -> {
+                insulinInterface.id === InsulinType.OREF_LYUMJEV            -> {
                     jsonSettings.put("curve", "ultra-rapid")
                     jsonSettings.put("useCustomPeakTime", true)
                     jsonSettings.put("insulinPeakTime", peakTime)
                 }
 
-                insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK          -> {
+                insulinInterface.id === InsulinType.OREF_FREE_PEAK          -> {
                     jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
                     jsonSettings.put("useCustomPeakTime", true)
                     jsonSettings.put("insulinPeakTime", peakTime)
@@ -384,7 +386,6 @@ class AutotunePlugin @Inject constructor(
             return
         }
         localProfileManager.currentProfileIndex = indexLocalProfile
-        localProfileManager.currentProfile()?.dia = newProfile.dia
         localProfileManager.currentProfile()?.basal = newProfile.basal()
         localProfileManager.currentProfile()?.ic = newProfile.ic(circadian)
         localProfileManager.currentProfile()?.isf = newProfile.isf(circadian)
