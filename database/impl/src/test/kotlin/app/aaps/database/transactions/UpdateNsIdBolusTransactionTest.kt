@@ -3,6 +3,7 @@ package app.aaps.database.transactions
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.BolusDao
 import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -204,6 +205,7 @@ class UpdateNsIdBolusTransactionTest {
         timestamp = timestamp,
         amount = amount,
         type = type,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0)
     ).also { it.id = id }
 }

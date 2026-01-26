@@ -2,6 +2,7 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -63,6 +64,7 @@ open class DanaRTestBase : TestBaseWithProfile() {
                 it.danaHistoryRecordDao = danaHistoryRecordDao
                 it.uiInteraction = uiInteraction
                 it.notificationManager = notificationManager
+                it.ch = ch
             }
         }
     }

@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -42,12 +43,14 @@ class UploadChunkTest {
 
     @InjectMocks lateinit var sut: UploadChunk
 
+    val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
+
     @Test
     fun `SMBs should be marked as 'automated' when uploading to Tidepool`() = runTest {
         // setup mocked test data
         val boluses = listOf(
-            BS(timestamp = 100, amount = 7.5, type = BS.Type.NORMAL),
-            BS(timestamp = 200, amount = 0.5, type = BS.Type.SMB)
+            BS(timestamp = 100, amount = 7.5, type = BS.Type.NORMAL, iCfg = iCfg),
+            BS(timestamp = 200, amount = 0.5, type = BS.Type.SMB, iCfg = iCfg)
         )
         whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(boluses)
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())

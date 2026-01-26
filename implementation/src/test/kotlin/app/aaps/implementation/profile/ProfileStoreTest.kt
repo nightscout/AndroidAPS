@@ -1,8 +1,10 @@
 package app.aaps.implementation.profile
 
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import kotlin.test.assertIs
 
@@ -20,7 +22,7 @@ internal class ProfileStoreTest : TestBaseWithProfile() {
 
     @Test
     fun getDefaultProfileJsonTest() {
-        assertThat(getValidProfileStore().getDefaultProfileJson()?.has("dia")).isTrue()
+        assertThat(getValidProfileStore().getDefaultProfileJson()?.has("carbratio")).isTrue()
         assertThat(getInvalidProfileStore2().getDefaultProfileJson()).isNull()
     }
 

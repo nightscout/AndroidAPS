@@ -768,7 +768,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs()
+            ids = IDs(),
+            iCfg = someICfg
         )
         val pair = Pair(bolus, bolus)
 
@@ -798,14 +799,16 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val newBolus = BS(
             id = 6,
             timestamp = 1000L,
             amount = 5.5, // Modified amount
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val pair = Pair(newBolus, oldBolus)
 
@@ -835,7 +838,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val pair = Pair(bolus, bolus)
 
@@ -864,14 +868,16 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs()
+            ids = IDs(),
+            iCfg = someICfg
         )
         val newBolus = BS(
             id = 6,
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val pair = Pair(newBolus, oldBolus)
 
@@ -899,7 +905,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs()
+            ids = IDs(),
+            iCfg = someICfg
         )
         val pair = Pair(bolus, bolus)
 
@@ -921,8 +928,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L, 5L, 6L, 6L, 7L, 7L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
-        val bolus1 = BS(id = 6, timestamp = 1000L, amount = 5.0, type = BS.Type.NORMAL, ids = IDs())
-        val bolus2 = BS(id = 7, timestamp = 2000L, amount = 3.0, type = BS.Type.NORMAL, ids = IDs())
+        val bolus1 = BS(id = 6, timestamp = 1000L, amount = 5.0, type = BS.Type.NORMAL, ids = IDs(), iCfg = someICfg)
+        val bolus2 = BS(id = 7, timestamp = 2000L, amount = 3.0, type = BS.Type.NORMAL, ids = IDs(), iCfg = someICfg)
 
         whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Pair(bolus1, bolus1))
         whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(Pair(bolus2, bolus2))

@@ -74,7 +74,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
         pumpDescription.basalMinimumRate = 0.1
 
         whenever(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
 
         val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)

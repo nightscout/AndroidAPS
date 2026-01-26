@@ -206,10 +206,11 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 BS(
                     timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
                     type = BS.Type.NORMAL,
-                    amount = 0.0
+                    amount = 0.0,
+                    iCfg = someICfg
                 )
             )
-            whenever(profileFunction.getProfile()).thenReturn(validProfile)
+            whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
 
             val bolusConstraint = ConstraintObject(0.0, aapsLogger)
             whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
@@ -535,7 +536,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // when
         testPumpPlugin.isProfileSet = true
-        commandQueue.setProfile(validProfile, false, object : Callback() {
+        commandQueue.setProfile(effectiveProfile, false, object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()
                 assertThat(result.enacted).isFalse()
@@ -547,7 +548,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
         // different should be added
         testPumpPlugin.isProfileSet = false
-        commandQueue.setProfile(validProfile, false, object : Callback() {
+        commandQueue.setProfile(effectiveProfile, false, object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()
                 assertThat(result.enacted).isTrue()
@@ -555,7 +556,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         })
         assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
-        commandQueue.setProfile(validProfile, false, object : Callback() {
+        commandQueue.setProfile(effectiveProfile, false, object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()
             }

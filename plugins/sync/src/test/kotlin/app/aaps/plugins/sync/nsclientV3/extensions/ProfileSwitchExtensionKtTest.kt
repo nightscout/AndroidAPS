@@ -32,17 +32,17 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         var profileSwitch = PS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
             duration = 0,
             iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",
@@ -52,24 +52,24 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(localProfileManager, dateUtil)!!
+        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(localProfileManager, dateUtil, insulin)!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
 
         profileSwitch = PS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             profileName = "SomeProfile",
             timeshift = -3600000,
             percentage = 150,
             duration = 3600000,
             iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",
@@ -79,7 +79,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(localProfileManager, dateUtil)!!
+        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(localProfileManager, dateUtil, insulin)!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
     }

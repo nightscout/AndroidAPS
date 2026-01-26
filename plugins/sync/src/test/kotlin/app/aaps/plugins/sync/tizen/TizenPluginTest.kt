@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.aps.GlucoseStatusSMB
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.RT
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -33,6 +34,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
+    @Mock lateinit var insulin: Insulin
 
     private lateinit var sut: TizenPlugin
 
@@ -44,7 +46,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
         )
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         whenever(profileFunction.getProfileName()).thenReturn("TestProfile")
         whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
@@ -67,6 +69,8 @@ internal class TizenPluginTest : TestBaseWithProfile() {
             it.enacted = RT(runningDynamicIsf = false)
         })
         whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true))
+        whenever(activePlugin.activeInsulin).thenReturn(insulin)
+        whenever(insulin.iCfg).thenReturn(someICfg)
     }
 
     @Test
