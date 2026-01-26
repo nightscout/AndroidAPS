@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
@@ -26,7 +27,6 @@ interface ActivePlugin {
 
     /**
      *  Currently selected Profile plugin
-     *  Default LocalProfile
      */
     val activeProfileSource: ProfileSource
 
@@ -43,10 +43,16 @@ interface ActivePlugin {
     val activeAPS: APS
 
     /**
-     *  Currently selected Pump plugin
-     *  Default VirtualPump
+     *  PumpWithConcentration should pass data to real Pump plugin if U100 is used
+     *  or do proper recalculation if other concentration is used (U20, U50, U200 etc)
      */
-    val activePump: Pump
+    val activePump: PumpWithConcentration
+
+    /**
+     *  PumpWithConcentration should pass data to real Pump plugin if U100 is used
+     *  or do proper recalculation if other concentration is used (U20, U50, U200 etc)
+     */
+    val activePumpInternal: Pump
 
     /**
      *  Currently selected Sensitivity plugin

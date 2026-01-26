@@ -72,7 +72,7 @@ class NSClientAddUpdateWorker(
                 latestDateInReceivedData = mills
 
             if (insulin > 0 && (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT)) {
-                BS.fromJson(json)?.let { bolus ->
+                BS.fromJson(json, activePlugin.activeInsulin)?.let { bolus ->
                     storeDataForDb.addToBoluses(bolus)
                 } ?: aapsLogger.error("Error parsing bolus json $json")
             }
@@ -90,7 +90,7 @@ class NSClientAddUpdateWorker(
                 json = ebJson
                 eventType = JsonHelper.safeGetString(json, "eventType")
 
-                activePlugin.activePump.let { if (it is VirtualPump) it.fakeDataDetected = true }
+                activePlugin.activePump.selectedActivePump().let { if (it is VirtualPump) it.fakeDataDetected = true }
             }
             when {
                 insulin > 0 || carbs > 0                                          -> Any()
@@ -103,7 +103,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT) {
-                        EPS.fromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
+                        EPS.fromJson(json, dateUtil, activePlugin.activeInsulin)?.let { effectiveProfileSwitch ->
                             storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
@@ -145,7 +145,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.PROFILE_SWITCH.text                          ->
                     if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT) {
-                        PS.fromJson(json, dateUtil, localProfileManager)?.let { profileSwitch ->
+                        PS.fromJson(json, dateUtil, localProfileManager, activePlugin.activeInsulin)?.let { profileSwitch ->
                             storeDataForDb.addToProfileSwitches(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
