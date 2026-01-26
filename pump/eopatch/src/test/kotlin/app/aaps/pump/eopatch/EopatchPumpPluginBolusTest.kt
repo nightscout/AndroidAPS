@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.eopatch.core.scan.BleConnectionState
@@ -24,7 +25,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var bleConnectionState: BleConnectionState
-    @Mock lateinit var profile: Profile
+    @Mock lateinit var profile: PumpProfile
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var blePreCheck: BlePreCheck
 
@@ -54,7 +55,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck
+            protectionCheck, blePreCheck, ch
         )
     }
 
@@ -95,7 +96,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         // isNormalBasalAct will be false
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
-        val result = plugin.setTempBasalAbsolute(1.5, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result = plugin.setTempBasalAbsolute(1.5, 60, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -107,7 +108,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         patchState.update(ByteArray(20), System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
-        val result = plugin.setTempBasalPercent(150, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result = plugin.setTempBasalPercent(150, 60, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -121,7 +122,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         patchState.update(bytes, System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
-        val result = plugin.setTempBasalPercent(0, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result = plugin.setTempBasalPercent(0, 60, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()

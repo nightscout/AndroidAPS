@@ -95,7 +95,7 @@ class SyncNsEffectiveProfileSwitchTransactionTest {
         originalPercentage = 100,
         originalDuration = 0,
         originalEnd = 0,
-        insulinConfiguration = InsulinConfiguration("Test", 0, 0),
+        insulinConfiguration = InsulinConfiguration("Test", 0, 0, 1.0),
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId),
         isValid = isValid
     ).also { it.id = id }

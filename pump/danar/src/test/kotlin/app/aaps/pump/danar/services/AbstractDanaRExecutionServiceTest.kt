@@ -142,7 +142,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
     @Test
     fun testDoSanityCheck_temporaryBasalMismatch() {
         val temporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
-        val activePump = mock(app.aaps.core.interfaces.pump.Pump::class.java)
+        val activePump = mock(app.aaps.core.interfaces.pump.PumpWithConcentration::class.java)
 
         `when`(temporaryBasal.rate).thenReturn(150.0)
         `when`(temporaryBasal.timestamp).thenReturn(1000000L)
@@ -168,7 +168,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testDoSanityCheck_noTemporaryBasalInAAPSButInPump() {
-        val activePump = mock(app.aaps.core.interfaces.pump.Pump::class.java)
+        val activePump = mock(app.aaps.core.interfaces.pump.PumpWithConcentration::class.java)
 
         // Create real PumpState for proper destructuring
         val pumpState = PumpSync.PumpState(null, null, null, null, "TEST123")
@@ -192,7 +192,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
     @Test
     fun testDoSanityCheck_temporaryBasalInAAPSButNotInPump() {
         val temporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
-        val activePump = mock(app.aaps.core.interfaces.pump.Pump::class.java)
+        val activePump = mock(app.aaps.core.interfaces.pump.PumpWithConcentration::class.java)
 
         // Set dateUtil.now() first, before checking isTempBasalInProgress
         `when`(dateUtil.now()).thenReturn(2000000L)
@@ -219,7 +219,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
     @Test
     fun testDoSanityCheck_extendedBolusMismatch() {
         val extendedBolus = mock(PumpSync.PumpState.ExtendedBolus::class.java)
-        val activePump = mock(app.aaps.core.interfaces.pump.Pump::class.java)
+        val activePump = mock(app.aaps.core.interfaces.pump.PumpWithConcentration::class.java)
 
         // Set dateUtil.now() FIRST to ensure it's available for all property getters
         `when`(dateUtil.now()).thenReturn(1500000L) // Within the extended bolus range

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 
-@Suppress("SpellCheckingInspection")
 internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
 
     @Mock lateinit var insulin: Insulin
@@ -33,11 +32,11 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         val profileSwitch = EPS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,
@@ -45,7 +44,7 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             originalDuration = 3600000,
             originalEnd = 0,
             iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",
@@ -55,7 +54,7 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        val profileSwitch2 = (profileSwitch.toNSEffectiveProfileSwitch(dateUtil).convertToRemoteAndBack() as NSEffectiveProfileSwitch).toEffectiveProfileSwitch(dateUtil)!!
+        val profileSwitch2 = (profileSwitch.toNSEffectiveProfileSwitch(dateUtil).convertToRemoteAndBack() as NSEffectiveProfileSwitch).toEffectiveProfileSwitch(dateUtil, insulin)!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
     }

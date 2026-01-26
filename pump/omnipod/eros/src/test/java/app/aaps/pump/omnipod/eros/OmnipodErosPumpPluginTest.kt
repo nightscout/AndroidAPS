@@ -54,7 +54,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         val plugin = OmnipodErosPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, TestAapsSchedulers(), rxBus, context,
             erosPodStateManager, aapsOmnipodErosManager, fabricPrivacy, rileyLinkServiceData, aapsOmnipodUtil,
-            rileyLinkUtil, omnipodAlertUtil, profileFunction, pumpSync, uiInteraction, notificationManager, erosHistoryDatabase, pumpEnactResultProvider
+            rileyLinkUtil, omnipodAlertUtil,  pumpSync, uiInteraction, notificationManager,erosHistoryDatabase,  pumpEnactResultProvider
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")
         whenever(pumpSync.expectedPumpState()).thenReturn(pumpState)
@@ -75,11 +75,11 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given standard basal
         whenever(profile.getBasal()).thenReturn(0.5)
         // When
-        var result1 = plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        var result2 = plugin.setTempBasalPercent(5000, 30000, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        val result3 = plugin.setTempBasalPercent(0, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        val result4 = plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        val result5 = plugin.setTempBasalPercent(-50, 60, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        var result1 = plugin.setTempBasalPercent(80, 30,  false, PumpSync.TemporaryBasalType.NORMAL)
+        var result2 = plugin.setTempBasalPercent(5000, 30000,  false, PumpSync.TemporaryBasalType.NORMAL)
+        val result3 = plugin.setTempBasalPercent(0, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+        val result4 = plugin.setTempBasalPercent(0, 0,  false, PumpSync.TemporaryBasalType.NORMAL)
+        val result5 = plugin.setTempBasalPercent(-50, 60,  false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return correct values
         assertThat(result1.absolute).isWithin(0.01).of(0.4)
         assertThat(result1.duration).isEqualTo(30)
@@ -96,8 +96,8 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given zero basal
         whenever(profile.getBasal()).thenReturn(0.0)
         // When
-        result1 = plugin.setTempBasalPercent(8000, 90, profile, false, PumpSync.TemporaryBasalType.NORMAL)
-        result2 = plugin.setTempBasalPercent(0, 0, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result1 = plugin.setTempBasalPercent(8000, 90,  false, PumpSync.TemporaryBasalType.NORMAL)
+        result2 = plugin.setTempBasalPercent(0, 0,  false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return zero values
         assertThat(result1.absolute).isWithin(0.01).of(0.0)
         assertThat(result1.duration).isEqualTo(90)
@@ -108,7 +108,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         whenever(profile.getBasal()).thenReturn(500.0)
         // When treatment
         result1 =
-            plugin.setTempBasalPercent(80, 30, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+            plugin.setTempBasalPercent(80, 30,  false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return sane values
         assertThat(result1.absolute).isWithin(0.01).of(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(500.0 * 0.8))
         assertThat(result1.duration).isEqualTo(30)
@@ -116,7 +116,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given weird basal
         whenever(profile.getBasal()).thenReturn(1.234567)
         // When treatment
-        result1 = plugin.setTempBasalPercent(280, 600, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result1 = plugin.setTempBasalPercent(280, 600,  false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return sane values
         assertThat(result1.absolute).isWithin(0.01).of(3.4567876)
         assertThat(result1.duration).isEqualTo(600)
@@ -124,7 +124,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         // Given negative basal
         whenever(profile.getBasal()).thenReturn(-1.234567)
         // When treatment
-        result1 = plugin.setTempBasalPercent(280, 510, profile, false, PumpSync.TemporaryBasalType.NORMAL)
+        result1 = plugin.setTempBasalPercent(280, 510,  false, PumpSync.TemporaryBasalType.NORMAL)
         // Then return negative value (this is validated further downstream, see TempBasalExtraCommand)
         assertThat(result1.absolute).isWithin(0.01).of(-3.4567876)
         assertThat(result1.duration).isEqualTo(510)

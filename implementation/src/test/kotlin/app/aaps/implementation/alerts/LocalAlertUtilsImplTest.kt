@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
@@ -39,7 +39,7 @@ class LocalAlertUtilsImplTest : TestBase() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var notificationManager: NotificationManager
-    @Mock lateinit var pump: Pump
+    @Mock lateinit var pump: PumpWithConcentration
     @Mock lateinit var pumpDescription: PumpDescription
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -207,7 +207,7 @@ class LocalAlertUtilsImplTest : TestBase() {
     fun `reportPumpStatusRead updates alarm when profile is available`() {
         val lastDataTime = now - T.mins(5).msecs()
         val thresholdMinutes = 30
-        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.Profile>()
+        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(pump.lastDataTime).thenReturn(lastDataTime)
@@ -234,7 +234,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val lastDataTime = now - T.mins(5).msecs()
         val thresholdMinutes = 30
         val futureAlarmTime = now + T.hours(2).msecs()
-        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.Profile>()
+        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(pump.lastDataTime).thenReturn(lastDataTime)
@@ -301,7 +301,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val lastDataTime = now - T.mins(10).msecs()
         val thresholdMinutes = 40
         val currentAlarmTime = now + T.mins(5).msecs()
-        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.Profile>()
+        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(pump.lastDataTime).thenReturn(lastDataTime)

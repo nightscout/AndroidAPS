@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -99,7 +99,7 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testCurrentProfile() {
-        val profile = mock<Profile>()
+        val profile = mock<EffectiveProfile>()
         whenever(profileFunction.getProfile()).thenReturn(profile)
         assertEquals(profile, loopHub.currentProfile)
         verify(profileFunction, times(1)).getProfile()
@@ -209,7 +209,7 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testTemporaryBasal() {
-        val profile = mock<Profile>()
+        val profile = mock<EffectiveProfile>()
         whenever(profileFunction.getProfile()).thenReturn(profile)
         val tb = mock<TB> {
             on { isAbsolute }.thenReturn(false)
@@ -222,7 +222,7 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testTemporaryBasalAbsolute() {
-        val profile = mock<Profile> {
+        val profile = mock<EffectiveProfile> {
             onGeneric { getBasal(clock.millis()) }.thenReturn(2.0)
         }
         whenever(profileFunction.getProfile()).thenReturn(profile)
@@ -237,7 +237,7 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testTemporaryBasalNoRun() {
-        val profile = mock<Profile>()
+        val profile = mock<EffectiveProfile>()
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(null)
         assertTrue(loopHub.temporaryBasal.isNaN())
@@ -255,7 +255,7 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testDisconnectPump() {
-        val profile = mock<Profile>()
+        val profile = mock<EffectiveProfile>()
         whenever(profileFunction.getProfile()).thenReturn(profile)
         loopHub.disconnectPump(23)
         verify(profileFunction).getProfile()

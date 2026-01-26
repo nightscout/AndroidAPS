@@ -2,23 +2,19 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.plugins.automation.elements.Comparator
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 import java.util.Optional
 
 class TriggerPumpBatteryLevelTest : TriggerTestBase() {
 
-    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Test fun shouldRunTest() {
-        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
-        whenever(virtualPumpPlugin.batteryLevel).thenReturn(6)
+        whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.GENERIC_AAPS)
+        whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(6)
         var t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -38,19 +34,18 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunBatteryLevelSupport() {
-        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
-        whenever(virtualPumpPlugin.batteryLevel).thenReturn(6)
+        whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.GENERIC_AAPS)
+        whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(6)
         val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
 
-        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.OMNIPOD_EROS)
-        whenever(virtualPumpPlugin.isUseRileyLinkBatteryLevel()).thenReturn(true)
-        whenever(virtualPumpPlugin.batteryLevel).thenReturn(6)
+        whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.OMNIPOD_EROS)
+        whenever(pumpPluginWithConcentration.isUseRileyLinkBatteryLevel()).thenReturn(true)
+        whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(6)
         assertThat(t.shouldRun()).isTrue()
 
-        whenever(virtualPumpPlugin.model()).thenReturn(PumpType.OMNIPOD_DASH)
-        whenever(virtualPumpPlugin.batteryLevel).thenReturn(0)
+        whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.OMNIPOD_DASH)
+        whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(0)
         assertThat(t.shouldRun()).isFalse()
     }
 

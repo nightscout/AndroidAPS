@@ -53,7 +53,7 @@ class InsertEffectiveProfileSwitchTransactionTest {
         originalPercentage = 100,
         originalDuration = 0,
         originalEnd = 0,
-        insulinConfiguration = InsulinConfiguration("Test", 0, 0),
+        insulinConfiguration = InsulinConfiguration("Test", 0, 0, 1.0),
         interfaceIDs_backing = InterfaceIDs()
     )
 }
