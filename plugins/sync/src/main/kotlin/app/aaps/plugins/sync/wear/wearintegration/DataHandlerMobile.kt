@@ -1523,8 +1523,9 @@ class DataHandlerMobile @Inject constructor(
         } ?: ""
         // Reservoir Level
         val pump = activePlugin.activePump
-        val maxReading = pump.pumpDescription.maxResorvoirReading.toDouble()
-        val reservoir = pump.reservoirLevel.let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+        val iCfg = activePlugin.activeInsulin.iCfg
+        val maxReading = pump.pumpDescription.maxReservoirReading.toDouble()
+        val reservoir = pump.reservoirLevel.iU(iCfg.concentration).let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
         val reservoirString = if (reservoir > 0) decimalFormatter.to0Decimal(reservoir, rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)) else ""
         val resUrgent = preferences.get(IntKey.OverviewResCritical)
         val resWarn = preferences.get(IntKey.OverviewResWarning)

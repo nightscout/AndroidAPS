@@ -78,7 +78,6 @@ class ProfileFragment : DaggerFragment() {
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
     }
 
@@ -86,7 +85,6 @@ class ProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            localProfileManager.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
             localProfileManager.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }
@@ -122,7 +120,6 @@ class ProfileFragment : DaggerFragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-        binding.diaLabel.labelFor = binding.dia.editTextId
         binding.unlock.setOnClickListener { queryProtection() }
 
         val profiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
@@ -145,8 +142,6 @@ class ProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.profileList.filters = arrayOf()
         binding.profileList.setText(currentProfile.name)
-        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
-        binding.dia.tag = "LP_DIA"
         TimeListEdit(
             requireContext(),
             aapsLogger,
@@ -276,7 +271,6 @@ class ProfileFragment : DaggerFragment() {
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
 
         binding.profileAdd.setOnClickListener {
@@ -414,11 +408,10 @@ class ProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibility(position: Int) {
-        binding.diaPlaceholder.visibility = (position == 0).toVisibility()
-        binding.ic.visibility = (position == 1).toVisibility()
-        binding.isf.visibility = (position == 2).toVisibility()
-        binding.basal.visibility = (position == 3).toVisibility()
-        binding.target.visibility = (position == 4).toVisibility()
+        binding.ic.visibility = (position == 0).toVisibility()
+        binding.isf.visibility = (position == 1).toVisibility()
+        binding.basal.visibility = (position == 2).toVisibility()
+        binding.target.visibility = (position == 3).toVisibility()
     }
 
     private fun updateProtectedUi() {

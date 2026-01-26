@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -192,7 +193,6 @@ class ProfileViewerActivity : DaggerAppCompatActivity() {
                         getIsfList = { it.getIsfList(rh, dateUtil) },
                         getBasalList = { it.getBasalList(rh, dateUtil) },
                         getTargetList = { it.getTargetList(rh, dateUtil) },
-                        formatDia = { rh.gs(R.string.format_hours, it) },
                         formatBasalSum = { rh.gs(R.string.format_insulin_units, it) }
                     )
                 },
@@ -201,7 +201,6 @@ class ProfileViewerActivity : DaggerAppCompatActivity() {
                         profile1 = profile1,
                         profile2 = profile2,
                         unitsText = profileFunction.getUnits().asText,
-                        formatDia = { DecimalFormat("0.00").format(it) },
                         shortHourUnit = rh.gs(app.aaps.core.interfaces.R.string.shorthour),
                         icsRows = buildIcRows(profile1, profile2, dateUtil),
                         icUnits = rh.gs(R.string.profile_carbs_per_unit),

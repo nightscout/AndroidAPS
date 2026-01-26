@@ -256,7 +256,6 @@ fun ProfileManagementScreen(
                                             profile1 = compareData.baseProfile,
                                             profile2 = compareData.effectiveProfile,
                                             unitsText = compareData.unitsText,
-                                            formatDia = { DecimalFormat("0.00").format(it) },
                                             shortHourUnit = compareData.shortHourUnit,
                                             icsRows = compareData.icRows,
                                             icUnits = compareData.icUnits,
@@ -276,10 +275,8 @@ fun ProfileManagementScreen(
                                             getIsfList = viewModel::getIsfList,
                                             getBasalList = viewModel::getBasalList,
                                             getTargetList = viewModel::getTargetList,
-                                            formatDia = viewModel::formatDia,
                                             formatBasalSum = viewModel::formatBasalSum
-                                        )
-                                    }
+                                    )}
                                     // Extra space for floating toolbar
                                     Spacer(modifier = Modifier.height(80.dp))
                                 }

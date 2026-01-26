@@ -179,7 +179,6 @@ fun ProfileHelperScreen(
                     profile1 = sealed1,
                     profile2 = sealed2,
                     unitsText = viewModel.getUnits().asText,
-                    formatDia = { DecimalFormat("0.00").format(it) },
                     shortHourUnit = viewModel.rh.gs(app.aaps.core.interfaces.R.string.shorthour),
                     icsRows = buildIcRows(sealed1, sealed2, viewModel.dateUtil),
                     icUnits = viewModel.rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit),

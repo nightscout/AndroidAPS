@@ -243,6 +243,7 @@ class InsulinDialogViewModel @Inject constructor(
         val notes = state.notes
         val recordOnlyChecked = state.recordOnlyChecked
         val units = profileFunction.getUnits()
+        val iCfg = profileFunction.getProfile()?.iCfg ?: activePlugin.activeInsulin.iCfg // Todo: iCfg can be different for external boluses
 
         // Insert temp target if eating soon checked
         if (state.eatingSoonTtChecked) {
@@ -286,7 +287,7 @@ class InsulinDialogViewModel @Inject constructor(
             if (recordOnlyChecked) {
                 viewModelScope.launch {
                     persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(),
+                        bolus = detailedBolusInfo.createBolus(iCfg),
                         action = Action.BOLUS,
                         source = Sources.InsulinDialog,
                         note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""

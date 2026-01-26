@@ -104,8 +104,10 @@ class UploadChunk @Inject constructor(
             }
         persistenceLayer.getCarbsFromTimeToTimeExpanded(start, end, true)
             .forEach { carb ->
-                if (carb.amount > 0.0)
-                    result.add(WizardElement(carb, dateUtil))
+                profileFunction.getProfile(carb.timestamp)?.let { profile ->
+                    if (carb.amount > 0.0)
+                        result.add(WizardElement(carb, dateUtil, profile.iCfg))
+                }
             }
         return result
     }

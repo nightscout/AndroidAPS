@@ -190,6 +190,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
+        val profile = profileFunction.getProfile() ?: error("Profile not defined")
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
@@ -262,7 +263,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                         if (recordOnlyChecked) {
                             lifecycleScope.launch {
                                 persistenceLayer.insertOrUpdateBolus(
-                                    bolus = detailedBolusInfo.createBolus(),
+                                    bolus = detailedBolusInfo.createBolus(profile.iCfg),
                                     action = Action.BOLUS,
                                     source = Sources.InsulinDialog,
                                     note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""

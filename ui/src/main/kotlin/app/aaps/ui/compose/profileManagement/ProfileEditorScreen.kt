@@ -196,37 +196,29 @@ fun ProfileEditorScreen(
                         selected = state.selectedTab == 0,
                         onClick = { viewModel.selectTab(0) },
                         modifier = Modifier.background(
-                            if (diaHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
-                        ),
-                        text = { Text(stringResource(R.string.dia_short)) }
-                    )
-                    Tab(
-                        selected = state.selectedTab == 1,
-                        onClick = { viewModel.selectTab(1) },
-                        modifier = Modifier.background(
                             if (icHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
                         text = { Text(stringResource(R.string.ic_short)) }
                     )
                     Tab(
-                        selected = state.selectedTab == 2,
-                        onClick = { viewModel.selectTab(2) },
+                        selected = state.selectedTab == 1,
+                        onClick = { viewModel.selectTab(1) },
                         modifier = Modifier.background(
                             if (isfHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
                         text = { Text(stringResource(R.string.isf_short)) }
                     )
                     Tab(
-                        selected = state.selectedTab == 3,
-                        onClick = { viewModel.selectTab(3) },
+                        selected = state.selectedTab == 2,
+                        onClick = { viewModel.selectTab(2) },
                         modifier = Modifier.background(
                             if (basalHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
                         text = { Text(stringResource(R.string.basal_short)) }
                     )
                     Tab(
-                        selected = state.selectedTab == 4,
-                        onClick = { viewModel.selectTab(4) },
+                        selected = state.selectedTab == 3,
+                        onClick = { viewModel.selectTab(3) },
                         modifier = Modifier.background(
                             if (targetHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
@@ -259,34 +251,28 @@ fun ProfileEditorScreen(
                     }
 
                     when (state.selectedTab) {
-                        0 -> DiaContent(
-                            dia = profile.dia,
-                            onDiaChange = { viewModel.updateDia(it) },
-                            minDia = state.diaMin,
-                            maxDia = state.diaMax
-                        )
 
-                        1 -> IcContent(
+                        0 -> IcContent(
                             viewModel = viewModel,
                             profile = profile,
                             state = state,
                             supportsDynamic = state.supportsDynamicIc
                         )
 
-                        2 -> IsfContent(
+                        1 -> IsfContent(
                             viewModel = viewModel,
                             profile = profile,
                             state = state,
                             supportsDynamic = state.supportsDynamicIsf
                         )
 
-                        3 -> BasalContent(
+                        2 -> BasalContent(
                             viewModel = viewModel,
                             profile = profile,
                             state = state
                         )
 
-                        4 -> TargetContent(
+                        3 -> TargetContent(
                             viewModel = viewModel,
                             profile = profile,
                             state = state
