@@ -97,8 +97,8 @@ class CmdDevicesOldGetTest : TestBaseWithProfile() {
     @Test
     fun `isSupport should check firmware version`() {
         val cmd = CmdDevicesOldGet("00:11:22:33:44:55", aapsLogger, preferences, equilManager)
-        // Initially firmware version is 0.0
-        assertFalse(cmd.isSupport())
+        // Initially firmware version is 0.0, serial starting with '0' needs version check
+        assertFalse(cmd.isSupport("0ABC12"))
     }
 
     @Test
@@ -162,7 +162,7 @@ class CmdDevicesOldGetTest : TestBaseWithProfile() {
         thread.join(1000)
 
         assertTrue(cmd.cmdSuccess)
-        assertTrue(cmd.isSupport()) // 5.5 should be supported (>= 5.3)
+        assertTrue(cmd.isSupport("0ABC12")) // 5.5 should be supported (>= 5.3)
     }
 
     @Test
