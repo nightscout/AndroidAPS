@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
     <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
     <string name="description_insulin_lyumjev">Insulin preset for Lyumjev</string>
     <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
-    <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="description_insulin_plugin">Allows you to manage the different insulin you will use within AAPS</string>
     <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
-
+    <string name="missing_insulin_name">Missing Insulin Name</string>
+    <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
+    <string name="insulin_duplicated">Insulin already exists Name %1$s</string>
+    <string name="do_you_want_switch_insulin">Do you want to switch insulin and discard changes made to current insulin?</string>
+    <string name="a11y_add_new_insulin">Add new insulin</string>
+    <string name="a11y_delete_current_insulin">Delete current insulin</string>
+    <string name="save_or_reset_changes_first">Save or reset current changes first</string>
+    <string name="update_profiles_title">Update Profiles</string>
+    <string name="update_profiles_message">This insulin is used within %1$d profile(s)\nDo you confirm the update of this insulin?\n\nA profile switch will be required to apply the modification within your Loop</string>
+    <string name="concentration_with_unit">U%1$.0f</string>
+    <string name="pump_insulin">%1$s (Pump)</string>
+    <string name="change_insulin_reminder">Set reminder to change Insulin on next Insulin Change</string>
+    <string name="change_concentration">Change Insulin concentration on next reservoir change</string>
+    <string name="new_concentration">New Concentration:</string>
+    <string name="save_pump_insulin_title">Save Insulin %1$s?</string>
+    <string name="save_pump_insulin_message">A Profile Switch is required to update Pump Insulin with current running profile</string>
 
 </resources>

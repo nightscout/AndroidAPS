@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    tools:context=".dialogs.CalibrationDialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            style="@style/StyleDialogHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ic_insulin" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/concentration"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:minWidth="45dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/concentration_title"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/ins_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="120dp"
+                android:padding="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/insulin_concentration_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <app.aaps.core.ui.elements.NumberPicker
+                android:id="@+id/concentration"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                app:customContentDescription="@string/insulin_concentration_label" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
+
+    </LinearLayout>
+
+</ScrollView>

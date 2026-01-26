@@ -33,6 +33,10 @@
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />
         <activity
+            android:name=".activities.ConcentrationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
+        <activity
             android:name=".activities.ErrorActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />
