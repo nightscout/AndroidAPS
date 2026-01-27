@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -56,7 +57,7 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override val lastBolusTime: Long? get() = null
     override val lastBolusAmount: PumpInsulin? get() = null
     override val lastDataTime: Long get() = lastData
-    override val baseBasalRate: Double get() = baseBasal
+    override val baseBasalRate: PumpRate get() = PumpRate(baseBasal)
     override val reservoirLevel: PumpInsulin = PumpInsulin(0.0)
     override val batteryLevel: Int? = null
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)

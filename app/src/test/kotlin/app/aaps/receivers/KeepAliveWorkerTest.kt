@@ -74,6 +74,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             it.localAlertUtils = localAlertUtils
             it.workManager = workManager
             it.rh = rh
+            it.ch = ch
         }
 
     @Test

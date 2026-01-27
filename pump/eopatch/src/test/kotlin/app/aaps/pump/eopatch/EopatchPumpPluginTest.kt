@@ -157,7 +157,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
     fun `baseBasalRate should return 0 when not activated`() {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
-        assertThat(plugin.baseBasalRate).isWithin(0.001).of(0.0)
+        assertThat(plugin.baseBasalRate.cU).isWithin(0.001).of(0.0)
     }
 
     @Test
@@ -169,7 +169,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         patchState.update(bytes, System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
-        assertThat(plugin.baseBasalRate).isWithin(0.001).of(0.0)
+        assertThat(plugin.baseBasalRate.cU).isWithin(0.001).of(0.0)
     }
 
     @Test
