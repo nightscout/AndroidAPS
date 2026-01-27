@@ -905,10 +905,10 @@ class ComboV2Plugin @Inject constructor(
     @OptIn(ExperimentalTime::class)
     override val lastBolusTime: Long? get() = lastBolusUIFlow.value?.timestamp?.toEpochMilliseconds()
     override val lastBolusAmount: PumpInsulin? get() = lastBolusUIFlow.value?.bolusAmount?.cctlBolusToIU()?.let { PumpInsulin(it) }
-    override val baseBasalRate: Double
+    override val baseBasalRate: PumpRate
         get() {
             val currentHour = DateTime().hourOfDay().get()
-            return activeBasalProfile?.get(currentHour)?.cctlBasalToIU() ?: 0.0
+            return PumpRate(activeBasalProfile?.get(currentHour)?.cctlBasalToIU() ?: 0.0)
         }
 
     // Store the levels as plain properties. That way, the last reported
@@ -1123,7 +1123,7 @@ class ComboV2Plugin @Inject constructor(
         // Corner case: Current base basal rate is 0 IU. We cannot do
         // anything then, otherwise we get into a division by zero below
         // when converting absoluteRate to a percentage.
-        if (baseBasalRate == 0.0) {
+        if (baseBasalRate.cU == 0.0) {
             pumpEnactResult.apply {
                 success = false
                 enacted = false
@@ -1137,8 +1137,8 @@ class ComboV2Plugin @Inject constructor(
         // and the percentage must be an integer multiple
         // of 10, otherwise the Combo won't accept it.
 
-        val percentage = absoluteRate / baseBasalRate * 100
-        val roundedPercentage = ((absoluteRate / baseBasalRate * 10).roundToInt() * 10)
+        val percentage = absoluteRate / baseBasalRate.cU * 100
+        val roundedPercentage = ((absoluteRate / baseBasalRate.cU * 10).roundToInt() * 10)
         val limitedPercentage = min(roundedPercentage, _pumpDescription.maxTempPercent)
 
         aapsLogger.debug(LTag.PUMP, "Calculated percentage of $percentage% out of absolute rate $absoluteRate; rounded to: $roundedPercentage%; limited to: $limitedPercentage%")

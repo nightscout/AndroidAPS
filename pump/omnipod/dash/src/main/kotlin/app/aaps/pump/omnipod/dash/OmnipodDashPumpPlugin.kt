@@ -528,15 +528,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override val lastBolusTime: Long? get() = podStateManager.lastBolus?.startTime
     override val lastBolusAmount: PumpInsulin? get() = podStateManager.lastBolus?.requestedUnits?.let { PumpInsulin(it) }
     override val lastDataTime: Long get() = podStateManager.lastUpdatedSystem
-    override val baseBasalRate: Double
+    override val baseBasalRate: PumpRate
         get() {
             val date = System.currentTimeMillis()
             val ret = podStateManager.basalProgram?.rateAt(date) ?: 0.0
             aapsLogger.info(LTag.PUMP, "baseBasalRate: $ret at $date}")
-            return if (podStateManager.alarmType != null) {
-                0.0
-            } else
-                ret
+            return PumpRate(
+                if (podStateManager.alarmType != null) {
+                    0.0
+                } else
+                    ret
+            )
         }
 
     override val reservoirLevel: PumpInsulin

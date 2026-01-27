@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
@@ -297,7 +298,7 @@ class DanaRSPlugin @Inject constructor(
     override val lastDataTime get() = danaPump.lastConnection
     override val lastBolusTime get() = danaPump.lastBolusTime
     override val lastBolusAmount get() = PumpInsulin(danaPump.lastBolusAmount)
-    override val baseBasalRate get() = danaPump.currentBasal
+    override val baseBasalRate get() = PumpRate(danaPump.currentBasal)
     override val reservoirLevel get() = PumpInsulin(danaPump.reservoirRemainingUnits)
     override val batteryLevel get() = danaPump.batteryRemaining
 
@@ -347,14 +348,14 @@ class DanaRSPlugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        var doTempOff = baseBasalRate - absoluteRate == 0.0
-        val doLowTemp = absoluteRate < baseBasalRate
-        val doHighTemp = absoluteRate > baseBasalRate
+        var doTempOff = baseBasalRate.cU - absoluteRate == 0.0
+        val doLowTemp = absoluteRate < baseBasalRate.cU
+        val doHighTemp = absoluteRate > baseBasalRate.cU
 
         var percentRate = 0
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate >= 0.10) {
-            percentRate = java.lang.Double.valueOf(absoluteRate / baseBasalRate * 100).toInt()
+            percentRate = java.lang.Double.valueOf(absoluteRate / baseBasalRate.cU * 100).toInt()
         } else {
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
         }

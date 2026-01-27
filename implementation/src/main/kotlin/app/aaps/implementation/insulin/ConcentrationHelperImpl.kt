@@ -25,7 +25,7 @@ class ConcentrationHelperImpl @Inject constructor(
 
     override fun fromPump(amount: PumpInsulin): Double = amount.iU(concentration)
 
-    //override fun toPump(profile: EffectiveProfile): Profile = profile.toPump()
+    override fun fromPump(rate: PumpRate): Double = rate.iU(concentration, true)
 
     override fun basalRateString(rate: PumpRate, isAbsolute: Boolean): String {
         if (isAbsolute.not())

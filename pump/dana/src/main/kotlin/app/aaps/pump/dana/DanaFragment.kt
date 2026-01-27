@@ -230,7 +230,7 @@ class DanaFragment : DaggerFragment() {
 
         binding.dailyUnits.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
         warnColors.setColor(binding.dailyUnits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
-        binding.baseBasalRate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, plugin.baseBasalRate)
+        binding.baseBasalRate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, plugin.baseBasalRate.cU)
         // DanaRPlugin, DanaRKoreanPlugin
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()

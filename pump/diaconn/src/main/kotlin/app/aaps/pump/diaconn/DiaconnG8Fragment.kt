@@ -189,7 +189,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
         binding.dailyunits.text = rh.gs(R.string.reservoir_value, todayInsulinAmount, todayInsulinLimitAmount)
         warnColors.setColor(binding.dailyunits, todayInsulinAmount, todayInsulinLimitAmount * 0.75, todayInsulinLimitAmount * 0.9)
-        binding.basabasalrate.text = pump.baseInjAmount.toString() + " / " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate)
+        binding.basabasalrate.text = pump.baseInjAmount.toString() + " / " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate.cU)
 
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()

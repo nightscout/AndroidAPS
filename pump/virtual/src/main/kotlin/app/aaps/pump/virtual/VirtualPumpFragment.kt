@@ -109,7 +109,7 @@ class VirtualPumpFragment : DaggerFragment() {
     private fun updateGui() {
         if (_binding == null) return
         val profile = pumpSync.expectedPumpState().profile ?: return
-        binding.baseBasalRate.text = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate)
+        binding.baseBasalRate.text = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate.cU)
         binding.tempbasal.text = runBlocking { persistenceLayer.getTemporaryBasalActiveAt(dateUtil.now()) }?.toStringFull(profile, dateUtil, rh)
             ?: ""
         binding.extendedbolus.text = runBlocking { persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) }?.toStringFull(dateUtil, rh)

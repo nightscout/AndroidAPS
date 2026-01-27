@@ -323,7 +323,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // base basal rate
         binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
-            + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, medtronicPumpPlugin.baseBasalRate))
+            + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, medtronicPumpPlugin.baseBasalRate.cU))
 
         // TBR
         var tbrStr = ""

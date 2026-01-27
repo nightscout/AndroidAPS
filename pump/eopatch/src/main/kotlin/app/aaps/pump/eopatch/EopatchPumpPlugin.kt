@@ -286,10 +286,11 @@ class EopatchPumpPlugin @Inject constructor(
     override val lastDataTime: Long get() = mLastDataTime
     override val lastBolusTime: Long? get() = null
     override val lastBolusAmount: PumpInsulin? get() = null
-    override val baseBasalRate: Double
-        get() =
+    override val baseBasalRate: PumpRate
+        get() = PumpRate(
             if (!patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused) 0.0
             else normalBasalManager.normalBasal.getCurrentSegment()?.doseUnitPerHour?.toDouble() ?: 0.05
+        )
     override val reservoirLevel: PumpInsulin get() = PumpInsulin(if (!patchConfig.isActivated) 0.0 else preferenceManager.patchState.remainedInsulin.toDouble())
     override val batteryLevel: Int? get() = if (patchConfig.isActivated) preferenceManager.patchState.batteryLevel() else null
 

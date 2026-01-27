@@ -208,11 +208,11 @@ class DanaRPlugin @Inject constructor(
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         var result = pumpEnactResultProvider.get()
-        var doTempOff = baseBasalRate - absoluteRate == 0.0 && absoluteRate >= 0.10
-        val doLowTemp = absoluteRate < baseBasalRate || absoluteRate < 0.10
-        val doHighTemp = absoluteRate > baseBasalRate && !preferences.get(DanaBooleanKey.UseExtended)
-        val doExtendedTemp = absoluteRate > baseBasalRate && preferences.get(DanaBooleanKey.UseExtended)
-        var percentRate = (absoluteRate / baseBasalRate * 100).toInt()
+        var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
+        val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
+        val doHighTemp = absoluteRate > baseBasalRate.cU && !preferences.get(DanaBooleanKey.UseExtended)
+        val doExtendedTemp = absoluteRate > baseBasalRate.cU && preferences.get(DanaBooleanKey.UseExtended)
+        var percentRate = (absoluteRate / baseBasalRate.cU * 100).toInt()
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10) percentRate = 0
         percentRate =
@@ -280,7 +280,7 @@ class DanaRPlugin @Inject constructor(
             // Calculate # of halfHours from minutes
             val durationInHalfHours = max(durationInMinutes / 30, 1)
             // We keep current basal running so need to sub current basal
-            var extendedRateToSet = absoluteRate - baseBasalRate
+            var extendedRateToSet = absoluteRate - baseBasalRate.cU
             // needs to be rounded to 0.1
             extendedRateToSet = roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2) // *2 because of half hours
 
@@ -308,7 +308,7 @@ class DanaRPlugin @Inject constructor(
                 return result
             }
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus set ok")
-            result.absolute(result.absolute + baseBasalRate)
+            result.absolute(result.absolute + baseBasalRate.cU)
             return result
         }
         // We should never end here

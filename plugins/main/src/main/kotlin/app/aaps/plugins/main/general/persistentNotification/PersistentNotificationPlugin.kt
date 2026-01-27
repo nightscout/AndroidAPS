@@ -9,6 +9,7 @@ import androidx.core.app.RemoteInput
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -56,7 +57,8 @@ class PersistentNotificationPlugin @Inject constructor(
     private val iconsProvider: IconsProvider,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val config: Config,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val ch: ConcentrationHelper
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -162,8 +164,8 @@ class PersistentNotificationPlugin @Inject constructor(
                 ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
                 ).generateCOBString(decimalFormatter) + "."
-            line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, pump.baseBasalRate)
-            var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, pump.baseBasalRate) + "."
+            line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate))
+            var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + "."
             line3 += " - " + profileFunction.getProfileName()
             line3aa += " - " + profileFunction.getProfileName() + "."
             /// For Android Auto
