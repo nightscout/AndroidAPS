@@ -526,10 +526,11 @@ class OmnipodErosPumpPlugin @Inject constructor(
     override val lastBolusAmount: PumpInsulin? get() = null
     override val lastDataTime: Long get() = if (podStateManager.isPodInitialized) podStateManager.lastSuccessfulCommunication.millis else 0
 
-    override val baseBasalRate: Double
-        get() =
+    override val baseBasalRate: PumpRate
+        get() = PumpRate(
             if (!podStateManager.isPodRunning) 0.0
             else podStateManager.basalSchedule?.rateAt(TimeUtil.toDuration(DateTime.now())) ?: 0.0
+        )
 
     override val reservoirLevel: PumpInsulin
         get() = PumpInsulin(

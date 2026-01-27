@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.actions.CustomAction
@@ -298,7 +299,7 @@ class DiaconnG8Plugin @Inject constructor(
     override val lastBolusTime: Long get() = diaconnG8Pump.lastBolusTime
     override val lastBolusAmount: PumpInsulin get() = PumpInsulin(diaconnG8Pump.lastBolusAmount)
     override val lastDataTime: Long get() = diaconnG8Pump.lastConnection
-    override val baseBasalRate: Double get() = diaconnG8Pump.baseAmount
+    override val baseBasalRate: PumpRate get() = PumpRate(diaconnG8Pump.baseAmount)
     override val reservoirLevel: PumpInsulin get() = PumpInsulin(diaconnG8Pump.systemRemainInsulin)
     override val batteryLevel: Int? get() = diaconnG8Pump.systemRemainBattery
 
@@ -332,9 +333,9 @@ class DiaconnG8Plugin @Inject constructor(
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        val doTempOff = baseBasalRate - absoluteRate == 0.0
-        val doLowTemp = absoluteRate < baseBasalRate
-        val doHighTemp = absoluteRate > baseBasalRate
+        val doTempOff = baseBasalRate.cU - absoluteRate == 0.0
+        val doLowTemp = absoluteRate < baseBasalRate.cU
+        val doHighTemp = absoluteRate > baseBasalRate.cU
         if (doTempOff) {
             // If temp in progress
             if (diaconnG8Pump.isTempBasalInProgress) {
@@ -343,7 +344,7 @@ class DiaconnG8Plugin @Inject constructor(
             }
             result.success = true
             result.enacted = false
-            result.absolute = baseBasalRate
+            result.absolute = baseBasalRate.cU
             result.isPercent = false
             result.isTempCancel = true
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK")

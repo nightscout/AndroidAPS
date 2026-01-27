@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.fillFor
@@ -208,10 +209,10 @@ abstract class PumpPluginAbstract protected constructor(
         get() = if (pumpStatusData.lastBolusTime==null) null else pumpStatusData.lastBolusTime!!.time
 
     // base basal rate, not temp basal
-    override val baseBasalRate: Double
+    override val baseBasalRate: PumpRate
         get() {
             aapsLogger.debug(LTag.PUMP, "getBaseBasalRate [PumpPluginAbstract] - Not implemented.")
-            return 0.0
+            return PumpRate(0.0)
         }
 
     override fun stopBolusDelivering() {

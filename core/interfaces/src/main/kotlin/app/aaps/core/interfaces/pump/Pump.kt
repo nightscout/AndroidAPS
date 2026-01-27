@@ -115,7 +115,7 @@ interface Pump {
      * This _must not_ be affected by current pump states
      * (TBRs, pump suspended/running etc.)
      */
-    val baseBasalRate: Double
+    val baseBasalRate: PumpRate
 
     /**
      * Reservoir level at time of last connection [Units of insulin]

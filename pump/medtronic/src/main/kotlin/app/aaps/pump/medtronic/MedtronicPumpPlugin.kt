@@ -582,8 +582,8 @@ class MedtronicPumpPlugin @Inject constructor(
         } else System.currentTimeMillis()
     }
 
-    override val baseBasalRate: Double
-        get() = medtronicPumpStatus.basalProfileForHour
+    override val baseBasalRate: PumpRate
+        get() = PumpRate(medtronicPumpStatus.basalProfileForHour)
 
     override val reservoirLevel: PumpInsulin
         get() = PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits)

@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -133,6 +134,7 @@ class DataHandlerMobile @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val pumpStatusProvider: PumpStatusProvider,
+    private val ch: ConcentrationHelper,
     @ApplicationScope private val appScope: CoroutineScope
 ) {
 
@@ -555,8 +557,8 @@ class DataHandlerMobile @Inject constructor(
                     // Calculate remaining duration
                     val remainingMin = ((currentTbr.end - dateUtil.now()) / 60000).toInt()
 
-                    val percentValue = if (activePlugin.activePump.baseBasalRate > 0) {
-                        ((rate / activePlugin.activePump.baseBasalRate) * 100).toInt()
+                    val percentValue = if (ch.fromPump(activePlugin.activePump.baseBasalRate) > 0) {
+                        ((rate / ch.fromPump(activePlugin.activePump.baseBasalRate)) * 100).toInt()
                     } else 0
 
                     aapsLogger.debug(LTag.WEAR, "Let temp run - rate: $rate U/h ($percentValue%), remaining: $remainingMin min")
@@ -570,8 +572,8 @@ class DataHandlerMobile @Inject constructor(
                 // Normal case - show the new requested values
                 val percentValue = if (result.usePercent) {
                     result.percent
-                } else if (activePlugin.activePump.baseBasalRate > 0) {
-                    ((constrainedRate / activePlugin.activePump.baseBasalRate) * 100).toInt()
+                } else if (ch.fromPump(activePlugin.activePump.baseBasalRate) > 0) {
+                    ((constrainedRate / ch.fromPump(activePlugin.activePump.baseBasalRate)) * 100).toInt()
                 } else null
 
                 // For AAPSClient, use current TBR rate if available, otherwise use constrained rate
@@ -1642,7 +1644,7 @@ class DataHandlerMobile @Inject constructor(
             } else if (result.rate == 0.0 && result.duration == 0) {
                 rh.gs(app.aaps.core.ui.R.string.cancel_temp) + "\n"
             } else {
-                rh.gs(R.string.rate_duration, result.rate, result.rate / activePlugin.activePump.baseBasalRate * 100, result.duration) + "\n"
+                rh.gs(R.string.rate_duration, result.rate, result.rate / ch.fromPump(activePlugin.activePump.baseBasalRate) * 100, result.duration) + "\n"
             }
             ret += "\n" + rh.gs(app.aaps.core.ui.R.string.reason) + ": " + result.reason
             return ret

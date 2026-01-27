@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
@@ -346,7 +347,7 @@ class MedtrumPlugin @Inject constructor(
     override val lastDataTime: Long get() = medtrumPump.lastConnection
     override val lastBolusTime: Long get() = medtrumPump.lastBolusTime
     override val lastBolusAmount: PumpInsulin get() = PumpInsulin(medtrumPump.lastBolusAmount)
-    override val baseBasalRate: Double get() = medtrumPump.baseBasalRate
+    override val baseBasalRate: PumpRate get() = PumpRate(medtrumPump.baseBasalRate)
     override val reservoirLevel: PumpInsulin get() = PumpInsulin(medtrumPump.reservoir)
     override val batteryLevel: Int? = null // We cannot determine battery level (yet)
 

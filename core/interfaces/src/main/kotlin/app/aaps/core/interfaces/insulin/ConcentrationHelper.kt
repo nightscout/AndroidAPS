@@ -18,6 +18,14 @@ interface ConcentrationHelper {
     fun fromPump(amount: PumpInsulin): Double
 
     /**
+     * Convert concentrated absolute rate received from pump to IU using current concentration (conversion managed within PumpRate)
+     *
+     * @param rate PumpRate
+     * @return Double (concerted value in IU)
+     */
+    fun fromPump(rate: PumpRate): Double
+
+    /**
      * Convert EffectiveProfile defined in IU to Profile (in CU) sent to pump with current concentration
      * TBC if needed
      */

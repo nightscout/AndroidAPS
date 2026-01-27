@@ -479,10 +479,10 @@ class InsightPlugin @Inject constructor(
     override val lastDataTime: Long get() = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
     override val lastBolusTime: Long get() = lastBolusTimestamp
 
-    override val baseBasalRate: Double
+    override val baseBasalRate: PumpRate
         get() {
-            if (connectionService == null || alertService == null) return 0.0
-            return activeBasalRate?.activeBasalRate ?: 0.0
+            if (connectionService == null || alertService == null) return PumpRate(0.0)
+            return PumpRate(activeBasalRate?.activeBasalRate ?: 0.0)
         }
     override val reservoirLevel: PumpInsulin get() = PumpInsulin(cartridgeStatus?.remainingAmount ?: 0.0)
     override val batteryLevel: Int? get() = batteryStatus?.batteryAmount
@@ -615,7 +615,7 @@ class InsightPlugin @Inject constructor(
                         val cancelTBRResult = cancelTempBasalOnly()
                         if (cancelTBRResult.success) {
                             val ebResult = setExtendedBolusOnly(
-                                (absoluteRate - baseBasalRate) / 60.0 * durationInMinutes.toDouble(), durationInMinutes,
+                                (absoluteRate - baseBasalRate.cU) / 60.0 * durationInMinutes.toDouble(), durationInMinutes,
                                 preferences.get(InsightBooleanKey.DisableVibrationAuto)
                             )
                             if (ebResult.success) {

@@ -101,7 +101,7 @@ class PumpStatusProviderImpl @Inject constructor(
             .putIfThereIsValue("ExtendedBolusAbsoluteRate", expectedPumpState.extendedBolus?.rate)
             .putIfThereIsValue("ExtendedBolusStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.extendedBolus?.timestamp))
             .putIfThereIsValue("ExtendedBolusRemaining", expectedPumpState.extendedBolus?.plannedRemainingMinutes)
-            .putIfThereIsValue("BaseBasalRate", pump.baseBasalRate)
+            .putIfThereIsValue("BaseBasalRate", pump.baseBasalRate.iU(profile.insulinConcentration(), true))
             .put("ActiveProfile", profileFunction.getProfileName())
 
         // grab more values from pump if provided
