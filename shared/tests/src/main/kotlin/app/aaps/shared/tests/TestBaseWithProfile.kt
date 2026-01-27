@@ -24,6 +24,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -219,7 +221,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(preferences.observe(any<LongNonPreferenceKey>())).thenReturn(MutableStateFlow(0L))
         whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
         deltaCalculator = DeltaCalculator(aapsLogger)
-        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider) }
+        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
@@ -356,7 +358,10 @@ open class TestBaseWithProfile : TestBase() {
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
 
         whenever(ch.bolusProgressString(any())).thenReturn("AnyString")
-        whenever(ch.fromPump(any())).thenReturn(0.0)
+        whenever(ch.fromPump(any<PumpRate>())).thenAnswer { invocation ->
+            (invocation.arguments[0] as PumpRate).cU }
+        whenever(ch.fromPump(any<PumpInsulin>())).thenAnswer { invocation ->
+            (invocation.arguments[0] as PumpInsulin).cU }
     }
 
     @AfterEach
