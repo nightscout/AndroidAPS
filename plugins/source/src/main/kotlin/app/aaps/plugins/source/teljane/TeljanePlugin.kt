@@ -1,6 +1,7 @@
 package app.aaps.plugins.source.teljane
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -31,6 +32,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TeljanePlugin @Inject constructor(
+    private val application: Application,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences
@@ -47,6 +49,19 @@ class TeljanePlugin @Inject constructor(
     aapsLogger, rh, preferences
 ), BgSource {
 
+    private fun appContext(): Context = application.applicationContext
+
+    // PluginBase calls these when enabled/disabled via setPluginEnabled()
+    override fun onStart() {
+        super.onStart()
+        TeljaneStaleCheckWorker.ensureScheduled(appContext(), enabled = true)
+    }
+
+    override fun onStop() {
+        TeljaneStaleCheckWorker.cancel(appContext())
+        super.onStop()
+    }
+
     // cannot be inner class because of needed injection
     class TeljaneWorker(
         context: Context,
@@ -60,6 +75,50 @@ class TeljanePlugin @Inject constructor(
         private fun readDouble(json: JSONObject, vararg keys: String): Double {
             for (k in keys) if (json.has(k) && !json.isNull(k)) return json.getDouble(k)
             throw JSONException("Missing glucose value field among: ${keys.joinToString()}")
+        }
+
+        /**
+         * Teljane sends sgvId as a 13-digit string.
+         * We store it as Long in AAPS.
+         */
+        private fun parseSgvId(json: JSONObject): Long? {
+            val v = json.optString("sgvId", null)?.trim()
+            if (v.isNullOrEmpty() || v.length != TELJANE_SGVID_DIGITS || !v.all { it.isDigit() }) return null
+            return v.toLongOrNull()
+        }
+
+        /**
+         * Teljane mark:
+         * - accepts any mark >= 0
+         * - must be 5 digits max (<= 99999)
+         * - if > 99999: log debug and fallback to 6048
+         * - if missing/null or invalid: return null (device-level fallback handled elsewhere)
+         */
+        private fun parseSgvMark(json: JSONObject): Int? {
+            if (!json.has("sgvMark") || json.isNull("sgvMark")) return null
+
+            // can be int or string in vendor payloads
+            val mark: Int? = try {
+                when (val any = json.get("sgvMark")) {
+                    is Number -> any.toInt()
+                    is String -> any.trim().toIntOrNull()
+                    else -> null
+                }
+            } catch (_: Throwable) { null }
+
+            // negative / unparseable -> treat as missing
+            if (mark == null || mark < 0) return null
+
+            if (mark > TELJANE_MARK_MAX) {
+                // do not reject the record; fallback to default for safety
+                aapsLogger.debug(
+                    LTag.BGSOURCE,
+                    "Teljane CGM: sgvMark out of range (> $TELJANE_MARK_MAX): $mark -> fallback=$TELJANE_MARK_FALLBACK"
+                )
+                return TELJANE_MARK_FALLBACK
+            }
+
+            return mark
         }
 
         private fun normalizeToMgdl(value: Double, raw: Double?, unitsStr: String?): Pair<Double, Double?> {
@@ -106,7 +165,11 @@ class TeljanePlugin @Inject constructor(
 
                     val direction = json.optString("direction", "Flat")
 
-                    glucoseValues += GV(
+                    // Teljane extras
+                    val sgvId = parseSgvId(json)      // Long?
+                    val sgvMark = parseSgvMark(json)  // Int? (or fallback if >99999)
+
+                    val gv = GV(
                         timestamp = ts,
                         value = mgdl,            // always mg/dL in GV.value
                         raw = rawMgdl,           // null or mg/dL
@@ -114,6 +177,11 @@ class TeljanePlugin @Inject constructor(
                         trendArrow = TrendArrow.fromString(direction),
                         sourceSensor = SourceSensor.TELJANE
                     )
+
+                    // Teljane extras saved into db
+                    gv.sgvId = sgvId
+                    gv.sgvMark = sgvMark
+                    glucoseValues += gv
                 }
 
                 persistenceLayer.insertCgmSourceData(Sources.Teljane, glucoseValues, emptyList(), null)
@@ -128,6 +196,12 @@ class TeljanePlugin @Inject constructor(
             }
 
             return ret
+        }
+
+        companion object {
+            private const val TELJANE_SGVID_DIGITS = 13
+            private const val TELJANE_MARK_MAX = 99_999
+            private const val TELJANE_MARK_FALLBACK = 6_048
         }
     }
 }

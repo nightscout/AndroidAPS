@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -59,6 +60,8 @@ open class AppModule {
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
+
+        @Binds fun bindApplication(mainApp: MainApp): Application
     }
 }
 

@@ -15,5 +15,8 @@ data class GV(
     var value: Double,
     var trendArrow: TrendArrow,
     var noise: Double?,
-    var sourceSensor: SourceSensor
+    var sourceSensor: SourceSensor,
+    // Teljane extra fields (nullable; only Teljane fills these)
+    var sgvId: Long? = null,
+    var sgvMark: Int? = null
 ) : HasIDs

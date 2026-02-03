@@ -17,7 +17,10 @@ fun GlucoseValue.fromDb(): GV =
         trendArrow = this.trendArrow.fromDb(),
         noise = this.noise,
         sourceSensor = this.sourceSensor.fromDb(),
-        ids = this.interfaceIDs.fromDb()
+        ids = this.interfaceIDs.fromDb(),
+        // Teljane extra fields
+        sgvId = this.sgvId,
+        sgvMark = this.sgvMark
     )
 
 fun GV.toDb(): GlucoseValue =
@@ -34,5 +37,8 @@ fun GV.toDb(): GlucoseValue =
         trendArrow = this.trendArrow.toDb(),
         noise = this.noise,
         sourceSensor = this.sourceSensor.toDb(),
-        interfaceIDs_backing = this.ids.toDb()
+        interfaceIDs_backing = this.ids.toDb(),
+        // Teljane extra fields
+        sgvId = this.sgvId,
+        sgvMark = this.sgvMark
     )

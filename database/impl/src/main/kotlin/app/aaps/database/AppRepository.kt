@@ -13,6 +13,7 @@ import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.StepsCount
+import app.aaps.database.entities.TeljaneScopeRow
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -819,6 +820,32 @@ class AppRepository @Inject internal constructor(
     fun getApsResults(start: Long, end: Long): Single<List<APSResult>> =
         database.apsResultDao.getApsResults(start, end)
             .subscribeOn(Schedulers.io())
+
+    // Teljane timer-check helpers (DB-layer only)
+    // NOTE: AppRepository is in :database layer, so it must NOT depend on core-interfaces.
+    // It returns TeljaneScopeRow, and mapping to PersistenceLayer.TeljaneScope happens in PersistenceLayerImpl.
+    fun getLatestTeljaneDeviceIdPrefix(): Maybe<Long> =
+        database.glucoseValueDao.getLatestDeviceIdPrefix(GlucoseValue.SourceSensor.TELJANE)
+
+    fun getTeljaneScope(devicePrefix: Long): Maybe<TeljaneScopeRow> {
+        val deviceStart = devicePrefix * 100000L
+        val deviceEnd = deviceStart + 99999L // only to bound the device prefix range
+        return Maybe.fromCallable {
+            database.glucoseValueDao.getTeljaneScope(
+                sourceSensor = GlucoseValue.SourceSensor.TELJANE,
+                deviceStart = deviceStart,
+                deviceEnd = deviceEnd
+            )
+        }
+    }
+
+    fun getFirstMissingTeljaneMark(deviceStart: Long, minMark: Int, endMark: Int): Maybe<Int> =
+        database.glucoseValueDao.getFirstMissingMark(
+            sourceSensor = GlucoseValue.SourceSensor.TELJANE,
+            deviceStart = deviceStart,
+            minMark = minMark,
+            endMark = endMark
+        )
 
 }
 

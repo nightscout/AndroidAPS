@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.AppRepository
 import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.TeljaneScopeRow
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.persistence.converters.fromDb
 import app.aaps.database.persistence.converters.toDb
@@ -1957,4 +1958,31 @@ class PersistenceLayerImpl @Inject constructor(
                 }
                 transactionResult
             }
+
+    // Teljane timer-check helper
+    override fun getLatestTeljaneDeviceIdPrefix(): Maybe<Long> =
+        repository.getLatestTeljaneDeviceIdPrefix()
+
+    override fun getTeljaneScope(devicePrefix: Long): Maybe<PersistenceLayer.TeljaneScope> =
+        repository.getTeljaneScope(devicePrefix)
+            .flatMap { row: TeljaneScopeRow ->
+                // DAO uses COALESCE, so "no rows" becomes sentinel -1 values.
+                if (row.minSgvId <= 0L || row.maxSgvId <= 0L || row.latestTimestamp <= 0L) {
+                    Maybe.empty()
+                } else {
+                    Maybe.just(
+                        PersistenceLayer.TeljaneScope(
+                            minSgvId = row.minSgvId,
+                            maxSgvId = row.maxSgvId,
+                            sgvMark = row.sgvMark, // can be -1 sentinel; worker handles fallback/log
+                            latestTimestamp = row.latestTimestamp
+                        )
+                    )
+                }
+            }
+
+    override fun findTeljaneFirstMissingMark(devicePrefix: Long, minMark: Int, endMark: Int): Maybe<Int> {
+        val deviceStart = devicePrefix * 100000L
+        return repository.getFirstMissingTeljaneMark(deviceStart, minMark, endMark)
+    }
 }

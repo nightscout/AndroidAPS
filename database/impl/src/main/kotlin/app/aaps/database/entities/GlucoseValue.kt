@@ -22,7 +22,12 @@ import java.util.TimeZone
         Index("nightscoutId"),
         Index("sourceSensor"),
         Index("referenceId"),
-        Index("timestamp")
+        Index("timestamp"),
+        // Teljane extra indexes
+        Index("sgvId"),
+        // IMPORTANT: Teljane sgvId is unique per sourceSensor -> enforce uniqueness in DB
+        Index(value = ["sourceSensor", "sgvId"], unique = true),
+        Index(value = ["sourceSensor", "timestamp"]) // helps latest-device lookup
     ]
 )
 data class GlucoseValue(
@@ -40,7 +45,11 @@ data class GlucoseValue(
     var value: Double,
     var trendArrow: TrendArrow,
     var noise: Double?,
-    var sourceSensor: SourceSensor
+    var sourceSensor: SourceSensor,
+
+    // Teljane extra fields
+    var sgvId: Long? = null,
+    var sgvMark: Int? = null
 ) : TraceableDBEntry, DBEntryWithTime {
 
     fun contentEqualsTo(other: GlucoseValue): Boolean =
@@ -51,7 +60,9 @@ data class GlucoseValue(
             value == other.value &&
             trendArrow == other.trendArrow &&
             noise == other.noise &&
-            sourceSensor == other.sourceSensor
+            sourceSensor == other.sourceSensor &&
+            sgvId == other.sgvId &&
+            sgvMark == other.sgvMark
 
     enum class TrendArrow {
         NONE,

@@ -202,7 +202,62 @@ open class DatabaseModule {
         }
     }
 
+    // Teljane extra fields migration
+    internal val migration31to32 = object : Migration(31, 32) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Teljane: add columns (sgvId stored as INTEGER/Long, sgvMark optional)
+            database.execSQL("ALTER TABLE `glucoseValues` ADD COLUMN `sgvId` INTEGER")
+            database.execSQL("ALTER TABLE `glucoseValues` ADD COLUMN `sgvMark` INTEGER")
+
+            // IMPORTANT:
+            // We must dedupe BEFORE creating the UNIQUE index (sourceSensor, sgvId),
+            // otherwise Room validation / index creation can fail if duplicates exist.
+            //
+            // Assumption: sourceSensor is stored as TEXT using enum name "TELJANE".
+            // If your DB stores another string, change TELJANE_DB_VALUE accordingly.
+            val TELJANE_DB_VALUE = "TELJANE"
+
+            // Dedupe only Teljane rows where sgvId is present and referenceId is NULL.
+            // Keep ONE row per (sourceSensor, sgvId) group:
+            //  - prefer a valid row (isValid=1) if any exists
+            //  - otherwise keep the smallest id
+            database.execSQL(
+                """
+            DELETE FROM glucoseValues
+            WHERE id IN (
+                SELECT id FROM glucoseValues
+                WHERE sourceSensor = '$TELJANE_DB_VALUE'
+                  AND sgvId IS NOT NULL
+                  AND referenceId IS NULL
+                  AND id NOT IN (
+                      SELECT MIN(id) FROM glucoseValues
+                      WHERE sourceSensor = '$TELJANE_DB_VALUE'
+                        AND sgvId IS NOT NULL
+                        AND referenceId IS NULL
+                        AND isValid = 1
+                      GROUP BY sgvId
+                      UNION
+                      SELECT MIN(id) FROM glucoseValues
+                      WHERE sourceSensor = '$TELJANE_DB_VALUE'
+                        AND sgvId IS NOT NULL
+                        AND referenceId IS NULL
+                      GROUP BY sgvId
+                  )
+            )
+            """.trimIndent()
+            )
+
+            // Teljane indexes for efficient lookups
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_glucoseValues_sgvId` ON `glucoseValues` (`sgvId`)")
+            // MUST be UNIQUE to match Room's expected schema (and to prevent future duplicates).
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_glucoseValues_sourceSensor_sgvId` ON `glucoseValues` (`sourceSensor`, `sgvId`)")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_glucoseValues_sourceSensor_timestamp` ON `glucoseValues` (`sourceSensor`, `timestamp`)")
+
+            dropCustomIndexes(database)
+        }
+    }
+
     /** List of all migrations for easy reply in tests. */
     @VisibleForTesting
-    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29, migration29to30, migration30to31)
+    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29, migration29to30, migration30to31, migration31to32)
 }

@@ -16,6 +16,35 @@ class CgmSourceTransaction(
     override fun run(): TransactionResult {
         val result = TransactionResult()
         glucoseValues.forEach { glucoseValue ->
+
+            /**
+             * Teljane-only uniqueness rule:
+             * - For Teljane, sgvId is the vendor unique id (per device scope).
+             * - We must NOT allow duplicate sgvId rows.
+             * - If (sourceSensor, sgvId) already exists -> SKIP (do NOT update).
+             *
+             * This relies on:
+             * - UNIQUE index (sourceSensor, sgvId)
+             * - GlucoseValueDao.insertTeljaneIfNew(...) using OnConflictStrategy.IGNORE
+             *
+             * Non-Teljane sources keep the original timestamp-based upsert logic unchanged.
+             */
+            val isTeljaneWithSgvId =
+                glucoseValue.sourceSensor == GlucoseValue.SourceSensor.TELJANE &&
+                    glucoseValue.sgvId != null
+
+            if (isTeljaneWithSgvId) {
+                val rowId = database.glucoseValueDao.insertTeljaneIfNew(glucoseValue)
+                if (rowId != -1L) {
+                    // Keep consistent with other inserts: set generated id and record as inserted
+                    glucoseValue.id = rowId
+                    result.inserted.add(glucoseValue)
+                }
+                // If rowId == -1, it was a duplicate (conflict) and was ignored.
+                // Per requirement: skip, do NOT update.
+                return@forEach
+            }
+
             val current = database.glucoseValueDao.findByTimestampAndSensor(glucoseValue.timestamp, glucoseValue.sourceSensor)
             // if nsId is not provided in new record, copy from current if exists
             if (glucoseValue.interfaceIDs.nightscoutId == null)

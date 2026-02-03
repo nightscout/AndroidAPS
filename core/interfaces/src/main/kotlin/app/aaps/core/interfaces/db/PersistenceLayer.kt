@@ -1442,4 +1442,27 @@ interface PersistenceLayer {
      */
     fun insertOrUpdateApsResult(apsResult: APSResult): Single<TransactionResult<APSResult>>
 
+    /**
+     * Teljane scope info for the latest device.
+     *
+     * DESIGN NOTE (why this exists even though DB has a similar type):
+     * - Plugins/workers depend on PersistenceLayer (core interface).
+     * - They must NOT depend on :database module types.
+     * - Therefore, we keep this public DTO here as the stable API contract.
+     *
+     * The DB module uses a separate projection (TeljaneScopeRow) because
+     * GlucoseValueDao cannot import core-interfaces without Gradle dependency changes.
+     */
+    data class TeljaneScope(
+        val minSgvId: Long,
+        val maxSgvId: Long,
+        val sgvMark: Int,          // -1 means missing in DB (abnormal)
+        val latestTimestamp: Long
+    )
+
+    fun getLatestTeljaneDeviceIdPrefix(): Maybe<Long>
+
+    fun getTeljaneScope(devicePrefix: Long): Maybe<TeljaneScope>
+
+    fun findTeljaneFirstMissingMark(devicePrefix: Long, minMark: Int, endMark: Int): Maybe<Int>
 }
