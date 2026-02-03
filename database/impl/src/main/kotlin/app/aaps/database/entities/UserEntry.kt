@@ -196,6 +196,7 @@ data class UserEntry(
         SyaiTag,            //From Syai Tag plugin
         SiBionic,
         Sino,
+        Teljane,            // From Teljane plugin
         Stats,              //From Stat Activity
         Aaps,               // MainApp
         BgFragment,

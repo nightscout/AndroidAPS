@@ -45,6 +45,7 @@ import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.SyaiPlugin
+import app.aaps.plugins.source.teljane.TeljanePlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.sync.garmin.GarminPlugin
@@ -450,6 +451,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(476)
     abstract fun bindPatchedSinoAppPlugin(plugin: PatchedSinoAppPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(477)
+    abstract fun bindTeljanePlugin(plugin: TeljanePlugin): PluginBase
 
     @Binds
     @AllConfigs

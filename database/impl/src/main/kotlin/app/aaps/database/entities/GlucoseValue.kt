@@ -101,7 +101,7 @@ data class GlucoseValue(
         SIBIONIC,
         SINO,
         SYAI_TAG,
-
+        TELJANE,
         IOB_PREDICTION,
         A_COB_PREDICTION,
         COB_PREDICTION,

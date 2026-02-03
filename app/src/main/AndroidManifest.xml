@@ -103,6 +103,8 @@
                 <action android:name="cn.diyaps.sharing.SI_APP" />
                 <!-- Receiver from patched Sino app -->
                 <action android:name="cn.diyaps.sharing.SINO_APP" />
+                <!-- Receiver from patched Teljane App (International, aka Instara) -->
+                <action android:name="info.nightscout.androidaps.action.Teljane_APP" />
             </intent-filter>
         </receiver>
 

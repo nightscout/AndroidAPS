@@ -78,6 +78,7 @@ enum class Sources {
     BgFragment,
     Garmin,
     Database,           // for PersistenceLayer
+    Teljane,            // From Teljane Plugin
     Unknown             //if necessary
     ;
 }
