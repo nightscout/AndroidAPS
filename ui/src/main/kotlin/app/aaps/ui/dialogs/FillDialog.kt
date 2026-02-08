@@ -138,7 +138,7 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
                 )
             if ((siteChange || insulinChange) && !ch.isU100()) {    // include concentration correction and volume information
                 insulinAfterConstraints = ch.fromPump(PumpInsulin(insulinAfterConstraints)) // For Prime/Fill, amount should be considered as CU so CU->IU is required
-                actions.add(rh.gs(R.string.fill_warning_concentration, ch.insulinConcentrationString(), insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+                actions.add(rh.gs(R.string.fill_warning_concentration, ch.insulinConcentrationString()).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
                 actions.add(
                     rh.gs(R.string.fill_warning_concentration2) + ": " + ch.bolusWithConvertedVolume(insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
                 )
