@@ -30,6 +30,10 @@ data class FillDialogUiState(
     val insulinAfterConstraints: Double = 0.0,
     val constraintApplied: Boolean = false,
 
+    // Computed after concentration
+    val insulinAfterConcentration: Double = 0.0,
+    val concentrationApplied: Boolean = false,
+
     // Config
     val showBolus: Boolean = true,
     val showNotesFromPreferences: Boolean = false,
