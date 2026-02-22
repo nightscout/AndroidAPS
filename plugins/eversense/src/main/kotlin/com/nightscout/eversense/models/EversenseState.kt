@@ -21,6 +21,7 @@ class EversenseState {
 
     var recentGlucoseDatetime: Long = 0
     var recentGlucoseValue: Int = 0
+    var lastGlucoseRaw: Int = 0
 
     var settings = EversenseTransmitterSettings()
 }

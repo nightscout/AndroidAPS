@@ -52,6 +52,7 @@ import com.nightscout.eversense.packets.e3.SetSettingRateFallingThresholdPacket
 import com.nightscout.eversense.packets.e3.SetSettingRateRisingEnabledPacket
 import com.nightscout.eversense.packets.e3.SetSettingRateRisingThresholdPacket
 import com.nightscout.eversense.packets.e3.SetSettingVibratePacket
+import com.nightscout.eversense.util.EselSmoothing
 import com.nightscout.eversense.util.EversenseLogger
 import com.nightscout.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
@@ -75,24 +76,30 @@ class EversenseE3Communicator {
 
             try {
                 EversenseLogger.debug(TAG, "Reading current glucose...")
-                val currentGlucose = gatt.writePacket<GetCurrentGlucosePacket.Response>(GetCurrentGlucosePacket())
-                if (currentGlucose.datetime <= state.recentGlucoseDatetime) {
-                    EversenseLogger.warning(TAG, "Glucose data is still recent after reading - currentReading: ${currentGlucose.datetime}, lastReading: ${state.recentGlucoseDatetime}")
+                val glucoseData = gatt.writePacket<GetCurrentGlucosePacket.Response>(GetCurrentGlucosePacket())
+                if (glucoseData.datetime <= state.recentGlucoseDatetime) {
+                    EversenseLogger.warning(TAG, "Glucose data is still recent after reading - currentReading: ${glucoseData.datetime}, lastReading: ${state.recentGlucoseDatetime}")
                     return
                 }
 
-                if (currentGlucose.glucoseInMgDl > 1000) {
-                    EversenseLogger.error(TAG, "recentGlucose exceeds range - received: ${currentGlucose.glucoseInMgDl}")
+                if (glucoseData.glucoseInMgDl > 1000) {
+                    EversenseLogger.error(TAG, "recentGlucose exceeds range - received: ${glucoseData.glucoseInMgDl}")
                     return
+                }
+
+                var currentGlucose = glucoseData.glucoseInMgDl
+                if (state.useSmoothing && state.recentGlucoseValue > 0 && state.lastGlucoseRaw > 0) {
+                    currentGlucose = EselSmoothing.smooth(currentGlucose, state.recentGlucoseValue, state.lastGlucoseRaw)
                 }
 
                 val result = mutableListOf<EversenseCGMResult>()
-                state.recentGlucoseDatetime = currentGlucose.datetime
-                state.recentGlucoseValue = currentGlucose.glucoseInMgDl
+                state.recentGlucoseDatetime = glucoseData.datetime
+                state.recentGlucoseValue = currentGlucose
+                state.lastGlucoseRaw = glucoseData.glucoseInMgDl
                 result += EversenseCGMResult(
-                    glucoseInMgDl = currentGlucose.glucoseInMgDl,
-                    datetime = currentGlucose.datetime,
-                    trend = currentGlucose.trend
+                    glucoseInMgDl = currentGlucose,
+                    datetime = glucoseData.datetime,
+                    trend = glucoseData.trend
                 )
 
                 // TODO: read history for backfill
