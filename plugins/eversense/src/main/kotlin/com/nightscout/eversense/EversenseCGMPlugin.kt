@@ -8,10 +8,12 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.ParcelUuid
+import androidx.core.content.edit
 import com.nightscout.eversense.callbacks.EversenseScanCallback
 import com.nightscout.eversense.callbacks.EversenseWatcher
 import com.nightscout.eversense.models.EversenseState
 import com.nightscout.eversense.models.EversenseTransmitterSettings
+import com.nightscout.eversense.packets.Eversense365Communicator
 import com.nightscout.eversense.packets.EversenseE3Communicator
 import com.nightscout.eversense.util.EversenseLogger
 import com.nightscout.eversense.util.EversenseScanner
@@ -39,8 +41,22 @@ class EversenseCGMPlugin {
         gattCallback = EversenseGattCallback(this, preference)
     }
 
+    fun setSmoothing(value: Boolean) {
+        val state = getCurrentState() ?: return
+        state.useSmoothing = value
+
+        preferences?.edit(commit = true) {
+            putString(StorageKeys.STATE, JSON.encodeToString(state))
+        }
+    }
+
+
     fun addWatcher(watcher: EversenseWatcher) {
         this.watchers += watcher
+    }
+
+    fun removeWatcher(watcher: EversenseWatcher) {
+        this.watchers -= watcher
     }
 
     fun isConnected(): Boolean {
@@ -58,7 +74,7 @@ class EversenseCGMPlugin {
         }
 
         val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
-        return Json.decodeFromString<EversenseState>(stateJson)
+        return JSON.decodeFromString<EversenseState>(stateJson)
     }
 
     @SuppressLint("MissingPermission")
@@ -99,7 +115,7 @@ class EversenseCGMPlugin {
 
         if (device != null) {
             EversenseLogger.info(TAG, "Connecting to ${device.name}")
-            device.connectGatt(context, true, gattCallback)
+            device.connectGatt(context, false, gattCallback)
             return true
         }
 
@@ -113,7 +129,7 @@ class EversenseCGMPlugin {
             return false
         }
 
-        remoteDevice.connectGatt(context, true, gattCallback)
+        remoteDevice.connectGatt(context, false, gattCallback)
         return true
     }
 
@@ -138,6 +154,8 @@ class EversenseCGMPlugin {
 
     companion object {
         private const val TAG = "EversenseCGMManager"
+
+        private val JSON = Json { ignoreUnknownKeys = true }
 
         val instance:EversenseCGMPlugin by lazy {
             EversenseCGMPlugin()

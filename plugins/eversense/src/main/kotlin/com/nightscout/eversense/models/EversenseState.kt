@@ -1,11 +1,21 @@
 package com.nightscout.eversense.models
 
+import com.nightscout.eversense.enums.CalibrationMode
+import com.nightscout.eversense.enums.CalibrationPhase
+import com.nightscout.eversense.enums.CalibrationReadiness
 import kotlinx.serialization.Serializable
 
 @Serializable
 class EversenseState {
     var lastSync: Long = 0
+    var useSmoothing: Boolean = false
     var insertionDate: Long = 0
+
+    var calibrationPhase: CalibrationPhase = CalibrationPhase.UNKNOWN
+    var calibrationReadiness: CalibrationReadiness = CalibrationReadiness.UNKNOWN
+    var calibrationMode: CalibrationMode = CalibrationMode.DEFAULT
+    var nextCalibrationDate: Long = 0
+    var lastCalibrationDate: Long = 0
 
     var batteryPercentage: Int = 0
 
@@ -23,13 +33,11 @@ class EversenseTransmitterSettings {
     var glucoseHighAlarmThreshold: Int = 250
     var glucoseLowAlarmThreshold: Int = 60
 
-    var rateAlarmEnabled: Boolean = true
     var rateFallingAlarmEnabled: Boolean = true
     var rateFallingAlarmThreshold: Double = 1.5
     var rateRisingAlarmEnabled: Boolean = true
     var rateRisingAlarmThreshold: Double = 1.5
 
-    var predictiveAlarmEnabled: Boolean = true
     var predictiveHighAlarmEnabled: Boolean = true
     var predictiveHighAlarmThreshold: Int = 180
     var predictiveHighAlarmMinutes: Int = 5

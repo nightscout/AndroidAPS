@@ -25,7 +25,7 @@ class EversenseLogger {
     private fun debug(tag: String, message: String) {
         if (!isEnabled) { return }
 
-        lc.getLogger(tag).info(logLocationPrefix() + message)
+        lc.getLogger(tag).debug(logLocationPrefix() + message)
     }
 
     private fun info(tag: String, message: String) {

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.content.edit
 import com.nightscout.eversense.models.EversenseSecureState
 import com.nightscout.eversense.packets.e365.utils.toByteArray
+import com.nightscout.eversense.packets.e365.utils.toLong
 import kotlinx.serialization.json.Json
 import org.bouncycastle.asn1.ASN1InputStream
 import org.bouncycastle.asn1.ASN1Integer
@@ -56,6 +57,12 @@ class EversenseCrypto365Util(val preference: SharedPreferences) {
         saveState(state, preference)
     }
 
+    fun disallowUseShortcut() {
+        val state = getState(preference)
+        state.canUseShortcut = false
+        saveState(state, preference)
+    }
+
     fun getClientPublicKey(): ByteArray {
         val state = getState(preference)
         return state.publicKey.hexToByteArray()
@@ -76,6 +83,11 @@ class EversenseCrypto365Util(val preference: SharedPreferences) {
         saveState(state, preference)
         EversenseLogger.debug(TAG, "Generated keypair!")
         return true
+    }
+
+    fun getClientId(): ByteArray {
+        val state = getState(preference)
+        return state.clientId.hexToByteArray()
     }
 
     fun getStartSecret(signature: ByteArray): ByteArray {
@@ -156,8 +168,8 @@ class EversenseCrypto365Util(val preference: SharedPreferences) {
         }
     }
 
-    fun encrypt(request: ByteArray): ByteArray {
-        val salt = ephemSalt ?:run {
+    fun encrypt(data: ByteArray): ByteArray {
+        val ephemSalt = ephemSalt ?:run {
             EversenseLogger.error(TAG, "No salt available...")
             return byteArrayOf()
         }
@@ -168,18 +180,36 @@ class EversenseCrypto365Util(val preference: SharedPreferences) {
         }
 
         val i = (messageSequenceNumber and 0x3FFF).toLong()
-        val s = (i shl 2).toShort().toByteArray()
+        val prefix = (i shl 2).toShort().toByteArray()
 
-        val wrapReversed = generateEncryptionSalt(salt, i)
+        val salt = generateEncryptionSalt(ephemSalt, i)
         messageSequenceNumber++
 
-        val encryptedData = aeadCCM(wrapReversed, request, s, true, sessionKey) ?: return byteArrayOf()
-
+        val encryptedData = aeadCCM(salt, data, prefix, true, sessionKey) ?: return byteArrayOf()
         return ByteBuffer.allocate(encryptedData.count() + 2).run {
-            put(s)
+            put(prefix)
             put(encryptedData)
             array()
         }
+    }
+
+    fun decrypt(response: ByteArray): ByteArray {
+        val ephemSalt = ephemSalt ?:run {
+            EversenseLogger.error(TAG, "No salt available...")
+            return byteArrayOf()
+        }
+
+        val sessionKey = sessionKey ?:run {
+            EversenseLogger.error(TAG, "No sessionKey available...")
+            return byteArrayOf()
+        }
+
+        val cypherText = response.copyOfRange(2, response.size)
+        val prefix = response.copyOfRange(0, 2)
+        val i = (prefix.toLong() shr 2) and 0x3FFF
+        val salt = generateEncryptionSalt(ephemSalt, i)
+
+        return aeadCCM(salt, cypherText, prefix, false, sessionKey) ?: byteArrayOf()
     }
 
     companion object {

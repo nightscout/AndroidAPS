@@ -37,7 +37,7 @@ abstract class EversenseBasePacket : Object() {
         receivedData += data
     }
 
-    fun buildRequest(cryptoUtil: EversenseCrypto365Util): ByteArray? {
+    fun buildRequest(cryptoUtil: EversenseCrypto365Util, payloadSize: Int): ByteArray? {
         val annotation = getAnnotation() ?:run {
             EversenseLogger.error("EversenseBasePacket", this.javaClass.name + " does not have the EversensePacket annotation...")
             return null
@@ -60,7 +60,7 @@ abstract class EversenseBasePacket : Object() {
                     requestData = cryptoUtil.encrypt(requestData)
                 }
 
-                return encodeMessage(requestData)
+                return encodeMessage(requestData, payloadSize)
             }
         }
     }
