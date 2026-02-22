@@ -10,10 +10,10 @@ import com.nightscout.eversense.packets.EversensePacket
     typeId = Eversense365Packets.AuthenticateWhoAmI,
     securityType = EversenseSecurityType.SecureV2
 )
-class AuthWhoAmIPacket : EversenseBasePacket() {
+class AuthWhoAmIPacket(private val clientId: ByteArray) : EversenseBasePacket() {
 
     override fun getRequestData(): ByteArray {
-        return byteArrayOf()
+        return clientId
     }
 
     override fun parseResponse(): Response? {

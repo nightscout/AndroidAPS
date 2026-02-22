@@ -65,7 +65,6 @@ class EversenseHttp365Util {
                 return Json.decodeFromString(LoginResponseModel.serializer(), dataJson)
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "Got exception during login - exception: $e")
-                e.printStackTrace()
                 return null
             }
         }
@@ -117,7 +116,6 @@ class EversenseHttp365Util {
                 return response
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "Failed to get fleetSecretV2 - exception: $e")
-                e.printStackTrace()
                 return null
             }
         }

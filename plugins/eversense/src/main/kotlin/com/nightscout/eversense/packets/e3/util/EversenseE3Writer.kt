@@ -3,6 +3,7 @@ package com.nightscout.eversense.packets.e3.util
 import java.util.Calendar
 import java.util.TimeZone
 import kotlin.math.PI
+import kotlin.math.abs
 
 class EversenseE3Writer {
     companion object {
@@ -56,7 +57,7 @@ class EversenseE3Writer {
             val timezoneOffset = TimeZone.getDefault().getOffset(timestamp)
             val timezoneNegative = if (timezoneOffset < 0) 255 else 0
 
-            return writeTime(timezoneOffset.toLong()) + byteArrayOf(timezoneNegative.toByte())
+            return writeTime(abs(timezoneOffset).toLong()) + byteArrayOf(timezoneNegative.toByte())
         }
 
         fun writeBoolean(value: Boolean): ByteArray {
