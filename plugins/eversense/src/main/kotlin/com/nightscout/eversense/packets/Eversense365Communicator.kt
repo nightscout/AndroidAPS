@@ -15,6 +15,7 @@ import com.nightscout.eversense.packets.e365.GetGlucoseDataPacket
 import com.nightscout.eversense.packets.e365.GetPatientSettingsPacket
 import com.nightscout.eversense.packets.e365.GetSensorInformationPacket
 import com.nightscout.eversense.packets.e365.SetCurrentDateTimePacket
+import com.nightscout.eversense.util.EselSmoothing
 import com.nightscout.eversense.util.EversenseLogger
 import com.nightscout.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
@@ -43,11 +44,17 @@ class Eversense365Communicator {
                 return
             }
 
+            var currentGlucose = glucoseData.glucoseInMgDl
+            if (state.useSmoothing && state.recentGlucoseValue > 0 && state.lastGlucoseRaw > 0) {
+                currentGlucose = EselSmoothing.smooth(currentGlucose, state.recentGlucoseValue, state.lastGlucoseRaw)
+            }
+
             val result = mutableListOf<EversenseCGMResult>()
             state.recentGlucoseDatetime = glucoseData.datetime
-            state.recentGlucoseValue = glucoseData.glucoseInMgDl
+            state.recentGlucoseValue = currentGlucose
+            state.lastGlucoseRaw = glucoseData.glucoseInMgDl
             result += EversenseCGMResult(
-                glucoseInMgDl = glucoseData.glucoseInMgDl,
+                glucoseInMgDl = currentGlucose,
                 datetime = glucoseData.datetime,
                 trend = glucoseData.trend
             )
