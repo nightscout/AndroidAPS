@@ -46,11 +46,11 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.DatePickerModal
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.TimePickerModal
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.DatePickerModal
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.ui.R
 import java.util.Calendar
 
@@ -311,11 +311,10 @@ fun ProfileActivationScreen(
 
             // Duration input - automatically formats as "Xh Ym" when >= 60
             NumberInputRow(
-                label = stringResource(app.aaps.core.ui.R.string.duration),
+                labelResId = app.aaps.core.ui.R.string.duration,
                 value = duration,
                 onValueChange = { duration = it },
-                minValue = 0.0,
-                maxValue = Constants.MAX_PROFILE_SWITCH_DURATION,
+                valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
                 step = 10.0,
                 controlPoints = listOf(
                     0.0 to 0.0,             // 0% slider -> 0h
@@ -331,11 +330,10 @@ fun ProfileActivationScreen(
 
             // Percentage input
             NumberInputRow(
-                label = stringResource(R.string.percentage_label),
+                labelResId = R.string.percentage_label,
                 value = percentage,
                 onValueChange = { percentage = it },
-                minValue = Constants.CPP_MIN_PERCENTAGE.toDouble(),
-                maxValue = Constants.CPP_MAX_PERCENTAGE.toDouble(),
+                valueRange = Constants.CPP_MIN_PERCENTAGE.toDouble()..Constants.CPP_MAX_PERCENTAGE.toDouble(),
                 step = 5.0,
                 unitLabelResId = app.aaps.core.keys.R.string.units_percent
             )
@@ -344,11 +342,10 @@ fun ProfileActivationScreen(
 
             // Timeshift input
             NumberInputRow(
-                label = stringResource(R.string.timeshift_label),
+                labelResId = R.string.timeshift_label,
                 value = timeshift,
                 onValueChange = { timeshift = it },
-                minValue = Constants.CPP_MIN_TIMESHIFT.toDouble(),
-                maxValue = Constants.CPP_MAX_TIMESHIFT.toDouble(),
+                valueRange = Constants.CPP_MIN_TIMESHIFT.toDouble()..Constants.CPP_MAX_TIMESHIFT.toDouble(),
                 step = 1.0,
                 unitLabelResId = app.aaps.core.keys.R.string.units_hours
             )

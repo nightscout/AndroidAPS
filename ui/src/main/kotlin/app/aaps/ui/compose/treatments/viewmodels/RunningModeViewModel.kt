@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -74,7 +75,7 @@ class RunningModeViewModel @Inject constructor(
                     it.copy(
                         runningModes = runningModes,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -82,7 +83,7 @@ class RunningModeViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading running modes"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading running modes")
                     )
                 }
             }
@@ -104,8 +105,8 @@ class RunningModeViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -201,7 +202,7 @@ class RunningModeViewModel @Inject constructor(
                 exitSelectionMode()
                 loadData()
             } catch (e: Exception) {
-                uiState.update { it.copy(error = e.message) }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting running modes")) }
             }
         }
     }
@@ -218,5 +219,5 @@ data class RunningModeUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<RM> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

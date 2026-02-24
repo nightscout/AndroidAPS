@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SliderWithButtons
 import app.aaps.core.ui.compose.pickers.HourWheelPicker
@@ -37,6 +38,7 @@ import java.text.DecimalFormat
 fun TimeValueList(
     title: String,
     entries: List<TimeValue>,
+    dateUtil: DateUtil,
     onEntryChange: (Int, TimeValue) -> Unit,
     onAddEntry: (Int) -> Unit,
     onRemoveEntry: (Int) -> Unit,
@@ -70,6 +72,7 @@ fun TimeValueList(
                 index = index,
                 timeSeconds = entry.timeSeconds,
                 value = entry.value,
+                dateUtil = dateUtil,
                 onTimeClick = {
                     editingIndex = index
                     showTimePicker = true
@@ -102,6 +105,7 @@ fun TimeValueList(
                 HourWheelPicker(
                     selectedHour = currentHour,
                     availableHours = availableHours,
+                    dateUtil = dateUtil,
                     onHourSelected = { hour ->
                         currentEntry?.let { entry ->
                             onEntryChange(editingIndex, entry.copy(timeSeconds = hour * 3600))
@@ -126,6 +130,7 @@ private fun TimeValueRow(
     index: Int,
     timeSeconds: Int,
     value: Double,
+    dateUtil: DateUtil,
     onTimeClick: () -> Unit,
     onValueChange: (Double) -> Unit,
     onRemove: () -> Unit,
@@ -137,8 +142,8 @@ private fun TimeValueRow(
     step: Double,
     valueFormat: DecimalFormat
 ) {
-    val hour = timeSeconds / 3600
-    val timeString = String.format("%02d:00", hour)
+    timeSeconds / 3600
+    val timeString = dateUtil.timeStringFromSeconds(timeSeconds)
 
     Column {
         Row(
@@ -210,6 +215,7 @@ fun TargetValueList(
     title: String,
     lowEntries: List<TimeValue>,
     highEntries: List<TimeValue>,
+    dateUtil: DateUtil,
     onEntryChange: (Int, TimeValue, TimeValue) -> Unit,
     onAddEntry: (Int) -> Unit,
     onRemoveEntry: (Int) -> Unit,
@@ -241,6 +247,7 @@ fun TargetValueList(
                 timeSeconds = low.timeSeconds,
                 lowValue = low.value,
                 highValue = high.value,
+                dateUtil = dateUtil,
                 onTimeClick = {
                     editingIndex = index
                     showTimePicker = true
@@ -277,6 +284,7 @@ fun TargetValueList(
                 HourWheelPicker(
                     selectedHour = currentHour,
                     availableHours = availableHours,
+                    dateUtil = dateUtil,
                     onHourSelected = { hour ->
                         val low = lowEntries.getOrNull(editingIndex)
                         val high = highEntries.getOrNull(editingIndex)
@@ -308,6 +316,7 @@ private fun TargetValueRow(
     timeSeconds: Int,
     lowValue: Double,
     highValue: Double,
+    dateUtil: DateUtil,
     onTimeClick: () -> Unit,
     onLowValueChange: (Double) -> Unit,
     onHighValueChange: (Double) -> Unit,
@@ -320,8 +329,8 @@ private fun TargetValueRow(
     step: Double,
     valueFormat: DecimalFormat
 ) {
-    val hour = timeSeconds / 3600
-    val timeString = String.format("%02d:00", hour)
+    timeSeconds / 3600
+    val timeString = dateUtil.timeStringFromSeconds(timeSeconds)
 
     Column(
         modifier = Modifier

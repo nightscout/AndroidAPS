@@ -1,9 +1,11 @@
 package app.aaps.ui.compose.tempTarget
+
 import androidx.compose.runtime.Immutable
 
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
  * UI state for TempTargetManagementScreen
@@ -59,7 +61,7 @@ data class TempTargetManagementUiState(
     val isLoading: Boolean = true,
 
     /** Error message if loading/saving failed */
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )
 
 /**

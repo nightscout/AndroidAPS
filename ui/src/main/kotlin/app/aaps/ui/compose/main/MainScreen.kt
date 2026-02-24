@@ -3,7 +3,6 @@ package app.aaps.ui.compose.main
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.DrawerValue
@@ -13,6 +12,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -35,11 +35,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.OkDialog
-import app.aaps.core.ui.compose.QueryAnyPasswordDialog
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.ui.compose.alertDialogs.AboutAlertDialog
-import app.aaps.ui.compose.management.MaintenanceViewModel.ExportState
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
 import app.aaps.ui.compose.management.CloudDirectorySheet
 import app.aaps.ui.compose.management.ImportSource
@@ -47,6 +46,7 @@ import app.aaps.ui.compose.management.LogSettingBottomSheet
 import app.aaps.ui.compose.management.MaintenanceBottomSheet
 import app.aaps.ui.compose.management.MaintenanceEvent
 import app.aaps.ui.compose.management.MaintenanceViewModel
+import app.aaps.ui.compose.management.MaintenanceViewModel.ExportState
 import app.aaps.ui.compose.overview.OverviewScreen
 import app.aaps.ui.compose.overview.automation.AutomationActionItem
 import app.aaps.ui.compose.overview.automation.AutomationBottomSheet
@@ -333,9 +333,9 @@ fun MainScreen(
                 if (config.APS || config.PUMPCONTROL) {
                     val colors = AapsTheme.generalColors
                     val versionColor = when {
-                        config.COMMITTED                                                               -> colors.versionCommitted
+                        config.COMMITTED                                                          -> colors.versionCommitted
                         preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME) != 0L -> colors.versionWarning
-                        else                                                                           -> colors.versionUncommitted
+                        else                                                                      -> colors.versionUncommitted
                     }
                     Text(
                         text = "${config.VERSION_NAME} (${config.HEAD.substring(0, minOf(4, config.HEAD.length))})",
@@ -622,7 +622,8 @@ fun MainScreen(
             )
         }
 
-        is ExportState.Idle                  -> { /* no dialog */ }
+        is ExportState.Idle                  -> { /* no dialog */
+        }
     }
 
     // Cleanup result dialog (result contains HTML with <br> tags)

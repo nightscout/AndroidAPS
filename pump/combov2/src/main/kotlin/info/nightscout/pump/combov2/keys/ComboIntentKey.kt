@@ -8,6 +8,7 @@ import info.nightscout.pump.combov2.R
 enum class ComboIntentKey(
     override val key: String,
     override val titleResId: Int = 0,
+    override val confirmationMessageResId: Int? = null,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -32,6 +33,7 @@ enum class ComboIntentKey(
     UnpairPump(
         key = "combov2_unpair_pump",
         titleResId = R.string.combov2_unpair_pump_title,
+        confirmationMessageResId = R.string.combov2_unpair_pump_summary,
         enabledCondition = PreferenceEnabledCondition { ctx ->
             ctx.preferences.get(ComboStringNonKey.BtAddress).isNotEmpty()
         }

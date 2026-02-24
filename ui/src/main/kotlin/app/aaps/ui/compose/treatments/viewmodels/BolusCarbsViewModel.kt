@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.compose.treatments.MealLink
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -102,7 +103,7 @@ class BolusCarbsViewModel @Inject constructor(
                     it.copy(
                         mealLinks = mealLinks,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -110,7 +111,7 @@ class BolusCarbsViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading bolus/carbs data"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading bolus/carbs data")
                     )
                 }
             }
@@ -136,8 +137,8 @@ class BolusCarbsViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -261,7 +262,7 @@ class BolusCarbsViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete treatments", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting treatments") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting treatments")) }
             }
         }
     }
@@ -277,5 +278,5 @@ data class BolusCarbsUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<MealLink> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

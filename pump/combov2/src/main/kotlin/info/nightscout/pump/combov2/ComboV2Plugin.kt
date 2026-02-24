@@ -46,9 +46,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.withActivity
+import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.compose.preference.withDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
@@ -2236,11 +2236,7 @@ class ComboV2Plugin @Inject constructor(
         titleResId = R.string.combov2_title,
         items = listOf(
             ComboIntentKey.PairWithPump.withActivity(ComboV2PairingActivity::class.java),
-            ComboIntentKey.UnpairPump.withDialog(
-                titleResId = app.aaps.core.ui.R.string.confirmation,
-                messageResId = R.string.combov2_unpair_pump_summary,
-                onConfirm = { unpair() }
-            ),
+            ComboIntentKey.UnpairPump.withClick { unpair() },
             ComboIntKey.DiscoveryDuration,
             ComboBooleanKey.AutomaticReservoirEntry,
             ComboBooleanKey.AutomaticBatteryEntry,

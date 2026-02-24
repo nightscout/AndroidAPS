@@ -28,21 +28,19 @@ import app.aaps.core.ui.compose.icons.IcProfile
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
+import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalBox
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 
 /** Series identifiers */
 private const val SERIES_REGULAR = "regular"
@@ -80,10 +78,8 @@ fun BgGraphCompose(
     val bucketedData by viewModel.bucketedDataFlow.collectAsState()
     val predictions by viewModel.predictionsFlow.collectAsState()
     val derivedTimeRange by viewModel.derivedTimeRange.collectAsState()
-    val chartConfig by viewModel.chartConfigFlow.collectAsState()
     val basalData by viewModel.basalGraphFlow.collectAsState()
     val targetData by viewModel.targetLineFlow.collectAsState()
-    val treatmentData by viewModel.treatmentGraphFlow.collectAsState()
     val epsPoints by viewModel.epsGraphFlow.collectAsState()
 
     // Use derived time range or fall back to default (last 24 hours)
@@ -115,7 +111,6 @@ fun BgGraphCompose(
     val ztPredColor = AapsTheme.generalColors.ztPrediction
 
     // Calculate x-axis range (must match COB graph for alignment)
-    val minX = 0.0
     val maxX = remember(minTimestamp, maxTimestamp) {
         timestampToX(maxTimestamp, minTimestamp)
     }
@@ -399,18 +394,10 @@ fun BgGraphCompose(
     // Decorations
     // =========================================================================
 
-    val targetRangeColor = AapsTheme.generalColors.bgTargetRangeArea
-    val targetRangeBoxComponent = rememberShapeComponent(fill = Fill(targetRangeColor))
-    val targetRangeBox = remember(chartConfig.lowMark, chartConfig.highMark, targetRangeBoxComponent) {
-        HorizontalBox(
-            y = { chartConfig.lowMark..chartConfig.highMark },
-            box = targetRangeBoxComponent
-        )
-    }
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowTimestamp by viewModel.nowTimestamp.collectAsState()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
-    val decorations = remember(targetRangeBox, nowLine) { listOf(targetRangeBox, nowLine) }
+    val decorations = remember(nowLine) { listOf(nowLine) }
 
     // =========================================================================
     // Chart — dual layer

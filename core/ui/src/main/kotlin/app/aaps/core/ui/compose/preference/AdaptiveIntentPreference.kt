@@ -7,12 +7,17 @@ package app.aaps.core.ui.compose.preference
 import android.content.Intent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 
 /**
  * Composable intent preference for use inside card sections.
@@ -44,11 +49,33 @@ fun AdaptiveIntentPreferenceItem(
 
     if (!visibility.visible) return
 
+    // Show confirmation dialog when confirmationMessageResId is set on the key
+    val confirmationResId = intentKey.confirmationMessageResId
+    var showConfirmation by remember { mutableStateOf(false) }
+
+    if (showConfirmation && confirmationResId != null) {
+        OkCancelDialog(
+            title = stringResource(effectiveTitleResId),
+            message = stringResource(confirmationResId),
+            onConfirm = {
+                onClick()
+                showConfirmation = false
+            },
+            onDismiss = { showConfirmation = false }
+        )
+    }
+
+    val effectiveOnClick = if (confirmationResId != null) {
+        { showConfirmation = true }
+    } else {
+        onClick
+    }
+
     Preference(
         title = { Text(stringResource(effectiveTitleResId)) },
         summary = effectiveSummaryResId?.let { { Text(stringResource(it)) } },
         enabled = visibility.enabled,
-        onClick = if (visibility.enabled) onClick else null
+        onClick = if (visibility.enabled) effectiveOnClick else null
     )
 }
 

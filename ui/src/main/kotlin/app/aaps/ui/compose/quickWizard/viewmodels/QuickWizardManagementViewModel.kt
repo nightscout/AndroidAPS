@@ -14,6 +14,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.events.EventQuickWizardChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -96,7 +97,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                         showSuperBolusOption = showSuperBolus,
                         showWearOptions = showWear,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     ).let { state ->
                         // Load first entry into editor if exists
                         if (firstEntry != null) {
@@ -111,7 +112,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Failed to load entries"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load entries")
                     )
                 }
             }
@@ -126,10 +127,10 @@ class QuickWizardManagementViewModel @Inject constructor(
             .toObservable(EventQuickWizardChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                loadData()
-            }, { throwable ->
-                aapsLogger.error(LTag.UI, "Error observing QuickWizard changes", throwable)
-            })
+                           loadData()
+                       }, { throwable ->
+                           aapsLogger.error(LTag.UI, "Error observing QuickWizard changes", throwable)
+                       })
     }
 
     /**
@@ -200,7 +201,7 @@ class QuickWizardManagementViewModel @Inject constructor(
 
                 // Validate inputs
                 if (currentState.editorCarbs <= 0 && (!currentState.editorUseEcarbs || currentState.editorCarbs2 <= 0)) {
-                    uiState.update { it.copy(error = "Carbs must be greater than 0") }
+                    uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Carbs must be greater than 0")) }
                     return@launch
                 }
 
@@ -223,9 +224,9 @@ class QuickWizardManagementViewModel @Inject constructor(
                 // Device selection
                 val device = when {
                     currentState.editorDevicePhone && currentState.editorDeviceWatch -> QuickWizardEntry.DEVICE_ALL
-                    currentState.editorDevicePhone -> QuickWizardEntry.DEVICE_PHONE
-                    currentState.editorDeviceWatch -> QuickWizardEntry.DEVICE_WATCH
-                    else -> QuickWizardEntry.DEVICE_ALL
+                    currentState.editorDevicePhone                                   -> QuickWizardEntry.DEVICE_PHONE
+                    currentState.editorDeviceWatch                                   -> QuickWizardEntry.DEVICE_WATCH
+                    else                                                             -> QuickWizardEntry.DEVICE_ALL
                 }
                 entry.storage.put("device", device)
 
@@ -241,7 +242,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 uiState.update { it.copy(hasUnsavedChanges = false) }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to save QuickWizard entry", e)
-                uiState.update { it.copy(error = e.message ?: "Failed to save entry") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to save entry")) }
             }
         }
     }
@@ -266,7 +267,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 _sideEffect.emit(SideEffect.ScrollToEntry(newIndex))
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to add QuickWizard entry", e)
-                uiState.update { it.copy(error = e.message ?: "Failed to add entry") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to add entry")) }
             }
         }
     }
@@ -313,7 +314,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 _sideEffect.emit(SideEffect.ScrollToEntry(newIndex))
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to clone QuickWizard entry", e)
-                uiState.update { it.copy(error = e.message ?: "Failed to clone entry") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to clone entry")) }
             }
         }
     }
@@ -332,9 +333,16 @@ class QuickWizardManagementViewModel @Inject constructor(
                 rxBus.send(EventQuickWizardChange())
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete QuickWizard entry", e)
-                uiState.update { it.copy(error = e.message ?: "Failed to delete entry") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to delete entry")) }
             }
         }
+    }
+
+    /**
+     * Clear snackbar message
+     */
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     // Editor field update functions

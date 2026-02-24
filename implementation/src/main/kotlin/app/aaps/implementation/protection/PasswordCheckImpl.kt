@@ -26,9 +26,9 @@ import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
-import app.aaps.core.ui.compose.QueryAnyPasswordDialog
-import app.aaps.core.ui.compose.QueryPasswordDialog
-import app.aaps.core.ui.compose.SetPasswordDialog
+import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
+import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
+import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import app.aaps.core.ui.toast.ToastUtils
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope

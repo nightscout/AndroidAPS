@@ -46,13 +46,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.OkCancelDialog
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.plugins.source.viewmodels.BgSourceViewModel
 import app.aaps.ui.compose.components.ContentContainer
-import app.aaps.ui.compose.components.ErrorSnackbar
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
@@ -151,9 +151,9 @@ fun BgSourceScreen(
             }
 
             // Error display
-            ErrorSnackbar(
-                error = uiState.error,
-                onDismiss = { viewModel.clearError() },
+            AapsSnackbarHost(
+                message = uiState.snackbarMessage,
+                onDismiss = { viewModel.clearSnackbar() },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }

@@ -29,7 +29,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.SliderWithButtons
+import app.aaps.core.ui.compose.NumberInputRow
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 
@@ -106,73 +106,48 @@ fun TempTargetEditor(
         }
 
         // Target value slider
-        Column {
-            Text(
-                text = stringResource(R.string.temporary_target),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+        val (minTarget, maxTarget, targetStep) = when (units) {
+            GlucoseUnit.MGDL -> Triple(
+                Constants.MIN_TT_MGDL,
+                Constants.MAX_TT_MGDL,
+                1.0
             )
-            Spacer(modifier = Modifier.height(4.dp))
 
-            val (minTarget, maxTarget, step) = when (units) {
-                GlucoseUnit.MGDL -> Triple(
-                    Constants.MIN_TT_MGDL,
-                    Constants.MAX_TT_MGDL,
-                    1.0
-                )
-
-                GlucoseUnit.MMOL -> Triple(
-                    Constants.MIN_TT_MMOL,
-                    Constants.MAX_TT_MMOL,
-                    0.1
-                )
-            }
-
-            SliderWithButtons(
-                value = editorTarget,
-                onValueChange = onTargetChange,
-                valueRange = minTarget..maxTarget,
-                step = step,
-                showValue = true,
-                valueFormat = if (units == GlucoseUnit.MGDL) {
-                    DecimalFormat("0")
-                } else {
-                    DecimalFormat("0.0")
-                },
-                unitLabel = units.asText,
-                dialogLabel = stringResource(R.string.temporary_target),
-                modifier = Modifier.fillMaxWidth()
+            GlucoseUnit.MMOL -> Triple(
+                Constants.MIN_TT_MMOL,
+                Constants.MAX_TT_MMOL,
+                0.1
             )
         }
+
+        NumberInputRow(
+            labelResId = R.string.temporary_target,
+            value = editorTarget,
+            onValueChange = onTargetChange,
+            valueRange = minTarget..maxTarget,
+            step = targetStep,
+            valueFormat = if (units == GlucoseUnit.MGDL) DecimalFormat("0") else DecimalFormat("0.0"),
+            unitLabel = units.asText,
+            modifier = Modifier.fillMaxWidth()
+        )
 
         // Duration slider
-        Column {
-            Text(
-                text = stringResource(R.string.duration),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-
-            SliderWithButtons(
-                value = editorDuration.toDouble(),
-                onValueChange = { onDurationChange((it * 60000L).toLong()) },
-                valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
-                controlPoints = listOf(
-                    0.0 to 0.0,             // 0% slider -> 0h
-                    0.25 to 6.0 * 60.0,     // 25% slider -> 6h
-                    0.5 to 24.0 * 60.0,     // 50% slider -> 24h
-                    0.75 to 48.0 * 60.0,    // 75% slider -> 48h
-                    1.0 to Constants.MAX_PROFILE_SWITCH_DURATION   // 100% slider -> 168h
-                ),
-                step = 5.0,
-                showValue = true,
-                valueFormat = DecimalFormat("0"),
-                unitLabelResId = KeysR.string.units_min,
-                dialogLabel = stringResource(R.string.duration),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        NumberInputRow(
+            labelResId = R.string.duration,
+            value = editorDuration.toDouble(),
+            onValueChange = { onDurationChange((it * 60000L).toLong()) },
+            valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+            step = 5.0,
+            controlPoints = listOf(
+                0.0 to 0.0,             // 0% slider -> 0h
+                0.25 to 6.0 * 60.0,     // 25% slider -> 6h
+                0.5 to 24.0 * 60.0,     // 50% slider -> 24h
+                0.75 to 48.0 * 60.0,    // 75% slider -> 48h
+                1.0 to Constants.MAX_PROFILE_SWITCH_DURATION   // 100% slider -> 168h
+            ),
+            unitLabelResId = KeysR.string.units_min,
+            modifier = Modifier.fillMaxWidth()
+        )
 
         // Separator
         Spacer(modifier = Modifier.height(8.dp))

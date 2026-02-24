@@ -22,6 +22,7 @@ import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -102,7 +103,7 @@ class TempBasalViewModel @Inject constructor(
                     it.copy(
                         tempBasals = tempBasals,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -110,7 +111,7 @@ class TempBasalViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading temp basals"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading temp basals")
                     )
                 }
             }
@@ -132,8 +133,8 @@ class TempBasalViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -250,7 +251,7 @@ class TempBasalViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete temp basals", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting temp basals") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp basals")) }
             }
         }
     }
@@ -287,5 +288,5 @@ data class TempBasalUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<TB> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

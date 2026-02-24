@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.treatments
 
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,13 +28,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
-import androidx.core.graphics.drawable.toBitmap
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -43,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
@@ -56,11 +55,11 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.MenuItemData
-import app.aaps.core.ui.compose.OkCancelDialog
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.R
-import app.aaps.ui.compose.components.ErrorSnackbar
 import app.aaps.ui.compose.treatments.viewmodels.UserEntryViewModel
 
 /**
@@ -199,9 +198,9 @@ fun UserEntryScreen(
             }
 
             // Error display
-            ErrorSnackbar(
-                error = uiState.error,
-                onDismiss = { viewModel.clearError() },
+            AapsSnackbarHost(
+                message = uiState.snackbarMessage,
+                onDismiss = { viewModel.clearSnackbar() },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }

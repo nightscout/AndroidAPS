@@ -25,8 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
-import app.aaps.core.ui.compose.ErrorDialog
-import app.aaps.core.ui.compose.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.ErrorDialog
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.compose.management.MaintenanceViewModel.CloudDirectoryState
 import app.aaps.core.ui.R as CoreUiR
 
@@ -40,8 +40,10 @@ fun CloudDirectorySheet(
     onDismiss: () -> Unit
 ) {
     when (state) {
-        is CloudDirectoryState.Hidden       -> { /* nothing */ }
-        is CloudDirectoryState.Shown        -> {
+        is CloudDirectoryState.Hidden -> { /* nothing */
+        }
+
+        is CloudDirectoryState.Shown -> {
             CloudDirectoryDialog(
                 info = state.info,
                 onConnectGoogleDrive = onConnectGoogleDrive,
@@ -58,7 +60,7 @@ fun CloudDirectorySheet(
             )
         }
 
-        is CloudDirectoryState.Reauthorize  -> {
+        is CloudDirectoryState.Reauthorize -> {
             ErrorDialog(
                 title = stringResource(CoreUiR.string.cloud_connection_failed),
                 message = stringResource(CoreUiR.string.cloud_reauthorize_message),

@@ -48,11 +48,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.DatePickerModal
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.SliderWithButtons
-import app.aaps.core.ui.compose.TimePickerModal
+import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.DatePickerModal
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -62,7 +62,6 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import java.text.DecimalFormat
 import kotlin.time.Instant
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
@@ -270,16 +269,14 @@ fun InsulinDialogScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // --- Insulin Section ---
-            SectionHeader(stringResource(CoreUiR.string.overview_insulin_label))
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.overview_insulin_label,
                 value = uiState.insulin,
                 onValueChange = { viewModel.updateInsulin(it) },
                 valueRange = 0.0..uiState.maxInsulin,
                 step = uiState.bolusStep,
-                showValue = true,
                 valueFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
                 unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                dialogLabel = stringResource(CoreUiR.string.overview_insulin_label),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -291,22 +288,21 @@ fun InsulinDialogScreen(
                 bolusStep = uiState.bolusStep,
                 decimalFormatter = viewModel.decimalFormatter,
                 onAddInsulin = viewModel::addInsulin,
-                onSettingsClick = if (uiState.simpleMode) null else {{ showButtonSettings = true }}
+                onSettingsClick = if (uiState.simpleMode) null else {
+                    { showButtonSettings = true }
+                }
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // --- Time Offset Section (visible only when recordOnly) ---
             if (uiState.timeLayoutVisible) {
-                SectionHeader(stringResource(CoreUiR.string.time))
-                SliderWithButtons(
+                NumberInputRow(
+                    labelResId = CoreUiR.string.time,
                     value = uiState.timeOffsetMinutes.toDouble(),
                     onValueChange = { viewModel.updateTimeOffset(it.toInt()) },
                     valueRange = -12.0 * 60..12.0 * 60,
                     step = 5.0,
-                    showValue = true,
-                    valueFormat = DecimalFormat("0"),
                     unitLabelResId = KeysR.string.units_min,
-                    dialogLabel = stringResource(CoreUiR.string.time),
                     modifier = Modifier.fillMaxWidth()
                 )
 

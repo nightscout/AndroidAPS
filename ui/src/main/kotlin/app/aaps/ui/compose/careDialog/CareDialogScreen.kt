@@ -35,8 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -48,11 +48,11 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.DatePickerModal
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.SliderWithButtons
-import app.aaps.core.ui.compose.TimePickerModal
+import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.DatePickerModal
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcBgCheck
@@ -60,6 +60,7 @@ import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcQuestion
+import app.aaps.ui.R
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -67,7 +68,6 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.text.DecimalFormat
 import kotlin.time.Instant
-import app.aaps.ui.R
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -198,7 +198,6 @@ fun CareDialogScreen(
 
             // BG Section
             if (uiState.showBgSection) {
-                SectionHeader(stringResource(CoreUiR.string.bg_label))
                 BgSection(
                     meterType = uiState.meterType,
                     bgValue = uiState.bgValue,
@@ -211,7 +210,6 @@ fun CareDialogScreen(
 
             // Duration Section
             if (uiState.showDurationSection) {
-                SectionHeader(stringResource(CoreUiR.string.duration_label))
                 DurationSection(
                     duration = uiState.duration,
                     onDurationChange = viewModel::updateDuration
@@ -307,15 +305,14 @@ private fun BgSection(
         GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, DecimalFormat("0"))
     }
 
-    SliderWithButtons(
+    NumberInputRow(
+        labelResId = CoreUiR.string.bg_label,
         value = bgValue,
         onValueChange = onBgValueChange,
         valueRange = minBg..maxBg,
         step = step,
-        showValue = true,
         valueFormat = format,
         unitLabel = glucoseUnits.asText,
-        dialogLabel = stringResource(CoreUiR.string.bg_label),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -332,15 +329,13 @@ private fun DurationSection(
     duration: Double,
     onDurationChange: (Double) -> Unit
 ) {
-    SliderWithButtons(
+    NumberInputRow(
+        labelResId = CoreUiR.string.duration_label,
         value = duration,
         onValueChange = onDurationChange,
         valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
         step = 10.0,
-        showValue = true,
-        valueFormat = DecimalFormat("0"),
         unitLabelResId = KeysR.string.units_min,
-        dialogLabel = stringResource(CoreUiR.string.duration_label),
         modifier = Modifier.fillMaxWidth()
     )
 }

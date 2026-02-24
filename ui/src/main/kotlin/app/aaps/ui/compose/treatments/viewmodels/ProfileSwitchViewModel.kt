@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -88,7 +89,7 @@ class ProfileSwitchViewModel @Inject constructor(
                     it.copy(
                         profileSwitches = profileSwitches,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -96,7 +97,7 @@ class ProfileSwitchViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading profile switches"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading profile switches")
                     )
                 }
             }
@@ -121,8 +122,8 @@ class ProfileSwitchViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -220,7 +221,7 @@ class ProfileSwitchViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete profile switches", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting profile switches") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting profile switches")) }
             }
         }
     }
@@ -257,5 +258,5 @@ data class ProfileSwitchUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<ProfileSealed> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

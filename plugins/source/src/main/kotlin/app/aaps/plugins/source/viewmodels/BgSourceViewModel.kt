@@ -1,7 +1,7 @@
 package app.aaps.plugins.source.viewmodels
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GV
@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.SnackbarMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,7 +72,7 @@ class BgSourceViewModel @Inject constructor(
                     it.copy(
                         glucoseValues = data,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -79,7 +80,7 @@ class BgSourceViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading BG data"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading BG data")
                     )
                 }
             }
@@ -108,8 +109,8 @@ class BgSourceViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -187,7 +188,7 @@ class BgSourceViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete BG readings", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting BG readings") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting BG readings")) }
             }
         }
     }
@@ -202,6 +203,6 @@ data class BgSourceUiState(
     val isLoading: Boolean = true,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<GV> = emptySet(),
-    val error: String? = null,
+    val snackbarMessage: SnackbarMessage? = null,
     val historyHours: Long = 36L
 )

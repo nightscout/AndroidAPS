@@ -48,7 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer

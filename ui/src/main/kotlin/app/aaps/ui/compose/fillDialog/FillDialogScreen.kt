@@ -46,12 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.DatePickerModal
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.SliderWithButtons
-import app.aaps.core.ui.compose.TimePickerModal
+import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.dialogs.DatePickerModal
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.icons.IcCanulaChange
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -63,7 +62,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
-import app.aaps.core.objects.R as ObjectsR
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -273,17 +271,14 @@ fun FillDialogScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // Insulin section
-            SectionHeader(stringResource(CoreUiR.string.bolus))
-
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.bolus,
                 value = uiState.insulin,
                 onValueChange = viewModel::updateInsulin,
                 valueRange = 0.0..uiState.maxInsulin,
                 step = uiState.bolusStep,
-                showValue = true,
                 valueFormat = viewModel.decimalFormat(),
                 unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                dialogLabel = stringResource(CoreUiR.string.bolus),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -294,7 +289,9 @@ fun FillDialogScreen(
                 presetButton3 = uiState.presetButton3,
                 bolusStep = uiState.bolusStep,
                 onPresetClick = viewModel::updateInsulin,
-                onSettingsClick = if (uiState.simpleMode) null else {{ showButtonSettings = true }}
+                onSettingsClick = if (uiState.simpleMode) null else {
+                    { showButtonSettings = true }
+                }
             )
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)

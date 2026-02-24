@@ -55,10 +55,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.DatePickerModal
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.TimePickerModal
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.DatePickerModal
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer

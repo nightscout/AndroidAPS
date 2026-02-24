@@ -17,20 +17,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
-import app.aaps.core.ui.toast.ToastUtils
 
 /**
  * A single metadata summary item row with status icon, category icon, and formatted text.
@@ -40,7 +34,8 @@ import app.aaps.core.ui.toast.ToastUtils
 fun ImportSummaryItem(
     metaKey: PrefsMetadataKey,
     metaEntry: PrefMetadata,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSnackbarMessage: (SnackbarMessage) -> Unit = {}
 ) {
     val context = LocalContext.current
     val colors = AapsTheme.generalColors
@@ -60,11 +55,12 @@ fun ImportSummaryItem(
                 } else {
                     context.getString(metaKey.label)
                 }
-                when {
-                    metaEntry.status.isWarning -> ToastUtils.Long.warnToast(context, msg)
-                    metaEntry.status.isError   -> ToastUtils.Long.errorToast(context, msg)
-                    else                       -> ToastUtils.Long.infoToast(context, msg)
+                val snackbarMessage = when {
+                    metaEntry.status.isWarning -> SnackbarMessage.Warning(msg)
+                    metaEntry.status.isError   -> SnackbarMessage.Error(msg)
+                    else                       -> SnackbarMessage.Info(msg)
                 }
+                onSnackbarMessage(snackbarMessage)
             }
             .padding(vertical = 4.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -98,56 +94,6 @@ fun ImportSummaryItem(
             style = MaterialTheme.typography.bodySmall,
             color = textColor,
             modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-/**
- * A summary section showing all metadata entries with optional "Details" button.
- * Used in both the legacy import summary dialog and the new import review screen.
- */
-@Composable
-fun ImportSummarySection(
-    metadata: Map<PrefsMetadataKey, PrefMetadata>,
-    modifier: Modifier = Modifier,
-    listHeight: Dp = 210.dp,
-    detailsButtonText: String = stringResource(android.R.string.untitled)
-) {
-    val context = LocalContext.current
-    var showDetails by remember { mutableStateOf(false) }
-
-    val details = remember(metadata) {
-        metadata.mapNotNull { (key, entry) ->
-            entry.info?.let { Triple(context.getString(key.label), entry.value, it) }
-        }
-    }
-
-    Column(modifier = modifier.fillMaxWidth()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(listHeight)
-        ) {
-            items(metadata.entries.toList()) { (metaKey, metaEntry) ->
-                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry)
-            }
-        }
-
-        if (details.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(8.dp))
-            TextButton(
-                onClick = { showDetails = true },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text(detailsButtonText)
-            }
-        }
-    }
-
-    if (showDetails) {
-        ImportDetailsDialog(
-            details = details,
-            onDismiss = { showDetails = false }
         )
     }
 }

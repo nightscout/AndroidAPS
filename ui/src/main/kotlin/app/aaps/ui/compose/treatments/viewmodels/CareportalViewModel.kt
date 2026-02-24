@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -77,7 +78,7 @@ class CareportalViewModel @Inject constructor(
                     it.copy(
                         therapyEvents = therapyEvents,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -85,7 +86,7 @@ class CareportalViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading therapy events"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading therapy events")
                     )
                 }
             }
@@ -107,8 +108,8 @@ class CareportalViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -199,7 +200,7 @@ class CareportalViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete therapy events", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting therapy events") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting therapy events")) }
             }
         }
     }
@@ -237,5 +238,5 @@ data class CareportalUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<TE> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

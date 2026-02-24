@@ -60,8 +60,8 @@ import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.SliderWithButtons
-import app.aaps.core.ui.compose.ValueInputDialog
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
@@ -513,6 +513,7 @@ private fun IcContent(
             TimeValueList(
                 title = stringResource(R.string.ic_long_label),
                 entries = profile.ic,
+                dateUtil = viewModel.dateUtil,
                 onEntryChange = { index, entry -> viewModel.updateIcEntry(index, entry) },
                 onAddEntry = { index -> viewModel.addIcEntry(index) },
                 onRemoveEntry = { index -> viewModel.removeIcEntry(index) },
@@ -570,6 +571,7 @@ private fun IsfContent(
             TimeValueList(
                 title = stringResource(R.string.isf_long_label),
                 entries = profile.isf,
+                dateUtil = viewModel.dateUtil,
                 onEntryChange = { index, entry -> viewModel.updateIsfEntry(index, entry) },
                 onAddEntry = { index -> viewModel.addIsfEntry(index) },
                 onRemoveEntry = { index -> viewModel.removeIsfEntry(index) },
@@ -636,6 +638,7 @@ private fun BasalContent(
                 TimeValueList(
                     title = "",
                     entries = profile.basal,
+                    dateUtil = viewModel.dateUtil,
                     onEntryChange = { index, entry -> viewModel.updateBasalEntry(index, entry) },
                     onAddEntry = { index -> viewModel.addBasalEntry(index) },
                     onRemoveEntry = { index -> viewModel.removeBasalEntry(index) },
@@ -684,6 +687,7 @@ private fun TargetContent(
                 title = stringResource(R.string.target_long_label),
                 lowEntries = profile.targetLow,
                 highEntries = profile.targetHigh,
+                dateUtil = viewModel.dateUtil,
                 onEntryChange = { index, low, high ->
                     viewModel.updateTargetEntry(index, low, high)
                 },

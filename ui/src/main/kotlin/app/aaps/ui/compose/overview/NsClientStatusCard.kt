@@ -25,7 +25,7 @@ import app.aaps.core.interfaces.overview.graph.NsClientLevel
 import app.aaps.core.interfaces.overview.graph.NsClientStatusData
 import app.aaps.core.interfaces.overview.graph.NsClientStatusItem
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.OkDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 
 @Composable
 fun NsClientStatusCard(

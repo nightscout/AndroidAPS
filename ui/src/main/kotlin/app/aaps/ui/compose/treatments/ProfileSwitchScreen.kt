@@ -46,13 +46,13 @@ import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.OkCancelDialog
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
-import app.aaps.ui.compose.components.ErrorSnackbar
 import app.aaps.ui.compose.treatments.viewmodels.ProfileSwitchViewModel
 
 /**
@@ -205,9 +205,9 @@ fun ProfileSwitchScreen(
             }
 
             // Error display
-            ErrorSnackbar(
-                error = uiState.error,
-                onDismiss = { viewModel.clearError() },
+            AapsSnackbarHost(
+                message = uiState.snackbarMessage,
+                onDismiss = { viewModel.clearSnackbar() },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }

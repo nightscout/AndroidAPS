@@ -1,4 +1,4 @@
-package app.aaps.core.ui.compose
+package app.aaps.core.ui.compose.dialogs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,8 +24,11 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.formatMinutesAsDuration
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 import app.aaps.core.keys.R as KeysR
@@ -73,13 +76,13 @@ fun ValueInputDialog(
         return try {
             val parsed = text.toDouble()
             when {
-                parsed < valueRange.start -> {
+                parsed < valueRange.start                                 -> {
                     isError = true
                     errorMessage = "Min: ${valueFormat.format(valueRange.start)}"
                     null
                 }
 
-                parsed > valueRange.endInclusive -> {
+                parsed > valueRange.endInclusive                          -> {
                     isError = true
                     errorMessage = "Max: ${valueFormat.format(valueRange.endInclusive)}"
                     null
@@ -91,7 +94,7 @@ fun ValueInputDialog(
                     null
                 }
 
-                else -> {
+                else                                                      -> {
                     isError = false
                     // Accept value as-is (no rounding to step)
                     parsed
@@ -191,5 +194,21 @@ fun ValueInputDialog(
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ValueInputDialogPreview() {
+    AapsTheme {
+        ValueInputDialog(
+            currentValue = 5.0,
+            valueRange = 0.0..10.0,
+            step = 0.5,
+            label = "Insulin",
+            unitLabel = "U",
+            onValueConfirm = {},
+            onDismiss = {}
+        )
     }
 }

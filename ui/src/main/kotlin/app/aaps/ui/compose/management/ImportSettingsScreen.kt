@@ -42,9 +42,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,8 +59,10 @@ import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ImportSummaryItem
-import app.aaps.core.ui.compose.OkDialog
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -71,11 +75,11 @@ fun ImportSettingsScreen(
 
     when (val currentStep = step) {
         is ImportStep.Idle,
-        is ImportStep.Loading -> {
+        is ImportStep.Loading        -> {
             ImportLoadingContent()
         }
 
-        is ImportStep.FilePicker -> {
+        is ImportStep.FilePicker     -> {
             ImportFilePickerContent(
                 state = currentStep,
                 prefFileList = prefFileList,
@@ -88,7 +92,7 @@ fun ImportSettingsScreen(
             )
         }
 
-        is ImportStep.Review  -> {
+        is ImportStep.Review         -> {
             ImportReviewContent(
                 state = currentStep,
                 onMasterPasswordChanged = { viewModel.onMasterPasswordChanged(it) },
@@ -107,7 +111,7 @@ fun ImportSettingsScreen(
             )
         }
 
-        is ImportStep.Error   -> {
+        is ImportStep.Error          -> {
             OkDialog(
                 title = stringResource(CoreUiR.string.error),
                 message = currentStep.message,
@@ -190,7 +194,9 @@ private fun ImportFilePickerContent(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            CircularProgressIndicator(modifier = Modifier.height(24.dp).width(24.dp))
+                            CircularProgressIndicator(modifier = Modifier
+                                .height(24.dp)
+                                .width(24.dp))
                             if (state.cloudLoadingProgress != null) {
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Text(
@@ -391,8 +397,15 @@ private fun ImportReviewContent(
     val focusManager = LocalFocusManager.current
     val successResult = state.decryptResult as? ImportDecryptResult.Success
     val canImport = successResult != null && successResult.importPossible
+    var snackbarMessage by remember { mutableStateOf<SnackbarMessage?>(null) }
 
     Scaffold(
+        snackbarHost = {
+            AapsSnackbarHost(
+                message = snackbarMessage,
+                onDismiss = { snackbarMessage = null }
+            )
+        },
         topBar = {
             AapsTopAppBar(
                 title = { Text(stringResource(CoreUiR.string.import_setting)) },
@@ -437,7 +450,7 @@ private fun ImportReviewContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // File details card
-            FileDetailsCard(file = state.file, source = state.fileSource)
+            FileDetailsCard(file = state.file, source = state.fileSource, onSnackbarMessage = { snackbarMessage = it })
 
             // Master password
             OutlinedTextField(
@@ -464,7 +477,9 @@ private fun ImportReviewContent(
                 ) {
                     if (state.isProcessing) {
                         CircularProgressIndicator(
-                            modifier = Modifier.height(20.dp).width(20.dp),
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(20.dp),
                             color = MaterialTheme.colorScheme.onPrimary,
                             strokeWidth = 2.dp
                         )
@@ -509,7 +524,9 @@ private fun ImportReviewContent(
                     ) {
                         if (state.isProcessing) {
                             CircularProgressIndicator(
-                                modifier = Modifier.height(20.dp).width(20.dp),
+                                modifier = Modifier
+                                    .height(20.dp)
+                                    .width(20.dp),
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 strokeWidth = 2.dp
                             )
@@ -572,7 +589,9 @@ private fun ImportReviewContent(
                                 imageVector = icon,
                                 contentDescription = null,
                                 tint = iconTint,
-                                modifier = Modifier.height(24.dp).width(24.dp)
+                                modifier = Modifier
+                                    .height(24.dp)
+                                    .width(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -585,7 +604,7 @@ private fun ImportReviewContent(
                         // Only show entries with warnings or errors
                         if (problemEntries.isNotEmpty()) {
                             problemEntries.forEach { (metaKey, metaEntry) ->
-                                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry)
+                                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry, onSnackbarMessage = { snackbarMessage = it })
                             }
                         }
                     }
@@ -598,7 +617,8 @@ private fun ImportReviewContent(
 @Composable
 private fun FileDetailsCard(
     file: PrefsFile,
-    source: ImportSource
+    source: ImportSource,
+    onSnackbarMessage: (SnackbarMessage) -> Unit = {}
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -622,7 +642,7 @@ private fun FileDetailsCard(
 
             // Show all metadata
             file.metadata.entries.forEach { (metaKey, metaEntry) ->
-                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry)
+                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry, onSnackbarMessage = onSnackbarMessage)
             }
         }
     }

@@ -30,13 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.SliderWithButtons
+import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
@@ -166,47 +165,33 @@ private fun TreatmentDialogContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // --- Insulin Section ---
-            SectionHeader(stringResource(CoreUiR.string.overview_insulin_label))
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.overview_insulin_label,
                 value = uiState.insulin,
                 onValueChange = onInsulinChange,
                 valueRange = 0.0..uiState.maxInsulin,
                 step = uiState.bolusStep,
-                showValue = true,
                 valueFormat = bolusFormat,
                 unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                dialogLabel = stringResource(CoreUiR.string.overview_insulin_label),
                 modifier = Modifier.fillMaxWidth()
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // --- Carbs Section ---
-            SectionHeader(stringResource(CoreUiR.string.carbs))
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.carbs,
                 value = uiState.carbs.toDouble(),
                 onValueChange = onCarbsChange,
                 valueRange = 0.0..uiState.maxCarbs.toDouble(),
                 step = 1.0,
-                showValue = true,
                 valueFormat = DecimalFormat("0"),
                 unitLabel = stringResource(CoreUiR.string.shortgramm),
-                dialogLabel = stringResource(CoreUiR.string.carbs),
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
-}
-
-@Composable
-private fun SectionHeader(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary
-    )
 }
 
 @Preview(showBackground = true)

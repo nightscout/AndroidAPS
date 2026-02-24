@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 
 /**
  * Time range picker for selecting a start and end time (e.g., valid hours for QuickWizard).

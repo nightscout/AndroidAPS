@@ -20,7 +20,6 @@ import app.aaps.core.keys.interfaces.Preferences
  * Supported types:
  * - PreferenceKey: Rendered with AdaptivePreferenceItem
  * - PreferenceSubScreenDef: Rendered as navigation item
- * - DialogIntentPreference: Rendered with dialog handling
  *
  * @param items List of PreferenceItems to render
  * @param preferences The Preferences instance
@@ -56,19 +55,6 @@ fun AdaptivePreferenceList(
             is PreferenceSubScreenDef -> {
                 // Subscreens are handled by PreferenceContentExtensions as nested collapsible sections
                 // Not rendered here in the flat list
-            }
-
-            is DialogIntentPreference -> {
-                // Handle dialog preferences
-                item.Render { keyToRender ->
-                    AdaptivePreferenceItem(
-                        key = keyToRender,
-                        preferences = preferences,
-                        config = config,
-                        profileUtil = profileUtil,
-                        visibilityContext = visibilityContext
-                    )
-                }
             }
         }
     }

@@ -1,7 +1,7 @@
 package app.aaps.ui.compose.treatments.viewmodels
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.UE
@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.USER_ENTRY_FILTERED_DAYS
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.USER_ENTRY_UNFILTERED_DAYS
@@ -72,7 +73,7 @@ class UserEntryViewModel @Inject constructor(
                     it.copy(
                         userEntries = userEntries,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -80,7 +81,7 @@ class UserEntryViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading user entries"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading user entries")
                     )
                 }
             }
@@ -102,8 +103,8 @@ class UserEntryViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -141,5 +142,5 @@ data class UserEntryUiState(
     val userEntries: List<UE> = emptyList(),
     val isLoading: Boolean = true,
     val showLoop: Boolean = false,
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

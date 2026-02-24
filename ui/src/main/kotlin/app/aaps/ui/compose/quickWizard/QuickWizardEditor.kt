@@ -146,11 +146,10 @@ fun QuickWizardEditor(
 
         // Carbs
         NumberInputRow(
-            label = stringResource(CoreR.string.carbs),
+            labelResId = CoreR.string.carbs,
             value = carbs.toDouble(),
             onValueChange = { onCarbsChange(it.toInt()) },
-            minValue = 0.0,
-            maxValue = maxCarbs,
+            valueRange = 0.0..maxCarbs,
             step = 1.0,
             unitLabelResId = KeysR.string.units_grams,
             modifier = Modifier.fillMaxWidth()
@@ -158,11 +157,10 @@ fun QuickWizardEditor(
 
         // Carb Time
         NumberInputRow(
-            label = stringResource(R.string.carb_time),
+            labelResId = R.string.carb_time,
             value = carbTime.toDouble(),
             onValueChange = { onCarbTimeChange(it.toInt()) },
-            minValue = -60.0,
-            maxValue = 60.0,
+            valueRange = -60.0..60.0,
             step = 5.0,
             unitLabelResId = KeysR.string.units_min,
             modifier = Modifier.fillMaxWidth()
@@ -278,11 +276,10 @@ fun QuickWizardEditor(
 
         // Percentage
         NumberInputRow(
-            label = stringResource(KeysR.string.pref_title_bolus_percentage),
+            labelResId = KeysR.string.pref_title_bolus_percentage,
             value = percentage.toDouble(),
             onValueChange = { onPercentageChange(it.toInt()) },
-            minValue = 10.0,
-            maxValue = 200.0,
+            valueRange = 10.0..200.0,
             step = 5.0,
             unitLabelResId = KeysR.string.units_percent,
             modifier = Modifier.fillMaxWidth()
@@ -329,11 +326,10 @@ fun QuickWizardEditor(
             ) {
                 // Time offset
                 NumberInputRow(
-                    label = stringResource(R.string.time_offset),
+                    labelResId = R.string.time_offset,
                     value = time.toDouble(),
                     onValueChange = { onTimeChange(it.toInt()) },
-                    minValue = (-7 * 24 * 60).toDouble(),
-                    maxValue = (12 * 60).toDouble(),
+                    valueRange = (-7 * 24 * 60).toDouble()..(12 * 60).toDouble(),
                     step = 5.0,
                     unitLabelResId = KeysR.string.units_min,
                     modifier = Modifier.fillMaxWidth()
@@ -341,11 +337,10 @@ fun QuickWizardEditor(
 
                 // Duration
                 NumberInputRow(
-                    label = stringResource(CoreR.string.duration),
+                    labelResId = CoreR.string.duration,
                     value = duration.toDouble(),
                     onValueChange = { onDurationChange(it.toInt()) },
-                    minValue = 0.0,
-                    maxValue = 10.0,
+                    valueRange = 0.0..10.0,
                     step = 1.0,
                     unitLabelResId = KeysR.string.units_hours,
                     modifier = Modifier.fillMaxWidth()
@@ -353,11 +348,10 @@ fun QuickWizardEditor(
 
                 // Additional carbs
                 NumberInputRow(
-                    label = stringResource(R.string.ecarbs_additional),
+                    labelResId = R.string.ecarbs_additional,
                     value = carbs2.toDouble(),
                     onValueChange = { onCarbs2Change(it.toInt()) },
-                    minValue = 0.0,
-                    maxValue = maxCarbs,
+                    valueRange = 0.0..maxCarbs,
                     step = 1.0,
                     unitLabelResId = KeysR.string.units_grams,
                     modifier = Modifier.fillMaxWidth()

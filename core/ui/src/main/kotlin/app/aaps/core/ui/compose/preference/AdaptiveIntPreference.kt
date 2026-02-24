@@ -69,9 +69,8 @@ fun AdaptiveIntPreferenceItem(
 
     // Use slider if min/max range is specified (not default extreme values)
     val hasValidRange = intKey.min > Int.MIN_VALUE && intKey.max < Int.MAX_VALUE
-    val useSlider = hasValidRange
 
-    if (useSlider) {
+    if (hasValidRange) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

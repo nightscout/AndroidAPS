@@ -75,9 +75,8 @@ fun AdaptiveDoublePreferenceItem(
     // Use slider if min/max range is specified (not default extreme values)
     // Note: Double.MIN_VALUE is smallest positive value, not most negative
     val hasValidRange = doubleKey.min != -Double.MAX_VALUE && doubleKey.max != Double.MAX_VALUE
-    val useSlider = hasValidRange
 
-    if (useSlider) {
+    if (hasValidRange) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

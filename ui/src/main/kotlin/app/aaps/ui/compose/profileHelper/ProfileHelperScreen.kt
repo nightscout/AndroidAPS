@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -49,7 +50,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -459,38 +459,34 @@ fun DefaultProfileContent(
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.profile_parameters), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 16.dp))
         NumberInputRow(
-            label = stringResource(R.string.age),
+            labelResId = R.string.age,
             value = age.toDouble(),
             onValueChange = { onAgeChange(it.toInt()) },
-            minValue = 1.0,
-            maxValue = 99.0,
+            valueRange = 1.0..99.0,
             step = 1.0,
             unitLabelResId = app.aaps.core.keys.R.string.units_years
         )
         if (showTdd) NumberInputRow(
-            label = stringResource(app.aaps.core.ui.R.string.tdd_total),
+            labelResId = app.aaps.core.ui.R.string.tdd_total,
             value = tdd,
             onValueChange = onTddChange,
-            minValue = 0.0,
-            maxValue = 200.0,
+            valueRange = 0.0..200.0,
             step = 1.0,
             unitLabelResId = app.aaps.core.keys.R.string.units_insulin
         )
         if (showWeight) NumberInputRow(
-            label = stringResource(R.string.weight_label),
+            labelResId = R.string.weight_label,
             value = weight,
             onValueChange = onWeightChange,
-            minValue = 0.0,
-            maxValue = 150.0,
+            valueRange = 0.0..150.0,
             step = 1.0,
             unitLabelResId = app.aaps.core.keys.R.string.units_kg
         )
         if (showPct) NumberInputRow(
-            label = stringResource(R.string.basal_pct_from_tdd_label),
+            labelResId = R.string.basal_pct_from_tdd_label,
             value = pct,
             onValueChange = onPctChange,
-            minValue = 32.0,
-            maxValue = 37.0,
+            valueRange = 32.0..37.0,
             step = 1.0,
             unitLabelResId = app.aaps.core.keys.R.string.units_percent
         )

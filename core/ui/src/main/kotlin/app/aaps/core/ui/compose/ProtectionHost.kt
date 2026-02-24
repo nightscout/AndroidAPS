@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 
 /**
  * Composable that hosts protection dialogs (password, PIN, biometric).

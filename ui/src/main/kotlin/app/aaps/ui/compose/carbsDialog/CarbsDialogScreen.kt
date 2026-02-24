@@ -49,11 +49,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.DatePickerModal
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.SliderWithButtons
-import app.aaps.core.ui.compose.TimePickerModal
+import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.DatePickerModal
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
@@ -241,16 +241,14 @@ fun CarbsDialogScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // --- Carbs Section ---
-            SectionHeader(stringResource(CoreUiR.string.carbs))
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.carbs,
                 value = uiState.carbs.toDouble(),
                 onValueChange = { viewModel.updateCarbs(it.toInt()) },
                 valueRange = (-uiState.maxCarbs).toDouble()..uiState.maxCarbs.toDouble(),
                 step = 1.0,
-                showValue = true,
                 valueFormat = DecimalFormat("0"),
                 unitLabel = stringResource(CoreUiR.string.shortgramm),
-                dialogLabel = stringResource(CoreUiR.string.carbs),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -260,13 +258,15 @@ fun CarbsDialogScreen(
                 increment2 = uiState.carbsButtonIncrement2,
                 increment3 = uiState.carbsButtonIncrement3,
                 onAddCarbs = viewModel::addCarbs,
-                onSettingsClick = if (uiState.simpleMode) null else {{ showButtonSettings = true }}
+                onSettingsClick = if (uiState.simpleMode) null else {
+                    { showButtonSettings = true }
+                }
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // --- Time Offset Section ---
-            SectionHeader(stringResource(CoreUiR.string.time))
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.time,
                 value = uiState.timeOffsetMinutes.toDouble(),
                 onValueChange = { viewModel.updateTimeOffset(it.toInt()) },
                 valueRange = (-7.0 * 24 * 60)..(12.0 * 60),
@@ -277,10 +277,7 @@ fun CarbsDialogScreen(
                     0.67 to 2.0 * 60,
                     1.0 to 12.0 * 60
                 ),
-                showValue = true,
-                valueFormat = DecimalFormat("0"),
                 unitLabelResId = KeysR.string.units_min,
-                dialogLabel = stringResource(CoreUiR.string.time),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -315,16 +312,14 @@ fun CarbsDialogScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // --- Duration Section ---
-            SectionHeader(stringResource(CoreUiR.string.duration_label))
-            SliderWithButtons(
+            NumberInputRow(
+                labelResId = CoreUiR.string.duration_label,
                 value = uiState.durationHours.toDouble(),
                 onValueChange = { viewModel.updateDuration(it.toInt()) },
                 valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                 step = 1.0,
-                showValue = true,
                 valueFormat = DecimalFormat("0"),
                 unitLabel = stringResource(InterfacesR.string.shorthour),
-                dialogLabel = stringResource(CoreUiR.string.duration_label),
                 modifier = Modifier.fillMaxWidth()
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)

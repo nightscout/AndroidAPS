@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -75,7 +76,7 @@ class ExtendedBolusViewModel @Inject constructor(
                     it.copy(
                         extendedBoluses = extendedBoluses,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -83,7 +84,7 @@ class ExtendedBolusViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading extended boluses"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading extended boluses")
                     )
                 }
             }
@@ -105,8 +106,8 @@ class ExtendedBolusViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -196,7 +197,7 @@ class ExtendedBolusViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete extended boluses", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting extended boluses") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting extended boluses")) }
             }
         }
     }
@@ -233,5 +234,5 @@ data class ExtendedBolusUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<EB> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

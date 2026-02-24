@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.friendlyDescription
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +80,7 @@ class TempTargetViewModel @Inject constructor(
                     it.copy(
                         tempTargets = tempTargets,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -87,7 +88,7 @@ class TempTargetViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Unknown error loading temp targets"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading temp targets")
                     )
                 }
             }
@@ -109,8 +110,8 @@ class TempTargetViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -209,7 +210,7 @@ class TempTargetViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete temp targets", e)
-                uiState.update { it.copy(error = e.message ?: "Unknown error deleting temp targets") }
+                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp targets")) }
             }
         }
     }
@@ -246,5 +247,5 @@ data class TempTargetUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<TT> = emptySet(),
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

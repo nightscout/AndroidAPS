@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.QueryPasswordDialog
-import app.aaps.core.ui.compose.SetPasswordDialog
+import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
+import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import kotlinx.coroutines.launch
 
 /**

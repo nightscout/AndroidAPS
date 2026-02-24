@@ -18,7 +18,7 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.SetPasswordDialog
+import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import kotlinx.coroutines.launch
 
 /**

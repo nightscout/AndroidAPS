@@ -56,12 +56,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.notifications.AapsNotification
-import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcSettingsOff
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -134,142 +133,142 @@ fun OverviewScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-        // Calculation progress bar
-        if (calcProgress < 100) {
-            LinearProgressIndicator(
-                progress = { calcProgress / 100f },
+            // Calculation progress bar
+            if (calcProgress < 100) {
+                LinearProgressIndicator(
+                    progress = { calcProgress / 100f },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp),
+                )
+            }
+            // BG Info and Chips in a row
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(4.dp),
-            )
-        }
-        // BG Info and Chips in a row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.Bottom
-        ) {
-            // BG Info section + sensitivity chip on the left
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.Bottom
             ) {
-                BgInfoSection(
-                    bgInfo = bgInfoState.bgInfo,
-                    timeAgoText = bgInfoState.timeAgoText
-                )
-                // Sensitivity / Autosens chip (hidden when ratio is 100% with no extra info)
-                val sensitivityUiState by graphViewModel.sensitivityUiState.collectAsState()
-                if (sensitivityUiState.asText.isNotEmpty() || sensitivityUiState.isfFrom.isNotEmpty()) {
-                    var showSensitivityDialog by remember { mutableStateOf(false) }
-                    SensitivityChip(
-                        state = sensitivityUiState,
-                        onClick = { if (sensitivityUiState.dialogText.isNotEmpty()) showSensitivityDialog = true }
+                // BG Info section + sensitivity chip on the left
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    BgInfoSection(
+                        bgInfo = bgInfoState.bgInfo,
+                        timeAgoText = bgInfoState.timeAgoText
                     )
-                    if (showSensitivityDialog) {
-                        OkCancelDialog(
-                            title = stringResource(app.aaps.core.ui.R.string.sensitivity),
-                            message = sensitivityUiState.dialogText,
-                            onConfirm = { showSensitivityDialog = false },
-                            onDismiss = { showSensitivityDialog = false }
+                    // Sensitivity / Autosens chip (hidden when ratio is 100% with no extra info)
+                    val sensitivityUiState by graphViewModel.sensitivityUiState.collectAsState()
+                    if (sensitivityUiState.asText.isNotEmpty() || sensitivityUiState.isfFrom.isNotEmpty()) {
+                        var showSensitivityDialog by remember { mutableStateOf(false) }
+                        SensitivityChip(
+                            state = sensitivityUiState,
+                            onClick = { if (sensitivityUiState.dialogText.isNotEmpty()) showSensitivityDialog = true }
                         )
-                    }
-                }
-            }
-
-            // Chips column on the right
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                // Running mode chip + simple mode icon
-                if (runningModeText.isNotEmpty()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RunningModeChip(
-                            mode = runningMode,
-                            text = runningModeText,
-                            progress = runningModeProgress,
-                            modifier = Modifier.weight(1f),
-                            onClick = onRunningModeClick
-                        )
-                        if (isSimpleMode) {
-                            Icon(
-                                imageVector = IcSettingsOff,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier
-                                    .padding(start = 4.dp)
-                                    .size(20.dp)
+                        if (showSensitivityDialog) {
+                            OkCancelDialog(
+                                title = stringResource(app.aaps.core.ui.R.string.sensitivity),
+                                message = sensitivityUiState.dialogText,
+                                onConfirm = { showSensitivityDialog = false },
+                                onDismiss = { showSensitivityDialog = false }
                             )
                         }
                     }
                 }
-                // Profile chip
-                if (profileName.isNotEmpty()) {
-                    ProfileChip(
-                        profileName = profileName,
-                        isModified = isProfileModified,
-                        progress = profileProgress,
-                        onClick = onProfileManagementClick
+
+                // Chips column on the right
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    // Running mode chip + simple mode icon
+                    if (runningModeText.isNotEmpty()) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            RunningModeChip(
+                                mode = runningMode,
+                                text = runningModeText,
+                                progress = runningModeProgress,
+                                modifier = Modifier.weight(1f),
+                                onClick = onRunningModeClick
+                            )
+                            if (isSimpleMode) {
+                                Icon(
+                                    imageVector = IcSettingsOff,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier
+                                        .padding(start = 4.dp)
+                                        .size(20.dp)
+                                )
+                            }
+                        }
+                    }
+                    // Profile chip
+                    if (profileName.isNotEmpty()) {
+                        ProfileChip(
+                            profileName = profileName,
+                            isModified = isProfileModified,
+                            progress = profileProgress,
+                            onClick = onProfileManagementClick
+                        )
+                    }
+                    // TempTarget chip (show when text is available)
+                    if (tempTargetText.isNotEmpty()) {
+                        TempTargetChip(
+                            targetText = tempTargetText,
+                            state = tempTargetState,
+                            progress = tempTargetProgress,
+                            reason = tempTargetReason,
+                            onClick = onTempTargetClick
+                        )
+                    }
+                    // IOB + COB chips row
+                    val iobUiState by graphViewModel.iobUiState.collectAsState()
+                    val cobUiState by graphViewModel.cobUiState.collectAsState()
+                    IobCobChipsRow(
+                        iobUiState = iobUiState,
+                        cobUiState = cobUiState
                     )
                 }
-                // TempTarget chip (show when text is available)
-                if (tempTargetText.isNotEmpty()) {
-                    TempTargetChip(
-                        targetText = tempTargetText,
-                        state = tempTargetState,
-                        progress = tempTargetProgress,
-                        reason = tempTargetReason,
-                        onClick = onTempTargetClick
-                    )
+            }
+
+            // Status section with expand/collapse
+            OverviewStatusSection(
+                sensorStatus = statusState.sensorStatus,
+                insulinStatus = statusState.insulinStatus,
+                cannulaStatus = statusState.cannulaStatus,
+                batteryStatus = statusState.batteryStatus,
+                showFill = statusState.showFill,
+                showPumpBatteryChange = statusState.showPumpBatteryChange,
+                onSensorInsertClick = onSensorInsertClick,
+                onFillClick = onFillClick,
+                onInsulinChangeClick = onInsulinChangeClick,
+                onBatteryChangeClick = onBatteryChangeClick,
+                statusLightsDef = statusLightsDef,
+                preferences = preferences,
+                config = config,
+                onCopyFromNightscout = { manageViewModel.copyStatusLightsFromNightscout() }
+            )
+
+            // NSClient status card (only in AAPSCLIENT builds)
+            if (config.AAPSCLIENT) {
+                val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsState()
+                val flavorTint = when {
+                    config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
+                    config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
+                    else               -> AapsTheme.generalColors.flavorClient1Tint
                 }
-                // IOB + COB chips row
-                val iobUiState by graphViewModel.iobUiState.collectAsState()
-                val cobUiState by graphViewModel.cobUiState.collectAsState()
-                IobCobChipsRow(
-                    iobUiState = iobUiState,
-                    cobUiState = cobUiState
+                NsClientStatusCard(
+                    statusData = nsClientStatus,
+                    flavorTint = flavorTint
                 )
             }
+
+            // Graph content - New Compose/Vico graphs
+            OverviewGraphsSection(graphViewModel = graphViewModel)
         }
-
-        // Status section with expand/collapse
-        OverviewStatusSection(
-            sensorStatus = statusState.sensorStatus,
-            insulinStatus = statusState.insulinStatus,
-            cannulaStatus = statusState.cannulaStatus,
-            batteryStatus = statusState.batteryStatus,
-            showFill = statusState.showFill,
-            showPumpBatteryChange = statusState.showPumpBatteryChange,
-            onSensorInsertClick = onSensorInsertClick,
-            onFillClick = onFillClick,
-            onInsulinChangeClick = onInsulinChangeClick,
-            onBatteryChangeClick = onBatteryChangeClick,
-            statusLightsDef = statusLightsDef,
-            preferences = preferences,
-            config = config,
-            onCopyFromNightscout = { manageViewModel.copyStatusLightsFromNightscout() }
-        )
-
-        // NSClient status card (only in AAPSCLIENT builds)
-        if (config.AAPSCLIENT) {
-            val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsState()
-            val flavorTint = when {
-                config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                else               -> AapsTheme.generalColors.flavorClient1Tint
-            }
-            NsClientStatusCard(
-                statusData = nsClientStatus,
-                flavorTint = flavorTint
-            )
-        }
-
-        // Graph content - New Compose/Vico graphs
-        OverviewGraphsSection(graphViewModel = graphViewModel)
-    }
 
         // Notification FAB overlay
         NotificationFab(

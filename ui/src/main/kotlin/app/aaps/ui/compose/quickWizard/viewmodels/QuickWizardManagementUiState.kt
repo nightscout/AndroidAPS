@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.quickWizard.viewmodels
 
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
  * UI state for QuickWizard management screen
@@ -12,7 +13,7 @@ data class QuickWizardManagementUiState(
     val selectedGuid: String = "",
     val currentCardIndex: Int = 0,
     val hasUnsavedChanges: Boolean = false,
-    val error: String? = null,
+    val snackbarMessage: SnackbarMessage? = null,
 
     // Editor fields (match EditQuickWizardDialog fields)
     val editorButtonText: String = "",
@@ -46,6 +47,7 @@ data class QuickWizardManagementUiState(
  * Trend options matching QuickWizardEntry constants
  */
 enum class TrendOption {
+
     NO,             // QuickWizardEntry.NO = 1
     YES,            // QuickWizardEntry.YES = 0
     POSITIVE_ONLY,  // QuickWizardEntry.POSITIVE_ONLY = 2
@@ -56,8 +58,8 @@ enum class TrendOption {
  * Convert TrendOption enum to QuickWizardEntry constant
  */
 fun TrendOption.toInt(): Int = when (this) {
-    TrendOption.YES -> QuickWizardEntry.YES
-    TrendOption.NO -> QuickWizardEntry.NO
+    TrendOption.YES           -> QuickWizardEntry.YES
+    TrendOption.NO            -> QuickWizardEntry.NO
     TrendOption.POSITIVE_ONLY -> QuickWizardEntry.POSITIVE_ONLY
     TrendOption.NEGATIVE_ONLY -> QuickWizardEntry.NEGATIVE_ONLY
 }
@@ -66,8 +68,8 @@ fun TrendOption.toInt(): Int = when (this) {
  * Convert QuickWizardEntry constant to TrendOption enum
  */
 fun Int.toTrendOption(): TrendOption = when (this) {
-    QuickWizardEntry.YES -> TrendOption.YES
+    QuickWizardEntry.YES           -> TrendOption.YES
     QuickWizardEntry.POSITIVE_ONLY -> TrendOption.POSITIVE_ONLY
     QuickWizardEntry.NEGATIVE_ONLY -> TrendOption.NEGATIVE_ONLY
-    else -> TrendOption.NO
+    else                           -> TrendOption.NO
 }

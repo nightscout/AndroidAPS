@@ -1,7 +1,7 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
@@ -80,7 +80,7 @@ class ProfileEditorViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
-    private val dateUtil: DateUtil,
+    val dateUtil: DateUtil,
     private val protectionCheck: ProtectionCheck
 ) : ViewModel() {
 

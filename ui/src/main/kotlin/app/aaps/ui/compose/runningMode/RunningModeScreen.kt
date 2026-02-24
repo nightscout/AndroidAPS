@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
-import app.aaps.core.ui.compose.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.R
 import app.aaps.ui.compose.overview.toColor
 import app.aaps.ui.compose.overview.toIcon

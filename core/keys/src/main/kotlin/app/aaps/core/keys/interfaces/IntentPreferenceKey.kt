@@ -17,6 +17,14 @@ interface IntentPreferenceKey : PreferenceKey {
         get() = null
 
     /**
+     * String resource ID for confirmation dialog message.
+     * When set, clicking this preference shows an OK/Cancel dialog before executing onClick.
+     * The dialog title uses [titleResId].
+     */
+    val confirmationMessageResId: Int?
+        get() = null
+
+    /**
      * Runtime-attached click handler.
      * When set, this takes precedence over other handlers.
      */

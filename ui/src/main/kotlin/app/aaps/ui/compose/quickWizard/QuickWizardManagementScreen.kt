@@ -50,8 +50,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.OkCancelDialog
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
@@ -379,41 +379,41 @@ fun QuickWizardManagementScreen(
                             modifier = Modifier.padding(horizontal = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                        // Add button
-                        IconButton(onClick = { viewModel.addNewEntry() }) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = stringResource(CoreR.string.add)
-                            )
-                        }
-                        // Clone button
-                        IconButton(
-                            onClick = { viewModel.cloneCurrentEntry() },
-                            enabled = uiState.entries.isNotEmpty()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.ContentCopy,
-                                contentDescription = "Clone",
-                                tint = if (uiState.entries.isNotEmpty())
-                                    MaterialTheme.colorScheme.onSurface
-                                else
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                            )
-                        }
-                        // Delete button
-                        IconButton(
-                            onClick = { showDeleteDialog = true },
-                            enabled = uiState.entries.isNotEmpty()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = stringResource(R.string.remove_label),
-                                tint = if (uiState.entries.isNotEmpty())
-                                    MaterialTheme.colorScheme.error
-                                else
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                            )
-                        }
+                            // Add button
+                            IconButton(onClick = { viewModel.addNewEntry() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = stringResource(CoreR.string.add)
+                                )
+                            }
+                            // Clone button
+                            IconButton(
+                                onClick = { viewModel.cloneCurrentEntry() },
+                                enabled = uiState.entries.isNotEmpty()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.ContentCopy,
+                                    contentDescription = "Clone",
+                                    tint = if (uiState.entries.isNotEmpty())
+                                        MaterialTheme.colorScheme.onSurface
+                                    else
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                )
+                            }
+                            // Delete button
+                            IconButton(
+                                onClick = { showDeleteDialog = true },
+                                enabled = uiState.entries.isNotEmpty()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = stringResource(R.string.remove_label),
+                                    tint = if (uiState.entries.isNotEmpty())
+                                        MaterialTheme.colorScheme.error
+                                    else
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                )
+                            }
                         }
                     }
 

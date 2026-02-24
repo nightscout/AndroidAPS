@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -31,9 +32,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
 import java.text.DecimalFormat
 import kotlin.math.abs
@@ -70,6 +73,44 @@ fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
         sign + rh.gs(R.string.format_hour_minute, hours, mins)
     } else {
         rh.gs(R.string.format_mins, minutes)
+    }
+}
+
+/**
+ * Formats a slider/input value for display, handling minutes-as-duration, resource format strings,
+ * unit labels, and plain value formatting.
+ *
+ * Priority order:
+ * 1. Minutes unit (unitLabelResId == units_min) → "Xh Ym" or "X mins"
+ * 2. valueFormatResId → stringResource with value (as Int if formatAsInt, else Double)
+ * 3. unitLabel non-empty → "formatted_value unitLabel"
+ * 4. Plain → valueFormat.format(value)
+ */
+@Composable
+fun formatSliderDisplayValue(
+    value: Double,
+    unitLabelResId: Int = 0,
+    valueFormatResId: Int? = null,
+    formatAsInt: Boolean = false,
+    valueFormat: DecimalFormat,
+    unitLabel: String = ""
+): String {
+    val isMinutesUnit = unitLabelResId == KeysR.string.units_min
+    val resolvedUnitLabel = when {
+        unitLabelResId != 0    -> stringResource(unitLabelResId)
+        unitLabel.isNotEmpty() -> unitLabel
+        else                   -> ""
+    }
+    return when {
+        isMinutesUnit                  -> formatMinutesAsDuration(value.roundToInt())
+
+        valueFormatResId != null       -> {
+            if (formatAsInt) stringResource(valueFormatResId, value.roundToInt())
+            else stringResource(valueFormatResId, value)
+        }
+
+        resolvedUnitLabel.isNotEmpty() -> "${valueFormat.format(value)} $resolvedUnitLabel"
+        else                           -> valueFormat.format(value)
     }
 }
 
@@ -192,6 +233,16 @@ fun SliderWithButtons(
         else                   -> ""
     }
 
+    // Use shared formatting function for display text
+    val displayText = if (showValue) formatSliderDisplayValue(
+        value = value,
+        unitLabelResId = unitLabelResId,
+        valueFormatResId = valueFormatResId,
+        formatAsInt = formatAsInt,
+        valueFormat = valueFormat,
+        unitLabel = unitLabel
+    ) else ""
+
     BoxWithConstraints(modifier = modifier) {
         val showSlider = maxWidth >= 180.dp
 
@@ -252,21 +303,6 @@ fun SliderWithButtons(
 
             // Optional clickable value label
             if (showValue) {
-                val displayText = when {
-                    // Special formatting for minutes >= 60 as "Xh Ym"
-                    isMinutesUnit                  -> formatMinutesAsDuration(value.roundToInt())
-
-                    valueFormatResId != null       -> {
-                        if (formatAsInt) {
-                            stringResource(valueFormatResId, value.roundToInt())
-                        } else {
-                            stringResource(valueFormatResId, value)
-                        }
-                    }
-
-                    resolvedUnitLabel.isNotEmpty() -> "${valueFormat.format(value)} $resolvedUnitLabel"
-                    else                           -> valueFormat.format(value)
-                }
                 Text(
                     text = displayText,
                     style = MaterialTheme.typography.bodyMedium,
@@ -350,5 +386,85 @@ private fun RepeatingIconButton(
         }
     ) {
         content()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SliderWithButtonsPreview() {
+    MaterialTheme {
+        SliderWithButtons(
+            value = 5.0,
+            onValueChange = {},
+            valueRange = 0.0..10.0,
+            step = 0.5
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SliderWithButtonsValuePreview() {
+    MaterialTheme {
+        SliderWithButtons(
+            value = 3.5,
+            onValueChange = {},
+            valueRange = 0.0..10.0,
+            step = 0.1,
+            showValue = true,
+            valueFormat = DecimalFormat("0.0"),
+            unitLabel = "U"
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SliderWithButtonsIntPreview() {
+    MaterialTheme {
+        SliderWithButtons(
+            value = 45.0,
+            onValueChange = {},
+            valueRange = 0.0..120.0,
+            step = 5.0,
+            showValue = true,
+            valueFormat = DecimalFormat("0"),
+            unitLabelResId = KeysR.string.units_min
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SliderWithButtonsNonLinearPreview() {
+    MaterialTheme {
+        Column {
+            SliderWithButtons(
+                value = 50.0,
+                onValueChange = {},
+                valueRange = 0.0..500.0,
+                step = 1.0,
+                controlPoints = listOf(
+                    0.0 to 0.0,
+                    0.5 to 50.0,
+                    1.0 to 500.0
+                ),
+                showValue = true,
+                valueFormat = DecimalFormat("0")
+            )
+            SliderWithButtons(
+                value = 250.0,
+                onValueChange = {},
+                valueRange = 0.0..500.0,
+                step = 1.0,
+                controlPoints = listOf(
+                    0.0 to 0.0,
+                    0.5 to 50.0,
+                    1.0 to 500.0
+                ),
+                showValue = true,
+                valueFormat = DecimalFormat("0")
+            )
+        }
     }
 }

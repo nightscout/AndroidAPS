@@ -22,12 +22,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.ErrorDialog
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.OkDialog
-import app.aaps.core.ui.compose.YesNoCancelDialog
+import app.aaps.core.ui.compose.dialogs.ErrorDialog
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.dialogs.YesNoCancelDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

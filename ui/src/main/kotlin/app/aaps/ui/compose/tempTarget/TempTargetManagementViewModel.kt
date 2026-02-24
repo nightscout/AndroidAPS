@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.SnackbarMessage
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -135,7 +136,7 @@ class TempTargetManagementViewModel @Inject constructor(
                         editorDuration = initialPreset?.duration ?: (60L * 60L * 1000L),
                         showNotesField = showNotes,
                         isLoading = false,
-                        error = null
+                        snackbarMessage = null
                     )
                 }
             } catch (e: Exception) {
@@ -143,7 +144,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = e.message ?: "Failed to load presets"
+                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load presets")
                     )
                 }
             }

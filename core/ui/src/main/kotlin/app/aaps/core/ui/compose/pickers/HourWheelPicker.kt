@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import app.aaps.core.interfaces.utils.DateUtil
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.math.abs
 
@@ -41,6 +42,7 @@ private const val ITEM_HEIGHT_DP = 44
 fun HourWheelPicker(
     selectedHour: Int,
     availableHours: List<Int>,
+    dateUtil: DateUtil,
     onHourSelected: (Int) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
@@ -94,7 +96,7 @@ fun HourWheelPicker(
         properties = PopupProperties(focusable = true)
     ) {
         Surface(
-            modifier = modifier.width(110.dp),
+            modifier = modifier.width(130.dp),
             shape = RoundedCornerShape(12.dp),
             shadowElevation = 8.dp,
             color = MaterialTheme.colorScheme.surface
@@ -145,6 +147,7 @@ fun HourWheelPicker(
                         }
 
                         val isSelected = index == centeredItemIndex
+                        val hourLabel = dateUtil.timeStringFromSeconds(hour * 3600)
 
                         Box(
                             modifier = Modifier
@@ -158,7 +161,7 @@ fun HourWheelPicker(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = String.format("%02d:00", hour),
+                                text = hourLabel,
                                 fontSize = 18.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                 color = if (isSelected)
@@ -183,6 +186,7 @@ fun HourWheelPicker(
 @Composable
 fun HourWheelPickerDialog(
     selectedHour: Int,
+    dateUtil: DateUtil,
     minHour: Int = 0,
     maxHour: Int = 23,
     excludeHour: Int? = null,
@@ -196,6 +200,7 @@ fun HourWheelPickerDialog(
     HourWheelPicker(
         selectedHour = selectedHour,
         availableHours = availableHours,
+        dateUtil = dateUtil,
         onHourSelected = onHourSelected,
         onDismiss = onDismiss
     )

@@ -1,4 +1,4 @@
-package app.aaps.core.ui.compose
+package app.aaps.core.ui.compose.dialogs
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,85 +18,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
-
-/**
- * Sealed class representing different types of snackbar messages.
- * Each type has appropriate styling (color, icon) applied automatically.
- *
- * @property message The text message to display
- */
-sealed class SnackbarMessage(open val message: String) {
-
-    data class Error(override val message: String) : SnackbarMessage(message)
-    data class Warning(override val message: String) : SnackbarMessage(message)
-    data class Info(override val message: String) : SnackbarMessage(message)
-    data class Success(override val message: String) : SnackbarMessage(message)
-}
-
-/**
- * Color scheme for snackbar messages.
- * Provides consistent colors for different message types.
- *
- * @property errorContainer Background color for error snackbars
- * @property onErrorContainer Text/icon color for error snackbars
- * @property warningContainer Background color for warning snackbars
- * @property onWarningContainer Text/icon color for warning snackbars
- * @property infoContainer Background color for info snackbars
- * @property onInfoContainer Text/icon color for info snackbars
- * @property successContainer Background color for success snackbars
- * @property onSuccessContainer Text/icon color for success snackbars
- */
-data class SnackbarColors(
-    val errorContainer: Color,
-    val onErrorContainer: Color,
-    val warningContainer: Color,
-    val onWarningContainer: Color,
-    val infoContainer: Color,
-    val onInfoContainer: Color,
-    val successContainer: Color,
-    val onSuccessContainer: Color
-)
-
-/**
- * Light mode snackbar colors.
- */
-internal val LightSnackbarColors = SnackbarColors(
-    errorContainer = Color(0xFFFFDAD6),
-    onErrorContainer = Color(0xFF410002),
-    warningContainer = Color(0xFFFFE082),
-    onWarningContainer = Color(0xFF3E2723),
-    infoContainer = Color(0xFFBBDEFB),
-    onInfoContainer = Color(0xFF0D47A1),
-    successContainer = Color(0xFFC8E6C9),
-    onSuccessContainer = Color(0xFF1B5E20)
-)
-
-/**
- * Dark mode snackbar colors.
- */
-internal val DarkSnackbarColors = SnackbarColors(
-    errorContainer = Color(0xFF93000A),
-    onErrorContainer = Color(0xFFFFDAD6),
-    warningContainer = Color(0xFF5D4037),
-    onWarningContainer = Color(0xFFFFE082),
-    infoContainer = Color(0xFF1565C0),
-    onInfoContainer = Color(0xFFBBDEFB),
-    successContainer = Color(0xFF2E7D32),
-    onSuccessContainer = Color(0xFFC8E6C9)
-)
-
-/**
- * CompositionLocal providing snackbar colors based on current theme.
- */
-internal val LocalSnackbarColors = compositionLocalOf { LightSnackbarColors }
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
  * Snackbar host that displays typed messages with appropriate styling.
@@ -104,19 +33,9 @@ internal val LocalSnackbarColors = compositionLocalOf { LightSnackbarColors }
  *
  * **Usage:**
  * ```kotlin
- * // In ViewModel
- * data class UiState(
- *     val snackbarMessage: SnackbarMessage? = null
- * )
- *
- * fun showError(msg: String) {
- *     _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(msg)) }
- * }
- *
- * // In Composable
  * AapsSnackbarHost(
- *     message = uiState.snackbarMessage,
- *     onDismiss = { viewModel.clearMessage() },
+ *     message = uiState.error?.let { SnackbarMessage.Error(it) },
+ *     onDismiss = { viewModel.clearSnackbar() },
  *     modifier = Modifier.align(Alignment.BottomCenter)
  * )
  * ```
@@ -153,7 +72,7 @@ fun AapsSnackbarHost(
             is SnackbarMessage.Warning -> Triple(colors.warningContainer, colors.onWarningContainer, Icons.Default.Warning)
             is SnackbarMessage.Info -> Triple(colors.infoContainer, colors.onInfoContainer, Icons.Default.Info)
             is SnackbarMessage.Success -> Triple(colors.successContainer, colors.onSuccessContainer, Icons.Default.CheckCircle)
-            null                    -> Triple(MaterialTheme.colorScheme.inverseSurface, MaterialTheme.colorScheme.inverseOnSurface, Icons.Default.Info)
+            null -> Triple(MaterialTheme.colorScheme.inverseSurface, MaterialTheme.colorScheme.inverseOnSurface, Icons.Default.Info)
         }
 
         Snackbar(

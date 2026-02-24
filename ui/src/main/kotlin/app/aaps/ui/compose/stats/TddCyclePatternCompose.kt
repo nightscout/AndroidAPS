@@ -30,9 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.SliderWithButtons
+import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.ui.R
-import java.text.DecimalFormat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
@@ -164,18 +163,12 @@ fun TddCyclePatternCompose(
         }
 
         // Offset slider
-        Text(
-            text = stringResource(R.string.cycle_offset),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        SliderWithButtons(
+        NumberInputRow(
+            labelResId = R.string.cycle_offset,
             value = offset.toDouble(),
             onValueChange = { onOffsetChange(it.toInt()) },
             valueRange = 0.0..27.0,
             step = 1.0,
-            showValue = true,
-            valueFormat = DecimalFormat("0"),
             modifier = Modifier.fillMaxWidth()
         )
     }

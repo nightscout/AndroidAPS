@@ -1,7 +1,7 @@
 package app.aaps.ui.compose.runningMode
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.RM
@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.SnackbarMessage
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -78,7 +79,7 @@ class RunningModeManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load running mode state", e)
-                uiState.update { it.copy(isLoading = false, error = e.message) }
+                uiState.update { it.copy(isLoading = false, snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load running mode state")) }
             }
         }
     }
@@ -124,12 +125,15 @@ class RunningModeManagementViewModel @Inject constructor(
                 Action.RESUME, Action.RECONNECT -> {
                     preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
                 }
-                Action.DISCONNECT -> {
+
+                Action.DISCONNECT               -> {
                     if (durationMinutes >= 60) {
                         preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
                     }
                 }
-                else -> { /* no tracking needed */ }
+
+                else                            -> { /* no tracking needed */
+                }
             }
         }
 
@@ -139,8 +143,8 @@ class RunningModeManagementViewModel @Inject constructor(
     /**
      * Clear error state
      */
-    fun clearError() {
-        uiState.update { it.copy(error = null) }
+    fun clearSnackbar() {
+        uiState.update { it.copy(snackbarMessage = null) }
     }
 }
 
@@ -157,5 +161,5 @@ data class RunningModeManagementUiState(
     val tempDurationStep15mAllowed: Boolean = false,
     val tempDurationStep30mAllowed: Boolean = false,
     val isLoading: Boolean = true,
-    val error: String? = null
+    val snackbarMessage: SnackbarMessage? = null
 )

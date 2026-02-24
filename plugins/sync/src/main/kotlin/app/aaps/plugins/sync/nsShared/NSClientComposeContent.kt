@@ -19,9 +19,9 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ComposablePluginContent
-import app.aaps.core.ui.compose.OkCancelDialog
-import app.aaps.core.ui.compose.OkDialog
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.mvvm.NSClientViewModel
 import kotlinx.coroutines.Dispatchers

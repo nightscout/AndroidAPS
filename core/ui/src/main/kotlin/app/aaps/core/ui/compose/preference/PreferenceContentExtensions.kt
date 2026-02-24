@@ -142,7 +142,7 @@ private fun RenderPreferenceItems(
                     // Content without card wrapper
                     if (isSubExpanded) {
                         if (preferences != null && config != null) {
-                            // Auto-render nested subscreen items (including DialogIntentPreference)
+                            // Auto-render nested subscreen items
                             if (item.items.isNotEmpty()) {
                                 val theme = LocalPreferenceTheme.current
                                 Column(
