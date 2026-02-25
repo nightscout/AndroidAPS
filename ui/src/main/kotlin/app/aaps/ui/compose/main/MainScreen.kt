@@ -103,6 +103,7 @@ fun MainScreen(
     onCgmClick: (() -> Unit)?,
     onCalibrationClick: (() -> Unit)?,
     onQuickWizardClick: ((String) -> Unit)? = null,
+    onCalculatorClick: (() -> Unit)? = null,
     // Notifications
     notifications: List<AapsNotification>,
     onDismissNotification: (AapsNotification) -> Unit,
@@ -315,6 +316,7 @@ fun MainScreen(
             onCgmClick = onCgmClick,
             onCalibrationClick = onCalibrationClick,
             onQuickWizardClick = onQuickWizardClick,
+            onCalculatorClick = onCalculatorClick,
             treatmentButtonsDef = treatmentButtonsDef,
         )
     }

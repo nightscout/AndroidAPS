@@ -33,6 +33,7 @@ enum class BooleanKey(
     OverviewShowNotesInDialogs("show_notes_entry_dialogs", false, R.string.pref_title_show_notes_in_dialogs, defaultedBySM = true),
     OverviewUseBolusAdvisor("use_bolus_advisor", true, R.string.pref_title_use_bolus_advisor, R.string.pref_summary_use_bolus_advisor, defaultedBySM = true),
     OverviewUseBolusReminder("use_bolus_reminder", true, R.string.pref_title_use_bolus_reminder, R.string.pref_summary_use_bolus_reminder, defaultedBySM = true),
+    @Deprecated("Remove support")
     OverviewUseSuperBolus("key_usersuperbolus", false, R.string.pref_title_use_super_bolus, R.string.pref_summary_use_super_bolus, defaultedBySM = true, hideParentScreenIfHidden = true),
 
     PumpBtWatchdog("bt_watchdog", false, R.string.pref_title_bt_watchdog, R.string.pref_summary_bt_watchdog, showInNsClientMode = false, hideParentScreenIfHidden = true),

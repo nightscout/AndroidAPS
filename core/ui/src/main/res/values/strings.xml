@@ -571,11 +571,29 @@
 
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected_plain">!!!!! Slow carbs absorption detected: %1$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="partialboluswizard_reset_time">Old glycemia time threshold [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="wizard_bg_label">BG</string>
+    <string name="wizard_correction">Correction</string>
+    <string name="wizard_subtotal">Subtotal</string>
+    <string name="carbs_type_bread">Bread, savory pastries, yogurt, fruit (apple, banana, pear), potatoes, rice, buckwheat, oatmeal, slow and low carb foods, vegetables</string>
+    <string name="carbs_type_cake">Dumplings, pasta, Asian cuisine rich in carbs and fats, sweet and yeast pastries, cereals, grain porridge, honey, jam</string>
+    <string name="carbs_type_pizza">Lasagna, pizza, hamburgers, fries, baked potatoes, chips and similar snacks</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_total">Total</string>
+    <string name="wizard_carb_time">Carb time</string>
+    <string name="wizard_set_alarm">Set alarm</string>
+    <string name="wizard_use_percentage">Use percentage</string>
+    <string name="wizard_include_bg">Include BG</string>
+    <string name="wizard_include_tt">Include TempTarget</string>
+    <string name="wizard_include_trend">Include trend</string>
+    <string name="wizard_include_iob">Include IOB</string>
+    <string name="wizard_include_cob">Include COB</string>
+    <string name="wizard_calculation">Calculation</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
     <string name="wizard_no_insulin_required">No insulin required!</string>
@@ -590,6 +608,7 @@
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>

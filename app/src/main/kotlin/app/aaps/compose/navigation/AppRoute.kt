@@ -53,6 +53,17 @@ sealed class AppRoute(val route: String) {
     data object CarbsDialog : AppRoute("carbs_dialog")
     data object InsulinDialog : AppRoute("insulin_dialog")
     data object TreatmentDialog : AppRoute("treatment_dialog")
+    data object WizardDialog : AppRoute("wizard_dialog?carbs={carbs}&notes={notes}") {
+
+        fun createRoute(carbs: Int? = null, notes: String? = null): String {
+            val params = buildList {
+                carbs?.let { add("carbs=$it") }
+                notes?.let { add("notes=$it") }
+            }
+            return if (params.isEmpty()) "wizard_dialog"
+            else "wizard_dialog?${params.joinToString("&")}"
+        }
+    }
     data object ImportSettings : AppRoute("import_settings/{source}") {
 
         fun createRoute(source: String) = "import_settings/$source"

@@ -81,8 +81,8 @@ private val modeSegmentsKey = ExtraStore.Key<List<Triple<Double, Double, RM.Mode
  *   4. Announcement points (conditional)
  *   5. Settings Export points (conditional)
  *   6. General event points (conditional)
- *   7. Exercise duration lines (0..M, each = 2-point at Y=0.5)
- *   8. General with duration lines (0..K, each = 2-point at Y=0.5)
+ *   7. Exercise duration lines (0..M, each = 2-point at Y=1.0, top)
+ *   8. General with duration lines (0..K, each = 2-point at Y=1.0, top)
  *   9. Normalizer (always last)
  */
 @Composable
@@ -272,12 +272,12 @@ fun TreatmentBeltGraphCompose(
                     hasGeneral = true
                 }
 
-                // 3. Duration events — one series per event
+                // 3. Duration events — one series per event (top of graph)
                 for ((start, end) in exerciseDurationSeries) {
-                    series(x = listOf(start, end), y = listOf(0.5, 0.5))
+                    series(x = listOf(start, end), y = listOf(1.0, 1.0))
                 }
                 for ((start, end) in generalDurationSeries) {
-                    series(x = listOf(start, end), y = listOf(0.5, 0.5))
+                    series(x = listOf(start, end), y = listOf(1.0, 1.0))
                 }
 
                 // 4. Normalizer (always last)

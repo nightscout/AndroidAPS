@@ -59,7 +59,7 @@ class WikiSearchRepository @Inject constructor(
 
                 if (!response.isSuccessful) return@withContext WikiSearchResult.Success(emptyList())
 
-                val body = response.body?.string() ?: return@withContext WikiSearchResult.Success(emptyList())
+                val body = response.body.string()
                 WikiSearchResult.Success(parseResults(JSONObject(body)))
             } catch (_: Exception) {
                 WikiSearchResult.Success(emptyList())

@@ -1,0 +1,861 @@
+package app.aaps.ui.compose.wizardDialog
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.icons.IcBread
+import app.aaps.core.ui.compose.icons.IcCake
+import app.aaps.core.ui.compose.icons.IcCalculator
+import app.aaps.core.ui.compose.icons.IcPizza
+import app.aaps.ui.R
+import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.keys.R as KeysR
+
+@Composable
+fun WizardDialogScreen(
+    viewModel: WizardDialogViewModel,
+    initialCarbs: Int? = null,
+    initialNotes: String? = null,
+    onNavigateBack: () -> Unit,
+    onShowDeliveryError: (String) -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Initialize ViewModel
+    LaunchedEffect(Unit) {
+        viewModel.init(initialCarbs, initialNotes)
+    }
+
+    // Observe side effects
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is WizardDialogViewModel.SideEffect.ShowDeliveryError -> {
+                    onShowDeliveryError(effect.comment)
+                }
+
+                is WizardDialogViewModel.SideEffect.ShowTempBasalError -> {
+                    onShowDeliveryError(effect.comment)
+                }
+            }
+        }
+    }
+
+    // Dialog states
+    var showConfirmation by remember { mutableStateOf(false) }
+    var showNoAction by remember { mutableStateOf(false) }
+    var showBolusAdvisorPrompt by remember { mutableStateOf(false) }
+    var showAdvisorConfirmation by remember { mutableStateOf(false) }
+    var showNormalConfirmation by remember { mutableStateOf(false) }
+
+    // --- Confirmation flow ---
+    if (showConfirmation) {
+        if (!viewModel.hasAction()) {
+            showConfirmation = false
+            showNoAction = true
+        } else if (viewModel.needsBolusAdvisor()) {
+            showConfirmation = false
+            showBolusAdvisorPrompt = true
+        } else {
+            showConfirmation = false
+            showNormalConfirmation = true
+        }
+    }
+
+    // No action dialog
+    if (showNoAction) {
+        OkCancelDialog(
+            title = stringResource(CoreUiR.string.boluswizard),
+            message = stringResource(CoreUiR.string.no_action_selected),
+            icon = IcCalculator,
+            iconTint = AapsTheme.generalColors.calculator,
+            onConfirm = { showNoAction = false },
+            onDismiss = { showNoAction = false }
+        )
+    }
+
+    // Bolus advisor prompt: Yes / No / Cancel (3-button dialog)
+    if (showBolusAdvisorPrompt) {
+        AlertDialog(
+            onDismissRequest = { showBolusAdvisorPrompt = false },
+            icon = {
+                Icon(
+                    imageVector = IcCalculator,
+                    contentDescription = null,
+                    tint = AapsTheme.generalColors.calculator
+                )
+            },
+            title = { Text(stringResource(CoreUiR.string.bolus_advisor)) },
+            text = { Text(stringResource(CoreUiR.string.bolus_advisor_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showBolusAdvisorPrompt = false
+                    showAdvisorConfirmation = true
+                }) {
+                    Text(stringResource(CoreUiR.string.yes))
+                }
+            },
+            dismissButton = {
+                Row {
+                    TextButton(onClick = {
+                        showBolusAdvisorPrompt = false
+                        showNormalConfirmation = true
+                    }) {
+                        Text(stringResource(CoreUiR.string.no))
+                    }
+                    TextButton(onClick = { showBolusAdvisorPrompt = false }) {
+                        Text(stringResource(CoreUiR.string.cancel))
+                    }
+                }
+            },
+            properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
+        )
+    }
+
+    // Advisor confirmation: show summary with advisor=true
+    if (showAdvisorConfirmation) {
+        val summaryLines = viewModel.getAdvisorSummary()
+        OkCancelDialog(
+            title = stringResource(CoreUiR.string.boluswizard),
+            message = summaryLines.joinToString("<br/>"),
+            icon = IcCalculator,
+            iconTint = AapsTheme.generalColors.calculator,
+            onConfirm = {
+                viewModel.executeBolusAdvisor()
+                onNavigateBack()
+            },
+            onDismiss = { showAdvisorConfirmation = false }
+        )
+    }
+
+    // Normal confirmation: show summary with advisor=false
+    if (showNormalConfirmation) {
+        val summaryLines = viewModel.getConfirmationSummary()
+        OkCancelDialog(
+            title = stringResource(CoreUiR.string.boluswizard),
+            message = summaryLines.joinToString("<br/>"),
+            icon = IcCalculator,
+            iconTint = AapsTheme.generalColors.calculator,
+            onConfirm = {
+                viewModel.executeNormal()
+                onNavigateBack()
+            },
+            onDismiss = { showNormalConfirmation = false }
+        )
+    }
+
+    WizardDialogContent(
+        uiState = uiState,
+        unitsLabel = uiState.units.asText,
+        onBgChange = { viewModel.updateBg(it) },
+        onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
+        onCarbsTypeChange = viewModel::updateCarbsType,
+        onPercentageChange = { viewModel.updatePercentage(it.toInt()) },
+        onDirectCorrectionChange = { viewModel.updateDirectCorrection(it) },
+        onCarbTimeChange = { viewModel.updateCarbTime(it.toInt()) },
+        onNotesChange = viewModel::updateNotes,
+        onProfileSelect = viewModel::selectProfile,
+        onBgToggle = viewModel::toggleBg,
+        onTTToggle = viewModel::toggleTT,
+        onTrendToggle = viewModel::toggleTrend,
+        onIOBToggle = viewModel::toggleIOB,
+        onCOBToggle = viewModel::toggleCOB,
+        onDirectCorrectionToggle = viewModel::toggleDirectCorrection,
+        onAlarmToggle = viewModel::toggleAlarm,
+        onBgExpandToggle = viewModel::toggleBgExpanded,
+        onCalculationExpandToggle = viewModel::toggleCalculationExpanded,
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WizardDialogContent(
+    uiState: WizardDialogUiState,
+    unitsLabel: String,
+    onBgChange: (Double) -> Unit,
+    onCarbsChange: (Double) -> Unit,
+    onCarbsTypeChange: (CarbsType) -> Unit,
+    onPercentageChange: (Double) -> Unit,
+    onDirectCorrectionChange: (Double) -> Unit,
+    onCarbTimeChange: (Double) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onProfileSelect: (Int) -> Unit,
+    onBgToggle: (Boolean) -> Unit,
+    onTTToggle: (Boolean) -> Unit,
+    onTrendToggle: (Boolean) -> Unit,
+    onIOBToggle: (Boolean) -> Unit,
+    onCOBToggle: (Boolean) -> Unit,
+    onDirectCorrectionToggle: (Boolean) -> Unit,
+    onAlarmToggle: (Boolean) -> Unit,
+    onBgExpandToggle: () -> Unit,
+    onCalculationExpandToggle: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                imageVector = IcCalculator,
+                                contentDescription = null,
+                                tint = AapsTheme.generalColors.calculator,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
+                                if (uiState.totalInsulin > 0.0) {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin),
+                                        fontWeight = FontWeight.Bold,
+                                        color = AapsTheme.elementColors.insulin
+                                    )
+                                }
+                                if (uiState.carbs > 0) {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.format_carbs, uiState.carbs),
+                                        fontWeight = FontWeight.Bold,
+                                        color = AapsTheme.elementColors.carbs
+                                    )
+                                }
+                                if (uiState.percentage != 100) {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.format_percent, uiState.percentage),
+                                        fontWeight = FontWeight.Bold,
+                                        color = AapsTheme.elementColors.insulin
+                                    )
+                                }
+                            } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
+                                Text(
+                                    text = stringResource(R.string.missing_carbs, uiState.carbsEquivalent.toInt()),
+                                    fontWeight = FontWeight.Bold,
+                                    color = AapsTheme.elementColors.carbs
+                                )
+                            } else {
+                                Text(stringResource(CoreUiR.string.boluswizard))
+                            }
+                        }
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(CoreUiR.string.back)
+                        )
+                    }
+                },
+                actions = {
+                    if (uiState.okVisible) {
+                        IconButton(onClick = onConfirmClick) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = stringResource(CoreUiR.string.ok),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .clearFocusOnTap(focusManager)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // --- Inputs Card ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Carbs Input
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.carbs,
+                        value = uiState.carbs.toDouble(),
+                        onValueChange = onCarbsChange,
+                        valueRange = 0.0..uiState.maxCarbs.toDouble(),
+                        step = 1.0,
+                        unitLabel = "g"
+                    )
+
+                    // Carbs type selector
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.size(48.dp))
+                        SingleChoiceSegmentedButtonRow(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            CarbsType.entries.forEachIndexed { index, type ->
+                                SegmentedButton(
+                                    selected = uiState.carbsType == type,
+                                    onClick = { onCarbsTypeChange(type) },
+                                    shape = SegmentedButtonDefaults.itemShape(index, CarbsType.entries.size),
+                                    icon = {}
+                                ) {
+                                    Icon(
+                                        imageVector = when (type) {
+                                            CarbsType.BREAD -> IcBread
+                                            CarbsType.CAKE  -> IcCake
+                                            CarbsType.PIZZA -> IcPizza
+                                        },
+                                        contentDescription = type.name,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        val tooltipState = rememberTooltipState()
+                        val scope = rememberCoroutineScope()
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                            tooltip = {
+                                PlainTooltip {
+                                    Text(
+                                        text = when (uiState.carbsType) {
+                                            CarbsType.BREAD -> stringResource(CoreUiR.string.carbs_type_bread)
+                                            CarbsType.CAKE  -> stringResource(CoreUiR.string.carbs_type_cake)
+                                            CarbsType.PIZZA -> stringResource(CoreUiR.string.carbs_type_pizza)
+                                        }
+                                    )
+                                }
+                            },
+                            state = tooltipState
+                        ) {
+                            IconButton(onClick = { scope.launch { tooltipState.show() } }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Info,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    HorizontalDivider()
+
+                    // Percentage Input (always visible)
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.wizard_use_percentage,
+                        value = uiState.percentage.toDouble(),
+                        onValueChange = onPercentageChange,
+                        valueRange = 10.0..200.0,
+                        step = 5.0,
+                        unitLabel = "%",
+                        decimalPlaces = 0
+                    )
+
+                    HorizontalDivider()
+
+                    // Direct Correction toggle + input
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onDirectCorrectionToggle(!uiState.useDirectCorrection) },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(CoreUiR.string.wizard_correction),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Switch(
+                            checked = uiState.useDirectCorrection,
+                            onCheckedChange = onDirectCorrectionToggle
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = uiState.useDirectCorrection,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        NumberInputRow(
+                            labelResId = CoreUiR.string.wizard_correction,
+                            value = uiState.directCorrection,
+                            onValueChange = onDirectCorrectionChange,
+                            valueRange = -uiState.maxBolus..uiState.maxBolus,
+                            step = uiState.bolusStep,
+                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                            decimalPlaces = 1
+                        )
+                    }
+
+                    HorizontalDivider()
+
+                    // Carb Time Input
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.wizard_carb_time,
+                        value = uiState.carbTime.toDouble(),
+                        onValueChange = onCarbTimeChange,
+                        valueRange = -60.0..60.0,
+                        step = 5.0,
+                        unitLabelResId = KeysR.string.units_min
+                    )
+
+                    // Alarm toggle
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onAlarmToggle(!uiState.alarmChecked) },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Alarm,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = stringResource(CoreUiR.string.wizard_set_alarm),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        Switch(
+                            checked = uiState.alarmChecked,
+                            onCheckedChange = onAlarmToggle
+                        )
+                    }
+                }
+            }
+
+            // --- BG Card (collapsible) ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Header row — collapsed: read-only BG info; tap to expand
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onBgExpandToggle() },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = stringResource(CoreUiR.string.wizard_bg_label),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (!uiState.bgExpanded) {
+                                // Collapsed: show read-only value and age
+                                if (uiState.hasBgData) {
+                                    Text(
+                                        text = formatDouble(uiState.bg, if (uiState.isMgdl) 0 else 1) + " " + unitsLabel,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = "(${uiState.bgAgeMinutes} min)",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                } else {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.not_available_full),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            }
+                        }
+                        Icon(
+                            imageVector = if (uiState.bgExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    // Expanded content: BG input + toggles
+                    AnimatedVisibility(
+                        visible = uiState.bgExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        Column(modifier = Modifier.padding(top = 8.dp)) {
+                            NumberInputRow(
+                                labelResId = CoreUiR.string.wizard_bg_label,
+                                value = uiState.bg,
+                                onValueChange = onBgChange,
+                                valueRange = uiState.bgRange,
+                                step = uiState.bgStep,
+                                unitLabel = unitsLabel,
+                                decimalPlaces = if (uiState.isMgdl) 0 else 1
+                            )
+                            SwitchRow(stringResource(CoreUiR.string.wizard_include_bg), uiState.useBg, onBgToggle)
+                            SwitchRow(
+                                label = stringResource(CoreUiR.string.wizard_include_tt),
+                                checked = uiState.useTT,
+                                onCheckedChange = onTTToggle,
+                                enabled = uiState.hasTempTarget && uiState.useBg
+                            )
+                            SwitchRow(stringResource(CoreUiR.string.wizard_include_trend), uiState.useTrend, onTrendToggle)
+                        }
+                    }
+                }
+            }
+
+            // --- Options Card ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Toggle switches
+                    SwitchRow(stringResource(CoreUiR.string.wizard_include_iob), uiState.useIOB, onIOBToggle)
+                    SwitchRow(stringResource(CoreUiR.string.wizard_include_cob), uiState.useCOB, onCOBToggle)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Profile dropdown
+                    ProfileDropdown(
+                        profileNames = uiState.profileNames,
+                        selectedIndex = uiState.selectedProfileIndex,
+                        onSelect = onProfileSelect
+                    )
+                }
+            }
+
+            // --- Calculation Card (expandable) ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Header row (clickable to toggle)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCalculationExpandToggle() },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(CoreUiR.string.wizard_calculation),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Icon(
+                            imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = uiState.calculationExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(top = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            if (uiState.hasResult) {
+                                // === Suggestion components (scaled by percentage) ===
+
+                                // BG
+                                if (uiState.useBg && uiState.bg > 0) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_bg_label) + " (ISF: ${formatDouble(uiState.isf, 1)})",
+                                        value = formatInsulinUnits(uiState.insulinFromBG)
+                                    )
+                                }
+
+                                // Trend
+                                if (uiState.useTrend) {
+                                    CalcRow(
+                                        label = uiState.trendDetail,
+                                        value = formatInsulinUnits(uiState.insulinFromTrend)
+                                    )
+                                }
+
+                                // COB
+                                if (uiState.useCOB) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.cob) + " (IC: ${formatDouble(uiState.ic, 1)})",
+                                        value = formatInsulinUnits(uiState.insulinFromCOB)
+                                    )
+                                }
+
+                                // Carbs
+                                if (uiState.eCarbs > 0) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.carbs) + " ${uiState.effectiveCarbs}g (IC: ${formatDouble(uiState.ic, 1)})",
+                                        value = formatInsulinUnits(uiState.insulinFromCarbs)
+                                    )
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
+                                        value = ""
+                                    )
+                                } else {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.carbs) + " (IC: ${formatDouble(uiState.ic, 1)})",
+                                        value = formatInsulinUnits(uiState.insulinFromCarbs)
+                                    )
+                                }
+
+                                if (uiState.percentage != 100) {
+                                    // Show subtotal before percentage, then scaled result
+                                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                                    val scaledSubtotal = uiState.insulinFromBG + uiState.insulinFromTrend +
+                                        uiState.insulinFromCarbs + uiState.insulinFromCOB
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_subtotal),
+                                        value = formatInsulinUnits(scaledSubtotal)
+                                    )
+                                    val afterPercentage = scaledSubtotal * uiState.percentage / 100.0
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.format_percent, uiState.percentage),
+                                        value = formatInsulinUnits(afterPercentage)
+                                    )
+                                }
+
+                                // === Fact components (not scaled by percentage) ===
+
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+                                // IOB
+                                if (uiState.useIOB) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.iob),
+                                        value = formatInsulinUnits(uiState.totalIOB)
+                                    )
+                                }
+
+                                // Direct Correction
+                                if (uiState.useDirectCorrection && uiState.insulinFromCorrection != 0.0) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_correction),
+                                        value = formatInsulinUnits(uiState.insulinFromCorrection)
+                                    )
+                                }
+
+                                // === Total ===
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                                CalcRow(
+                                    label = stringResource(CoreUiR.string.wizard_total),
+                                    value = formatInsulinUnits(uiState.totalInsulin)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // --- Notes ---
+            if (uiState.showNotes) {
+                OutlinedTextField(
+                    value = uiState.notes,
+                    onValueChange = onNotesChange,
+                    label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(),
+                    singleLine = false,
+                    maxLines = 3
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun SwitchRow(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled) { onCheckedChange(!checked) },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            enabled = enabled
+        )
+    }
+}
+
+@Composable
+private fun CalcRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProfileDropdown(
+    profileNames: List<String>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedText = profileNames.getOrElse(selectedIndex) { "" }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        OutlinedTextField(
+            value = selectedText,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(stringResource(CoreUiR.string.profile)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            profileNames.forEachIndexed { index, name ->
+                DropdownMenuItem(
+                    text = { Text(name) },
+                    onClick = {
+                        onSelect(index)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
+            }
+        }
+    }
+}
+
+private fun formatInsulinUnits(value: Double): String {
+    return String.format("%.2f U", value)
+}
+
+private fun formatDouble(value: Double, decimals: Int): String {
+    return String.format("%.${decimals}f", value)
+}

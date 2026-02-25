@@ -251,14 +251,21 @@ class BolusWizard @Inject constructor(
         }
 
         // Total
-        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + calculatedTotalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
+        // Suggestion components (BG, Trend, Carbs, COB) are scaled by percentage.
+        // Fact components (IOB, Direct Correction) are NOT scaled — they represent
+        // actual measured or explicit values, not wizard suggestions.
+        // This prevents the compounding overdose bug when splitting carb entries (#2561):
+        // previously, IOB was scaled down by percentage, under-counting active insulin.
+        val scaledComponents = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromCOB
+        val unscaledComponents = calculatedTotalIOB + insulinFromCorrection
 
         val percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
 
+        totalBeforePercentageAdjustment = scaledComponents + unscaledComponents
+        calculatedTotalInsulin = scaledComponents * percentage / 100.0 + unscaledComponents
+
         // Percentage adjustment
-        totalBeforePercentageAdjustment = calculatedTotalInsulin
         if (calculatedTotalInsulin >= 0) {
-            calculatedTotalInsulin = calculatedTotalInsulin * percentage / 100.0
             if (usePercentage)
                 calcCorrectionWithConstraints()
             else
@@ -616,4 +623,289 @@ class BolusWizard @Inject constructor(
         calculatedCorrection = max(-constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
     }
 
+    // --- Compose-friendly methods (no Context/attrs dependency) ---
+
+    /**
+     * Pure logic check whether bolus advisor should be offered.
+     * Extracted from confirmAndExecute() line 399.
+     */
+    fun needsBolusAdvisor(): Boolean =
+        preferences.get(BooleanKey.OverviewUseBolusAdvisor) &&
+            profileUtil.convertToMgdl(bg, profile.units) > 180 &&
+            carbs > 0 &&
+            carbTime >= 0
+
+    /**
+     * Build confirmation summary lines as plain text (no HTML colors).
+     * Compose UI layer handles coloring via theme.
+     */
+    fun buildConfirmationLines(advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0): List<String> {
+        val lines = mutableListOf<String>()
+        if (insulinAfterConstraints > 0) {
+            val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
+            lines.add(rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints) + pct)
+        }
+        if (carbs > 0 && !advisor) {
+            var timeShift = ""
+            if (carbTime > 0) {
+                timeShift += " (+" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
+            } else if (carbTime < 0) {
+                timeShift += " (" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
+            }
+            lines.add(rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs) + timeShift)
+        }
+        if (insulinFromCOB > 0) {
+            lines.add(
+                rh.gs(app.aaps.core.ui.R.string.cobvsiob) + ": " + rh.gs(
+                    app.aaps.core.ui.R.string.formatsignedinsulinunits,
+                    -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
+                )
+            )
+            val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
+            if (absorptionRate > .25)
+                lines.add(rh.gs(app.aaps.core.ui.R.string.slowabsorptiondetected_plain, (absorptionRate * 100).toInt()))
+        }
+        if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
+            lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
+        if (config.AAPSCLIENT && insulinAfterConstraints > 0)
+            lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
+        if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
+            lines.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime))
+        if (advisor)
+            lines.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm))
+
+        if (quickWizardEntry != null) {
+            val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
+            if (eCarbsYesNo == QuickWizardEntry.YES) {
+                val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
+                val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
+                val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
+                if (carbs2 > 0) {
+                    val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
+                    lines.add(rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + ": " + ecarbsMessage)
+                }
+            }
+        }
+        if (eCarbsGrams > 0) {
+            lines.add(rh.gs(app.aaps.core.ui.R.string.wizard_ecarbs, eCarbsGrams, eCarbsDurationHours, eCarbsDelayMinutes))
+        }
+
+        return lines
+    }
+
+    /**
+     * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
+     * No UI dependency — errors reported via [onError] callback.
+     */
+    fun executeNormal(onError: (String) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
+        if (accepted) {
+            aapsLogger.debug(LTag.UI, "guarding: already accepted")
+            return
+        }
+        accepted = true
+        if (calculatedTotalInsulin > 0.0)
+            automation.removeAutomationEventBolusReminder()
+        if (carbs > 0.0)
+            automation.removeAutomationEventEatReminder()
+
+        val profile = profileFunction.getProfile() ?: return
+        val pump = activePlugin.activePump
+        val now = dateUtil.now()
+
+        if (insulinAfterConstraints > 0 || carbs > 0) {
+            if (useSuperBolus) {
+                if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
+                    loop.handleRunningModeChange(
+                        durationInMinutes = 2 * 60,
+                        profile = profile,
+                        newRM = RM.Mode.SUPER_BOLUS,
+                        action = Action.SUPERBOLUS_TBR,
+                        source = Sources.WizardDialog
+                    )
+                    rxBus.send(EventRefreshOverview("WizardDialog"))
+                }
+
+                if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                    commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                onError(result.comment)
+                            }
+                        }
+                    })
+                } else {
+                    commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                onError(result.comment)
+                            }
+                        }
+                    })
+                }
+            }
+            DetailedBolusInfo().apply {
+                eventType = TE.Type.BOLUS_WIZARD
+                insulin = insulinAfterConstraints
+                carbs = this@BolusWizard.carbs.toDouble()
+                mgdlGlucose = profileUtil.convertToMgdl(bg, this@BolusWizard.profile.units)
+                glucoseType = TE.MeterType.MANUAL
+                carbsTimestamp = now + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
+                bolusCalculatorResult = createBolusCalculatorResult()
+                notes = this@BolusWizard.notes
+                if (insulin > 0 || carbs > 0) {
+                    val action = when {
+                        insulinAfterConstraints == 0.0 -> Action.CARBS
+                        carbs == 0.0                   -> Action.BOLUS
+                        else                           -> Action.TREATMENT
+                    }
+                    uel.log(
+                        action = action,
+                        source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                        note = notes,
+                        listValues = listOfNotNull(
+                            ValueWithUnit.TEType(eventType),
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
+                            ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
+                        )
+                    )
+                    quickWizardEntry?.markAsUsed()
+                    commandQueue.bolus(this, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                onError(result.comment)
+                            } else if (useAlarm && carbs > 0 && this@BolusWizard.carbTime > 0) {
+                                automation.scheduleTimeToEatReminder(T.mins(this@BolusWizard.carbTime.toLong()).secs().toInt())
+                            }
+                        }
+                    })
+                }
+                bolusCalculatorResult?.let { runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
+            }
+        }
+        if (quickWizardEntry != null) {
+            scheduleECarbsFromQuickWizardCompose(quickWizardEntry, onError)
+        }
+        if (eCarbsGrams > 0) {
+            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError)
+        }
+    }
+
+    /**
+     * Execute bolus advisor flow (correction-only bolus, no carbs, eat reminder).
+     * No UI dependency — errors reported via [onError] callback.
+     */
+    fun executeBolusAdvisor(onError: (String) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
+        if (accepted) {
+            aapsLogger.debug(LTag.UI, "guarding: already accepted")
+            return
+        }
+        accepted = true
+        if (calculatedTotalInsulin > 0.0)
+            automation.removeAutomationEventBolusReminder()
+        if (carbs > 0.0)
+            automation.removeAutomationEventEatReminder()
+
+        DetailedBolusInfo().apply {
+            eventType = TE.Type.CORRECTION_BOLUS
+            insulin = insulinAfterConstraints
+            carbs = 0.0
+            mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
+            glucoseType = TE.MeterType.MANUAL
+            carbTime = 0
+            bolusCalculatorResult = createBolusCalculatorResult()
+            notes = this@BolusWizard.notes
+            uel.log(
+                action = Action.BOLUS_ADVISOR,
+                source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                note = notes,
+                listValues = listOf(
+                    ValueWithUnit.TEType(eventType),
+                    ValueWithUnit.Insulin(insulinAfterConstraints)
+                )
+            )
+            if (insulin > 0) {
+                commandQueue.bolus(this, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            onError(result.comment)
+                        } else
+                            automation.scheduleAutomationEventEatReminder()
+                    }
+                })
+            }
+        }
+        if (eCarbsGrams > 0) {
+            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError)
+        }
+    }
+
+    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (String) -> Unit) {
+        val totalDelayMinutes = delayMinutes + carbTime
+        val eventTime = Calendar.getInstance().timeInMillis + (totalDelayMinutes * 60000L)
+        DetailedBolusInfo().apply {
+            eventType = TE.Type.CORRECTION_BOLUS
+            carbs = eCarbsGrams.toDouble()
+            carbsDuration = T.hours(durationHours.toLong()).msecs()
+            carbsTimestamp = eventTime
+            notes = this@BolusWizard.notes
+            uel.log(
+                action = Action.EXTENDED_CARBS,
+                source = Sources.WizardDialog,
+                note = notes,
+                listValues = listOfNotNull(
+                    ValueWithUnit.Timestamp(eventTime),
+                    ValueWithUnit.Gram(eCarbsGrams),
+                    ValueWithUnit.Minute(totalDelayMinutes).takeIf { totalDelayMinutes != 0 },
+                    ValueWithUnit.Hour(durationHours).takeIf { durationHours != 0 }
+                )
+            )
+            commandQueue.bolus(this, object : Callback() {
+                override fun run() {
+                    if (!result.success) {
+                        onError(result.comment)
+                    }
+                }
+            })
+        }
+    }
+
+    private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (String) -> Unit) {
+        val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
+        if (eCarbsYesNo == QuickWizardEntry.YES) {
+            val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
+            val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
+            val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
+
+            val currentTime = Calendar.getInstance().timeInMillis
+            val eventTime: Long = currentTime + (timeOffset * 60000)
+
+            if (carbs2 > 0) {
+                val detailedBolusInfo = DetailedBolusInfo()
+                detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
+                detailedBolusInfo.carbs = carbs2.toDouble()
+                detailedBolusInfo.notes = quickWizardEntry.storage.get("buttonText").toString()
+                detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
+                detailedBolusInfo.carbsTimestamp = eventTime
+                uel.log(
+                    action = Action.EXTENDED_CARBS,
+                    source = Sources.QuickWizard,
+                    note = quickWizardEntry.storage.get("buttonText").toString(),
+                    listValues = listOfNotNull(
+                        ValueWithUnit.Timestamp(eventTime),
+                        ValueWithUnit.Gram(carbs2),
+                        ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
+                        ValueWithUnit.Hour(duration).takeIf { duration != 0 }
+                    )
+                )
+                commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            onError(result.comment)
+                        }
+                    }
+                })
+            }
+        }
+    }
 }

@@ -48,7 +48,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.compose.AapsCard
@@ -186,8 +185,7 @@ fun UserEntryScreen(
                                     UserEntryItem(
                                         userEntry = ue,
                                         userEntryPresentationHelper = userEntryPresentationHelper,
-                                        translator = translator,
-                                        rh = viewModel.rh
+                                        translator = translator
                                     )
                                 }
                             }
@@ -210,8 +208,7 @@ fun UserEntryScreen(
 private fun UserEntryItem(
     userEntry: UE,
     userEntryPresentationHelper: UserEntryPresentationHelper,
-    translator: Translator,
-    rh: ResourceHelper
+    translator: Translator
 ) {
     val dateUtil = LocalDateUtil.current
     AapsCard(

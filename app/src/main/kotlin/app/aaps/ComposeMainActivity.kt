@@ -3,7 +3,6 @@ package app.aaps
 import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
@@ -119,6 +118,8 @@ import app.aaps.ui.compose.treatmentDialog.TreatmentDialogScreen
 import app.aaps.ui.compose.treatmentDialog.TreatmentDialogViewModel
 import app.aaps.ui.compose.treatments.TreatmentsScreen
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
+import app.aaps.ui.compose.wizardDialog.WizardDialogScreen
+import app.aaps.ui.compose.wizardDialog.WizardDialogViewModel
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchViewModel
@@ -168,6 +169,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var carbsDialogViewModel: CarbsDialogViewModel
     @Inject lateinit var insulinDialogViewModel: InsulinDialogViewModel
     @Inject lateinit var treatmentDialogViewModel: TreatmentDialogViewModel
+    @Inject lateinit var wizardDialogViewModel: WizardDialogViewModel
     @Inject lateinit var importViewModel: ImportViewModel
     @Inject lateinit var searchViewModel: SearchViewModel
     @Inject lateinit var permissionsViewModel: PermissionsViewModel
@@ -260,7 +262,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                     effect.group.permissions.contains(Manifest.permission.SCHEDULE_EXACT_ALARM)                 ->
                                         startActivity(
                                             Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                                                data = Uri.parse("package:$packageName")
+                                                data = "package:$packageName".toUri()
                                             }
                                         )
                                 }
@@ -276,7 +278,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                 if (result == SnackbarResult.ActionPerformed) {
                                     startActivity(
                                         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                            data = Uri.parse("package:$packageName")
+                                            data = "package:$packageName".toUri()
                                         }
                                     )
                                 }
@@ -446,7 +448,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                         .setShowTitle(true)
                                         .build()
                                     customTabsIntent.launchUrl(this@ComposeMainActivity, url.toUri())
-                                } catch (e: Exception) {
+                                } catch (_: Exception) {
                                     maintenanceViewModel.emitError("Unable to open browser")
                                 }
                             },
@@ -519,6 +521,13 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                 protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
                                     if (result == ProtectionResult.GRANTED) {
                                         mainViewModel.executeQuickWizard(this@ComposeMainActivity, guid)
+                                    }
+                                }
+                            },
+                            onCalculatorClick = {
+                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                                    if (result == ProtectionResult.GRANTED) {
+                                        navController.navigate(AppRoute.WizardDialog.createRoute())
                                     }
                                 }
                             },
@@ -666,6 +675,34 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     composable(route = AppRoute.TreatmentDialog.route) {
                         TreatmentDialogScreen(
                             viewModel = treatmentDialogViewModel,
+                            onNavigateBack = { navController.popBackStack() },
+                            onShowDeliveryError = { comment ->
+                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        )
+                    }
+
+                    composable(
+                        route = AppRoute.WizardDialog.route,
+                        arguments = listOf(
+                            androidx.navigation.navArgument("carbs") {
+                                type = androidx.navigation.NavType.StringType
+                                nullable = true
+                                defaultValue = null
+                            },
+                            androidx.navigation.navArgument("notes") {
+                                type = androidx.navigation.NavType.StringType
+                                nullable = true
+                                defaultValue = null
+                            }
+                        )
+                    ) { backStackEntry ->
+                        val carbs = backStackEntry.arguments?.getString("carbs")?.toIntOrNull()
+                        val notes = backStackEntry.arguments?.getString("notes")
+                        WizardDialogScreen(
+                            viewModel = wizardDialogViewModel,
+                            initialCarbs = carbs,
+                            initialNotes = notes,
                             onNavigateBack = { navController.popBackStack() },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
