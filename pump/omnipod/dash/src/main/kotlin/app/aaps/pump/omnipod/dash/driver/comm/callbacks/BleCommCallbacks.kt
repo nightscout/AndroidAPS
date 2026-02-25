@@ -11,6 +11,10 @@ import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.dash.driver.comm.io.CharacteristicType.Companion.byValue
 import app.aaps.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import app.aaps.pump.omnipod.dash.driver.comm.session.DisconnectHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.UUID
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
@@ -38,7 +42,14 @@ class BleCommCallbacks(
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange with status/state: $status/$newState")
         super.onConnectionStateChange(gatt, status, newState)
         if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
-            connected.countDown()
+            aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange delaying gattConnected event by $SLEEP_AFTER_CONNECT_GATT ms")
+            CoroutineScope(Dispatchers.IO).launch {
+                // give GATT a chance to configure encryption, race condition bt stack.
+                delay(SLEEP_AFTER_CONNECT_GATT)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange now delivering gattConnected")
+
+                connected.countDown()
+            }
         }
         if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             // If status == SUCCESS, it means that we initiated the disconnect.
@@ -225,5 +236,7 @@ class BleCommCallbacks(
     companion object {
 
         private const val WRITE_CONFIRM_TIMEOUT_MS = 10 // the confirmation queue should be empty anyway
+
+        const val SLEEP_AFTER_CONNECT_GATT = 1000L
     }
 }
