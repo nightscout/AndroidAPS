@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.TIR
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalProfileUtil
 import java.util.Locale
 
 /**
@@ -56,17 +56,15 @@ data class TirStatsData(
  * - Average rows: TIR and TIT averages for 7 and 30 days
  *
  * @param tirStatsData TIR statistics data
- * @param dateUtil Date formatting utility
- * @param profileUtil Profile utility for unit conversion
  * @param modifier Modifier for the root Column
  */
 @Composable
 fun TirStatsCompose(
     tirStatsData: TirStatsData,
-    dateUtil: DateUtil,
-    profileUtil: ProfileUtil,
     modifier: Modifier = Modifier
 ) {
+    val profileUtil = LocalProfileUtil.current
+    val dateUtil = LocalDateUtil.current
     Column(modifier = modifier) {
         // TIR Section
         Text(

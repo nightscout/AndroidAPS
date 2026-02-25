@@ -16,9 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 
@@ -31,8 +29,6 @@ import app.aaps.core.keys.interfaces.StringValidator
  */
 @Composable
 fun AdaptiveStringPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     stringKey: StringPreferenceKey,
     titleResId: Int = 0,
     summaryResId: Int? = null,
@@ -47,14 +43,12 @@ fun AdaptiveStringPreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = stringKey,
-        preferences = preferences,
-        config = config,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible) return
 
-    val state = rememberPreferenceStringState(preferences, stringKey)
+    val state = rememberPreferenceStringState(stringKey)
     val value = state.value
     val validator = stringKey.validator
     val isSecure = isPassword || stringKey.isPassword || stringKey.isPin

@@ -324,7 +324,6 @@ fun TempTargetManagementScreen(
                                 remainingTimeMs = uiState.remainingTimeMs,
                                 isSelected = pagerState.currentPage == page,
                                 units = viewModel.units,
-                                profileUtil = viewModel.profileUtil,
                                 onExpired = { viewModel.refreshData() },
                                 modifier = Modifier
                                     .graphicsLayer {
@@ -373,8 +372,6 @@ fun TempTargetManagementScreen(
                                 notes = uiState.notes,
                                 showNotesField = uiState.showNotesField,
                                 units = viewModel.units,
-                                profileUtil = viewModel.profileUtil,
-                                dateUtil = viewModel.dateUtil,
                                 rh = viewModel.rh,
                                 onNameChange = viewModel::updateEditorName,
                                 onTargetChange = viewModel::updateEditorTarget,

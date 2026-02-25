@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 
@@ -33,7 +32,6 @@ import app.aaps.core.ui.compose.dialogs.TimePickerModal
  * @param endSeconds End time in seconds from midnight
  * @param onStartChange Callback when start time changes
  * @param onEndChange Callback when end time changes
- * @param dateUtil DateUtil for time formatting
  * @param modifier Modifier for the component
  */
 @Composable
@@ -43,9 +41,9 @@ fun TimeRangePicker(
     endSeconds: Int,
     onStartChange: (Int) -> Unit,
     onEndChange: (Int) -> Unit,
-    dateUtil: DateUtil,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
 

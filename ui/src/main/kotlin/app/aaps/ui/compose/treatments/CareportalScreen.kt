@@ -36,12 +36,12 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
@@ -57,7 +57,6 @@ import kotlinx.coroutines.launch
  *
  * @param viewModel ViewModel managing state and business logic
  * @param persistenceLayer Database layer for therapy event data (needed for menu item)
- * @param profileUtil Profile utility for unit conversion
  * @param translator Translator for therapy event types
  * @param setToolbarConfig Callback to set the toolbar configuration
  * @param onNavigateBack Callback to navigate back
@@ -67,7 +66,6 @@ import kotlinx.coroutines.launch
 fun CareportalScreen(
     viewModel: CareportalViewModel,
     persistenceLayer: PersistenceLayer,
-    profileUtil: ProfileUtil,
     translator: Translator,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit = { }
@@ -148,7 +146,6 @@ fun CareportalScreen(
                     items = uiState.therapyEvents,
                     getTimestamp = { it.timestamp },
                     getItemKey = { it.id },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { te ->
                         TherapyEventItem(
@@ -171,10 +168,8 @@ fun CareportalScreen(
                                     viewModel.enterSelectionMode(te)
                                 }
                             },
-                            profileUtil = profileUtil,
                             rh = viewModel.rh,
-                            translator = translator,
-                            dateUtil = viewModel.dateUtil
+                            translator = translator
                         )
                     }
                 )
@@ -198,11 +193,11 @@ private fun TherapyEventItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
-    profileUtil: ProfileUtil,
     rh: ResourceHelper,
-    translator: Translator,
-    dateUtil: DateUtil
+    translator: Translator
 ) {
+    val profileUtil = LocalProfileUtil.current
+    val dateUtil = LocalDateUtil.current
     AapsCard(
         modifier = Modifier
             .fillMaxWidth()

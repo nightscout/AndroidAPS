@@ -18,10 +18,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
+
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTopAppBar
 
@@ -30,16 +29,12 @@ import app.aaps.core.ui.compose.AapsTopAppBar
  * Uses the same rendering approach as AllPreferencesScreen - collapsible sections.
  *
  * @param plugin The plugin whose preferences to display
- * @param config Config instance for rendering
- * @param profileUtil ProfileUtil instance for unit preferences
  * @param visibilityContext Context for evaluating visibility conditions
  * @param onBackClick Callback when back button is clicked
  */
 @Composable
 fun PluginPreferencesScreen(
     plugin: PluginBase,
-    config: Config,
-    profileUtil: ProfileUtil,
     visibilityContext: PreferenceVisibilityContext? = null,
     onBackClick: () -> Unit
 ) {
@@ -54,8 +49,6 @@ fun PluginPreferencesScreen(
                     screen = preferenceScreenContent,
                     title = title,
                     plugin = plugin,
-                    config = config,
-                    profileUtil = profileUtil,
                     visibilityContext = visibilityContext,
                     onBackClick = onBackClick
                 )
@@ -110,8 +103,6 @@ private fun SinglePluginPreferencesRenderer(
     screen: PreferenceSubScreenDef,
     title: String,
     plugin: PluginBase,
-    config: Config,
-    profileUtil: ProfileUtil,
     visibilityContext: PreferenceVisibilityContext?,
     onBackClick: () -> Unit
 ) {
@@ -145,8 +136,6 @@ private fun SinglePluginPreferencesRenderer(
         }
         return
     }
-
-    val preferences = pluginWithPrefs.preferences
 
     val sectionState = rememberPreferenceSectionState()
 
@@ -193,10 +182,7 @@ private fun SinglePluginPreferencesRenderer(
                 // This renders as collapsible sections, not navigation
                 addPreferenceContent(
                     content = screen,
-                    sectionState = sectionState,
-                    preferences = preferences,
-                    config = config,
-                    profileUtil = profileUtil
+                    sectionState = sectionState
                 )
             }
         }

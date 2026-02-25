@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TimeRangePicker
 import app.aaps.ui.R
@@ -107,7 +107,6 @@ fun QuickWizardEditor(
     showSuperBolusOption: Boolean,
     showWearOptions: Boolean,
     maxCarbs: Double,
-    dateUtil: DateUtil,
     rh: ResourceHelper,
     onButtonTextChange: (String) -> Unit,
     onCarbsChange: (Int) -> Unit,
@@ -131,6 +130,7 @@ fun QuickWizardEditor(
     onCarbs2Change: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LocalDateUtil.current
     Column(
         modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -173,7 +173,6 @@ fun QuickWizardEditor(
             endSeconds = validTo,
             onStartChange = onValidFromChange,
             onEndChange = onValidToChange,
-            dateUtil = dateUtil,
             modifier = Modifier.fillMaxWidth()
         )
 

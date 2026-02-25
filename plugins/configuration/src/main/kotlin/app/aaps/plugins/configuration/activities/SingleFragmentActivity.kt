@@ -16,12 +16,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.core.view.MenuProvider
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.overview.Overview
@@ -35,7 +35,9 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
@@ -126,15 +128,15 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
         setContent {
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
-                LocalRxBus provides rxBus
+                LocalRxBus provides rxBus,
+                LocalConfig provides config,
+                LocalProfileUtil provides profileUtil
             ) {
                 AapsTheme {
                     if (showingComposePreferences) {
                         // Show compose preferences
                         PluginPreferencesScreen(
                             plugin = plugin,
-                            config = config,
-                            profileUtil = profileUtil,
                             visibilityContext = visibilityContext,
                             onBackClick = {
                                 showingComposePreferences = false
@@ -208,12 +210,12 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
-                    android.R.id.home -> {
+                    android.R.id.home           -> {
                         onBackPressedDispatcher.onBackPressed()
                         true
                     }
 
-                    MENU_TOGGLE_COMPOSE -> {
+                    MENU_TOGGLE_COMPOSE         -> {
                         toggleToCompose()
                         true
                     }
@@ -223,7 +225,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
                         true
                     }
 
-                    else -> false
+                    else                        -> false
                 }
         }
         addMenuProvider(singleFragmentMenuProvider)
@@ -240,6 +242,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     }
 
     companion object {
+
         private const val MENU_TOGGLE_COMPOSE = 9999
         private const val KEY_FORCE_FRAGMENT = "force_fragment"
     }

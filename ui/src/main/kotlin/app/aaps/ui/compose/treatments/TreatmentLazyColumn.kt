@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.LocalDateUtil
 
 /**
  * Generic lazy column for treatment screens with sticky date headers and item animations.
@@ -32,11 +32,11 @@ fun <T> TreatmentLazyColumn(
     items: List<T>,
     getTimestamp: (T) -> Long,
     getItemKey: (T) -> Any,
-    dateUtil: DateUtil,
     rh: ResourceHelper,
     itemContent: @Composable (T) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     val groupedByDay by remember(items) {
         derivedStateOf {
             items.groupBy { item ->

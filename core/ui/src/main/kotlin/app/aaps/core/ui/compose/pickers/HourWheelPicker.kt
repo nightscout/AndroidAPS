@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.LocalDateUtil
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.math.abs
 
@@ -42,11 +42,11 @@ private const val ITEM_HEIGHT_DP = 44
 fun HourWheelPicker(
     selectedHour: Int,
     availableHours: List<Int>,
-    dateUtil: DateUtil,
     onHourSelected: (Int) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     val listState = rememberLazyListState()
     val initialIndex = availableHours.indexOf(selectedHour).coerceAtLeast(0)
     val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
@@ -186,7 +186,6 @@ fun HourWheelPicker(
 @Composable
 fun HourWheelPickerDialog(
     selectedHour: Int,
-    dateUtil: DateUtil,
     minHour: Int = 0,
     maxHour: Int = 23,
     excludeHour: Int? = null,
@@ -200,7 +199,6 @@ fun HourWheelPickerDialog(
     HourWheelPicker(
         selectedHour = selectedHour,
         availableHours = availableHours,
-        dateUtil = dateUtil,
         onHourSelected = onHourSelected,
         onDismiss = onDismiss
     )

@@ -12,12 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import kotlinx.coroutines.launch
 
@@ -26,7 +25,6 @@ import kotlinx.coroutines.launch
  * Automatically detects if it's a password or PIN from the StringPreferenceKey flags.
  *
  * @param preferences The Preferences instance
- * @param config The Config instance
  * @param stringKey The StringPreferenceKey (should have isPassword=true or isPin=true)
  * @param hashPassword Function to hash the password before storing
  * @param titleResId Optional title resource ID. If 0, uses stringKey.titleResId
@@ -36,8 +34,6 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun AdaptivePasswordPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     stringKey: StringPreferenceKey,
     hashPassword: (String) -> String,
     titleResId: Int = 0,
@@ -45,6 +41,7 @@ fun AdaptivePasswordPreferenceItem(
     visibilityValue: Int? = null,
     visibilityContext: PreferenceVisibilityContext? = null
 ) {
+    val preferences = LocalPreferences.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = LocalSnackbarHostState.current
     val effectiveTitleResId = if (titleResId != 0) titleResId else stringKey.titleResId
@@ -54,15 +51,13 @@ fun AdaptivePasswordPreferenceItem(
 
     // Check conditional visibility based on visibilityKey
     if (visibilityKey != null && visibilityValue != null) {
-        val currentValue by rememberPreferenceIntState(preferences, visibilityKey)
+        val currentValue by rememberPreferenceIntState(visibilityKey)
         if (currentValue != visibilityValue) return
     }
 
     // Check standard visibility
     val visibility = calculatePreferenceVisibility(
         preferenceKey = stringKey,
-        preferences = preferences,
-        config = config,
         visibilityContext = visibilityContext
     )
 

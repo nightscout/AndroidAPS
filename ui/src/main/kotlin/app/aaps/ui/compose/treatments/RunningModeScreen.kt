@@ -40,10 +40,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -165,7 +165,6 @@ fun RunningModeScreen(
                     items = uiState.runningModes,
                     getTimestamp = { it.timestamp },
                     getItemKey = { it.id },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { rm ->
                         RunningModeItem(
@@ -191,8 +190,7 @@ fun RunningModeScreen(
                                 }
                             },
                             rh = viewModel.rh,
-                            translator = translator,
-                            dateUtil = viewModel.dateUtil
+                            translator = translator
                         )
                     }
                 )
@@ -219,9 +217,9 @@ private fun RunningModeItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     rh: ResourceHelper,
-    translator: Translator,
-    dateUtil: DateUtil
+    translator: Translator
 ) {
+    val dateUtil = LocalDateUtil.current
     AapsCard(
         modifier = Modifier
             .fillMaxWidth()

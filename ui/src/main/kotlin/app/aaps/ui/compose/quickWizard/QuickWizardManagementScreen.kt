@@ -265,7 +265,6 @@ fun QuickWizardManagementScreen(
                                 QuickWizardCarouselCard(
                                     entry = entry,
                                     isSelected = pagerState.currentPage == page,
-                                    dateUtil = viewModel.dateUtil,
                                     modifier = Modifier
                                         .graphicsLayer {
                                             val pageOffset = (
@@ -329,7 +328,6 @@ fun QuickWizardManagementScreen(
                                     showSuperBolusOption = uiState.showSuperBolusOption,
                                     showWearOptions = uiState.showWearOptions,
                                     maxCarbs = viewModel.getMaxCarbs(),
-                                    dateUtil = viewModel.dateUtil,
                                     rh = viewModel.rh,
                                     onButtonTextChange = viewModel::updateButtonText,
                                     onCarbsChange = viewModel::updateCarbs,

@@ -45,8 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
@@ -174,8 +172,6 @@ fun InsulinDialogScreen(
     if (showButtonSettings) {
         InsulinButtonSettingsSheet(
             settingsDef = insulinButtonsDef,
-            preferences = viewModel.preferences,
-            config = viewModel.config,
             onDismiss = {
                 showButtonSettings = false
                 viewModel.refreshInsulinButtons()
@@ -464,8 +460,6 @@ private fun InsulinQuickAddButtons(
 @Composable
 private fun InsulinButtonSettingsSheet(
     settingsDef: PreferenceSubScreenDef,
-    preferences: Preferences,
-    config: Config,
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -484,9 +478,7 @@ private fun InsulinButtonSettingsSheet(
             )
             ProvidePreferenceTheme {
                 AdaptivePreferenceList(
-                    items = settingsDef.items,
-                    preferences = preferences,
-                    config = config
+                    items = settingsDef.items
                 )
             }
         }

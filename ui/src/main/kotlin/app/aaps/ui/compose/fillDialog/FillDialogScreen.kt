@@ -465,9 +465,7 @@ private fun FillButtonSettingsSheet(
             )
             ProvidePreferenceTheme {
                 AdaptivePreferenceList(
-                    items = settingsDef.items,
-                    preferences = viewModel.preferences,
-                    config = viewModel.config
+                    items = settingsDef.items
                 )
             }
         }

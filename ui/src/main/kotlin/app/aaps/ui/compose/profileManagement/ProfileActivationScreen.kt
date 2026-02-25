@@ -44,8 +44,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
@@ -77,11 +77,11 @@ fun ProfileActivationScreen(
     hasReuseValues: Boolean = false,
     showNotesField: Boolean = true,
     initialTimestamp: Long,
-    dateUtil: DateUtil,
     rh: ResourceHelper,
     onNavigateBack: () -> Unit,
     onActivate: (durationMinutes: Int, percentage: Int, timeshiftHours: Int, withTT: Boolean, notes: String, timestamp: Long, timeChanged: Boolean) -> Unit
 ) {
+    val dateUtil = LocalDateUtil.current
     val focusManager = LocalFocusManager.current
     var duration by remember { mutableDoubleStateOf(0.0) }
     var percentage by remember { mutableDoubleStateOf(100.0) }

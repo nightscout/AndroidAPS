@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
-import app.aaps.core.ui.compose.formatMinutesAsDuration
 import kotlinx.coroutines.delay
 
 /**
@@ -54,7 +54,6 @@ import kotlinx.coroutines.delay
  * @param remainingTimeMs Remaining time in milliseconds for active TT
  * @param isSelected Whether this card is currently selected
  * @param units Current glucose units (mg/dL or mmol/L)
- * @param profileUtil For unit conversion
  * @param modifier Modifier for the card
  */
 @Composable
@@ -64,10 +63,10 @@ fun TempTargetCarouselCard(
     remainingTimeMs: Long?,
     isSelected: Boolean,
     units: GlucoseUnit,
-    profileUtil: ProfileUtil,
     onExpired: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val profileUtil = LocalProfileUtil.current
     val isActiveCard = activeTT != null
     val reason = preset?.reason ?: activeTT?.reason ?: TT.Reason.CUSTOM
 

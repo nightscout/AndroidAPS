@@ -41,7 +41,10 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.ui.compose.profileManagement.ProfileCompareContent
 import app.aaps.ui.compose.profileManagement.ProfileSingleContent
@@ -124,7 +127,10 @@ class ProfileViewerActivity : DaggerAppCompatActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
-                LocalRxBus provides rxBus
+                LocalRxBus provides rxBus,
+                LocalDateUtil provides dateUtil,
+                LocalConfig provides config,
+                LocalProfileUtil provides profileUtil
             ) {
                 AapsTheme {
                     val viewerData = prepareProfileViewerData()

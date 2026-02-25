@@ -8,10 +8,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import kotlinx.coroutines.launch
@@ -24,30 +23,26 @@ import kotlinx.coroutines.launch
  * - If master password is not set: user can set it directly
  *
  * @param preferences The Preferences instance
- * @param config The Config instance
  * @param checkPassword Function to verify password: (enteredPassword, storedHash) -> Boolean
  * @param hashPassword Function to hash password before storing: (password) -> String
  */
 @Composable
 fun AdaptiveMasterPasswordPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     checkPassword: (password: String, hash: String) -> Boolean,
     hashPassword: (String) -> String
 ) {
+    val preferences = LocalPreferences.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = LocalSnackbarHostState.current
     val stringKey = StringKey.ProtectionMasterPassword
 
     val visibility = calculatePreferenceVisibility(
-        preferenceKey = stringKey,
-        preferences = preferences,
-        config = config
+        preferenceKey = stringKey
     )
 
     if (!visibility.visible) return
 
-    var passwordState by rememberPreferenceStringState(preferences, stringKey)
+    var passwordState by rememberPreferenceStringState(stringKey)
     val hasPassword = passwordState.isNotEmpty()
 
     val summary = if (hasPassword) {

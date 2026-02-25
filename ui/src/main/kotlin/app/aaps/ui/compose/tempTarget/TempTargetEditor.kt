@@ -25,10 +25,9 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TTPreset
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
@@ -46,8 +45,6 @@ import app.aaps.core.keys.R as KeysR
  * @param notes Activation notes
  * @param showNotesField Whether notes field should be shown
  * @param units Current glucose units
- * @param profileUtil For unit conversion and formatting
- * @param dateUtil For date/time formatting
  * @param rh Resource helper
  * @param onNameChange Callback when name changes
  * @param onTargetChange Callback when target changes (in user units)
@@ -68,8 +65,6 @@ fun TempTargetEditor(
     notes: String,
     showNotesField: Boolean,
     units: GlucoseUnit,
-    profileUtil: ProfileUtil,
-    dateUtil: DateUtil,
     rh: ResourceHelper,
     onNameChange: (String) -> Unit,
     onTargetChange: (Double) -> Unit,
@@ -79,6 +74,7 @@ fun TempTargetEditor(
     onNotesChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     Column(
         modifier = modifier
             .fillMaxWidth()

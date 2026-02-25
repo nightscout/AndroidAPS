@@ -11,15 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.decimalPlaces
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.step
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
+import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.SliderWithButtons
 import java.text.DecimalFormat
 
@@ -31,13 +30,12 @@ import java.text.DecimalFormat
  */
 @Composable
 fun AdaptiveDoublePreferenceItem(
-    preferences: Preferences,
-    config: Config,
     doubleKey: DoublePreferenceKey,
     titleResId: Int = 0,
     unit: String = "",
     visibilityContext: PreferenceVisibilityContext? = null
 ) {
+    val preferences = LocalPreferences.current
     val effectiveTitleResId = if (titleResId != 0) titleResId else doubleKey.titleResId
 
     // Skip if no title resource is available
@@ -45,14 +43,12 @@ fun AdaptiveDoublePreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = doubleKey,
-        preferences = preferences,
-        config = config,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible || (preferences.simpleMode && doubleKey.calculatedBySM)) return
 
-    val state = rememberPreferenceDoubleState(preferences, doubleKey)
+    val state = rememberPreferenceDoubleState(doubleKey)
     val value = state.value
     val theme = LocalPreferenceTheme.current
 

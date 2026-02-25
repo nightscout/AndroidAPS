@@ -17,8 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.TDD
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.LocalDateUtil
 import java.util.Locale
 
 /**
@@ -65,9 +65,9 @@ data class TddStatsData(
 @Composable
 fun TddStatsCompose(
     tddStatsData: TddStatsData,
-    dateUtil: DateUtil,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     Column(modifier = modifier) {
         // Header row with column labels
         TddTableHeaderRow()

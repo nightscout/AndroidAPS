@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
@@ -67,7 +68,8 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
             setContent {
                 CompositionLocalProvider(
                     LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalRxBus provides rxBus,
+                    LocalDateUtil provides dateUtil
                 ) {
                     AapsTheme {
                         viewModel?.let { vm ->

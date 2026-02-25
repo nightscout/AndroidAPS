@@ -12,7 +12,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -24,17 +23,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.ui.compose.AapsFab
-import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.alertDialogs.AboutAlertDialog
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
 import app.aaps.ui.compose.maintenance.ImportSource
@@ -123,18 +119,16 @@ fun MainScreen(
     onNotificationActionClick: (AapsNotification) -> Unit,
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
-    dateUtil: DateUtil,
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
     calcProgress: Int,
     graphViewModel: GraphViewModel,
-    statusLightsDef: app.aaps.core.ui.compose.preference.PreferenceSubScreenDef,
-    treatmentButtonsDef: app.aaps.core.ui.compose.preference.PreferenceSubScreenDef,
-    preferences: app.aaps.core.keys.interfaces.Preferences,
-    config: app.aaps.core.interfaces.configuration.Config,
+    statusLightsDef: PreferenceSubScreenDef,
+    treatmentButtonsDef: PreferenceSubScreenDef,
     modifier: Modifier = Modifier
 ) {
+    LocalDateUtil.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
@@ -267,10 +261,7 @@ fun MainScreen(
                     onNotificationActionClick = onNotificationActionClick,
                     autoShowNotificationSheet = autoShowNotificationSheet,
                     onAutoShowConsumed = onAutoShowConsumed,
-                    dateUtil = dateUtil,
-                    paddingValues = paddingValues,
-                    preferences = preferences,
-                    config = config
+                    paddingValues = paddingValues
                 )
 
                 // Search results overlay
@@ -289,23 +280,11 @@ fun MainScreen(
                 }
 
                 // Version overlay (always visible for screenshots)
-                if (config.APS || config.PUMPCONTROL) {
-                    val colors = AapsTheme.generalColors
-                    val versionColor = when {
-                        config.COMMITTED -> colors.versionCommitted
-                        preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME) != 0L -> colors.versionWarning
-                        else -> colors.versionUncommitted
-                    }
-                    Text(
-                        text = "${config.VERSION_NAME} (${config.HEAD.substring(0, minOf(4, config.HEAD.length))})",
-                        color = versionColor,
-                        fontSize = 10.sp,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(paddingValues)
-                            .padding(top = 4.dp, end = 4.dp)
-                    )
-                }
+                VersionOverlay(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(paddingValues)
+                )
             }
         }
     }
@@ -351,8 +330,6 @@ fun MainScreen(
             onCalibrationClick = onCalibrationClick,
             onQuickWizardClick = onQuickWizardClick,
             treatmentButtonsDef = treatmentButtonsDef,
-            preferences = preferences,
-            config = config
         )
     }
 

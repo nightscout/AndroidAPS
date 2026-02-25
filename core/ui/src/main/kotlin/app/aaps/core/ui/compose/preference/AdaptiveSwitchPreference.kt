@@ -7,10 +7,8 @@ package app.aaps.core.ui.compose.preference
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 
 /**
  * Composable switch preference for use inside card sections.
@@ -21,8 +19,6 @@ import app.aaps.core.keys.interfaces.Preferences
  */
 @Composable
 fun AdaptiveSwitchPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     booleanKey: BooleanPreferenceKey,
     titleResId: Int = 0,
     summaryResId: Int? = null,
@@ -38,15 +34,13 @@ fun AdaptiveSwitchPreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = booleanKey,
-        preferences = preferences,
-        config = config,
         engineeringModeOnly = booleanKey.engineeringModeOnly,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible) return
 
-    val state = rememberPreferenceBooleanState(preferences, booleanKey)
+    val state = rememberPreferenceBooleanState(booleanKey)
     SwitchPreference(
         state = state,
         title = { Text(stringResource(effectiveTitleResId)) },

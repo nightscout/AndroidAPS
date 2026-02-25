@@ -54,7 +54,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
@@ -196,6 +199,9 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
         CompositionLocalProvider(
             LocalPreferences provides preferences,
             LocalRxBus provides rxBus,
+            LocalDateUtil provides dateUtil,
+            LocalConfig provides config,
+            LocalProfileUtil provides profileUtil,
             LocalCheckPassword provides cryptoUtil::checkPassword,
             LocalHashPassword provides cryptoUtil::hashPassword,
             LocalVisibilityContext provides visibilityContext
@@ -524,7 +530,6 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             },
                             autoShowNotificationSheet = _autoShowNotifications.value,
                             onAutoShowConsumed = { _autoShowNotifications.value = false },
-                            dateUtil = dateUtil,
                             permissionsMissing = permState.hasAnyMissing,
                             onPermissionsClick = {
                                 permissionsViewModel.showSheet()
@@ -532,9 +537,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             calcProgress = calcProgress,
                             graphViewModel = graphViewModel,
                             statusLightsDef = builtInSearchables.statusLights,
-                            treatmentButtonsDef = builtInSearchables.treatmentButtons,
-                            preferences = mainViewModel.preferences,
-                            config = mainViewModel.config
+                            treatmentButtonsDef = builtInSearchables.treatmentButtons
                         )
                     }
 
@@ -701,7 +704,6 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             hasReuseValues = reuseValues != null,
                             showNotesField = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                             initialTimestamp = profileManagementViewModel.dateUtil.nowWithoutMilliseconds(),
-                            dateUtil = profileManagementViewModel.dateUtil,
                             rh = rh,
                             onNavigateBack = { navController.popBackStack() },
                             onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
@@ -768,11 +770,8 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     composable(AppRoute.Preferences.route) {
                         AllPreferencesScreen(
                             activePlugin = activePlugin,
-                            preferences = preferences,
-                            config = config,
                             rh = rh,
                             builtInSearchables = builtInSearchables,
-                            profileUtil = profileUtil,
                             onBackClick = { navController.popBackStack() }
                         )
                     }
@@ -785,8 +784,6 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         if (plugin != null) {
                             PluginPreferencesScreen(
                                 plugin = plugin,
-                                config = config,
-                                profileUtil = profileUtil,
                                 visibilityContext = visibilityContext,
                                 onBackClick = { navController.popBackStack() }
                             )
@@ -802,9 +799,6 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         if (screenDef != null) {
                             PreferenceScreenView(
                                 screenDef = screenDef,
-                                preferences = preferences,
-                                config = config,
-                                profileUtil = profileUtil,
                                 highlightKey = highlightKey,
                                 onBackClick = { navController.popBackStack() }
                             )

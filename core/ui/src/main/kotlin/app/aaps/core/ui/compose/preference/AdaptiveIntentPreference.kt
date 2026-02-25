@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 
 /**
@@ -28,7 +27,6 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
  */
 @Composable
 fun AdaptiveIntentPreferenceItem(
-    preferences: Preferences,
     intentKey: IntentPreferenceKey,
     titleResId: Int = 0,
     summaryResId: Int? = null,
@@ -43,7 +41,6 @@ fun AdaptiveIntentPreferenceItem(
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
-        preferences = preferences,
         visibilityContext = visibilityContext
     )
 
@@ -86,7 +83,6 @@ fun AdaptiveIntentPreferenceItem(
  */
 @Composable
 fun AdaptiveUrlPreferenceItem(
-    preferences: Preferences,
     intentKey: IntentPreferenceKey,
     titleResId: Int = 0,
     url: String,
@@ -99,7 +95,6 @@ fun AdaptiveUrlPreferenceItem(
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
-        preferences = preferences,
         visibilityContext = visibilityContext
     )
 
@@ -124,7 +119,6 @@ fun AdaptiveUrlPreferenceItem(
  */
 @Composable
 fun AdaptiveDynamicActivityPreferenceItem(
-    preferences: Preferences,
     intentKey: IntentPreferenceKey,
     titleResId: Int = 0,
     activityClass: Class<*>,
@@ -139,7 +133,6 @@ fun AdaptiveDynamicActivityPreferenceItem(
 
     val visibility = calculateIntentPreferenceVisibility(
         intentKey = intentKey,
-        preferences = preferences,
         visibilityContext = visibilityContext
     )
 

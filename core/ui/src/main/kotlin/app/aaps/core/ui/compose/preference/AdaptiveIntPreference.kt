@@ -11,10 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
@@ -29,8 +27,6 @@ import java.text.DecimalFormat
  */
 @Composable
 fun AdaptiveIntPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     intKey: IntPreferenceKey,
     titleResId: Int = 0,
     unit: String = "",
@@ -43,15 +39,13 @@ fun AdaptiveIntPreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = intKey,
-        preferences = preferences,
-        config = config,
         engineeringModeOnly = intKey.engineeringModeOnly,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible) return
 
-    val state = rememberPreferenceIntState(preferences, intKey)
+    val state = rememberPreferenceIntState(intKey)
     val value = state.value
     val theme = LocalPreferenceTheme.current
 

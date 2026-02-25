@@ -11,11 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.SliderWithButtons
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -32,13 +31,12 @@ import app.aaps.core.ui.R as UiR
  */
 @Composable
 fun AdaptiveUnitDoublePreferenceItem(
-    preferences: Preferences,
-    config: Config,
-    profileUtil: ProfileUtil,
     unitKey: UnitDoublePreferenceKey,
     titleResId: Int = 0,
     visibilityContext: PreferenceVisibilityContext? = null
 ) {
+    val preferences = LocalPreferences.current
+    val profileUtil = LocalProfileUtil.current
     val effectiveTitleResId = if (titleResId != 0) titleResId else unitKey.titleResId
 
     // Skip if no title resource is available
@@ -46,14 +44,12 @@ fun AdaptiveUnitDoublePreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = unitKey,
-        preferences = preferences,
-        config = config,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible || (preferences.simpleMode && unitKey.defaultedBySM)) return
 
-    val state = rememberUnitDoublePreferenceState(preferences, profileUtil, unitKey)
+    val state = rememberUnitDoublePreferenceState(unitKey)
     val theme = LocalPreferenceTheme.current
 
     // Convert min/max values from mg/dL to current units using ProfileUtil

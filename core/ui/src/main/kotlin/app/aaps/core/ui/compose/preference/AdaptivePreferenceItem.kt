@@ -10,8 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.profile.ProfileUtil
+
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
@@ -20,7 +19,6 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringKeyWithEntriesProvider
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
@@ -33,9 +31,6 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
  * For URL/ACTIVITY types on IntentPreferenceKey, requires additional parameters.
  *
  * @param key The PreferenceKey to render
- * @param preferences The Preferences instance
- * @param config The Config instance
- * @param profileUtil Required for UnitDoublePreferenceKey
  * @param onIntentClick Optional click handler for IntentPreferenceKey with CLICK type
  * @param intentUrl Optional URL for IntentPreferenceKey with URL type
  * @param intentActivityClass Optional Activity class for IntentPreferenceKey with ACTIVITY type
@@ -43,9 +38,6 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 @Composable
 fun AdaptivePreferenceItem(
     key: PreferenceKey,
-    preferences: Preferences,
-    config: Config,
-    profileUtil: ProfileUtil? = null,
     visibilityContext: PreferenceVisibilityContext? = null,
     onIntentClick: (() -> Unit)? = null,
     intentUrl: String? = null,
@@ -54,8 +46,7 @@ fun AdaptivePreferenceItem(
     when (key) {
         is BooleanPreferenceKey         -> {
             AdaptiveSwitchPreferenceItem(
-                preferences = preferences,
-                config = config,
+
                 booleanKey = key,
                 visibilityContext = visibilityContext
             )
@@ -68,8 +59,7 @@ fun AdaptivePreferenceItem(
                     val resolved = key.resolvedEntries
                     if (resolved != null) {
                         AdaptiveListIntPreferenceItem(
-                            preferences = preferences,
-                            config = config,
+
                             intKey = key,
                             entries = resolved.values.toList(),
                             entryValues = resolved.keys.toList(),
@@ -77,8 +67,7 @@ fun AdaptivePreferenceItem(
                         )
                     } else if (key.entries.isNotEmpty()) {
                         AdaptiveListIntPreferenceItem(
-                            preferences = preferences,
-                            config = config,
+
                             intKey = key,
                             entries = key.entries.values.map { stringResource(it) },
                             entryValues = key.entries.keys.toList(),
@@ -89,8 +78,7 @@ fun AdaptivePreferenceItem(
 
                 PreferenceType.TEXT_FIELD -> {
                     AdaptiveIntPreferenceItem(
-                        preferences = preferences,
-                        config = config,
+
                         intKey = key,
                         visibilityContext = visibilityContext
                     )
@@ -99,8 +87,7 @@ fun AdaptivePreferenceItem(
                 else                      -> {
                     // Default to text field for unsupported types
                     AdaptiveIntPreferenceItem(
-                        preferences = preferences,
-                        config = config,
+
                         intKey = key,
                         visibilityContext = visibilityContext
                     )
@@ -110,8 +97,7 @@ fun AdaptivePreferenceItem(
 
         is DoublePreferenceKey          -> {
             AdaptiveDoublePreferenceItem(
-                preferences = preferences,
-                config = config,
+
                 doubleKey = key,
                 visibilityContext = visibilityContext
             )
@@ -125,8 +111,6 @@ fun AdaptivePreferenceItem(
 
             if (entries.isNotEmpty()) {
                 AdaptiveStringListPreferenceItem(
-                    preferences = preferences,
-                    config = config,
                     stringKey = key,
                     entries = entries,
                     visibilityContext = visibilityContext
@@ -150,15 +134,13 @@ fun AdaptivePreferenceItem(
                     // Special handling for master password (requires current password first)
                     if (key == StringKey.ProtectionMasterPassword) {
                         AdaptiveMasterPasswordPreferenceItem(
-                            preferences = preferences,
-                            config = config,
+
                             checkPassword = checkPassword,
                             hashPassword = hashPassword
                         )
                     } else {
                         AdaptivePasswordPreferenceItem(
-                            preferences = preferences,
-                            config = config,
+
                             stringKey = key,
                             hashPassword = hashPassword,
                             visibilityContext = visibilityContext
@@ -174,8 +156,7 @@ fun AdaptivePreferenceItem(
 
                         if (entriesMap != null) {
                             AdaptiveStringListPreferenceItem(
-                                preferences = preferences,
-                                config = config,
+
                                 stringKey = key,
                                 entries = entriesMap,
                                 visibilityContext = visibilityContext
@@ -185,8 +166,7 @@ fun AdaptivePreferenceItem(
 
                     PreferenceType.TEXT_FIELD -> {
                         AdaptiveStringPreferenceItem(
-                            preferences = preferences,
-                            config = config,
+
                             stringKey = key,
                             visibilityContext = visibilityContext
                         )
@@ -194,8 +174,7 @@ fun AdaptivePreferenceItem(
 
                     else                      -> {
                         AdaptiveStringPreferenceItem(
-                            preferences = preferences,
-                            config = config,
+
                             stringKey = key,
                             visibilityContext = visibilityContext
                         )
@@ -205,15 +184,10 @@ fun AdaptivePreferenceItem(
         }
 
         is UnitDoublePreferenceKey      -> {
-            profileUtil?.let {
-                AdaptiveUnitDoublePreferenceItem(
-                    preferences = preferences,
-                    config = config,
-                    profileUtil = it,
-                    unitKey = key,
-                    visibilityContext = visibilityContext
-                )
-            }
+            AdaptiveUnitDoublePreferenceItem(
+                unitKey = key,
+                visibilityContext = visibilityContext
+            )
         }
 
         is IntentPreferenceKey          -> {
@@ -227,7 +201,7 @@ fun AdaptivePreferenceItem(
             when {
                 resolvedClick != null    -> {
                     AdaptiveIntentPreferenceItem(
-                        preferences = preferences,
+
                         intentKey = key,
                         onClick = resolvedClick,
                         visibilityContext = visibilityContext
@@ -236,7 +210,7 @@ fun AdaptivePreferenceItem(
 
                 resolvedActivity != null -> {
                     AdaptiveDynamicActivityPreferenceItem(
-                        preferences = preferences,
+
                         intentKey = key,
                         activityClass = resolvedActivity,
                         visibilityContext = visibilityContext
@@ -245,7 +219,7 @@ fun AdaptivePreferenceItem(
 
                 resolvedUrl != null      -> {
                     AdaptiveUrlPreferenceItem(
-                        preferences = preferences,
+
                         intentKey = key,
                         url = resolvedUrl,
                         visibilityContext = visibilityContext

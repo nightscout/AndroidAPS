@@ -22,22 +22,21 @@ import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.preference.LocalSnackbarHostState
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.preference.addPreferenceContent
 import app.aaps.core.ui.compose.preference.rememberPreferenceSectionState
 import app.aaps.core.ui.compose.preference.verticalScrollIndicators
+import app.aaps.ui.search.BuiltInSearchables
 
 /**
  * Screen for displaying all preferences from all plugins.
@@ -47,24 +46,20 @@ import app.aaps.core.ui.compose.preference.verticalScrollIndicators
  * direct dependencies on specific plugin implementations.
  *
  * @param activePlugin ActivePlugin instance for accessing plugins by interface
- * @param preferences Preferences instance for built-in settings
- * @param config Config instance
  * @param rh ResourceHelper instance
  * @param builtInSearchables BuiltInSearchables instance (single source of truth for built-in screens)
- * @param profileUtil ProfileUtil instance
  * @param onBackClick Callback when back button is clicked
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllPreferencesScreen(
     activePlugin: ActivePlugin,
-    preferences: Preferences,
-    config: Config,
     rh: ResourceHelper,
     builtInSearchables: BuiltInSearchables,
-    profileUtil: ProfileUtil,
     onBackClick: () -> Unit
 ) {
+    val preferences = LocalPreferences.current
+    val config = LocalConfig.current
     // Look up plugins by interface
     val smsCommunicatorPlugin = activePlugin.getSpecificPluginsListByInterface(SmsCommunicator::class.java).firstOrNull()
     val automationPlugin = activePlugin.getSpecificPluginsListByInterface(Automation::class.java).firstOrNull()
@@ -173,25 +168,25 @@ fun AllPreferencesScreen(
                     state = listState
                 ) {
                     // Built-in: General settings (first)
-                    addPreferenceContent(generalPreferences, sectionState, preferences, config, profileUtil)
+                    addPreferenceContent(generalPreferences, sectionState)
 
                     // Built-in: Protection settings
-                    addPreferenceContent(protectionPreferences, sectionState, preferences, config, profileUtil)
+                    addPreferenceContent(protectionPreferences, sectionState)
 
                     // Plugin preferences (in fixed order, only enabled plugins)
                     pluginContents.forEach { content ->
-                        addPreferenceContent(content, sectionState, preferences, config, profileUtil)
+                        addPreferenceContent(content, sectionState)
                     }
 
                     // Built-in: Pump settings
-                    addPreferenceContent(pumpPreferences, sectionState, preferences, config, profileUtil)
+                    addPreferenceContent(pumpPreferences, sectionState)
 
                     // Built-in: Alerts settings
-                    addPreferenceContent(alertsPreferences, sectionState, preferences, config, profileUtil)
+                    addPreferenceContent(alertsPreferences, sectionState)
 
                     // Maintenance plugin (found via interface, always last)
                     getPreferenceContentIfEnabled(maintenancePlugin)?.let { content ->
-                        addPreferenceContent(content, sectionState, preferences, config, profileUtil)
+                        addPreferenceContent(content, sectionState)
                     }
                 }
             }

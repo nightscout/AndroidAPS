@@ -8,10 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 
 /**
@@ -22,8 +20,6 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
  */
 @Composable
 fun AdaptiveListIntPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     intKey: IntPreferenceKey,
     titleResId: Int = 0,
     entries: List<String>,
@@ -37,15 +33,13 @@ fun AdaptiveListIntPreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = intKey,
-        preferences = preferences,
-        config = config,
         engineeringModeOnly = intKey.engineeringModeOnly,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible) return
 
-    val state = rememberPreferenceIntState(preferences, intKey)
+    val state = rememberPreferenceIntState(intKey)
     val currentValue = state.value
     val currentIndex = entryValues.indexOf(currentValue).coerceAtLeast(0)
     val currentEntry = entries.getOrElse(currentIndex) { currentValue.toString() }
@@ -76,8 +70,6 @@ fun AdaptiveListIntPreferenceItem(
  */
 @Composable
 fun AdaptiveStringListPreferenceItem(
-    preferences: Preferences,
-    config: Config,
     stringKey: StringPreferenceKey,
     titleResId: Int = 0,
     entries: Map<String, String>,
@@ -90,14 +82,12 @@ fun AdaptiveStringListPreferenceItem(
 
     val visibility = calculatePreferenceVisibility(
         preferenceKey = stringKey,
-        preferences = preferences,
-        config = config,
         visibilityContext = visibilityContext
     )
 
     if (!visibility.visible) return
 
-    val state = rememberPreferenceStringState(preferences, stringKey)
+    val state = rememberPreferenceStringState(stringKey)
     val currentValue = state.value
     val currentEntry = entries[currentValue] ?: currentValue
     val values = entries.keys.toList()

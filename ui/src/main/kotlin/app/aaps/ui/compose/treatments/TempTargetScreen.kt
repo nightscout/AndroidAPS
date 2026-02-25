@@ -32,15 +32,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.extensions.highValueToUnitsToString
 import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -52,7 +52,6 @@ import app.aaps.ui.compose.treatments.viewmodels.TempTargetViewModel
  * Composable screen displaying temporary targets with delete and show hidden functionality.
  *
  * @param viewModel ViewModel managing state and business logic
- * @param profileUtil Profile utility for unit conversion
  * @param translator Translator for temp target reasons
  * @param decimalFormatter Formatter for decimal values
  * @param setToolbarConfig Callback to set the toolbar configuration
@@ -62,7 +61,6 @@ import app.aaps.ui.compose.treatments.viewmodels.TempTargetViewModel
 @Composable
 fun TempTargetScreen(
     viewModel: TempTargetViewModel,
-    profileUtil: ProfileUtil,
     translator: Translator,
     decimalFormatter: DecimalFormatter,
     setToolbarConfig: (ToolbarConfig) -> Unit,
@@ -118,7 +116,6 @@ fun TempTargetScreen(
                     items = uiState.tempTargets,
                     getTimestamp = { it.timestamp },
                     getItemKey = { it.id },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { tt ->
                         TempTargetItem(
@@ -143,10 +140,8 @@ fun TempTargetScreen(
                                     viewModel.enterSelectionMode(tt)
                                 }
                             },
-                            profileUtil = profileUtil,
                             rh = viewModel.rh,
                             translator = translator,
-                            dateUtil = viewModel.dateUtil,
                             decimalFormatter = decimalFormatter
                         )
                     }
@@ -173,12 +168,12 @@ private fun TempTargetItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
-    profileUtil: ProfileUtil,
     rh: ResourceHelper,
     translator: Translator,
-    dateUtil: DateUtil,
     decimalFormatter: DecimalFormatter
 ) {
+    val profileUtil = LocalProfileUtil.current
+    val dateUtil = LocalDateUtil.current
     val units = profileUtil.units
 
     AapsCard(

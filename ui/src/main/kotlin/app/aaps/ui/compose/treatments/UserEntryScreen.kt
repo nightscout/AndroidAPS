@@ -50,10 +50,10 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -187,8 +187,7 @@ fun UserEntryScreen(
                                         userEntry = ue,
                                         userEntryPresentationHelper = userEntryPresentationHelper,
                                         translator = translator,
-                                        rh = viewModel.rh,
-                                        dateUtil = viewModel.dateUtil
+                                        rh = viewModel.rh
                                     )
                                 }
                             }
@@ -212,9 +211,9 @@ private fun UserEntryItem(
     userEntry: UE,
     userEntryPresentationHelper: UserEntryPresentationHelper,
     translator: Translator,
-    rh: ResourceHelper,
-    dateUtil: DateUtil
+    rh: ResourceHelper
 ) {
+    val dateUtil = LocalDateUtil.current
     AapsCard(
         modifier = Modifier
             .fillMaxWidth()

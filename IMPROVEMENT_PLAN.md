@@ -15,7 +15,9 @@ Findings from code review of the new Compose UI. Organized by priority and area.
   passes only the ViewModel and a visibility flag.
 - [ ] Extract bottom sheet management (treatments, manage, automation) into dedicated composables or
   a coordinator
-- [ ] Extract version overlay into `VersionOverlay` composable
+- [x] Extract version overlay into `VersionOverlay` composable
+  — Moved to `VersionOverlay.kt` with `VersionOverlay(config, preferences, modifier)`. Removed 3
+  unused imports from MainScreen (`sp`, `LongComposedKey`, `AapsTheme`).
 - [ ] Reduce MainScreen parameter count by grouping related callbacks into sealed class actions (
   e.g., `MainAction`)
 
@@ -23,8 +25,14 @@ Findings from code review of the new Compose UI. Organized by priority and area.
 
 - [ ] Evaluate replacing N callback parameters with `onAction: (SealedAction) -> Unit` pattern for
   screens with >10 callbacks
-- [ ] Consider `CompositionLocal` for deeply-shared singletons (`DateUtil`, `Preferences`, `Config`)
-  instead of threading them through 3+ composable layers
+- [x] Create `CompositionLocal` for deeply-shared singletons (`DateUtil`, `Preferences`, `Config`)
+  — Added `LocalDateUtil` and `LocalConfig` to `AapsTheme.kt` alongside existing `LocalPreferences`
+  and `LocalRxBus`. Provided at all 7 entry points (ComposeMainActivity, ProfileViewerActivity,
+  ErrorActivity, SingleFragmentActivity, XdripFragment, TidepoolFragment, NSClientFragment).
+  Composables can now use `LocalDateUtil.current` / `LocalConfig.current` instead of parameter
+  threading. Actual migration of consumer composables is a separate step.
+- [ ] Migrate composables to use `LocalDateUtil.current` / `LocalConfig.current` instead of
+  parameter threading (eliminates ~77 parameters across ~50 composables)
 
 ### 1.3 TreatmentsScreen Toolbar Workaround
 

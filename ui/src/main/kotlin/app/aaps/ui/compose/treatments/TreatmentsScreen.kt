@@ -207,7 +207,7 @@ fun TreatmentsScreen(
                     { config -> toolbarConfigs[tab.pageIndex] = config }
                 }
                 when (tab.titleRes) {
-                    R.string.carbs_and_bolus                          ->
+                    R.string.carbs_and_bolus                           ->
                         BolusCarbsScreen(
                             viewModel = viewModel.bolusCarbsViewModel,
                             activePlugin = viewModel.activePlugin,
@@ -215,7 +215,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.extended_bolus          ->
+                    app.aaps.core.ui.R.string.extended_bolus           ->
                         ExtendedBolusScreen(
                             viewModel = viewModel.extendedBolusViewModel,
                             profileFunction = viewModel.profileFunction,
@@ -224,7 +224,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.tempbasal_label         ->
+                    app.aaps.core.ui.R.string.tempbasal_label          ->
                         TempBasalScreen(
                             viewModel = viewModel.tempBasalViewModel,
                             profileFunction = viewModel.profileFunction,
@@ -233,10 +233,9 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.temporary_target        ->
+                    app.aaps.core.ui.R.string.temporary_target         ->
                         TempTargetScreen(
                             viewModel = viewModel.tempTargetViewModel,
-                            profileUtil = viewModel.profileUtil,
                             translator = viewModel.translator,
                             decimalFormatter = viewModel.decimalFormatter,
                             setToolbarConfig = setConfig,
@@ -253,17 +252,16 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.careportal              ->
+                    app.aaps.core.ui.R.string.careportal               ->
                         CareportalScreen(
                             viewModel = viewModel.careportalViewModel,
                             persistenceLayer = viewModel.persistenceLayer,
-                            profileUtil = viewModel.profileUtil,
                             translator = viewModel.translator,
                             setToolbarConfig = setConfig,
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.running_mode            ->
+                    app.aaps.core.ui.R.string.running_mode             ->
                         RunningModeScreen(
                             viewModel = viewModel.runningModeViewModel,
                             translator = viewModel.translator,
@@ -271,7 +269,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    R.string.user_entry                               ->
+                    R.string.user_entry                                ->
                         UserEntryScreen(
                             viewModel = viewModel.userEntryViewModel,
                             userEntryPresentationHelper = viewModel.userEntryPresentationHelper,

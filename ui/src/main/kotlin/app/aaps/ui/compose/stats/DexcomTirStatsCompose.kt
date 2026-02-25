@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
+import app.aaps.core.ui.compose.LocalProfileUtil
 import kotlin.math.roundToInt
 
 /**
@@ -22,15 +22,14 @@ import kotlin.math.roundToInt
  * Shows detailed 14-day TIR statistics with 5 ranges, HbA1c and standard deviation.
  *
  * @param dexcomTir Dexcom TIR data
- * @param profileUtil Profile utility for unit conversion
  * @param modifier Modifier for the root Column
  */
 @Composable
 fun DexcomTirStatsCompose(
     dexcomTir: DexcomTIR,
-    profileUtil: ProfileUtil,
     modifier: Modifier = Modifier
 ) {
+    val profileUtil = LocalProfileUtil.current
     Column(modifier = modifier) {
         // Header with ranges
         Text(

@@ -40,11 +40,11 @@ import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -118,7 +118,6 @@ fun TempBasalScreen(
                     items = uiState.tempBasals,
                     getTimestamp = { it.timestamp },
                     getItemKey = { it.id },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { tb ->
                         TempBasalItem(
@@ -146,7 +145,6 @@ fun TempBasalScreen(
                             profileFunction = profileFunction,
                             activePlugin = activePlugin,
                             rh = viewModel.rh,
-                            dateUtil = viewModel.dateUtil,
                             decimalFormatter = viewModel.decimalFormatter
                         )
                     }
@@ -176,9 +174,9 @@ private fun TempBasalItem(
     profileFunction: ProfileFunction,
     activePlugin: ActivePlugin,
     rh: ResourceHelper,
-    dateUtil: DateUtil,
     decimalFormatter: DecimalFormatter
 ) {
+    val dateUtil = LocalDateUtil.current
     val now = dateUtil.now()
     val profile = profileFunction.getProfile(now)
     val iob = if (profile != null) {

@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,11 +27,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.ui.R
 import kotlin.math.PI
 import kotlin.math.cos
@@ -141,15 +141,14 @@ private fun pentagonArea(radii: List<Double>): Double {
  * Full CGP card content composable.
  *
  * @param dexcomTir 14-day Dexcom TIR data
- * @param profileUtil Profile utility for glucose unit conversion
  * @param modifier Modifier for the root Column
  */
 @Composable
 fun GlucosePentagonCompose(
     dexcomTir: DexcomTIR,
-    profileUtil: ProfileUtil,
     modifier: Modifier = Modifier
 ) {
+    val profileUtil = LocalProfileUtil.current
     val cgpData = remember(dexcomTir) { computeCgpData(dexcomTir) }
     GlucosePentagonCard(
         cgpData = cgpData,

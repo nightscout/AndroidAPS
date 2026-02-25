@@ -53,11 +53,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.AapsNotification
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcSettingsOff
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
@@ -104,12 +103,11 @@ fun OverviewScreen(
     onNotificationActionClick: (AapsNotification) -> Unit,
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
-    dateUtil: DateUtil,
     paddingValues: PaddingValues,
-    preferences: Preferences,
-    config: Config,
     modifier: Modifier = Modifier
 ) {
+    val config = LocalConfig.current
+    LocalDateUtil.current
     // Collect BG info state from ViewModel
     val bgInfoState by graphViewModel.bgInfoState.collectAsStateWithLifecycle()
     val statusState by statusViewModel.uiState.collectAsStateWithLifecycle()
@@ -246,8 +244,6 @@ fun OverviewScreen(
                 onInsulinChangeClick = onInsulinChangeClick,
                 onBatteryChangeClick = onBatteryChangeClick,
                 statusLightsDef = statusLightsDef,
-                preferences = preferences,
-                config = config,
                 onCopyFromNightscout = { manageViewModel.copyStatusLightsFromNightscout() }
             )
 
@@ -285,7 +281,6 @@ fun OverviewScreen(
     if (showNotificationSheet && notifications.isNotEmpty()) {
         NotificationBottomSheet(
             notifications = notifications,
-            dateUtil = dateUtil,
             onDismissSheet = { showNotificationSheet = false },
             onDismissNotification = onDismissNotification,
             onNotificationActionClick = onNotificationActionClick
@@ -307,8 +302,6 @@ private fun OverviewStatusSection(
     onInsulinChangeClick: () -> Unit,
     onBatteryChangeClick: () -> Unit,
     statusLightsDef: PreferenceSubScreenDef,
-    preferences: Preferences,
-    config: Config,
     onCopyFromNightscout: () -> Unit
 ) {
     val items = listOfNotNull(cannulaStatus, insulinStatus, sensorStatus, batteryStatus)
@@ -416,8 +409,6 @@ private fun OverviewStatusSection(
         StatusLightsSettingsBottomSheet(
             settingsDef = statusLightsDef,
             onDismiss = { showSettingsSheet = false },
-            preferences = preferences,
-            config = config,
             onCopyFromNightscout = onCopyFromNightscout,
             sheetState = sheetState
         )
@@ -429,8 +420,6 @@ private fun OverviewStatusSection(
 private fun StatusLightsSettingsBottomSheet(
     settingsDef: PreferenceSubScreenDef,
     onDismiss: () -> Unit,
-    preferences: Preferences,
-    config: Config,
     onCopyFromNightscout: () -> Unit,
     sheetState: androidx.compose.material3.SheetState
 ) {
@@ -441,8 +430,6 @@ private fun StatusLightsSettingsBottomSheet(
     ) {
         StatusLightsSettingsContent(
             settingsDef = settingsDef,
-            preferences = preferences,
-            config = config,
             onCopyFromNightscout = onCopyFromNightscout
         )
     }
@@ -451,8 +438,6 @@ private fun StatusLightsSettingsBottomSheet(
 @Composable
 private fun StatusLightsSettingsContent(
     settingsDef: PreferenceSubScreenDef,
-    preferences: Preferences,
-    config: Config,
     onCopyFromNightscout: () -> Unit
 ) {
     var showCopyDialog by remember { mutableStateOf(false) }
@@ -473,9 +458,7 @@ private fun StatusLightsSettingsContent(
         // Settings list
         ProvidePreferenceTheme {
             AdaptivePreferenceList(
-                items = settingsDef.items,
-                preferences = preferences,
-                config = config
+                items = settingsDef.items
             )
         }
 

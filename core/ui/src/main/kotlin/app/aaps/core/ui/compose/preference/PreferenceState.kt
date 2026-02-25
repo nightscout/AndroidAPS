@@ -11,7 +11,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -24,6 +23,9 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalRxBus
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -82,20 +84,20 @@ private class ReactiveVisibilityContext(
 @Composable
 fun calculatePreferenceVisibility(
     preferenceKey: PreferenceKey,
-    preferences: Preferences,
-    config: Config,
     engineeringModeOnly: Boolean = false,
     visibilityContext: PreferenceVisibilityContext? = null
 ): PreferenceVisibilityState {
+    val preferences = LocalPreferences.current
+    val config = LocalConfig.current
     // Use reactive state for simpleMode - this triggers recomposition when it changes
-    val simpleModeState = rememberPreferenceBooleanState(preferences, app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
+    val simpleModeState = rememberPreferenceBooleanState(app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
 
     // Use reactive state for dependency checks
     val dependencyState = preferenceKey.dependency?.let {
-        rememberPreferenceBooleanState(preferences, it)
+        rememberPreferenceBooleanState(it)
     }
     val negativeDependencyState = preferenceKey.negativeDependency?.let {
-        rememberPreferenceBooleanState(preferences, it)
+        rememberPreferenceBooleanState(it)
     }
 
     var visible = true
@@ -169,18 +171,18 @@ fun calculatePreferenceVisibility(
 @Composable
 fun calculateIntentPreferenceVisibility(
     intentKey: IntentPreferenceKey,
-    preferences: Preferences,
     visibilityContext: PreferenceVisibilityContext? = null
 ): PreferenceVisibilityState {
+    val preferences = LocalPreferences.current
     // Use reactive state for simpleMode - this triggers recomposition when it changes
-    val simpleModeState = rememberPreferenceBooleanState(preferences, app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
+    val simpleModeState = rememberPreferenceBooleanState(app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
 
     // Use reactive state for dependency checks
     val dependencyState = intentKey.dependency?.let {
-        rememberPreferenceBooleanState(preferences, it)
+        rememberPreferenceBooleanState(it)
     }
     val negativeDependencyState = intentKey.negativeDependency?.let {
-        rememberPreferenceBooleanState(preferences, it)
+        rememberPreferenceBooleanState(it)
     }
 
     var visible = true
@@ -293,9 +295,9 @@ private fun setSharedDoubleState(key: String, value: Double) {
  */
 @Composable
 fun rememberPreferenceBooleanState(
-    preferences: Preferences,
     key: BooleanPreferenceKey
 ): MutableState<Boolean> {
+    val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
     return remember(key, preferences) {
         PreferenceBooleanState(preferences, key, rxBus)
@@ -307,9 +309,9 @@ fun rememberPreferenceBooleanState(
  */
 @Composable
 fun rememberPreferenceStringState(
-    preferences: Preferences,
     key: StringPreferenceKey
 ): MutableState<String> {
+    val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
     return remember(key, preferences) {
         PreferenceStringState(preferences, key, rxBus)
@@ -321,9 +323,9 @@ fun rememberPreferenceStringState(
  */
 @Composable
 fun rememberPreferenceIntState(
-    preferences: Preferences,
     key: IntPreferenceKey
 ): MutableState<Int> {
+    val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
     return remember(key, preferences) {
         PreferenceIntState(preferences, key, rxBus)
@@ -335,9 +337,9 @@ fun rememberPreferenceIntState(
  */
 @Composable
 fun rememberPreferenceDoubleState(
-    preferences: Preferences,
     key: DoublePreferenceKey
 ): MutableState<Double> {
+    val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
     return remember(key, preferences) {
         PreferenceDoubleState(preferences, key, rxBus)
@@ -479,10 +481,10 @@ class UnitDoublePreferenceState(
 
 @Composable
 fun rememberUnitDoublePreferenceState(
-    preferences: Preferences,
-    profileUtil: ProfileUtil,
     key: UnitDoublePreferenceKey
 ): UnitDoublePreferenceState {
+    val preferences = LocalPreferences.current
+    val profileUtil = LocalProfileUtil.current
     val rxBus = LocalRxBus.current
     // Get stored value (in mg/dL) and convert to display units
     val storedValue = preferences.get(key)

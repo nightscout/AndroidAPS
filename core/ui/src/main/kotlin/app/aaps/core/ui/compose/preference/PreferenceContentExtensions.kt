@@ -17,15 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.LongPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
-import app.aaps.core.keys.interfaces.Preferences
 import kotlinx.coroutines.delay
 
 /**
@@ -34,13 +31,10 @@ import kotlinx.coroutines.delay
  */
 fun LazyListScope.addPreferenceContent(
     content: Any,
-    sectionState: PreferenceSectionState? = null,
-    preferences: Preferences? = null,
-    config: Config? = null,
-    profileUtil: ProfileUtil? = null
+    sectionState: PreferenceSectionState? = null
 ) {
     when (content) {
-        is PreferenceSubScreenDef -> addPreferenceSubScreenDef(content, sectionState, preferences, config, profileUtil)
+        is PreferenceSubScreenDef -> addPreferenceSubScreenDef(content, sectionState)
     }
 }
 
@@ -51,10 +45,7 @@ fun LazyListScope.addPreferenceContent(
  */
 fun LazyListScope.addPreferenceSubScreenDef(
     def: PreferenceSubScreenDef,
-    sectionState: PreferenceSectionState? = null,
-    preferences: Preferences? = null,
-    config: Config? = null,
-    profileUtil: ProfileUtil? = null
+    sectionState: PreferenceSectionState? = null
 ) {
     val sectionKey = "${def.key}_main"
     item(key = sectionKey) {
@@ -74,9 +65,6 @@ fun LazyListScope.addPreferenceSubScreenDef(
                 items = def.items,
                 parentKey = def.key,
                 sectionState = sectionState,
-                preferences = preferences,
-                config = config,
-                profileUtil = profileUtil,
                 visibilityContext = visibilityContext
             )
         }
@@ -91,38 +79,24 @@ private fun RenderPreferenceItems(
     items: List<Any>,
     parentKey: String,
     sectionState: PreferenceSectionState?,
-    preferences: Preferences?,
-    config: Config?,
-    profileUtil: ProfileUtil?,
     visibilityContext: PreferenceVisibilityContext?
 ) {
     items.forEach { item ->
         when (item) {
             is PreferenceKey          -> {
-                // Render using AdaptivePreferenceItem which handles visibility reactively
-                if (preferences != null && config != null) {
-                    HighlightablePreference(preferenceKey = item.key) {
-                        AdaptivePreferenceItem(
-                            key = item,
-                            preferences = preferences,
-                            config = config,
-                            profileUtil = profileUtil,
-                            visibilityContext = visibilityContext
-                        )
-                    }
+                HighlightablePreference(preferenceKey = item.key) {
+                    AdaptivePreferenceItem(
+                        key = item,
+                        visibilityContext = visibilityContext
+                    )
                 }
             }
 
             is PreferenceSubScreenDef -> {
-                // Check hideParentScreenIfHidden before rendering subscreen
-                val shouldShow = if (preferences != null && config != null) {
-                    shouldShowSubScreenInline(
-                        subScreen = item,
-                        preferences = preferences,
-                        config = config,
-                        visibilityContext = visibilityContext
-                    )
-                } else true
+                val shouldShow = shouldShowSubScreenInline(
+                    subScreen = item,
+                    visibilityContext = visibilityContext
+                )
 
                 if (shouldShow) {
                     // Render nested subscreen as simple collapsible section (no extra card)
@@ -141,22 +115,16 @@ private fun RenderPreferenceItems(
 
                     // Content without card wrapper
                     if (isSubExpanded) {
-                        if (preferences != null && config != null) {
-                            // Auto-render nested subscreen items
-                            if (item.items.isNotEmpty()) {
-                                val theme = LocalPreferenceTheme.current
-                                Column(
-                                    modifier = Modifier.padding(start = theme.nestedContentIndent)
-                                ) {
-                                    AdaptivePreferenceList(
-                                        items = item.items,
-                                        preferences = preferences,
-                                        config = config,
-                                        profileUtil = profileUtil,
-                                        visibilityContext = visibilityContext,
-                                        onNavigateToSubScreen = null // Nested subscreens not supported here
-                                    )
-                                }
+                        if (item.items.isNotEmpty()) {
+                            val theme = LocalPreferenceTheme.current
+                            Column(
+                                modifier = Modifier.padding(start = theme.nestedContentIndent)
+                            ) {
+                                AdaptivePreferenceList(
+                                    items = item.items,
+                                    visibilityContext = visibilityContext,
+                                    onNavigateToSubScreen = null // Nested subscreens not supported here
+                                )
                             }
                         }
                     }
@@ -173,8 +141,6 @@ private fun RenderPreferenceItems(
 @Composable
 private fun shouldShowSubScreenInline(
     subScreen: PreferenceSubScreenDef,
-    preferences: Preferences,
-    config: Config,
     visibilityContext: PreferenceVisibilityContext?
 ): Boolean {
     // Find items with hideParentScreenIfHidden = true
@@ -184,7 +150,6 @@ private fun shouldShowSubScreenInline(
                 // Check visibility of intent item
                 calculateIntentPreferenceVisibility(
                     intentKey = item,
-                    preferences = preferences,
                     visibilityContext = visibilityContext
                 )
             } else {
@@ -198,8 +163,6 @@ private fun shouldShowSubScreenInline(
                 // Check visibility of regular preference item
                 calculatePreferenceVisibility(
                     preferenceKey = item,
-                    preferences = preferences,
-                    config = config,
                     engineeringModeOnly = engineeringModeOnly,
                     visibilityContext = visibilityContext
                 )

@@ -3,7 +3,6 @@ package app.aaps.ui.compose.quickWizard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.core.ui.R as CoreR
 
@@ -43,9 +42,9 @@ import app.aaps.core.ui.R as CoreR
 fun QuickWizardCarouselCard(
     entry: QuickWizardEntry,
     isSelected: Boolean,
-    dateUtil: DateUtil,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     // Card colors
     val containerColor = if (isSelected) {
         MaterialTheme.colorScheme.secondaryContainer
@@ -91,41 +90,41 @@ fun QuickWizardCarouselCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-            // Button Text (main title)
-            Text(
-                text = entry.buttonText().ifEmpty { stringResource(CoreR.string.manage) },
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth()
-            )
+                // Button Text (main title)
+                Text(
+                    text = entry.buttonText().ifEmpty { stringResource(CoreR.string.manage) },
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            // Carbs display
-            val carbsText = buildCarbsText(entry)
-            Text(
-                text = carbsText,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth()
-            )
+                // Carbs display
+                val carbsText = buildCarbsText(entry)
+                Text(
+                    text = carbsText,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            // Time range
-            val fromTime = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(entry.validFrom()))
-            val toTime = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(entry.validTo()))
-            Text(
-                text = "$fromTime - $toTime",
-                style = MaterialTheme.typography.bodyMedium,
-                color = contentColor.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center
-            )
+                // Time range
+                val fromTime = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(entry.validFrom()))
+                val toTime = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(entry.validTo()))
+                Text(
+                    text = "$fromTime - $toTime",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = contentColor.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

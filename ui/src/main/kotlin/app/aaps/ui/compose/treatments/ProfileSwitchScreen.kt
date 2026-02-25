@@ -40,12 +40,12 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -145,7 +145,6 @@ fun ProfileSwitchScreen(
                     items = uiState.profileSwitches,
                     getTimestamp = { it.timestamp },
                     getItemKey = { if (it is ProfileSealed.EPS) "eps_${it.id}" else "ps_${it.id}" },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { profileSwitch ->
                         ProfileSwitchItem(
@@ -197,7 +196,6 @@ fun ProfileSwitchScreen(
                                 showCloneDialog = true
                             },
                             rh = viewModel.rh,
-                            dateUtil = viewModel.dateUtil,
                             decimalFormatter = decimalFormatter
                         )
                     }
@@ -226,9 +224,9 @@ private fun ProfileSwitchItem(
     onLongPress: () -> Unit,
     onClone: (ProfileSealed.PS) -> Unit,
     rh: ResourceHelper,
-    dateUtil: DateUtil,
     decimalFormatter: DecimalFormatter
 ) {
+    val dateUtil = LocalDateUtil.current
     AapsCard(
         modifier = Modifier
             .fillMaxWidth()

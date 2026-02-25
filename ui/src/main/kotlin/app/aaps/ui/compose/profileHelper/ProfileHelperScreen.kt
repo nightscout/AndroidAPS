@@ -285,7 +285,7 @@ fun ProfileHelperScreen(
 
                             state.tddStatsData != null -> {
                                 state.tddStatsData?.let { data ->
-                                    TddStatsCompose(tddStatsData = data, dateUtil = viewModel.dateUtil)
+                                    TddStatsCompose(tddStatsData = data)
                                 }
                             }
                         }

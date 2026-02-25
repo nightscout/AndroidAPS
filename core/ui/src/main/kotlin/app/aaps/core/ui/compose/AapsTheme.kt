@@ -13,8 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UiMode
@@ -30,6 +33,24 @@ val LocalPreferences = compositionLocalOf<Preferences> { error("No Preferences p
  * Used to react to preference changes (e.g., dark mode toggle) in real-time.
  */
 val LocalRxBus = compositionLocalOf<RxBus> { error("No RxBus provided") }
+
+/**
+ * CompositionLocal providing access to DateUtil for date/time formatting.
+ * Avoids threading dateUtil through multiple composable layers.
+ */
+val LocalDateUtil = compositionLocalOf<DateUtil> { error("No DateUtil provided") }
+
+/**
+ * CompositionLocal providing access to app configuration (build flavors, feature flags).
+ * Avoids threading config through multiple composable layers.
+ */
+val LocalConfig = compositionLocalOf<Config> { error("No Config provided") }
+
+/**
+ * CompositionLocal providing access to ProfileUtil for glucose unit conversions.
+ * Avoids threading profileUtil through multiple composable layers.
+ */
+val LocalProfileUtil = compositionLocalOf<ProfileUtil> { error("No ProfileUtil provided") }
 
 /**
  * AndroidAPS theme object providing access to custom theme colors and extensions.

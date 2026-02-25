@@ -25,25 +25,25 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationCategory
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcCgmInsert
+import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcPluginNsClient
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.icons.IcProfile
-import app.aaps.core.ui.compose.icons.IcLoopClosed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationBottomSheet(
     notifications: List<AapsNotification>,
-    dateUtil: DateUtil,
     onDismissSheet: () -> Unit,
     onDismissNotification: (AapsNotification) -> Unit,
     onNotificationActionClick: (AapsNotification) -> Unit
 ) {
+    LocalDateUtil.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     ModalBottomSheet(
@@ -68,7 +68,6 @@ fun NotificationBottomSheet(
                 Box(modifier = Modifier.animateItem()) {
                     NotificationItem(
                         notification = notification,
-                        dateUtil = dateUtil,
                         onDismiss = { onDismissNotification(notification) },
                         onActionClick = { onNotificationActionClick(notification) }
                     )
@@ -81,10 +80,10 @@ fun NotificationBottomSheet(
 @Composable
 private fun NotificationItem(
     notification: AapsNotification,
-    dateUtil: DateUtil,
     onDismiss: () -> Unit,
     onActionClick: () -> Unit
 ) {
+    val dateUtil = LocalDateUtil.current
     val levelColor = notification.level.toColor()
     val categoryIcon = notification.id.category.toIcon()
 

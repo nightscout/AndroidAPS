@@ -19,9 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.preference.LocalHighlightKey
 import app.aaps.core.ui.compose.preference.LocalSnackbarHostState
@@ -36,18 +33,12 @@ import app.aaps.core.ui.compose.preference.verticalScrollIndicators
  * Used when navigating from search results to a specific screen.
  *
  * @param screenDef The preference screen definition to display
- * @param preferences Preferences instance
- * @param config Config instance
- * @param profileUtil ProfileUtil instance
  * @param highlightKey Optional preference key to highlight (for search navigation)
  * @param onBackClick Callback when back button is clicked
  */
 @Composable
 fun PreferenceScreenView(
     screenDef: PreferenceSubScreenDef,
-    preferences: Preferences,
-    config: Config,
-    profileUtil: ProfileUtil,
     highlightKey: String? = null,
     onBackClick: () -> Unit
 ) {
@@ -101,10 +92,7 @@ fun PreferenceScreenView(
                 ) {
                     addPreferenceContent(
                         content = screenDef,
-                        sectionState = sectionState,
-                        preferences = preferences,
-                        config = config,
-                        profileUtil = profileUtil
+                        sectionState = sectionState
                     )
                 }
             }

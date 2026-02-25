@@ -12,8 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -33,15 +33,13 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcByoda
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCalibration
 import app.aaps.core.ui.compose.icons.IcCarbs
-import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
@@ -75,8 +73,6 @@ fun TreatmentBottomSheet(
     onQuickWizardClick: ((String) -> Unit)? = null,
     // For settings screen
     treatmentButtonsDef: PreferenceSubScreenDef? = null,
-    preferences: Preferences? = null,
-    config: Config? = null
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showSettings by remember { mutableStateOf(false) }
@@ -86,11 +82,9 @@ fun TreatmentBottomSheet(
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surface
     ) {
-        if (showSettings && treatmentButtonsDef != null && preferences != null && config != null) {
+        if (showSettings && treatmentButtonsDef != null) {
             TreatmentSettingsContent(
                 settingsDef = treatmentButtonsDef,
-                preferences = preferences,
-                config = config,
                 onBack = { showSettings = false }
             )
         } else {
@@ -178,9 +172,9 @@ private fun TreatmentSelectionContent(
         quickWizardItems.forEach { item ->
             val itemEnabled = item.isEnabled && onQuickWizardClick != null
             val supportingText = if (itemEnabled) item.detail
-                else item.disabledReason?.let { reason ->
-                    if (item.detail != null) "${item.detail} — $reason" else reason
-                } ?: item.detail
+            else item.disabledReason?.let { reason ->
+                if (item.detail != null) "${item.detail} — $reason" else reason
+            } ?: item.detail
             ListItem(
                 headlineContent = {
                     Text(
@@ -417,8 +411,6 @@ private fun TreatmentSelectionContent(
 @Composable
 private fun TreatmentSettingsContent(
     settingsDef: PreferenceSubScreenDef,
-    preferences: Preferences,
-    config: Config,
     onBack: () -> Unit
 ) {
     Column(
@@ -446,14 +438,11 @@ private fun TreatmentSettingsContent(
         }
         ProvidePreferenceTheme {
             AdaptivePreferenceList(
-                items = settingsDef.items,
-                preferences = preferences,
-                config = config
+                items = settingsDef.items
             )
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

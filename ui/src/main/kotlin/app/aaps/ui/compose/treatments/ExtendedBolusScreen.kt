@@ -39,11 +39,11 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.objects.extensions.isInProgress
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -116,7 +116,6 @@ fun ExtendedBolusScreen(
                     items = uiState.extendedBoluses,
                     getTimestamp = { it.timestamp },
                     getItemKey = { it.id },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { eb ->
                         ExtendedBolusItem(
@@ -141,8 +140,7 @@ fun ExtendedBolusScreen(
                             },
                             profileFunction = profileFunction,
                             activeInsulin = activeInsulin,
-                            rh = viewModel.rh,
-                            dateUtil = viewModel.dateUtil
+                            rh = viewModel.rh
                         )
                     }
                 )
@@ -168,9 +166,9 @@ private fun ExtendedBolusItem(
     onLongPress: () -> Unit,
     profileFunction: ProfileFunction,
     activeInsulin: Insulin,
-    rh: ResourceHelper,
-    dateUtil: DateUtil
+    rh: ResourceHelper
 ) {
+    val dateUtil = LocalDateUtil.current
     val profile = profileFunction.getProfile(extendedBolus.timestamp)
     val iob = if (profile != null) {
         extendedBolus.iobCalc(System.currentTimeMillis(), profile, activeInsulin)

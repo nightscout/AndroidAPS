@@ -42,11 +42,11 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
@@ -130,7 +130,6 @@ fun BolusCarbsScreen(
                     items = uiState.mealLinks,
                     getTimestamp = { it.bolusCalculatorResult?.timestamp ?: it.bolus?.timestamp ?: it.carbs?.timestamp ?: 0L },
                     getItemKey = { "b${it.bolus?.id}_c${it.carbs?.id}_bcr${it.bolusCalculatorResult?.id}" },
-                    dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     itemContent = { ml ->
                         MealLinkItem(
@@ -156,7 +155,6 @@ fun BolusCarbsScreen(
                             profile = profile,
                             activePlugin = activePlugin,
                             rh = viewModel.rh,
-                            dateUtil = viewModel.dateUtil,
                             decimalFormatter = viewModel.decimalFormatter,
                             showInvalidated = uiState.showInvalidated
                         )
@@ -196,10 +194,10 @@ private fun MealLinkItem(
     profile: Profile?,
     activePlugin: ActivePlugin,
     rh: ResourceHelper,
-    dateUtil: DateUtil,
     decimalFormatter: DecimalFormatter,
     showInvalidated: Boolean
 ) {
+    val dateUtil = LocalDateUtil.current
     AapsCard(
         modifier = Modifier
             .fillMaxWidth()

@@ -121,7 +121,6 @@ fun StatsScreen(
                                 state.tddStatsData?.let { data ->
                                     TddStatsCompose(
                                         tddStatsData = data,
-                                        dateUtil = viewModel.dateUtil,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -171,8 +170,6 @@ fun StatsScreen(
                                 state.tirStatsData?.let { data ->
                                     TirStatsCompose(
                                         tirStatsData = data,
-                                        dateUtil = viewModel.dateUtil,
-                                        profileUtil = viewModel.profileUtil,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -222,7 +219,6 @@ fun StatsScreen(
                                 state.dexcomTirData?.let { data ->
                                     DexcomTirStatsCompose(
                                         dexcomTir = data,
-                                        profileUtil = viewModel.profileUtil,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -370,7 +366,7 @@ fun StatsScreen(
                             LoadingSection(title = stringResource(R.string.cgp_title), message = stringResource(R.string.calculation_in_progress))
                         } else {
                             state.dexcomTirData?.let { data ->
-                                GlucosePentagonCompose(dexcomTir = data, profileUtil = viewModel.profileUtil, modifier = Modifier.fillMaxWidth())
+                                GlucosePentagonCompose(dexcomTir = data, modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }
