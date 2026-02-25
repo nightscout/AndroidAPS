@@ -24,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,17 +35,11 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.ui.compose.alertDialogs.AboutAlertDialog
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
-import app.aaps.ui.compose.management.CloudDirectorySheet
-import app.aaps.ui.compose.management.ImportSource
-import app.aaps.ui.compose.management.LogSettingBottomSheet
-import app.aaps.ui.compose.management.MaintenanceBottomSheet
-import app.aaps.ui.compose.management.MaintenanceEvent
-import app.aaps.ui.compose.management.MaintenanceViewModel
-import app.aaps.ui.compose.management.MaintenanceViewModel.ExportState
+import app.aaps.ui.compose.maintenance.ImportSource
+import app.aaps.ui.compose.maintenance.MaintenanceDialogs
+import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.overview.OverviewScreen
 import app.aaps.ui.compose.overview.automation.AutomationActionItem
 import app.aaps.ui.compose.overview.automation.AutomationBottomSheet
@@ -60,8 +53,6 @@ import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchResults
 import app.aaps.ui.search.SearchUiState
 import kotlinx.coroutines.launch
-import app.aaps.core.keys.R as KeysR
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,39 +142,7 @@ fun MainScreen(
     var showManageSheet by remember { mutableStateOf(false) }
     var showAutomationSheet by remember { mutableStateOf(false) }
     var confirmAutomationItem by remember { mutableStateOf<AutomationActionItem?>(null) }
-    var showLogSettings by remember { mutableStateOf(false) }
-
-    // Confirmation dialog states for maintenance destructive actions
-    var showConfirmResetAps by remember { mutableStateOf(false) }
-    var showConfirmResetDb by remember { mutableStateOf(false) }
-    var showConfirmCleanupDb by remember { mutableStateOf(false) }
-    var showConfirmExportCsv by remember { mutableStateOf(false) }
-    var showConfirmSendLogs by remember { mutableStateOf(false) }
-    var cleanupResultText by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-
-    // Export dialog state
-    val exportState by maintenanceViewModel.exportState.collectAsStateWithLifecycle()
-
-    // Cloud directory dialog state
-    val cloudDirectoryState by maintenanceViewModel.cloudDirectoryState.collectAsStateWithLifecycle()
-
-    // Export config for dynamic labels and cloud error badge
-    val exportConfig by maintenanceViewModel.exportConfig.collectAsStateWithLifecycle()
-
-    // Collect maintenance events
-    LaunchedEffect(Unit) {
-        maintenanceViewModel.events.collect { event ->
-            when (event) {
-                is MaintenanceEvent.RecreateActivity  -> onRecreateActivity()
-                is MaintenanceEvent.CleanupResult     -> cleanupResultText = event.result
-                is MaintenanceEvent.Snackbar          -> snackbarHostState.showSnackbar(event.message)
-                is MaintenanceEvent.Error             -> snackbarHostState.showSnackbar(event.message)
-                is MaintenanceEvent.LaunchBrowser     -> onLaunchBrowser(event.url)
-                is MaintenanceEvent.BringToForeground -> onBringToForeground()
-            }
-        }
-    }
 
     // Sync drawer state with ui state
     LaunchedEffect(uiState.isDrawerOpen) {
@@ -333,9 +292,9 @@ fun MainScreen(
                 if (config.APS || config.PUMPCONTROL) {
                     val colors = AapsTheme.generalColors
                     val versionColor = when {
-                        config.COMMITTED                                                          -> colors.versionCommitted
+                        config.COMMITTED -> colors.versionCommitted
                         preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME) != 0L -> colors.versionWarning
-                        else                                                                      -> colors.versionUncommitted
+                        else -> colors.versionUncommitted
                     }
                     Text(
                         text = "${config.VERSION_NAME} (${config.HEAD.substring(0, minOf(4, config.HEAD.length))})",
@@ -464,63 +423,17 @@ fun MainScreen(
         )
     }
 
-    // Maintenance bottom sheet
-    if (uiState.showMaintenanceSheet) {
-        // Refresh export config when sheet opens
-        LaunchedEffect(Unit) {
-            maintenanceViewModel.refreshExportConfig()
-        }
-
-        MaintenanceBottomSheet(
-            onDismiss = onMaintenanceSheetDismiss,
-            onLogSettingsClick = { showLogSettings = true },
-            onSendLogsClick = { showConfirmSendLogs = true },
-            onDeleteLogsClick = { maintenanceViewModel.deleteLogs() },
-            onDirectoryClick = {
-                maintenanceViewModel.logSelectDirectory()
-                onDirectoryClick()
-            },
-            onCloudDirectoryClick = { maintenanceViewModel.showCloudDirectory() },
-            onClearCloudClick = { maintenanceViewModel.requestClearCloud() },
-            onExportSettingsClick = {
-                maintenanceViewModel.startExport()
-            },
-            onImportSettingsClick = { source ->
-                maintenanceViewModel.logImportSettings()
-                onImportSettingsNavigate(source)
-            },
-            onExportCsvClick = { showConfirmExportCsv = true },
-            onResetApsResultsClick = { showConfirmResetAps = true },
-            onCleanupDbClick = { showConfirmCleanupDb = true },
-            onResetDbClick = { showConfirmResetDb = true },
-            exportConfig = exportConfig,
-            onToggleSettingsLocal = { maintenanceViewModel.toggleSettingsLocal(it) },
-            onToggleSettingsCloud = { maintenanceViewModel.toggleSettingsCloud(it) },
-            onToggleLogEmail = { maintenanceViewModel.toggleLogEmail(it) },
-            onToggleLogCloud = { maintenanceViewModel.toggleLogCloud(it) },
-            onToggleCsvLocal = { maintenanceViewModel.toggleCsvLocal(it) },
-            onToggleCsvCloud = { maintenanceViewModel.toggleCsvCloud(it) }
-        )
-    }
-
-    // Log settings bottom sheet
-    if (showLogSettings) {
-        LogSettingBottomSheet(
-            logElements = maintenanceViewModel.logElements,
-            onDismiss = { showLogSettings = false },
-            onToggle = { element, enabled -> maintenanceViewModel.toggleLogElement(element, enabled) },
-            onResetToDefaults = { maintenanceViewModel.resetLogDefaults() }
-        )
-    }
-
-    // Cloud directory dialog
-    CloudDirectorySheet(
-        state = cloudDirectoryState,
-        onConnectGoogleDrive = { maintenanceViewModel.connectGoogleDrive() },
-        onConfirmClear = { maintenanceViewModel.confirmClearCloud() },
-        onCancelClear = { maintenanceViewModel.cancelClearCloud() },
-        onReauthorize = { maintenanceViewModel.reauthorize() },
-        onDismiss = { maintenanceViewModel.dismissCloudDirectory() }
+    // Maintenance dialogs (sheets, confirmations, export chain)
+    MaintenanceDialogs(
+        maintenanceViewModel = maintenanceViewModel,
+        showMaintenanceSheet = uiState.showMaintenanceSheet,
+        onMaintenanceSheetDismiss = onMaintenanceSheetDismiss,
+        onDirectoryClick = onDirectoryClick,
+        onImportSettingsNavigate = onImportSettingsNavigate,
+        onRecreateActivity = onRecreateActivity,
+        onLaunchBrowser = onLaunchBrowser,
+        onBringToForeground = onBringToForeground,
+        onSnackbar = { snackbarHostState.showSnackbar(it) }
     )
 
     // About dialog
@@ -528,110 +441,6 @@ fun MainScreen(
         AboutAlertDialog(
             data = aboutDialogData,
             onDismiss = onAboutDialogDismiss
-        )
-    }
-
-    // Maintenance confirmation dialogs
-    if (showConfirmResetAps) {
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.reset_aps_results_confirm),
-            onConfirm = {
-                showConfirmResetAps = false
-                maintenanceViewModel.resetApsResults()
-            },
-            onDismiss = { showConfirmResetAps = false }
-        )
-    }
-
-    if (showConfirmResetDb) {
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.reset_db_confirm),
-            onConfirm = {
-                showConfirmResetDb = false
-                maintenanceViewModel.resetDatabases()
-            },
-            onDismiss = { showConfirmResetDb = false }
-        )
-    }
-
-    if (showConfirmCleanupDb) {
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.cleanup_db_confirm),
-            onConfirm = {
-                showConfirmCleanupDb = false
-                maintenanceViewModel.cleanupDatabases()
-            },
-            onDismiss = { showConfirmCleanupDb = false }
-        )
-    }
-
-    if (showConfirmSendLogs) {
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.send_logs) + "?",
-            onConfirm = {
-                showConfirmSendLogs = false
-                maintenanceViewModel.sendLogs()
-            },
-            onDismiss = { showConfirmSendLogs = false }
-        )
-    }
-
-    if (showConfirmExportCsv) {
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.ue_export_to_csv) + "?",
-            onConfirm = {
-                showConfirmExportCsv = false
-                maintenanceViewModel.exportCsv()
-            },
-            onDismiss = { showConfirmExportCsv = false }
-        )
-    }
-
-    // Export settings dialog chain
-    when (exportState) {
-        is ExportState.MasterPasswordMissing -> {
-            OkDialog(
-                title = stringResource(CoreUiR.string.nav_export),
-                message = stringResource(CoreUiR.string.master_password_missing, stringResource(CoreUiR.string.protection)),
-                onDismiss = { maintenanceViewModel.cancelExport() }
-            )
-        }
-
-        is ExportState.ConfirmExport         -> {
-            val confirmState = exportState as ExportState.ConfirmExport
-            OkCancelDialog(
-                title = stringResource(CoreUiR.string.export_to),
-                message = confirmState.fileName + "?\n\n" +
-                    stringResource(CoreUiR.string.password_preferences_encrypt_prompt),
-                onConfirm = { maintenanceViewModel.onExportConfirmed() },
-                onDismiss = { maintenanceViewModel.cancelExport() }
-            )
-        }
-
-        is ExportState.AskPassword           -> {
-            QueryAnyPasswordDialog(
-                title = stringResource(KeysR.string.master_password),
-                passwordExplanation = stringResource(CoreUiR.string.password_preferences_encrypt_prompt),
-                onConfirm = { password -> maintenanceViewModel.onExportPasswordEntered(password) },
-                onCancel = { maintenanceViewModel.cancelExport() }
-            )
-        }
-
-        is ExportState.Idle                  -> { /* no dialog */
-        }
-    }
-
-    // Cleanup result dialog (result contains HTML with <br> tags)
-    cleanupResultText?.let { result ->
-        OkDialog(
-            title = stringResource(CoreUiR.string.result),
-            message = "<b>" + stringResource(CoreUiR.string.cleared_entries) + "</b><br>" + result,
-            onDismiss = { cleanupResultText = null }
         )
     }
 }

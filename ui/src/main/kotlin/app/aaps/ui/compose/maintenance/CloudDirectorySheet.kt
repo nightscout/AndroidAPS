@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.management
+package app.aaps.ui.compose.maintenance
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.ui.compose.dialogs.ErrorDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.ui.compose.management.MaintenanceViewModel.CloudDirectoryState
+import app.aaps.ui.compose.maintenance.MaintenanceViewModel.CloudDirectoryState
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable

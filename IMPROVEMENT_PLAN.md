@@ -8,8 +8,11 @@ Findings from code review of the new Compose UI. Organized by priority and area.
 
 ### 1.1 MainScreen Decomposition
 
-- [ ] Extract maintenance dialog chain (export state machine, confirmation dialogs) into
+- [x] Extract maintenance dialog chain (export state machine, confirmation dialogs) into
   `MaintenanceDialogs` composable
+  — Moved 7 state variables, 5 confirmation dialogs, export state machine (3 dialogs), log settings
+  sheet, cloud directory sheet, and cleanup result dialog into `MaintenanceDialogs.kt`. MainScreen
+  passes only the ViewModel and a visibility flag.
 - [ ] Extract bottom sheet management (treatments, manage, automation) into dedicated composables or
   a coordinator
 - [ ] Extract version overlay into `VersionOverlay` composable
@@ -42,8 +45,8 @@ Findings from code review of the new Compose UI. Organized by priority and area.
 
 ### 2.1 Navigation Bar
 
-- [ ] Replace `NavigationBar` + `NavigationBarItem(selected = false)` in `MainNavigationBar` with
-  `BottomAppBar` + `IconButton` — current items are actions, not navigation destinations
+- Won't fix — `NavigationBar` kept as-is. `BottomAppBar` would lose labels, badges, and even
+  spacing for no practical gain. `selected = false` is a required API parameter, not removable.
 
 ### 2.2 Theme Completeness
 

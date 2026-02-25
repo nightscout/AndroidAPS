@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.management
+package app.aaps.ui.compose.maintenance
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

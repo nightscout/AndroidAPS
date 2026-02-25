@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.management
+package app.aaps.ui.compose.maintenance
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,15 +19,14 @@ import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TableChart
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -126,7 +125,7 @@ internal fun MaintenanceBottomSheetContent(
     onToggleCsvCloud: (Boolean) -> Unit = {}
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    val errorColor = MaterialTheme.colorScheme.error
+    MaterialTheme.colorScheme.error
     val isCloudActive = exportConfig?.isCloudActive == true
     val hasCloudError = exportConfig?.isCloudError == true
     val hasCloudCredentials = exportConfig?.hasCloudCredentials == true
@@ -326,10 +325,10 @@ private fun CloudStatusIcon(
     color: Color
 ) {
     val badgeColor = when {
-        hasError       -> MaterialTheme.colorScheme.error
-        isActive       -> Color(0xFF4CAF50) // green
+        hasError -> MaterialTheme.colorScheme.error
+        isActive -> Color(0xFF4CAF50) // green
         hasCredentials -> Color(0xFF4CAF50) // green (has credentials, active)
-        else           -> MaterialTheme.colorScheme.outlineVariant // gray
+        else -> MaterialTheme.colorScheme.outlineVariant // gray
     }
     BadgedBox(
         badge = {

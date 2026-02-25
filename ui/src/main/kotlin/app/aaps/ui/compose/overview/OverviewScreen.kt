@@ -65,6 +65,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.ui.compose.main.TempTargetChipState
+import app.aaps.ui.compose.overview.aapsClient.AapsClientStatusCard
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.manage.ManageViewModel
 import app.aaps.ui.compose.overview.notifications.NotificationBottomSheet
@@ -258,7 +259,7 @@ fun OverviewScreen(
                     config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
                     else               -> AapsTheme.generalColors.flavorClient1Tint
                 }
-                NsClientStatusCard(
+                AapsClientStatusCard(
                     statusData = nsClientStatus,
                     flavorTint = flavorTint
                 )

@@ -24,6 +24,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.graph.AapsClientLevel
+import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
+import app.aaps.core.interfaces.overview.graph.AapsClientStatusItem
 import app.aaps.core.interfaces.overview.graph.AbsIobGraphData
 import app.aaps.core.interfaces.overview.graph.ActivityGraphData
 import app.aaps.core.interfaces.overview.graph.BasalGraphData
@@ -41,9 +44,6 @@ import app.aaps.core.interfaces.overview.graph.EpsGraphPoint
 import app.aaps.core.interfaces.overview.graph.ExtendedBolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.IobGraphData
-import app.aaps.core.interfaces.overview.graph.NsClientLevel
-import app.aaps.core.interfaces.overview.graph.NsClientStatusData
-import app.aaps.core.interfaces.overview.graph.NsClientStatusItem
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.overview.graph.ProfileDisplayData
 import app.aaps.core.interfaces.overview.graph.RatioGraphData
@@ -78,6 +78,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -194,8 +195,8 @@ class OverviewDataCacheImpl @Inject constructor(
     override val runningModeGraphFlow: StateFlow<RunningModeGraphData> = _runningModeGraphFlow.asStateFlow()
 
     // NSClient status
-    private val _nsClientStatusFlow = MutableStateFlow(NsClientStatusData())
-    override val nsClientStatusFlow: StateFlow<NsClientStatusData> = _nsClientStatusFlow.asStateFlow()
+    private val _nsClientStatusFlow = MutableStateFlow(AapsClientStatusData())
+    override val nsClientStatusFlow: StateFlow<AapsClientStatusData> = _nsClientStatusFlow.asStateFlow()
 
     init {
         // Load initial data from database
@@ -579,7 +580,7 @@ class OverviewDataCacheImpl @Inject constructor(
                     timestamp = ca.timestamp,
                     amount = ca.amount,
                     isValid = ca.isValid && ca.amount > 0,
-                    label = rh.gs(app.aaps.core.ui.R.string.format_carbs, ca.amount.toInt())
+                    label = rh.gs(R.string.format_carbs, ca.amount.toInt())
                 )
             }
 
@@ -593,7 +594,7 @@ class OverviewDataCacheImpl @Inject constructor(
                         amount = eb.amount,
                         rate = eb.rate,
                         duration = eb.duration,
-                        label = rh.gs(app.aaps.core.ui.R.string.extended_bolus_data_point_graph, eb.amount, eb.rate)
+                        label = rh.gs(R.string.extended_bolus_data_point_graph, eb.amount, eb.rate)
                     )
                 }
         } else emptyList()
@@ -751,15 +752,15 @@ class OverviewDataCacheImpl @Inject constructor(
         val now = dateUtil.now()
         val pumpItem = processedDeviceStatusData.pumpData?.let { pumpData ->
             val level = when {
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < now                               -> NsClientLevel.URGENT
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                                                -> NsClientLevel.URGENT
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")                          -> NsClientLevel.URGENT
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV") -> NsClientLevel.URGENT
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < now                                 -> NsClientLevel.WARN
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                                  -> NsClientLevel.WARN
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")                            -> NsClientLevel.WARN
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")   -> NsClientLevel.WARN
-                else                                                                                                                   -> NsClientLevel.INFO
+                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < now                               -> AapsClientLevel.URGENT
+                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                                                -> AapsClientLevel.URGENT
+                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")                          -> AapsClientLevel.URGENT
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV") -> AapsClientLevel.URGENT
+                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < now                                 -> AapsClientLevel.WARN
+                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                                  -> AapsClientLevel.WARN
+                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")                            -> AapsClientLevel.WARN
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")   -> AapsClientLevel.WARN
+                else                                                                                                                   -> AapsClientLevel.INFO
             }
             // Format: "75% 3 min ago" (running mode excluded — already shown in RunningMode chip)
             val value = buildString {
@@ -772,11 +773,11 @@ class OverviewDataCacheImpl @Inject constructor(
                     append(it.replace("<br>", "\n").replace(Regex("<[^>]*>"), "").replace("&nbsp;", " ").trim())
                 }
             }
-            NsClientStatusItem(
-                label = rh.gs(app.aaps.core.ui.R.string.pump),
+            AapsClientStatusItem(
+                label = rh.gs(R.string.pump),
                 value = value,
                 level = level,
-                dialogTitle = rh.gs(app.aaps.core.ui.R.string.pump),
+                dialogTitle = rh.gs(R.string.pump),
                 dialogText = dialogText
             )
         }
@@ -784,9 +785,9 @@ class OverviewDataCacheImpl @Inject constructor(
         val openApsItem = if (processedDeviceStatusData.openAPSData.clockSuggested != 0L) {
             val clockSuggested = processedDeviceStatusData.openAPSData.clockSuggested
             val level = when {
-                clockSuggested + T.mins(preferences.get(IntKey.NsClientUrgentAlarmStaleData).toLong()).msecs() < now -> NsClientLevel.URGENT
-                clockSuggested + T.mins(preferences.get(IntKey.NsClientAlarmStaleData).toLong()).msecs() < now       -> NsClientLevel.WARN
-                else                                                                                                 -> NsClientLevel.INFO
+                clockSuggested + T.mins(preferences.get(IntKey.NsClientUrgentAlarmStaleData).toLong()).msecs() < now -> AapsClientLevel.URGENT
+                clockSuggested + T.mins(preferences.get(IntKey.NsClientAlarmStaleData).toLong()).msecs() < now       -> AapsClientLevel.WARN
+                else                                                                                                 -> AapsClientLevel.INFO
             }
             // Match original format: "2 min ago"
             val value = dateUtil.minOrSecAgo(rh, clockSuggested)
@@ -803,11 +804,11 @@ class OverviewDataCacheImpl @Inject constructor(
                     it.reason?.let { reason -> append(" $reason") }
                 }
             }
-            NsClientStatusItem(
-                label = rh.gs(app.aaps.core.ui.R.string.openaps_short),
+            AapsClientStatusItem(
+                label = rh.gs(R.string.openaps_short),
                 value = value,
                 level = level,
-                dialogTitle = rh.gs(app.aaps.core.ui.R.string.openaps),
+                dialogTitle = rh.gs(R.string.openaps),
                 dialogText = dialogText
             )
         } else null
@@ -823,26 +824,26 @@ class OverviewDataCacheImpl @Inject constructor(
             }
             // Match original format: "ᴪ 93%" or "93%"
             val value = buildString {
-                if (isCharging) append("\u1D6A ")
+                if (isCharging) append("\u26A1 ")
                 append("$minBattery%")
             }
             val dialogText = buildString {
                 for ((device, uploader) in processedDeviceStatusData.uploaderMap) {
                     append("$device: ${uploader.battery}%")
-                    if (uploader.isCharging == true) append(" \u1D6A")
+                    if (uploader.isCharging == true) append(" \u26A1")
                     append("\n")
                 }
             }.trimEnd()
-            NsClientStatusItem(
-                label = rh.gs(app.aaps.core.ui.R.string.uploader_short),
+            AapsClientStatusItem(
+                label = rh.gs(R.string.uploader_short),
                 value = value,
-                level = NsClientLevel.INFO,
-                dialogTitle = rh.gs(app.aaps.core.ui.R.string.uploader),
+                level = AapsClientLevel.INFO,
+                dialogTitle = rh.gs(R.string.uploader),
                 dialogText = dialogText
             )
         } else null
 
-        _nsClientStatusFlow.value = NsClientStatusData(pump = pumpItem, openAps = openApsItem, uploader = uploaderItem)
+        _nsClientStatusFlow.value = AapsClientStatusData(pump = pumpItem, openAps = openApsItem, uploader = uploaderItem)
     }
 
     override fun reset() {
@@ -869,7 +870,7 @@ class OverviewDataCacheImpl @Inject constructor(
         _basalGraphFlow.value = BasalGraphData(emptyList(), emptyList(), 0.0)
         _targetLineFlow.value = TargetLineData(emptyList())
         _runningModeGraphFlow.value = RunningModeGraphData(emptyList())
-        _nsClientStatusFlow.value = NsClientStatusData()
+        _nsClientStatusFlow.value = AapsClientStatusData()
         _calcProgressFlow.value = 100
     }
 }

@@ -82,10 +82,10 @@ import app.aaps.ui.compose.insulinDialog.InsulinDialogViewModel
 import app.aaps.ui.compose.main.MainMenuItem
 import app.aaps.ui.compose.main.MainScreen
 import app.aaps.ui.compose.main.MainViewModel
-import app.aaps.ui.compose.management.ImportSettingsScreen
-import app.aaps.ui.compose.management.ImportSource
-import app.aaps.ui.compose.management.ImportViewModel
-import app.aaps.ui.compose.management.MaintenanceViewModel
+import app.aaps.ui.compose.maintenance.ImportSettingsScreen
+import app.aaps.ui.compose.maintenance.ImportSource
+import app.aaps.ui.compose.maintenance.ImportViewModel
+import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.overview.automation.AutomationViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.manage.ManageViewModel
