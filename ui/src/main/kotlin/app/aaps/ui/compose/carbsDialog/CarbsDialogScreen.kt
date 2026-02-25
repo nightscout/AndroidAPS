@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.configuration.Config
@@ -77,7 +78,6 @@ fun CarbsDialogScreen(
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val focusManager = LocalFocusManager.current
 
     // Initialize ViewModel
     LaunchedEffect(Unit) {
@@ -185,6 +185,53 @@ fun CarbsDialogScreen(
         )
     }
 
+    CarbsDialogContent(
+        uiState = uiState,
+        dateString = viewModel.dateUtil.dateString(uiState.eventTime),
+        timeString = viewModel.dateUtil.timeString(uiState.eventTime),
+        onHypoChange = viewModel::updateHypoTt,
+        onEatingSoonChange = viewModel::updateEatingSoonTt,
+        onActivityChange = viewModel::updateActivityTt,
+        onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
+        onAddCarbs = viewModel::addCarbs,
+        onTimeOffsetChange = { viewModel.updateTimeOffset(it.toInt()) },
+        onAlarmChange = viewModel::updateAlarm,
+        onDurationChange = { viewModel.updateDuration(it.toInt()) },
+        onBolusReminderChange = viewModel::updateBolusReminder,
+        onNotesChange = viewModel::updateNotes,
+        onDateClick = { showDatePicker = true },
+        onTimeClick = { showTimePicker = true },
+        onSettingsClick = if (uiState.simpleMode) null else {
+            { showButtonSettings = true }
+        },
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true }
+    )
+}
+
+@Composable
+private fun CarbsDialogContent(
+    uiState: CarbsDialogUiState,
+    dateString: String,
+    timeString: String,
+    onHypoChange: (Boolean) -> Unit,
+    onEatingSoonChange: (Boolean) -> Unit,
+    onActivityChange: (Boolean) -> Unit,
+    onCarbsChange: (Double) -> Unit,
+    onAddCarbs: (Int) -> Unit,
+    onTimeOffsetChange: (Double) -> Unit,
+    onAlarmChange: (Boolean) -> Unit,
+    onDurationChange: (Double) -> Unit,
+    onBolusReminderChange: (Boolean) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onDateClick: () -> Unit,
+    onTimeClick: () -> Unit,
+    onSettingsClick: (() -> Unit)?,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -209,7 +256,7 @@ fun CarbsDialogScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showConfirmation = true }) {
+                    IconButton(onClick = onConfirmClick) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(CoreUiR.string.ok),
@@ -234,9 +281,9 @@ fun CarbsDialogScreen(
                 hypoChecked = uiState.hypoTtChecked,
                 eatingSoonChecked = uiState.eatingSoonTtChecked,
                 activityChecked = uiState.activityTtChecked,
-                onHypoChange = viewModel::updateHypoTt,
-                onEatingSoonChange = viewModel::updateEatingSoonTt,
-                onActivityChange = viewModel::updateActivityTt
+                onHypoChange = onHypoChange,
+                onEatingSoonChange = onEatingSoonChange,
+                onActivityChange = onActivityChange
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -244,7 +291,7 @@ fun CarbsDialogScreen(
             NumberInputRow(
                 labelResId = CoreUiR.string.carbs,
                 value = uiState.carbs.toDouble(),
-                onValueChange = { viewModel.updateCarbs(it.toInt()) },
+                onValueChange = onCarbsChange,
                 valueRange = (-uiState.maxCarbs).toDouble()..uiState.maxCarbs.toDouble(),
                 step = 1.0,
                 valueFormat = DecimalFormat("0"),
@@ -257,10 +304,8 @@ fun CarbsDialogScreen(
                 increment1 = uiState.carbsButtonIncrement1,
                 increment2 = uiState.carbsButtonIncrement2,
                 increment3 = uiState.carbsButtonIncrement3,
-                onAddCarbs = viewModel::addCarbs,
-                onSettingsClick = if (uiState.simpleMode) null else {
-                    { showButtonSettings = true }
-                }
+                onAddCarbs = onAddCarbs,
+                onSettingsClick = onSettingsClick
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -268,7 +313,7 @@ fun CarbsDialogScreen(
             NumberInputRow(
                 labelResId = CoreUiR.string.time,
                 value = uiState.timeOffsetMinutes.toDouble(),
-                onValueChange = { viewModel.updateTimeOffset(it.toInt()) },
+                onValueChange = onTimeOffsetChange,
                 valueRange = (-7.0 * 24 * 60)..(12.0 * 60),
                 step = 5.0,
                 controlPoints = listOf(
@@ -286,7 +331,7 @@ fun CarbsDialogScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(enabled = uiState.alarmEnabled) {
-                        viewModel.updateAlarm(!uiState.alarmChecked)
+                        onAlarmChange(!uiState.alarmChecked)
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -315,7 +360,7 @@ fun CarbsDialogScreen(
             NumberInputRow(
                 labelResId = CoreUiR.string.duration_label,
                 value = uiState.durationHours.toDouble(),
-                onValueChange = { viewModel.updateDuration(it.toInt()) },
+                onValueChange = onDurationChange,
                 valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                 step = 1.0,
                 valueFormat = DecimalFormat("0"),
@@ -329,7 +374,7 @@ fun CarbsDialogScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { viewModel.updateBolusReminder(!uiState.bolusReminderChecked) },
+                        .clickable { onBolusReminderChange(!uiState.bolusReminderChecked) },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
@@ -348,11 +393,11 @@ fun CarbsDialogScreen(
             // --- DateTime Section ---
             SectionHeader(stringResource(CoreUiR.string.date))
             DateTimeSection(
-                eventTime = uiState.eventTime,
+                dateString = dateString,
+                timeString = timeString,
                 eventTimeChanged = uiState.eventTimeChanged,
-                dateUtil = viewModel.dateUtil,
-                onDateClick = { showDatePicker = true },
-                onTimeClick = { showTimePicker = true }
+                onDateClick = onDateClick,
+                onTimeClick = onTimeClick
             )
 
             // --- Notes Section ---
@@ -360,7 +405,7 @@ fun CarbsDialogScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 OutlinedTextField(
                     value = uiState.notes,
-                    onValueChange = viewModel::updateNotes,
+                    onValueChange = onNotesChange,
                     label = { Text(stringResource(CoreUiR.string.notes_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 2,
@@ -371,6 +416,41 @@ fun CarbsDialogScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CarbsDialogScreenPreview() {
+    MaterialTheme {
+        CarbsDialogContent(
+            uiState = CarbsDialogUiState(
+                carbs = 15,
+                maxCarbs = 100,
+                carbsButtonIncrement1 = 5,
+                carbsButtonIncrement2 = 10,
+                carbsButtonIncrement3 = 20,
+                showNotesFromPreferences = true,
+                showBolusReminder = true
+            ),
+            dateString = "25/02/2026",
+            timeString = "14:30",
+            onHypoChange = {},
+            onEatingSoonChange = {},
+            onActivityChange = {},
+            onCarbsChange = {},
+            onAddCarbs = {},
+            onTimeOffsetChange = {},
+            onAlarmChange = {},
+            onDurationChange = {},
+            onBolusReminderChange = {},
+            onNotesChange = {},
+            onDateClick = {},
+            onTimeClick = {},
+            onSettingsClick = {},
+            onNavigateBack = {},
+            onConfirmClick = {}
+        )
     }
 }
 
@@ -510,9 +590,9 @@ private fun CarbsButtonSettingsSheet(
 
 @Composable
 private fun DateTimeSection(
-    eventTime: Long,
+    dateString: String,
+    timeString: String,
     eventTimeChanged: Boolean,
-    dateUtil: app.aaps.core.interfaces.utils.DateUtil,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit
 ) {
@@ -521,7 +601,7 @@ private fun DateTimeSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            value = dateUtil.dateString(eventTime),
+            value = dateString,
             onValueChange = {},
             readOnly = true,
             enabled = false,
@@ -546,7 +626,7 @@ private fun DateTimeSection(
         )
 
         OutlinedTextField(
-            value = dateUtil.timeString(eventTime),
+            value = timeString,
             onValueChange = {},
             readOnly = true,
             enabled = false,

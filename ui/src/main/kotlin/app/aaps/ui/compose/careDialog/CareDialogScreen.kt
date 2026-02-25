@@ -40,13 +40,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.DateUtil
+
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -79,7 +80,6 @@ fun CareDialogScreen(
     onShowSiteRotationDialog: (Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val focusManager = LocalFocusManager.current
 
     // Initialize ViewModel for this event type
     LaunchedEffect(eventType) {
@@ -150,6 +150,39 @@ fun CareDialogScreen(
         )
     }
 
+    CareDialogContent(
+        uiState = uiState,
+        eventType = eventType,
+        dateString = viewModel.dateUtil.dateString(uiState.eventTime),
+        timeString = viewModel.dateUtil.timeString(uiState.eventTime),
+        onMeterTypeChange = viewModel::updateMeterType,
+        onBgValueChange = viewModel::updateBgValue,
+        onDurationChange = viewModel::updateDuration,
+        onNotesChange = viewModel::updateNotes,
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true },
+        onDateClick = { showDatePicker = true },
+        onTimeClick = { showTimePicker = true }
+    )
+}
+
+@Composable
+private fun CareDialogContent(
+    uiState: CareDialogUiState,
+    eventType: UiInteraction.EventType,
+    dateString: String,
+    timeString: String,
+    onMeterTypeChange: (TE.MeterType) -> Unit,
+    onBgValueChange: (Double) -> Unit,
+    onDurationChange: (Double) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit,
+    onDateClick: () -> Unit,
+    onTimeClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -163,7 +196,7 @@ fun CareDialogScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showConfirmation = true }) {
+                    IconButton(onClick = onConfirmClick) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(CoreUiR.string.ok),
@@ -202,8 +235,8 @@ fun CareDialogScreen(
                     meterType = uiState.meterType,
                     bgValue = uiState.bgValue,
                     glucoseUnits = uiState.glucoseUnits,
-                    onMeterTypeChange = viewModel::updateMeterType,
-                    onBgValueChange = viewModel::updateBgValue
+                    onMeterTypeChange = onMeterTypeChange,
+                    onBgValueChange = onBgValueChange
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
@@ -212,7 +245,7 @@ fun CareDialogScreen(
             if (uiState.showDurationSection) {
                 DurationSection(
                     duration = uiState.duration,
-                    onDurationChange = viewModel::updateDuration
+                    onDurationChange = onDurationChange
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
@@ -220,11 +253,11 @@ fun CareDialogScreen(
             // Date/Time Section
             SectionHeader(stringResource(CoreUiR.string.time))
             DateTimeSection(
-                eventTime = uiState.eventTime,
+                dateString = dateString,
+                timeString = timeString,
                 eventTimeChanged = uiState.eventTimeChanged,
-                dateUtil = viewModel.dateUtil,
-                onDateClick = { showDatePicker = true },
-                onTimeClick = { showTimePicker = true }
+                onDateClick = onDateClick,
+                onTimeClick = onTimeClick
             )
 
             // Notes Section
@@ -232,7 +265,7 @@ fun CareDialogScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 OutlinedTextField(
                     value = uiState.notes,
-                    onValueChange = viewModel::updateNotes,
+                    onValueChange = onNotesChange,
                     label = { Text(stringResource(CoreUiR.string.notes_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 2,
@@ -342,9 +375,9 @@ private fun DurationSection(
 
 @Composable
 private fun DateTimeSection(
-    eventTime: Long,
+    dateString: String,
+    timeString: String,
     eventTimeChanged: Boolean,
-    dateUtil: DateUtil,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit
 ) {
@@ -353,7 +386,7 @@ private fun DateTimeSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            value = dateUtil.dateString(eventTime),
+            value = dateString,
             onValueChange = {},
             readOnly = true,
             enabled = false,
@@ -378,7 +411,7 @@ private fun DateTimeSection(
         )
 
         OutlinedTextField(
-            value = dateUtil.timeString(eventTime),
+            value = timeString,
             onValueChange = {},
             readOnly = true,
             enabled = false,
@@ -424,4 +457,30 @@ fun UiInteraction.EventType.icon(): ImageVector = when (this) {
     UiInteraction.EventType.EXERCISE       -> IcActivity
     UiInteraction.EventType.QUESTION       -> IcQuestion
     UiInteraction.EventType.ANNOUNCEMENT   -> IcAnnouncement
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CareDialogScreenPreview() {
+    MaterialTheme {
+        CareDialogContent(
+            uiState = CareDialogUiState(
+                eventType = UiInteraction.EventType.BGCHECK,
+                bgValue = 120.0,
+                glucoseUnits = GlucoseUnit.MGDL,
+                showNotesFromPreferences = true
+            ),
+            eventType = UiInteraction.EventType.BGCHECK,
+            dateString = "25/02/2026",
+            timeString = "14:30",
+            onMeterTypeChange = {},
+            onBgValueChange = {},
+            onDurationChange = {},
+            onNotesChange = {},
+            onNavigateBack = {},
+            onConfirmClick = {},
+            onDateClick = {},
+            onTimeClick = {}
+        )
+    }
 }

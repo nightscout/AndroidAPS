@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTheme
@@ -61,6 +62,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.text.DecimalFormat
 import kotlin.time.Instant
 import app.aaps.core.ui.R as CoreUiR
 
@@ -74,7 +76,6 @@ fun FillDialogScreen(
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val focusManager = LocalFocusManager.current
 
     // Initialize ViewModel
     LaunchedEffect(preselect) {
@@ -187,6 +188,43 @@ fun FillDialogScreen(
         )
     }
 
+    FillDialogContent(
+        uiState = uiState,
+        dateString = viewModel.dateUtil.dateString(uiState.eventTime),
+        timeString = viewModel.dateUtil.timeString(uiState.eventTime),
+        bolusFormat = viewModel.decimalFormat(),
+        onSiteChangeClick = { viewModel.updateSiteChange(!uiState.siteChange) },
+        onCartridgeChangeClick = { viewModel.updateCartridgeChange(!uiState.insulinCartridgeChange) },
+        onInsulinChange = viewModel::updateInsulin,
+        onNotesChange = viewModel::updateNotes,
+        onDateClick = { showDatePicker = true },
+        onTimeClick = { showTimePicker = true },
+        onSettingsClick = if (uiState.simpleMode) null else {
+            { showButtonSettings = true }
+        },
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true }
+    )
+}
+
+@Composable
+private fun FillDialogContent(
+    uiState: FillDialogUiState,
+    dateString: String,
+    timeString: String,
+    bolusFormat: DecimalFormat,
+    onSiteChangeClick: () -> Unit,
+    onCartridgeChangeClick: () -> Unit,
+    onInsulinChange: (Double) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onDateClick: () -> Unit,
+    onTimeClick: () -> Unit,
+    onSettingsClick: (() -> Unit)?,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -200,7 +238,7 @@ fun FillDialogScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showConfirmation = true }) {
+                    IconButton(onClick = onConfirmClick) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(CoreUiR.string.ok),
@@ -237,7 +275,7 @@ fun FillDialogScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { viewModel.updateSiteChange(!uiState.siteChange) },
+                    .clickable { onSiteChangeClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
@@ -254,7 +292,7 @@ fun FillDialogScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { viewModel.updateCartridgeChange(!uiState.insulinCartridgeChange) },
+                    .clickable { onCartridgeChangeClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
@@ -274,10 +312,10 @@ fun FillDialogScreen(
             NumberInputRow(
                 labelResId = CoreUiR.string.bolus,
                 value = uiState.insulin,
-                onValueChange = viewModel::updateInsulin,
+                onValueChange = onInsulinChange,
                 valueRange = 0.0..uiState.maxInsulin,
                 step = uiState.bolusStep,
-                valueFormat = viewModel.decimalFormat(),
+                valueFormat = bolusFormat,
                 unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -288,10 +326,8 @@ fun FillDialogScreen(
                 presetButton2 = uiState.presetButton2,
                 presetButton3 = uiState.presetButton3,
                 bolusStep = uiState.bolusStep,
-                onPresetClick = viewModel::updateInsulin,
-                onSettingsClick = if (uiState.simpleMode) null else {
-                    { showButtonSettings = true }
-                }
+                onPresetClick = onInsulinChange,
+                onSettingsClick = onSettingsClick
             )
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -299,11 +335,11 @@ fun FillDialogScreen(
             // Date/Time Section
             SectionHeader(stringResource(CoreUiR.string.time))
             DateTimeSection(
-                eventTime = uiState.eventTime,
+                dateString = dateString,
+                timeString = timeString,
                 eventTimeChanged = uiState.eventTimeChanged,
-                dateUtil = viewModel.dateUtil,
-                onDateClick = { showDatePicker = true },
-                onTimeClick = { showTimePicker = true }
+                onDateClick = onDateClick,
+                onTimeClick = onTimeClick
             )
 
             // Notes section
@@ -311,7 +347,7 @@ fun FillDialogScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 OutlinedTextField(
                     value = uiState.notes,
-                    onValueChange = viewModel::updateNotes,
+                    onValueChange = onNotesChange,
                     label = { Text(stringResource(CoreUiR.string.notes_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 2,
@@ -322,6 +358,38 @@ fun FillDialogScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FillDialogScreenPreview() {
+    MaterialTheme {
+        FillDialogContent(
+            uiState = FillDialogUiState(
+                insulin = 0.0,
+                siteChange = true,
+                insulinCartridgeChange = false,
+                maxInsulin = 10.0,
+                bolusStep = 0.1,
+                presetButton1 = 0.3,
+                presetButton2 = 0.5,
+                presetButton3 = 1.0,
+                showNotesFromPreferences = true
+            ),
+            dateString = "25/02/2026",
+            timeString = "14:30",
+            bolusFormat = DecimalFormat("0.0"),
+            onSiteChangeClick = {},
+            onCartridgeChangeClick = {},
+            onInsulinChange = {},
+            onNotesChange = {},
+            onDateClick = {},
+            onTimeClick = {},
+            onSettingsClick = {},
+            onNavigateBack = {},
+            onConfirmClick = {}
+        )
     }
 }
 
@@ -408,9 +476,9 @@ private fun FillButtonSettingsSheet(
 
 @Composable
 private fun DateTimeSection(
-    eventTime: Long,
+    dateString: String,
+    timeString: String,
     eventTimeChanged: Boolean,
-    dateUtil: app.aaps.core.interfaces.utils.DateUtil,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit
 ) {
@@ -419,7 +487,7 @@ private fun DateTimeSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            value = dateUtil.dateString(eventTime),
+            value = dateString,
             onValueChange = {},
             readOnly = true,
             enabled = false,
@@ -444,7 +512,7 @@ private fun DateTimeSection(
         )
 
         OutlinedTextField(
-            value = dateUtil.timeString(eventTime),
+            value = timeString,
             onValueChange = {},
             readOnly = true,
             enabled = false,

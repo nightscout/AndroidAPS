@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.configuration.Config
@@ -62,6 +63,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.text.DecimalFormat
 import kotlin.time.Instant
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
@@ -74,7 +76,6 @@ fun InsulinDialogScreen(
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val focusManager = LocalFocusManager.current
 
     // Initialize ViewModel
     LaunchedEffect(Unit) {
@@ -182,6 +183,49 @@ fun InsulinDialogScreen(
         )
     }
 
+    InsulinDialogContent(
+        uiState = uiState,
+        dateString = viewModel.dateUtil.dateString(uiState.eventTime),
+        timeString = viewModel.dateUtil.timeString(uiState.eventTime),
+        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
+        formatAmount = { viewModel.decimalFormatter.toPumpSupportedBolus(it, uiState.bolusStep) },
+        onEatingSoonChange = viewModel::updateEatingSoonTt,
+        onRecordOnlyChange = viewModel::updateRecordOnly,
+        onInsulinChange = { viewModel.updateInsulin(it) },
+        onAddInsulin = viewModel::addInsulin,
+        onTimeOffsetChange = { viewModel.updateTimeOffset(it.toInt()) },
+        onNotesChange = viewModel::updateNotes,
+        onDateClick = { showDatePicker = true },
+        onTimeClick = { showTimePicker = true },
+        onSettingsClick = if (uiState.simpleMode) null else {
+            { showButtonSettings = true }
+        },
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true }
+    )
+}
+
+@Composable
+private fun InsulinDialogContent(
+    uiState: InsulinDialogUiState,
+    dateString: String,
+    timeString: String,
+    bolusFormat: DecimalFormat,
+    formatAmount: (Double) -> String,
+    onEatingSoonChange: (Boolean) -> Unit,
+    onRecordOnlyChange: (Boolean) -> Unit,
+    onInsulinChange: (Double) -> Unit,
+    onAddInsulin: (Double) -> Unit,
+    onTimeOffsetChange: (Double) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onDateClick: () -> Unit,
+    onTimeClick: () -> Unit,
+    onSettingsClick: (() -> Unit)?,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -206,7 +250,7 @@ fun InsulinDialogScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showConfirmation = true }) {
+                    IconButton(onClick = onConfirmClick) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(CoreUiR.string.ok),
@@ -232,7 +276,7 @@ fun InsulinDialogScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { viewModel.updateEatingSoonTt(!uiState.eatingSoonTtChecked) },
+                        .clickable { onEatingSoonChange(!uiState.eatingSoonTtChecked) },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(checked = uiState.eatingSoonTtChecked, onCheckedChange = null)
@@ -248,7 +292,7 @@ fun InsulinDialogScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(enabled = uiState.recordOnlyEnabled) {
-                            viewModel.updateRecordOnly(!uiState.recordOnlyChecked)
+                            onRecordOnlyChange(!uiState.recordOnlyChecked)
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -272,10 +316,10 @@ fun InsulinDialogScreen(
             NumberInputRow(
                 labelResId = CoreUiR.string.overview_insulin_label,
                 value = uiState.insulin,
-                onValueChange = { viewModel.updateInsulin(it) },
+                onValueChange = onInsulinChange,
                 valueRange = 0.0..uiState.maxInsulin,
                 step = uiState.bolusStep,
-                valueFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
+                valueFormat = bolusFormat,
                 unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -285,12 +329,9 @@ fun InsulinDialogScreen(
                 increment1 = uiState.insulinButtonIncrement1,
                 increment2 = uiState.insulinButtonIncrement2,
                 increment3 = uiState.insulinButtonIncrement3,
-                bolusStep = uiState.bolusStep,
-                decimalFormatter = viewModel.decimalFormatter,
-                onAddInsulin = viewModel::addInsulin,
-                onSettingsClick = if (uiState.simpleMode) null else {
-                    { showButtonSettings = true }
-                }
+                formatAmount = formatAmount,
+                onAddInsulin = onAddInsulin,
+                onSettingsClick = onSettingsClick
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -299,7 +340,7 @@ fun InsulinDialogScreen(
                 NumberInputRow(
                     labelResId = CoreUiR.string.time,
                     value = uiState.timeOffsetMinutes.toDouble(),
-                    onValueChange = { viewModel.updateTimeOffset(it.toInt()) },
+                    onValueChange = onTimeOffsetChange,
                     valueRange = -12.0 * 60..12.0 * 60,
                     step = 5.0,
                     unitLabelResId = KeysR.string.units_min,
@@ -309,11 +350,11 @@ fun InsulinDialogScreen(
                 // --- DateTime Section ---
                 SectionHeader(stringResource(CoreUiR.string.date))
                 DateTimeSection(
-                    eventTime = uiState.eventTime,
+                    dateString = dateString,
+                    timeString = timeString,
                     eventTimeChanged = uiState.eventTimeChanged,
-                    dateUtil = viewModel.dateUtil,
-                    onDateClick = { showDatePicker = true },
-                    onTimeClick = { showTimePicker = true }
+                    onDateClick = onDateClick,
+                    onTimeClick = onTimeClick
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
@@ -322,7 +363,7 @@ fun InsulinDialogScreen(
             if (uiState.showNotesFromPreferences) {
                 OutlinedTextField(
                     value = uiState.notes,
-                    onValueChange = viewModel::updateNotes,
+                    onValueChange = onNotesChange,
                     label = { Text(stringResource(CoreUiR.string.notes_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 2,
@@ -333,6 +374,39 @@ fun InsulinDialogScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InsulinDialogScreenPreview() {
+    MaterialTheme {
+        InsulinDialogContent(
+            uiState = InsulinDialogUiState(
+                insulin = 2.5,
+                maxInsulin = 10.0,
+                bolusStep = 0.1,
+                insulinButtonIncrement1 = 0.5,
+                insulinButtonIncrement2 = 1.0,
+                insulinButtonIncrement3 = 2.0,
+                showNotesFromPreferences = true
+            ),
+            dateString = "25/02/2026",
+            timeString = "14:30",
+            bolusFormat = DecimalFormat("0.0"),
+            formatAmount = { DecimalFormat("0.0").format(it) },
+            onEatingSoonChange = {},
+            onRecordOnlyChange = {},
+            onInsulinChange = {},
+            onAddInsulin = {},
+            onTimeOffsetChange = {},
+            onNotesChange = {},
+            onDateClick = {},
+            onTimeClick = {},
+            onSettingsClick = {},
+            onNavigateBack = {},
+            onConfirmClick = {}
+        )
     }
 }
 
@@ -351,8 +425,7 @@ private fun InsulinQuickAddButtons(
     increment1: Double,
     increment2: Double,
     increment3: Double,
-    bolusStep: Double,
-    decimalFormatter: app.aaps.core.interfaces.utils.DecimalFormatter,
+    formatAmount: (Double) -> String,
     onAddInsulin: (Double) -> Unit,
     onSettingsClick: (() -> Unit)?
 ) {
@@ -365,7 +438,7 @@ private fun InsulinQuickAddButtons(
         verticalAlignment = Alignment.CenterVertically
     ) {
         increments.forEach { amount ->
-            val formatted = decimalFormatter.toPumpSupportedBolus(amount, bolusStep)
+            val formatted = formatAmount(amount)
             val label = if (amount > 0) "+$formatted" else formatted
             FilledTonalButton(onClick = { onAddInsulin(amount) }) {
                 Text(label)
@@ -422,9 +495,9 @@ private fun InsulinButtonSettingsSheet(
 
 @Composable
 private fun DateTimeSection(
-    eventTime: Long,
+    dateString: String,
+    timeString: String,
     eventTimeChanged: Boolean,
-    dateUtil: app.aaps.core.interfaces.utils.DateUtil,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit
 ) {
@@ -433,7 +506,7 @@ private fun DateTimeSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            value = dateUtil.dateString(eventTime),
+            value = dateString,
             onValueChange = {},
             readOnly = true,
             enabled = false,
@@ -458,7 +531,7 @@ private fun DateTimeSection(
         )
 
         OutlinedTextField(
-            value = dateUtil.timeString(eventTime),
+            value = timeString,
             onValueChange = {},
             readOnly = true,
             enabled = false,
