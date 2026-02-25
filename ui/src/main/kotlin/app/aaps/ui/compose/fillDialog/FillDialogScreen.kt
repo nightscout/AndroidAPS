@@ -49,21 +49,15 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.ui.R
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
+import app.aaps.ui.compose.EventDatePicker
+import app.aaps.ui.compose.EventTimePicker
 import java.text.DecimalFormat
-import kotlin.time.Instant
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -145,34 +139,19 @@ fun FillDialogScreen(
 
     // Date picker
     if (showDatePicker) {
-        val tz = TimeZone.currentSystemDefault()
-        DatePickerModal(
-            onDateSelected = { selectedMillis ->
-                selectedMillis?.let {
-                    val currentLdt = Instant.fromEpochMilliseconds(uiState.eventTime).toLocalDateTime(tz)
-                    val selectedDate = Instant.fromEpochMilliseconds(it).toLocalDateTime(tz).date
-                    val merged = LocalDateTime(selectedDate, currentLdt.time)
-                    viewModel.updateEventTime(merged.toInstant(tz).toEpochMilliseconds())
-                }
-            },
-            onDismiss = { showDatePicker = false },
-            initialDateMillis = uiState.eventTime
+        EventDatePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showDatePicker = false }
         )
     }
 
     // Time picker
     if (showTimePicker) {
-        val tz = TimeZone.currentSystemDefault()
-        val currentLdt = Instant.fromEpochMilliseconds(uiState.eventTime).toLocalDateTime(tz)
-        TimePickerModal(
-            onTimeSelected = { hour, minute ->
-                val merged = LocalDateTime(currentLdt.date, LocalTime(hour, minute))
-                viewModel.updateEventTime(merged.toInstant(tz).toEpochMilliseconds())
-            },
-            onDismiss = { showTimePicker = false },
-            initialHour = currentLdt.hour,
-            initialMinute = currentLdt.minute,
-            is24Hour = true
+        EventTimePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showTimePicker = false }
         )
     }
 
@@ -306,29 +285,31 @@ private fun FillDialogContent(
                 )
             }
 
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            if (uiState.showBolus) {
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
-            // Insulin section
-            NumberInputRow(
-                labelResId = CoreUiR.string.bolus,
-                value = uiState.insulin,
-                onValueChange = onInsulinChange,
-                valueRange = 0.0..uiState.maxInsulin,
-                step = uiState.bolusStep,
-                valueFormat = bolusFormat,
-                unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                modifier = Modifier.fillMaxWidth()
-            )
+                // Insulin section
+                NumberInputRow(
+                    labelResId = CoreUiR.string.bolus,
+                    value = uiState.insulin,
+                    onValueChange = onInsulinChange,
+                    valueRange = 0.0..uiState.maxInsulin,
+                    step = uiState.bolusStep,
+                    valueFormat = bolusFormat,
+                    unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            // Preset buttons
-            PresetButtonsRow(
-                presetButton1 = uiState.presetButton1,
-                presetButton2 = uiState.presetButton2,
-                presetButton3 = uiState.presetButton3,
-                bolusStep = uiState.bolusStep,
-                onPresetClick = onInsulinChange,
-                onSettingsClick = onSettingsClick
-            )
+                // Preset buttons
+                PresetButtonsRow(
+                    presetButton1 = uiState.presetButton1,
+                    presetButton2 = uiState.presetButton2,
+                    presetButton3 = uiState.presetButton3,
+                    bolusStep = uiState.bolusStep,
+                    onPresetClick = onInsulinChange,
+                    onSettingsClick = onSettingsClick
+                )
+            }
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 

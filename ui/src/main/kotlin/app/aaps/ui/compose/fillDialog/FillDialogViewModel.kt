@@ -88,6 +88,7 @@ class FillDialogViewModel @Inject constructor(
                 presetButton3 = preferences.get(DoubleKey.ActionsFillButton3),
                 insulinAfterConstraints = 0.0,
                 constraintApplied = false,
+                showBolus = !config.AAPSCLIENT,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode)
             )

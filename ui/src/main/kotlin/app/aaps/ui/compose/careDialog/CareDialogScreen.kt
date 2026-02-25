@@ -47,13 +47,10 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.ui.UiInteraction
-
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcBgCheck
@@ -62,13 +59,9 @@ import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.ui.R
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
+import app.aaps.ui.compose.EventDatePicker
+import app.aaps.ui.compose.EventTimePicker
 import java.text.DecimalFormat
-import kotlin.time.Instant
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -119,34 +112,19 @@ fun CareDialogScreen(
 
     // Date picker
     if (showDatePicker) {
-        val tz = TimeZone.currentSystemDefault()
-        DatePickerModal(
-            onDateSelected = { selectedMillis ->
-                selectedMillis?.let {
-                    val currentLdt = Instant.fromEpochMilliseconds(uiState.eventTime).toLocalDateTime(tz)
-                    val selectedDate = Instant.fromEpochMilliseconds(it).toLocalDateTime(tz).date
-                    val merged = LocalDateTime(selectedDate, currentLdt.time)
-                    viewModel.updateEventTime(merged.toInstant(tz).toEpochMilliseconds())
-                }
-            },
-            onDismiss = { showDatePicker = false },
-            initialDateMillis = uiState.eventTime
+        EventDatePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showDatePicker = false }
         )
     }
 
     // Time picker
     if (showTimePicker) {
-        val tz = TimeZone.currentSystemDefault()
-        val currentLdt = Instant.fromEpochMilliseconds(uiState.eventTime).toLocalDateTime(tz)
-        TimePickerModal(
-            onTimeSelected = { hour, minute ->
-                val merged = LocalDateTime(currentLdt.date, LocalTime(hour, minute))
-                viewModel.updateEventTime(merged.toInstant(tz).toEpochMilliseconds())
-            },
-            onDismiss = { showTimePicker = false },
-            initialHour = currentLdt.hour,
-            initialMinute = currentLdt.minute,
-            is24Hour = true
+        EventTimePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showTimePicker = false }
         )
     }
 
