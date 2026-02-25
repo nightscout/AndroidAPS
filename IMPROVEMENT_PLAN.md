@@ -25,11 +25,16 @@ Findings from code review of the new Compose UI. Organized by priority and area.
 
 ### 1.3 TreatmentsScreen Toolbar Workaround
 
-- [ ] Replace `allowedToolbarPage` + `key(allowedToolbarPage)` forced recomposition pattern with a
+- [x] Replace `allowedToolbarPage` + `key(allowedToolbarPage)` forced recomposition pattern with a
   callback-based or shared `StateFlow<ToolbarConfig>` approach
-- [ ] Fix `TreatmentTab` data class storing `@Composable () -> Unit` lambda (breaks `equals`/
+  — Per-tab `mutableStateListOf<ToolbarConfig?>` cache. Each child writes to its own slot
+  unconditionally. Parent derives active toolbar via `derivedStateOf` from `pagerState.currentPage`.
+  Eliminates forced recomposition and page guard logic.
+- [x] Fix `TreatmentTab` data class storing `@Composable () -> Unit` lambda (breaks `equals`/
   `hashCode`) — consider using an index-based approach or `@Immutable` annotation with manual
   equality
+  — Changed to plain `class` with only metadata (icon, titleRes, colorGetter, pageIndex).
+  Content rendering moved to `when` dispatch in the pager.
 
 ---
 

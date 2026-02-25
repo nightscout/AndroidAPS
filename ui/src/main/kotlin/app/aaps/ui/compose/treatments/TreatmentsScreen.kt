@@ -18,13 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -58,209 +56,113 @@ fun TreatmentsScreen(
 ) {
     val showExtendedBolusTab = viewModel.showExtendedBolusTab()
     val iconColors = AapsTheme.elementColors
-    var toolbarConfig by remember {
-        mutableStateOf(
-            ToolbarConfig(
-                title = "",
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
-                        )
-                    }
-                },
-                actions = { }
-            )
+    val defaultToolbarConfig = remember {
+        ToolbarConfig(
+            title = "",
+            navigationIcon = {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            },
+            actions = { }
         )
     }
-
-    // Track which page should be allowed to set toolbar
-    var allowedToolbarPage by remember { mutableStateOf(0) }
 
     // Define tabs with their icons and content
     val tabs = remember(showExtendedBolusTab) {
         var currentIndex = 0
         buildList {
-            val pageIndex0 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = IcCarbs,
                     titleRes = R.string.carbs_and_bolus,
                     colorGetter = { iconColors.carbs },
-                    content = {
-                        BolusCarbsScreen(
-                            viewModel = viewModel.bolusCarbsViewModel,
-                            activePlugin = viewModel.activePlugin,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex0) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
             if (showExtendedBolusTab) {
-                val pageIndex1 = currentIndex++
                 add(
                     TreatmentTab(
+                        pageIndex = currentIndex++,
                         icon = IcExtendedBolus,
                         titleRes = app.aaps.core.ui.R.string.extended_bolus,
                         colorGetter = { iconColors.extendedBolus },
-                        content = {
-                            ExtendedBolusScreen(
-                                viewModel = viewModel.extendedBolusViewModel,
-                                profileFunction = viewModel.profileFunction,
-                                activeInsulin = viewModel.activePlugin.activeInsulin,
-                                setToolbarConfig = { config ->
-                                    if (allowedToolbarPage == pageIndex1) toolbarConfig = config
-                                },
-                                onNavigateBack = onNavigateBack
-                            )
-                        }
                     )
                 )
             }
-            val pageIndex2 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = IcTbrHigh,
                     titleRes = app.aaps.core.ui.R.string.tempbasal_label,
                     colorGetter = { iconColors.tempBasal },
-                    content = {
-                        TempBasalScreen(
-                            viewModel = viewModel.tempBasalViewModel,
-                            profileFunction = viewModel.profileFunction,
-                            activePlugin = viewModel.activePlugin,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex2) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
-            val pageIndex3 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = IcTtHigh,
                     titleRes = app.aaps.core.ui.R.string.temporary_target,
                     colorGetter = { iconColors.tempTarget },
-                    content = {
-                        TempTargetScreen(
-                            viewModel = viewModel.tempTargetViewModel,
-                            profileUtil = viewModel.profileUtil,
-                            translator = viewModel.translator,
-                            decimalFormatter = viewModel.decimalFormatter,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex3) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
-            val pageIndex4 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = IcProfile,
                     titleRes = app.aaps.core.ui.R.string.careportal_profileswitch,
                     colorGetter = { iconColors.profileSwitch },
-                    content = {
-                        ProfileSwitchScreen(
-                            viewModel = viewModel.profileSwitchViewModel,
-                            localProfileManager = viewModel.localProfileManager,
-                            decimalFormatter = viewModel.decimalFormatter,
-                            uel = viewModel.uel,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex4) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
-            val pageIndex5 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = IcNote,
                     titleRes = app.aaps.core.ui.R.string.careportal,
                     colorGetter = { iconColors.careportal },
-                    content = {
-                        CareportalScreen(
-                            viewModel = viewModel.careportalViewModel,
-                            persistenceLayer = viewModel.persistenceLayer,
-                            profileUtil = viewModel.profileUtil,
-                            translator = viewModel.translator,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex5) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
-            val pageIndex6 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = Icons.AutoMirrored.Filled.DirectionsRun,
                     titleRes = app.aaps.core.ui.R.string.running_mode,
                     colorGetter = { iconColors.runningMode },
-                    content = {
-                        RunningModeScreen(
-                            viewModel = viewModel.runningModeViewModel,
-                            translator = viewModel.translator,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex6) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
-            val pageIndex7 = currentIndex++
             add(
                 TreatmentTab(
+                    pageIndex = currentIndex++,
                     icon = Icons.AutoMirrored.Filled.Note,
                     titleRes = R.string.user_entry,
                     colorGetter = { iconColors.userEntry },
-                    content = {
-                        UserEntryScreen(
-                            viewModel = viewModel.userEntryViewModel,
-                            userEntryPresentationHelper = viewModel.userEntryPresentationHelper,
-                            translator = viewModel.translator,
-                            importExportPrefs = viewModel.importExportPrefs,
-                            uel = viewModel.uel,
-                            setToolbarConfig = { config ->
-                                if (allowedToolbarPage == pageIndex7) toolbarConfig = config
-                            },
-                            onNavigateBack = onNavigateBack
-                        )
-                    }
                 )
             )
         }
+    }
+
+    // Per-tab toolbar config cache — each child writes to its own slot
+    val toolbarConfigs = remember(tabs.size) {
+        List<ToolbarConfig?>(tabs.size) { null }.toMutableStateList()
     }
 
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
 
-    // Force toolbar update when page changes and settles
-    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress) {
-            // Update which page is allowed to set toolbar
-            allowedToolbarPage = pagerState.currentPage
-            // Force the page to update its toolbar by triggering a composition
-            // (incrementing this will cause screens to see a new key and recompose)
-        }
+    // Derive active toolbar from current page's cached config
+    val activeToolbar by remember {
+        derivedStateOf { toolbarConfigs.getOrNull(pagerState.currentPage) ?: defaultToolbarConfig }
     }
 
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(toolbarConfig.title) },
-                navigationIcon = { toolbarConfig.navigationIcon() },
-                actions = { toolbarConfig.actions(this) }
+                title = { Text(activeToolbar.title) },
+                navigationIcon = { activeToolbar.navigationIcon() },
+                actions = { activeToolbar.actions(this) }
             )
         }
     ) { paddingValues ->
@@ -298,11 +200,87 @@ fun TreatmentsScreen(
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
-                beyondViewportPageCount = 0  // Only compose the current page
+                beyondViewportPageCount = 0
             ) { page ->
-                // Force recomposition when allowedToolbarPage changes
-                key(allowedToolbarPage) {
-                    tabs[page].content()
+                val tab = tabs[page]
+                val setConfig: (ToolbarConfig) -> Unit = remember(tab.pageIndex) {
+                    { config -> toolbarConfigs[tab.pageIndex] = config }
+                }
+                when (tab.titleRes) {
+                    R.string.carbs_and_bolus                          ->
+                        BolusCarbsScreen(
+                            viewModel = viewModel.bolusCarbsViewModel,
+                            activePlugin = viewModel.activePlugin,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    app.aaps.core.ui.R.string.extended_bolus          ->
+                        ExtendedBolusScreen(
+                            viewModel = viewModel.extendedBolusViewModel,
+                            profileFunction = viewModel.profileFunction,
+                            activeInsulin = viewModel.activePlugin.activeInsulin,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    app.aaps.core.ui.R.string.tempbasal_label         ->
+                        TempBasalScreen(
+                            viewModel = viewModel.tempBasalViewModel,
+                            profileFunction = viewModel.profileFunction,
+                            activePlugin = viewModel.activePlugin,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    app.aaps.core.ui.R.string.temporary_target        ->
+                        TempTargetScreen(
+                            viewModel = viewModel.tempTargetViewModel,
+                            profileUtil = viewModel.profileUtil,
+                            translator = viewModel.translator,
+                            decimalFormatter = viewModel.decimalFormatter,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    app.aaps.core.ui.R.string.careportal_profileswitch ->
+                        ProfileSwitchScreen(
+                            viewModel = viewModel.profileSwitchViewModel,
+                            localProfileManager = viewModel.localProfileManager,
+                            decimalFormatter = viewModel.decimalFormatter,
+                            uel = viewModel.uel,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    app.aaps.core.ui.R.string.careportal              ->
+                        CareportalScreen(
+                            viewModel = viewModel.careportalViewModel,
+                            persistenceLayer = viewModel.persistenceLayer,
+                            profileUtil = viewModel.profileUtil,
+                            translator = viewModel.translator,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    app.aaps.core.ui.R.string.running_mode            ->
+                        RunningModeScreen(
+                            viewModel = viewModel.runningModeViewModel,
+                            translator = viewModel.translator,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
+
+                    R.string.user_entry                               ->
+                        UserEntryScreen(
+                            viewModel = viewModel.userEntryViewModel,
+                            userEntryPresentationHelper = viewModel.userEntryPresentationHelper,
+                            translator = viewModel.translator,
+                            importExportPrefs = viewModel.importExportPrefs,
+                            uel = viewModel.uel,
+                            setToolbarConfig = setConfig,
+                            onNavigateBack = onNavigateBack
+                        )
                 }
             }
         }
@@ -310,16 +288,14 @@ fun TreatmentsScreen(
 }
 
 /**
- * Data class representing a treatment tab.
+ * Represents a treatment tab's metadata (icon, title, color).
+ * Content is rendered in the pager via a `when` dispatch on [titleRes].
  *
- * @param icon The ImageVector icon for the tab
- * @param titleRes The string resource ID for the tab title
- * @param colorGetter Lambda function that returns the color for the tab icon from theme
- * @param content Composable content to display when this tab is selected
+ * Not a data class — [colorGetter] lambda makes structural equality meaningless.
  */
-private data class TreatmentTab(
+private class TreatmentTab(
+    val pageIndex: Int,
     val icon: ImageVector,
     val titleRes: Int,
     val colorGetter: () -> Color,
-    val content: @Composable () -> Unit
 )
