@@ -19,15 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcCannulaChange
+import app.aaps.core.ui.compose.icons.IcCgmInsert
+import app.aaps.core.ui.compose.icons.IcPumpBattery
+import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.statusLevelToColor
-import app.aaps.ui.compose.overview.statusLights.StatusItem
 
 /**
  * Status rows content — sensor/insulin/cannula/battery with optional action buttons.
@@ -86,7 +88,7 @@ private fun StatusRow(
     ) {
         // Icon
         Icon(
-            painter = painterResource(id = item.iconRes),
+            imageVector = item.icon,
             contentDescription = item.label,
             modifier = Modifier.size(28.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -176,7 +178,7 @@ private fun StatusSectionContentPreview() {
                     level = "Signal OK",
                     levelStatus = StatusLevel.NORMAL,
                     levelPercent = 0.2f,
-                    iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_sensor
+                    icon = IcCgmInsert
                 ),
                 insulinStatus = StatusItem(
                     label = "Insulin",
@@ -186,14 +188,14 @@ private fun StatusSectionContentPreview() {
                     level = "86 U",
                     levelStatus = StatusLevel.NORMAL,
                     levelPercent = -1f,
-                    iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_insulin
+                    icon = IcPumpCartridge
                 ),
                 cannulaStatus = StatusItem(
                     label = "Cannula",
                     age = "1d 18h",
                     ageStatus = StatusLevel.NORMAL,
                     agePercent = 0.6f,
-                    iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_cannula
+                    icon = IcCannulaChange
                 ),
                 batteryStatus = StatusItem(
                     label = "Battery",
@@ -203,7 +205,7 @@ private fun StatusSectionContentPreview() {
                     level = "12%",
                     levelStatus = StatusLevel.CRITICAL,
                     levelPercent = 0.88f,
-                    iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_battery
+                    icon = IcPumpBattery
                 ),
                 onSensorInsertClick = {},
                 onFillClick = {},

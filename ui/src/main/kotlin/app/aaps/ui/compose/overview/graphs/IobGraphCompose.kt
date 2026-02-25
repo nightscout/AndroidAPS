@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.ui.compose.AapsTheme
@@ -57,9 +57,9 @@ fun IobGraphCompose(
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
-    val iobGraphData by viewModel.iobGraphFlow.collectAsState()
-    val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsState()
-    val derivedTimeRange by viewModel.derivedTimeRange.collectAsState()
+    val iobGraphData by viewModel.iobGraphFlow.collectAsStateWithLifecycle()
+    val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
+    val derivedTimeRange by viewModel.derivedTimeRange.collectAsStateWithLifecycle()
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
@@ -124,9 +124,9 @@ fun IobGraphCompose(
                 for (smb in smbs) {
                     val point = timestampToX(smb.timestamp, minTimestamp) to 0.0
                     when {
-                        smb.amount < smallThreshold  -> small.add(point)
-                        smb.amount < largeThreshold  -> medium.add(point)
-                        else                         -> large.add(point)
+                        smb.amount < smallThreshold -> small.add(point)
+                        smb.amount < largeThreshold -> medium.add(point)
+                        else                        -> large.add(point)
                     }
                 }
                 smallSmbs = small
@@ -342,7 +342,7 @@ fun IobGraphCompose(
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsState()
+    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val decorations = remember(nowLine) { listOf(nowLine) }
 
@@ -385,7 +385,9 @@ private data class ProcessedIobTreatments(
     val normalBoluses: List<Pair<Double, Double>>,
     val extBoluses: List<Triple<Double, Double, Double>>
 ) {
+
     companion object {
+
         val EMPTY = ProcessedIobTreatments(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
     }
 }

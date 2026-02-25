@@ -8,19 +8,19 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.core.app.ActivityCompat
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -31,11 +31,11 @@ import app.aaps.compose.navigation.AppRoute
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -46,8 +46,8 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
@@ -212,7 +212,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                 )
 
                 // Permissions bottom sheet
-                val permState by permissionsViewModel.uiState.collectAsState()
+                val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()
 
                 val snackbarHostState = remember { SnackbarHostState() }
 
@@ -287,16 +287,16 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     )
                 }
 
-                val state by mainViewModel.uiState.collectAsState()
+                val state by mainViewModel.uiState.collectAsStateWithLifecycle()
 
                 NavHost(
                     navController = navController,
                     startDestination = AppRoute.Main.route
                 ) {
                     composable(AppRoute.Main.route) {
-                        val searchState by searchViewModel.uiState.collectAsState()
-                        val calcProgress by mainViewModel.calcProgressFlow.collectAsState()
-                        val notifications by notificationManager.notifications.collectAsState()
+                        val searchState by searchViewModel.uiState.collectAsStateWithLifecycle()
+                        val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
+                        val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
 
                         MainScreen(
                             uiState = state,
@@ -902,18 +902,19 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
 
     private fun handleNotificationAction(notificationId: NotificationId, navController: NavController) {
         when (notificationId) {
-            NotificationId.IDENTIFICATION_NOT_SET   ->
+            NotificationId.IDENTIFICATION_NOT_SET  ->
                 navController.navigate(AppRoute.PreferenceScreen.createRoute("data_choice_setting", StringKey.MaintenanceIdentification.key))
 
-            NotificationId.MASTER_PASSWORD_NOT_SET   ->
+            NotificationId.MASTER_PASSWORD_NOT_SET ->
                 navController.navigate(AppRoute.PreferenceScreen.createRoute("protection", StringKey.ProtectionMasterPassword.key))
 
-            NotificationId.AAPS_DIR_NOT_SELECTED     ->
+            NotificationId.AAPS_DIR_NOT_SELECTED   ->
                 try {
                     accessTree?.launch(null)
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
 
-            else                                     -> Unit
+            else                                   -> Unit
         }
     }
 
@@ -1011,6 +1012,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     "treatments"              -> navController.navigate(AppRoute.Treatments.route)
                     "stats",
                     "stats_cycle_pattern"     -> navController.navigate(AppRoute.Stats.route)
+
                     "profile_helper"          -> navController.navigate(AppRoute.ProfileHelper.route)
 
                     "history_browser"         -> {

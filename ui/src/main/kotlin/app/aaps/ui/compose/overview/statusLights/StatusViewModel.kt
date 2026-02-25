@@ -19,6 +19,11 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcCannulaChange
+import app.aaps.core.ui.compose.icons.IcCgmInsert
+import app.aaps.core.ui.compose.icons.IcPatchPump
+import app.aaps.core.ui.compose.icons.IcPumpBattery
+import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -119,7 +124,7 @@ class StatusViewModel @Inject constructor(
             level = level,
             levelStatus = if (levelPercent >= 0) getLevelStatus((levelPercent * 100).toDouble(), IntKey.OverviewSbatWarning, IntKey.OverviewSbatCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = if (levelPercent >= 0) 1f - levelPercent else -1f, // Invert: 100% battery = 0% toward empty
-            iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_sensor
+            icon = IcCgmInsert
         )
     }
 
@@ -147,7 +152,7 @@ class StatusViewModel @Inject constructor(
             level = level,
             levelStatus = if (reservoirLevel > 0) getLevelStatus(reservoirLevel, IntKey.OverviewResWarning, IntKey.OverviewResCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = -1f, // No progress bar - reservoir sizes vary by pump
-            iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_insulin
+            icon = IcPumpCartridge
         )
     }
 
@@ -165,7 +170,7 @@ class StatusViewModel @Inject constructor(
         } else 0.0
 
         val label = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-        val iconRes = if (isPatchPump) app.aaps.core.objects.R.drawable.ic_patch_pump_outline else app.aaps.core.objects.R.drawable.ic_cp_age_cannula
+        val icon = if (isPatchPump) IcPatchPump else IcCannulaChange
 
         return StatusItem(
             label = label,
@@ -175,7 +180,7 @@ class StatusViewModel @Inject constructor(
             level = if (usage > 0) decimalFormatter.to0Decimal(usage, insulinUnit) else null,
             levelStatus = StatusLevel.UNSPECIFIED, // Usage doesn't have warning thresholds
             levelPercent = -1f,
-            iconRes = iconRes
+            icon = icon
         )
     }
 
@@ -203,7 +208,7 @@ class StatusViewModel @Inject constructor(
             level = level,
             levelStatus = if (batteryLevel != null) getLevelStatus(batteryLevel.toDouble(), IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = batteryLevel?.let { 1f - (it / 100f) } ?: -1f, // Invert: 100% battery = 0% toward empty
-            iconRes = app.aaps.core.objects.R.drawable.ic_cp_age_battery
+            icon = IcPumpBattery
         )
     }
 

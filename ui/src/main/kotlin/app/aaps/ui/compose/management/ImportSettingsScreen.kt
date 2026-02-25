@@ -40,7 +40,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.PrefsFile
@@ -71,7 +71,7 @@ fun ImportSettingsScreen(
     prefFileList: FileListProvider,
     onClose: () -> Unit
 ) {
-    val step by viewModel.importStep.collectAsState()
+    val step by viewModel.importStep.collectAsStateWithLifecycle()
 
     when (val currentStep = step) {
         is ImportStep.Idle,
@@ -194,9 +194,11 @@ private fun ImportFilePickerContent(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            CircularProgressIndicator(modifier = Modifier
-                                .height(24.dp)
-                                .width(24.dp))
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .height(24.dp)
+                                    .width(24.dp)
+                            )
                             if (state.cloudLoadingProgress != null) {
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Text(

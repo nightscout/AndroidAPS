@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
@@ -18,21 +17,21 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.ui.compose.overview.graphs.BgGraphCompose
 import app.aaps.ui.compose.overview.graphs.CobGraphCompose
 import app.aaps.ui.compose.overview.graphs.DEFAULT_GRAPH_ZOOM_MINUTES
-import app.aaps.ui.compose.overview.graphs.IobGraphCompose
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
+import app.aaps.ui.compose.overview.graphs.IobGraphCompose
 import app.aaps.ui.compose.overview.graphs.TreatmentBeltGraphCompose
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import kotlin.math.abs
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.debounce
+import kotlin.math.abs
 
 /**
  * Overview graphs section using Vico charts.
@@ -116,7 +115,7 @@ fun OverviewGraphsSection(
     }
 
     // Auto-scroll to end when new BG value arrives
-    val bgInfoState by graphViewModel.bgInfoState.collectAsState()
+    val bgInfoState by graphViewModel.bgInfoState.collectAsStateWithLifecycle()
     var lastBgTimestamp by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(bgInfoState.bgInfo?.timestamp) {
@@ -179,7 +178,9 @@ fun OverviewGraphsSection(
             viewModel = graphViewModel,
             scrollState = bgScrollState,
             zoomState = bgZoomState,
-            modifier = Modifier.fillMaxWidth().offset(y = (-16).dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset(y = (-16).dp)
         )
         // IOB Graph - non-interactive, synced from BG graph
         Box(modifier = Modifier.offset(y = (-8).dp)) {
@@ -193,7 +194,9 @@ fun OverviewGraphsSection(
                 text = "IOB",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                modifier = Modifier.align(Alignment.TopStart).padding(start = 36.dp, top = 2.dp)
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 36.dp, top = 2.dp)
             )
         }
         // COB Graph - non-interactive, synced from BG graph
@@ -208,7 +211,9 @@ fun OverviewGraphsSection(
                 text = "COB",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                modifier = Modifier.align(Alignment.TopStart).padding(start = 36.dp, top = 2.dp)
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 36.dp, top = 2.dp)
             )
         }
     }

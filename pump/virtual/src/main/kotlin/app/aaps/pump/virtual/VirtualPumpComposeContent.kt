@@ -1,9 +1,9 @@
 package app.aaps.pump.virtual
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -41,7 +41,7 @@ class VirtualPumpComposeContent(
             )
         }
 
-        val state = viewModel.uiState.collectAsState()
+        val state = viewModel.uiState.collectAsStateWithLifecycle()
 
         PumpOverviewScreen(state = state.value)
     }

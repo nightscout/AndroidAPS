@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.overview.statusLights
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.ui.compose.StatusLevel
 
 /**
@@ -13,5 +14,5 @@ data class StatusItem(
     val level: String? = null,
     val levelStatus: StatusLevel = StatusLevel.UNSPECIFIED,
     val levelPercent: Float = -1f, // -1 means no level, 0-1 for progress (inverted: 100% = empty/critical)
-    val iconRes: Int
+    val icon: ImageVector
 )

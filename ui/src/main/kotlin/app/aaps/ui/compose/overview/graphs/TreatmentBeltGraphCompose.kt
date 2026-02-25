@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
@@ -34,7 +34,6 @@ import app.aaps.core.ui.compose.icons.IcNote
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
-import com.patrykandpatrick.vico.compose.cartesian.axis.BaseAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisTickComponent
@@ -94,9 +93,9 @@ fun TreatmentBeltGraphCompose(
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
-    val runningModeData by viewModel.runningModeGraphFlow.collectAsState()
-    val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsState()
-    val derivedTimeRange by viewModel.derivedTimeRange.collectAsState()
+    val runningModeData by viewModel.runningModeGraphFlow.collectAsStateWithLifecycle()
+    val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
+    val derivedTimeRange by viewModel.derivedTimeRange.collectAsStateWithLifecycle()
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
@@ -316,16 +315,16 @@ fun TreatmentBeltGraphCompose(
 
     // Build mode color mapping function
     fun modeColor(mode: RM.Mode): Color = when (mode) {
-        RM.Mode.CLOSED_LOOP     -> Color.Transparent
-        RM.Mode.RESUME          -> Color.Transparent
-        RM.Mode.OPEN_LOOP       -> elementColors.loopOpened
-        RM.Mode.CLOSED_LOOP_LGS -> elementColors.loopLgs
-        RM.Mode.DISABLED_LOOP   -> elementColors.loopDisabled
-        RM.Mode.SUPER_BOLUS     -> elementColors.loopSuperBolus
+        RM.Mode.CLOSED_LOOP       -> Color.Transparent
+        RM.Mode.RESUME            -> Color.Transparent
+        RM.Mode.OPEN_LOOP         -> elementColors.loopOpened
+        RM.Mode.CLOSED_LOOP_LGS   -> elementColors.loopLgs
+        RM.Mode.DISABLED_LOOP     -> elementColors.loopDisabled
+        RM.Mode.SUPER_BOLUS       -> elementColors.loopSuperBolus
         RM.Mode.DISCONNECTED_PUMP -> elementColors.loopDisconnected
         RM.Mode.SUSPENDED_BY_PUMP,
         RM.Mode.SUSPENDED_BY_USER,
-        RM.Mode.SUSPENDED_BY_DST -> elementColors.loopSuspended
+        RM.Mode.SUSPENDED_BY_DST  -> elementColors.loopSuspended
     }
 
     // Use the rendered segments (with gap fills) for building lines — must match series order
@@ -470,7 +469,7 @@ fun TreatmentBeltGraphCompose(
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsState()
+    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val beltDecorations = remember(nowLine) { listOf(nowLine) }
 

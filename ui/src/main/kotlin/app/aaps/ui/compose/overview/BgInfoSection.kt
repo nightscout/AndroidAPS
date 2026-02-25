@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import kotlin.math.cos
-import kotlin.math.sin
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +29,8 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsTheme
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Displays current BG information in a circular design.
@@ -64,9 +66,20 @@ fun BgInfoSection(
     val bgColor = bgInfo.bgRange.toColor()
     val ringColor = bgColor.copy(alpha = 0.3f)
 
+    // Build accessibility description: "BG 120, Flat, delta +2, 2 min ago"
+    val a11yDescription = buildString {
+        append("BG ${bgInfo.bgText}")
+        bgInfo.trendDescription?.let { append(", $it") }
+        bgInfo.deltaText?.let { append(", delta $it") }
+        if (timeAgoText.isNotEmpty()) append(", $timeAgoText ago")
+        if (bgInfo.isOutdated) append(", outdated")
+    }
+
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.padding(4.dp)
+        modifier = modifier
+            .padding(4.dp)
+            .semantics { contentDescription = a11yDescription }
     ) {
         // Background ring + trend arc indicator
         Canvas(modifier = Modifier.size(size)) {

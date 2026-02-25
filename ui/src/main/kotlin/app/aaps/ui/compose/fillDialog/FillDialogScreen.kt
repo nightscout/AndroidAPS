@@ -51,7 +51,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
-import app.aaps.core.ui.compose.icons.IcCanulaChange
+import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
@@ -119,7 +119,7 @@ fun FillDialogScreen(
             OkCancelDialog(
                 title = stringResource(CoreUiR.string.prime_fill),
                 message = summaryLines.joinToString("<br/>"),
-                icon = IcCanulaChange,
+                icon = IcCannulaChange,
                 iconTint = AapsTheme.elementColors.insulin,
                 onConfirm = {
                     viewModel.confirmAndSave()
@@ -135,7 +135,7 @@ fun FillDialogScreen(
         OkCancelDialog(
             title = stringResource(CoreUiR.string.prime_fill),
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = IcCanulaChange,
+            icon = IcCannulaChange,
             iconTint = AapsTheme.elementColors.insulin,
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
@@ -226,7 +226,7 @@ fun FillDialogScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    imageVector = IcCanulaChange,
+                    imageVector = IcCannulaChange,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 8.dp)

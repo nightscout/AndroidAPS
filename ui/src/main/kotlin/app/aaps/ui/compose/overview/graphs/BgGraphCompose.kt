@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +16,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.BasalGraphData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
@@ -74,13 +74,13 @@ fun BgGraphCompose(
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently - each triggers recomposition only when it changes
-    val bgReadings by viewModel.bgReadingsFlow.collectAsState()
-    val bucketedData by viewModel.bucketedDataFlow.collectAsState()
-    val predictions by viewModel.predictionsFlow.collectAsState()
-    val derivedTimeRange by viewModel.derivedTimeRange.collectAsState()
-    val basalData by viewModel.basalGraphFlow.collectAsState()
-    val targetData by viewModel.targetLineFlow.collectAsState()
-    val epsPoints by viewModel.epsGraphFlow.collectAsState()
+    val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
+    val bucketedData by viewModel.bucketedDataFlow.collectAsStateWithLifecycle()
+    val predictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
+    val derivedTimeRange by viewModel.derivedTimeRange.collectAsStateWithLifecycle()
+    val basalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
+    val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
+    val epsPoints by viewModel.epsGraphFlow.collectAsStateWithLifecycle()
 
     // Use derived time range or fall back to default (last 24 hours)
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
@@ -395,7 +395,7 @@ fun BgGraphCompose(
     // =========================================================================
 
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsState()
+    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val decorations = remember(nowLine) { listOf(nowLine) }
 

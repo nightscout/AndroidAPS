@@ -17,7 +17,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -163,13 +163,13 @@ fun MainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Export dialog state
-    val exportState by maintenanceViewModel.exportState.collectAsState()
+    val exportState by maintenanceViewModel.exportState.collectAsStateWithLifecycle()
 
     // Cloud directory dialog state
-    val cloudDirectoryState by maintenanceViewModel.cloudDirectoryState.collectAsState()
+    val cloudDirectoryState by maintenanceViewModel.cloudDirectoryState.collectAsStateWithLifecycle()
 
     // Export config for dynamic labels and cloud error badge
-    val exportConfig by maintenanceViewModel.exportConfig.collectAsState()
+    val exportConfig by maintenanceViewModel.exportConfig.collectAsStateWithLifecycle()
 
     // Collect maintenance events
     LaunchedEffect(Unit) {
@@ -269,7 +269,7 @@ fun MainScreen(
                         automationViewModel.refreshState()
                         showAutomationSheet = true
                     },
-                    automationCount = automationViewModel.uiState.collectAsState().value.items.size,
+                    automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
                     permissionsMissing = permissionsMissing,
                     onPermissionsClick = onPermissionsClick,
                 )
@@ -342,9 +342,9 @@ fun MainScreen(
                         color = versionColor,
                         fontSize = 10.sp,
                         modifier = Modifier
-                            .align(Alignment.TopStart)
+                            .align(Alignment.TopEnd)
                             .padding(paddingValues)
-                            .padding(start = 4.dp)
+                            .padding(top = 4.dp, end = 4.dp)
                     )
                 }
             }
@@ -373,7 +373,7 @@ fun MainScreen(
 
     // Treatment bottom sheet
     if (showTreatmentSheet) {
-        val treatmentState by treatmentViewModel.uiState.collectAsState()
+        val treatmentState by treatmentViewModel.uiState.collectAsStateWithLifecycle()
         TreatmentBottomSheet(
             onDismiss = { showTreatmentSheet = false },
             showCgm = treatmentState.showCgm,
@@ -399,7 +399,7 @@ fun MainScreen(
 
     // Automation bottom sheet
     if (showAutomationSheet) {
-        val automationState by automationViewModel.uiState.collectAsState()
+        val automationState by automationViewModel.uiState.collectAsStateWithLifecycle()
         AutomationBottomSheet(
             onDismiss = { showAutomationSheet = false },
             automationItems = automationState.items,
@@ -423,7 +423,7 @@ fun MainScreen(
 
     // Manage bottom sheet
     if (showManageSheet) {
-        val manageState by manageViewModel.uiState.collectAsState()
+        val manageState by manageViewModel.uiState.collectAsStateWithLifecycle()
         ManageBottomSheet(
             onDismiss = { showManageSheet = false },
             isSimpleMode = uiState.isSimpleMode,

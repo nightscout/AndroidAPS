@@ -2,11 +2,11 @@ package app.aaps.core.ui.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
@@ -32,7 +32,7 @@ fun ProtectionHost(
     checkPassword: (password: String, hash: String) -> Boolean,
     showBiometric: (FragmentActivity, Int, () -> Unit, () -> Unit, () -> Unit) -> Unit
 ) {
-    val request by protectionCheck.pendingRequest.collectAsState()
+    val request by protectionCheck.pendingRequest.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val activity = context as? FragmentActivity
 

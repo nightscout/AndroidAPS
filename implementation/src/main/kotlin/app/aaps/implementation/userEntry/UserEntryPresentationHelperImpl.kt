@@ -20,7 +20,7 @@ import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCalibration
-import app.aaps.core.ui.compose.icons.IcCanulaChange
+import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
@@ -48,7 +48,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.CalibrationDialog  -> IcCalibration
         Sources.CarbDialog         -> IcCarbs
         Sources.Exercise           -> IcActivity
-        Sources.FillDialog         -> IcCanulaChange
+        Sources.FillDialog         -> IcCannulaChange
         Sources.InsulinDialog      -> IcBolus
         Sources.Note               -> IcNote
         Sources.Question           -> IcQuestion

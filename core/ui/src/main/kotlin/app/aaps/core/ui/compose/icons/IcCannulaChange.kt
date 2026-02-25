@@ -15,16 +15,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /**
- * Icon for Canula change treatment type.
+ * Icon for Cannula change treatment type.
  * Represents infusion set change entries.
  *
  * replacing ic_cp_pump_cannula
  *
  * Bounding box: x: 1.2-22.8, y: 6.3-19.5 (viewport: 24x24, ~90% width)
  */
-val IcCanulaChange: ImageVector by lazy {
+val IcCannulaChange: ImageVector by lazy {
     ImageVector.Builder(
-        name = "IcCanulaChange",
+        name = "IcCannulaChange",
         defaultWidth = 48.dp,
         defaultHeight = 48.dp,
         viewportWidth = 24f,
@@ -75,9 +75,9 @@ val IcCanulaChange: ImageVector by lazy {
 
 @Preview(showBackground = true)
 @Composable
-private fun IcCanulaChangeIconPreview() {
+private fun IcCannulaChangeIconPreview() {
     Icon(
-        imageVector = IcCanulaChange,
+        imageVector = IcCannulaChange,
         contentDescription = null,
         modifier = Modifier
             .padding(0.dp)

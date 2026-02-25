@@ -38,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,14 +45,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.AapsNotification
@@ -112,8 +110,8 @@ fun OverviewScreen(
     modifier: Modifier = Modifier
 ) {
     // Collect BG info state from ViewModel
-    val bgInfoState by graphViewModel.bgInfoState.collectAsState()
-    val statusState by statusViewModel.uiState.collectAsState()
+    val bgInfoState by graphViewModel.bgInfoState.collectAsStateWithLifecycle()
+    val statusState by statusViewModel.uiState.collectAsStateWithLifecycle()
 
     // Notification bottom sheet state
     var showNotificationSheet by remember { mutableStateOf(false) }
@@ -158,7 +156,7 @@ fun OverviewScreen(
                         timeAgoText = bgInfoState.timeAgoText
                     )
                     // Sensitivity / Autosens chip (hidden when ratio is 100% with no extra info)
-                    val sensitivityUiState by graphViewModel.sensitivityUiState.collectAsState()
+                    val sensitivityUiState by graphViewModel.sensitivityUiState.collectAsStateWithLifecycle()
                     if (sensitivityUiState.asText.isNotEmpty() || sensitivityUiState.isfFrom.isNotEmpty()) {
                         var showSensitivityDialog by remember { mutableStateOf(false) }
                         SensitivityChip(
@@ -196,7 +194,7 @@ fun OverviewScreen(
                             if (isSimpleMode) {
                                 Icon(
                                     imageVector = IcSettingsOff,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.simple_mode),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier
                                         .padding(start = 4.dp)
@@ -225,8 +223,8 @@ fun OverviewScreen(
                         )
                     }
                     // IOB + COB chips row
-                    val iobUiState by graphViewModel.iobUiState.collectAsState()
-                    val cobUiState by graphViewModel.cobUiState.collectAsState()
+                    val iobUiState by graphViewModel.iobUiState.collectAsStateWithLifecycle()
+                    val cobUiState by graphViewModel.cobUiState.collectAsStateWithLifecycle()
                     IobCobChipsRow(
                         iobUiState = iobUiState,
                         cobUiState = cobUiState
@@ -254,7 +252,7 @@ fun OverviewScreen(
 
             // NSClient status card (only in AAPSCLIENT builds)
             if (config.AAPSCLIENT) {
-                val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsState()
+                val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
                 val flavorTint = when {
                     config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
                     config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
@@ -363,7 +361,7 @@ private fun OverviewStatusSection(
                     // Collapse icon
                     Icon(
                         imageVector = Icons.Filled.ExpandLess,
-                        contentDescription = null,
+                        contentDescription = stringResource(app.aaps.core.ui.R.string.collapse),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.clickable { expanded = false }
                     )
@@ -383,7 +381,7 @@ private fun OverviewStatusSection(
                     // Expand icon
                     Icon(
                         imageVector = Icons.Filled.ExpandMore,
-                        contentDescription = null,
+                        contentDescription = stringResource(app.aaps.core.ui.R.string.expand),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.clickable { expanded = true }
                     )
@@ -514,10 +512,10 @@ private fun CompactStatusItem(item: StatusItem) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(id = item.iconRes),
+            imageVector = item.icon,
             contentDescription = item.label,
             modifier = Modifier.size(20.dp),
-            tint = Color.Unspecified
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.width(2.dp))
         Text(
