@@ -112,6 +112,25 @@ object AapsTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalSnackbarColors.current
+
+    /**
+     * Custom typography scale for domain-specific text styles.
+     * Provides styles for BG display, treatments, chips, and section headers.
+     *
+     * @see AapsTypography for available text styles
+     */
+    val typography: AapsTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAapsTypography.current
+
+    /**
+     * Centralized spacing and dimension constants.
+     * Provides generic spacing scale and domain-specific dimensions.
+     *
+     * @see AapsSpacing for available values
+     */
+    val spacing: AapsSpacing get() = AapsSpacing
 }
 
 /**
@@ -185,7 +204,11 @@ fun AapsTheme(
     ) {
         MaterialTheme(
             colorScheme = scheme,
-            content = content
-        )
+        ) {
+            CompositionLocalProvider(
+                LocalAapsTypography provides aapsTypography(),
+                content = content
+            )
+        }
     }
 }

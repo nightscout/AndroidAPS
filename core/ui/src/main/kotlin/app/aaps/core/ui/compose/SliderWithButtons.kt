@@ -28,7 +28,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -360,6 +362,7 @@ private fun RepeatingIconButton(
 ) {
     var isPressed by remember { mutableStateOf(false) }
     val currentOnClick by rememberUpdatedState(onClick)
+    val haptic = LocalHapticFeedback.current
 
     LaunchedEffect(isPressed, enabled) {
         if (isPressed && enabled) {
@@ -367,6 +370,7 @@ private fun RepeatingIconButton(
             var currentDelay = maxDelayMs.toFloat()
             while (isPressed && enabled) {
                 currentOnClick()
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 delay(currentDelay.toLong())
                 currentDelay = (currentDelay * accelerationFactor).coerceAtLeast(minDelayMs.toFloat())
             }
@@ -374,7 +378,10 @@ private fun RepeatingIconButton(
     }
 
     FilledTonalIconButton(
-        onClick = onClick,
+        onClick = {
+            onClick()
+            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        },
         enabled = enabled,
         modifier = modifier.pointerInput(Unit) {
             awaitEachGesture {

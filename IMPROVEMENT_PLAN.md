@@ -42,12 +42,15 @@ Findings from code review of the new Compose UI. Organized by priority and area.
 
 ### 2.2 Theme Completeness
 
-- [ ] Add custom `Typography` to `AapsTheme` with semantic text styles (e.g., `bgValue`,
+- [x] Add custom `Typography` to `AapsTheme` with semantic text styles (e.g., `bgValue`,
   `chipLabel`, `sectionHeader`) instead of inline `fontSize`/`fontWeight` overrides
-- [ ] Create a centralized spacing/dimension system (e.g., `AapsTheme.spacing.small/medium/large` or
+  — `AapsTypography.kt` with 6 styles, `compositionLocalOf`, `aapsTypography()` factory
+- [x] Create a centralized spacing/dimension system (e.g., `AapsTheme.spacing.small/medium/large` or
   dimension constants) to replace scattered hardcoded `dp` values
-- [ ] Audit and replace inline `sp`/`dp` overrides in `BgInfoSection` (`50.sp`, `17.sp`, `126.dp`)
+  — `AapsSpacing.kt` with generic scale + domain-specific chip/BG dimensions
+- [x] Audit and replace inline `sp`/`dp` overrides in `BgInfoSection` (`50.sp`, `17.sp`, `126.dp`)
   with theme-defined values
+  — Also migrated all 7 chip composables to use `AapsSpacing.*` and `AapsTheme.typography.*`
 
 ---
 
@@ -96,15 +99,21 @@ Findings from code review of the new Compose UI. Organized by priority and area.
 
 ### 5.1 Haptic Feedback
 
-- [ ] Add haptic feedback to `RepeatingIconButton` in `SliderWithButtons` for tactile confirmation
+- [x] Add haptic feedback to `RepeatingIconButton` in `SliderWithButtons` for tactile confirmation
   when stepping through insulin/carb values
-- [ ] Consider haptic feedback on chip taps for state-changing actions (temp target, running mode)
+  — `TextHandleMove` on each tick and initial tap
+- [x] Consider haptic feedback on chip taps for state-changing actions (temp target, running mode)
+  — `LongPress` haptic on TempTargetChip, RunningModeChip, ProfileChip
 
 ### 5.2 Loading States
 
-- [ ] Add loading skeletons or shimmer placeholders for screens that load data asynchronously (
+- [x] Add loading skeletons or shimmer placeholders for screens that load data asynchronously (
   treatments list, statistics)
-- [ ] Ensure empty states have clear messaging (not just blank space)
+  — Treatment screens already use `ContentContainer` with `isLoading`; Stats uses `LoadingSection`
+  with `Crossfade`. Upgraded `ContentContainer` with `Crossfade` transitions for smooth state
+  changes.
+- [x] Ensure empty states have clear messaging (not just blank space)
+  — `ContentContainer` now shows `SearchOff` icon + text instead of plain text
 
 ### 5.3 Version Overlay
 

@@ -18,8 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
@@ -47,41 +49,44 @@ fun TempTargetChip(
         TempTargetChipState.Adjusted -> iconColor.copy(alpha = 0.2f)
         TempTargetChipState.None     -> Color.Transparent
     }
+    val haptic = LocalHapticFeedback.current
 
     Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
+        onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onClick() },
+        shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = containerColor,
         modifier = modifier
             .fillMaxWidth()
-            .height(35.dp)
+            .height(AapsSpacing.chipHeight)
     ) {
         Column {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                modifier = Modifier.padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
             ) {
                 Icon(
                     imageVector = reason.toIcon(),
                     contentDescription = null,
                     tint = iconColor,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )
                 Text(
                     text = targetText,
                     color = textColor,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = AapsSpacing.medium)
                 )
             }
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(3.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(AapsSpacing.chipProgressHeight)
+            ) {
                 if (progress > 0f) {
                     LinearProgressIndicator(
                         progress = { progress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(3.dp),
+                            .height(AapsSpacing.chipProgressHeight),
                         color = iconColor,
                         trackColor = iconColor.copy(alpha = 0.3f)
                     )

@@ -16,17 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.icons.IcArrowFlat
+import app.aaps.core.ui.compose.icons.IcArrowFortyfiveDown
+import app.aaps.core.ui.compose.icons.IcArrowFortyfiveUp
 import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.icons.IcAsAbove
 import app.aaps.core.ui.compose.icons.IcAsAboveX
 import app.aaps.core.ui.compose.icons.IcAsBelow
 import app.aaps.core.ui.compose.icons.IcAsBelowX
 import app.aaps.core.ui.compose.icons.IcAsX
-import app.aaps.core.ui.compose.icons.IcArrowFlat
-import app.aaps.core.ui.compose.icons.IcArrowFortyfiveDown
-import app.aaps.core.ui.compose.icons.IcArrowFortyfiveUp
 import app.aaps.ui.compose.overview.graphs.SensitivityUiState
 
 @Composable
@@ -42,6 +41,7 @@ internal fun SensitivityChip(
         color = AapsTheme.elementColors.sensitivity.copy(alpha = 0.15f),
         modifier = modifier.clickable(onClick = onClick)
     ) {
+        val chipStyle = AapsTheme.typography.chipLabel
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -54,7 +54,7 @@ internal fun SensitivityChip(
             if (state.asText.isNotEmpty()) {
                 Text(
                     text = state.asText,
-                    fontSize = 12.sp,
+                    style = chipStyle,
                     color = textColor
                 )
             }
@@ -64,7 +64,7 @@ internal fun SensitivityChip(
             if (state.isfFrom.isNotEmpty()) {
                 Text(
                     text = state.isfFrom,
-                    fontSize = 12.sp,
+                    style = chipStyle,
                     color = textColor
                 )
                 Icon(
@@ -75,7 +75,7 @@ internal fun SensitivityChip(
                 )
                 Text(
                     text = state.isfTo,
-                    fontSize = 12.sp,
+                    style = chipStyle,
                     color = textColor
                 )
             }
@@ -88,13 +88,13 @@ private fun selectSensIcon(ratio: Double, isEnabled: Boolean): ImageVector =
         when {
             ratio > 1.0 -> IcAsAbove
             ratio < 1.0 -> IcAsBelow
-            else         -> IcAs
+            else        -> IcAs
         }
     } else {
         when {
             ratio > 1.0 -> IcAsAboveX
             ratio < 1.0 -> IcAsBelowX
-            else         -> IcAsX
+            else        -> IcAsX
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.ui.compose.overview.graphs.CobUiState
@@ -50,28 +51,28 @@ internal fun CobChip(
 
     val hasValue = state.cobValue != 0.0
     Surface(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = if (hasValue) AapsTheme.elementColors.carbs.copy(alpha = 0.2f) else Color.Transparent,
         modifier = modifier
-            .heightIn(min = 35.dp)
+            .heightIn(min = AapsSpacing.chipHeight)
             .then(alphaModifier)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
         ) {
             if (showIcon) {
                 Icon(
                     imageVector = IcCarbs,
                     contentDescription = null,
                     tint = AapsTheme.elementColors.carbs,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )
             }
             Text(
                 text = state.text,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(start = if (showIcon) 8.dp else 0.dp)
+                modifier = Modifier.padding(start = if (showIcon) AapsSpacing.medium else 0.dp)
             )
         }
     }

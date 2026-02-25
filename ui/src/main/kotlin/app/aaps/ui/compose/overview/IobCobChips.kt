@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.ui.compose.overview.graphs.CobUiState
 import app.aaps.ui.compose.overview.graphs.IobUiState
 
@@ -16,7 +16,7 @@ fun IobCobChipsRow(
     cobUiState: CobUiState,
     modifier: Modifier = Modifier
 ) {
-    val spacingDp = 4.dp
+    val spacingDp = AapsSpacing.small
     SubcomposeLayout(
         modifier = modifier.fillMaxWidth()
     ) { constraints ->

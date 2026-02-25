@@ -19,15 +19,14 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import kotlin.math.cos
 import kotlin.math.sin
@@ -46,7 +45,7 @@ fun BgInfoSection(
     bgInfo: BgInfoData?,
     timeAgoText: String,
     modifier: Modifier = Modifier,
-    size: Dp = 126.dp
+    size: Dp = AapsSpacing.bgCircleSize
 ) {
     if (bgInfo == null) {
         // Show placeholder when no data
@@ -69,7 +68,7 @@ fun BgInfoSection(
     // Build accessibility description: "BG 120, Flat, delta +2, 2 min ago"
     val a11yDescription = buildString {
         append("BG ${bgInfo.bgText}")
-        bgInfo.trendDescription?.let { append(", $it") }
+        append(", ${bgInfo.trendDescription}")
         bgInfo.deltaText?.let { append(", delta $it") }
         if (timeAgoText.isNotEmpty()) append(", $timeAgoText ago")
         if (bgInfo.isOutdated) append(", outdated")
@@ -78,12 +77,12 @@ fun BgInfoSection(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(4.dp)
+            .padding(AapsSpacing.small)
             .semantics { contentDescription = a11yDescription }
     ) {
         // Background ring + trend arc indicator
         Canvas(modifier = Modifier.size(size)) {
-            val strokeWidth = 8.dp.toPx()
+            val strokeWidth = AapsSpacing.bgRingStrokeWidth.toPx()
             val arcSize = Size(size.toPx() - strokeWidth, size.toPx() - strokeWidth)
             val topLeft = Offset(strokeWidth / 2, strokeWidth / 2)
 
@@ -151,14 +150,14 @@ fun BgInfoSection(
         // Center content: delta on top, BG value, time ago below
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(bottom = 4.dp),
+            modifier = Modifier.padding(bottom = AapsSpacing.small),
             verticalArrangement = Arrangement.spacedBy((-2).dp, Alignment.CenterVertically)
         ) {
             // Delta on top
             bgInfo.deltaText?.let { delta ->
                 Text(
                     text = delta,
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 17.sp, lineHeight = 19.sp, fontWeight = FontWeight.Bold),
+                    style = AapsTheme.typography.bgSecondary,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -166,11 +165,7 @@ fun BgInfoSection(
             // BG value - large bold text with strikethrough if outdated
             Text(
                 text = bgInfo.bgText,
-                style = MaterialTheme.typography.displayMedium.copy(
-                    fontSize = 50.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 52.sp
-                ),
+                style = AapsTheme.typography.bgValue,
                 color = bgColor,
                 textDecoration = if (bgInfo.isOutdated) TextDecoration.LineThrough else TextDecoration.None
             )
@@ -178,7 +173,7 @@ fun BgInfoSection(
             // Time ago below
             Text(
                 text = timeAgoText,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 17.sp, lineHeight = 19.sp, fontWeight = FontWeight.Bold),
+                style = AapsTheme.typography.bgTimeAgo,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
