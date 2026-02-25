@@ -41,7 +41,7 @@ import app.aaps.ui.compose.overview.automation.AutomationActionItem
 import app.aaps.ui.compose.overview.automation.AutomationBottomSheet
 import app.aaps.ui.compose.overview.automation.AutomationViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
-import app.aaps.ui.compose.overview.manage.ManageBottomSheet
+import app.aaps.ui.compose.overview.manage.ManageSheetState
 import app.aaps.ui.compose.overview.manage.ManageViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 import app.aaps.ui.compose.overview.treatments.TreatmentBottomSheet
@@ -57,6 +57,7 @@ fun MainScreen(
     versionName: String,
     appIcon: Int,
     aboutDialogData: AboutDialogData?,
+    manageSheetState: ManageSheetState,
     manageViewModel: ManageViewModel,
     maintenanceViewModel: MaintenanceViewModel,
     statusViewModel: StatusViewModel,
@@ -96,23 +97,12 @@ fun MainScreen(
     // Actions callbacks
     onRunningModeClick: () -> Unit,
     onTempTargetClick: () -> Unit,
-    onTempBasalClick: () -> Unit,
-    onExtendedBolusClick: () -> Unit,
-    onHistoryBrowserClick: () -> Unit,
-    onQuickWizardManagementClick: () -> Unit,
-    onBgCheckClick: () -> Unit,
-    onNoteClick: () -> Unit,
-    onExerciseClick: () -> Unit,
-    onQuestionClick: () -> Unit,
-    onAnnouncementClick: () -> Unit,
-    onSiteRotationClick: () -> Unit,
     onCarbsClick: () -> Unit,
     onInsulinClick: () -> Unit,
     onTreatmentClick: () -> Unit,
     onCgmClick: (() -> Unit)?,
     onCalibrationClick: (() -> Unit)?,
     onQuickWizardClick: ((String) -> Unit)? = null,
-    onActionsError: (String, String) -> Unit,
     // Notifications
     notifications: List<AapsNotification>,
     onDismissNotification: (AapsNotification) -> Unit,
@@ -133,7 +123,6 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showTreatmentSheet by remember { mutableStateOf(false) }
-    var showManageSheet by remember { mutableStateOf(false) }
     var showAutomationSheet by remember { mutableStateOf(false) }
     var confirmAutomationItem by remember { mutableStateOf<AutomationActionItem?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -209,10 +198,7 @@ fun MainScreen(
             },
             bottomBar = {
                 MainNavigationBar(
-                    onManageClick = {
-                        manageViewModel.refreshState()
-                        showManageSheet = true
-                    },
+                    onManageClick = { manageSheetState.show() },
                     onTreatmentClick = {
                         treatmentViewModel.refreshState()
                         showTreatmentSheet = true
@@ -354,49 +340,6 @@ fun MainScreen(
                 confirmAutomationItem = null
             },
             onDismiss = { confirmAutomationItem = null }
-        )
-    }
-
-    // Manage bottom sheet
-    if (showManageSheet) {
-        val manageState by manageViewModel.uiState.collectAsStateWithLifecycle()
-        ManageBottomSheet(
-            onDismiss = { showManageSheet = false },
-            isSimpleMode = uiState.isSimpleMode,
-            showTempTarget = manageState.showTempTarget,
-            showTempBasal = manageState.showTempBasal,
-            showCancelTempBasal = manageState.showCancelTempBasal,
-            showExtendedBolus = manageState.showExtendedBolus,
-            showCancelExtendedBolus = manageState.showCancelExtendedBolus,
-            cancelTempBasalText = manageState.cancelTempBasalText,
-            cancelExtendedBolusText = manageState.cancelExtendedBolusText,
-            customActions = manageState.customActions,
-            onProfileManagementClick = onProfileManagementClick,
-            onTempTargetClick = onTempTargetClick,
-            onTempBasalClick = onTempBasalClick,
-            onCancelTempBasalClick = {
-                manageViewModel.cancelTempBasal { success, comment ->
-                    if (!success) {
-                        onActionsError(comment, "Temp basal delivery error")
-                    }
-                }
-            },
-            onExtendedBolusClick = onExtendedBolusClick,
-            onCancelExtendedBolusClick = {
-                manageViewModel.cancelExtendedBolus { success, comment ->
-                    if (!success) {
-                        onActionsError(comment, "Extended bolus delivery error")
-                    }
-                }
-            },
-            onBgCheckClick = onBgCheckClick,
-            onNoteClick = onNoteClick,
-            onExerciseClick = onExerciseClick,
-            onQuestionClick = onQuestionClick,
-            onAnnouncementClick = onAnnouncementClick,
-            onSiteRotationClick = onSiteRotationClick,
-            onQuickWizardClick = onQuickWizardManagementClick,
-            onCustomActionClick = { manageViewModel.executeCustomAction(it.customActionType) }
         )
     }
 

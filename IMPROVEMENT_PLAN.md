@@ -13,26 +13,33 @@ Findings from code review of the new Compose UI. Organized by priority and area.
   — Moved 7 state variables, 5 confirmation dialogs, export state machine (3 dialogs), log settings
   sheet, cloud directory sheet, and cleanup result dialog into `MaintenanceDialogs.kt`. MainScreen
   passes only the ViewModel and a visibility flag.
-- [ ] Extract bottom sheet management (treatments, manage, automation) into dedicated composables or
-  a coordinator
+- [x] Extract manage bottom sheet into `ManageSheetHost` coordinator composable
+  — Owns show/hide state, ViewModel state collection, cancel-action error handling. Removed 11
+  manage-only callbacks from MainScreen params (`onTempBasalClick`, `onExtendedBolusClick`,
+  `onBgCheckClick`, `onNoteClick`, `onExerciseClick`, `onQuestionClick`, `onAnnouncementClick`,
+  `onSiteRotationClick`, `onQuickWizardManagementClick`, `onActionsError`, `onHistoryBrowserClick`
+  dead param). Shared callbacks deduplicated as local vals in ComposeMainActivity.
+- [ ] Extract treatment and automation bottom sheets into coordinator composables (low priority —
+  compact blocks, ~20 lines each)
 - [x] Extract version overlay into `VersionOverlay` composable
   — Moved to `VersionOverlay.kt` with `VersionOverlay(config, preferences, modifier)`. Removed 3
   unused imports from MainScreen (`sp`, `LongComposedKey`, `AapsTheme`).
-- [ ] Reduce MainScreen parameter count by grouping related callbacks into sealed class actions (
-  e.g., `MainAction`)
+- [x] ~~Reduce MainScreen parameter count by grouping related callbacks into sealed class actions~~ —
+  Won't do. Individual callbacks are idiomatic Compose (explicit contract, compile-time safety,
+  better testability). Focus on 1.1 decomposition to naturally reduce callback count per composable.
 
-### 1.2 Callback Threading
+### 1.2 CompositionLocal Migration
 
-- [ ] Evaluate replacing N callback parameters with `onAction: (SealedAction) -> Unit` pattern for
-  screens with >10 callbacks
-- [x] Create `CompositionLocal` for deeply-shared singletons (`DateUtil`, `Preferences`, `Config`)
-  — Added `LocalDateUtil` and `LocalConfig` to `AapsTheme.kt` alongside existing `LocalPreferences`
-  and `LocalRxBus`. Provided at all 7 entry points (ComposeMainActivity, ProfileViewerActivity,
-  ErrorActivity, SingleFragmentActivity, XdripFragment, TidepoolFragment, NSClientFragment).
-  Composables can now use `LocalDateUtil.current` / `LocalConfig.current` instead of parameter
-  threading. Actual migration of consumer composables is a separate step.
-- [ ] Migrate composables to use `LocalDateUtil.current` / `LocalConfig.current` instead of
-  parameter threading (eliminates ~77 parameters across ~50 composables)
+- [x] ~~Evaluate replacing N callback parameters with `onAction: (SealedAction) -> Unit` pattern~~ —
+  Won't do (same reasoning as above).
+- [x] Create `CompositionLocal` for deeply-shared singletons (`DateUtil`, `Preferences`, `Config`,
+  `ProfileUtil`)
+  — Added `LocalDateUtil`, `LocalConfig`, `LocalProfileUtil` to `AapsTheme.kt` alongside existing
+  `LocalPreferences` and `LocalRxBus`. Provided at all entry points.
+- [x] Migrate all composables to use CompositionLocals instead of parameter threading
+  — Migrated `DateUtil` (~19 files), `Config` (3 files), `Preferences` (~15 files),
+  `ProfileUtil` (7 files). No composable function takes these as parameters anymore. Only
+  ViewModels (DI-injected) and non-composable functions retain parameters.
 
 ### 1.3 TreatmentsScreen Toolbar Workaround
 

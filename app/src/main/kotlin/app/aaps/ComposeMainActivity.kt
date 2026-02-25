@@ -91,6 +91,7 @@ import app.aaps.ui.compose.maintenance.ImportViewModel
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.overview.automation.AutomationViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
+import app.aaps.ui.compose.overview.manage.ManageSheetHost
 import app.aaps.ui.compose.overview.manage.ManageViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 import app.aaps.ui.compose.overview.treatments.TreatmentViewModel
@@ -304,6 +305,75 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
                         val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
 
+                        val onProfileManagement: () -> Unit = {
+                            protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                                if (result == ProtectionResult.GRANTED) {
+                                    navController.navigate(AppRoute.Profile.route)
+                                }
+                            }
+                        }
+                        val onTempTarget: () -> Unit = {
+                            protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                                if (result == ProtectionResult.GRANTED) {
+                                    navController.navigate(AppRoute.TempTargetManagement.route)
+                                }
+                            }
+                        }
+
+                        val manageSheetState = ManageSheetHost(
+                            manageViewModel = manageViewModel,
+                            isSimpleMode = state.isSimpleMode,
+                            onProfileManagementClick = onProfileManagement,
+                            onTempTargetClick = onTempTarget,
+                            onTempBasalClick = {
+                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                                    if (result == ProtectionResult.GRANTED) {
+                                        uiInteraction.runTempBasalDialog(supportFragmentManager)
+                                    }
+                                }
+                            },
+                            onExtendedBolusClick = {
+                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                                    if (result == ProtectionResult.GRANTED) {
+                                        uiInteraction.showOkCancelDialog(
+                                            context = this@ComposeMainActivity,
+                                            title = app.aaps.core.ui.R.string.extended_bolus,
+                                            message = app.aaps.plugins.main.R.string.ebstopsloop,
+                                            ok = { uiInteraction.runExtendedBolusDialog(supportFragmentManager) }
+                                        )
+                                    }
+                                }
+                            },
+                            onBgCheckClick = {
+                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
+                            },
+                            onNoteClick = {
+                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.NOTE.ordinal))
+                            },
+                            onExerciseClick = {
+                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
+                            },
+                            onQuestionClick = {
+                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
+                            },
+                            onAnnouncementClick = {
+                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
+                            },
+                            onSiteRotationClick = {
+                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                            },
+                            onQuickWizardClick = {
+                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                                    if (result == ProtectionResult.GRANTED) {
+                                        navController.navigate(AppRoute.QuickWizardManagement.route)
+                                    }
+                                }
+                            },
+                            onActionsError = { comment, title ->
+                                uiInteraction.runAlarm(comment, title, app.aaps.core.ui.R.raw.boluserror)
+                            },
+                        )
+
                         MainScreen(
                             uiState = state,
                             versionName = mainViewModel.versionName,
@@ -311,6 +381,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             aboutDialogData = if (state.showAboutDialog) {
                                 mainViewModel.buildAboutDialogData(getString(R.string.app_name))
                             } else null,
+                            manageSheetState = manageSheetState,
                             manageViewModel = manageViewModel,
                             maintenanceViewModel = maintenanceViewModel,
                             statusViewModel = statusViewModel,
@@ -328,13 +399,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                 handleSearchResultClick(entry, navController)
                             },
                             onMenuClick = { mainViewModel.openDrawer() },
-                            onProfileManagementClick = {
-                                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
-                                    if (result == ProtectionResult.GRANTED) {
-                                        navController.navigate(AppRoute.Profile.route)
-                                    }
-                                }
-                            },
+                            onProfileManagementClick = onProfileManagement,
                             onPreferencesClick = {
                                 protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                                     if (result == ProtectionResult.GRANTED) {
@@ -428,60 +493,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                     }
                                 }
                             },
-                            onTempTargetClick = {
-                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
-                                    if (result == ProtectionResult.GRANTED) {
-                                        navController.navigate(AppRoute.TempTargetManagement.route)
-                                    }
-                                }
-                            },
-                            onTempBasalClick = {
-                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
-                                    if (result == ProtectionResult.GRANTED) {
-                                        uiInteraction.runTempBasalDialog(supportFragmentManager)
-                                    }
-                                }
-                            },
-                            onExtendedBolusClick = {
-                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
-                                    if (result == ProtectionResult.GRANTED) {
-                                        uiInteraction.showOkCancelDialog(
-                                            context = this@ComposeMainActivity,
-                                            title = app.aaps.core.ui.R.string.extended_bolus,
-                                            message = app.aaps.plugins.main.R.string.ebstopsloop,
-                                            ok = { uiInteraction.runExtendedBolusDialog(supportFragmentManager) }
-                                        )
-                                    }
-                                }
-                            },
-                            onHistoryBrowserClick = {
-                                startActivity(Intent(this@ComposeMainActivity, uiInteraction.historyBrowseActivity))
-                            },
-                            onQuickWizardManagementClick = {
-                                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
-                                    if (result == ProtectionResult.GRANTED) {
-                                        navController.navigate(AppRoute.QuickWizardManagement.route)
-                                    }
-                                }
-                            },
-                            onBgCheckClick = {
-                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
-                            },
-                            onNoteClick = {
-                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.NOTE.ordinal))
-                            },
-                            onExerciseClick = {
-                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
-                            },
-                            onQuestionClick = {
-                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
-                            },
-                            onAnnouncementClick = {
-                                navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
-                            },
-                            onSiteRotationClick = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
-                            },
+                            onTempTargetClick = onTempTarget,
                             onCarbsClick = {
                                 protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
                                     if (result == ProtectionResult.GRANTED) {
@@ -517,9 +529,6 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             onCalibrationClick = if (xDripSource.isEnabled()) {
                                 { uiInteraction.runCalibrationDialog(supportFragmentManager) }
                             } else null,
-                            onActionsError = { comment, title ->
-                                uiInteraction.runAlarm(comment, title, app.aaps.core.ui.R.raw.boluserror)
-                            },
                             // Notifications
                             notifications = notifications,
                             onDismissNotification = { notification ->
