@@ -1,12 +1,12 @@
 package app.aaps.pump.omnipod.dash.driver
 
-import app.aaps.pump.omnipod.dash.driver.event.PodEvent
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertTrigger
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertType
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BeepType
-import app.aaps.pump.omnipod.dash.driver.pod.response.ResponseType
+import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
+import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import java.util.concurrent.CountDownLatch

@@ -1,7 +1,7 @@
 package app.aaps.pump.omnipod.dash.driver.comm.endecrypt
 
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.dash.driver.comm.message.MessagePacket
+import app.aaps.pump.omnipod.common.bledriver.comm.message.MessagePacket
 import app.aaps.shared.tests.AAPSLoggerTest
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

@@ -1,10 +1,10 @@
 package app.aaps.pump.omnipod.dash.driver.pod.command
 
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertTrigger
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertType
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BeepType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepRepetitionType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
 import com.google.common.truth.Truth.assertThat
 import org.apache.commons.codec.binary.Hex
 import org.junit.jupiter.api.Test

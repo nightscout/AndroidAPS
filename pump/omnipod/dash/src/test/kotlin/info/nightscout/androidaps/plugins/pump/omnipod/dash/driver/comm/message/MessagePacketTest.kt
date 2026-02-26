@@ -1,7 +1,7 @@
 package app.aaps.pump.omnipod.dash.driver.comm.message
 
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.dash.driver.comm.Id
+import app.aaps.pump.omnipod.common.bledriver.comm.Id
 import com.google.common.truth.Truth.assertThat
 import com.google.crypto.tink.subtle.Hex
 import org.junit.jupiter.api.Test
