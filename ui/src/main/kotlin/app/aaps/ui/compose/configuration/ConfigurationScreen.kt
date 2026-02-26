@@ -1,35 +1,44 @@
-package app.aaps.ui.compose.main
+package app.aaps.ui.compose.configuration
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,53 +50,201 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.ui.compose.main.DrawerCategory
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PluginSelectionSheet(
-    category: DrawerCategory,
+fun ConfigurationScreen(
+    categories: List<DrawerCategory>,
     isSimpleMode: Boolean,
     pluginStateVersion: Int,
-    sheetState: SheetState,
-    onDismiss: () -> Unit,
+    onNavigateBack: () -> Unit,
     onPluginClick: (PluginBase) -> Unit,
     onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
     onPluginPreferencesClick: (PluginBase) -> Unit,
+) {
+    var selectedTypeOrdinal by rememberSaveable { mutableStateOf(-1) }
+    val selectedCategory = if (selectedTypeOrdinal >= 0) {
+        categories.find { it.type.ordinal == selectedTypeOrdinal }
+    } else null
+
+    if (selectedCategory != null) {
+        BackHandler { selectedTypeOrdinal = -1 }
+    }
+
+    Crossfade(
+        targetState = selectedCategory,
+        label = "configNav"
+    ) { category ->
+        if (category != null) {
+            CategoryDetailScreen(
+                category = category,
+                isSimpleMode = isSimpleMode,
+                pluginStateVersion = pluginStateVersion,
+                onNavigateBack = { selectedTypeOrdinal = -1 },
+                onPluginClick = onPluginClick,
+                onPluginEnableToggle = onPluginEnableToggle,
+                onPluginPreferencesClick = onPluginPreferencesClick
+            )
+        } else {
+            CategoryListScreen(
+                categories = categories,
+                onCategoryClick = { selectedTypeOrdinal = it.type.ordinal },
+                onNavigateBack = onNavigateBack
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryListScreen(
+    categories: List<DrawerCategory>,
+    onCategoryClick: (DrawerCategory) -> Unit,
+    onNavigateBack: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(app.aaps.core.ui.R.string.nav_configuration)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            items(categories, key = { it.type }) { category ->
+                CategoryRow(
+                    category = category,
+                    onClick = { onCategoryClick(category) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryRow(
+    category: DrawerCategory,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 32.dp)
-        ) {
-            // Header
-            Text(
-                text = stringResource(category.titleRes),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-            )
+    val categoryName = stringResource(category.titleRes)
+    val subtitle = if (category.enabledCount == 1) {
+        category.enabledPlugins.firstOrNull()?.name ?: "-"
+    } else if (category.isMultiSelect) {
+        if (category.enabledCount > 0) "${category.enabledCount}" else "-"
+    } else {
+        category.activePluginName ?: "-"
+    }
 
-            // Plugin list
-            key(pluginStateVersion) {
-                category.plugins.forEach { plugin ->
+    val plugin = if (category.enabledCount == 1) category.enabledPlugins.firstOrNull() else null
+    val composeIcon = plugin?.pluginDescription?.icon
+    val iconPainter =
+        if (composeIcon != null) rememberVectorPainter(composeIcon)
+        else if (plugin?.menuIcon != null && plugin.menuIcon != -1) painterResource(plugin.menuIcon)
+        else rememberVectorPainter(Icons.Default.Settings)
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(start = 24.dp, top = 12.dp, bottom = 12.dp, end = 16.dp)
+    ) {
+        Icon(
+            painter = iconPainter,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = categoryName,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
+@Composable
+private fun CategoryDetailScreen(
+    category: DrawerCategory,
+    isSimpleMode: Boolean,
+    pluginStateVersion: Int,
+    onNavigateBack: () -> Unit,
+    onPluginClick: (PluginBase) -> Unit,
+    onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
+    onPluginPreferencesClick: (PluginBase) -> Unit,
+) {
+    val enabledIndex = category.plugins
+        .indexOfFirst { it.isEnabled(category.type) }
+        .coerceAtLeast(0)
+    val listState = remember(category.type) {
+        LazyListState(firstVisibleItemIndex = enabledIndex)
+    }
+
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(category.titleRes)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        key(pluginStateVersion) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                items(category.plugins, key = { it.javaClass.simpleName }) { plugin ->
                     val pluginEnabled = plugin.isEnabled(category.type)
                     val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
                     val showPrefs = hasPreferences && pluginEnabled &&
                         (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode == true)
 
-                    SheetPluginItem(
+                    val canToggle = !plugin.pluginDescription.alwaysEnabled &&
+                        (category.isMultiSelect || !pluginEnabled)
+
+                    ConfigPluginItem(
                         plugin = plugin,
                         isEnabled = pluginEnabled,
-                        isAlwaysEnabled = plugin.pluginDescription.alwaysEnabled,
+                        canToggle = canToggle,
                         showPreferences = showPrefs,
                         onPluginClick = { onPluginClick(plugin) },
                         onEnableToggle = { enabled ->
@@ -97,17 +254,15 @@ fun PluginSelectionSheet(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-private fun SheetPluginItem(
+private fun ConfigPluginItem(
     plugin: PluginBase,
     isEnabled: Boolean,
-    isAlwaysEnabled: Boolean,
+    canToggle: Boolean,
     showPreferences: Boolean,
     onPluginClick: () -> Unit,
     onEnableToggle: (Boolean) -> Unit,
@@ -169,7 +324,6 @@ private fun SheetPluginItem(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                // Checkmark badge for enabled plugins
                 if (isEnabled) {
                     Box(
                         contentAlignment = Alignment.Center,
@@ -215,7 +369,7 @@ private fun SheetPluginItem(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 2.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable(enabled = !isAlwaysEnabled) {
+            .clickable(enabled = canToggle) {
                 onEnableToggle(!isEnabled)
             }
     )

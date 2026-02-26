@@ -64,6 +64,8 @@ sealed class AppRoute(val route: String) {
             else "wizard_dialog?${params.joinToString("&")}"
         }
     }
+
+    data object Configuration : AppRoute("configuration")
     data object ImportSettings : AppRoute("import_settings/{source}") {
 
         fun createRoute(source: String) = "import_settings/$source"

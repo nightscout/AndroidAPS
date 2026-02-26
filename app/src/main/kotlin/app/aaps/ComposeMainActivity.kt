@@ -76,6 +76,7 @@ import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.carbsDialog.CarbsDialogViewModel
 import app.aaps.ui.compose.careDialog.CareDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogViewModel
+import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
@@ -173,6 +174,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var importViewModel: ImportViewModel
     @Inject lateinit var searchViewModel: SearchViewModel
     @Inject lateinit var permissionsViewModel: PermissionsViewModel
+    @Inject lateinit var configurationViewModel: ConfigurationViewModel
 
     private val _autoShowNotifications = mutableStateOf(false)
     private val disposable = CompositeDisposable()
@@ -411,25 +413,6 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             },
                             onMenuItemClick = { menuItem ->
                                 handleMenuItemClick(menuItem, navController)
-                            },
-                            onCategoryClick = { category ->
-                                mainViewModel.handleCategoryClick(category) { plugin ->
-                                    handlePluginClick(plugin)
-                                }
-                            },
-                            onCategoryExpand = { category -> mainViewModel.showCategorySheet(category) },
-                            onCategorySheetDismiss = { mainViewModel.dismissCategorySheet() },
-                            onPluginClick = { plugin -> handlePluginClick(plugin) },
-                            onPluginEnableToggle = { plugin, type, enabled ->
-                                mainViewModel.togglePluginEnabled(plugin, type, enabled)
-                                permissionsViewModel.refresh(this@ComposeMainActivity)
-                            },
-                            onPluginPreferencesClick = { plugin ->
-                                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
-                                    if (result == ProtectionResult.GRANTED) {
-                                        navController.navigate(AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName))
-                                    }
-                                }
                             },
                             onDrawerClosed = { mainViewModel.closeDrawer() },
                             onSwitchToClassicUi = { switchToClassicUi() },
@@ -822,6 +805,28 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         )
                     }
 
+                    composable(AppRoute.Configuration.route) {
+                        val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
+                        app.aaps.ui.compose.configuration.ConfigurationScreen(
+                            categories = configState.pluginCategories,
+                            isSimpleMode = configState.isSimpleMode,
+                            pluginStateVersion = configState.pluginStateVersion,
+                            onNavigateBack = { navController.popBackStack() },
+                            onPluginClick = { plugin -> handlePluginClick(plugin) },
+                            onPluginEnableToggle = { plugin, type, enabled ->
+                                configurationViewModel.togglePluginEnabled(plugin, type, enabled)
+                                permissionsViewModel.refresh(this@ComposeMainActivity)
+                            },
+                            onPluginPreferencesClick = { plugin ->
+                                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                                    if (result == ProtectionResult.GRANTED) {
+                                        navController.navigate(AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName))
+                                    }
+                                }
+                            }
+                        )
+                    }
+
                     composable(AppRoute.PluginPreferences.route) { backStackEntry ->
                         val pluginKey = backStackEntry.arguments?.getString("pluginKey")
                         val plugin = activePlugin.getPluginsList().find {
@@ -990,6 +995,14 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                 protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                     if (result == ProtectionResult.GRANTED) {
                         mainViewModel.setShowMaintenanceSheet(true)
+                    }
+                }
+            }
+
+            is MainMenuItem.Configuration     -> {
+                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                    if (result == ProtectionResult.GRANTED) {
+                        navController.navigate(AppRoute.Configuration.route)
                     }
                 }
             }

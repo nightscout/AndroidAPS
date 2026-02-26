@@ -14,9 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,21 +27,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcHistory
+import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.ui.compose.icons.IcSetupWizard
 import app.aaps.core.ui.compose.icons.IcStats
 
 @Composable
 fun MainDrawer(
-    categories: List<DrawerCategory>,
     versionName: String,
     appIcon: Int,
-    onCategoryClick: (DrawerCategory) -> Unit,
-    onCategoryExpand: (DrawerCategory) -> Unit,
     onMenuItemClick: (MainMenuItem) -> Unit,
     isTreatmentsEnabled: Boolean,
     modifier: Modifier = Modifier
@@ -96,7 +92,7 @@ fun MainDrawer(
             )
 
             DrawerMenuItem(
-                icon = Icons.Default.Settings,
+                icon = IcSetupWizard,
                 label = stringResource(app.aaps.core.ui.R.string.nav_setupwizard),
                 description = stringResource(app.aaps.core.ui.R.string.nav_setupwizard_desc),
                 onClick = { onMenuItemClick(MainMenuItem.SetupWizard) }
@@ -123,21 +119,12 @@ fun MainDrawer(
                 onClick = { onMenuItemClick(MainMenuItem.Maintenance) }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Plugin categories
-            categories.forEach { category ->
-                val categoryName = stringResource(category.titleRes)
-
-                DrawerCategoryItem(
-                    category = category,
-                    categoryName = categoryName,
-                    onClick = { onCategoryClick(category) },
-                    onExpandClick = { onCategoryExpand(category) }
-                )
-            }
+            DrawerMenuItem(
+                icon = IcPluginConfigBuilder,
+                label = stringResource(app.aaps.core.ui.R.string.nav_configuration),
+                description = stringResource(app.aaps.core.ui.R.string.nav_configuration_desc),
+                onClick = { onMenuItemClick(MainMenuItem.Configuration) }
+            )
         }
 
         // Bottom section with About and Exit
@@ -209,72 +196,5 @@ private fun DrawerMenuItem(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun DrawerCategoryItem(
-    category: DrawerCategory,
-    categoryName: String,
-    onClick: () -> Unit,
-    onExpandClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    // If only 1 plugin is enabled, show its name (behave like exclusive selection)
-    val subtitle = if (category.enabledCount == 1) {
-        category.enabledPlugins.firstOrNull()?.name ?: "-"
-    } else if (category.isMultiSelect) {
-        if (category.enabledCount > 0) "${category.enabledCount}" else "-"
-    } else {
-        category.activePluginName ?: "-"
-    }
-
-    // Use plugin compose icon if only one enabled, fall back to resource icon, then settings icon
-    val plugin = if (category.enabledCount == 1) category.enabledPlugins.firstOrNull() else null
-    val composeIcon: ImageVector? = plugin?.pluginDescription?.icon
-    val iconPainter =
-        if (composeIcon != null) rememberVectorPainter(composeIcon)
-        else if (plugin?.menuIcon != null && plugin.menuIcon != -1) painterResource(plugin.menuIcon)
-        else rememberVectorPainter(Icons.Default.Settings)
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(start = 24.dp, top = 6.dp, bottom = 6.dp, end = 8.dp)
-    ) {
-        Icon(
-            painter = iconPainter,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = categoryName,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = "Expand",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .size(40.dp)
-                .clickable(onClick = onExpandClick)
-                .padding(8.dp)
-        )
     }
 }

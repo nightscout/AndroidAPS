@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.ui.search.M3SearchBar
 import app.aaps.ui.search.SearchUiState
 
@@ -29,6 +28,7 @@ sealed class MainMenuItem(val id: String) {
     data object Stats : MainMenuItem("stats")
     data object ProfileHelper : MainMenuItem("profile_helper")
     data object Maintenance : MainMenuItem("maintenance")
+    data object Configuration : MainMenuItem("configuration")
     data object About : MainMenuItem("about")
     data object Exit : MainMenuItem("exit")
 }

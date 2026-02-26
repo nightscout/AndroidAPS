@@ -3,6 +3,8 @@
     <!--    General-->
     <string name="treatments">Treatments</string>
     <string name="treatments_desc">View and manage treatment history</string>
+    <string name="nav_configuration">Configuration</string>
+    <string name="nav_configuration_desc">Setup your configuration (CGM, Pump, ...) end enable features</string>
     <string name="count_selected">%1$d selected</string>
     <string name="delete">Delete</string>
     <string name="show_invalidated">Show invalidated</string>

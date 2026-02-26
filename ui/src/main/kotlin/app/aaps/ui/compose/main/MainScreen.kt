@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,9 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.notifications.AapsNotification
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -50,7 +46,6 @@ import app.aaps.ui.search.SearchResults
 import app.aaps.ui.search.SearchUiState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     uiState: MainUiState,
@@ -74,12 +69,6 @@ fun MainScreen(
     onProfileManagementClick: () -> Unit,
     onPreferencesClick: () -> Unit,
     onMenuItemClick: (MainMenuItem) -> Unit,
-    onCategoryClick: (DrawerCategory) -> Unit,
-    onCategoryExpand: (DrawerCategory) -> Unit,
-    onCategorySheetDismiss: () -> Unit,
-    onPluginClick: (PluginBase) -> Unit,
-    onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
-    onPluginPreferencesClick: (PluginBase) -> Unit,
     onDrawerClosed: () -> Unit,
     onSwitchToClassicUi: () -> Unit,
     onAboutDialogDismiss: () -> Unit,
@@ -121,7 +110,6 @@ fun MainScreen(
 ) {
     LocalDateUtil.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showTreatmentSheet by remember { mutableStateOf(false) }
     var showAutomationSheet by remember { mutableStateOf(false) }
@@ -143,30 +131,12 @@ fun MainScreen(
         }
     }
 
-    // Show bottom sheet when category is selected
-    LaunchedEffect(uiState.selectedCategoryForSheet) {
-        if (uiState.selectedCategoryForSheet != null) {
-            sheetState.show()
-        } else {
-            sheetState.hide()
-        }
-    }
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             MainDrawer(
-                categories = uiState.drawerCategories,
                 versionName = versionName,
                 appIcon = appIcon,
-                onCategoryClick = { category ->
-                    scope.launch {
-                        drawerState.close()
-                        onDrawerClosed()
-                    }
-                    onCategoryClick(category)
-                },
-                onCategoryExpand = onCategoryExpand,
                 onMenuItemClick = { menuItem ->
                     scope.launch {
                         drawerState.close()
@@ -274,26 +244,6 @@ fun MainScreen(
                 )
             }
         }
-    }
-
-    // Plugin selection bottom sheet
-    uiState.selectedCategoryForSheet?.let { category ->
-        PluginSelectionSheet(
-            category = category,
-            isSimpleMode = uiState.isSimpleMode,
-            pluginStateVersion = uiState.pluginStateVersion,
-            sheetState = sheetState,
-            onDismiss = onCategorySheetDismiss,
-            onPluginClick = { plugin ->
-                onCategorySheetDismiss()
-                onPluginClick(plugin)
-            },
-            onPluginEnableToggle = onPluginEnableToggle,
-            onPluginPreferencesClick = { plugin ->
-                onCategorySheetDismiss()
-                onPluginPreferencesClick(plugin)
-            }
-        )
     }
 
     // Treatment bottom sheet
