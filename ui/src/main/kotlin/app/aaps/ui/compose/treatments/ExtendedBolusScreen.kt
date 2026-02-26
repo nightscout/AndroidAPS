@@ -207,9 +207,7 @@ private fun ExtendedBolusItem(
                     )
                     append(" ")
                     // Rate
-                    val formattedRate = String.format("%.2f", extendedBolus.rate)
-                    append(formattedRate)
-                    append(rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour))
+                    append(stringResource(app.aaps.core.ui.R.string.pump_base_basal_rate, extendedBolus.rate))
                     // IOB in blue color when != 0.0
                     if (iob != null && iob.iob != 0.0) {
                         append(" ")
@@ -220,16 +218,14 @@ private fun ExtendedBolusItem(
                             )
                         ) {
                             append("(")
-                            val formattedIob = String.format("%.2f", iob.iob)
-                            append(formattedIob)
-                            append(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))
+                            append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, iob.iob))
                             append(")")
                         }
                     }
                     append(" ")
                     // Duration
                     append(T.msecs(extendedBolus.duration).mins().toInt().toString())
-                    append(rh.gs(app.aaps.core.keys.R.string.units_min))
+                    append(stringResource(app.aaps.core.keys.R.string.units_min))
                 },
                 modifier = Modifier.padding(start = 4.dp),
                 fontSize = 14.sp,

@@ -625,7 +625,7 @@ private fun BasalContent(
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${DecimalFormat("0.00").format(viewModel.getBasalSum())} ${stringResource(R.string.insulin_unit_shortname)}",
+                        text = "∑ ${stringResource(app.aaps.core.ui.R.string.format_insulin_units, viewModel.getBasalSum())}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

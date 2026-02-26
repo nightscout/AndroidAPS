@@ -593,6 +593,7 @@
     <string name="wizard_include_trend">Include trend</string>
     <string name="wizard_include_iob">Include IOB</string>
     <string name="wizard_include_cob">Include COB</string>
+    <string name="wizard_advanced">Advanced</string>
     <string name="wizard_calculation">Calculation</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>

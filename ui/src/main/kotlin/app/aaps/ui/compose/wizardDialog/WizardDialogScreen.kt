@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -37,7 +38,9 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
@@ -63,15 +66,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.icons.IcBgCheck
+import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcBread
 import app.aaps.core.ui.compose.icons.IcCake
 import app.aaps.core.ui.compose.icons.IcCalculator
+import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcPizza
+import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.keys.R as KeysR
@@ -211,6 +220,8 @@ fun WizardDialogScreen(
 
     WizardDialogContent(
         uiState = uiState,
+        decimalFormatter = viewModel.decimalFormatter,
+        profileUtil = viewModel.profileUtil,
         unitsLabel = uiState.units.asText,
         onBgChange = { viewModel.updateBg(it) },
         onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
@@ -225,9 +236,9 @@ fun WizardDialogScreen(
         onTrendToggle = viewModel::toggleTrend,
         onIOBToggle = viewModel::toggleIOB,
         onCOBToggle = viewModel::toggleCOB,
-        onDirectCorrectionToggle = viewModel::toggleDirectCorrection,
         onAlarmToggle = viewModel::toggleAlarm,
         onBgExpandToggle = viewModel::toggleBgExpanded,
+        onAdvancedExpandToggle = viewModel::toggleAdvancedExpanded,
         onCalculationExpandToggle = viewModel::toggleCalculationExpanded,
         onNavigateBack = onNavigateBack,
         onConfirmClick = { showConfirmation = true }
@@ -238,6 +249,8 @@ fun WizardDialogScreen(
 @Composable
 private fun WizardDialogContent(
     uiState: WizardDialogUiState,
+    decimalFormatter: DecimalFormatter,
+    profileUtil: ProfileUtil,
     unitsLabel: String,
     onBgChange: (Double) -> Unit,
     onCarbsChange: (Double) -> Unit,
@@ -252,9 +265,9 @@ private fun WizardDialogContent(
     onTrendToggle: (Boolean) -> Unit,
     onIOBToggle: (Boolean) -> Unit,
     onCOBToggle: (Boolean) -> Unit,
-    onDirectCorrectionToggle: (Boolean) -> Unit,
     onAlarmToggle: (Boolean) -> Unit,
     onBgExpandToggle: () -> Unit,
+    onAdvancedExpandToggle: () -> Unit,
     onCalculationExpandToggle: () -> Unit,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
@@ -395,7 +408,7 @@ private fun WizardDialogContent(
                         val tooltipState = rememberTooltipState()
                         val scope = rememberCoroutineScope()
                         TooltipBox(
-                            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                             tooltip = {
                                 PlainTooltip {
                                     Text(
@@ -421,52 +434,16 @@ private fun WizardDialogContent(
 
                     HorizontalDivider()
 
-                    // Percentage Input (always visible)
+                    // Direct Correction input
                     NumberInputRow(
-                        labelResId = CoreUiR.string.wizard_use_percentage,
-                        value = uiState.percentage.toDouble(),
-                        onValueChange = onPercentageChange,
-                        valueRange = 10.0..200.0,
-                        step = 5.0,
-                        unitLabel = "%",
-                        decimalPlaces = 0
+                        labelResId = CoreUiR.string.wizard_correction,
+                        value = uiState.directCorrection,
+                        onValueChange = onDirectCorrectionChange,
+                        valueRange = -uiState.maxBolus..uiState.maxBolus,
+                        step = uiState.bolusStep,
+                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        decimalPlaces = 2
                     )
-
-                    HorizontalDivider()
-
-                    // Direct Correction toggle + input
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onDirectCorrectionToggle(!uiState.useDirectCorrection) },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(CoreUiR.string.wizard_correction),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Switch(
-                            checked = uiState.useDirectCorrection,
-                            onCheckedChange = onDirectCorrectionToggle
-                        )
-                    }
-
-                    AnimatedVisibility(
-                        visible = uiState.useDirectCorrection,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
-                    ) {
-                        NumberInputRow(
-                            labelResId = CoreUiR.string.wizard_correction,
-                            value = uiState.directCorrection,
-                            onValueChange = onDirectCorrectionChange,
-                            valueRange = -uiState.maxBolus..uiState.maxBolus,
-                            step = uiState.bolusStep,
-                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                            decimalPlaces = 1
-                        )
-                    }
 
                     HorizontalDivider()
 
@@ -511,6 +488,207 @@ private fun WizardDialogContent(
                 }
             }
 
+            // --- Calculation Card (expandable) ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Header row (clickable to toggle)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCalculationExpandToggle() },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(CoreUiR.string.wizard_calculation),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Icon(
+                            imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    // Toggle buttons row (always visible)
+                    MultiChoiceSegmentedButtonRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    ) {
+                        // BG
+                        SegmentedButton(
+                            checked = uiState.useBg,
+                            onCheckedChange = onBgToggle,
+                            shape = SegmentedButtonDefaults.itemShape(0, 5),
+                            icon = {}
+                        ) {
+                            Icon(
+                                imageVector = IcBgCheck,
+                                contentDescription = stringResource(CoreUiR.string.wizard_include_bg),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        // TT
+                        SegmentedButton(
+                            checked = uiState.useTT,
+                            onCheckedChange = onTTToggle,
+                            shape = SegmentedButtonDefaults.itemShape(1, 5),
+                            enabled = uiState.hasTempTarget && uiState.useBg,
+                            icon = {}
+                        ) {
+                            Icon(
+                                imageVector = IcTtManual,
+                                contentDescription = stringResource(CoreUiR.string.wizard_include_tt),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        // Trend
+                        SegmentedButton(
+                            checked = uiState.useTrend,
+                            onCheckedChange = onTrendToggle,
+                            shape = SegmentedButtonDefaults.itemShape(2, 5),
+                            icon = {}
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                                contentDescription = stringResource(CoreUiR.string.wizard_include_trend),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        // IOB
+                        SegmentedButton(
+                            checked = uiState.useIOB,
+                            onCheckedChange = onIOBToggle,
+                            shape = SegmentedButtonDefaults.itemShape(3, 5),
+                            icon = {}
+                        ) {
+                            Icon(
+                                imageVector = IcBolus,
+                                contentDescription = stringResource(CoreUiR.string.wizard_include_iob),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        // COB
+                        SegmentedButton(
+                            checked = uiState.useCOB,
+                            onCheckedChange = onCOBToggle,
+                            shape = SegmentedButtonDefaults.itemShape(4, 5),
+                            icon = {}
+                        ) {
+                            Icon(
+                                imageVector = IcCarbs,
+                                contentDescription = stringResource(CoreUiR.string.wizard_include_cob),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(
+                        visible = uiState.calculationExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(top = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            if (uiState.hasResult) {
+                                // === Suggestion components (scaled by percentage) ===
+
+                                // BG
+                                if (uiState.useBg && uiState.bg > 0) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_bg_label) + " (ISF: ${decimalFormatter.to1Decimal(uiState.isf)})",
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromBG)
+                                    )
+                                }
+
+                                // Trend
+                                if (uiState.useTrend) {
+                                    CalcRow(
+                                        label = uiState.trendDetail,
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromTrend)
+                                    )
+                                }
+
+                                // COB
+                                if (uiState.useCOB) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.cob) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCOB)
+                                    )
+                                }
+
+                                // Carbs
+                                if (uiState.eCarbs > 0) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCarbs)
+                                    )
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
+                                        value = ""
+                                    )
+                                } else {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCarbs)
+                                    )
+                                }
+
+                                if (uiState.percentage != 100) {
+                                    // Show subtotal before percentage, then scaled result
+                                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                                    val scaledSubtotal = uiState.insulinFromBG + uiState.insulinFromTrend +
+                                        uiState.insulinFromCarbs + uiState.insulinFromCOB
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_subtotal),
+                                        value = stringResource(CoreUiR.string.format_insulin_units, scaledSubtotal)
+                                    )
+                                    val afterPercentage = scaledSubtotal * uiState.percentage / 100.0
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.format_percent, uiState.percentage),
+                                        value = stringResource(CoreUiR.string.format_insulin_units, afterPercentage)
+                                    )
+                                }
+
+                                // === Fact components (not scaled by percentage) ===
+
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+                                // IOB
+                                if (uiState.useIOB) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.iob),
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.totalIOB)
+                                    )
+                                }
+
+                                // Direct Correction
+                                if (uiState.insulinFromCorrection != 0.0) {
+                                    CalcRow(
+                                        label = stringResource(CoreUiR.string.wizard_correction),
+                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCorrection)
+                                    )
+                                }
+
+                                // === Total ===
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                                CalcRow(
+                                    label = stringResource(CoreUiR.string.wizard_total),
+                                    value = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             // --- BG Card (collapsible) ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -539,7 +717,7 @@ private fun WizardDialogContent(
                                 // Collapsed: show read-only value and age
                                 if (uiState.hasBgData) {
                                     Text(
-                                        text = formatDouble(uiState.bg, if (uiState.isMgdl) 0 else 1) + " " + unitsLabel,
+                                        text = profileUtil.stringInCurrentUnitsDetect(uiState.bg) + " " + unitsLabel,
                                         style = MaterialTheme.typography.bodyLarge,
                                         fontWeight = FontWeight.Medium,
                                         color = MaterialTheme.colorScheme.onSurface
@@ -594,149 +772,63 @@ private fun WizardDialogContent(
                 }
             }
 
-            // --- Options Card ---
+            // --- Advanced Card (collapsible) ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    // Toggle switches
-                    SwitchRow(stringResource(CoreUiR.string.wizard_include_iob), uiState.useIOB, onIOBToggle)
-                    SwitchRow(stringResource(CoreUiR.string.wizard_include_cob), uiState.useCOB, onCOBToggle)
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Profile dropdown
-                    ProfileDropdown(
-                        profileNames = uiState.profileNames,
-                        selectedIndex = uiState.selectedProfileIndex,
-                        onSelect = onProfileSelect
-                    )
-                }
-            }
-
-            // --- Calculation Card (expandable) ---
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    // Header row (clickable to toggle)
+                    // Header row
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onCalculationExpandToggle() },
+                            .clickable { onAdvancedExpandToggle() },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(CoreUiR.string.wizard_calculation),
+                            text = stringResource(CoreUiR.string.wizard_advanced),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Icon(
-                            imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                            imageVector = if (uiState.advancedExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
                     AnimatedVisibility(
-                        visible = uiState.calculationExpanded,
+                        visible = uiState.advancedExpanded,
                         enter = expandVertically(),
                         exit = shrinkVertically()
                     ) {
-                        Column(
-                            modifier = Modifier.padding(top = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            if (uiState.hasResult) {
-                                // === Suggestion components (scaled by percentage) ===
+                        Column(modifier = Modifier.padding(top = 8.dp)) {
+                            // Percentage Input
+                            NumberInputRow(
+                                labelResId = CoreUiR.string.wizard_use_percentage,
+                                value = uiState.percentage.toDouble(),
+                                onValueChange = onPercentageChange,
+                                valueRange = 10.0..200.0,
+                                step = 5.0,
+                                unitLabel = "%",
+                                decimalPlaces = 0
+                            )
 
-                                // BG
-                                if (uiState.useBg && uiState.bg > 0) {
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_bg_label) + " (ISF: ${formatDouble(uiState.isf, 1)})",
-                                        value = formatInsulinUnits(uiState.insulinFromBG)
-                                    )
-                                }
+                            HorizontalDivider()
 
-                                // Trend
-                                if (uiState.useTrend) {
-                                    CalcRow(
-                                        label = uiState.trendDetail,
-                                        value = formatInsulinUnits(uiState.insulinFromTrend)
-                                    )
-                                }
+                            // Toggle switches
+                            SwitchRow(stringResource(CoreUiR.string.wizard_include_iob), uiState.useIOB, onIOBToggle)
+                            SwitchRow(stringResource(CoreUiR.string.wizard_include_cob), uiState.useCOB, onCOBToggle)
 
-                                // COB
-                                if (uiState.useCOB) {
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.cob) + " (IC: ${formatDouble(uiState.ic, 1)})",
-                                        value = formatInsulinUnits(uiState.insulinFromCOB)
-                                    )
-                                }
+                            Spacer(modifier = Modifier.height(8.dp))
 
-                                // Carbs
-                                if (uiState.eCarbs > 0) {
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.carbs) + " ${uiState.effectiveCarbs}g (IC: ${formatDouble(uiState.ic, 1)})",
-                                        value = formatInsulinUnits(uiState.insulinFromCarbs)
-                                    )
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
-                                        value = ""
-                                    )
-                                } else {
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.carbs) + " (IC: ${formatDouble(uiState.ic, 1)})",
-                                        value = formatInsulinUnits(uiState.insulinFromCarbs)
-                                    )
-                                }
-
-                                if (uiState.percentage != 100) {
-                                    // Show subtotal before percentage, then scaled result
-                                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                                    val scaledSubtotal = uiState.insulinFromBG + uiState.insulinFromTrend +
-                                        uiState.insulinFromCarbs + uiState.insulinFromCOB
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_subtotal),
-                                        value = formatInsulinUnits(scaledSubtotal)
-                                    )
-                                    val afterPercentage = scaledSubtotal * uiState.percentage / 100.0
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.format_percent, uiState.percentage),
-                                        value = formatInsulinUnits(afterPercentage)
-                                    )
-                                }
-
-                                // === Fact components (not scaled by percentage) ===
-
-                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-
-                                // IOB
-                                if (uiState.useIOB) {
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.iob),
-                                        value = formatInsulinUnits(uiState.totalIOB)
-                                    )
-                                }
-
-                                // Direct Correction
-                                if (uiState.useDirectCorrection && uiState.insulinFromCorrection != 0.0) {
-                                    CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_correction),
-                                        value = formatInsulinUnits(uiState.insulinFromCorrection)
-                                    )
-                                }
-
-                                // === Total ===
-                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                                CalcRow(
-                                    label = stringResource(CoreUiR.string.wizard_total),
-                                    value = formatInsulinUnits(uiState.totalInsulin)
-                                )
-                            }
+                            // Profile dropdown
+                            ProfileDropdown(
+                                profileNames = uiState.profileNames,
+                                selectedIndex = uiState.selectedProfileIndex,
+                                onSelect = onProfileSelect
+                            )
                         }
                     }
                 }
@@ -850,12 +942,4 @@ private fun ProfileDropdown(
             }
         }
     }
-}
-
-private fun formatInsulinUnits(value: Double): String {
-    return String.format("%.2f U", value)
-}
-
-private fun formatDouble(value: Double, decimals: Int): String {
-    return String.format("%.${decimals}f", value)
 }

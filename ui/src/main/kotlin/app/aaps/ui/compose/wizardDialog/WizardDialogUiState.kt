@@ -21,7 +21,6 @@ data class WizardDialogUiState(
     val carbs: Int = 0,
     val carbsType: CarbsType = CarbsType.BREAD,
     val percentage: Int = 100,
-    val useDirectCorrection: Boolean = false,
     val directCorrection: Double = 0.0,
     val carbTime: Int = 0,
     val notes: String = "",
@@ -34,6 +33,7 @@ data class WizardDialogUiState(
     val useIOB: Boolean = true,
     val useCOB: Boolean = false,
     val alarmChecked: Boolean = false,
+    val advancedExpanded: Boolean = false,
     val calculationExpanded: Boolean = false,
     val bgExpanded: Boolean = false,
 

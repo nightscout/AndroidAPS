@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -39,7 +40,7 @@ class WizardDialogViewModel @Inject constructor(
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    private val profileUtil: ProfileUtil,
+    val profileUtil: ProfileUtil,
     private val localProfileManager: LocalProfileManager,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
@@ -48,6 +49,7 @@ class WizardDialogViewModel @Inject constructor(
     val config: Config,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
+    val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
@@ -119,7 +121,6 @@ class WizardDialogViewModel @Inject constructor(
                 bg = currentBg,
                 carbs = initialCarbs ?: 0,
                 percentage = percentage,
-                useDirectCorrection = false,
                 directCorrection = 0.0,
                 carbTime = 0,
                 notes = initialNotes ?: "",
@@ -257,18 +258,12 @@ class WizardDialogViewModel @Inject constructor(
         recalculate()
     }
 
-    fun toggleDirectCorrection(checked: Boolean) {
-        uiState.update {
-            it.copy(
-                useDirectCorrection = checked,
-                directCorrection = if (!checked) 0.0 else it.directCorrection
-            )
-        }
-        recalculate()
-    }
-
     fun toggleAlarm(checked: Boolean) {
         uiState.update { it.copy(alarmChecked = checked) }
+    }
+
+    fun toggleAdvancedExpanded() {
+        uiState.update { it.copy(advancedExpanded = !it.advancedExpanded) }
     }
 
     fun toggleCalculationExpanded() {
@@ -321,8 +316,8 @@ class WizardDialogViewModel @Inject constructor(
         // Carbs constraint check (on effective carbs only)
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(effectiveCarbs, aapsLogger)).value()
 
-        // Direct correction value (only when toggle is ON)
-        val correctionValue = if (state.useDirectCorrection) state.directCorrection else 0.0
+        // Direct correction value
+        val correctionValue = state.directCorrection
 
         // Percentage is always applied
         val percentageCorrection = state.percentage

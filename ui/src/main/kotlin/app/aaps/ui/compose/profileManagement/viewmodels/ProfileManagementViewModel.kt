@@ -342,7 +342,7 @@ class ProfileManagementViewModel @Inject constructor(
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
     fun formatDia(dia: Double): String = rh.gs(R.string.format_hours, dia)
-    fun formatBasalSum(basalSum: Double): String = decimalFormatter.to2Decimal(basalSum) + " " + rh.gs(R.string.insulin_unit_shortname)
+    fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
 
     /**
      * Get reuse values from current active profile if it has custom percentage/timeshift
