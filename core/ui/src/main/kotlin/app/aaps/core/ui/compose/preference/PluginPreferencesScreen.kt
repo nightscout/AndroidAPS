@@ -15,11 +15,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 
+import androidx.activity.compose.BackHandler
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -41,52 +47,69 @@ fun PluginPreferencesScreen(
     val preferenceScreenContent = plugin.getPreferenceScreenContent()
     val title = plugin.name
 
-    ProvidePreferenceTheme {
-        when (preferenceScreenContent) {
-            is PreferenceSubScreenDef -> {
-                // PreferenceSubScreenDef - use same rendering as AllPreferencesScreen
-                SinglePluginPreferencesRenderer(
-                    screen = preferenceScreenContent,
-                    title = title,
-                    plugin = plugin,
-                    visibilityContext = visibilityContext,
-                    onBackClick = onBackClick
-                )
-            }
+    // State for inline Compose screen navigation
+    var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
-            else                      -> {
-                // Fallback for plugins without compose preferences
-                Scaffold(
-                    topBar = {
-                        AapsTopAppBar(
-                            title = {
-                                Text(
-                                    text = title,
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = onBackClick) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+    BackHandler(enabled = composeScreen != null) {
+        composeScreen = null
+    }
+
+    // If a compose sub-screen is active, render it instead of preferences
+    composeScreen?.let { screen ->
+        screen.Content(onBack = { composeScreen = null })
+        return
+    }
+
+    ProvidePreferenceTheme {
+        CompositionLocalProvider(
+            LocalNavigateToCompose provides { screen -> composeScreen = screen }
+        ) {
+            when (preferenceScreenContent) {
+                is PreferenceSubScreenDef -> {
+                    // PreferenceSubScreenDef - use same rendering as AllPreferencesScreen
+                    SinglePluginPreferencesRenderer(
+                        screen = preferenceScreenContent,
+                        title = title,
+                        plugin = plugin,
+                        visibilityContext = visibilityContext,
+                        onBackClick = onBackClick
+                    )
+                }
+
+                else                      -> {
+                    // Fallback for plugins without compose preferences
+                    Scaffold(
+                        topBar = {
+                            AapsTopAppBar(
+                                title = {
+                                    Text(
+                                        text = title,
+                                        style = MaterialTheme.typography.titleLarge
                                     )
+                                },
+                                navigationIcon = {
+                                    IconButton(onClick = onBackClick) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                        )
+                                    }
                                 }
-                            }
-                        )
-                    },
-                    containerColor = MaterialTheme.colorScheme.background
-                ) { paddingValues ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No compose preferences available for this plugin",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                            )
+                        },
+                        containerColor = MaterialTheme.colorScheme.background
+                    ) { paddingValues ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No compose preferences available for this plugin",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
                 }
             }

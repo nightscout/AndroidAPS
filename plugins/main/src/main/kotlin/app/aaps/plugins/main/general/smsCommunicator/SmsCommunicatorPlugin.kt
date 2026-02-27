@@ -65,6 +65,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
@@ -83,6 +84,8 @@ import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorO
 import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorComposeContent
 import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
+import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorOtpScreen
 import app.aaps.plugins.main.general.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -1372,7 +1375,18 @@ class SmsCommunicatorPlugin @Inject constructor(
             BooleanKey.SmsAllowRemoteCommands,
             IntKey.SmsRemoteBolusDistance,
             StringKey.SmsOtpPassword,
-            SmsIntentKey.OtpSetup,
+            SmsIntentKey.OtpSetup.withCompose(
+                ComposeScreenContent { onBack ->
+                    SmsCommunicatorOtpScreen(
+                        otp = otp,
+                        onReset = {
+                            uel.log(Action.OTP_RESET, Sources.SMS)
+                            otp.ensureKey(true)
+                        },
+                        onBack = onBack
+                    )
+                }
+            ),
             BooleanKey.SmsReportPumpUnreachable
 
         ),

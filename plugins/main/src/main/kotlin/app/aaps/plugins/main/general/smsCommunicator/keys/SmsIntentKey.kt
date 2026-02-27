@@ -5,14 +5,12 @@ import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpComposeActivity
 
 enum class SmsIntentKey(
     override val key: String,
     override val titleResId: Int = 0,
     override val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.ACTIVITY,
-    override val activityClass: Class<*>? = null,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -26,8 +24,6 @@ enum class SmsIntentKey(
     OtpSetup(
         key = "smscommunicator_otp_setup",
         titleResId = R.string.smscommunicator_tab_otp_label,
-        preferenceType = PreferenceType.ACTIVITY,
-        activityClass = SmsCommunicatorOtpComposeActivity::class.java,
         dependency = BooleanKey.SmsAllowRemoteCommands
     )
 }

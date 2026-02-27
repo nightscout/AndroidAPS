@@ -11,10 +11,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +34,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePasswordValidationResult
@@ -40,15 +47,29 @@ import kotlin.math.min
 fun SmsCommunicatorOtpScreen(
     otp: OneTimePassword,
     onReset: () -> Unit,
-    onExportSecret: () -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var verifyText by remember { mutableStateOf("") }
     var qrBitmap by remember { mutableStateOf(generateQrBitmap(otp)) }
+    var showResetConfirmation by remember { mutableStateOf(false) }
 
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(R.string.smscommunicator_tab_otp_label)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -126,10 +147,7 @@ fun SmsCommunicatorOtpScreen(
             color = MaterialTheme.colorScheme.error
         )
         Button(
-            onClick = {
-                onReset()
-                qrBitmap = generateQrBitmap(otp)
-            },
+            onClick = { showResetConfirmation = true },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
         ) {
@@ -138,6 +156,20 @@ fun SmsCommunicatorOtpScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+    }
+    }
+
+    if (showResetConfirmation) {
+        OkCancelDialog(
+            title = stringResource(R.string.smscommunicator_otp_reset_title),
+            message = stringResource(R.string.smscommunicator_otp_reset_prompt),
+            onConfirm = {
+                showResetConfirmation = false
+                onReset()
+                qrBitmap = generateQrBitmap(otp)
+            },
+            onDismiss = { showResetConfirmation = false }
+        )
     }
 }
 

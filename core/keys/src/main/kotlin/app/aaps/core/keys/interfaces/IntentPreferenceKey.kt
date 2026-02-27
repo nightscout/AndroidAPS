@@ -44,6 +44,17 @@ interface IntentPreferenceKey : PreferenceKey {
      */
     val runtimeUrl: String?
         get() = null
+
+    /**
+     * Runtime-attached Compose screen content.
+     * When set, clicking the preference navigates to this Compose screen
+     * instead of launching an Activity.
+     *
+     * At runtime this holds `@Composable (onBack: () -> Unit) -> Unit`.
+     * Typed as Any? because core:keys has no Compose dependency.
+     */
+    val composeScreen: Any?
+        get() = null
 }
 
 /**
@@ -87,3 +98,18 @@ fun IntentPreferenceKey.withActivity(activityClass: Class<*>): IntentPreferenceK
  */
 fun IntentPreferenceKey.withUrl(url: String): IntentPreferenceKey =
     IntentKeyWithUrl(this, url)
+
+/**
+ * Wrapper that attaches Compose screen content to an IntentPreferenceKey.
+ */
+class IntentKeyWithCompose(
+    private val delegate: IntentPreferenceKey,
+    override val composeScreen: Any
+) : IntentPreferenceKey by delegate
+
+/**
+ * Creates a new IntentPreferenceKey with Compose screen content attached.
+ * The [content] lambda should be `@Composable (onBack: () -> Unit) -> Unit`.
+ */
+fun IntentPreferenceKey.withCompose(content: Any): IntentPreferenceKey =
+    IntentKeyWithCompose(this, content)

@@ -24,17 +24,6 @@
         </activity>
 
         <activity
-            android:name=".general.smsCommunicator.activities.SmsCommunicatorOtpComposeActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpComposeActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name="app.aaps.plugins.sync.wear.activities.CwfInfosActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />

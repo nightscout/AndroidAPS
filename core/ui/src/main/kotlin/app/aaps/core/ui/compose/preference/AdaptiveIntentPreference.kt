@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 
 /**
@@ -145,6 +146,41 @@ fun AdaptiveDynamicActivityPreferenceItem(
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
             { context.startActivity(Intent(context, activityClass)) }
+        } else null
+    )
+}
+
+/**
+ * Composable preference that navigates to an inline Compose screen.
+ * Used for IntentPreferenceKey with composeScreen attached via withCompose().
+ */
+@Composable
+fun AdaptiveComposeScreenPreferenceItem(
+    intentKey: IntentPreferenceKey,
+    composeScreen: ComposeScreenContent,
+    onNavigate: (ComposeScreenContent) -> Unit,
+    titleResId: Int = 0,
+    summaryResId: Int? = null,
+    visibilityContext: PreferenceVisibilityContext? = null
+) {
+    val effectiveTitleResId = if (titleResId != 0) titleResId else intentKey.titleResId
+    val effectiveSummaryResId = summaryResId ?: intentKey.summaryResId
+
+    if (effectiveTitleResId == 0) return
+
+    val visibility = calculateIntentPreferenceVisibility(
+        intentKey = intentKey,
+        visibilityContext = visibilityContext
+    )
+
+    if (!visibility.visible) return
+
+    Preference(
+        title = { Text(stringResource(effectiveTitleResId)) },
+        summary = effectiveSummaryResId?.let { { Text(stringResource(it)) } },
+        enabled = visibility.enabled,
+        onClick = if (visibility.enabled) {
+            { onNavigate(composeScreen) }
         } else null
     )
 }

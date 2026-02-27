@@ -22,6 +22,7 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.StringKeyWithEntriesProvider
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.core.ui.compose.ComposeScreenContent
 
 /**
  * Renders a preference based on its PreferenceKey type and preferenceType.
@@ -191,15 +192,15 @@ fun AdaptivePreferenceItem(
         }
 
         is IntentPreferenceKey          -> {
-            // Priority: 1) runtime properties from withClick/withActivity/withUrl
-            //           2) function parameters
-            //           3) key's static properties
+            // Priority: 1) runtime click  2) compose screen  3) activity  4) url
             val resolvedClick = key.onClick ?: onIntentClick
+            val resolvedCompose = key.composeScreen as? ComposeScreenContent
+            val onNavigateToCompose = LocalNavigateToCompose.current
             val resolvedActivity = key.runtimeActivityClass ?: intentActivityClass ?: key.activityClass
             val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlResId?.let { stringResource(it) }
 
             when {
-                resolvedClick != null    -> {
+                resolvedClick != null                                   -> {
                     AdaptiveIntentPreferenceItem(
 
                         intentKey = key,
@@ -208,7 +209,16 @@ fun AdaptivePreferenceItem(
                     )
                 }
 
-                resolvedActivity != null -> {
+                resolvedCompose != null && onNavigateToCompose != null  -> {
+                    AdaptiveComposeScreenPreferenceItem(
+                        intentKey = key,
+                        composeScreen = resolvedCompose,
+                        onNavigate = onNavigateToCompose,
+                        visibilityContext = visibilityContext
+                    )
+                }
+
+                resolvedActivity != null                                -> {
                     AdaptiveDynamicActivityPreferenceItem(
 
                         intentKey = key,
@@ -217,7 +227,7 @@ fun AdaptivePreferenceItem(
                     )
                 }
 
-                resolvedUrl != null      -> {
+                resolvedUrl != null                         -> {
                     AdaptiveUrlPreferenceItem(
 
                         intentKey = key,

@@ -4,7 +4,6 @@ import app.aaps.plugins.main.general.smsCommunicator.AuthRequest
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorFragment
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
-import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpComposeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -14,7 +13,6 @@ abstract class SMSCommunicatorModule {
 
     @ContributesAndroidInjector abstract fun authRequestInjector(): AuthRequest
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpActivity(): SmsCommunicatorOtpActivity
-    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpComposeActivity(): SmsCommunicatorOtpComposeActivity
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorWorker(): SmsCommunicatorPlugin.SmsCommunicatorWorker
 }

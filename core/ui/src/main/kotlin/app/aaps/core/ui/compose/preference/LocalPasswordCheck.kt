@@ -2,6 +2,7 @@ package app.aaps.core.ui.compose.preference
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.compositionLocalOf
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 
 /**
@@ -35,3 +36,10 @@ val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState?> { null }
  * Used when navigating from search to highlight the found preference.
  */
 val LocalHighlightKey = compositionLocalOf<String?> { null }
+
+/**
+ * CompositionLocal for navigating to an inline Compose screen from a preference.
+ * Used by IntentPreferenceKey with composeScreen attached via withCompose().
+ * The lambda receives a composable content that takes an onBack callback.
+ */
+val LocalNavigateToCompose = compositionLocalOf<((ComposeScreenContent) -> Unit)?> { null }

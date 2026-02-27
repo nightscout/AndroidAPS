@@ -16,9 +16,13 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.activity.compose.BackHandler
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
@@ -30,6 +34,8 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.preference.LocalNavigateToCompose
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.preference.LocalSnackbarHostState
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
@@ -134,8 +140,21 @@ fun AllPreferencesScreen(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
-    CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+    BackHandler(enabled = composeScreen != null) {
+        composeScreen = null
+    }
+
+    composeScreen?.let { screen ->
+        screen.Content(onBack = { composeScreen = null })
+        return
+    }
+
+    CompositionLocalProvider(
+        LocalSnackbarHostState provides snackbarHostState,
+        LocalNavigateToCompose provides { screen -> composeScreen = screen }
+    ) {
         ProvidePreferenceTheme {
             Scaffold(
                 topBar = {
