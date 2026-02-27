@@ -281,49 +281,50 @@ private fun WizardDialogContent(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Icon(
-                                imageVector = IcCalculator,
-                                contentDescription = null,
-                                tint = AapsTheme.generalColors.calculator,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
-                                if (uiState.totalInsulin > 0.0) {
-                                    Text(
-                                        text = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin),
-                                        fontWeight = FontWeight.Bold,
-                                        color = AapsTheme.elementColors.insulin
-                                    )
-                                }
-                                if (uiState.carbs > 0) {
-                                    Text(
-                                        text = stringResource(CoreUiR.string.format_carbs, uiState.carbs),
-                                        fontWeight = FontWeight.Bold,
-                                        color = AapsTheme.elementColors.carbs
-                                    )
-                                }
+                        if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
+                            if (uiState.totalInsulin > 0.0) {
+                                Text(
+                                    text = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin),
+                                    fontWeight = FontWeight.Bold,
+                                    color = AapsTheme.elementColors.insulin
+                                )
+                            }
+                            if (uiState.carbs > 0) {
+                                Text(
+                                    text = stringResource(CoreUiR.string.format_carbs, uiState.carbs),
+                                    fontWeight = FontWeight.Bold,
+                                    color = AapsTheme.elementColors.carbs
+                                )
+                            }
+                            val hasExtra = uiState.percentage != 100 || uiState.directCorrection != 0.0
+                            if (hasExtra) {
+                                Text("(", fontWeight = FontWeight.Bold)
                                 if (uiState.percentage != 100) {
                                     Text(
                                         text = stringResource(CoreUiR.string.format_percent, uiState.percentage),
                                         fontWeight = FontWeight.Bold,
+                                        color = AapsTheme.elementColors.carbs
+                                    )
+                                }
+                                if (uiState.directCorrection != 0.0) {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.format_insulin_units_signed, uiState.directCorrection),
+                                        fontWeight = FontWeight.Bold,
                                         color = AapsTheme.elementColors.insulin
                                     )
                                 }
-                            } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
-                                Text(
-                                    text = stringResource(R.string.missing_carbs, uiState.carbsEquivalent.toInt()),
-                                    fontWeight = FontWeight.Bold,
-                                    color = AapsTheme.elementColors.carbs
-                                )
-                            } else {
-                                Text(stringResource(CoreUiR.string.boluswizard))
+                                Text(")", fontWeight = FontWeight.Bold)
                             }
+                        } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
+                            Text(
+                                text = stringResource(R.string.missing_carbs, uiState.carbsEquivalent.toInt()),
+                                fontWeight = FontWeight.Bold,
+                                color = AapsTheme.elementColors.carbs
+                            )
+                        } else {
+                            Text(stringResource(CoreUiR.string.boluswizard))
                         }
                     }
                 },
@@ -411,13 +412,30 @@ private fun WizardDialogContent(
                             positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                             tooltip = {
                                 PlainTooltip {
-                                    Text(
-                                        text = when (uiState.carbsType) {
-                                            CarbsType.BREAD -> stringResource(CoreUiR.string.carbs_type_bread)
-                                            CarbsType.CAKE  -> stringResource(CoreUiR.string.carbs_type_cake)
-                                            CarbsType.PIZZA -> stringResource(CoreUiR.string.carbs_type_pizza)
-                                        }
-                                    )
+                                    Column {
+                                        Text(
+                                            text = when (uiState.carbsType) {
+                                                CarbsType.BREAD -> stringResource(CoreUiR.string.carbs_type_bread)
+                                                CarbsType.CAKE  -> stringResource(CoreUiR.string.carbs_type_cake)
+                                                CarbsType.PIZZA -> stringResource(CoreUiR.string.carbs_type_pizza)
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        val type = uiState.carbsType
+                                        Text(
+                                            text = if (type == CarbsType.BREAD)
+                                                stringResource(R.string.wizard_carbs_type_bread_desc)
+                                            else
+                                                stringResource(
+                                                    R.string.wizard_carbs_type_desc,
+                                                    100 - type.carbsPercent,
+                                                    type.eCarbsPercent,
+                                                    type.eCarbsDelayMinutes,
+                                                    type.eCarbsDurationHours
+                                                ),
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                 }
                             },
                             state = tooltipState
