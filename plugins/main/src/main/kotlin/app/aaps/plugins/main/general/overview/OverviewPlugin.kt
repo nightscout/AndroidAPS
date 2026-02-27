@@ -223,10 +223,6 @@ class OverviewPlugin @Inject constructor(
             ),
 
             BooleanKey.OverviewShowNotesInDialogs,
-            IntKey.OverviewBolusPercentage,
-            IntKey.OverviewResetBolusPercentageTime,
-            BooleanKey.OverviewUseBolusAdvisor,
-            BooleanKey.OverviewUseBolusReminder,
 
             // Advanced settings subscreen
             PreferenceSubScreenDef(
@@ -365,13 +361,13 @@ class OverviewPlugin @Inject constructor(
                         })
                 )
             })
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = app.aaps.core.keys.R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = app.aaps.core.keys.R.string.deliverpartofboluswizard, title = app.aaps.core.keys.R.string.deliverpartofboluswizard))
             addPreference(
                 AdaptiveIntPreference(
                     ctx = context,
                     intKey = IntKey.OverviewResetBolusPercentageTime,
                     dialogMessage = app.aaps.core.keys.R.string.deliver_part_of_boluswizard_reset_time,
-                    title = app.aaps.core.ui.R.string.partialboluswizard_reset_time
+                    title = app.aaps.core.keys.R.string.pref_title_reset_bolus_percentage_time
                 )
             )
             addPreference(

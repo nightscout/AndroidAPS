@@ -1,5 +1,10 @@
 package app.aaps.ui.search
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.TipsAndUpdates
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.skin.SkinDescriptionProvider
 import app.aaps.core.keys.BooleanKey
@@ -7,15 +12,11 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.withEntries
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.TipsAndUpdates
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.icons.Pump
-import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
@@ -160,7 +161,8 @@ class BuiltInSearchables @Inject constructor(
         items = listOf(
             IntKey.OverviewCarbsButtonIncrement1,
             IntKey.OverviewCarbsButtonIncrement2,
-            IntKey.OverviewCarbsButtonIncrement3
+            IntKey.OverviewCarbsButtonIncrement3,
+            BooleanKey.OverviewUseBolusReminder
         ),
         icon = IcCarbs
     )
@@ -207,6 +209,20 @@ class BuiltInSearchables @Inject constructor(
         icon = IcBolus
     )
 
+    /**
+     * Wizard settings (accessible from Wizard dialog)
+     */
+    val wizardSettings = PreferenceSubScreenDef(
+        key = "wizard_settings",
+        titleResId = app.aaps.core.ui.R.string.boluswizard,
+        items = listOf(
+            IntKey.OverviewBolusPercentage,
+            IntKey.OverviewResetBolusPercentageTime,
+            BooleanKey.OverviewUseBolusAdvisor
+        ),
+        icon = IcCalculator
+    )
+
     override fun getSearchableItems(): List<SearchableItem> = listOf(
         // Main preference screens (shown in AllPreferencesScreen)
         SearchableItem.Category(general),
@@ -218,7 +234,8 @@ class BuiltInSearchables @Inject constructor(
         SearchableItem.Category(insulinButtons),
         SearchableItem.Category(carbsButtons),
         SearchableItem.Category(statusLights),
-        SearchableItem.Category(treatmentButtons)
+        SearchableItem.Category(treatmentButtons),
+        SearchableItem.Category(wizardSettings)
     )
 }
 

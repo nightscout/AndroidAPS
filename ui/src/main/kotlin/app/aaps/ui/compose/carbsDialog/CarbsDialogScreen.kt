@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
@@ -30,13 +29,14 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +56,11 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
+import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.overview.graphs.BgInfoUiState
+import app.aaps.ui.compose.overview.graphs.CobUiState
+import app.aaps.ui.compose.overview.graphs.IobUiState
+import kotlinx.coroutines.flow.StateFlow
 import java.text.DecimalFormat
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.keys.R as KeysR
@@ -66,15 +71,16 @@ import app.aaps.core.ui.compose.icons.IcCarbs as CarbsIcon
 fun CarbsDialogScreen(
     viewModel: CarbsDialogViewModel,
     carbsButtonsDef: PreferenceSubScreenDef,
+    bgInfoState: StateFlow<BgInfoUiState>,
+    iobUiState: StateFlow<IobUiState>,
+    cobUiState: StateFlow<CobUiState>,
     onNavigateBack: () -> Unit,
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Initialize ViewModel
-    LaunchedEffect(Unit) {
-        viewModel.init()
-    }
+    val bgInfo by bgInfoState.collectAsStateWithLifecycle()
+    val iob by iobUiState.collectAsStateWithLifecycle()
+    val cob by cobUiState.collectAsStateWithLifecycle()
 
     // Observe side effects
     LaunchedEffect(Unit) {
@@ -91,12 +97,12 @@ fun CarbsDialogScreen(
         }
     }
 
-    // Dialog states
-    var showConfirmation by remember { mutableStateOf(false) }
-    var showNoAction by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
-    var showButtonSettings by remember { mutableStateOf(false) }
+    // Dialog states (rememberSaveable to survive rotation)
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+    var showButtonSettings by rememberSaveable { mutableStateOf(false) }
 
     // Confirmation dialog
     if (showConfirmation) {
@@ -162,6 +168,9 @@ fun CarbsDialogScreen(
 
     CarbsDialogContent(
         uiState = uiState,
+        bgInfo = bgInfo,
+        iob = iob,
+        cob = cob,
         dateString = viewModel.dateUtil.dateString(uiState.eventTime),
         timeString = viewModel.dateUtil.timeString(uiState.eventTime),
         onHypoChange = viewModel::updateHypoTt,
@@ -187,6 +196,9 @@ fun CarbsDialogScreen(
 @Composable
 private fun CarbsDialogContent(
     uiState: CarbsDialogUiState,
+    bgInfo: BgInfoUiState,
+    iob: IobUiState,
+    cob: CobUiState,
     dateString: String,
     timeString: String,
     onHypoChange: (Boolean) -> Unit,
@@ -231,6 +243,15 @@ private fun CarbsDialogContent(
                     }
                 },
                 actions = {
+                    if (onSettingsClick != null) {
+                        IconButton(onClick = onSettingsClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiR.string.settings),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                     IconButton(onClick = onConfirmClick) {
                         Icon(
                             imageVector = Icons.Filled.Check,
@@ -251,16 +272,8 @@ private fun CarbsDialogContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // --- Temp Target Section ---
-            TempTargetCheckboxes(
-                hypoChecked = uiState.hypoTtChecked,
-                eatingSoonChecked = uiState.eatingSoonTtChecked,
-                activityChecked = uiState.activityTtChecked,
-                onHypoChange = onHypoChange,
-                onEatingSoonChange = onEatingSoonChange,
-                onActivityChange = onActivityChange
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            // --- Status Bar ---
+            DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
 
             // --- Carbs Section ---
             NumberInputRow(
@@ -279,8 +292,18 @@ private fun CarbsDialogContent(
                 increment1 = uiState.carbsButtonIncrement1,
                 increment2 = uiState.carbsButtonIncrement2,
                 increment3 = uiState.carbsButtonIncrement3,
-                onAddCarbs = onAddCarbs,
-                onSettingsClick = onSettingsClick
+                onAddCarbs = onAddCarbs
+            )
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+            // --- Temp Target Section ---
+            TempTargetCheckboxes(
+                hypoChecked = uiState.hypoTtChecked,
+                eatingSoonChecked = uiState.eatingSoonTtChecked,
+                activityChecked = uiState.activityTtChecked,
+                onHypoChange = onHypoChange,
+                onEatingSoonChange = onEatingSoonChange,
+                onActivityChange = onActivityChange
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -301,32 +324,35 @@ private fun CarbsDialogContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Alarm checkbox
+            // Alarm switch
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(enabled = uiState.alarmEnabled) {
                         onAlarmChange(!uiState.alarmChecked)
                     },
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Checkbox(
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    val alarmAlpha = if (uiState.alarmEnabled) 1f else 0.38f
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alarmAlpha),
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = stringResource(app.aaps.ui.R.string.a11y_carb_reminder),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = if (uiState.alarmEnabled) MaterialTheme.colorScheme.onSurface
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    )
+                }
+                Switch(
                     checked = uiState.alarmChecked && uiState.alarmEnabled,
-                    onCheckedChange = null,
+                    onCheckedChange = { onAlarmChange(it) },
                     enabled = uiState.alarmEnabled
-                )
-                val alarmAlpha = if (uiState.alarmEnabled) 1f else 0.38f
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alarmAlpha),
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text(
-                    text = stringResource(app.aaps.ui.R.string.a11y_carb_reminder),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = if (uiState.alarmEnabled) MaterialTheme.colorScheme.onSurface
-                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -350,16 +376,16 @@ private fun CarbsDialogContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onBolusReminderChange(!uiState.bolusReminderChecked) },
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Checkbox(
-                        checked = uiState.bolusReminderChecked,
-                        onCheckedChange = null
-                    )
                     Text(
                         text = stringResource(CoreUiR.string.bolus_reminder),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 8.dp)
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Switch(
+                        checked = uiState.bolusReminderChecked,
+                        onCheckedChange = { onBolusReminderChange(it) }
                     )
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -408,6 +434,9 @@ private fun CarbsDialogScreenPreview() {
                 showNotesFromPreferences = true,
                 showBolusReminder = true
             ),
+            bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
+            iob = IobUiState(),
+            cob = CobUiState(),
             dateString = "25/02/2026",
             timeString = "14:30",
             onHypoChange = {},
@@ -453,42 +482,42 @@ private fun TempTargetCheckboxes(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onHypoChange(!hypoChecked) },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Checkbox(checked = hypoChecked, onCheckedChange = null)
             Text(
                 text = stringResource(app.aaps.ui.R.string.start_hypo_tt),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp)
+                style = MaterialTheme.typography.bodyLarge
             )
+            Switch(checked = hypoChecked, onCheckedChange = { onHypoChange(it) })
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onEatingSoonChange(!eatingSoonChecked) },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Checkbox(checked = eatingSoonChecked, onCheckedChange = null)
             Text(
                 text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp)
+                style = MaterialTheme.typography.bodyLarge
             )
+            Switch(checked = eatingSoonChecked, onCheckedChange = { onEatingSoonChange(it) })
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onActivityChange(!activityChecked) },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Checkbox(checked = activityChecked, onCheckedChange = null)
             Text(
                 text = stringResource(app.aaps.ui.R.string.start_activity_tt),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp)
+                style = MaterialTheme.typography.bodyLarge
             )
+            Switch(checked = activityChecked, onCheckedChange = { onActivityChange(it) })
         }
     }
 }
@@ -498,11 +527,10 @@ private fun QuickAddButtons(
     increment1: Int,
     increment2: Int,
     increment3: Int,
-    onAddCarbs: (Int) -> Unit,
-    onSettingsClick: (() -> Unit)?
+    onAddCarbs: (Int) -> Unit
 ) {
     val increments = listOf(increment1, increment2, increment3).filter { it > 0 }
-    if (increments.isEmpty() && onSettingsClick == null) return
+    if (increments.isEmpty()) return
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -512,19 +540,6 @@ private fun QuickAddButtons(
         increments.forEach { amount ->
             FilledTonalButton(onClick = { onAddCarbs(amount) }) {
                 Text("+$amount")
-            }
-        }
-        if (onSettingsClick != null) {
-            IconButton(
-                onClick = onSettingsClick,
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = stringResource(CoreUiR.string.settings),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
             }
         }
     }

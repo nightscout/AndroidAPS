@@ -92,13 +92,6 @@ fun MainDrawer(
             )
 
             DrawerMenuItem(
-                icon = IcSetupWizard,
-                label = stringResource(app.aaps.core.ui.R.string.nav_setupwizard),
-                description = stringResource(app.aaps.core.ui.R.string.nav_setupwizard_desc),
-                onClick = { onMenuItemClick(MainMenuItem.SetupWizard) }
-            )
-
-            DrawerMenuItem(
                 icon = IcStats,
                 label = stringResource(app.aaps.ui.R.string.statistics),
                 description = stringResource(app.aaps.ui.R.string.statistics_desc),
@@ -117,6 +110,13 @@ fun MainDrawer(
                 label = stringResource(app.aaps.core.ui.R.string.maintenance),
                 description = stringResource(app.aaps.core.ui.R.string.description_maintenance),
                 onClick = { onMenuItemClick(MainMenuItem.Maintenance) }
+            )
+
+            DrawerMenuItem(
+                icon = IcSetupWizard,
+                label = stringResource(app.aaps.core.ui.R.string.nav_setupwizard),
+                description = stringResource(app.aaps.core.ui.R.string.nav_setupwizard_desc),
+                onClick = { onMenuItemClick(MainMenuItem.SetupWizard) }
             )
 
             DrawerMenuItem(

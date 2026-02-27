@@ -80,7 +80,8 @@ class CarbsDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
-    fun init() {
+    // TODO: Migrate to @HiltViewModel with SavedStateHandle to properly scope ViewModel to NavBackStackEntry
+    init {
         val now = dateUtil.now()
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val units = profileUtil.units

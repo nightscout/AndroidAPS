@@ -17,45 +17,49 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.PlainTooltip
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,7 +69,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.launch
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsTheme
@@ -81,13 +84,18 @@ import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcPizza
 import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.ui.R
-import app.aaps.core.ui.R as CoreUiR
+import kotlinx.coroutines.launch
 import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun WizardDialogScreen(
     viewModel: WizardDialogViewModel,
+    wizardSettingsDef: PreferenceSubScreenDef,
     initialCarbs: Int? = null,
     initialNotes: String? = null,
     onNavigateBack: () -> Unit,
@@ -115,12 +123,25 @@ fun WizardDialogScreen(
         }
     }
 
-    // Dialog states
-    var showConfirmation by remember { mutableStateOf(false) }
-    var showNoAction by remember { mutableStateOf(false) }
-    var showBolusAdvisorPrompt by remember { mutableStateOf(false) }
-    var showAdvisorConfirmation by remember { mutableStateOf(false) }
-    var showNormalConfirmation by remember { mutableStateOf(false) }
+    // Dialog states (rememberSaveable to survive rotation)
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+    var showBolusAdvisorPrompt by rememberSaveable { mutableStateOf(false) }
+    var showAdvisorConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNormalConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showSettings by rememberSaveable { mutableStateOf(false) }
+
+    // Settings bottom sheet
+    if (showSettings) {
+        WizardSettingsSheet(
+            settingsDef = wizardSettingsDef,
+            viewModel = viewModel,
+            onDismiss = {
+                showSettings = false
+                viewModel.refreshAfterSettings()
+            }
+        )
+    }
 
     // --- Confirmation flow ---
     if (showConfirmation) {
@@ -237,11 +258,11 @@ fun WizardDialogScreen(
         onIOBToggle = viewModel::toggleIOB,
         onCOBToggle = viewModel::toggleCOB,
         onAlarmToggle = viewModel::toggleAlarm,
-        onBgExpandToggle = viewModel::toggleBgExpanded,
         onAdvancedExpandToggle = viewModel::toggleAdvancedExpanded,
         onCalculationExpandToggle = viewModel::toggleCalculationExpanded,
         onNavigateBack = onNavigateBack,
-        onConfirmClick = { showConfirmation = true }
+        onConfirmClick = { showConfirmation = true },
+        onSettingsClick = { showSettings = true }
     )
 }
 
@@ -266,11 +287,11 @@ private fun WizardDialogContent(
     onIOBToggle: (Boolean) -> Unit,
     onCOBToggle: (Boolean) -> Unit,
     onAlarmToggle: (Boolean) -> Unit,
-    onBgExpandToggle: () -> Unit,
     onAdvancedExpandToggle: () -> Unit,
     onCalculationExpandToggle: () -> Unit,
     onNavigateBack: () -> Unit,
-    onConfirmClick: () -> Unit
+    onConfirmClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -337,6 +358,13 @@ private fun WizardDialogContent(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(CoreUiR.string.settings),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     if (uiState.okVisible) {
                         IconButton(onClick = onConfirmClick) {
                             Icon(
@@ -533,76 +561,102 @@ private fun WizardDialogContent(
                     }
 
                     // Toggle buttons row (always visible)
-                    MultiChoiceSegmentedButtonRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // BG
-                        SegmentedButton(
-                            checked = uiState.useBg,
-                            onCheckedChange = onBgToggle,
-                            shape = SegmentedButtonDefaults.itemShape(0, 5),
-                            icon = {}
+                        MultiChoiceSegmentedButtonRow(
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Icon(
-                                imageVector = IcBgCheck,
-                                contentDescription = stringResource(CoreUiR.string.wizard_include_bg),
-                                modifier = Modifier.size(24.dp)
-                            )
+                            // BG
+                            SegmentedButton(
+                                checked = uiState.useBg,
+                                onCheckedChange = onBgToggle,
+                                shape = SegmentedButtonDefaults.itemShape(0, 5),
+                                icon = {}
+                            ) {
+                                Icon(
+                                    imageVector = IcBgCheck,
+                                    contentDescription = stringResource(CoreUiR.string.wizard_include_bg),
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            // TT
+                            SegmentedButton(
+                                checked = uiState.useTT,
+                                onCheckedChange = onTTToggle,
+                                shape = SegmentedButtonDefaults.itemShape(1, 5),
+                                enabled = uiState.hasTempTarget && uiState.useBg,
+                                icon = {}
+                            ) {
+                                Icon(
+                                    imageVector = IcTtManual,
+                                    contentDescription = stringResource(CoreUiR.string.wizard_include_tt),
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            // Trend
+                            SegmentedButton(
+                                checked = uiState.useTrend,
+                                onCheckedChange = onTrendToggle,
+                                shape = SegmentedButtonDefaults.itemShape(2, 5),
+                                icon = {}
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                                    contentDescription = stringResource(CoreUiR.string.wizard_include_trend),
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            // IOB
+                            SegmentedButton(
+                                checked = uiState.useIOB,
+                                onCheckedChange = onIOBToggle,
+                                shape = SegmentedButtonDefaults.itemShape(3, 5),
+                                icon = {}
+                            ) {
+                                Icon(
+                                    imageVector = IcBolus,
+                                    contentDescription = stringResource(CoreUiR.string.wizard_include_iob),
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            // COB
+                            SegmentedButton(
+                                checked = uiState.useCOB,
+                                onCheckedChange = onCOBToggle,
+                                shape = SegmentedButtonDefaults.itemShape(4, 5),
+                                icon = {}
+                            ) {
+                                Icon(
+                                    imageVector = IcCarbs,
+                                    contentDescription = stringResource(CoreUiR.string.wizard_include_cob),
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
-                        // TT
-                        SegmentedButton(
-                            checked = uiState.useTT,
-                            onCheckedChange = onTTToggle,
-                            shape = SegmentedButtonDefaults.itemShape(1, 5),
-                            enabled = uiState.hasTempTarget && uiState.useBg,
-                            icon = {}
+
+                        val includeTooltipState = rememberTooltipState()
+                        val includeScope = rememberCoroutineScope()
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                            tooltip = {
+                                PlainTooltip {
+                                    Text(stringResource(R.string.wizard_include_info))
+                                }
+                            },
+                            state = includeTooltipState
                         ) {
-                            Icon(
-                                imageVector = IcTtManual,
-                                contentDescription = stringResource(CoreUiR.string.wizard_include_tt),
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        // Trend
-                        SegmentedButton(
-                            checked = uiState.useTrend,
-                            onCheckedChange = onTrendToggle,
-                            shape = SegmentedButtonDefaults.itemShape(2, 5),
-                            icon = {}
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                                contentDescription = stringResource(CoreUiR.string.wizard_include_trend),
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        // IOB
-                        SegmentedButton(
-                            checked = uiState.useIOB,
-                            onCheckedChange = onIOBToggle,
-                            shape = SegmentedButtonDefaults.itemShape(3, 5),
-                            icon = {}
-                        ) {
-                            Icon(
-                                imageVector = IcBolus,
-                                contentDescription = stringResource(CoreUiR.string.wizard_include_iob),
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        // COB
-                        SegmentedButton(
-                            checked = uiState.useCOB,
-                            onCheckedChange = onCOBToggle,
-                            shape = SegmentedButtonDefaults.itemShape(4, 5),
-                            icon = {}
-                        ) {
-                            Icon(
-                                imageVector = IcCarbs,
-                                contentDescription = stringResource(CoreUiR.string.wizard_include_cob),
-                                modifier = Modifier.size(24.dp)
-                            )
+                            IconButton(
+                                onClick = { includeScope.launch { includeTooltipState.show() } },
+                                modifier = Modifier.size(32.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Info,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
                     }
 
@@ -707,85 +761,33 @@ private fun WizardDialogContent(
                 }
             }
 
-            // --- BG Card (collapsible) ---
+            // --- BG Card ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    // Header row — collapsed: read-only BG info; tap to expand
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onBgExpandToggle() },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = stringResource(CoreUiR.string.wizard_bg_label),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            if (!uiState.bgExpanded) {
-                                // Collapsed: show read-only value and age
-                                if (uiState.hasBgData) {
-                                    Text(
-                                        text = profileUtil.stringInCurrentUnitsDetect(uiState.bg) + " " + unitsLabel,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = "(${uiState.bgAgeMinutes} min)",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                } else {
-                                    Text(
-                                        text = stringResource(CoreUiR.string.not_available_full),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.error
-                                    )
-                                }
-                            }
-                        }
-                        Icon(
-                            imageVector = if (uiState.bgExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.wizard_bg_label,
+                        value = uiState.bg,
+                        onValueChange = onBgChange,
+                        valueRange = uiState.bgRange,
+                        step = uiState.bgStep,
+                        unitLabel = unitsLabel,
+                        decimalPlaces = if (uiState.isMgdl) 0 else 1
+                    )
+                    if (uiState.hasBgData) {
+                        Text(
+                            text = stringResource(R.string.wizard_bg_age, uiState.bgAgeMinutes),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    }
-
-                    // Expanded content: BG input + toggles
-                    AnimatedVisibility(
-                        visible = uiState.bgExpanded,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
-                    ) {
-                        Column(modifier = Modifier.padding(top = 8.dp)) {
-                            NumberInputRow(
-                                labelResId = CoreUiR.string.wizard_bg_label,
-                                value = uiState.bg,
-                                onValueChange = onBgChange,
-                                valueRange = uiState.bgRange,
-                                step = uiState.bgStep,
-                                unitLabel = unitsLabel,
-                                decimalPlaces = if (uiState.isMgdl) 0 else 1
-                            )
-                            SwitchRow(stringResource(CoreUiR.string.wizard_include_bg), uiState.useBg, onBgToggle)
-                            SwitchRow(
-                                label = stringResource(CoreUiR.string.wizard_include_tt),
-                                checked = uiState.useTT,
-                                onCheckedChange = onTTToggle,
-                                enabled = uiState.hasTempTarget && uiState.useBg
-                            )
-                            SwitchRow(stringResource(CoreUiR.string.wizard_include_trend), uiState.useTrend, onTrendToggle)
-                        }
+                    } else {
+                        Text(
+                            text = stringResource(CoreUiR.string.not_available_full),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             }
@@ -833,20 +835,15 @@ private fun WizardDialogContent(
                                 decimalPlaces = 0
                             )
 
-                            HorizontalDivider()
-
-                            // Toggle switches
-                            SwitchRow(stringResource(CoreUiR.string.wizard_include_iob), uiState.useIOB, onIOBToggle)
-                            SwitchRow(stringResource(CoreUiR.string.wizard_include_cob), uiState.useCOB, onCOBToggle)
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            // Profile dropdown
-                            ProfileDropdown(
-                                profileNames = uiState.profileNames,
-                                selectedIndex = uiState.selectedProfileIndex,
-                                onSelect = onProfileSelect
-                            )
+                            // Profile dropdown (hidden in simple mode)
+                            if (!uiState.simpleMode) {
+                                HorizontalDivider()
+                                ProfileDropdown(
+                                    profileNames = uiState.profileNames,
+                                    selectedIndex = uiState.selectedProfileIndex,
+                                    onSelect = onProfileSelect
+                                )
+                            }
                         }
                     }
                 }
@@ -871,33 +868,6 @@ private fun WizardDialogContent(
 }
 
 @Composable
-private fun SwitchRow(
-    label: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    enabled: Boolean = true
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = enabled) { onCheckedChange(!checked) },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            enabled = enabled
-        )
-    }
-}
-
-@Composable
 private fun CalcRow(label: String, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -916,6 +886,36 @@ private fun CalcRow(label: String, value: String) {
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WizardSettingsSheet(
+    settingsDef: PreferenceSubScreenDef,
+    viewModel: WizardDialogViewModel,
+    onDismiss: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
+        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 24.dp)) {
+            Text(
+                text = stringResource(settingsDef.titleResId),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp)
+            )
+            ProvidePreferenceTheme {
+                AdaptivePreferenceList(
+                    items = settingsDef.items
+                )
+            }
+        }
     }
 }
 

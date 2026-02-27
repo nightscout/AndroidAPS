@@ -2,12 +2,12 @@ package app.aaps.ui.search
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
@@ -18,6 +18,7 @@ import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.ui.compose.icons.IcQuickwizard
+import app.aaps.core.ui.compose.icons.IcSetupWizard
 import app.aaps.core.ui.compose.icons.IcStats
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.search.SearchableItem
@@ -80,7 +81,7 @@ class DialogSearchables @Inject constructor() : SearchableProvider {
             SearchableItem.Dialog(
                 dialogKey = "setup_wizard",
                 dialogTitleResId = CoreUiR.string.nav_setupwizard,
-                dialogIcon = Icons.Default.Settings,
+                dialogIcon = IcSetupWizard,
                 dialogSummaryResId = CoreUiR.string.nav_setupwizard_desc
             )
         )
@@ -148,6 +149,13 @@ class DialogSearchables @Inject constructor() : SearchableProvider {
                 dialogKey = "fill_dialog",
                 dialogTitleResId = CoreUiR.string.prime_fill,
                 dialogIcon = IcPumpCartridge
+            )
+        )
+        add(
+            SearchableItem.Dialog(
+                dialogKey = "wizard_dialog",
+                dialogTitleResId = CoreUiR.string.boluswizard,
+                dialogIcon = IcCalculator
             )
         )
 

@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,21 +36,27 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.overview.graphs.BgInfoUiState
+import app.aaps.ui.compose.overview.graphs.CobUiState
+import app.aaps.ui.compose.overview.graphs.IobUiState
+import kotlinx.coroutines.flow.StateFlow
 import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun TreatmentDialogScreen(
     viewModel: TreatmentDialogViewModel,
+    bgInfoState: StateFlow<BgInfoUiState>,
+    iobUiState: StateFlow<IobUiState>,
+    cobUiState: StateFlow<CobUiState>,
     onNavigateBack: () -> Unit,
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Initialize ViewModel
-    LaunchedEffect(Unit) {
-        viewModel.init()
-    }
+    val bgInfo by bgInfoState.collectAsStateWithLifecycle()
+    val iob by iobUiState.collectAsStateWithLifecycle()
+    val cob by cobUiState.collectAsStateWithLifecycle()
 
     // Observe side effects
     LaunchedEffect(Unit) {
@@ -68,8 +74,8 @@ fun TreatmentDialogScreen(
     }
 
     // Dialog states
-    var showConfirmation by remember { mutableStateOf(false) }
-    var showNoAction by remember { mutableStateOf(false) }
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
 
     // Confirmation dialog
     if (showConfirmation) {
@@ -104,6 +110,9 @@ fun TreatmentDialogScreen(
 
     TreatmentDialogContent(
         uiState = uiState,
+        bgInfo = bgInfo,
+        iob = iob,
+        cob = cob,
         bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
         onInsulinChange = { viewModel.updateInsulin(it) },
         onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
@@ -115,6 +124,9 @@ fun TreatmentDialogScreen(
 @Composable
 private fun TreatmentDialogContent(
     uiState: TreatmentDialogUiState,
+    bgInfo: BgInfoUiState,
+    iob: IobUiState,
+    cob: CobUiState,
     bolusFormat: DecimalFormat,
     onInsulinChange: (Double) -> Unit,
     onCarbsChange: (Double) -> Unit,
@@ -164,6 +176,9 @@ private fun TreatmentDialogContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // --- Status Bar ---
+            DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
+
             // --- Insulin Section ---
             NumberInputRow(
                 labelResId = CoreUiR.string.overview_insulin_label,
@@ -206,6 +221,9 @@ private fun TreatmentDialogScreenPreview() {
                 maxCarbs = 100,
                 bolusStep = 0.1
             ),
+            bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
+            iob = IobUiState(),
+            cob = CobUiState(),
             bolusFormat = DecimalFormat("0.0"),
             onInsulinChange = {},
             onCarbsChange = {},

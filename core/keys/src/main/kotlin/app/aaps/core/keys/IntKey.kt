@@ -122,7 +122,7 @@ enum class IntKey(
         summaryResId = R.string.deliver_part_of_boluswizard_reset_time,
         defaultedBySM = true,
         engineeringModeOnly = true,
-        unitType = UnitType.HOURS
+        unitType = UnitType.MIN
     ),
     ProtectionTimeout(
         key = "protection_timeout",

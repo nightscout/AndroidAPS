@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -364,14 +365,14 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun saveCheckedStates() {
-        preferences.put(BooleanKey.WizardIncludeCob, binding.cobCheckbox.isChecked)
-        preferences.put(BooleanKey.WizardIncludeTrend, binding.bgTrendCheckbox.isChecked)
+        preferences.put(BooleanNonKey.WizardIncludeCob, binding.cobCheckbox.isChecked)
+        preferences.put(BooleanNonKey.WizardIncludeTrend, binding.bgTrendCheckbox.isChecked)
         preferences.put(BooleanKey.WizardCorrectionPercent, binding.correctionPercent.isChecked)
     }
 
     private fun loadCheckedStates() {
-        binding.bgTrendCheckbox.isChecked = preferences.get(BooleanKey.WizardIncludeTrend)
-        binding.cobCheckbox.isChecked = preferences.get(BooleanKey.WizardIncludeCob)
+        binding.bgTrendCheckbox.isChecked = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        binding.cobCheckbox.isChecked = preferences.get(BooleanNonKey.WizardIncludeCob)
         usePercentage = preferences.get(BooleanKey.WizardCorrectionPercent)
         binding.correctionPercent.isChecked = usePercentage
     }

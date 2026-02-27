@@ -116,6 +116,8 @@
     <string name="missing_carbs">Missing %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% immediate carbs, no extended carbs</string>
     <string name="wizard_carbs_type_desc">Carbs reduced by %1$d%%, added eCarbs %2$d%% delayed %3$dmin for %4$dh</string>
+    <string name="wizard_include_info">Tap to include/exclude from calculation:\n• BG — blood glucose (ON at start)\n• TT — temp target (ON at start)\n• Trend — BG trend (last state remembered)\n• IOB — insulin on board (ON at start)\n• COB — carbs on board (last state remembered)</string>
+    <string name="wizard_bg_age">BG age: %1$d min</string>
     <string name="a11y_current_bg">current blood glucose</string>
     <string name="carb_time_label">Carb time</string>
     <string name="a11y_set_carb_timer">set carb timer alarm</string>

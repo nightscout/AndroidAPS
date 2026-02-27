@@ -58,7 +58,11 @@ class CareDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
+    private var lastEventType: UiInteraction.EventType? = null
+
     fun initForEventType(eventType: UiInteraction.EventType) {
+        if (lastEventType == eventType) return
+        lastEventType = eventType
         val units = profileFunction.getUnits()
         val currentBg = profileUtil.fromMgdlToUnits(
             glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0

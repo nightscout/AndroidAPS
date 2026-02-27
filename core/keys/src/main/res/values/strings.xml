@@ -16,7 +16,7 @@
     <string name="pref_summary_show_calibration_button">Sends a calibration to xDrip+ (ensure \'Accept Calibrations\' is enabled in xDrip+ under Inter-App settings).</string>
     <string name="pref_title_show_notes_in_dialogs">Show notes in dialogs</string>
     <string name="pref_title_use_bolus_advisor">Use bolus advisor</string>
-    <string name="pref_summary_use_bolus_advisor">Enable bolus advisor which assists with bolus calculations.</string>
+    <string name="pref_summary_use_bolus_advisor">Enable bolus advisor which assists with bolus calculations during higher glycemias.</string>
     <string name="pref_title_use_bolus_reminder">Use bolus reminder</string>
     <string name="pref_summary_use_bolus_reminder">Enable bolus reminder notifications to help track insulin administration.</string>
     <string name="pref_title_use_super_bolus">Use super bolus</string>
@@ -160,8 +160,6 @@
     <!-- Wizard preferences -->
     <string name="pref_title_wizard_calculation_visible">Show wizard calculation</string>
     <string name="pref_title_wizard_correction_percent">Use correction percent</string>
-    <string name="pref_title_wizard_include_cob">Include COB by default</string>
-    <string name="pref_title_wizard_include_trend">Include trend by default</string>
 
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Manage pump site rotation</string>
@@ -190,7 +188,7 @@
     <string name="pref_title_batt_warning">Threshold warning pump battery level</string>
     <string name="pref_title_batt_critical">Threshold critical pump battery level</string>
     <string name="pref_title_bolus_percentage">Bolus percentage</string>
-    <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
+    <string name="deliverpartofboluswizard">Apply this value to BG and carbs correction in bolus wizard\'s result</string>
     <string name="pref_title_reset_bolus_percentage_time">Reset bolus percentage time</string>
     <string name="deliver_part_of_boluswizard_reset_time">Deliver full bolus (100%) if glycemia is older than</string>
 

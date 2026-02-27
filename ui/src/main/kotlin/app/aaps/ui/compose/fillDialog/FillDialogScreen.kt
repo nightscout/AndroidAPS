@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
@@ -29,13 +27,14 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,12 +75,12 @@ fun FillDialogScreen(
         viewModel.init(preselect)
     }
 
-    // Dialog states
-    var showConfirmation by remember { mutableStateOf(false) }
-    var showNoAction by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
-    var showButtonSettings by remember { mutableStateOf(false) }
+    // Dialog states (rememberSaveable to survive rotation)
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+    var showButtonSettings by rememberSaveable { mutableStateOf(false) }
 
     // Observe side effects
     LaunchedEffect(Unit) {
@@ -217,6 +216,15 @@ private fun FillDialogContent(
                     }
                 },
                 actions = {
+                    if (onSettingsClick != null) {
+                        IconButton(onClick = onSettingsClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiR.string.settings),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                     IconButton(onClick = onConfirmClick) {
                         Icon(
                             imageVector = Icons.Filled.Check,
@@ -250,21 +258,21 @@ private fun FillDialogContent(
                 )
             }
 
-            // Checkboxes section
+            // Site/cartridge change switches
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onSiteChangeClick() },
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Checkbox(
-                    checked = uiState.siteChange,
-                    onCheckedChange = null
-                )
                 Text(
                     text = stringResource(R.string.record_pump_site_change),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(start = 8.dp)
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Switch(
+                    checked = uiState.siteChange,
+                    onCheckedChange = { onSiteChangeClick() }
                 )
             }
 
@@ -272,16 +280,16 @@ private fun FillDialogContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onCartridgeChangeClick() },
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Checkbox(
-                    checked = uiState.insulinCartridgeChange,
-                    onCheckedChange = null
-                )
                 Text(
                     text = stringResource(R.string.record_insulin_cartridge_change),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(start = 8.dp)
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Switch(
+                    checked = uiState.insulinCartridgeChange,
+                    onCheckedChange = { onCartridgeChangeClick() }
                 )
             }
 
@@ -306,8 +314,7 @@ private fun FillDialogContent(
                     presetButton2 = uiState.presetButton2,
                     presetButton3 = uiState.presetButton3,
                     bolusStep = uiState.bolusStep,
-                    onPresetClick = onInsulinChange,
-                    onSettingsClick = onSettingsClick
+                    onPresetClick = onInsulinChange
                 )
             }
 
@@ -390,11 +397,10 @@ private fun PresetButtonsRow(
     presetButton2: Double,
     presetButton3: Double,
     bolusStep: Double,
-    onPresetClick: (Double) -> Unit,
-    onSettingsClick: (() -> Unit)?
+    onPresetClick: (Double) -> Unit
 ) {
     val presets = listOf(presetButton1, presetButton2, presetButton3).filter { it > 0 }
-    if (presets.isEmpty() && onSettingsClick == null) return
+    if (presets.isEmpty()) return
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -405,19 +411,6 @@ private fun PresetButtonsRow(
             val label = if (bolusStep <= 0.051) "%.2f".format(amount) else "%.1f".format(amount)
             FilledTonalButton(onClick = { onPresetClick(amount) }) {
                 Text(label)
-            }
-        }
-        if (onSettingsClick != null) {
-            IconButton(
-                onClick = onSettingsClick,
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = stringResource(CoreUiR.string.settings),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
             }
         }
     }

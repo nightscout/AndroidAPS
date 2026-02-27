@@ -19,8 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -599,8 +602,11 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     ) { backStackEntry ->
                         val ordinal = backStackEntry.arguments?.getInt("eventTypeOrdinal") ?: 0
                         val eventType = UiInteraction.EventType.entries[ordinal]
+                        val vm: CareDialogViewModel = viewModel(
+                            factory = daggerViewModel { careDialogViewModel }
+                        )
                         CareDialogScreen(
-                            viewModel = careDialogViewModel,
+                            viewModel = vm,
                             eventType = eventType,
                             onNavigateBack = { navController.popBackStack() },
                             onShowSiteRotationDialog = {
@@ -619,8 +625,11 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     ) { backStackEntry ->
                         val preselectOrdinal = backStackEntry.arguments?.getInt("preselect") ?: 0
                         val preselect = FillPreselect.entries[preselectOrdinal]
+                        val vm: FillDialogViewModel = viewModel(
+                            factory = daggerViewModel { fillDialogViewModel }
+                        )
                         FillDialogScreen(
-                            viewModel = fillDialogViewModel,
+                            viewModel = vm,
                             preselect = preselect,
                             fillButtonsDef = builtInSearchables.fillButtons,
                             onNavigateBack = { navController.popBackStack() },
@@ -634,9 +643,15 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(route = AppRoute.CarbsDialog.route) {
+                        val vm: CarbsDialogViewModel = viewModel(
+                            factory = daggerViewModel { carbsDialogViewModel }
+                        )
                         CarbsDialogScreen(
-                            viewModel = carbsDialogViewModel,
+                            viewModel = vm,
                             carbsButtonsDef = builtInSearchables.carbsButtons,
+                            bgInfoState = graphViewModel.bgInfoState,
+                            iobUiState = graphViewModel.iobUiState,
+                            cobUiState = graphViewModel.cobUiState,
                             onNavigateBack = { navController.popBackStack() },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -645,9 +660,15 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(route = AppRoute.InsulinDialog.route) {
+                        val vm: InsulinDialogViewModel = viewModel(
+                            factory = daggerViewModel { insulinDialogViewModel }
+                        )
                         InsulinDialogScreen(
-                            viewModel = insulinDialogViewModel,
+                            viewModel = vm,
                             insulinButtonsDef = builtInSearchables.insulinButtons,
+                            bgInfoState = graphViewModel.bgInfoState,
+                            iobUiState = graphViewModel.iobUiState,
+                            cobUiState = graphViewModel.cobUiState,
                             onNavigateBack = { navController.popBackStack() },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -656,8 +677,14 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(route = AppRoute.TreatmentDialog.route) {
+                        val vm: TreatmentDialogViewModel = viewModel(
+                            factory = daggerViewModel { treatmentDialogViewModel }
+                        )
                         TreatmentDialogScreen(
-                            viewModel = treatmentDialogViewModel,
+                            viewModel = vm,
+                            bgInfoState = graphViewModel.bgInfoState,
+                            iobUiState = graphViewModel.iobUiState,
+                            cobUiState = graphViewModel.cobUiState,
                             onNavigateBack = { navController.popBackStack() },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -682,8 +709,12 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     ) { backStackEntry ->
                         val carbs = backStackEntry.arguments?.getString("carbs")?.toIntOrNull()
                         val notes = backStackEntry.arguments?.getString("notes")
+                        val vm: WizardDialogViewModel = viewModel(
+                            factory = daggerViewModel { wizardDialogViewModel }
+                        )
                         WizardDialogScreen(
-                            viewModel = wizardDialogViewModel,
+                            viewModel = vm,
+                            wizardSettingsDef = builtInSearchables.wizardSettings,
                             initialCarbs = carbs,
                             initialNotes = notes,
                             onNavigateBack = { navController.popBackStack() },
@@ -1140,6 +1171,14 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         }
                     }
 
+                    "wizard_dialog"           -> {
+                        protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                            if (result == ProtectionResult.GRANTED) {
+                                navController.navigate(AppRoute.WizardDialog.createRoute())
+                            }
+                        }
+                    }
+
                     // CareDialog events
                     "care_bgcheck"            -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
                     "care_sensor_insert"      -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.SENSOR_INSERT.ordinal))
@@ -1179,3 +1218,14 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
     }
 
 }
+
+/**
+ * Creates a [ViewModelProvider.Factory] that returns a Dagger-provided ViewModel instance.
+ * Used with [viewModel] composable to scope Dagger-injected ViewModels to NavBackStackEntry,
+ * so they survive configuration changes but are recreated on navigation.
+ */
+@Suppress("UNCHECKED_CAST")
+fun <T : ViewModel> daggerViewModel(provider: () -> T): ViewModelProvider.Factory =
+    object : ViewModelProvider.Factory {
+        override fun <V : ViewModel> create(modelClass: Class<V>): V = provider() as V
+    }

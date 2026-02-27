@@ -69,7 +69,11 @@ class FillDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
+    private var lastPreselect: FillPreselect? = null
+
     fun init(preselect: FillPreselect = FillPreselect.NONE) {
+        if (lastPreselect == preselect) return
+        lastPreselect = preselect
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 

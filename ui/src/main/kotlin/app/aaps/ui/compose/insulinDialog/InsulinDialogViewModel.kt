@@ -81,7 +81,8 @@ class InsulinDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
-    fun init() {
+    // TODO: Migrate to @HiltViewModel with SavedStateHandle to properly scope ViewModel to NavBackStackEntry
+    init {
         val now = dateUtil.now()
         val pump = activePlugin.activePump
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
@@ -232,7 +233,7 @@ class InsulinDialogViewModel @Inject constructor(
 
     fun confirmAndSave() {
         val state = uiState.value
-        val pump = activePlugin.activePump
+        activePlugin.activePump
         val insulin = state.insulin
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
             ConstraintObject(insulin, aapsLogger)

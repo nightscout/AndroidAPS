@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -70,7 +71,13 @@ class WizardDialogViewModel @Inject constructor(
 
     private var wizard: BolusWizard? = null
 
+    // TODO: Migrate to @HiltViewModel with SavedStateHandle — read initialCarbs/initialNotes from
+    //  navigation args in init {} block and remove the initialized guard
+    private var initialized = false
+
     fun init(initialCarbs: Int? = null, initialNotes: String? = null) {
+        if (initialized) return
+        initialized = true
         // Reset state to avoid showing stale results from previous invocation
         uiState.update { WizardDialogUiState() }
         wizard = null
@@ -88,9 +95,8 @@ class WizardDialogViewModel @Inject constructor(
         profileList.addAll(profileStore.getProfileList().map { it.toString() })
 
         // Load saved preferences
-        val useTrend = preferences.get(BooleanKey.WizardIncludeTrend)
-        val useCOB = preferences.get(BooleanKey.WizardIncludeCob)
-        val calcVisible = preferences.get(BooleanKey.WizardCalculationVisible)
+        val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
         val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
         val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
 
@@ -127,12 +133,12 @@ class WizardDialogViewModel @Inject constructor(
                 selectedProfileIndex = 0,
                 // Toggles
                 useBg = true,
-                useTT = false,
+                useTT = true,
                 useTrend = useTrend,
                 useIOB = true,
                 useCOB = useCOB,
                 alarmChecked = false,
-                calculationExpanded = calcVisible,
+                calculationExpanded = false,
                 // Config
                 maxCarbs = maxCarbs,
                 maxBolus = maxBolus,
@@ -143,8 +149,8 @@ class WizardDialogViewModel @Inject constructor(
                 hasTempTarget = tempTarget != null,
                 useBolusAdvisor = useBolusAdvisor,
                 defaultPercentage = percentage,
+                simpleMode = preferences.simpleMode,
                 // BG card
-                bgExpanded = !hasBgData,
                 hasBgData = hasBgData,
                 bgAgeMinutes = bgAgeMinutes,
                 // Initial IOB display
@@ -267,13 +273,25 @@ class WizardDialogViewModel @Inject constructor(
     }
 
     fun toggleCalculationExpanded() {
-        val expanded = !uiState.value.calculationExpanded
-        uiState.update { it.copy(calculationExpanded = expanded) }
-        preferences.put(BooleanKey.WizardCalculationVisible, expanded)
+        uiState.update { it.copy(calculationExpanded = !it.calculationExpanded) }
     }
 
-    fun toggleBgExpanded() {
-        uiState.update { it.copy(bgExpanded = !it.bgExpanded) }
+    fun refreshAfterSettings() {
+        // Re-read preferences that may have changed in settings sheet
+        val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
+        val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
+        val percentage = preferences.get(IntKey.OverviewBolusPercentage)
+        uiState.update {
+            it.copy(
+                useTrend = useTrend,
+                useCOB = useCOB,
+                useBolusAdvisor = useBolusAdvisor,
+                percentage = percentage,
+                defaultPercentage = percentage
+            )
+        }
+        recalculate()
     }
 
     // --- Calculation ---
@@ -445,7 +463,7 @@ class WizardDialogViewModel @Inject constructor(
 
     fun savePreferences() {
         val state = uiState.value
-        preferences.put(BooleanKey.WizardIncludeCob, state.useCOB)
-        preferences.put(BooleanKey.WizardIncludeTrend, state.useTrend)
+        preferences.put(BooleanNonKey.WizardIncludeCob, state.useCOB)
+        preferences.put(BooleanNonKey.WizardIncludeTrend, state.useTrend)
     }
 }

@@ -9,6 +9,7 @@ enum class CarbsType(
     val eCarbsDelayMinutes: Int,
     val eCarbsDurationHours: Int
 ) {
+
     BREAD(carbsPercent = 100, eCarbsPercent = 0, eCarbsDelayMinutes = 0, eCarbsDurationHours = 0),
     CAKE(carbsPercent = 90, eCarbsPercent = 20, eCarbsDelayMinutes = 60, eCarbsDurationHours = 2),
     PIZZA(carbsPercent = 80, eCarbsPercent = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3)
@@ -35,7 +36,6 @@ data class WizardDialogUiState(
     val alarmChecked: Boolean = false,
     val advancedExpanded: Boolean = false,
     val calculationExpanded: Boolean = false,
-    val bgExpanded: Boolean = false,
 
     // Config (set once in init)
     val maxCarbs: Int = 0,
@@ -47,6 +47,7 @@ data class WizardDialogUiState(
     val hasTempTarget: Boolean = false,
     val useBolusAdvisor: Boolean = false,
     val defaultPercentage: Int = 100,
+    val simpleMode: Boolean = false,
 
     // Calculation results (updated on every recalc)
     val insulinFromBG: Double = 0.0,

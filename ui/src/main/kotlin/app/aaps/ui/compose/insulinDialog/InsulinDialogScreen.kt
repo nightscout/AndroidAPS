@@ -35,7 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +56,11 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
+import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.overview.graphs.BgInfoUiState
+import app.aaps.ui.compose.overview.graphs.CobUiState
+import app.aaps.ui.compose.overview.graphs.IobUiState
+import kotlinx.coroutines.flow.StateFlow
 import java.text.DecimalFormat
 import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
@@ -64,15 +69,16 @@ import app.aaps.core.ui.R as CoreUiR
 fun InsulinDialogScreen(
     viewModel: InsulinDialogViewModel,
     insulinButtonsDef: PreferenceSubScreenDef,
+    bgInfoState: StateFlow<BgInfoUiState>,
+    iobUiState: StateFlow<IobUiState>,
+    cobUiState: StateFlow<CobUiState>,
     onNavigateBack: () -> Unit,
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Initialize ViewModel
-    LaunchedEffect(Unit) {
-        viewModel.init()
-    }
+    val bgInfo by bgInfoState.collectAsStateWithLifecycle()
+    val iob by iobUiState.collectAsStateWithLifecycle()
+    val cob by cobUiState.collectAsStateWithLifecycle()
 
     // Observe side effects
     LaunchedEffect(Unit) {
@@ -90,11 +96,11 @@ fun InsulinDialogScreen(
     }
 
     // Dialog states
-    var showConfirmation by remember { mutableStateOf(false) }
-    var showNoAction by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
-    var showButtonSettings by remember { mutableStateOf(false) }
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+    var showButtonSettings by rememberSaveable { mutableStateOf(false) }
 
     // Confirmation dialog
     if (showConfirmation) {
@@ -160,6 +166,9 @@ fun InsulinDialogScreen(
 
     InsulinDialogContent(
         uiState = uiState,
+        bgInfo = bgInfo,
+        iob = iob,
+        cob = cob,
         dateString = viewModel.dateUtil.dateString(uiState.eventTime),
         timeString = viewModel.dateUtil.timeString(uiState.eventTime),
         bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
@@ -183,6 +192,9 @@ fun InsulinDialogScreen(
 @Composable
 private fun InsulinDialogContent(
     uiState: InsulinDialogUiState,
+    bgInfo: BgInfoUiState,
+    iob: IobUiState,
+    cob: CobUiState,
     dateString: String,
     timeString: String,
     bolusFormat: DecimalFormat,
@@ -245,6 +257,9 @@ private fun InsulinDialogContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // --- Status Bar ---
+            DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
+
             // --- Checkboxes Section ---
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 // Eating Soon TT checkbox
@@ -366,6 +381,9 @@ private fun InsulinDialogScreenPreview() {
                 insulinButtonIncrement3 = 2.0,
                 showNotesFromPreferences = true
             ),
+            bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
+            iob = IobUiState(),
+            cob = CobUiState(),
             dateString = "25/02/2026",
             timeString = "14:30",
             bolusFormat = DecimalFormat("0.0"),
