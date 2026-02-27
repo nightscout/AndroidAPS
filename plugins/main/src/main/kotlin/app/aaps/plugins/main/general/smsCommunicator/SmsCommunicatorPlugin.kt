@@ -80,6 +80,8 @@ import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
+import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorComposeContent
+import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.main.general.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
@@ -134,6 +136,12 @@ class SmsCommunicatorPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
+        .composeContent { plugin ->
+            SmsCommunicatorComposeContent(
+                repository = (plugin as SmsCommunicatorPlugin).repository,
+                dateUtil = dateUtil
+            )
+        }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)
         .icon(IcPluginSms)
         .pluginName(R.string.smscommunicator)
@@ -149,6 +157,12 @@ class SmsCommunicatorPlugin @Inject constructor(
     @Volatile var messageToConfirm: AuthRequest? = null
     @Volatile var lastRemoteBolusTime: Long = 0
     override var messages = ArrayList<Sms>()
+    val repository = SmsCommunicatorRepository()
+
+    private fun notifyMessagesChanged() {
+        repository.updateMessages(messages)
+        rxBus.send(EventSmsCommunicatorUpdateGui())
+    }
 
     private val commands = mapOf(
         "BG" to "BG",
@@ -273,7 +287,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             aapsLogger.debug(LTag.SMS, "Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed")
             receivedSms.ignored = true
             messages.add(receivedSms)
-            rxBus.send(EventSmsCommunicatorUpdateGui())
+            notifyMessagesChanged()
             return
         }
         messages.add(receivedSms)
@@ -369,7 +383,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     }
             }
         }
-        rxBus.send(EventSmsCommunicatorUpdateGui())
+        notifyMessagesChanged()
     }
 
     private fun processBG(receivedSms: Sms) {
@@ -385,13 +399,11 @@ class SmsCommunicatorPlugin @Inject constructor(
             reply = rh.gs(R.string.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated) + " " + rh.gs(R.string.sms_min_ago, agoMin) + ", "
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        if (glucoseStatus != null) reply += rh.gs(R.string.sms_delta) + " " + profileUtil.fromMgdlToUnits(glucoseStatus.delta) + " " + units + ", "
+        if (glucoseStatus != null) reply += rh.gs(R.string.sms_delta) + " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta) + " " + units + ", "
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val cobInfo = iobCobCalculator.getCobInfo("SMS COB")
-        reply += (rh.gs(R.string.sms_iob) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-            + rh.gs(R.string.sms_bolus) + " " + decimalFormatter.to2Decimal(bolusIob.iob) + "U "
-            + rh.gs(R.string.sms_basal) + " " + decimalFormatter.to2Decimal(basalIob.basaliob) + "U), "
+        reply += (rh.gs(R.string.sms_iob) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U, "
             + rh.gs(app.aaps.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString(decimalFormatter))
         sendSMS(Sms(receivedSms.phoneNumber, reply))
         receivedSms.processed = true
@@ -1286,7 +1298,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             // This should open Permissions bottom sheet when permission is missing
             return false
         }
-        rxBus.send(EventSmsCommunicatorUpdateGui())
+        notifyMessagesChanged()
         return true
     }
 

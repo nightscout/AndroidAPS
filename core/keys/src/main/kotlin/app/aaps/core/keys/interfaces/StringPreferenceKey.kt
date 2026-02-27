@@ -10,6 +10,14 @@ interface StringPreferenceKey : PreferenceKey, StringNonPreferenceKey {
     val isPin: Boolean
 
     /**
+     * Whether the value should be hashed before storing.
+     * When true, [hashPassword] is applied before persisting.
+     * When false, the value is stored as plaintext (even if [isPassword] masks the UI).
+     */
+    val isHashed: Boolean
+        get() = false
+
+    /**
      * Entries for LIST type preferences.
      * Map of stored value -> label resource ID.
      * Empty map means no entries (not a list preference).

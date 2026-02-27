@@ -42,6 +42,8 @@ dependencies {
     api(libs.androidx.compose.material.icons.extended)
     api(libs.androidx.compose.foundation)
     api(libs.androidx.lifecycle.runtime.compose)
+    api(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Actions
     api(libs.androidx.gridlayout)

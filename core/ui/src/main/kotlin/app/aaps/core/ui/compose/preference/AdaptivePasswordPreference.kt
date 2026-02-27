@@ -101,7 +101,7 @@ fun AdaptivePasswordPreferenceItem(
                     }
 
                     password1.isNotEmpty() -> {
-                        preferences.put(stringKey, hashPassword(password1))
+                        preferences.put(stringKey, if (stringKey.isHashed) hashPassword(password1) else password1)
                         scope.launch { snackbarHostState?.showSnackbar(setMsg) }
                         hasValue = true
                         showDialog = false

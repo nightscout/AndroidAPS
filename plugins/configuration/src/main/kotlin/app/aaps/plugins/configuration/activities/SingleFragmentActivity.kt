@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
+import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -40,6 +41,8 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.preference.LocalCheckPassword
+import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.configuration.R
@@ -53,6 +56,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var config: Config
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var visibilityContext: PreferenceVisibilityContext
+    @Inject lateinit var cryptoUtil: CryptoUtil
 
     private var plugin: PluginBase? = null
 
@@ -130,7 +134,9 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
                 LocalPreferences provides preferences,
                 LocalRxBus provides rxBus,
                 LocalConfig provides config,
-                LocalProfileUtil provides profileUtil
+                LocalProfileUtil provides profileUtil,
+                LocalCheckPassword provides cryptoUtil::checkPassword,
+                LocalHashPassword provides cryptoUtil::hashPassword
             ) {
                 AapsTheme {
                     if (showingComposePreferences) {

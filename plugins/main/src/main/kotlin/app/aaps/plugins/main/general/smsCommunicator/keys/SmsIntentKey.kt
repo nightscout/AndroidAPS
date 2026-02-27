@@ -5,7 +5,7 @@ import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
+import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpComposeActivity
 
 enum class SmsIntentKey(
     override val key: String,
@@ -27,7 +27,7 @@ enum class SmsIntentKey(
         key = "smscommunicator_otp_setup",
         titleResId = R.string.smscommunicator_tab_otp_label,
         preferenceType = PreferenceType.ACTIVITY,
-        activityClass = SmsCommunicatorOtpActivity::class.java,
+        activityClass = SmsCommunicatorOtpComposeActivity::class.java,
         dependency = BooleanKey.SmsAllowRemoteCommands
     )
 }

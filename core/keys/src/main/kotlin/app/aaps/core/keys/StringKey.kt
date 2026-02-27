@@ -22,6 +22,7 @@ enum class StringKey(
     override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
     override val isPin: Boolean = false,
+    override val isHashed: Boolean = false,
     override val exportable: Boolean = true,
     override val validator: StringValidator = StringValidator.NONE,
     override val visibility: PreferenceVisibility = PreferenceVisibility.ALWAYS,
@@ -97,29 +98,29 @@ enum class StringKey(
 
     AapsDirectoryUri(key = "aaps_directory", defaultValue = "", titleResId = R.string.pref_title_aaps_directory),
 
-    ProtectionMasterPassword(key = "master_password", defaultValue = "", titleResId = R.string.pref_title_master_password, isPassword = true),
+    ProtectionMasterPassword(key = "master_password", defaultValue = "", titleResId = R.string.pref_title_master_password, isPassword = true, isHashed = true),
     ProtectionSettingsPassword(
-        key = "settings_password", defaultValue = "", titleResId = R.string.pref_title_settings_password, isPassword = true,
+        key = "settings_password", defaultValue = "", titleResId = R.string.pref_title_settings_password, isPassword = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeSettings, ProtectionType.CUSTOM_PASSWORD.ordinal)
     ),
     ProtectionSettingsPin(
-        key = "settings_pin", defaultValue = "", titleResId = R.string.pref_title_settings_pin, isPin = true,
+        key = "settings_pin", defaultValue = "", titleResId = R.string.pref_title_settings_pin, isPin = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeSettings, ProtectionType.CUSTOM_PIN.ordinal)
     ),
     ProtectionApplicationPassword(
-        key = "application_password", defaultValue = "", titleResId = R.string.pref_title_application_password, isPassword = true,
+        key = "application_password", defaultValue = "", titleResId = R.string.pref_title_application_password, isPassword = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeApplication, ProtectionType.CUSTOM_PASSWORD.ordinal)
     ),
     ProtectionApplicationPin(
-        key = "application_pin", defaultValue = "", titleResId = R.string.pref_title_application_pin, isPin = true,
+        key = "application_pin", defaultValue = "", titleResId = R.string.pref_title_application_pin, isPin = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeApplication, ProtectionType.CUSTOM_PIN.ordinal)
     ),
     ProtectionBolusPassword(
-        key = "bolus_password", defaultValue = "", titleResId = R.string.pref_title_bolus_password, isPassword = true,
+        key = "bolus_password", defaultValue = "", titleResId = R.string.pref_title_bolus_password, isPassword = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeBolus, ProtectionType.CUSTOM_PASSWORD.ordinal)
     ),
     ProtectionBolusPin(
-        key = "bolus_pin", defaultValue = "", titleResId = R.string.pref_title_bolus_pin, isPin = true,
+        key = "bolus_pin", defaultValue = "", titleResId = R.string.pref_title_bolus_pin, isPin = true, isHashed = true,
         visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeBolus, ProtectionType.CUSTOM_PIN.ordinal)
     ),
 
