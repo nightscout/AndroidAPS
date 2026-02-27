@@ -2,8 +2,8 @@ package app.aaps.pump.omnipod.dash.driver.comm.pair
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
-import app.aaps.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
+import app.aaps.pump.omnipod.common.bledriver.pod.util.RandomByteGenerator
+import app.aaps.pump.omnipod.common.bledriver.pod.util.X25519KeyGenerator
 import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

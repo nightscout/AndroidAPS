@@ -1,6 +1,6 @@
 package app.aaps.pump.omnipod.dash.driver.pod.command
 
-import app.aaps.pump.omnipod.dash.driver.pod.response.ResponseType
+import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import com.google.common.truth.Truth.assertThat
 import org.apache.commons.codec.binary.Hex
 import org.junit.jupiter.api.Test

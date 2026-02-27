@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.ui.wizard.deactivation.viewmodel.action.DeactivatePodViewModel
-import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 import javax.inject.Provider

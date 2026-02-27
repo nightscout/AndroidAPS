@@ -1,8 +1,8 @@
 package app.aaps.pump.omnipod.dash.driver.comm.message
 
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
-import app.aaps.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
+import app.aaps.pump.omnipod.common.bledriver.comm.packet.PayloadJoiner
+import app.aaps.pump.omnipod.common.bledriver.comm.packet.PayloadSplitter
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import java.util.Random

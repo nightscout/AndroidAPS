@@ -2,12 +2,12 @@ package app.aaps.pump.omnipod.dash.di
 
 import app.aaps.pump.omnipod.common.di.ActivityScope
 import app.aaps.pump.omnipod.common.di.OmnipodWizardModule
-import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
-import app.aaps.pump.omnipod.dash.driver.OmnipodDashManagerImpl
-import app.aaps.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
-import app.aaps.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
-import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManagerImpl
+import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManager
+import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManagerImpl
+import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManager
+import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManagerImpl
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManagerImpl
 import app.aaps.pump.omnipod.dash.ui.DashPodHistoryActivity
 import app.aaps.pump.omnipod.dash.ui.DashPodManagementActivity
 import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment

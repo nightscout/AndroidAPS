@@ -3,7 +3,7 @@ package app.aaps.pump.omnipod.dash.util
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import kotlin.math.roundToInt
 
 fun mapProfileToBasalProgram(profile: Profile): BasalProgram {
