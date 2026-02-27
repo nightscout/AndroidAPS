@@ -6,7 +6,7 @@ import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.plugins.sync.nsShared.mvvm.NSClientMvvmRepositoryImpl
+import app.aaps.plugins.sync.nsShared.compose.NSClientMvvmRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service

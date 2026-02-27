@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.nsShared
+package app.aaps.plugins.sync.nsShared.compose
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +52,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsShared.mvvm.NSClientViewModel
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 

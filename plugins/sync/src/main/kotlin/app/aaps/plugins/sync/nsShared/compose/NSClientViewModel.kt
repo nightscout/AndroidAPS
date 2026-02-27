@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.nsShared.mvvm
+package app.aaps.plugins.sync.nsShared.compose
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.R
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +43,7 @@ class NSClientViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             nsClientMvvmRepository.queueSize.collect { size ->
-                val queueText = if (size >= 0) size.toString() else rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+                val queueText = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
                 uiState.update { it.copy(queue = queueText) }
             }
         }

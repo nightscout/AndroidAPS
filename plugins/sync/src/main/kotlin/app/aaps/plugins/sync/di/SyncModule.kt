@@ -14,8 +14,8 @@ import app.aaps.plugins.sync.garmin.LoopHub
 import app.aaps.plugins.sync.garmin.LoopHubImpl
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
-import app.aaps.plugins.sync.nsShared.mvvm.NSClientMvvmRepositoryImpl
-import app.aaps.plugins.sync.nsShared.mvvm.NSClientViewModel
+import app.aaps.plugins.sync.nsShared.compose.NSClientMvvmRepositoryImpl
+import app.aaps.plugins.sync.nsShared.compose.NSClientViewModel
 import app.aaps.plugins.sync.nsclient.data.NSSettingsStatusImpl
 import app.aaps.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
 import app.aaps.plugins.sync.nsclient.services.NSClientService

@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.nsShared
+package app.aaps.plugins.sync.nsShared.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,7 +23,6 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsShared.mvvm.NSClientViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

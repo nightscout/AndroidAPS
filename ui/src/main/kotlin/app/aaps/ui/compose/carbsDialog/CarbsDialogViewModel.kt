@@ -52,7 +52,7 @@ class CarbsDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val profileUtil: ProfileUtil,
     private val iobCobCalculator: IobCobCalculator,
-    private val glucoseStatusProvider: GlucoseStatusProvider,
+    glucoseStatusProvider: GlucoseStatusProvider,
     private val uel: UserEntryLogger,
     private val automation: Automation,
     private val commandQueue: CommandQueue,
