@@ -35,7 +35,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -1305,7 +1305,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                     if (!commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                         // we are late-confirming this command. before that, we answered with success:false
-                        rxBus.send(EventProfileSwitchChanged())
+                        rxBus.send(EventProfileChangeRequested())
                     }
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,

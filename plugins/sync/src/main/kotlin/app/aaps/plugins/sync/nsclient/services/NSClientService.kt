@@ -9,8 +9,14 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.work.OneTimeWorkRequest
+import app.aaps.core.data.model.DS
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T.Companion.mins
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -22,21 +28,13 @@ import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
-import app.aaps.core.interfaces.rx.events.EventDeviceStatusChange
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
-import app.aaps.core.interfaces.rx.events.EventRunningModeChange
-import app.aaps.core.interfaces.rx.events.EventTempTargetChange
-import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
@@ -64,8 +62,6 @@ import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
@@ -73,6 +69,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
@@ -85,13 +85,11 @@ import javax.inject.Inject
 class NSClientService : DaggerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
@@ -102,6 +100,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var storeDataForDb: StoreDataForDb
     @Inject lateinit var nsClientRepository: NSClientRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     companion object {
 
@@ -110,7 +109,6 @@ class NSClientService : DaggerService() {
         private const val WATCHDOG_MAX_CONNECTIONS = 5
     }
 
-    private val disposable = CompositeDisposable()
     private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -138,90 +136,62 @@ class NSClientService : DaggerService() {
         wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
         wakeLock?.acquire()
         initialize()
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           if (nsEnabled != nsClientPlugin.isEnabled()) {
-                               latestDateInReceivedData = 0
-                               destroy()
-                               initialize()
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange ->
-                           if (event.isChanged(StringKey.NsClientUrl.key) ||
-                               event.isChanged(StringKey.NsClientApiSecret.key) ||
-                               event.isChanged(NsclientBooleanKey.NsPaused.key)
-                           ) {
-                               latestDateInReceivedData = 0
-                               destroy()
-                               initialize()
-                               nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventConnectivityOptionChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           latestDateInReceivedData = 0
-                           destroy()
-                           initialize()
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.NSCLIENT, "EventAppExit received")
-                           destroy()
-                           stopSelf()
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNSClientRestart::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           latestDateInReceivedData = 0
-                           restart()
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(NSAuthAck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ack -> processAuthAck(ack) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNewHistoryData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("NEW_DATA") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventDeviceStatusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("EventDeviceStatusChange") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempTargetChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("EventTempTargetChange") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("EventProfileSwitchChanged") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTherapyEventChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("EventTherapyEventChange") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventRunningModeChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("EventOfflineChange") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventProfileStoreChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resend("EventProfileStoreChanged") }, fabricPrivacy::logException)
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        rxBus.toFlow(EventConfigBuilderChange::class.java)
+            .onEach {
+                if (nsEnabled != nsClientPlugin.isEnabled()) {
+                    latestDateInReceivedData = 0
+                    destroy()
+                    initialize()
+                }
+            }.launchIn(scope)
+        val restartOnChange: suspend (Any) -> Unit = {
+            latestDateInReceivedData = 0
+            destroy()
+            initialize()
+            nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
+        }
+        preferences.observe(StringKey.NsClientUrl).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(StringKey.NsClientApiSecret).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(NsclientBooleanKey.NsPaused).drop(1).onEach(restartOnChange).launchIn(scope)
+        rxBus.toFlow(EventConnectivityOptionChanged::class.java)
+            .onEach {
+                latestDateInReceivedData = 0
+                destroy()
+                initialize()
+            }.launchIn(scope)
+        rxBus.toFlow(EventAppExit::class.java)
+            .onEach {
+                aapsLogger.debug(LTag.NSCLIENT, "EventAppExit received")
+                destroy()
+                stopSelf()
+            }.launchIn(scope)
+        rxBus.toFlow(EventNSClientRestart::class.java)
+            .onEach {
+                latestDateInReceivedData = 0
+                restart()
+            }.launchIn(scope)
+        rxBus.toFlow(NSAuthAck::class.java)
+            .onEach { ack -> processAuthAck(ack) }.launchIn(scope)
+        rxBus.toFlow(EventNewHistoryData::class.java)
+            .onEach { resend("NEW_DATA") }.launchIn(scope)
+        persistenceLayer.observeChanges(DS::class.java)
+            .onEach { resend("EventDeviceStatusChange") }.launchIn(scope)
+        persistenceLayer.observeChanges(TT::class.java)
+            .onEach { resend("EventTempTargetChange") }.launchIn(scope)
+        persistenceLayer.observeChanges(PS::class.java)
+            .onEach { resend("EventProfileSwitchChanged") }.launchIn(scope)
+        persistenceLayer.observeChanges(TE::class.java)
+            .onEach { resend("EventTherapyEventChange") }.launchIn(scope)
+        persistenceLayer.observeChanges(RM::class.java)
+            .onEach { resend("EventOfflineChange") }.launchIn(scope)
+        rxBus.toFlow(EventProfileStoreChanged::class.java)
+            .onEach { resend("EventProfileStoreChanged") }.launchIn(scope)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
+        scope.cancel()
         handler.removeCallbacksAndMessages(null)
         handler.looper.quitSafely()
         if (wakeLock?.isHeld == true) wakeLock?.release()

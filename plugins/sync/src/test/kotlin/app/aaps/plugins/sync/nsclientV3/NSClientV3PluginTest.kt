@@ -43,6 +43,7 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.BeforeEach
@@ -80,12 +81,13 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
         whenever(activePlugin.activeInsulin).thenReturn(insulin)
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)
         sut =
             NSClientV3Plugin(
-                aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
+                aapsLogger, rh, preferences, rxBus, context,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
             )

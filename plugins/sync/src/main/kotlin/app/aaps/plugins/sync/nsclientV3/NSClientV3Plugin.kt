@@ -16,7 +16,12 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -33,25 +38,18 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventDeviceStatusChange
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
-import app.aaps.core.interfaces.rx.events.EventRunningModeChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
-import app.aaps.core.interfaces.rx.events.EventTempTargetChange
-import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
@@ -98,8 +96,13 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
@@ -112,10 +115,8 @@ class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -164,7 +165,7 @@ class NSClientV3Plugin @Inject constructor(
         const val RECORDS_TO_LOAD = 500
     }
 
-    private val disposable = CompositeDisposable()
+    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private lateinit var runLoop: Runnable
     private var handler: Handler? = null
     override val dataSyncSelector: DataSyncSelector get() = dataSyncSelectorV3
@@ -232,77 +233,54 @@ class NSClientV3Plugin @Inject constructor(
         setClient()
 
         receiverDelegate.grabReceiversState()
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           stopService()
-                           WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventConnectivityOptionChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev ->
-                           nsClientRepository.addLog("● CONNECTIVITY", ev.blockingReason)
-                           nsClientV3Service?.let { service ->
-                               if (ev.connected) {
-                                   when {
-                                       isAllowed && service.storageSocket == null  -> setClient() // socket must be created
-                                       !isAllowed && service.storageSocket != null -> stopService()
-                                   }
-                                   if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
-                               }
-                           }
-                           nsClientRepository.updateStatus(status)
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev ->
-                           if (ev.isChanged(StringKey.NsClientAccessToken.key) ||
-                               ev.isChanged(StringKey.NsClientUrl.key) ||
-                               ev.isChanged(BooleanKey.NsClient3UseWs.key) ||
-                               ev.isChanged(NsclientBooleanKey.NsPaused.key) ||
-                               ev.isChanged(BooleanKey.NsClientNotificationsFromAlarms.key) ||
-                               ev.isChanged(BooleanKey.NsClientNotificationsFromAnnouncements.key)
-                           ) {
-                               stopService()
-                               nsAndroidClient = null
-                               setClient()
-                               nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
-                           }
-                           if (ev.isChanged(LongNonKey.LocalProfileLastChange.key))
-                               executeUpload("PROFILE_CHANGE", forceNew = true)
-
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNewHistoryData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("NEW_DATA", forceNew = false) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempTargetChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventTempTargetChange", forceNew = false) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventProfileSwitchChanged", forceNew = false) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventDeviceStatusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventDeviceStatusChange", forceNew = false) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTherapyEventChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventTherapyEventChange", forceNew = false) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventRunningModeChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventRunningModeChange", forceNew = false) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventProfileStoreChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ executeUpload("EventProfileStoreChanged", forceNew = false) }, fabricPrivacy::logException)
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        rxBus.toFlow(EventAppExit::class.java)
+            .onEach {
+                stopService()
+                WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+            }.launchIn(scope)
+        rxBus.toFlow(EventConnectivityOptionChanged::class.java)
+            .onEach { ev ->
+                nsClientRepository.addLog("● CONNECTIVITY", ev.blockingReason)
+                nsClientV3Service?.let { service ->
+                    if (ev.connected) {
+                        when {
+                            isAllowed && service.storageSocket == null  -> setClient() // socket must be created
+                            !isAllowed && service.storageSocket != null -> stopService()
+                        }
+                        if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
+                    }
+                }
+                nsClientRepository.updateStatus(status)
+            }.launchIn(scope)
+        val restartOnChange: suspend (Any) -> Unit = {
+            stopService()
+            nsAndroidClient = null
+            setClient()
+            nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
+        }
+        preferences.observe(StringKey.NsClientAccessToken).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(StringKey.NsClientUrl).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(BooleanKey.NsClient3UseWs).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(NsclientBooleanKey.NsPaused).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(BooleanKey.NsClientNotificationsFromAlarms).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(BooleanKey.NsClientNotificationsFromAnnouncements).drop(1).onEach(restartOnChange).launchIn(scope)
+        preferences.observe(LongNonKey.LocalProfileLastChange).drop(1)
+            .onEach { executeUpload("PROFILE_CHANGE", forceNew = true) }.launchIn(scope)
+        rxBus.toFlow(EventNewHistoryData::class.java)
+            .onEach { executeUpload("NEW_DATA", forceNew = false) }.launchIn(scope)
+        persistenceLayer.observeChanges(TT::class.java)
+            .onEach { executeUpload("EventTempTargetChange", forceNew = false) }.launchIn(scope)
+        persistenceLayer.observeChanges(PS::class.java)
+            .onEach { executeUpload("EventProfileSwitchChanged", forceNew = false) }.launchIn(scope)
+        persistenceLayer.observeChanges(DS::class.java)
+            .onEach { executeUpload("EventDeviceStatusChange", forceNew = false) }.launchIn(scope)
+        persistenceLayer.observeChanges(TE::class.java)
+            .onEach { executeUpload("EventTherapyEventChange", forceNew = false) }.launchIn(scope)
+        persistenceLayer.observeChanges(RM::class.java)
+            .onEach { executeUpload("EventRunningModeChange", forceNew = false) }.launchIn(scope)
+        rxBus.toFlow(EventProfileStoreChanged::class.java)
+            .onEach { executeUpload("EventProfileStoreChanged", forceNew = false) }.launchIn(scope)
 
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
@@ -345,7 +323,7 @@ class NSClientV3Plugin @Inject constructor(
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()
         handler = null
-        disposable.clear()
+        scope.cancel()
         stopService()
         super.onStop()
     }

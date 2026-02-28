@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.keys.LongNonKey
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
@@ -106,7 +106,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.checkPump()
 
         // Assert
-        verify(mockedRxBus).send(any<EventProfileSwitchChanged>())
+        verify(mockedRxBus).send(any<EventProfileChangeRequested>())
     }
 
     @Test
@@ -121,7 +121,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(commandQueue, never()).readStatus(any(), anyOrNull())
-        verify(mockedRxBus, never()).send(any<EventProfileSwitchChanged>())
+        verify(mockedRxBus, never()).send(any<EventProfileChangeRequested>())
     }
 
     @Test

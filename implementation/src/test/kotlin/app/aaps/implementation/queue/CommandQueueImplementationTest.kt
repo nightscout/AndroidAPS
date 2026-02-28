@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -48,6 +47,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -79,7 +79,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         injector: HasAndroidInjector,
         aapsLogger: AAPSLogger,
         rxBus: RxBus,
-        aapsSchedulers: AapsSchedulers,
         rh: ResourceHelper,
         constraintChecker: ConstraintsChecker,
         profileFunction: ProfileFunction,
@@ -97,7 +96,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         workManager: WorkManager,
         appScope: CoroutineScope
     ) : CommandQueueImplementation(
-        injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
+        injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, context, config, dateUtil, fabricPrivacy,
         uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, appScope
     ) {
@@ -192,8 +191,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         runTest {
+            whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
             commandQueue = CommandQueueMocked(
-                injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction, activePlugin, context,
+                injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, context,
                 config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope
             )
             testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -238,7 +238,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun commandIsPickedUp() {
         commandQueue = CommandQueueImplementation(
-            injector, aapsLogger, rxBus, aapsSchedulers, rh,
+            injector, aapsLogger, rxBus, rh,
             constraintChecker, profileFunction, activePlugin, context,
             config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope
         )

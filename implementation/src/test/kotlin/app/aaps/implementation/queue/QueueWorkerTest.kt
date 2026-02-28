@@ -16,6 +16,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -62,8 +63,9 @@ class QueueWorkerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         commandQueue = CommandQueueImplementation(
-            injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
+            injector, aapsLogger, rxBus, rh, constraintChecker,
             profileFunction, activePlugin, context, config, dateUtil, fabricPrivacy,
             uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope
         )

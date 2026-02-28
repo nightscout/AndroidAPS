@@ -33,13 +33,14 @@ import app.aaps.database.AppRepository
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.RunningMode
+import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -191,6 +192,9 @@ class PersistenceLayerImpl @Inject constructor(
                 .map { list -> list.map { it.fromDb() } }
 
             RM::class.java -> repository.changesOfType<RunningMode>()
+                .map { list -> list.map { it.fromDb() } }
+
+            DS::class.java -> repository.changesOfType<DeviceStatus>()
                 .map { list -> list.map { it.fromDb() } }
 
             HR::class.java -> repository.changesOfType<HeartRate>()

@@ -82,9 +82,9 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
     fun setUp() {
         whenever(nsClientSource.isEnabled()).thenReturn(true)
         dataWorkerStorage = DataWorkerStorage(context)
-        receiverDelegate = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore, aapsSchedulers, fabricPrivacy)
+        receiverDelegate = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
+            aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
         )

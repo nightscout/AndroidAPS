@@ -14,6 +14,7 @@ import androidx.work.WorkManager
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
@@ -37,11 +38,10 @@ import app.aaps.core.interfaces.queue.Command.CommandType
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -73,13 +73,13 @@ import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.implementation.queue.commands.CommandUpdateTime
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.LinkedList
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -90,7 +90,6 @@ class CommandQueueImplementation @Inject constructor(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    aapsSchedulers: AapsSchedulers,
     private val rh: ResourceHelper,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
@@ -109,7 +108,6 @@ class CommandQueueImplementation @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope
 ) : CommandQueue {
 
-    private val disposable = CompositeDisposable()
     internal var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val queue = LinkedList<Command>()
@@ -118,49 +116,50 @@ class CommandQueueImplementation @Inject constructor(
     @Volatile var performing: Command? = null
 
     init {
-        disposable += rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .throttleLatest(3L, TimeUnit.SECONDS)
-            .subscribe({
-                           if (config.AAPSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
-                               return@subscribe
-                           }
-                           aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")
-                           profileFunction.getRequestedProfile()?.let {
-                               setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null, object : Callback() {
-                                   override fun run() {
-                                       if (!result.success) {
-                                           uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), app.aaps.core.ui.R.raw.boluserror)
-                                       } else /* if (result.enacted || effective != null && effective.originalEnd < dateUtil.now() && effective.originalDuration != 0L) */ {
-                                           // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
-                                           val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
-                                           EPS(
-                                               timestamp = dateUtil.now(),
-                                               basalBlocks = nonCustomized.basalBlocks,
-                                               isfBlocks = nonCustomized.isfBlocks,
-                                               icBlocks = nonCustomized.icBlocks,
-                                               targetBlocks = nonCustomized.targetBlocks,
-                                               glucoseUnit = it.glucoseUnit,
-                                               originalProfileName = it.profileName,
-                                               originalCustomizedName = it.getCustomizedName(decimalFormatter),
-                                               originalTimeshift = it.timeshift,
-                                               originalPercentage = it.percentage,
-                                               originalDuration = it.duration,
-                                               originalEnd = it.end,
-                                               iCfg = it.iCfg
-                                           ).also { eps ->
-                                               appScope.launch { persistenceLayer.insertEffectiveProfileSwitch(eps) }
-                                           }
-                                       }
-                                   }
-                               })
-                           }
-                       }, fabricPrivacy::logException)
+        merge(
+            rxBus.toFlow(EventProfileChangeRequested::class.java),
+            persistenceLayer.observeChanges(PS::class.java)
+        )
+            .onEach { onProfileChanged() }
+            .launchIn(appScope)
         /*
          * Clear old WorkManager jobs, because they survive restart
          */
         workManager.cancelUniqueWork(jobName.name)
+    }
+
+    private fun onProfileChanged() {
+        if (config.AAPSCLIENT) return // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
+        aapsLogger.debug(LTag.PROFILE, "onProfileChanged")
+        profileFunction.getRequestedProfile()?.let {
+            setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null, object : Callback() {
+                override fun run() {
+                    if (!result.success) {
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), app.aaps.core.ui.R.raw.boluserror)
+                    } else /* if (result.enacted || effective != null && effective.originalEnd < dateUtil.now() && effective.originalDuration != 0L) */ {
+                        // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
+                        val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
+                        EPS(
+                            timestamp = dateUtil.now(),
+                            basalBlocks = nonCustomized.basalBlocks,
+                            isfBlocks = nonCustomized.isfBlocks,
+                            icBlocks = nonCustomized.icBlocks,
+                            targetBlocks = nonCustomized.targetBlocks,
+                            glucoseUnit = it.glucoseUnit,
+                            originalProfileName = it.profileName,
+                            originalCustomizedName = it.getCustomizedName(decimalFormatter),
+                            originalTimeshift = it.timeshift,
+                            originalPercentage = it.percentage,
+                            originalDuration = it.duration,
+                            originalEnd = it.end,
+                            iCfg = it.iCfg
+                        ).also { eps ->
+                            appScope.launch { persistenceLayer.insertEffectiveProfileSwitch(eps) }
+                        }
+                    }
+                }
+            })
+        }
     }
 
     private fun executingNowError(): PumpEnactResult =

@@ -28,7 +28,13 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
@@ -52,6 +58,7 @@ import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -197,6 +204,12 @@ open class TestBaseWithProfile : TestBase() {
         whenever(dateUtil.now()).thenReturn(now)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
         whenever(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
+        whenever(preferences.observe(any<BooleanNonPreferenceKey>())).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(any<StringNonPreferenceKey>())).thenReturn(MutableStateFlow(""))
+        whenever(preferences.observe(any<DoubleNonPreferenceKey>())).thenReturn(MutableStateFlow(0.0))
+        whenever(preferences.observe(any<UnitDoublePreferenceKey>())).thenReturn(MutableStateFlow(0.0))
+        whenever(preferences.observe(any<IntNonPreferenceKey>())).thenReturn(MutableStateFlow(0))
+        whenever(preferences.observe(any<LongNonPreferenceKey>())).thenReturn(MutableStateFlow(0L))
         deltaCalculator = DeltaCalculator(aapsLogger)
         apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider) }
         hardLimits = HardLimitsMock(preferences, rh)

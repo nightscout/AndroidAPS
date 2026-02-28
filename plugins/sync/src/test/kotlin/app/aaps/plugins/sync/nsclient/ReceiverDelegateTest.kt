@@ -4,7 +4,6 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventChargingState
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -19,15 +18,13 @@ class ReceiverDelegateTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var fabricPrivacy: FabricPrivacy
-
     @Mock private lateinit var receiverStatusStore: ReceiverStatusStore
     private lateinit var sut: ReceiverDelegate
 
     @BeforeEach
     fun prepare() {
         //receiverStatusStore = ReceiverStatusStore(context, rxBus)
-        sut = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore, aapsSchedulers, fabricPrivacy)
+        sut = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore)
     }
 
     @Test

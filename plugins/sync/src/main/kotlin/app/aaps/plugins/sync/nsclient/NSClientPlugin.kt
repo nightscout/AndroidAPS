@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -31,7 +30,6 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -51,19 +49,21 @@ import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NSClientPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     rh: ResourceHelper,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val dataSyncSelectorV1: DataSyncSelectorV1,
@@ -102,7 +102,7 @@ class NSClientPlugin @Inject constructor(
     aapsLogger, rh
 ) {
 
-    private val disposable = CompositeDisposable()
+    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     override val dataSyncSelector: DataSyncSelector get() = dataSyncSelectorV1
     override var status = ""
     var nsClientService: NSClientService? = null
@@ -115,16 +115,16 @@ class NSClientPlugin @Inject constructor(
         context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
         receiverDelegate.grabReceiversState()
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        rxBus.toFlow(EventAppExit::class.java)
+            .onEach { if (nsClientService != null) context.unbindService(mConnection) }
+            .launchIn(scope)
     }
 
     override fun onStop() {
         nsClientService?.destroy()
         if (nsClientService != null) context.unbindService(mConnection)
-        disposable.clear()
+        scope.cancel()
         super.onStop()
     }
 

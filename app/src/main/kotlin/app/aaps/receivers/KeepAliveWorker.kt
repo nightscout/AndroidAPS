@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.LongNonKey
@@ -223,7 +223,7 @@ class KeepAliveWorker(
                     && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)
                 )
         ) {
-            rxBus.send(EventProfileSwitchChanged())
+            rxBus.send(EventProfileChangeRequested())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = now
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_status_outdated), null)
