@@ -2,7 +2,7 @@ package app.aaps.pump.omnipod.common.bledriver.comm.message
 
 import app.aaps.pump.omnipod.common.bledriver.comm.Id
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.CouldNotParseMessageException
-import app.aaps.pump.omnipod.dash.util.Flag
+import app.aaps.pump.omnipod.common.bledriver.util.Flag
 import java.nio.ByteBuffer
 
 /***

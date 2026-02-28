@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver.comm.message
+package app.aaps.pump.omnipod.common.bledriver.comm.message
 
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.common.bledriver.comm.packet.PayloadJoiner

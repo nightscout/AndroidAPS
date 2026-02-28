@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
+import app.aaps.pump.omnipod.common.EventOmnipodDashPumpValuesChanged
 import app.aaps.pump.omnipod.common.bledriver.comm.Id
 import app.aaps.pump.omnipod.common.bledriver.comm.pair.PairResult
 import app.aaps.pump.omnipod.common.bledriver.comm.session.EapSqn
@@ -23,7 +23,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.AlarmStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
-import app.aaps.pump.omnipod.dash.keys.DashStringNonPreferenceKey
+import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe

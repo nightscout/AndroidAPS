@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver.pod.command
+package app.aaps.pump.omnipod.common.bledriver.pod.command
 
 import com.google.common.truth.Truth.assertThat
 import org.apache.commons.codec.binary.Hex

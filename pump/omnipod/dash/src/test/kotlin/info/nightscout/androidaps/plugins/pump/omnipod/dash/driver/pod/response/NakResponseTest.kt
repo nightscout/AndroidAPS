@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver.pod.response
+package app.aaps.pump.omnipod.common.bledriver.pod.response
 
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.NakErrorType

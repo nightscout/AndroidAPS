@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash
+package app.aaps.pump.omnipod.common
 
 import app.aaps.core.interfaces.rx.events.Event
 

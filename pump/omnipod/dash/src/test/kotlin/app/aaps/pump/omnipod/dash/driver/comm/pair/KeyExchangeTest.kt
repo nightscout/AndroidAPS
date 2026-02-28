@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver.comm.pair
+package app.aaps.pump.omnipod.common.bledriver.comm.pair
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.utils.toHex
