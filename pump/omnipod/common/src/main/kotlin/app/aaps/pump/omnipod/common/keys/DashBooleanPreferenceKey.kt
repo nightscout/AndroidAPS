@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.keys
+package app.aaps.pump.omnipod.common.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 

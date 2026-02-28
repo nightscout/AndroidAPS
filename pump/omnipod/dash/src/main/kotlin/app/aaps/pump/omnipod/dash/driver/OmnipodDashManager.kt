@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver
+package app.aaps.pump.omnipod.common.bledriver
 
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration

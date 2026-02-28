@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver
+package app.aaps.pump.omnipod.common.bledriver
 
 import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger

@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver.comm.session
+package app.aaps.pump.omnipod.common.bledriver.comm.session
 
 import app.aaps.core.utils.toHex
 import app.aaps.shared.tests.AAPSLoggerTest

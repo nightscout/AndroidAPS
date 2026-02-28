@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.driver.comm.endecrypt
+package app.aaps.pump.omnipod.common.bledriver.comm.endecrypt
 
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.common.bledriver.comm.message.MessagePacket

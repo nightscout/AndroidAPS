@@ -38,7 +38,7 @@ import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
 import app.aaps.pump.omnipod.common.bledriver.pod.response.Response
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
-import app.aaps.pump.omnipod.dash.keys.DashBooleanPreferenceKey
+import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean

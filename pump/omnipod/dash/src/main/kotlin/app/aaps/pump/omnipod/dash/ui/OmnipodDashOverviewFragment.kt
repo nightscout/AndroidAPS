@@ -35,7 +35,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
-import app.aaps.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
+import app.aaps.pump.omnipod.common.EventOmnipodDashPumpValuesChanged
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.databinding.OmnipodDashOverviewBinding
