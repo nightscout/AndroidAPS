@@ -12,7 +12,8 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.receivers.Intents
@@ -30,20 +31,25 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.wear.compose.WearComposeContent
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,31 +58,55 @@ class WearPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
-    private val preferences: Preferences,
-    private val sp: SP,
+    preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val context: Context,
     private val dataHandlerMobile: DataHandlerMobile,
     private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper,
-    private val config: Config
-) : PluginBase(
-    PluginDescription()
+    private val config: Config,
+    private val dateUtil: DateUtil,
+    private val importExportPrefs: ImportExportPrefs,
+    private val versionCheckerUtils: VersionCheckerUtils
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
-        .fragmentClass(WearFragment::class.java.name)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .icon(Icons.Default.Watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.description_wear),
-    aapsLogger, rh
+        .description(R.string.description_wear)
+        .composeContent { plugin ->
+            WearComposeContent(
+                wearPlugin = plugin as WearPlugin,
+                rxBus = rxBus,
+                rh = rh,
+                dateUtil = dateUtil,
+                importExportPrefs = importExportPrefs,
+                preferences = preferences,
+                versionCheckerUtils = versionCheckerUtils,
+                aapsLogger = aapsLogger
+            )
+        },
+    aapsLogger = aapsLogger, rh = rh, preferences = preferences
 ) {
 
     private val disposable = CompositeDisposable()
 
-    var connectedDevice = "---"
-    var savedCustomWatchface: CwfData? = null
+    private val _connectedDevice = MutableStateFlow<String?>(null)
+    val connectedDevice: StateFlow<String?> = _connectedDevice.asStateFlow()
+
+    private val _savedCustomWatchface = MutableStateFlow<CwfData?>(null)
+    val savedCustomWatchface: StateFlow<CwfData?> = _savedCustomWatchface.asStateFlow()
+
+    fun updateConnectedDevice(deviceName: String?) {
+        _connectedDevice.value = deviceName
+    }
+
+    fun updateSavedCustomWatchface(cwfData: CwfData?) {
+        _savedCustomWatchface.value = cwfData
+    }
 
     override fun onStart() {
         super.onStart()
@@ -125,7 +155,7 @@ class WearPlugin @Inject constructor(
             .subscribe({
                            it.customWatchfaceData?.let { cwf ->
                                if (!it.exportFile) {
-                                   savedCustomWatchface = cwf
+                                   _savedCustomWatchface.value = cwf
                                    checkCustomWatchfacePreferences()
                                }
                            }
@@ -143,7 +173,7 @@ class WearPlugin @Inject constructor(
     }
 
     fun checkCustomWatchfacePreferences() {
-        savedCustomWatchface?.let { cwf ->
+        _savedCustomWatchface.value?.let { cwf ->
             val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
             val cwfName = preferences.get(StringNonKey.WearCwfWatchfaceName)
             val authorVersion = preferences.get(StringNonKey.WearCwfAuthorVersion)
