@@ -147,6 +147,10 @@ import app.aaps.ui.compose.quickWizard.QuickWizardManagementScreen
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeScreen
+import app.aaps.ui.compose.siteRotationDialog.SiteRotationEditorScreen
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationEditorViewModel
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
+import app.aaps.ui.compose.siteRotationDialog.SiteRotationManagementScreen
 import app.aaps.ui.compose.stats.StatsScreen
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempBasalDialog.TempBasalDialogScreen
@@ -193,6 +197,8 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var siteRotationEditorViewModel: SiteRotationEditorViewModel
+    @Inject lateinit var siteRotationManagementViewModel: SiteRotationManagementViewModel
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var callForPrefFile: ActivityResultLauncher<Void?>? = null
@@ -594,8 +600,9 @@ class ComposeMainActivity : AppCompatActivity() {
                     ) {
                         CareDialogScreen(
                             onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                            onShowSiteRotationDialog = { timestamp ->
+                                // uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
                             }
                         )
                     }
@@ -611,8 +618,9 @@ class ComposeMainActivity : AppCompatActivity() {
                         FillDialogScreen(
                             fillButtonsDef = builtInSearchables.fillButtons,
                             onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                            onShowSiteRotationDialog = { timestamp ->
+                                // uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
                             },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -940,6 +948,25 @@ class ComposeMainActivity : AppCompatActivity() {
                                 onBackClick = { navController.popBackStack() }
                             )
                         }
+                    }
+
+                    composable(AppRoute.SiteRotationManagement.route) {
+                        SiteRotationManagementScreen(
+                            viewModel = siteRotationManagementViewModel,
+                            onClose = { navController.popBackStack() },
+                            onEditEntry = { timestamp ->
+                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
+                            }
+                        )
+                    }
+
+                    composable(AppRoute.SiteRotationEditor.route) { backStackEntry ->
+                        val timestamp = backStackEntry.arguments?.getLong("timestamp") ?: 0L
+                        SiteRotationEditorScreen(
+                            viewModel = siteRotationEditorViewModel,
+                            timestamp = timestamp,
+                            onClose = { navController.popBackStack() }
+                        )
                     }
                 }
             }
