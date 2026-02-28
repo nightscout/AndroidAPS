@@ -3,7 +3,7 @@ package app.aaps.pump.omnipod.common.bledriver.comm.packet
 import java.lang.Integer.min
 import java.util.zip.CRC32
 
-internal class PayloadSplitter(private val payload: ByteArray) {
+class PayloadSplitter(private val payload: ByteArray) {
 
     fun splitInPackets(): List<BlePacket> {
         if (payload.size <= FirstBlePacket.CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET) {
