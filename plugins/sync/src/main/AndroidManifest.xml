@@ -25,8 +25,7 @@
             android:name=".openhumans.ui.OHLoginActivity"
             android:exported="true"
             android:label="Setup Open Humans"
-            android:launchMode="singleTop"
-            android:theme="@style/OpenHumans">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

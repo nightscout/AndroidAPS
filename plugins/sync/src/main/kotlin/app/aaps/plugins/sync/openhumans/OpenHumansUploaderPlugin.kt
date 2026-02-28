@@ -39,12 +39,12 @@ import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.openhumans.compose.OHComposeContent
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
-import app.aaps.plugins.sync.openhumans.ui.OHFragment
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -71,10 +71,10 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     private val config: Config,
-    private val context: Context,
+    internal val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
-    stateDelegate: OHStateDelegate,
+    internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
     private val rxBus: RxBus
@@ -87,7 +87,13 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         .shortName(R.string.open_humans_short)
         .description(R.string.open_humans_description)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .fragmentClass(OHFragment::class.qualifiedName),
+        .composeContent { plugin ->
+            OHComposeContent(
+                stateDelegate = (plugin as OpenHumansUploaderPlugin).stateDelegate,
+                plugin = plugin,
+                context = plugin.context
+            )
+        },
     ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),
     aapsLogger, rh, preferences
 ) {
