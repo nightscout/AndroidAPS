@@ -46,9 +46,9 @@ import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.DataSyncSelectorV1
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
+import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclient.acks.NSAddAck
 import app.aaps.plugins.sync.nsclient.acks.NSAuthAck
 import app.aaps.plugins.sync.nsclient.acks.NSUpdateAck
@@ -101,6 +101,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var storeDataForDb: StoreDataForDb
     @Inject lateinit var nsClientRepository: NSClientRepository
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var receiverDelegate: ReceiverDelegate
 
     companion object {
 
@@ -154,7 +155,8 @@ class NSClientService : DaggerService() {
         preferences.observe(StringKey.NsClientUrl).drop(1).onEach(restartOnChange).launchIn(scope)
         preferences.observe(StringKey.NsClientApiSecret).drop(1).onEach(restartOnChange).launchIn(scope)
         preferences.observe(NsclientBooleanKey.NsPaused).drop(1).onEach(restartOnChange).launchIn(scope)
-        rxBus.toFlow(EventConnectivityOptionChanged::class.java)
+        receiverDelegate.connectivityStatusFlow
+            .drop(1) // skip initial value
             .onEach {
                 latestDateInReceivedData = 0
                 destroy()

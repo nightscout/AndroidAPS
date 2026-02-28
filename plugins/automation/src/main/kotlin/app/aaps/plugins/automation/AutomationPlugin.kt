@@ -25,12 +25,11 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBTChange
-import app.aaps.core.interfaces.rx.events.EventChargingState
-import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -90,6 +89,13 @@ import app.aaps.plugins.automation.ui.TimerUtil
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -115,7 +121,8 @@ class AutomationPlugin @Inject constructor(
     private val locationServiceHelper: LocationServiceHelper,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val timerUtil: TimerUtil
+    private val timerUtil: TimerUtil,
+    private val receiverStatusStore: ReceiverStatusStore
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -133,6 +140,7 @@ class AutomationPlugin @Inject constructor(
 ), Automation {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private val automationEvents = ArrayList<AutomationEventObject>()
     var executionLog: MutableList<String> = ArrayList()
@@ -177,6 +185,18 @@ class AutomationPlugin @Inject constructor(
         loadFromSP()
         handler?.postDelayed(refreshLoop, T.mins(1).msecs())
 
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+
+        receiverStatusStore.chargingStatusFlow
+            .filterNotNull()
+            .onEach { processActions() }
+            .launchIn(newScope)
+        receiverStatusStore.networkStatusFlow
+            .filterNotNull()
+            .onEach { processActions() }
+            .launchIn(newScope)
+
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
@@ -198,14 +218,6 @@ class AutomationPlugin @Inject constructor(
                            processActions()
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventChargingState::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processActions() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNetworkChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processActions() }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventBTChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -216,6 +228,8 @@ class AutomationPlugin @Inject constructor(
     }
 
     override fun onStop() {
+        scope?.cancel()
+        scope = null
         disposable.clear()
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()

@@ -69,7 +69,6 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
-import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolusWizard
@@ -239,7 +238,8 @@ class NSClientV3Plugin @Inject constructor(
                 stopService()
                 WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
             }.launchIn(scope)
-        rxBus.toFlow(EventConnectivityOptionChanged::class.java)
+        receiverDelegate.connectivityStatusFlow
+            .drop(1) // skip initial value
             .onEach { ev ->
                 nsClientRepository.addLog("● CONNECTIVITY", ev.blockingReason)
                 nsClientV3Service?.let { service ->

@@ -4,6 +4,7 @@ import android.Manifest
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.automation.services.LocationServiceHelper
@@ -22,6 +23,7 @@ class AutomationPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var locationServiceHelper: LocationServiceHelper
     @Mock lateinit var timerUtil: TimerUtil
+    @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     private lateinit var automationPlugin: AutomationPlugin
 
     init {
@@ -35,7 +37,7 @@ class AutomationPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         automationPlugin = AutomationPlugin(
             injector, aapsLogger, rh, preferences, sp, context, fabricPrivacy, loop, rxBus, constraintChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
+            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore
         )
     }
 

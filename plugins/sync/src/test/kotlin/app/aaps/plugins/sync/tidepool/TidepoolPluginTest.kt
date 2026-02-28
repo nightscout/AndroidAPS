@@ -2,8 +2,8 @@ package app.aaps.plugins.sync.tidepool
 
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
+import app.aaps.plugins.sync.nsclient.ReceiverDelegate.ConnectivityStatus
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
@@ -11,6 +11,7 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import net.openid.appauth.AuthState
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,9 +35,11 @@ class TidepoolPluginTest : TestBaseWithProfile() {
 
     private lateinit var tidepoolPlugin: TidepoolPlugin
     private lateinit var rateLimit: RateLimit
+    private val connectivityFlow = MutableStateFlow(ConnectivityStatus("Status not available", allowed = false, connected = false))
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
+        whenever(receiverDelegate.connectivityStatusFlow).thenReturn(connectivityFlow)
         tidepoolPlugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil
         )
@@ -65,7 +68,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil
         )
         plugin.onStart()
-        rxBus.send(EventConnectivityOptionChanged("Connected", true))
+        connectivityFlow.value = ConnectivityStatus("Connected", allowed = true, connected = true)
 
         verify(authFlowOut).updateConnectionStatus(eq(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN), eq("Connecting"))
         plugin.onStop()
@@ -87,7 +90,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil
         )
         plugin.onStart()
-        rxBus.send(EventConnectivityOptionChanged("Blocked", false))
+        connectivityFlow.value = ConnectivityStatus("Blocked", allowed = false, connected = false)
 
         // When connectivity is not allowed, doUpload should return early without attempting login
         verify(authFlowOut, never()).updateConnectionStatus(eq(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN), any())

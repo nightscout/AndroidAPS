@@ -29,7 +29,6 @@ import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
@@ -47,6 +46,10 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -95,20 +98,20 @@ class TidepoolPlugin @Inject constructor(
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val isAllowed get() = receiverDelegate.allowed
 
     override fun onStart() {
         super.onStart()
-        disposable += rxBus
-            .toObservable(EventConnectivityOptionChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev ->
-                           rxBus.send(EventTidepoolStatus("● CONNECTIVITY ${ev.blockingReason}"))
-                           tidepoolUploader.resetInstance()
-                           if (isAllowed) doUpload(EventConnectivityOptionChanged::class.simpleName)
-                       }, fabricPrivacy::logException)
+        scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        receiverDelegate.connectivityStatusFlow
+            .drop(1) // skip initial value
+            .onEach { ev ->
+                rxBus.send(EventTidepoolStatus("● CONNECTIVITY ${ev.blockingReason}"))
+                tidepoolUploader.resetInstance()
+                if (isAllowed) doUpload("CONNECTIVITY")
+            }.launchIn(scope)
         disposable += rxBus
             .toObservable(EventTidepoolDoUpload::class.java)
             .observeOn(aapsSchedulers.io)
@@ -146,6 +149,7 @@ class TidepoolPlugin @Inject constructor(
     }
 
     override fun onStop() {
+        scope.cancel()
         disposable.clear()
         super.onStop()
     }

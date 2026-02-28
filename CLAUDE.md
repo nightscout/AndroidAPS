@@ -72,7 +72,8 @@
 - On KSP error during compilation just compile again. Do not clean build.
 - On file locked error stop gradle daemons
 - Never install app automatically
-- **NEVER run Android instrumented tests (connectedAndroidTest) without explicit user permission** — they uninstall the app from the device
+- **NEVER run Android instrumented tests (connectedAndroidTest) without explicit user permission** —
+  they uninstall the app from the device
 - Use %TEMP% directory for screenshots
 - Can edit files and run commands freely without asking for permission
 - Can use internet/web search as needed
@@ -101,13 +102,15 @@
   }
   ```
   The modifier is in `app.aaps.core.ui.compose.clearFocusOnTap`.
-- **Avoid adding new inter-module (project) dependencies** - Adding `implementation(project(":other:module"))`
+- **Avoid adding new inter-module (project) dependencies** - Adding
+  `implementation(project(":other:module"))`
   between modules can significantly slow down compilation time. Always discuss before adding these.
   Prefer alternatives:
     - Inline constants instead of importing from another module
     - Move shared code to existing common modules
     - Use interfaces defined in core modules
-  - Note: Adding external library dependencies via `api(libs.xxx)` or `implementation(libs.xxx)` is fine.
+    - Note: Adding external library dependencies via `api(libs.xxx)` or `implementation(libs.xxx)`
+      is fine.
 
 ## Migration Procedures
 
@@ -120,8 +123,9 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
     - Identify and categorize files by complexity (simple → medium → complex)
     - Track file counts and status for each phase
     - Update plan as you learn new information
-  - During collection of information on every new info compare compatibilty with previous. Ask if it
-    conflicts or something is not clear
+    - During collection of information on every new info compare compatibilty with previous. Ask if
+      it
+      conflicts or something is not clear
 - **Use grep/glob extensively** to find ALL instances before starting
     - Search for old patterns to ensure nothing is missed
     - Count total files/instances that need migration
@@ -161,6 +165,8 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
     - Why certain approaches were chosen
     - What patterns emerged during migration
     - What issues were encountered and how solved
+- **At the end of partial migration ask yourself if it's the best possible pattern independent to
+  previous code. Discuss your findings.**
 
 ### Cleanup Phase (Only After 100% Migration Complete)
 

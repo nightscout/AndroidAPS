@@ -1,9 +1,10 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.rx.events.EventNetworkChange
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -13,23 +14,21 @@ import org.skyscreamer.jsonassert.JSONAssert
 class TriggerWifiSsidTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
-        val e = EventNetworkChange()
-        whenever(receiverStatusStore.lastNetworkEvent).thenReturn(e)
+        val networkFlow = MutableStateFlow<NetworkStatus?>(NetworkStatus())
+        whenever(receiverStatusStore.networkStatusFlow).thenReturn(networkFlow)
         var t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_EQUAL)
-        e.wifiConnected = false
+        networkFlow.value = NetworkStatus(wifiConnected = false)
         assertThat(t.shouldRun()).isFalse()
-        e.wifiConnected = true
-        e.ssid = "otherSSID"
+        networkFlow.value = NetworkStatus(wifiConnected = true, ssid = "otherSSID")
         assertThat(t.shouldRun()).isFalse()
-        e.wifiConnected = true
-        e.ssid = "aSSID 1"
+        networkFlow.value = NetworkStatus(wifiConnected = true, ssid = "aSSID 1")
         assertThat(t.shouldRun()).isTrue()
         t = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_NOT_AVAILABLE)
-        e.wifiConnected = false
+        networkFlow.value = NetworkStatus(wifiConnected = false)
         assertThat(t.shouldRun()).isTrue()
 
         // no network data
-        whenever(receiverStatusStore.lastNetworkEvent).thenReturn(null)
+        networkFlow.value = null
         assertThat(t.shouldRun()).isFalse()
     }
 
