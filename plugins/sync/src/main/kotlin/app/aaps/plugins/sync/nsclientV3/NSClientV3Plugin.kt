@@ -225,13 +225,18 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
                            rxBus.send(EventNSClientNewLog("● CONNECTIVITY", ev.blockingReason))
-                           nsClientV3Service?.let { service ->
-                               if (ev.connected) {
-                                   when {
-                                       isAllowed && service.storageSocket == null  -> setClient() // socket must be created
-                                       !isAllowed && service.storageSocket != null -> stopService()
-                                   }
-                                   if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
+                           if (ev.connected && isAllowed) {
+                               val service = nsClientV3Service
+                               if (service == null || service.storageSocket == null)
+                                   setClient() // (re)create client and WS; WS_CONNECT callback will trigger executeLoop
+                               executeLoop("CONNECTIVITY", forceNew = false)
+                               // Trigger upload of data that accumulated while offline.
+                               // executeLoop may skip when WS is enabled and initial load is done,
+                               // but pending outbound data still needs to be pushed.
+                               executeUpload("CONNECTIVITY", forceNew = false)
+                           } else if (ev.connected && !isAllowed) {
+                               nsClientV3Service?.let { service ->
+                                   if (service.storageSocket != null) stopService()
                                }
                            }
                            rxBus.send(EventNSClientUpdateGuiStatus())
@@ -377,8 +382,8 @@ class NSClientV3Plugin @Inject constructor(
         try {
             if (nsClientV3Service != null) context.unbindService(serviceConnection)
         } catch (_: Exception) {
-            nsClientV3Service = null
         }
+        nsClientV3Service = null
     }
 
     override fun resend(reason: String) {
