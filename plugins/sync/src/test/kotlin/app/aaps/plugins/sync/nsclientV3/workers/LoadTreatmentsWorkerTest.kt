@@ -10,7 +10,7 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.source.NSClientSource
@@ -49,7 +49,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var l: L
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Mock lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var uel: UserEntryLogger
 
@@ -67,7 +67,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
                 it.nsClientV3Plugin = nsClientV3Plugin
                 it.storeDataForDb = storeDataForDb
                 it.nsIncomingDataProcessor = nsIncomingDataProcessor
-                it.nsClientMvvmRepository = nsClientMvvmRepository
+                it.nsClientRepository = nsClientRepository
             }
         }
     }
@@ -79,7 +79,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientMvvmRepository, uel, activePlugin
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

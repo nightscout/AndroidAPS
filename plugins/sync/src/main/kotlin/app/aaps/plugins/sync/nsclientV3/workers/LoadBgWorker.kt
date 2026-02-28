@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.NsClient
@@ -30,7 +30,7 @@ class LoadBgWorker(
     @Inject lateinit var nsClientSource: NSClientSource
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Inject lateinit var nsClientRepository: NSClientRepository
 
     override suspend fun doWorkAndLog(): Result {
         if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !nsClientV3Plugin.doingFullSync)
@@ -59,7 +59,7 @@ class LoadBgWorker(
                     aapsLogger.debug(LTag.NSCLIENT, "SGVS: $sgvs")
                     if (sgvs.isNotEmpty()) {
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
-                        nsClientMvvmRepository.addLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
+                        nsClientRepository.addLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         // Schedule processing of fetched data and continue of loading
                         continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
                     } else {
@@ -68,7 +68,7 @@ class LoadBgWorker(
                             nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                             nsClientV3Plugin.storeLastLoadedSrvModified()
                         }
-                        nsClientMvvmRepository.addLog("◄ RCV BG END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
+                        nsClientRepository.addLog("◄ RCV BG END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         continueLoading = false
                     }
                 } else {
@@ -77,13 +77,13 @@ class LoadBgWorker(
                         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
-                    nsClientMvvmRepository.addLog("◄ RCV BG END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
+                    nsClientRepository.addLog("◄ RCV BG END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                     continueLoading = false
                 }
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            nsClientMvvmRepository.addLog("◄ ERROR", error.localizedMessage)
+            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }

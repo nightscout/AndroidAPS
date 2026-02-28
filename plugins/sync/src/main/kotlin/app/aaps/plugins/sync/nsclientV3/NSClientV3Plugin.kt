@@ -26,7 +26,7 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -69,8 +69,8 @@ import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsShared.NSClientFragment
+import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolus
@@ -125,7 +125,7 @@ class NSClientV3Plugin @Inject constructor(
     private val storeDataForDb: StoreDataForDb,
     private val decimalFormatter: DecimalFormatter,
     private val l: L,
-    private val nsClientMvvmRepository: NSClientMvvmRepository,
+    private val nsClientRepository: NSClientRepository,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin
 ) : NsClient, Sync, PluginBaseWithPreferences(
@@ -145,7 +145,7 @@ class NSClientV3Plugin @Inject constructor(
                 aapsLogger = aapsLogger,
                 persistenceLayer = persistenceLayer,
                 uel = uel,
-                nsClientMvvmRepository = nsClientMvvmRepository,
+                nsClientRepository = nsClientRepository,
                 activePlugin = activePlugin,
                 preferences = preferences,
                 nsClient = plugin as NsClient,
@@ -243,7 +243,7 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventConnectivityOptionChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
-                           nsClientMvvmRepository.addLog("● CONNECTIVITY", ev.blockingReason)
+                           nsClientRepository.addLog("● CONNECTIVITY", ev.blockingReason)
                            nsClientV3Service?.let { service ->
                                if (ev.connected) {
                                    when {
@@ -253,7 +253,7 @@ class NSClientV3Plugin @Inject constructor(
                                    if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
                                }
                            }
-                           nsClientMvvmRepository.updateStatus(status)
+                           nsClientRepository.updateStatus(status)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -269,7 +269,7 @@ class NSClientV3Plugin @Inject constructor(
                                stopService()
                                nsAndroidClient = null
                                setClient()
-                               nsClientMvvmRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
+                               nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
                            }
                            if (ev.isChanged(LongNonKey.LocalProfileLastChange.key))
                                executeUpload("PROFILE_CHANGE", forceNew = true)
@@ -316,7 +316,7 @@ class NSClientV3Plugin @Inject constructor(
             if (!preferences.get(BooleanKey.NsClient3UseWs))
                 executeLoop("MAIN_LOOP", forceNew = true)
             else
-                nsClientMvvmRepository.addLog("● TICK", "")
+                nsClientRepository.addLog("● TICK", "")
             handler?.postDelayed(runLoop, refreshInterval)
         }
         handler?.postDelayed(runLoop, T.mins(2).msecs())
@@ -337,7 +337,7 @@ class NSClientV3Plugin @Inject constructor(
                 forceNew = false
             }
             handler?.postDelayed({ executeLoop(origin, forceNew = forceNew) }, toTime - dateUtil.now())
-            nsClientMvvmRepository.addLog("● NEXT", dateUtil.dateAndTimeAndSecondsString(toTime))
+            nsClientRepository.addLog("● NEXT", dateUtil.dateAndTimeAndSecondsString(toTime))
         }
     }
 
@@ -455,15 +455,15 @@ class NSClientV3Plugin @Inject constructor(
     private suspend fun dbOperationProfileStore(collection: String = "profile", dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         try {
-            nsClientMvvmRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", data)
+            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", data)
             nsAndroidClient?.createProfileStore(data)?.let { result ->
                 when (result.response) {
-                    200  -> nsClientMvvmRepository.addLog("◄ UPDATED", "OK ProfileStore")
-                    201  -> nsClientMvvmRepository.addLog("◄ ADDED", "OK ProfileStore")
-                    404  -> nsClientMvvmRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ProfileStore")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ProfileStore")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
 
                     else -> {
-                        nsClientMvvmRepository.addLog("◄ ERROR", "${result.errorResponse}")
+                        nsClientRepository.addLog("◄ ERROR", "${result.errorResponse}")
                         return config.ignoreNightscoutV3Errors()
                     }
                 }
@@ -480,15 +480,15 @@ class NSClientV3Plugin @Inject constructor(
     private suspend fun dbOperationDeviceStatus(collection: String = "devicestatus", dataPair: DataSyncSelector.PairDeviceStatus, progress: String): Boolean {
         try {
             val data = dataPair.value.toNSDeviceStatus()
-            nsClientMvvmRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", Json {}.encodeToJsonElement(data))
+            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", Json {}.encodeToJsonElement(data))
             nsAndroidClient?.createDeviceStatus(data)?.let { result ->
                 when (result.response) {
-                    200  -> nsClientMvvmRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
-                    201  -> nsClientMvvmRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}")
-                    404  -> nsClientMvvmRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
 
                     else -> {
-                        nsClientMvvmRepository.addLog("◄ ERROR", "${result.errorResponse} ")
+                        nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
                         return config.ignoreNightscoutV3Errors()
                     }
                 }
@@ -515,7 +515,7 @@ class NSClientV3Plugin @Inject constructor(
         try {
             val data = dataPair.value.toNSSvgV3()
             val id = dataPair.value.ids.nightscoutId
-            nsClientMvvmRepository.addLog(
+            nsClientRepository.addLog(
                 when (operation) {
                     Operation.CREATE -> "► ADD $collection"
                     Operation.UPDATE -> "► UPDATE $collection"
@@ -528,13 +528,13 @@ class NSClientV3Plugin @Inject constructor(
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
-                    200  -> nsClientMvvmRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
-                    201  -> nsClientMvvmRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientMvvmRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
-                    404  -> nsClientMvvmRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
 
                     else -> {
-                        nsClientMvvmRepository.addLog("◄ ERROR", "${result.errorResponse} ")
+                        nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
                         return config.ignoreNightscoutV3Errors()
                     }
                 }
@@ -560,7 +560,7 @@ class NSClientV3Plugin @Inject constructor(
         try {
             val data = dataPair.value.toNSFood()
             val id = dataPair.value.ids.nightscoutId
-            nsClientMvvmRepository.addLog(
+            nsClientRepository.addLog(
                 when (operation) {
                     Operation.CREATE -> "► ADD $collection"
                     Operation.UPDATE -> "► UPDATE $collection"
@@ -573,13 +573,13 @@ class NSClientV3Plugin @Inject constructor(
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
-                    200  -> nsClientMvvmRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
-                    201  -> nsClientMvvmRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientMvvmRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
-                    404  -> nsClientMvvmRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
 
                     else -> {
-                        nsClientMvvmRepository.addLog("◄ ERROR", "${result.errorResponse}")
+                        nsClientRepository.addLog("◄ ERROR", "${result.errorResponse}")
                         return config.ignoreNightscoutV3Errors()
                     }
                 }
@@ -626,7 +626,7 @@ class NSClientV3Plugin @Inject constructor(
         }?.let { data ->
             try {
                 val id = if (dataPair.value is HasIDs) (dataPair.value as HasIDs).ids.nightscoutId else ""
-                nsClientMvvmRepository.addLog(
+                nsClientRepository.addLog(
                     when (operation) {
                         Operation.CREATE -> "► ADD $collection"
                         Operation.UPDATE -> "► UPDATE $collection"
@@ -639,13 +639,13 @@ class NSClientV3Plugin @Inject constructor(
                 )
                 call?.let { it(data) }?.let { result ->
                     when (result.response) {
-                        200  -> nsClientMvvmRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
-                        201  -> nsClientMvvmRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                        400  -> nsClientMvvmRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
-                        404  -> nsClientMvvmRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
+                        400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
 
                         else -> {
-                            nsClientMvvmRepository.addLog("◄ ERROR", "${result.errorResponse} ")
+                            nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
                             return config.ignoreNightscoutV3Errors()
                         }
                     }
@@ -710,7 +710,7 @@ class NSClientV3Plugin @Inject constructor(
                     return true
                 }
             } catch (e: Exception) {
-                nsClientMvvmRepository.addLog("◄ ERROR", e.localizedMessage)
+                nsClientRepository.addLog("◄ ERROR", e.localizedMessage)
                 aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
                 return false
             }
@@ -736,28 +736,28 @@ class NSClientV3Plugin @Inject constructor(
     internal fun executeLoop(origin: String, forceNew: Boolean) {
         if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished) return
         if (preferences.get(NsclientBooleanKey.NsPaused)) {
-            nsClientMvvmRepository.addLog("● RUN", "paused  $origin")
+            nsClientRepository.addLog("● RUN", "paused  $origin")
             return
         }
         if (!isAllowed) {
-            nsClientMvvmRepository.addLog("● RUN", "$blockingReason $origin")
+            nsClientRepository.addLog("● RUN", "$blockingReason $origin")
             return
         }
         if (workIsRunning()) {
-            nsClientMvvmRepository.addLog("● RUN", "Already running $origin")
+            nsClientRepository.addLog("● RUN", "Already running $origin")
             if (!forceNew) return
             // Wait for end and start new cycle
             while (workIsRunning()) Thread.sleep(5000)
         }
-        nsClientMvvmRepository.addLog("● RUN", "Starting next round $origin")
+        nsClientRepository.addLog("● RUN", "Starting next round $origin")
         synchronized(fullSyncSemaphore) {
             if (fullSyncRequested) {
                 fullSyncRequested = false
                 doingFullSync = true
-                nsClientMvvmRepository.addLog("● RUN", "Full sync is requested")
+                nsClientRepository.addLog("● RUN", "Full sync is requested")
             }
         }
-        nsClientMvvmRepository.updateStatus(status)
+        nsClientRepository.updateStatus(status)
         WorkManager.getInstance(context)
             .beginUniqueWork(
                 JOB_NAME,
@@ -782,20 +782,20 @@ class NSClientV3Plugin @Inject constructor(
 
     private fun executeUpload(origin: String, forceNew: Boolean) {
         if (preferences.get(NsclientBooleanKey.NsPaused)) {
-            nsClientMvvmRepository.addLog("● RUN", "paused")
+            nsClientRepository.addLog("● RUN", "paused")
             return
         }
         if (!isAllowed) {
-            nsClientMvvmRepository.addLog("● RUN", blockingReason)
+            nsClientRepository.addLog("● RUN", blockingReason)
             return
         }
         if (workIsRunning()) {
-            nsClientMvvmRepository.addLog("● RUN", "Already running $origin")
+            nsClientRepository.addLog("● RUN", "Already running $origin")
             if (!forceNew) return
             // Wait for end and start new cycle
             while (workIsRunning()) Thread.sleep(5000)
         }
-        nsClientMvvmRepository.addLog("● RUN", "Starting upload $origin")
+        nsClientRepository.addLog("● RUN", "Starting upload $origin")
         WorkManager.getInstance(context)
             .enqueueUniqueWork(
                 JOB_NAME,

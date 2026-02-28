@@ -20,7 +20,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.keys.BooleanKey
@@ -47,7 +47,7 @@ import org.mockito.kotlin.whenever
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var nsClientSource: NSClientSource
     @Mock private lateinit var virtualPump: VirtualPump
-    @Mock private lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Mock private lateinit var nsClientRepository: NSClientRepository
 
     private lateinit var storeDataForDb: StoreDataForDbImpl
 
@@ -157,7 +157,7 @@ import org.mockito.kotlin.whenever
             config = config,
             nsClientSource = nsClientSource,
             virtualPump = virtualPump,
-            nsClientMvvmRepository = nsClientMvvmRepository
+            nsClientRepository = nsClientRepository
         )
     }
 

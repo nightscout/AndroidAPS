@@ -6,7 +6,6 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -19,10 +18,12 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginTidepool
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
@@ -33,12 +34,13 @@ import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
+import app.aaps.plugins.sync.tidepool.compose.TidepoolComposeContent
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
-import app.aaps.plugins.sync.tidepool.mvvm.TidepoolMvvmRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -62,14 +64,27 @@ class TidepoolPlugin @Inject constructor(
     private val rateLimit: RateLimit,
     private val receiverDelegate: ReceiverDelegate,
     private val authFlowOut: AuthFlowOut,
-    private val tidepoolMvvmRepository: TidepoolMvvmRepository
+    private val tidepoolRepository: TidepoolRepository,
+    private val dateUtil: DateUtil
 ) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginName(R.string.tidepool)
         .shortName(R.string.tidepool_shortname)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_tidepool)
+        .icon(IcPluginTidepool)
         .fragmentClass(TidepoolFragment::class.qualifiedName)
+        .composeContent { plugin ->
+            TidepoolComposeContent(
+                tidepoolRepository = (plugin as TidepoolPlugin).tidepoolRepository,
+                authFlowOut = plugin.authFlowOut,
+                tidepoolUploader = plugin.tidepoolUploader,
+                rxBus = plugin.rxBus,
+                preferences = preferences,
+                dateUtil = dateUtil,
+                rh = rh
+            )
+        }
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_tidepool),
     ownPreferences = listOf(
@@ -102,8 +117,8 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventTidepoolStatus::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           tidepoolMvvmRepository.addLog(event.status)
-                           tidepoolMvvmRepository.updateConnectionStatus(authFlowOut.connectionStatus)
+                           tidepoolRepository.addLog(event.status)
+                           tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)
                            // Pass to setup wizard
                            rxBus.send(EventSWSyncStatus(event.status))
                        }, fabricPrivacy::logException)

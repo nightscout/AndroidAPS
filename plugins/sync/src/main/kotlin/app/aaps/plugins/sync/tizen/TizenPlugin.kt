@@ -35,6 +35,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.durationInMinutes
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -66,6 +67,7 @@ class TizenPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_gwatch)
+        .icon(IcPluginTizen)
         .pluginName(R.string.tizen)
         .shortName(R.string.tizen_short)
         .description(R.string.tizen_description),

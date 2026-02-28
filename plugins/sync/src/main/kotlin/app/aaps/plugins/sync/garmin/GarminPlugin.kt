@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginGarmin
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -67,6 +68,7 @@ class GarminPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_garmin_triangle)
+        .icon(IcPluginGarmin)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)

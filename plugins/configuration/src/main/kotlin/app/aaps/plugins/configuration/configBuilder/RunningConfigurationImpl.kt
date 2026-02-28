@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
@@ -36,7 +36,7 @@ class RunningConfigurationImpl @Inject constructor(
     private val config: Config,
     private val pumpSync: PumpSync,
     private val notificationManager: NotificationManager,
-    private val nsClientMvvmRepository: NSClientMvvmRepository
+    private val nsClientRepository: NSClientRepository
 ) : RunningConfiguration {
 
     private var counter = 0
@@ -80,7 +80,7 @@ class RunningConfigurationImpl @Inject constructor(
         assert(config.AAPSCLIENT)
 
         configuration.version?.let {
-            nsClientMvvmRepository.addLog("◄ VERSION", "Received AAPS version  $it")
+            nsClientRepository.addLog("◄ VERSION", "Received AAPS version  $it")
             if (config.VERSION_NAME.startsWith(it).not())
                 notificationManager.post(NotificationId.NSCLIENT_VERSION_DOES_NOT_MATCH, R.string.nsclient_version_does_not_match)
         }

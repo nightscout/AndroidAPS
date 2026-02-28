@@ -26,7 +26,7 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
@@ -69,7 +69,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var insulin: Insulin
     @Mock lateinit var l: L
     @Mock lateinit var nsClientV3Service: NSClientV3Service
-    @Mock lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var uel: UserEntryLogger
 
@@ -82,12 +82,12 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     fun prepare() {
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
         whenever(activePlugin.activeInsulin).thenReturn(insulin)
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientMvvmRepository)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)
         sut =
             NSClientV3Plugin(
                 aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-                nsClientSource, storeDataForDb, decimalFormatter, l, nsClientMvvmRepository, uel, activePlugin
+                nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
             )
         sut.nsAndroidClient = nsAndroidClient
         sut.nsClientV3Service = nsClientV3Service

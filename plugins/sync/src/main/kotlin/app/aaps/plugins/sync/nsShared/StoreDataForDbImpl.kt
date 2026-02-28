@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
@@ -43,7 +43,7 @@ class StoreDataForDbImpl @Inject constructor(
     private val config: Config,
     private val nsClientSource: NSClientSource,
     private val virtualPump: VirtualPump,
-    private val nsClientMvvmRepository: NSClientMvvmRepository
+    private val nsClientRepository: NSClientRepository
 ) : StoreDataForDb {
 
     private val glucoseValues: MutableList<GV> = mutableListOf()
@@ -124,7 +124,7 @@ class StoreDataForDbImpl @Inject constructor(
                 glucoseValues.clear()
             }
         }
-        nsClientMvvmRepository.addLog("● DONE PROCESSING BG", "")
+        nsClientRepository.addLog("● DONE PROCESSING BG", "")
     }
 
     override fun storeFoodsToDb() {
@@ -143,7 +143,7 @@ class StoreDataForDbImpl @Inject constructor(
         }
 
         SystemClock.sleep(pause)
-        nsClientMvvmRepository.addLog("● DONE PROCESSING FOOD", "")
+        nsClientRepository.addLog("● DONE PROCESSING FOOD", "")
     }
 
     override fun storeTreatmentsToDb(fullSync: Boolean) {
@@ -323,7 +323,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
         }
 
-        nsClientMvvmRepository.addLog("● DONE PROCESSING TR", "")
+        nsClientRepository.addLog("● DONE PROCESSING TR", "")
     }
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
@@ -489,7 +489,7 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("RunningMode", RM::class.java.simpleName)
         sendLog("ExtendedBolus", EB::class.java.simpleName)
         sendLog("DeviceStatus", DS::class.java.simpleName)
-        nsClientMvvmRepository.addLog("● DONE NSIDs", "")
+        nsClientRepository.addLog("● DONE NSIDs", "")
     }
 
     override fun updateDeletedTreatmentsInDb() {
@@ -624,27 +624,27 @@ class StoreDataForDbImpl @Inject constructor(
 
     private fun sendLog(item: String, clazz: String) {
         inserted[clazz]?.let {
-            if (it > 0) nsClientMvvmRepository.addLog("◄ INSERT", "$item $it")
+            if (it > 0) nsClientRepository.addLog("◄ INSERT", "$item $it")
         }
         inserted.removeClass(clazz)
         updated[clazz]?.let {
-            if (it > 0) nsClientMvvmRepository.addLog("◄ UPDATE", "$item $it")
+            if (it > 0) nsClientRepository.addLog("◄ UPDATE", "$item $it")
         }
         updated.removeClass(clazz)
         invalidated[clazz]?.let {
-            if (it > 0) nsClientMvvmRepository.addLog("◄ INVALIDATE", "$item $it")
+            if (it > 0) nsClientRepository.addLog("◄ INVALIDATE", "$item $it")
         }
         invalidated.removeClass(clazz)
         nsIdUpdated[clazz]?.let {
-            if (it > 0) nsClientMvvmRepository.addLog("◄ NS_ID", "$item $it")
+            if (it > 0) nsClientRepository.addLog("◄ NS_ID", "$item $it")
         }
         nsIdUpdated.removeClass(clazz)
         durationUpdated[clazz]?.let {
-            if (it > 0) nsClientMvvmRepository.addLog("◄ DURATION", "$item $it")
+            if (it > 0) nsClientRepository.addLog("◄ DURATION", "$item $it")
         }
         durationUpdated.removeClass(clazz)
         ended[clazz]?.let {
-            if (it > 0) nsClientMvvmRepository.addLog("◄ CUT", "$item $it")
+            if (it > 0) nsClientRepository.addLog("◄ CUT", "$item $it")
         }
         ended.removeClass(clazz)
     }

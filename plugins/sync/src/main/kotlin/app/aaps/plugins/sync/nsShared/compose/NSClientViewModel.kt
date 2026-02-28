@@ -1,11 +1,11 @@
 package app.aaps.plugins.sync.nsShared.compose
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.nsclient.NSClientLog
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
@@ -30,7 +30,7 @@ data class NSClientUiState(
 class NSClientViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    private val nsClientMvvmRepository: NSClientMvvmRepository,
+    private val nsClientRepository: NSClientRepository,
     private val preferences: Preferences
 ) : ViewModel() {
 
@@ -42,18 +42,18 @@ class NSClientViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            nsClientMvvmRepository.queueSize.collect { size ->
+            nsClientRepository.queueSize.collect { size ->
                 val queueText = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
                 uiState.update { it.copy(queue = queueText) }
             }
         }
         viewModelScope.launch {
-            nsClientMvvmRepository.statusUpdate.collect { status ->
+            nsClientRepository.statusUpdate.collect { status ->
                 uiState.update { it.copy(status = status) }
             }
         }
         viewModelScope.launch {
-            nsClientMvvmRepository.logList.collect { logList ->
+            nsClientRepository.logList.collect { logList ->
                 uiState.update { it.copy(logList = logList) }
             }
         }

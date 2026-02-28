@@ -36,9 +36,9 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.sync.DataSyncSelector
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -47,16 +47,18 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.toJson
+import app.aaps.plugins.sync.xdrip.compose.XdripComposeContent
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.extensions.toXdripJson
 import app.aaps.plugins.sync.xdrip.keys.XdripIntentKey
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
-import app.aaps.plugins.sync.xdrip.mvvm.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -87,17 +89,26 @@ class XdripPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val rxBus: RxBus,
-    private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
     private val config: Config,
     private val decimalFormatter: DecimalFormatter,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val xdripMvvmRepository: XdripMvvmRepository
+    private val xdripMvvmRepository: XdripMvvmRepository,
+    private val dataSyncSelector: DataSyncSelectorXdrip
 ) : XDripBroadcast, Sync, PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
+        .composeContent { plugin ->
+            XdripComposeContent(
+                xdripMvvmRepository = (plugin as XdripPlugin).xdripMvvmRepository,
+                dataSyncSelector = plugin.dataSyncSelector,
+                dateUtil = plugin.dateUtil,
+                rh = rh
+            )
+        }
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
+        .icon(IcXDrip)
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)

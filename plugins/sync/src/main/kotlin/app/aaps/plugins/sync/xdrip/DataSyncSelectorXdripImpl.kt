@@ -14,8 +14,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
-import app.aaps.plugins.sync.xdrip.mvvm.XdripMvvmRepository
 import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton

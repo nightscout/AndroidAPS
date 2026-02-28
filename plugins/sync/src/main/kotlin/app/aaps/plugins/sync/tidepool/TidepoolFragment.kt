@@ -24,10 +24,11 @@ import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.tidepool.compose.TidepoolScreen
+import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
-import app.aaps.plugins.sync.tidepool.mvvm.TidepoolMvvmRepository
-import app.aaps.plugins.sync.tidepool.mvvm.TidepoolViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -39,7 +40,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var authFlowOut: AuthFlowOut
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var tidepoolMvvmRepository: TidepoolMvvmRepository
+    @Inject lateinit var tidepoolRepository: TidepoolRepository
 
     companion object {
 
@@ -56,7 +57,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         viewModel = TidepoolViewModel(
-            tidepoolMvvmRepository = tidepoolMvvmRepository,
+            tidepoolRepository = tidepoolRepository,
             authFlowOut = authFlowOut
         )
 
@@ -73,7 +74,18 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
                             TidepoolScreen(
                                 viewModel = vm,
                                 dateUtil = dateUtil,
-                                rh = rh
+                                rh = rh,
+                                setToolbarConfig = {},
+                                onNavigateBack = {},
+                                onSettings = null,
+                                onLogin = { authFlowOut.doTidePoolInitialLogin("menu") },
+                                onLogout = {
+                                    authFlowOut.clearAllSavedData()
+                                    tidepoolUploader.resetInstance()
+                                },
+                                onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
+                                onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
+                                onClearLog = { tidepoolRepository.clearLog() }
                             )
                         }
                     }
@@ -125,7 +137,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
             }
 
             ID_MENU_CLEAR_LOG -> {
-                tidepoolMvvmRepository.clearLog()
+                tidepoolRepository.clearLog()
                 true
             }
 

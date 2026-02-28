@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.tidepool.mvvm
+package app.aaps.plugins.sync.tidepool.compose
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -17,7 +17,7 @@ import javax.inject.Singleton
  * that are collected by the ViewModel and displayed in TidepoolScreen.
  */
 @Singleton
-class TidepoolMvvmRepository @Inject constructor(
+class TidepoolRepository @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 

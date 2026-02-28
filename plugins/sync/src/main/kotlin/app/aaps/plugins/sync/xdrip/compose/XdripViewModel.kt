@@ -1,11 +1,12 @@
-package app.aaps.plugins.sync.xdrip.mvvm
+package app.aaps.plugins.sync.xdrip.compose
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.ui.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -32,7 +33,7 @@ class XdripViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             xdripMvvmRepository.queueSize.collect { size ->
-                val queueText = if (size >= 0) size.toString() else rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+                val queueText = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
                 uiState.update { it.copy(queue = queueText) }
             }
         }

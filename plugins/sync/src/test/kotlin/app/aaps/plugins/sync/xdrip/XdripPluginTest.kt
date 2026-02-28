@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
-import app.aaps.plugins.sync.xdrip.mvvm.XdripMvvmRepository
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

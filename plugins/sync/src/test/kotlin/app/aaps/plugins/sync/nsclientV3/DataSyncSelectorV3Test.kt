@@ -5,7 +5,7 @@ import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.BgSource
@@ -36,7 +36,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var nsClient: NsClient
-    @Mock lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     private lateinit var storeDataForDb: StoreDataForDb
@@ -44,14 +44,14 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     @BeforeEach
     fun setUp() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientMvvmRepository)
-        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, localProfileManager, persistenceLayer, storeDataForDb, config, nsClientMvvmRepository, dagger.Lazy { nsClientV3Plugin })
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)
+        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, localProfileManager, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
     }
 
     @Test
     fun bgUploadEnabledTest() {
 
-        class NSClientSourcePlugin() : NSClientSource, BgSource {
+        class NSClientSourcePlugin : NSClientSource, BgSource {
 
             override fun isEnabled(): Boolean = true
             override fun detectSource(glucoseValue: GV) {}
@@ -59,7 +59,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         val nsClientSourcePlugin = NSClientSourcePlugin()
 
-        class AnotherSourcePlugin() : BgSource
+        class AnotherSourcePlugin : BgSource
 
         val anotherSourcePlugin = AnotherSourcePlugin()
 

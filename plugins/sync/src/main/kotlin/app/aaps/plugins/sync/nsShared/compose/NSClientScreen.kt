@@ -46,16 +46,21 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.interfaces.nsclient.NSClientLog
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 private val jsonPrettyPrint = Json { prettyPrint = true }
+private val timeFormatPreview = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
 private const val JSON_EXPANDED = "json_expanded"
 private const val JSON_COLLAPSED = "json_collapsed"
@@ -112,6 +117,21 @@ fun NSClientScreen(
         )
     }
 
+    NSClientScreenContent(
+        uiState = uiState,
+        dateUtil = dateUtil,
+        onPauseChanged = onPauseChanged,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun NSClientScreenContent(
+    uiState: NSClientUiState,
+    dateUtil: DateUtil? = null,
+    onPauseChanged: (Boolean) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -195,7 +215,7 @@ fun NSClientScreen(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = buildAnnotatedString {
-                                append(dateUtil.timeStringWithSeconds(log.date))
+                                append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(log.date))
                                 append(" ")
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                     append(log.action)
@@ -239,7 +259,8 @@ fun NSClientScreen(
                     }
                 } else {
                     val fullText = buildAnnotatedString {
-                        append(dateUtil.timeStringWithSeconds(log.date))
+                        dateUtil?.let { append(it.timeStringWithSeconds(log.date)) }
+                            ?: append(log.date.toString())
                         append(" ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                             append(log.action)
@@ -276,6 +297,26 @@ fun NSClientScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NSClientScreenPreview() {
+    MaterialTheme {
+        NSClientScreenContent(
+            uiState = NSClientUiState(
+                url = "https://nightscout.example.com",
+                status = "Connected",
+                queue = "0",
+                paused = false,
+                logList = listOf(
+                    NSClientLog(action = "UPLOAD", logText = "Uploading treatments"),
+                    NSClientLog(action = "READ", logText = "Reading entries"),
+                    NSClientLog(action = "SYNC", logText = "Synchronization complete"),
+                )
+            )
+        )
     }
 }
 

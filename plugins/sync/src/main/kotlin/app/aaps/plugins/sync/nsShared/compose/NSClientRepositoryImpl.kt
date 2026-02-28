@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.nsShared.compose
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientLog
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,14 +20,14 @@ import javax.inject.Singleton
  * Holds reactive state flows for queue size, connection status, URL,
  * and log entries that are collected by the ViewModel and displayed in NSClientScreen.
  *
- * Note: Interface [app.aaps.core.interfaces.nsclient.NSClientMvvmRepository] is in core:interfaces module
+ * Note: Interface [app.aaps.core.interfaces.nsclient.NSClientRepository] is in core:interfaces module
  * to allow cross-module dependency injection.
  */
 @Singleton
-class NSClientMvvmRepositoryImpl @Inject constructor(
+class NSClientRepositoryImpl @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger
-) : NSClientMvvmRepository {
+) : NSClientRepository {
 
     companion object {
 

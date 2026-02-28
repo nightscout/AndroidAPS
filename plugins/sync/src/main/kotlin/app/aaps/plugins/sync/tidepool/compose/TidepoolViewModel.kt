@@ -1,7 +1,7 @@
-package app.aaps.plugins.sync.tidepool.mvvm
+package app.aaps.plugins.sync.tidepool.compose
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
@@ -19,7 +19,7 @@ data class TidepoolUiState(
 
 @Stable
 class TidepoolViewModel @Inject constructor(
-    private val tidepoolMvvmRepository: TidepoolMvvmRepository,
+    private val tidepoolRepository: TidepoolRepository,
     private val authFlowOut: AuthFlowOut
 ) : ViewModel() {
 
@@ -28,18 +28,18 @@ class TidepoolViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            tidepoolMvvmRepository.connectionStatus.collect { status ->
+            tidepoolRepository.connectionStatus.collect { status ->
                 uiState.update { it.copy(connectionStatus = status.name) }
             }
         }
         viewModelScope.launch {
-            tidepoolMvvmRepository.logList.collect { logList ->
+            tidepoolRepository.logList.collect { logList ->
                 uiState.update { it.copy(logList = logList) }
             }
         }
     }
 
     fun loadInitialData() {
-        tidepoolMvvmRepository.updateConnectionStatus(authFlowOut.connectionStatus)
+        tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)
     }
 }

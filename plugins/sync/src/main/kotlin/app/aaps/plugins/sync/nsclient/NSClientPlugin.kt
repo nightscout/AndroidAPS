@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -45,8 +45,8 @@ import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsShared.NSClientFragment
+import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
@@ -71,7 +71,7 @@ class NSClientPlugin @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val nsSettingsStatus: NSSettingsStatus,
     private val decimalFormatter: DecimalFormatter,
-    private val nsClientMvvmRepository: NSClientMvvmRepository,
+    private val nsClientRepository: NSClientRepository,
     private val persistenceLayer: PersistenceLayer,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin
@@ -92,7 +92,7 @@ class NSClientPlugin @Inject constructor(
                 aapsLogger = aapsLogger,
                 persistenceLayer = persistenceLayer,
                 uel = uel,
-                nsClientMvvmRepository = nsClientMvvmRepository,
+                nsClientRepository = nsClientRepository,
                 activePlugin = activePlugin,
                 preferences = preferences,
                 nsClient = plugin as NsClient,

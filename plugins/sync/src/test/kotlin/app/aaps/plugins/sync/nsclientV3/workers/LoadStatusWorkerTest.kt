@@ -19,7 +19,7 @@ import app.aaps.core.nssdk.localmodel.Status
 import app.aaps.core.nssdk.localmodel.Storage
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.plugins.sync.nsShared.compose.NSClientMvvmRepositoryImpl
+import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
@@ -49,7 +49,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var uel: UserEntryLogger
 
-    private lateinit var nsClientMvvmRepository: NSClientMvvmRepositoryImpl
+    private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
     private lateinit var dataWorkerStorage: DataWorkerStorage
@@ -61,14 +61,14 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.fabricPrivacy = fabricPrivacy
                 it.nsClientV3Plugin = nsClientV3Plugin
-                it.nsClientMvvmRepository = nsClientMvvmRepository
+                it.nsClientRepository = nsClientMvvmRepository
             }
         }
     }
 
     @BeforeEach
     fun setUp() {
-        nsClientMvvmRepository = NSClientMvvmRepositoryImpl(rxBus, aapsLogger)
+        nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
         dataWorkerStorage = DataWorkerStorage(context)
         receiverDelegate = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(

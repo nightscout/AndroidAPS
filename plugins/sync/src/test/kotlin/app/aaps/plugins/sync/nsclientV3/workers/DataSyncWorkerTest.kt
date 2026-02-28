@@ -6,7 +6,7 @@ import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.plugins.sync.nsShared.compose.NSClientMvvmRepositoryImpl
+import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
@@ -40,7 +40,7 @@ internal class DataSyncWorkerTest : TestBase() {
     @Mock lateinit var nsClientV3Service: NSClientV3Service
     @Mock lateinit var context: ContextWithInjector
 
-    private lateinit var nsClientMvvmRepository: NSClientMvvmRepositoryImpl
+    private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
 
     private lateinit var sut: DataSyncWorker
 
@@ -51,7 +51,7 @@ internal class DataSyncWorkerTest : TestBase() {
                 it.fabricPrivacy = fabricPrivacy
                 it.dataSyncSelectorV3 = dataSyncSelectorV3
                 it.activePlugin = activePlugin
-                it.nsClientMvvmRepository = nsClientMvvmRepository
+                it.nsClientRepository = nsClientMvvmRepository
                 it.nsClientV3Plugin = nsClientV3Plugin
             }
         }
@@ -59,7 +59,7 @@ internal class DataSyncWorkerTest : TestBase() {
 
     @BeforeEach
     fun prepare() {
-        nsClientMvvmRepository = NSClientMvvmRepositoryImpl(rxBus, aapsLogger)
+        nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
         whenever(context.applicationContext).thenReturn(context)
         whenever(context.androidInjector()).thenReturn(injector.androidInjector())
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)

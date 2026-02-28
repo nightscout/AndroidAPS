@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.nsShared
 
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.keys.BooleanKey
@@ -44,7 +44,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     // Mock all dependencies
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var storeDataForDb: StoreDataForDb
-    @Mock lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Mock lateinit var nsClientRepository: NSClientRepository
 
     @BeforeEach
     fun setUp() {
@@ -67,7 +67,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             config = config,
             profileStoreProvider = profileStoreProvider,
             notificationManager = notificationManager,
-            nsClientMvvmRepository = nsClientMvvmRepository
+            nsClientRepository = nsClientRepository
         )
     }
 

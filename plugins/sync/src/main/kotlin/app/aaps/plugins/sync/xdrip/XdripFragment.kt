@@ -27,8 +27,9 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.xdrip.mvvm.XdripMvvmRepository
-import app.aaps.plugins.sync.xdrip.mvvm.XdripViewModel
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.plugins.sync.xdrip.compose.XdripScreen
+import app.aaps.plugins.sync.xdrip.compose.XdripViewModel
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,7 +77,12 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
                             XdripScreen(
                                 viewModel = vm,
                                 dateUtil = dateUtil,
-                                rh = rh
+                                rh = rh,
+                                setToolbarConfig = {},
+                                onNavigateBack = {},
+                                onSettings = null,
+                                onClearLog = { xdripMvvmRepository.clearLog() },
+                                onFullSync = { handleFullSync() }
                             )
                         }
                     }

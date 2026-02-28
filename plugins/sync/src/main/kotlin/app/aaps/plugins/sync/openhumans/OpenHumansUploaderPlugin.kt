@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
@@ -81,6 +82,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(R.drawable.open_humans_white)
+        .icon(IcPluginOpenHumans)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)
         .description(R.string.open_humans_description)

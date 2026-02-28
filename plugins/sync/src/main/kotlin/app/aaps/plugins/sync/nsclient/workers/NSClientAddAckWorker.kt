@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sync.DataSyncSelector
@@ -38,7 +38,7 @@ class NSClientAddAckWorker(
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Inject lateinit var nsClientRepository: NSClientRepository
 
     override suspend fun doWorkAndLog(): Result {
         val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAddAck?
@@ -58,7 +58,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdTemporaryTargets(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked TemporaryTarget " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked TemporaryTarget " + pair.value.ids.nightscoutId)
             }
 
             is PairGlucoseValue                  -> {
@@ -67,7 +67,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdGlucoseValues(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked GlucoseValue " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked GlucoseValue " + pair.value.ids.nightscoutId)
             }
 
             is PairFood                          -> {
@@ -76,7 +76,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdFoods(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked Food " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked Food " + pair.value.ids.nightscoutId)
                 // Send new if waiting
             }
 
@@ -86,7 +86,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdTherapyEvents(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked TherapyEvent " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked TherapyEvent " + pair.value.ids.nightscoutId)
             }
 
             is PairBolus                         -> {
@@ -95,7 +95,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdBoluses(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked Bolus " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked Bolus " + pair.value.ids.nightscoutId)
             }
 
             is PairCarbs                         -> {
@@ -104,7 +104,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdCarbs(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked Carbs " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked Carbs " + pair.value.ids.nightscoutId)
             }
 
             is PairBolusCalculatorResult         -> {
@@ -112,7 +112,7 @@ class NSClientAddAckWorker(
                 pair.value.ids.nightscoutId = ack.id
                 storeDataForDb.addToNsIdBolusCalculatorResults(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked BolusCalculatorResult " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked BolusCalculatorResult " + pair.value.ids.nightscoutId)
             }
 
             is PairTemporaryBasal                -> {
@@ -121,7 +121,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdTemporaryBasals(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked TemporaryBasal " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked TemporaryBasal " + pair.value.ids.nightscoutId)
             }
 
             is PairExtendedBolus                 -> {
@@ -130,7 +130,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdExtendedBoluses(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked ExtendedBolus " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked ExtendedBolus " + pair.value.ids.nightscoutId)
             }
 
             is PairProfileSwitch                 -> {
@@ -139,7 +139,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdProfileSwitches(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.ids.nightscoutId)
             }
 
             is PairEffectiveProfileSwitch        -> {
@@ -148,7 +148,7 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdEffectiveProfileSwitches(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked EffectiveProfileSwitch " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked EffectiveProfileSwitch " + pair.value.ids.nightscoutId)
             }
 
             is DataSyncSelector.PairDeviceStatus -> {
@@ -157,22 +157,22 @@ class NSClientAddAckWorker(
                 pair.confirmed = true
                 storeDataForDb.addToNsIdDeviceStatuses(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked DeviceStatus " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked DeviceStatus " + pair.value.ids.nightscoutId)
             }
 
             is PairProfileStore                  -> {
                 val pair = ack.originalObject
                 pair.confirmed = true
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked ProfileStore " + ack.id)
+                nsClientRepository.addLog("◄ DBADD", "Acked ProfileStore " + ack.id)
             }
 
-            is DataSyncSelector.PairRunningMode -> {
+            is DataSyncSelector.PairRunningMode  -> {
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.addToNsIdRunningModes(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                nsClientMvvmRepository.addLog("◄ DBADD", "Acked RunningMode " + pair.value.ids.nightscoutId)
+                nsClientRepository.addLog("◄ DBADD", "Acked RunningMode " + pair.value.ids.nightscoutId)
             }
 
         }

@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -70,7 +70,7 @@ class NsIncomingDataProcessor @Inject constructor(
     private val config: Config,
     private val profileStoreProvider: Provider<ProfileStore>,
     private val notificationManager: NotificationManager,
-    private val nsClientMvvmRepository: NSClientMvvmRepository
+    private val nsClientRepository: NSClientRepository
 ) {
 
     private fun toGv(jsonObject: JSONObject): GV? {
@@ -231,7 +231,7 @@ class NsIncomingDataProcessor @Inject constructor(
             return latestDateInReceivedData > 0
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            nsClientMvvmRepository.addLog("◄ ERROR", error.localizedMessage)
+            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
         }
         return false
     }
@@ -272,7 +272,7 @@ class NsIncomingDataProcessor @Inject constructor(
             storeDataForDb.addToFoods(foods)
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            nsClientMvvmRepository.addLog("◄ ERROR", error.localizedMessage)
+            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
         }
     }
 

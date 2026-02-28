@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.NsClient
@@ -37,7 +37,7 @@ class NSClientComposeContent(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val uel: UserEntryLogger,
-    private val nsClientMvvmRepository: NSClientMvvmRepository,
+    private val nsClientRepository: NSClientRepository,
     private val activePlugin: ActivePlugin,
     private val preferences: Preferences,
     private val nsClient: NsClient,
@@ -55,7 +55,7 @@ class NSClientComposeContent(
             NSClientViewModel(
                 rh = rh,
                 activePlugin = activePlugin,
-                nsClientMvvmRepository = nsClientMvvmRepository,
+                nsClientRepository = nsClientRepository,
                 preferences = preferences
             )
         }
@@ -147,7 +147,7 @@ class NSClientComposeContent(
                 viewModel.updatePaused(isChecked)
             },
             onClearLog = {
-                nsClientMvvmRepository.clearLog()
+                nsClientRepository.clearLog()
             },
             onSendNow = {
                 scope.launch(Dispatchers.IO) {

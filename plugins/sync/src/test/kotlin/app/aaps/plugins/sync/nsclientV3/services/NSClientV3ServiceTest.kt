@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsShared.compose.NSClientMvvmRepositoryImpl
+import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
@@ -26,12 +26,12 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
 
-    private lateinit var nsClientMvvmRepository: NSClientMvvmRepositoryImpl
+    private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
     private lateinit var sut: NSClientV3Service
 
     @BeforeEach
     fun init() {
-        nsClientMvvmRepository = NSClientMvvmRepositoryImpl(rxBus, aapsLogger)
+        nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
         sut = NSClientV3Service().also {
             it.aapsLogger = aapsLogger
             it.preferences = preferences
@@ -42,7 +42,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
             it.storeDataForDb = storeDataForDb
             it.notificationManager = notificationManager
             it.nsDeviceStatusHandler = nsDeviceStatusHandler
-            it.nsClientMvvmRepository = nsClientMvvmRepository
+            it.nsClientRepository = nsClientMvvmRepository
         }
     }
 

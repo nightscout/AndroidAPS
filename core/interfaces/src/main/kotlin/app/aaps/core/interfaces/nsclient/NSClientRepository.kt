@@ -15,7 +15,7 @@ import org.json.JSONObject
  * This interface is in core:interfaces to allow cross-module dependency injection.
  * Implementation is in plugins:sync module.
  */
-interface NSClientMvvmRepository {
+interface NSClientRepository {
 
     /** Current sync queue size */
     val queueSize: StateFlow<Long>

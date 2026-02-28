@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.tidepool.mvvm
+package app.aaps.plugins.sync.tidepool.compose
 
 import java.util.concurrent.atomic.AtomicLong
 

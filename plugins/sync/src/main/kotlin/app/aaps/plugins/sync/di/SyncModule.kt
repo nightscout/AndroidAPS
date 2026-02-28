@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.WorkManager
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -14,7 +14,7 @@ import app.aaps.plugins.sync.garmin.LoopHub
 import app.aaps.plugins.sync.garmin.LoopHubImpl
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
-import app.aaps.plugins.sync.nsShared.compose.NSClientMvvmRepositoryImpl
+import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsShared.compose.NSClientViewModel
 import app.aaps.plugins.sync.nsclient.data.NSSettingsStatusImpl
 import app.aaps.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
@@ -34,7 +34,7 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import app.aaps.plugins.sync.tidepool.TidepoolFragment
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowIn
-import app.aaps.plugins.sync.tidepool.mvvm.TidepoolViewModel
+import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
 import app.aaps.plugins.sync.wear.WearFragment
 import app.aaps.plugins.sync.wear.activities.CwfInfosActivity
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
@@ -42,7 +42,7 @@ import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
 import app.aaps.plugins.sync.xdrip.DataSyncSelectorXdripImpl
 import app.aaps.plugins.sync.xdrip.XdripFragment
 import app.aaps.plugins.sync.xdrip.XdripPlugin
-import app.aaps.plugins.sync.xdrip.mvvm.XdripViewModel
+import app.aaps.plugins.sync.xdrip.compose.XdripViewModel
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import dagger.Binds
 import dagger.Module
@@ -107,7 +107,7 @@ abstract class SyncModule {
         @Binds fun bindLoopHub(loopHub: LoopHubImpl): LoopHub
 
         @Binds fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
-        @Binds fun bindNSClientRepository(nsClientRepositoryImpl: NSClientMvvmRepositoryImpl): NSClientMvvmRepository
+        @Binds fun bindNSClientRepository(nsClientRepositoryImpl: NSClientRepositoryImpl): NSClientRepository
 
         @Binds
         @IntoMap

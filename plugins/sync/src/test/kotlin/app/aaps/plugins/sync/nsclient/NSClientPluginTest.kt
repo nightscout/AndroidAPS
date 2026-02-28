@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.nsclient
 
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -16,7 +16,7 @@ class NSClientPluginTest : TestBaseWithProfile() {
     @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var dataSyncSelectorV1: DataSyncSelectorV1
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
-    @Mock lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
@@ -26,7 +26,7 @@ class NSClientPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         nsClientPlugin = NSClientPlugin(
             aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy, preferences, receiverDelegate, dataSyncSelectorV1,
-            dateUtil, profileUtil, nsSettingsStatus, decimalFormatter, nsClientMvvmRepository, persistenceLayer, uel, activePlugin
+            dateUtil, profileUtil, nsSettingsStatus, decimalFormatter, nsClientRepository, persistenceLayer, uel, activePlugin
         )
     }
 

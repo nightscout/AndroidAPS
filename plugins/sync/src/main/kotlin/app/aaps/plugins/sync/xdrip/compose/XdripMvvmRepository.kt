@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.xdrip.mvvm
+package app.aaps.plugins.sync.xdrip.compose
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag

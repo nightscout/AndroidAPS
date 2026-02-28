@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginFragment
@@ -44,7 +44,7 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Inject lateinit var nsClientRepository: NSClientRepository
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
@@ -58,7 +58,7 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
         viewModel = NSClientViewModel(
             rh = rh,
             activePlugin = activePlugin,
-            nsClientMvvmRepository = nsClientMvvmRepository,
+            nsClientRepository = nsClientRepository,
             preferences = preferences
         )
 
@@ -87,7 +87,7 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
                                     vm.updatePaused(isChecked)
                                 },
                                 onClearLog = {
-                                    nsClientMvvmRepository.clearLog()
+                                    nsClientRepository.clearLog()
                                 },
                                 onSendNow = {
                                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {

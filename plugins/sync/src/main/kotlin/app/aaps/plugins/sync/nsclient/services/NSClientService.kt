@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.NSClientMvvmRepository
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -101,7 +101,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var storeDataForDb: StoreDataForDb
-    @Inject lateinit var nsClientMvvmRepository: NSClientMvvmRepository
+    @Inject lateinit var nsClientRepository: NSClientRepository
 
     companion object {
 
@@ -159,7 +159,7 @@ class NSClientService : DaggerService() {
                                latestDateInReceivedData = 0
                                destroy()
                                initialize()
-                               nsClientMvvmRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
+                               nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
                            }
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -235,13 +235,13 @@ class NSClientService : DaggerService() {
         connectionStatus += ')'
         isConnected = true
         hasWriteAuth = ack.write && ack.writeTreatment
-        nsClientMvvmRepository.updateStatus(connectionStatus)
-        nsClientMvvmRepository.addLog("◄ AUTH", connectionStatus)
+        nsClientRepository.updateStatus(connectionStatus)
+        nsClientRepository.addLog("◄ AUTH", connectionStatus)
         if (!ack.write) {
-            nsClientMvvmRepository.addLog("◄ ERROR", "Write permission not granted ")
+            nsClientRepository.addLog("◄ ERROR", "Write permission not granted ")
         }
         if (!ack.writeTreatment) {
-            nsClientMvvmRepository.addLog("◄ ERROR", "Write treatment permission not granted ")
+            nsClientRepository.addLog("◄ ERROR", "Write treatment permission not granted ")
         }
         if (!hasWriteAuth) {
             notificationManager.post(NotificationId.NSCLIENT_NO_WRITE_PERMISSION, R.string.no_write_permission, level = NotificationLevel.URGENT)
@@ -265,24 +265,24 @@ class NSClientService : DaggerService() {
         readPreferences()
         @Suppress("DEPRECATION")
         if (nsAPISecret != "") nsApiHashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString()
-        nsClientMvvmRepository.updateStatus("Initializing")
+        nsClientRepository.updateStatus("Initializing")
         if (!nsClientPlugin.isAllowed) {
-            nsClientMvvmRepository.addLog("● NSCLIENT", nsClientPlugin.blockingReason)
-            nsClientMvvmRepository.updateStatus(nsClientPlugin.blockingReason)
+            nsClientRepository.addLog("● NSCLIENT", nsClientPlugin.blockingReason)
+            nsClientRepository.updateStatus(nsClientPlugin.blockingReason)
         } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
-            nsClientMvvmRepository.addLog("● NSCLIENT", "paused")
-            nsClientMvvmRepository.updateStatus("Paused")
+            nsClientRepository.addLog("● NSCLIENT", "paused")
+            nsClientRepository.updateStatus("Paused")
         } else if (!nsEnabled) {
-            nsClientMvvmRepository.addLog("● NSCLIENT", "disabled")
-            nsClientMvvmRepository.updateStatus("Disabled")
+            nsClientRepository.addLog("● NSCLIENT", "disabled")
+            nsClientRepository.updateStatus("Disabled")
         } else if (nsURL != "" && (nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
-                nsClientMvvmRepository.updateStatus("Connecting ...")
+                nsClientRepository.updateStatus("Connecting ...")
                 val opt = IO.Options().also { it.forceNew = true }
                 socket = IO.socket(nsURL, opt).also { socket ->
                     socket.on(Socket.EVENT_CONNECT, onConnect)
                     socket.on(Socket.EVENT_DISCONNECT, onDisconnect)
-                    nsClientMvvmRepository.addLog("● NSCLIENT", "do connect")
+                    nsClientRepository.addLog("● NSCLIENT", "do connect")
                     socket.connect()
                     socket.on("dataUpdate", onDataUpdate)
                     socket.on("announcement", onAnnouncement)
@@ -291,25 +291,25 @@ class NSClientService : DaggerService() {
                     socket.on("clear_alarm", onClearAlarm)
                 }
             } catch (_: URISyntaxException) {
-                nsClientMvvmRepository.addLog("● NSCLIENT", "Wrong URL syntax")
-                nsClientMvvmRepository.updateStatus("Wrong URL syntax")
+                nsClientRepository.addLog("● NSCLIENT", "Wrong URL syntax")
+                nsClientRepository.updateStatus("Wrong URL syntax")
             } catch (_: RuntimeException) {
-                nsClientMvvmRepository.addLog("● NSCLIENT", "Wrong URL syntax")
-                nsClientMvvmRepository.updateStatus("Wrong URL syntax")
+                nsClientRepository.addLog("● NSCLIENT", "Wrong URL syntax")
+                nsClientRepository.updateStatus("Wrong URL syntax")
             }
         } else if (nsURL.lowercase(Locale.getDefault()).startsWith("http://")) {
-            nsClientMvvmRepository.addLog("● NSCLIENT", "NS URL not encrypted")
-            nsClientMvvmRepository.updateStatus("Not encrypted")
+            nsClientRepository.addLog("● NSCLIENT", "NS URL not encrypted")
+            nsClientRepository.updateStatus("Not encrypted")
         } else {
-            nsClientMvvmRepository.addLog("● NSCLIENT", "No NS URL specified")
-            nsClientMvvmRepository.updateStatus("Not configured")
+            nsClientRepository.addLog("● NSCLIENT", "No NS URL specified")
+            nsClientRepository.updateStatus("Not configured")
         }
     }
 
     private val onConnect = Emitter.Listener {
         connectCounter++
         val socketId = socket?.id() ?: "NULL"
-        nsClientMvvmRepository.addLog("● NSCLIENT", "connect #$connectCounter event. ID: $socketId")
+        nsClientRepository.addLog("● NSCLIENT", "connect #$connectCounter event. ID: $socketId")
         if (socket != null) sendAuthMessage(NSAuthAck(rxBus))
         watchdog()
     }
@@ -323,15 +323,15 @@ class NSClientService : DaggerService() {
                     reconnections.remove(r)
                 }
             }
-            nsClientMvvmRepository.addLog("● WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " minutes: " + reconnections.size + "/" + WATCHDOG_MAX_CONNECTIONS)
+            nsClientRepository.addLog("● WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " minutes: " + reconnections.size + "/" + WATCHDOG_MAX_CONNECTIONS)
             if (reconnections.size >= WATCHDOG_MAX_CONNECTIONS) {
                 notificationManager.post(NotificationId.NS_MALFUNCTION, R.string.ns_malfunction)
-                nsClientMvvmRepository.addLog("● WATCHDOG", "pausing for $WATCHDOG_RECONNECT_IN minutes")
+                nsClientRepository.addLog("● WATCHDOG", "pausing for $WATCHDOG_RECONNECT_IN minutes")
                 nsClientPlugin.pause(true)
-                nsClientMvvmRepository.updateStatus(nsClientPlugin.status)
+                nsClientRepository.updateStatus(nsClientPlugin.status)
                 Thread {
                     SystemClock.sleep(mins(WATCHDOG_RECONNECT_IN.toLong()).msecs())
-                    nsClientMvvmRepository.addLog("● WATCHDOG", "re-enabling NSClient")
+                    nsClientRepository.addLog("● WATCHDOG", "re-enabling NSClient")
                     nsClientPlugin.pause(false)
                 }.start()
             }
@@ -340,7 +340,7 @@ class NSClientService : DaggerService() {
 
     private val onDisconnect = Emitter.Listener { args ->
         aapsLogger.debug(LTag.NSCLIENT, "disconnect reason: {}", *args)
-        nsClientMvvmRepository.addLog("● NSCLIENT", "disconnect event")
+        nsClientRepository.addLog("● NSCLIENT", "disconnect event")
     }
 
     @Synchronized fun destroy() {
@@ -351,7 +351,7 @@ class NSClientService : DaggerService() {
         socket?.off("alarm")
         socket?.off("urgent_alarm")
         socket?.off("clear_alarm")
-        nsClientMvvmRepository.addLog("● NSCLIENT", "destroy")
+        nsClientRepository.addLog("● NSCLIENT", "destroy")
         isConnected = false
         hasWriteAuth = false
         socket?.disconnect()
@@ -370,7 +370,7 @@ class NSClientService : DaggerService() {
             aapsLogger.error("Unhandled exception", e)
             return
         }
-        nsClientMvvmRepository.addLog("► AUTH", "requesting auth")
+        nsClientRepository.addLog("► AUTH", "requesting auth")
         socket?.emit("authorize", authMessage, ack)
     }
 
@@ -447,7 +447,7 @@ class NSClientService : DaggerService() {
         val data: JSONObject
         try {
             data = args[0] as JSONObject
-            nsClientMvvmRepository.addLog("◄ CLEARALARM", "received")
+            nsClientRepository.addLog("◄ CLEARALARM", "received")
             notificationManager.dismiss(NotificationId.NS_ALARM)
             notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
             aapsLogger.debug(LTag.NSCLIENT, data.toString())
@@ -466,26 +466,26 @@ class NSClientService : DaggerService() {
                 try {
                     // delta means only increment/changes are coming
                     val isDelta = data.has("delta")
-                    nsClientMvvmRepository.addLog("◄ DATA", "Data packet #" + dataCounter++ + if (isDelta) " delta" else " full")
+                    nsClientRepository.addLog("◄ DATA", "Data packet #" + dataCounter++ + if (isDelta) " delta" else " full")
                     if (data.has("status")) {
                         val status = data.getJSONObject("status")
                         nsSettingsStatus.handleNewData(status)
                     } else if (!isDelta) {
-                        nsClientMvvmRepository.addLog("◄ ERROR", "Unsupported Nightscout version ")
+                        nsClientRepository.addLog("◄ ERROR", "Unsupported Nightscout version ")
                     }
                     if (data.has("profiles")) {
                         val profiles = data.getJSONArray("profiles")
                         if (profiles.length() > 0) {
                             // take the newest
                             val profileStoreJson = profiles[profiles.length() - 1] as JSONObject
-                            nsClientMvvmRepository.addLog("◄ PROFILE", "profile received")
+                            nsClientRepository.addLog("◄ PROFILE", "profile received")
                             nsIncomingDataProcessor.processProfile(profileStoreJson, false)
                         }
                     }
                     if (data.has("treatments")) {
                         val treatments = data.getJSONArray("treatments")
                         val addedOrUpdatedTreatments = JSONArray()
-                        if (treatments.length() > 0) nsClientMvvmRepository.addLog("◄ DATA", "received " + treatments.length() + " treatments")
+                        if (treatments.length() > 0) nsClientRepository.addLog("◄ DATA", "received " + treatments.length() + " treatments")
                         for (index in 0 until treatments.length()) {
                             val jsonTreatment = treatments.getJSONObject(index)
                             val action = safeGetStringAllowNull(jsonTreatment, "action", null)
@@ -545,7 +545,7 @@ class NSClientService : DaggerService() {
                                 emptyArray<NSDeviceStatus>()
                             }
                             if (devicestatuses.isNotEmpty()) {
-                                nsClientMvvmRepository.addLog("◄ DATA", "received " + devicestatuses.size + " device statuses")
+                                nsClientRepository.addLog("◄ DATA", "received " + devicestatuses.size + " device statuses")
                                 nsDeviceStatusHandler.handleNewData(devicestatuses)
                             }
                         } catch (e: JSONException) {
@@ -554,13 +554,13 @@ class NSClientService : DaggerService() {
                     }
                     if (data.has("food")) {
                         val foods = data.getJSONArray("food")
-                        if (foods.length() > 0) nsClientMvvmRepository.addLog("◄ DATA", "received " + foods.length() + " foods")
+                        if (foods.length() > 0) nsClientRepository.addLog("◄ DATA", "received " + foods.length() + " foods")
                         nsIncomingDataProcessor.processFood(foods)
                         storeDataForDb.storeFoodsToDb()
                     }
                     if (data.has("mbgs")) {
                         val mbgArray = data.getJSONArray("mbgs")
-                        if (mbgArray.length() > 0) nsClientMvvmRepository.addLog("◄ DATA", "received " + mbgArray.length() + " mbgs")
+                        if (mbgArray.length() > 0) nsClientRepository.addLog("◄ DATA", "received " + mbgArray.length() + " mbgs")
                         dataWorkerStorage.enqueue(
                             OneTimeWorkRequest.Builder(NSClientMbgWorker::class.java)
                                 .setInputData(dataWorkerStorage.storeInputData(mbgArray))
@@ -569,18 +569,18 @@ class NSClientService : DaggerService() {
                     }
                     if (data.has("cals")) {
                         val cals = data.getJSONArray("cals")
-                        if (cals.length() > 0) nsClientMvvmRepository.addLog("◄ DATA", "received " + cals.length() + " cals")
+                        if (cals.length() > 0) nsClientRepository.addLog("◄ DATA", "received " + cals.length() + " cals")
                         // Calibrations ignored
                     }
                     if (data.has("sgvs")) {
                         val sgvs = data.getJSONArray("sgvs")
                         if (sgvs.length() > 0) {
-                            nsClientMvvmRepository.addLog("◄ DATA", "received " + sgvs.length() + " sgvs")
+                            nsClientRepository.addLog("◄ DATA", "received " + sgvs.length() + " sgvs")
                             nsIncomingDataProcessor.processSgvs(sgvs, false)
                             storeDataForDb.storeGlucoseValuesToDb()
                         }
                     }
-                    nsClientMvvmRepository.addLog("◄ LAST", dateUtil.dateAndTimeString(latestDateInReceivedData))
+                    nsClientRepository.addLog("◄ LAST", dateUtil.dateAndTimeString(latestDateInReceivedData))
                     resend("LAST")
                 } catch (e: JSONException) {
                     aapsLogger.error("Unhandled exception", e)
@@ -601,7 +601,7 @@ class NSClientService : DaggerService() {
             message.put("_id", _id)
             message.put("data", data)
             socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, this, dateUtil, dataWorkerStorage, originalObject))
-            nsClientMvvmRepository.addLog("► UPDATE $collection", "Sent ${originalObject.javaClass.simpleName} $_id $progress", data)
+            nsClientRepository.addLog("► UPDATE $collection", "Sent ${originalObject.javaClass.simpleName} $_id $progress", data)
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }
@@ -614,7 +614,7 @@ class NSClientService : DaggerService() {
             message.put("collection", collection)
             message.put("data", data)
             socket?.emit("dbAdd", message, NSAddAck(aapsLogger, rxBus, this, dateUtil, dataWorkerStorage, originalObject))
-            nsClientMvvmRepository.addLog("► ADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + progress, data)
+            nsClientRepository.addLog("► ADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + progress, data)
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }
@@ -623,7 +623,7 @@ class NSClientService : DaggerService() {
     fun sendAlarmAck(alarmAck: AlarmAck) {
         if (!isConnected || !hasWriteAuth) return
         socket?.emit("ack", alarmAck.level, alarmAck.group, alarmAck.silenceTime)
-        nsClientMvvmRepository.addLog("► ALARMACK ", alarmAck.level.toString() + " " + alarmAck.group + " " + alarmAck.silenceTime)
+        nsClientRepository.addLog("► ALARMACK ", alarmAck.level.toString() + " " + alarmAck.group + " " + alarmAck.silenceTime)
     }
 
     @Synchronized
@@ -635,9 +635,9 @@ class NSClientService : DaggerService() {
             //     aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + (System.currentTimeMillis() - lastAckTime) / 1000L + " sec")
             //     return@async
             // }
-            nsClientMvvmRepository.addLog("● QUEUE", "Resend started: $reason")
+            nsClientRepository.addLog("● QUEUE", "Resend started: $reason")
             dataSyncSelectorV1.doUpload()
-            nsClientMvvmRepository.addLog("● QUEUE", "Resend ended: $reason")
+            nsClientRepository.addLog("● QUEUE", "Resend ended: $reason")
         }.join()
     }
 
@@ -650,7 +650,7 @@ class NSClientService : DaggerService() {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) {
             val nsAlarm = NSAlarmObject(announcement)
             postNsAlarm(nsAlarm)
-            nsClientMvvmRepository.addLog("◄ ANNOUNCEMENT", safeGetString(announcement, "message", "received"))
+            nsClientRepository.addLog("◄ ANNOUNCEMENT", safeGetString(announcement, "message", "received"))
             aapsLogger.debug(LTag.NSCLIENT, announcement.toString())
         }
     }
@@ -662,7 +662,7 @@ class NSClientService : DaggerService() {
                 val nsAlarm = NSAlarmObject(alarm)
                 postNsAlarm(nsAlarm)
             }
-            nsClientMvvmRepository.addLog("◄ ALARM", safeGetString(alarm, "message", "received"))
+            nsClientRepository.addLog("◄ ALARM", safeGetString(alarm, "message", "received"))
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString())
         }
     }
@@ -674,7 +674,7 @@ class NSClientService : DaggerService() {
                 val nsAlarm = NSAlarmObject(alarm)
                 postNsAlarm(nsAlarm)
             }
-            nsClientMvvmRepository.addLog("◄ URGENTALARM", safeGetString(alarm, "message", "received"))
+            nsClientRepository.addLog("◄ URGENTALARM", safeGetString(alarm, "message", "received"))
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString())
         }
     }

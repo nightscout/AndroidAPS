@@ -5,7 +5,7 @@ import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.sync.xdrip.mvvm.XdripMvvmRepository
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

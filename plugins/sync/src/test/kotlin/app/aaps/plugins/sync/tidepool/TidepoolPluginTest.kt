@@ -2,12 +2,12 @@ package app.aaps.plugins.sync.tidepool
 
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
+import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
-import app.aaps.plugins.sync.tidepool.mvvm.TidepoolMvvmRepository
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -28,7 +28,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var authFlowOut: AuthFlowOut
-    @Mock lateinit var tidepoolMvvmRepository: TidepoolMvvmRepository
+    @Mock lateinit var tidepoolRepository: TidepoolRepository
     @Mock lateinit var l: L
     @Mock lateinit var authState: AuthState
 
@@ -38,7 +38,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
         tidepoolPlugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolMvvmRepository
+            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository
         )
     }
 
@@ -55,11 +55,15 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
 
-        val realUploader = TidepoolUploader(aapsLogger, rxBus, context, preferences, uploadChunk,
-                                            dateUtil, receiverDelegate, config, l, authFlowOut)
-        val plugin = TidepoolPlugin(aapsLogger, rh, preferences, aapsSchedulers, rxBus,
-                                    fabricPrivacy, realUploader, uploadChunk, rateLimit,
-                                    receiverDelegate, authFlowOut, tidepoolMvvmRepository)
+        val realUploader = TidepoolUploader(
+            aapsLogger, rxBus, context, preferences, uploadChunk,
+            dateUtil, receiverDelegate, config, l, authFlowOut
+        )
+        val plugin = TidepoolPlugin(
+            aapsLogger, rh, preferences, aapsSchedulers, rxBus,
+            fabricPrivacy, realUploader, uploadChunk, rateLimit,
+            receiverDelegate, authFlowOut, tidepoolRepository
+        )
         plugin.onStart()
         rxBus.send(EventConnectivityOptionChanged("Connected", true))
 
@@ -73,11 +77,15 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         whenever(receiverDelegate.allowed).thenReturn(false)
         whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
 
-        val realUploader = TidepoolUploader(aapsLogger, rxBus, context, preferences, uploadChunk,
-                                            dateUtil, receiverDelegate, config, l, authFlowOut)
-        val plugin = TidepoolPlugin(aapsLogger, rh, preferences, aapsSchedulers, rxBus,
-                                    fabricPrivacy, realUploader, uploadChunk, rateLimit,
-                                    receiverDelegate, authFlowOut, tidepoolMvvmRepository)
+        val realUploader = TidepoolUploader(
+            aapsLogger, rxBus, context, preferences, uploadChunk,
+            dateUtil, receiverDelegate, config, l, authFlowOut
+        )
+        val plugin = TidepoolPlugin(
+            aapsLogger, rh, preferences, aapsSchedulers, rxBus,
+            fabricPrivacy, realUploader, uploadChunk, rateLimit,
+            receiverDelegate, authFlowOut, tidepoolRepository
+        )
         plugin.onStart()
         rxBus.send(EventConnectivityOptionChanged("Blocked", false))
 
