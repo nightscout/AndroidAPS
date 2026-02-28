@@ -26,7 +26,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -155,7 +154,6 @@ class OverviewPlugin @Inject constructor(
             .put(BooleanNonKey.AutosensUsedOnMainPhone, constraintsChecker.isAutosensModeEnabled().value())
 
     override fun applyConfiguration(configuration: JsonObject) {
-        val previousUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "old"
         configuration
             .store(StringKey.GeneralUnits, preferences)
             .store(StringNonKey.QuickWizard, preferences)
@@ -183,12 +181,6 @@ class OverviewPlugin @Inject constructor(
             .store(IntKey.OverviewBattCritical, preferences)
             .store(IntKey.OverviewBolusPercentage, preferences)
             .store(BooleanNonKey.AutosensUsedOnMainPhone, preferences)
-
-        val newUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "new"
-        if (previousUnits != newUnits) {
-            overviewData.reset()
-            rxBus.send(EventNewHistoryData(0L, reloadBgData = true))
-        }
     }
 
     @SuppressLint("SetTextI18n")

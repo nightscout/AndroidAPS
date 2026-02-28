@@ -9,14 +9,15 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuProvider
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.data.model.PS
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.ui.locale.LocaleHelper.update
@@ -26,6 +27,8 @@ import app.aaps.plugins.configuration.databinding.ActivitySetupwizardBinding
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.max
@@ -37,6 +40,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var swItemProvider: Provider<SWItem>
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
@@ -120,10 +124,8 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventSWSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(PS::class.java)
+            .onEach { updateButtons() }.launchIn(lifecycleScope)
         disposable += rxBus
             .toObservable(EventProfileStoreChanged::class.java)
             .observeOn(aapsSchedulers.main)

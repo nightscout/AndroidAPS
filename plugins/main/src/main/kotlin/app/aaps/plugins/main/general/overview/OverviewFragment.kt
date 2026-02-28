@@ -24,8 +24,12 @@ import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -63,18 +67,13 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
-import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
-import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.rx.events.EventRunningModeChange
 import app.aaps.core.interfaces.rx.events.EventScale
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
-import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewIobCob
@@ -115,7 +114,13 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
@@ -167,6 +172,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var commandQueue: CommandQueue
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private var smallWidth = false
     private var smallHeight = false
@@ -270,12 +276,22 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     override fun onPause() {
         super.onPause()
+        scope?.cancel()
+        scope = null
         disposable.clear()
         handler.removeCallbacksAndMessages(null)
     }
 
     override fun onResume() {
         super.onResume()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        persistenceLayer.observeChanges(EPS::class.java)
+            .onEach { scheduleUpdateGUI() }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(RM::class.java)
+            .onEach { processAps() }
+            .launchIn(newScope)
         disposable += activePlugin.activeOverview.overviewBus
             .toObservable(EventUpdateOverviewCalcProgress::class.java)
             .observeOn(aapsSchedulers.main)
@@ -343,27 +359,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processButtonsVisibility() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleUpdateGUI() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempTargetChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ updateTemporaryTarget() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ updateExtendedBolus() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ updateTemporaryBasal() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventRunningModeChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processAps() }, fabricPrivacy::logException)
-
+        persistenceLayer.observeChanges(TT::class.java)
+            .onEach { updateTemporaryTarget() }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(EB::class.java)
+            .onEach { updateExtendedBolus() }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(TB::class.java)
+            .onEach { updateTemporaryBasal() }
+            .launchIn(newScope)
         refreshLoop = Runnable {
             refreshAll()
             handler.postDelayed(refreshLoop, 60 * 1000L)

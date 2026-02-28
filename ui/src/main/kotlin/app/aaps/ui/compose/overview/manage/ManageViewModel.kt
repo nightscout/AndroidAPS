@@ -3,7 +3,9 @@ package app.aaps.ui.compose.overview.manage
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
@@ -19,9 +21,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
-import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.toStringMedium
 import app.aaps.core.objects.extensions.toStringShort
@@ -62,9 +62,9 @@ class ManageViewModel @Inject constructor(
     private fun setupEventListeners() {
         rxBus.toFlow(EventInitializationChanged::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventExtendedBolusChange::class.java)
+        persistenceLayer.observeChanges(EB::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventTempBasalChange::class.java)
+        persistenceLayer.observeChanges(TB::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventCustomActionsChanged::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)

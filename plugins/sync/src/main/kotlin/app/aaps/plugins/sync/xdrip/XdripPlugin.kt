@@ -16,6 +16,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -33,8 +34,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventNewBG
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.Sync
@@ -66,6 +65,8 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.util.concurrent.Executors
@@ -94,7 +95,8 @@ class XdripPlugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val xdripMvvmRepository: XdripMvvmRepository,
-    private val dataSyncSelector: DataSyncSelectorXdrip
+    private val dataSyncSelector: DataSyncSelectorXdrip,
+    private val persistenceLayer: PersistenceLayer
 ) : XDripBroadcast, Sync, PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -136,19 +138,11 @@ class XdripPlugin @Inject constructor(
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNewBG::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           sendStatusLine()
-                           delayAndScheduleExecution("NEW_BG")
-                       }, fabricPrivacy::logException)
-        disposable += rxBus.toObservable(EventNewHistoryData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           sendStatusLine()
-                           delayAndScheduleExecution("NEW_DATA")
-                       }, fabricPrivacy::logException)
+        persistenceLayer.observeAnyChange()
+            .onEach { types ->
+                sendStatusLine()
+                delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
+            }.launchIn(scope)
         disposable += rxBus.toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendStatusLine() }, fabricPrivacy::logException)

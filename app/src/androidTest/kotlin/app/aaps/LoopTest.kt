@@ -17,10 +17,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
-import app.aaps.core.interfaces.rx.events.EventNewBG
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
@@ -84,13 +80,9 @@ class LoopTest @Inject constructor() {
                 listValues = listOf(ValueWithUnit.SimpleString("Migration"))
             )
         }
-        rxHelper.listen(EventEffectiveProfileSwitchChanged::class.java)
         rxHelper.listen(EventLoopSetLastRunGui::class.java)
         rxHelper.listen(EventResetOpenAPSGui::class.java)
         rxHelper.listen(EventOpenAPSUpdateGui::class.java)
-        rxHelper.listen(EventNewBG::class.java)
-        rxHelper.listen(EventNewHistoryData::class.java)
-        rxHelper.listen(EventAutosensCalculationFinished::class.java)
         rxHelper.listen(EventAPSCalculationFinished::class.java)
         objectivesPlugin.onStart()
 
@@ -139,8 +131,8 @@ class LoopTest @Inject constructor() {
         )
         assertThat(result).isTrue()
 
-        // wait until PS is processed by pump and EventEffectiveProfileSwitchChanged is received
-        assertThat(rxHelper.waitFor(EventEffectiveProfileSwitchChanged::class.java, comment = "step3").first).isTrue()
+        // wait until PS is processed and EPS is created in DB
+        assertThat(rxHelper.waitUntil("step3: profile available") { profileFunction.getProfile() != null }).isTrue()
         assertThat(profileFunction.getProfile()).isNotNull()
 
         // Loop should fail on no result from APS plugin
@@ -154,7 +146,6 @@ class LoopTest @Inject constructor() {
         assertThat(loop.lastRun).isNull()
 
         // Let generate some BGs
-        rxHelper.resetState(EventNewBG::class.java)
         val now = dateUtil.now()
         val glucoseValues = mutableListOf<GV>()
         glucoseValues += GV(timestamp = now - 5 * 60000, value = 100.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
@@ -167,12 +158,10 @@ class LoopTest @Inject constructor() {
             assertThat(persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null).inserted.size).isEqualTo(6)
         }
 
-        // EventNewBG should be triggered
-        assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step6").first).isTrue()
-        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step7").first).isTrue()
-        // it should trigger loop, so wait for result
-        Thread.sleep(10000)
-        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step8").first).isTrue()
+        // GV insertion triggers calculation via observeChanges(GV) → scheduleHistoryDataChange (5s debounce)
+        // IobCobOref1Worker may exit early ("No bucketed data") so EventAutosensCalculationFinished
+        // is not guaranteed. Wait for EventAPSCalculationFinished which fires when loop runs.
+        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, maxSeconds = 60, comment = "step6").first).isTrue()
         Thread.sleep(5000)
         assertThat(loop.lastRun).isNotNull()
     }

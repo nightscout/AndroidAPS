@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -58,7 +57,7 @@ class StatusViewModel @Inject constructor(
     private fun setupEventListeners() {
         rxBus.toFlow(EventInitializationChanged::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventTherapyEventChange::class.java)
+        persistenceLayer.observeChanges(TE::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventPumpStatusChanged::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)

@@ -43,6 +43,7 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -82,6 +83,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
+        whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
         whenever(activePlugin.activeInsulin).thenReturn(insulin)
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)

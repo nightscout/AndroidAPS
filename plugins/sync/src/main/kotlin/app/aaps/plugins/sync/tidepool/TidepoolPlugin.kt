@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
+import app.aaps.core.data.model.GV
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -13,7 +15,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.Sync
@@ -68,7 +69,8 @@ class TidepoolPlugin @Inject constructor(
     private val receiverDelegate: ReceiverDelegate,
     private val authFlowOut: AuthFlowOut,
     private val tidepoolRepository: TidepoolRepository,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val persistenceLayer: PersistenceLayer
 ) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -125,17 +127,15 @@ class TidepoolPlugin @Inject constructor(
                            // Pass to setup wizard
                            rxBus.send(EventSWSyncStatus(event.status))
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNewBG::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           it.glucoseValueTimestamp?.let { bgReadingTimestamp ->
-                               if (bgReadingTimestamp < uploadChunk.getLastEnd())
-                                   uploadChunk.setLastEnd(bgReadingTimestamp)
-                               if (isAllowed && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
-                                   doUpload(EventNewBG::class.simpleName)
-                           }
-                       }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(GV::class.java)
+            .onEach { gvList ->
+                gvList.maxByOrNull { it.timestamp }?.let { gv ->
+                    if (gv.timestamp < uploadChunk.getLastEnd())
+                        uploadChunk.setLastEnd(gv.timestamp)
+                    if (isAllowed && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
+                        doUpload("GlucoseValue")
+                }
+            }.launchIn(scope)
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)

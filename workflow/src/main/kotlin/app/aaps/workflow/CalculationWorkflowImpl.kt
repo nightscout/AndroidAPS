@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.JOB
@@ -58,7 +57,7 @@ class CalculationWorkflowImpl @Inject constructor(
         reason: String,
         end: Long,
         bgDataReload: Boolean,
-        cause: Event?
+        triggeredByNewBG: Boolean
     ) {
         aapsLogger.debug(LTag.WORKER, "Starting calculation worker: $reason to ${dateUtil.dateAndTimeAndSecondsString(end)}")
 
@@ -111,11 +110,11 @@ class CalculationWorkflowImpl @Inject constructor(
             .then(
                 if (activePlugin.activeSensitivity.isOref1)
                     OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
                         .build()
                 else
                     OneTimeWorkRequest.Builder(IobCobOrefWorker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
                         .build()
             )
             .then(OneTimeWorkRequest.Builder(UpdateIobCobSensWorker::class.java).build())
@@ -133,7 +132,7 @@ class CalculationWorkflowImpl @Inject constructor(
             .then(
                 runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(InvokeLoopWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(InvokeLoopWorker.InvokeLoopData(cause)))
+                    .setInputData(dataWorkerStorage.storeInputData(InvokeLoopWorker.InvokeLoopData(triggeredByNewBG)))
                     .build()
             )
             .then(

@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DateUtil
@@ -60,7 +59,7 @@ class IobCobOrefWorker @Inject internal constructor(
         val reason: String,
         val end: Long,
         val limitDataToOldestAvailable: Boolean,
-        val cause: Event?
+        val triggeredByNewBG: Boolean
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -89,7 +88,7 @@ class IobCobOrefWorker @Inject internal constructor(
             var previous = autosensDataTable[prevDataTime]
             // start from oldest to be able to sub cob
             for (i in bucketedData.size - 4 downTo 0) {
-                rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
+                rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt(), data.triggeredByNewBG))
                 if (isStopped) {
                     aapsLogger.debug(LTag.AUTOSENS) { "Aborting calculation thread (trigger): ${data.reason}" }
                     return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.reason}"))
@@ -259,10 +258,10 @@ class IobCobOrefWorker @Inject internal constructor(
             data.iobCobCalculator.ads = ads
             Thread {
                 SystemClock.sleep(1000)
-                rxBus.send(EventAutosensCalculationFinished(data.cause))
+                rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
             }.start()
         } finally {
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.triggeredByNewBG))
             aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread ended: ${data.reason}" }
             profiler.log(LTag.AUTOSENS, "IobCobThread", start)
         }

@@ -1,6 +1,7 @@
 package app.aaps.implementation.profile
 
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
@@ -19,18 +20,14 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ConcurrentHashMap
@@ -41,7 +38,6 @@ import javax.inject.Singleton
 class ProfileFunctionImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    rxBus: RxBus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val localProfileManager: LocalProfileManager,
@@ -50,8 +46,6 @@ class ProfileFunctionImpl @Inject constructor(
     private val config: Config,
     private val hardLimits: HardLimits,
     private val notificationManager: NotificationManager,
-    aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ProfileFunction {
@@ -59,17 +53,13 @@ class ProfileFunctionImpl @Inject constructor(
     @VisibleForTesting
     val cache = ConcurrentHashMap<Long, Profile>()
 
-    private val disposable = CompositeDisposable()
-
     init {
-        disposable += rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    synchronized(cache) { cache.keys.removeIf { key -> key > it.startDate } }
-                }, fabricPrivacy::logException
-            )
+        persistenceLayer.observeChanges(EPS::class.java)
+            .onEach { epsList ->
+                epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
+                    synchronized(cache) { cache.keys.removeIf { key -> key > timestamp } }
+                }
+            }.launchIn(appScope)
     }
 
     override fun getProfileName(): String =

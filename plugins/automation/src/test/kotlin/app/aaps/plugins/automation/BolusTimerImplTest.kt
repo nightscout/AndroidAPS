@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -40,6 +41,7 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var timerUtil: TimerUtil
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var sp: SP
+    @Mock lateinit var receiverStatusStore: ReceiverStatusStore
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -59,7 +61,7 @@ class BolusTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         automationPlugin = AutomationPlugin(
             injector, aapsLogger, rh, preferences, sp, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil,
-            activePlugin, timerUtil
+            activePlugin, timerUtil, receiverStatusStore
         )
     }
 

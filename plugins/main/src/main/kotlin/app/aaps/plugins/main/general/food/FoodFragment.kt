@@ -20,39 +20,31 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.FoodFragmentBinding
 import app.aaps.plugins.main.databinding.FoodItemBinding
 import dagger.android.support.DaggerFragment
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class FoodFragment : DaggerFragment() {
 
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
 
-    private val disposable = CompositeDisposable()
     private var unfiltered: List<FD> = arrayListOf()
     private var filtered: MutableList<FD> = arrayListOf()
 
@@ -92,11 +84,10 @@ class FoodFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable += rxBus
-            .toObservable(EventFoodDatabaseChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(FD::class.java)
+            .debounce(1000L)
+            .onEach { swapAdapter() }
+            .launchIn(lifecycleScope)
         swapAdapter()
     }
 
@@ -116,7 +107,6 @@ class FoodFragment : DaggerFragment() {
     @Synchronized
     override fun onPause() {
         super.onPause()
-        disposable.clear()
     }
 
     @Synchronized

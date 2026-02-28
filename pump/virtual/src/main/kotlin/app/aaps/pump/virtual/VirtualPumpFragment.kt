@@ -6,6 +6,9 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.DoseStepSize
 import app.aaps.core.data.pump.defs.PumpTempBasalType
 import app.aaps.core.data.pump.defs.PumpType
@@ -17,8 +20,6 @@ import app.aaps.core.interfaces.pump.defs.hasExtendedBasals
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -30,6 +31,8 @@ import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -67,14 +70,10 @@ class VirtualPumpFragment : DaggerFragment() {
             .toObservable(EventVirtualPumpUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(TB::class.java)
+            .onEach { updateGui() }.launchIn(viewLifecycleOwner.lifecycleScope)
+        persistenceLayer.observeChanges(EB::class.java)
+            .onEach { updateGui() }.launchIn(viewLifecycleOwner.lifecycleScope)
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateGui() }
             handler.postDelayed(refreshLoop, T.mins(1).msecs())

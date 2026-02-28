@@ -4,8 +4,15 @@ import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
@@ -27,15 +34,9 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
-import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
-import app.aaps.core.interfaces.rx.events.EventNewBG
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.rx.events.EventRunningModeChange
-import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
@@ -55,6 +56,13 @@ import app.aaps.plugins.main.R
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -92,6 +100,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 ), IobCobCalculator {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
@@ -103,20 +112,20 @@ class IobCobCalculatorPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         // EventConfigBuilderChange
         disposable += rxBus
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           resetDataAndRunCalculation("onEventConfigBuilderChange", event)
-                       }, fabricPrivacy::logException)
-        // EventEffectiveProfileSwitchChanged
-        disposable += rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           newHistoryData(event.startDate, false, event)
-                       }, fabricPrivacy::logException)
+            .subscribe({ resetDataAndRunCalculation("onEventConfigBuilderChange") }, fabricPrivacy::logException)
+        // EffectiveProfileSwitch changes
+        persistenceLayer.observeChanges(EPS::class.java)
+            .onEach { epsList ->
+                epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
+                    newHistoryData(timestamp, bgDataReload = false, triggeredByNewBG = false)
+                }
+            }.launchIn(newScope)
         // EventPreferenceChange
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -132,31 +141,51 @@ class IobCobCalculatorPlugin @Inject constructor(
                                event.isChanged(DoubleKey.AutosensMin.key) ||
                                event.isChanged(IntKey.InsulinOrefPeak.key)
                            ) {
-                               resetDataAndRunCalculation("onEventPreferenceChange", event)
-                           }
-                           if (event.isChanged(StringKey.GeneralUnits.key)) {
-                               overviewData.reset()
-                               rxBus.send(EventNewHistoryData(0, false))
+                               resetDataAndRunCalculation("onEventPreferenceChange")
                            }
                            if (event.isChanged(IntNonKey.RangeToDisplay.key)) {
                                overviewData.initRange()
                                calculationWorkflow.runOnScaleChanged(this, overviewData)
-                               rxBus.send(EventNewHistoryData(0, false))
+                               scheduleHistoryDataChange(0, reloadBgData = false)
                            }
                        }, fabricPrivacy::logException)
-        // EventNewHistoryData
-        disposable += rxBus
-            .toObservable(EventNewHistoryData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> scheduleHistoryDataChange(event) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTherapyEventChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ calculationWorkflow.runOnEventTherapyEventChange(overviewData) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventRunningModeChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ calculationWorkflow.runOnEventTherapyEventChange(overviewData) }, fabricPrivacy::logException)
+        // GlucoseValue changes → reload BG data + trigger loop
+        persistenceLayer.observeChanges(GV::class.java)
+            .onEach { gvList ->
+                gvList.minOfOrNull { it.timestamp }?.let { timestamp ->
+                    scheduleHistoryDataChange(timestamp, reloadBgData = true, triggeredByNewBG = true)
+                }
+            }.launchIn(newScope)
+        // Treatment changes → invalidate caches
+        persistenceLayer.observeChanges(CA::class.java)
+            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(BS::class.java)
+            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(BCR::class.java)
+            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(TB::class.java)
+            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .launchIn(newScope)
+        persistenceLayer.observeChanges(EB::class.java)
+            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .launchIn(newScope)
+        // TherapyEvent changes
+        persistenceLayer.observeChanges(TE::class.java)
+            .onEach { calculationWorkflow.runOnEventTherapyEventChange(overviewData) }
+            .launchIn(newScope)
+        // RunningMode changes
+        persistenceLayer.observeChanges(RM::class.java)
+            .onEach { calculationWorkflow.runOnEventTherapyEventChange(overviewData) }
+            .launchIn(newScope)
+        // Units change
+        preferences.observe(StringKey.GeneralUnits).drop(1)
+            .onEach {
+                overviewData.reset()
+                scheduleHistoryDataChange(0, reloadBgData = true)
+            }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
@@ -169,7 +198,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                         "onEventAppInitialized",
                         System.currentTimeMillis(),
                         bgDataReload = true,
-                        cause = it
+                        triggeredByNewBG = false
                     )
                 },
                 fabricPrivacy::logException
@@ -178,13 +207,15 @@ class IobCobCalculatorPlugin @Inject constructor(
     }
 
     override fun onStop() {
+        scope?.cancel()
+        scope = null
         disposable.clear()
         historyWorker?.shutdown()
         historyWorker = null
         super.onStop()
     }
 
-    private fun resetDataAndRunCalculation(reason: String, event: Event?) {
+    private fun resetDataAndRunCalculation(reason: String) {
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, reason)
         clearCache()
         ads.reset()
@@ -195,7 +226,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             reason = reason,
             end = System.currentTimeMillis(),
             bgDataReload = true,
-            cause = event
+            triggeredByNewBG = false
         )
     }
 
@@ -415,54 +446,51 @@ class IobCobCalculatorPlugin @Inject constructor(
         return sb.toString()
     }
 
-    // Limit rate of EventNewHistoryData
+    // Debounce history data changes
     private var historyWorker: ScheduledExecutorService? = null
     private var scheduledHistoryPost: ScheduledFuture<*>? = null
-    private var scheduledEvent: EventNewHistoryData? = null
+
+    private class ScheduledHistoryData(
+        val oldDataTimestamp: Long,
+        var reloadBgData: Boolean,
+        var triggeredByNewBG: Boolean
+    )
+
+    private var scheduledData: ScheduledHistoryData? = null
 
     @Synchronized
-    private fun scheduleHistoryDataChange(event: EventNewHistoryData) {
+    fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false) {
         // if there is nothing scheduled or asking reload deeper to the past
-        if (scheduledEvent == null || event.oldDataTimestamp < (scheduledEvent?.oldDataTimestamp ?: 0L)) {
+        if (scheduledData == null || oldDataTimestamp < (scheduledData?.oldDataTimestamp ?: 0L)) {
             // cancel waiting task to prevent sending multiple posts
             scheduledHistoryPost?.cancel(false)
-            // prepare task for execution in 1 sec
-            scheduledEvent?.let {
-                // set reload bg data if was not set
-                event.reloadBgData = event.reloadBgData || it.reloadBgData
-            }
-            scheduledEvent = event
+            // merge flags from previously scheduled event
+            val mergedReload = reloadBgData || (scheduledData?.reloadBgData ?: false)
+            val mergedTriggeredByNewBG = triggeredByNewBG || (scheduledData?.triggeredByNewBG ?: false)
+            val data = ScheduledHistoryData(oldDataTimestamp, mergedReload, mergedTriggeredByNewBG)
+            scheduledData = data
             scheduledHistoryPost = historyWorker?.schedule(
                 {
                     synchronized(this) {
                         aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                        runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(event.oldDataTimestamp)) }
-                        newHistoryData(
-                            event.oldDataTimestamp,
-                            event.reloadBgData,
-                            if (event.newestGlucoseValueTimestamp != null) EventNewBG(event.newestGlucoseValueTimestamp) else event
-                        )
-                        scheduledEvent = null
+                        runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(data.oldDataTimestamp)) }
+                        newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
+                        scheduledData = null
                         scheduledHistoryPost = null
                     }
                 }, 5L, TimeUnit.SECONDS
             )
         } else {
             // asked reload is newer -> adjust params only
-            scheduledEvent?.let {
-                // set reload bg data if was not set
-                if (!it.reloadBgData) it.reloadBgData = event.reloadBgData
-                // set Glucose value if newer
-                event.newestGlucoseValueTimestamp?.let { timestamp ->
-                    if (timestamp > (it.newestGlucoseValueTimestamp ?: 0L)) it.newestGlucoseValueTimestamp = timestamp
-                }
+            scheduledData?.let {
+                if (!it.reloadBgData) it.reloadBgData = reloadBgData
+                if (!it.triggeredByNewBG) it.triggeredByNewBG = triggeredByNewBG
             }
         }
     }
 
     // When historical data is changed (coming from NS etc) finished calculations after this date must be invalidated
-    private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, event: Event) {
-        //log.debug("Locking onNewHistoryData");
+    private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, "onEventNewHistoryData")
         synchronized(dataLock) {
 
@@ -491,12 +519,11 @@ class IobCobCalculatorPlugin @Inject constructor(
             job = CalculationWorkflow.MAIN_CALCULATION,
             iobCobCalculator = this,
             overviewData = overviewData,
-            reason = event.javaClass.simpleName,
+            reason = if (triggeredByNewBG) "NewBG" else "DBChange",
             end = System.currentTimeMillis(),
             bgDataReload = bgDataReload,
-            cause = event
+            triggeredByNewBG = triggeredByNewBG
         )
-        //log.debug("Releasing onNewHistoryData");
     }
 
     /**

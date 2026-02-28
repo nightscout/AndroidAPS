@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventCustomCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
@@ -173,11 +172,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           // catch only events from iobCobCalculator
-                           if (it.cause is EventCustomCalculationFinished)
-                               refreshLoop("EventAutosensCalculationFinished")
-                       }, fabricPrivacy::logException)
+            .subscribe({ refreshLoop("EventAutosensCalculationFinished") }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.main)
@@ -271,7 +266,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         historyBrowserData.overviewData.fromTime = start + 100000 // little bit more to avoid wrong rounding - GraphView specific
         historyBrowserData.overviewData.toTime =
             historyBrowserData.overviewData.fromTime +
-            T.hours(rangeToDisplay.toLong()).msecs()
+                T.hours(rangeToDisplay.toLong()).msecs()
         historyBrowserData.overviewData.endTime = historyBrowserData.overviewData.toTime
     }
 
@@ -283,7 +278,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             reason = from,
             end = historyBrowserData.overviewData.toTime,
             bgDataReload = true,
-            cause = EventCustomCalculationFinished()
+            triggeredByNewBG = false
         )
     }
 

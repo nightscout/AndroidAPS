@@ -37,7 +37,6 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
@@ -424,7 +423,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun failWhenUnconfirmed(deliverySuspended: Boolean): Completable = Completable.defer {
-        rxBus.send(EventTempBasalChange())
         if (podStateManager.activeCommand != null) {
             if (deliverySuspended) {
                 showNotification(
@@ -463,7 +461,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             PodConstants.MAX_POD_LIFETIME.toMinutes(),
                             PumpSync.TemporaryBasalType.PUMP_SUSPEND
                         )
-                        rxBus.send(EventTempBasalChange())
                     }
                     .ignoreElements()
             ).doOnComplete {

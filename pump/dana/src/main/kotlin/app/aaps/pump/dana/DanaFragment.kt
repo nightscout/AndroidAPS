@@ -9,10 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -24,11 +28,9 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -40,6 +42,8 @@ import app.aaps.pump.dana.events.EventDanaRNewStatus
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class DanaFragment : DaggerFragment() {
@@ -56,6 +60,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -134,14 +139,10 @@ class DanaFragment : DaggerFragment() {
             .toObservable(EventDanaRNewStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGUI() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGUI() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(EB::class.java)
+            .onEach { updateGUI() }.launchIn(viewLifecycleOwner.lifecycleScope)
+        persistenceLayer.observeChanges(TB::class.java)
+            .onEach { updateGUI() }.launchIn(viewLifecycleOwner.lifecycleScope)
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
             .observeOn(aapsSchedulers.main)

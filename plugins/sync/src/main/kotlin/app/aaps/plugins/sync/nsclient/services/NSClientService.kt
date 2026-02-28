@@ -9,11 +9,6 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.work.OneTimeWorkRequest
-import app.aaps.core.data.model.DS
-import app.aaps.core.data.model.PS
-import app.aaps.core.data.model.RM
-import app.aaps.core.data.model.TE
-import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T.Companion.mins
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -32,7 +27,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -175,18 +169,8 @@ class NSClientService : DaggerService() {
             }.launchIn(scope)
         rxBus.toFlow(NSAuthAck::class.java)
             .onEach { ack -> processAuthAck(ack) }.launchIn(scope)
-        rxBus.toFlow(EventNewHistoryData::class.java)
-            .onEach { resend("NEW_DATA") }.launchIn(scope)
-        persistenceLayer.observeChanges(DS::class.java)
-            .onEach { resend("EventDeviceStatusChange") }.launchIn(scope)
-        persistenceLayer.observeChanges(TT::class.java)
-            .onEach { resend("EventTempTargetChange") }.launchIn(scope)
-        persistenceLayer.observeChanges(PS::class.java)
-            .onEach { resend("EventProfileSwitchChanged") }.launchIn(scope)
-        persistenceLayer.observeChanges(TE::class.java)
-            .onEach { resend("EventTherapyEventChange") }.launchIn(scope)
-        persistenceLayer.observeChanges(RM::class.java)
-            .onEach { resend("EventOfflineChange") }.launchIn(scope)
+        persistenceLayer.observeAnyChange()
+            .onEach { types -> resend("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})") }.launchIn(scope)
         rxBus.toFlow(EventProfileStoreChanged::class.java)
             .onEach { resend("EventProfileStoreChanged") }.launchIn(scope)
     }

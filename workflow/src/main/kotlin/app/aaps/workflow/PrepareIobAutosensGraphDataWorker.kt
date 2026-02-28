@@ -140,7 +140,7 @@ class PrepareIobAutosensGraphDataWorker(
         val endTime = max(endTimeOld, endTimeNew)
         val fromTime = min(fromTimeOld, fromTimeNew)
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0, false))
 
         // ========== MIGRATION: DELETE - Start GraphView arrays ==========
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -197,7 +197,7 @@ class PrepareIobAutosensGraphDataWorker(
         while (time <= endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, progress.toInt(), null))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, progress.toInt(), false))
             val profile = profileFunction.getProfile(time)
             if (profile == null) {
                 time += 5 * 60 * 1000L
@@ -491,7 +491,7 @@ class PrepareIobAutosensGraphDataWorker(
         )
         // ========== MIGRATION: KEEP - End Compose cache updates ==========
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, false))
         return Result.success()
     }
 }

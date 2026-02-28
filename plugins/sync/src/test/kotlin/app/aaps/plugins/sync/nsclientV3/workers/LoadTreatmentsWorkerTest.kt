@@ -25,6 +25,8 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSCarbs
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -75,7 +77,11 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         dataWorkerStorage = DataWorkerStorage(context)
-        receiverDelegate = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore)
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
+        whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
+        whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
+        receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,

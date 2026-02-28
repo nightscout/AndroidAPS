@@ -26,6 +26,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APSResult
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KClass
 
 interface PersistenceLayer {
 
@@ -53,6 +54,12 @@ interface PersistenceLayer {
      * @return Flow that emits list of changed entities of type T
      */
     fun <T : Any> observeChanges(type: Class<T>): Flow<List<T>>
+
+    /**
+     * Observe all database changes, emitting the set of domain types that changed in each transaction
+     * @return Flow that emits set of changed domain type KClasses (e.g. {BS::class, CA::class})
+     */
+    fun observeAnyChange(): Flow<Set<KClass<*>>>
 
     // BS
     /**

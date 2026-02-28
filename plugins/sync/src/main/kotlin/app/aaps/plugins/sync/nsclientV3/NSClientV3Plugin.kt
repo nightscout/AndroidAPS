@@ -16,12 +16,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.HasIDs
-import app.aaps.core.data.model.PS
-import app.aaps.core.data.model.RM
-import app.aaps.core.data.model.TE
-import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -40,7 +35,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
@@ -267,18 +261,8 @@ class NSClientV3Plugin @Inject constructor(
         preferences.observe(BooleanKey.NsClientNotificationsFromAnnouncements).drop(1).onEach(restartOnChange).launchIn(scope)
         preferences.observe(LongNonKey.LocalProfileLastChange).drop(1)
             .onEach { executeUpload("PROFILE_CHANGE", forceNew = true) }.launchIn(scope)
-        rxBus.toFlow(EventNewHistoryData::class.java)
-            .onEach { executeUpload("NEW_DATA", forceNew = false) }.launchIn(scope)
-        persistenceLayer.observeChanges(TT::class.java)
-            .onEach { executeUpload("EventTempTargetChange", forceNew = false) }.launchIn(scope)
-        persistenceLayer.observeChanges(PS::class.java)
-            .onEach { executeUpload("EventProfileSwitchChanged", forceNew = false) }.launchIn(scope)
-        persistenceLayer.observeChanges(DS::class.java)
-            .onEach { executeUpload("EventDeviceStatusChange", forceNew = false) }.launchIn(scope)
-        persistenceLayer.observeChanges(TE::class.java)
-            .onEach { executeUpload("EventTherapyEventChange", forceNew = false) }.launchIn(scope)
-        persistenceLayer.observeChanges(RM::class.java)
-            .onEach { executeUpload("EventRunningModeChange", forceNew = false) }.launchIn(scope)
+        persistenceLayer.observeAnyChange()
+            .onEach { types -> executeUpload("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})", forceNew = false) }.launchIn(scope)
         rxBus.toFlow(EventProfileStoreChanged::class.java)
             .onEach { executeUpload("EventProfileStoreChanged", forceNew = false) }.launchIn(scope)
 

@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.xdrip
 
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
@@ -19,6 +20,7 @@ class XdripPluginTest : TestBaseWithProfile() {
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var xdripMvvmRepository: XdripMvvmRepository
     @Mock lateinit var dataSyncSelector: DataSyncSelectorXdrip
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     private lateinit var xdripPlugin: XdripPlugin
     private lateinit var rateLimit: RateLimit
@@ -55,7 +57,8 @@ class XdripPluginTest : TestBaseWithProfile() {
             decimalFormatter,
             glucoseStatusProvider,
             xdripMvvmRepository,
-            dataSyncSelector
+            dataSyncSelector,
+            persistenceLayer
         )
     }
 

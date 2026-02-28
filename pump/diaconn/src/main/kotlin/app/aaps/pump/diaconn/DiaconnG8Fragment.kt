@@ -8,7 +8,11 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -18,11 +22,9 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -34,6 +36,8 @@ import app.aaps.pump.diaconn.events.EventDiaconnG8NewStatus
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class DiaconnG8Fragment : DaggerFragment() {
@@ -49,6 +53,7 @@ class DiaconnG8Fragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -98,14 +103,10 @@ class DiaconnG8Fragment : DaggerFragment() {
             .toObservable(EventDiaconnG8NewStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGUI() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGUI() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(EB::class.java)
+            .onEach { updateGUI() }.launchIn(viewLifecycleOwner.lifecycleScope)
+        persistenceLayer.observeChanges(TB::class.java)
+            .onEach { updateGUI() }.launchIn(viewLifecycleOwner.lifecycleScope)
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -194,7 +195,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
         binding.reservoir.text = rh.gs(R.string.reservoir_value, pump.systemRemainInsulin, 307)
         warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50, 20)
-        binding.battery.text = pump.systemRemainBattery?.let { "{fa-battery-" + it / 25 + "}" } ?: rh.gs(app.aaps.core.ui.R.string.unknown)
+        binding.battery.text = pump.systemRemainBattery?.let { "{fa-battery-" + it / 25 + "}" } ?: rh.gs(R.string.unknown)
         warnColors.setColorInverse(binding.battery, (pump.systemRemainBattery?.toDouble() ?: 100.0), 51, 26)
         binding.firmware.text =
             rh.gs(app.aaps.pump.diaconn.R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." + pump.minorVersion.toString() + "\nCountry: " + pump.country.toString() + "\nProductType: " + pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay

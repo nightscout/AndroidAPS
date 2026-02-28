@@ -22,14 +22,14 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -54,7 +54,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.persistence.CompatDBHelper
 import app.aaps.di.AppComponent
 import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
@@ -77,9 +76,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
-import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,8 +93,6 @@ import kotlin.reflect.full.declaredMemberProperties
 
 class MainApp : DaggerApplication() {
 
-    private val disposable = CompositeDisposable()
-
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activityMonitor: ActivityMonitor
@@ -107,7 +102,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var config: Config
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uiInteraction: UiInteraction
@@ -163,7 +157,6 @@ class MainApp : DaggerApplication() {
             gitRemote = null
             commitHash = null
         }
-        disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         runOnUiThread { themeSwitcherPlugin.setThemeMode() }
         aapsLogger.debug("Version: " + config.VERSION_NAME)
@@ -207,7 +200,7 @@ class MainApp : DaggerApplication() {
             handler.postDelayed(refreshWidget, 60000)
             Widget.updateWidget(this@MainApp, "ScheduleEveryMin")
         }
-        handler.postDelayed(refreshWidget, 60000)
+        handler.postDelayed(refreshWidget, 5000)
         config.appInitialized = true
         aapsLogger.debug("doInit end")
     }
@@ -417,10 +410,10 @@ class MainApp : DaggerApplication() {
         // Migrate loop mode
         if (config.APS && sp.contains("aps_mode")) {
             val mode = when (sp.getString("aps_mode", "CLOSED")) {
-                "OPEN"   -> RM.Mode.OPEN_LOOP
+                "OPEN" -> RM.Mode.OPEN_LOOP
                 "CLOSED" -> RM.Mode.CLOSED_LOOP
-                "LGS"    -> RM.Mode.CLOSED_LOOP_LGS
-                else     -> RM.Mode.CLOSED_LOOP
+                "LGS" -> RM.Mode.CLOSED_LOOP_LGS
+                else -> RM.Mode.CLOSED_LOOP
             }
             runBlocking {
                 persistenceLayer.insertOrUpdateRunningMode(

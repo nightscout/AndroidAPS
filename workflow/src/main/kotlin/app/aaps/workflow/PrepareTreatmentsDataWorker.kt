@@ -61,7 +61,7 @@ class PrepareTreatmentsDataWorker(
         val endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, false))
 
         // ========== MIGRATION: DELETE - Start GraphView-specific code ==========
         data.overviewData.maxTreatmentsValue = 0.0
@@ -136,7 +136,7 @@ class PrepareTreatmentsDataWorker(
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.stepsColor) }
         // ========== MIGRATION: DELETE - End GraphView-specific code ==========
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, false))
         return Result.success()
     }
 
