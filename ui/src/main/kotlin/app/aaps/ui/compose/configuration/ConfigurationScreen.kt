@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,8 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +28,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -305,72 +303,48 @@ private fun ConfigPluginItem(
             }
         },
         leadingContent = {
-            Box(contentAlignment = Alignment.Center) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            color = if (isEnabled) iconColor.copy(alpha = 0.12f)
-                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
-                            shape = CircleShape
-                        )
-                ) {
-                    Icon(
-                        painter = iconPainter,
-                        contentDescription = null,
-                        tint = if (isEnabled) iconColor
-                        else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
-                        modifier = Modifier.size(24.dp)
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = if (isEnabled) iconColor.copy(alpha = 0.12f)
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+                        shape = CircleShape
                     )
-                }
-                if (isEnabled) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .offset(x = 2.dp, y = 2.dp)
-                            .size(16.dp)
-                            .background(iconColor, CircleShape)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(10.dp)
-                        )
-                    }
-                }
+            ) {
+                Icon(
+                    painter = iconPainter,
+                    contentDescription = null,
+                    tint = if (isEnabled) iconColor
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
+                    modifier = Modifier.size(24.dp)
+                )
             }
         },
-        trailingContent = if (isEnabled) {
-            {
-                Row {
-                    if (showPreferences) {
-                        IconButton(onClick = onPreferencesClick) {
-                            Icon(
-                                imageVector = Icons.Filled.Settings,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    IconButton(onClick = onPluginClick) {
+        trailingContent = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (showPreferences) {
+                    IconButton(onClick = onPreferencesClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                            imageVector = Icons.Filled.Settings,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
+                Switch(
+                    checked = isEnabled,
+                    onCheckedChange = if (canToggle) {
+                        { onEnableToggle(it) }
+                    } else null,
+                )
             }
-        } else null,
+        },
         colors = ListItemDefaults.colors(containerColor = containerColor),
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 2.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable(enabled = canToggle) {
-                onEnableToggle(!isEnabled)
-            }
+            .clickable { onPluginClick() }
     )
 }
