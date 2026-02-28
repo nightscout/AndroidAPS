@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.xdrip
 
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
@@ -16,9 +16,9 @@ import org.mockito.Mock
 class XdripPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var loop: Loop
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var xdripMvvmRepository: XdripMvvmRepository
+    @Mock lateinit var dataSyncSelector: DataSyncSelectorXdrip
 
     private lateinit var xdripPlugin: XdripPlugin
     private lateinit var rateLimit: RateLimit
@@ -50,12 +50,12 @@ class XdripPluginTest : TestBaseWithProfile() {
             iobCobCalculator,
             processedTbrEbData,
             rxBus,
-            uiInteraction,
             dateUtil,
             config,
             decimalFormatter,
             glucoseStatusProvider,
-            xdripMvvmRepository
+            xdripMvvmRepository,
+            dataSyncSelector
         )
     }
 

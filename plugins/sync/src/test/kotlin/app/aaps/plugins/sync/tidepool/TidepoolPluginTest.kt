@@ -38,7 +38,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
         tidepoolPlugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository
+            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil
         )
     }
 
@@ -62,7 +62,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         val plugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus,
             fabricPrivacy, realUploader, uploadChunk, rateLimit,
-            receiverDelegate, authFlowOut, tidepoolRepository
+            receiverDelegate, authFlowOut, tidepoolRepository, dateUtil
         )
         plugin.onStart()
         rxBus.send(EventConnectivityOptionChanged("Connected", true))
@@ -84,7 +84,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         val plugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus,
             fabricPrivacy, realUploader, uploadChunk, rateLimit,
-            receiverDelegate, authFlowOut, tidepoolRepository
+            receiverDelegate, authFlowOut, tidepoolRepository, dateUtil
         )
         plugin.onStart()
         rxBus.send(EventConnectivityOptionChanged("Blocked", false))

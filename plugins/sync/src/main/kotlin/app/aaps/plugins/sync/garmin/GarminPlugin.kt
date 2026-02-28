@@ -8,15 +8,12 @@ import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNewBG
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginGarmin
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -30,8 +27,13 @@ import app.aaps.plugins.sync.garmin.keys.GarminIntKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -62,8 +64,7 @@ class GarminPlugin @Inject constructor(
     preferences: Preferences,
     private val context: Context,
     private val loopHub: LoopHub,
-    private val rxBus: RxBus,
-    private val config: Config
+    private val persistenceLayer: PersistenceLayer
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -107,7 +108,7 @@ class GarminPlugin @Inject constructor(
     )
 
     @VisibleForTesting
-    private val disposable = CompositeDisposable()
+    var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @VisibleForTesting
     var clock: Clock = Clock.systemUTC()
@@ -120,44 +121,38 @@ class GarminPlugin @Inject constructor(
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
     private val garminAapsKey get() = preferences.get(GarminStringKey.RequestKey)
 
-    private fun onPreferenceChange(event: EventPreferenceChange) {
-        when (event.changedKey) {
-            "communication_ciq_debug_mode"                                       -> setupGarminMessenger()
-            GarminBooleanKey.LocalHttpServer.key, GarminIntKey.LocalHttpPort.key -> setupHttpServer()
-            GarminStringKey.RequestKey.key                                       -> sendPhoneAppMessage()
-        }
-    }
-
     private fun setupGarminMessenger() {
         resetGarminMessenger()
         createGarminMessenger()
     }
 
     private fun createGarminMessenger(): GarminMessenger {
-        val enableDebug = false // sp.getBoolean("communication_ciq_debug_mode", false)
+        val enableDebug = false
         aapsLogger.info(LTag.GARMIN, "initialize IQ messenger in debug=$enableDebug")
         return GarminMessenger(
             aapsLogger, context, glucoseAppIds, { _, _ -> }, true, enableDebug
-        ).also {
-            disposable.add(it)
-        }
+        )
     }
 
     override fun onStart() {
         super.onStart()
         aapsLogger.info(LTag.GARMIN, "start")
-        disposable.add(
-            rxBus
-                .toObservable(EventPreferenceChange::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe(::onPreferenceChange)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventNewBG::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe(::onNewBloodGlucose)
-        )
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        preferences.observe(GarminBooleanKey.LocalHttpServer)
+            .drop(1)
+            .onEach { setupHttpServer() }
+            .launchIn(scope)
+        preferences.observe(GarminIntKey.LocalHttpPort)
+            .drop(1)
+            .onEach { setupHttpServer() }
+            .launchIn(scope)
+        preferences.observe(GarminStringKey.RequestKey)
+            .drop(1)
+            .onEach { sendPhoneAppMessage() }
+            .launchIn(scope)
+        persistenceLayer.observeChanges(GV::class.java)
+            .onEach(::onNewBloodGlucose)
+            .launchIn(scope)
         setupHttpServer()
         if (garminAapsKey.isNotEmpty())
             setupGarminMessenger()
@@ -189,7 +184,8 @@ class GarminPlugin @Inject constructor(
     }
 
     override fun onStop() {
-        disposable.clear()
+        scope.cancel()
+        garminMessengerField?.dispose()
         aapsLogger.info(LTag.GARMIN, "Stop")
         server?.close()
         server = null
@@ -202,8 +198,8 @@ class GarminPlugin @Inject constructor(
      * these values immediately when values are requested by Garmin device.
      * Sends a message to the Garmin devices via the ciqMessenger. */
     @VisibleForTesting
-    fun onNewBloodGlucose(event: EventNewBG) {
-        val timestamp = event.glucoseValueTimestamp ?: return
+    fun onNewBloodGlucose(glucoseValues: List<GV>) {
+        val timestamp = glucoseValues.maxOfOrNull { it.timestamp } ?: return
         aapsLogger.info(LTag.GARMIN, "onNewBloodGlucose ${Date(timestamp)}")
         valueLock.withLock {
             if ((lastGlucoseValueTimestamp ?: 0) >= timestamp) return
