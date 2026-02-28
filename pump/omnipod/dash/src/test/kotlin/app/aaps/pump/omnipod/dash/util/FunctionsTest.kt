@@ -2,7 +2,7 @@ package app.aaps.pump.omnipod.dash.util
 
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock

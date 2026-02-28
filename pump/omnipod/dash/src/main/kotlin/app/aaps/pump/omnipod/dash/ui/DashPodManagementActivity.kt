@@ -17,8 +17,8 @@ import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
 import app.aaps.pump.omnipod.dash.databinding.OmnipodDashPodManagementBinding
-import app.aaps.pump.omnipod.dash.driver.pod.definition.ActivationProgress
-import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import app.aaps.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram

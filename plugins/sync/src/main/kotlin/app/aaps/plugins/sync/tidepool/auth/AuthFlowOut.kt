@@ -96,14 +96,22 @@ class AuthFlowOut @Inject constructor(
     }
 
     @Synchronized fun initAuthState() {
-        //aapsLogger.debug(LTag.TIDEPOOL, "initAuthState")
         authState = AuthState()
-        // Set from configuration if exists
-        if (preferences.get(TidepoolStringNonKey.ServiceConfiguration).isNotEmpty())
-            authState = AuthState(AuthorizationServiceConfiguration.fromJson(preferences.get(TidepoolStringNonKey.ServiceConfiguration)))
-        // Check if we have an authorized state
-        if (preferences.get(TidepoolStringNonKey.AuthState).isNotEmpty()) {
-            authState = AuthState.jsonDeserialize(preferences.get(TidepoolStringNonKey.AuthState))
+        try {
+            // Set from configuration if exists
+            val serviceConfig = preferences.get(TidepoolStringNonKey.ServiceConfiguration)
+            if (serviceConfig.isNotEmpty())
+                authState = AuthState(AuthorizationServiceConfiguration.fromJson(serviceConfig))
+            // Check if we have an authorized state
+            val savedAuthState = preferences.get(TidepoolStringNonKey.AuthState)
+            if (savedAuthState.isNotEmpty()) {
+                authState = AuthState.jsonDeserialize(savedAuthState)
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.TIDEPOOL, "Failed to restore auth state, resetting", e)
+            authState = AuthState()
+            preferences.put(TidepoolStringNonKey.AuthState, "")
+            preferences.put(TidepoolStringNonKey.ServiceConfiguration, "")
         }
         aapsLogger.debug(LTag.TIDEPOOL, "Using auth state : ${authState.jsonSerializeString()}")
     }

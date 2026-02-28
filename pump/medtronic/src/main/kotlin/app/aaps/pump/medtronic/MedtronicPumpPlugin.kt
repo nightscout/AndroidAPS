@@ -1297,7 +1297,7 @@ class MedtronicPumpPlugin @Inject constructor(
         if (requiredKey != null) return
 
         val batteryEntries = mutableListOf<CharSequence>().also { list -> BatteryType.entries.forEach { list.add(rh.gs(it.friendlyName)) } }.toTypedArray()
-        val encodingEntries = arrayOf<CharSequence>(rh.gs(RileyLinkEncodingType.FourByteSixByteLocal.friendlyName!!), rh.gs(RileyLinkEncodingType.FourByteSixByteLocal.friendlyName!!))
+        val encodingEntries = arrayOf<CharSequence>(rh.gs(RileyLinkEncodingType.FourByteSixByteLocal.friendlyName!!), rh.gs(RileyLinkEncodingType.FourByteSixByteRileyLink.friendlyName!!))
 
         val pumpTypeEntries = arrayOf<CharSequence>(
             "Other (unsupported)",

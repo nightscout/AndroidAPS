@@ -126,6 +126,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sound when delivery suspended notification enabled</string>
     <string name="omnipod_dash_use_bonding">Bond BT device on Android 15</string>
 
     <!-- Omnipod - Pod Status -->

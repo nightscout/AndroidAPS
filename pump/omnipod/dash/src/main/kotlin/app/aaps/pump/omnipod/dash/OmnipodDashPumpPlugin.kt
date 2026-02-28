@@ -54,27 +54,27 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
-import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
-import app.aaps.pump.omnipod.dash.driver.pod.definition.ActivationProgress
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertTrigger
-import app.aaps.pump.omnipod.dash.driver.pod.definition.AlertType
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
-import app.aaps.pump.omnipod.dash.driver.pod.definition.BeepType
-import app.aaps.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
-import app.aaps.pump.omnipod.dash.driver.pod.definition.PodConstants
-import app.aaps.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING
-import app.aaps.pump.omnipod.dash.driver.pod.response.ResponseType
-import app.aaps.pump.omnipod.dash.driver.pod.state.CommandConfirmed
-import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManager
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepRepetitionType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING
+import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
+import app.aaps.pump.omnipod.common.bledriver.pod.state.CommandConfirmed
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusType
 import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
-import app.aaps.pump.omnipod.dash.keys.DashBooleanPreferenceKey
-import app.aaps.pump.omnipod.dash.keys.DashStringNonPreferenceKey
+import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
+import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
 import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
@@ -1643,7 +1643,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 AdaptiveSwitchPreference(
                     ctx = context,
                     booleanKey = DashBooleanPreferenceKey.SoundDeliverySuspendedNotification,
-                    title = R.string.omnipod_common_preferences_notification_delivery_suspended_sound_enabled
+                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_delivery_suspended_sound_enabled
                 )
             )
         }
