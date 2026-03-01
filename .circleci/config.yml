@@ -24,8 +24,7 @@ jobs:
             env
             ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx2g" \
-            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.daemon=true \
             compileFullDebugAndroidTestSources
 
@@ -51,8 +50,7 @@ jobs:
             env
             ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseG1GC -XX:MaxMetaspaceSize=1g -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx2g" \
-            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.workers.max=4 \
             -Dorg.gradle.daemon=false \
             connectedFullDebugAndroidTest
@@ -70,8 +68,7 @@ jobs:
             export ANDROID_HOME=/usr/lib/android-sdk
             ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx2g" \
-            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.workers.max=22 \
             -Dorg.gradle.daemon=true \
             testFullDebugUnitTest
