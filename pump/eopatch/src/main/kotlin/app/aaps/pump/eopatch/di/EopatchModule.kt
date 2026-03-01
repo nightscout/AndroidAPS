@@ -17,8 +17,8 @@ import app.aaps.pump.eopatch.ui.dialogs.AlarmDialog
 import app.aaps.pump.eopatch.ui.dialogs.CommonDialog
 import app.aaps.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
 import app.aaps.pump.eopatch.ui.viewmodel.EopatchViewModel
-import app.aaps.pump.eopatch.ui.viewmodel.ViewModelFactory
-import app.aaps.pump.eopatch.ui.viewmodel.ViewModelKey
+import app.aaps.core.ui.compose.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelKey
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

@@ -21,6 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+@Deprecated("Not used in compose")
 class ThemeSwitcherPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,

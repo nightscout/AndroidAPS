@@ -28,7 +28,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.di.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.compose.XdripScreen
 import app.aaps.plugins.sync.xdrip.compose.XdripViewModel

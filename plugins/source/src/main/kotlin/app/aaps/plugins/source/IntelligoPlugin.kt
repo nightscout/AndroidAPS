@@ -20,12 +20,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.source.keys.IntelligoLongKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.runBlocking
@@ -42,17 +43,13 @@ class IntelligoPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
-    profileUtil: ProfileUtil
+    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourcePlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .composeContent { _ ->
+        .composeContent { plugin ->
             BgSourceComposeContent(
-                persistenceLayer = persistenceLayer,
-                rh = resourceHelper,
-                dateUtil = dateUtil,
-                profileUtil = profileUtil,
-                aapsLogger = aapsLogger,
+                viewModelFactory = (plugin as IntelligoPlugin).viewModelFactory,
                 title = resourceHelper.gs(R.string.intelligo)
             )
         }

@@ -5,16 +5,15 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcPluginNsClientBg
+import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.core.ui.compose.ViewModelFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,19 +22,13 @@ class NSClientSourcePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config,
-    persistenceLayer: PersistenceLayer,
-    dateUtil: DateUtil,
-    profileUtil: ProfileUtil
+    private val viewModelFactory: ViewModelFactory
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .composeContent { _ ->
+        .composeContent { plugin ->
             BgSourceComposeContent(
-                persistenceLayer = persistenceLayer,
-                rh = rh,
-                dateUtil = dateUtil,
-                profileUtil = profileUtil,
-                aapsLogger = aapsLogger,
+                viewModelFactory = (plugin as NSClientSourcePlugin).viewModelFactory,
                 title = rh.gs(R.string.ns_client_bg)
             )
         }

@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
-import app.aaps.plugins.sync.di.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

@@ -55,7 +55,7 @@ Review each changed file against these categories:
 - **Compose**: Screen composables should be `internal`, content composables should be `private`
 - **Compose**: Previews must use `MaterialTheme`, NOT `AapsTheme` (crashes with InvocationTargetException)
 - **Compose**: Every screen composable should have at least one `@Preview` covering key states
-- **Compose ViewModel**: Must extend `ViewModel()`, use `@Inject constructor`, bind via Dagger `@Binds @IntoMap @ViewModelKey`. In Compose use `ViewModelProvider(viewModelStoreOwner, viewModelFactory)`, in Fragment use `by viewModels { viewModelFactory }`
+- **Compose ViewModel**: Must extend `ViewModel()`, use `@Inject constructor`, bind via Dagger `@Binds @IntoMap @ViewModelKey`. **Always use Dagger DI** — never create manual `ViewModelProvider.Factory` classes. Shared `ViewModelKey` + `ViewModelFactory` live in `core/ui/compose/ViewModelHelpers.kt` — all modules use this, never create per-module copies. Plugin classes inject `ViewModelFactory` and pass it to `ComposablePluginContent`. In Compose use `ViewModelProvider(viewModelStoreOwner, viewModelFactory)`, in Fragment use `by viewModels { viewModelFactory }`
 - **Compose migration completeness**: Compare the Compose screen against the original XML layout and Fragment to verify ALL UI elements, buttons, menus, dialogs, and interactions have been migrated. Warn if any UX from the original is missing in the Compose version
 - **Domain models**: No `@ColorInt` — use enums/sealed classes for classification
 - **Strings**: Never manipulate localized strings programmatically (no `.replace()`, `.removeSuffix()` on resource strings)

@@ -1,6 +1,6 @@
 package app.aaps.plugins.source
 
-import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -9,13 +9,13 @@ import org.mockito.Mock
 
 class GlimpPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var glimpPlugin: GlimpPlugin
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config, persistenceLayer, dateUtil, profileUtil)
+        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config, viewModelFactory)
     }
 
     @Test

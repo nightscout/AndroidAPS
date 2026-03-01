@@ -25,8 +25,8 @@ import app.aaps.pump.medtrum.ui.MedtrumRetryActivationFragment
 import app.aaps.pump.medtrum.ui.MedtrumStartDeactivationFragment
 import app.aaps.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
 import app.aaps.pump.medtrum.ui.viewmodel.MedtrumViewModel
-import app.aaps.pump.medtrum.ui.viewmodel.ViewModelFactory
-import app.aaps.pump.medtrum.ui.viewmodel.ViewModelKey
+import app.aaps.core.ui.compose.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelKey
 import javax.inject.Provider
 
 @Module(includes = [MedtrumCommModule::class])

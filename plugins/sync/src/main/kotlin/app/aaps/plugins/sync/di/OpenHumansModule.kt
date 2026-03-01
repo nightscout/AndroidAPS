@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.di
 
 import androidx.lifecycle.ViewModel
+import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.plugins.sync.openhumans.OpenHumansWorker
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import app.aaps.plugins.sync.openhumans.compose.OHViewModel

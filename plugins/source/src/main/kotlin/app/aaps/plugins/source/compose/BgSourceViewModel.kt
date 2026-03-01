@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.viewmodels
+package app.aaps.plugins.source.compose
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SnackbarMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -34,9 +35,9 @@ import javax.inject.Inject
 @Stable
 class BgSourceViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
-    val rh: ResourceHelper,
-    val dateUtil: DateUtil,
-    val profileUtil: ProfileUtil,
+    internal val rh: ResourceHelper,
+    internal val dateUtil: DateUtil,
+    private val profileUtil: ProfileUtil,
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
@@ -68,9 +69,19 @@ class BgSourceViewModel @Inject constructor(
 
                 val data = persistenceLayer.getBgReadingsDataFromTime(now - millsToThePast, false)
 
+                // Pre-compute duplicate IDs (items within 20s of previous) to avoid O(n²) in UI
+                val duplicateIds = buildSet {
+                    for (i in 1 until data.size) {
+                        if ((data[i - 1].timestamp - data[i].timestamp) < T.secs(20).msecs()) {
+                            add(data[i].id)
+                        }
+                    }
+                }
+
                 uiState.update {
                     it.copy(
                         glucoseValues = data,
+                        duplicateIds = duplicateIds,
                         isLoading = false,
                         snackbarMessage = null
                     )
@@ -112,6 +123,11 @@ class BgSourceViewModel @Inject constructor(
     fun clearSnackbar() {
         uiState.update { it.copy(snackbarMessage = null) }
     }
+
+    /**
+     * Format glucose value to string in user's preferred units
+     */
+    fun formatGlucoseValue(value: Double): String = profileUtil.fromMgdlToStringInUnits(value)
 
     /**
      * Enter selection mode with initial item selected
@@ -162,7 +178,7 @@ class BgSourceViewModel @Inject constructor(
             val gv = selected.first()
             "${dateUtil.dateAndTimeString(gv.timestamp)}\n${profileUtil.fromMgdlToUnits(gv.value)}"
         } else {
-            rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
         }
     }
 
@@ -200,6 +216,7 @@ class BgSourceViewModel @Inject constructor(
 @Immutable
 data class BgSourceUiState(
     val glucoseValues: List<GV> = emptyList(),
+    val duplicateIds: Set<Long> = emptySet(),
     val isLoading: Boolean = true,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<GV> = emptySet(),

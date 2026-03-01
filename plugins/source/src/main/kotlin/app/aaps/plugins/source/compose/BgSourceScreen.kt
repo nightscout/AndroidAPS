@@ -38,34 +38,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.GV
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.directionToIcon
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
-import app.aaps.plugins.source.viewmodels.BgSourceViewModel
 import app.aaps.ui.compose.components.ContentContainer
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-/**
- * Composable screen displaying blood glucose readings in a list grouped by day.
- *
- * @param viewModel ViewModel managing state and business logic
- * @param title Title to display in the toolbar
- * @param setToolbarConfig Lambda to set toolbar configuration
- * @param onNavigateBack Lambda to handle back navigation
- */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BgSourceScreen(
+internal fun BgSourceScreen(
     viewModel: BgSourceViewModel,
     title: String,
     setToolbarConfig: (ToolbarConfig) -> Unit,
@@ -100,9 +90,10 @@ fun BgSourceScreen(
     }
 
     // Delete confirmation dialog
+    val removeRecordTitle = stringResource(app.aaps.core.ui.R.string.removerecord)
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = removeRecordTitle,
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -122,6 +113,7 @@ fun BgSourceScreen(
 
                 BgSourceLazyColumn(
                     items = uiState.glucoseValues,
+                    duplicateIds = uiState.duplicateIds,
                     dateUtil = viewModel.dateUtil,
                     rh = viewModel.rh,
                     onLoadMore = { viewModel.loadMoreData() },
@@ -144,7 +136,7 @@ fun BgSourceScreen(
                                 }
                             },
                             dateUtil = viewModel.dateUtil,
-                            viewModel = viewModel
+                            formatGlucoseValue = viewModel::formatGlucoseValue
                         )
                     }
                 )
@@ -168,6 +160,7 @@ fun BgSourceScreen(
 @Composable
 private fun BgSourceLazyColumn(
     items: List<GV>,
+    duplicateIds: Set<Long>,
     dateUtil: DateUtil,
     rh: ResourceHelper,
     onLoadMore: () -> Unit,
@@ -204,7 +197,7 @@ private fun BgSourceLazyColumn(
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
     ) {
         groupedByDay.forEach { (dateString, itemsForDay) ->
             stickyHeader(key = dateString) {
@@ -213,7 +206,7 @@ private fun BgSourceLazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface)
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                        .padding(horizontal = AapsSpacing.medium, vertical = 6.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
@@ -225,15 +218,8 @@ private fun BgSourceLazyColumn(
                 items = itemsForDay,
                 key = { it.id }
             ) { gv ->
-                // Check if this item is too close to the previous one (duplicate detection)
-                val index = items.indexOf(gv)
-                val isDuplicate = if (index > 0) {
-                    val previous = items[index - 1]
-                    (previous.timestamp - gv.timestamp) < T.secs(20).msecs()
-                } else false
-
                 Box(modifier = Modifier.animateItem()) {
-                    itemContent(gv, isDuplicate)
+                    itemContent(gv, gv.id in duplicateIds)
                 }
             }
         }
@@ -250,7 +236,7 @@ private fun GlucoseValueItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     dateUtil: DateUtil,
-    viewModel: BgSourceViewModel
+    formatGlucoseValue: (Double) -> String
 ) {
     val duplicateColor = AapsTheme.generalColors.invalidatedRecord
     val backgroundColor = when {
@@ -262,7 +248,7 @@ private fun GlucoseValueItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 2.dp)
+            .padding(horizontal = AapsSpacing.extraSmall)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongPress
@@ -274,38 +260,39 @@ private fun GlucoseValueItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 6.dp),
+                .padding(horizontal = AapsSpacing.medium, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Time
             Text(
                 text = dateUtil.timeStringWithSeconds(glucoseValue.timestamp),
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1
             )
 
-            // Glucose value + Arrow together
+            // Glucose value
             Text(
-                text = viewModel.profileUtil.fromMgdlToStringInUnits(glucoseValue.value),
-                modifier = Modifier.padding(start = 12.dp),
-                fontSize = 14.sp,
+                text = formatGlucoseValue(glucoseValue.value),
+                modifier = Modifier.padding(start = AapsSpacing.large),
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1
             )
 
+            // Trend arrow
             Icon(
                 painter = painterResource(id = glucoseValue.trendArrow.directionToIcon()),
                 contentDescription = glucoseValue.trendArrow.name,
                 modifier = Modifier
-                    .padding(start = 4.dp)
+                    .padding(start = AapsSpacing.small)
                     .size(20.dp)
             )
 
             // Source sensor
             Text(
                 text = glucoseValue.sourceSensor.text,
-                modifier = Modifier.padding(start = 12.dp),
-                fontSize = 12.sp,
+                modifier = Modifier.padding(start = AapsSpacing.large),
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
@@ -341,7 +328,7 @@ private fun GlucoseValueItem(
                 Checkbox(
                     checked = isSelected,
                     onCheckedChange = { onClick() },
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(AapsSpacing.xxLarge)
                 )
             }
         }

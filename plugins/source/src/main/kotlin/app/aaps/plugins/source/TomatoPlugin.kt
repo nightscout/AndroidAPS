@@ -13,13 +13,13 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcPluginTomato
+import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.core.ui.compose.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,19 +30,13 @@ class TomatoPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    persistenceLayer: PersistenceLayer,
-    dateUtil: DateUtil,
-    profileUtil: ProfileUtil
+    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .composeContent { _ ->
+        .composeContent { plugin ->
             BgSourceComposeContent(
-                persistenceLayer = persistenceLayer,
-                rh = rh,
-                dateUtil = dateUtil,
-                profileUtil = profileUtil,
-                aapsLogger = aapsLogger,
+                viewModelFactory = (plugin as TomatoPlugin).viewModelFactory,
                 title = rh.gs(R.string.tomato)
             )
         }

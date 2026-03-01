@@ -23,11 +23,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -36,6 +34,8 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.isRunningTest
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.core.ui.compose.ViewModelFactory
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.runBlocking
 import java.security.SecureRandom
@@ -55,18 +55,13 @@ class RandomBgPlugin @Inject constructor(
     private val virtualPump: VirtualPump,
     preferences: Preferences,
     config: Config,
-    dateUtil: DateUtil,
-    profileUtil: ProfileUtil
+    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .composeContent { _ ->
+        .composeContent { plugin ->
             BgSourceComposeContent(
-                persistenceLayer = persistenceLayer,
-                rh = rh,
-                dateUtil = dateUtil,
-                profileUtil = profileUtil,
-                aapsLogger = aapsLogger,
+                viewModelFactory = (plugin as RandomBgPlugin).viewModelFactory,
                 title = rh.gs(R.string.random_bg)
             )
         }

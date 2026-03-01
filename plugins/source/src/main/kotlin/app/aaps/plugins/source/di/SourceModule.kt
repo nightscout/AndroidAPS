@@ -1,6 +1,10 @@
 package app.aaps.plugins.source.di
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.ui.compose.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.plugins.source.DexcomPlugin
@@ -14,9 +18,11 @@ import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.source.compose.BgSourceViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
@@ -45,5 +51,11 @@ abstract class SourceModule {
         @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource
         @Binds fun bindDexcomBoyda(dexcomPlugin: DexcomPlugin): DexcomBoyda
         @Binds fun bindXDrip(xdripSourcePlugin: XdripSourcePlugin): XDripSource
+        @Binds fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
+
+        @Binds
+        @IntoMap
+        @ViewModelKey(BgSourceViewModel::class)
+        fun bindBgSourceViewModel(viewModel: BgSourceViewModel): ViewModel
     }
 }
