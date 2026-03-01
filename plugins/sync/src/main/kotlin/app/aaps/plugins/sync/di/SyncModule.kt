@@ -35,6 +35,7 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import app.aaps.plugins.sync.tidepool.TidepoolFragment
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowIn
 import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
+import app.aaps.plugins.sync.wear.compose.WearViewModel
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
 import app.aaps.plugins.sync.xdrip.DataSyncSelectorXdripImpl
@@ -119,6 +120,11 @@ abstract class SyncModule {
         @IntoMap
         @ViewModelKey(TidepoolViewModel::class)
         fun bindTidepoolViewModel(tidepoolViewModel: TidepoolViewModel): ViewModel
+
+        @Binds
+        @IntoMap
+        @ViewModelKey(WearViewModel::class)
+        fun bindWearViewModel(wearViewModel: WearViewModel): ViewModel
     }
 
 }

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.xdrip.compose
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,22 +36,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-private val timeFormatPreview = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+private val timeFormatPreview = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault())
 
 @Composable
-fun XdripScreen(
+internal fun XdripScreen(
     viewModel: XdripViewModel,
     dateUtil: DateUtil,
-    rh: ResourceHelper,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
     onSettings: (() -> Unit)?,
@@ -60,16 +60,18 @@ fun XdripScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val title = stringResource(R.string.xdrip)
+
     // Set up toolbar
     LaunchedEffect(Unit) {
         setToolbarConfig(
             ToolbarConfig(
-                title = rh.gs(R.string.xdrip),
+                title = title,
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = rh.gs(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
                         )
                     }
                 },
@@ -78,12 +80,11 @@ fun XdripScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = rh.gs(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
                             )
                         }
                     }
                     XdripMenu(
-                        rh = rh,
                         onClearLog = onClearLog,
                         onFullSync = onFullSync
                     )
@@ -100,7 +101,7 @@ fun XdripScreen(
 }
 
 @Composable
-fun XdripScreenContent(
+private fun XdripScreenContent(
     uiState: XdripUiState,
     dateUtil: DateUtil? = null,
     modifier: Modifier = Modifier
@@ -108,13 +109,13 @@ fun XdripScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+            .padding(AapsSpacing.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
     ) {
         // Queue row
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
         ) {
             Text(
                 text = stringResource(R.string.queue),
@@ -145,7 +146,7 @@ fun XdripScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
         ) {
             items(
                 items = uiState.logList,
@@ -153,7 +154,7 @@ fun XdripScreenContent(
             ) { log ->
                 Text(
                     text = buildAnnotatedString {
-                        append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(log.date))
+                        append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(Instant.ofEpochMilli(log.date)))
                         append(" ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                             append(log.action)
@@ -173,7 +174,6 @@ fun XdripScreenContent(
 
 @Composable
 private fun XdripMenu(
-    rh: ResourceHelper,
     onClearLog: () -> Unit,
     onFullSync: () -> Unit
 ) {
@@ -183,7 +183,7 @@ private fun XdripMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = rh.gs(app.aaps.core.ui.R.string.more_options)
+                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
             )
         }
         DropdownMenu(
@@ -191,14 +191,14 @@ private fun XdripMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.clear_log)) },
+                text = { Text(stringResource(R.string.clear_log)) },
                 onClick = {
                     showMenu = false
                     onClearLog()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.full_sync)) },
+                text = { Text(stringResource(R.string.full_sync)) },
                 onClick = {
                     showMenu = false
                     onFullSync()
@@ -209,6 +209,7 @@ private fun XdripMenu(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun XdripScreenPreview() {
     MaterialTheme {
@@ -220,6 +221,19 @@ private fun XdripScreenPreview() {
                     XdripLog(action = "TREATMENT", logText = "Sending bolus 1.5U"),
                     XdripLog(action = "STATUS", logText = "Loop running, IOB 2.3U"),
                 )
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun XdripScreenEmptyPreview() {
+    MaterialTheme {
+        XdripScreenContent(
+            uiState = XdripUiState(
+                queue = "0",
+                logList = emptyList()
             )
         )
     }

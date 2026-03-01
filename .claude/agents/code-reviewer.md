@@ -46,9 +46,17 @@ Review each changed file against these categories:
 
 #### Project-Specific Conventions (AndroidAPS)
 - **Compose**: Use `stringResource()` not `ResourceHelper` in Composables
-- **Compose**: Use theme values, never hardcoded dp/padding/colors
+- **Compose**: Use theme values (`AapsSpacing.*`), never hardcoded dp/padding/colors
 - **Compose**: Never use Android attrs (`rh.gac(context, R.attr.xxx)`) — use Compose theme colors
 - **Compose**: Use `clearFocusOnTap` modifier for screens with text fields
+- **Compose**: Card backgrounds must use `CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)` — default Card color is too light
+- **Compose**: `modifier: Modifier = Modifier` must be the first optional parameter in composable functions (required params first, then modifier, then other optional params)
+- **Compose**: Only pre-resolve `stringResource()` to a val when used in `LaunchedEffect` suspend blocks (e.g., `ToolbarConfig.title: String`). `@Composable` lambdas (e.g., `navigationIcon`, `actions`) can call `stringResource()` directly — don't pass pre-resolved strings as params to child composables
+- **Compose**: Screen composables should be `internal`, content composables should be `private`
+- **Compose**: Previews must use `MaterialTheme`, NOT `AapsTheme` (crashes with InvocationTargetException)
+- **Compose**: Every screen composable should have at least one `@Preview` covering key states
+- **Compose ViewModel**: Must extend `ViewModel()`, use `@Inject constructor`, bind via Dagger `@Binds @IntoMap @ViewModelKey`. In Compose use `ViewModelProvider(viewModelStoreOwner, viewModelFactory)`, in Fragment use `by viewModels { viewModelFactory }`
+- **Compose migration completeness**: Compare the Compose screen against the original XML layout and Fragment to verify ALL UI elements, buttons, menus, dialogs, and interactions have been migrated. Warn if any UX from the original is missing in the Compose version
 - **Domain models**: No `@ColorInt` — use enums/sealed classes for classification
 - **Strings**: Never manipulate localized strings programmatically (no `.replace()`, `.removeSuffix()` on resource strings)
 - **Strings**: Only modify English version of resource strings
@@ -56,6 +64,10 @@ Review each changed file against these categories:
 - **External library deps** (`api(libs.xxx)`) are fine
 - **Types**: Prefer specific types over `Any?`
 - **Duplication**: Flag duplicated code — prefer moving to shared modules
+- **Side effects**: No side effects (logging, analytics) inside `StateFlow.update{}` lambda — it can be retried on contention. Move side effects outside the update block
+- **Immutability**: Data class fields should be `val` not `var` where possible
+- **Date/time**: Use `DateUtil` for production formatting, `DateTimeFormatter` (not `SimpleDateFormat`) for preview fallbacks
+- **Tests**: When plugin constructor params or function signatures change, verify ALL test files that construct/call them are updated
 - **Flow/Coroutines patterns**: `preferences.observe(key)` returns `StateFlow<T>`, use `.drop(1)` to skip initial value; `persistenceLayer.observeChanges<T>()` for DB changes; `rxBus.toFlow()` for events
 - **Coroutine scopes**: Plugins create `CoroutineScope(Dispatchers.IO + SupervisorJob())` in `onStart()`, cancel in `onStop()`. `PluginBase.scope` is private — plugins must create their own scope
 - **Never run `connectedAndroidTest`** without explicit user permission — it uninstalls the app from the device

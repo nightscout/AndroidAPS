@@ -1,26 +1,23 @@
 package app.aaps.plugins.sync.tidepool.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
-import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
-import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 
-class TidepoolComposeContent(
-    private val tidepoolRepository: TidepoolRepository,
-    private val authFlowOut: AuthFlowOut,
-    private val tidepoolUploader: TidepoolUploader,
-    private val rxBus: RxBus,
-    private val preferences: Preferences,
+internal class TidepoolComposeContent(
+    private val viewModelFactory: ViewModelProvider.Factory,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper
+    private val onLogin: () -> Unit,
+    private val onLogout: () -> Unit,
+    private val onUploadNow: () -> Unit,
+    private val onFullSync: () -> Unit,
+    private val onClearLog: () -> Unit
 ) : ComposablePluginContent {
 
     @Composable
@@ -29,28 +26,26 @@ class TidepoolComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel = remember {
-            TidepoolViewModel(
-                tidepoolRepository = tidepoolRepository,
-                authFlowOut = authFlowOut
-            ).also { it.loadInitialData() }
+        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
+        val viewModel: TidepoolViewModel = remember(viewModelStoreOwner) {
+            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[TidepoolViewModel::class.java]
+        }
+
+        LaunchedEffect(Unit) {
+            viewModel.loadInitialData()
         }
 
         TidepoolScreen(
             viewModel = viewModel,
             dateUtil = dateUtil,
-            rh = rh,
             setToolbarConfig = setToolbarConfig,
             onNavigateBack = onNavigateBack,
             onSettings = onSettings,
-            onLogin = { authFlowOut.doTidePoolInitialLogin("menu") },
-            onLogout = {
-                authFlowOut.clearAllSavedData()
-                tidepoolUploader.resetInstance()
-            },
-            onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
-            onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
-            onClearLog = { tidepoolRepository.clearLog() }
+            onLogin = onLogin,
+            onLogout = onLogout,
+            onUploadNow = onUploadNow,
+            onFullSync = onFullSync,
+            onClearLog = onClearLog
         )
     }
 }

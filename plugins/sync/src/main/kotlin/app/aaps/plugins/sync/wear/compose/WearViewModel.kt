@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import javax.inject.Inject
 
 @Immutable
 data class WearUiState(
@@ -71,7 +72,7 @@ data class CwfPrefItem(val label: String, val isEnabled: Boolean)
 data class CwfViewItem(val key: String, val comment: String)
 
 @Stable
-class WearViewModel(
+class WearViewModel @Inject constructor(
     private val wearPlugin: WearPlugin,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,

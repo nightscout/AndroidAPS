@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -22,6 +23,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
@@ -41,6 +43,9 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var authFlowOut: AuthFlowOut
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var tidepoolRepository: TidepoolRepository
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: TidepoolViewModel by viewModels { viewModelFactory }
 
     companion object {
 
@@ -51,15 +56,8 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
         const val ID_MENU_CLEAR_LOG = 535
     }
 
-    private var viewModel: TidepoolViewModel? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        viewModel = TidepoolViewModel(
-            tidepoolRepository = tidepoolRepository,
-            authFlowOut = authFlowOut
-        )
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -70,24 +68,21 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
                     LocalDateUtil provides dateUtil
                 ) {
                     AapsTheme {
-                        viewModel?.let { vm ->
-                            TidepoolScreen(
-                                viewModel = vm,
-                                dateUtil = dateUtil,
-                                rh = rh,
-                                setToolbarConfig = {},
-                                onNavigateBack = {},
-                                onSettings = null,
-                                onLogin = { authFlowOut.doTidePoolInitialLogin("menu") },
-                                onLogout = {
-                                    authFlowOut.clearAllSavedData()
-                                    tidepoolUploader.resetInstance()
-                                },
-                                onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
-                                onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
-                                onClearLog = { tidepoolRepository.clearLog() }
-                            )
-                        }
+                        TidepoolScreen(
+                            viewModel = viewModel,
+                            dateUtil = dateUtil,
+                            setToolbarConfig = { },
+                            onNavigateBack = {},
+                            onSettings = null,
+                            onLogin = { authFlowOut.doTidePoolInitialLogin("menu") },
+                            onLogout = {
+                                authFlowOut.clearAllSavedData()
+                                tidepoolUploader.resetInstance()
+                            },
+                            onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
+                            onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
+                            onClearLog = { tidepoolRepository.clearLog() }
+                        )
                     }
                 }
             }
@@ -96,12 +91,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel?.loadInitialData()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel = null
+        viewModel.loadInitialData()
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {

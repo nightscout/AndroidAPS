@@ -153,6 +153,8 @@
     <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
     <string name="cwf_infos_pref_required">List of prefs required for the Watchface</string>
     <string name="cwf_infos_view_title">List of fields included into the Watchface</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
     <string name="pump_fetching_data">trying to fetch data from pump.</string>
     <string name="pump_old_data">TDD: Still old data! Cannot load from pump.</string>
     <string name="units_short">U</string>

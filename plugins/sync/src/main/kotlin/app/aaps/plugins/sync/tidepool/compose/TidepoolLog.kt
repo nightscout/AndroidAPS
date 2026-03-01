@@ -6,7 +6,7 @@ class TidepoolLog(
     val status: String
 ) {
 
-    var date = System.currentTimeMillis()
+    val date: Long = System.currentTimeMillis()
     val id: Long = idCounter.getAndIncrement()
 
     companion object {

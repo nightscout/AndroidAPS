@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
@@ -171,7 +173,7 @@ private fun ConsentStep(authUrl: String) {
         Spacer(Modifier.height(AapsSpacing.extraLarge))
 
         // Terms of use
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
                     text = stringResource(R.string.terms_of_use),
@@ -189,7 +191,7 @@ private fun ConsentStep(authUrl: String) {
         Spacer(Modifier.height(AapsSpacing.large))
 
         // Data uploaded
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
                     text = stringResource(R.string.data_uploaded),
@@ -221,7 +223,7 @@ private fun ConsentStep(authUrl: String) {
         Spacer(Modifier.height(AapsSpacing.large))
 
         // Data NOT uploaded
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
                     text = stringResource(R.string.data_not_uploaded),
@@ -395,5 +397,45 @@ private fun DoneStep(onClose: () -> Unit) {
         ) {
             Text(stringResource(R.string.close))
         }
+    }
+}
+
+@Preview(showBackground = true, name = "Welcome")
+@Composable
+private fun WelcomeStepPreview() {
+    MaterialTheme {
+        WelcomeStep(onNext = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Consent")
+@Composable
+private fun ConsentStepPreview() {
+    MaterialTheme {
+        ConsentStep(authUrl = "https://example.com/auth")
+    }
+}
+
+@Preview(showBackground = true, name = "Confirm")
+@Composable
+private fun ConfirmStepPreview() {
+    MaterialTheme {
+        ConfirmStep(onCancel = {}, onProceed = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Finishing")
+@Composable
+private fun FinishingStepPreview() {
+    MaterialTheme {
+        FinishingStep()
+    }
+}
+
+@Preview(showBackground = true, name = "Done")
+@Composable
+private fun DoneStepPreview() {
+    MaterialTheme {
+        DoneStep(onClose = {})
     }
 }

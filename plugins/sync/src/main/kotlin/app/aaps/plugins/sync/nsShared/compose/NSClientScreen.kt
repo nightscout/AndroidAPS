@@ -51,7 +51,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.interfaces.nsclient.NSClientLog
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
 import kotlinx.serialization.json.Json
@@ -82,15 +81,6 @@ fun NSClientScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Resolve strings outside LaunchedEffect (composable scope required)
-    val backDesc = stringResource(app.aaps.core.ui.R.string.back)
-    val prefsDesc = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
-    val clearLogText = stringResource(R.string.clear_log)
-    val deliverNowText = stringResource(R.string.deliver_now)
-    val fullSyncText = stringResource(R.string.full_sync)
-    val moreOptionsDesc = stringResource(app.aaps.core.ui.R.string.more_options)
-
-    // Set up toolbar
     LaunchedEffect(Unit) {
         setToolbarConfig(
             ToolbarConfig(
@@ -99,26 +89,20 @@ fun NSClientScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = backDesc
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
                         )
                     }
                 },
                 actions = {
-                    // Settings button first (more accessible)
                     if (onSettings != null) {
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = prefsDesc
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
                             )
                         }
                     }
-                    // Overflow menu at far right (Material Design convention)
                     NSClientMenu(
-                        clearLogText = clearLogText,
-                        deliverNowText = deliverNowText,
-                        fullSyncText = fullSyncText,
-                        moreOptionsDesc = moreOptionsDesc,
                         onClearLog = onClearLog,
                         onSendNow = onSendNow,
                         onFullSync = onFullSync
@@ -314,7 +298,7 @@ fun NSClientScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun NSClientScreenPreview() {
-    AapsTheme {
+    MaterialTheme {
         NSClientScreenContent(
             uiState = NSClientUiState(
                 url = "https://nightscout.example.com",
@@ -410,10 +394,6 @@ private fun LabelValueRow(
 
 @Composable
 private fun NSClientMenu(
-    clearLogText: String,
-    deliverNowText: String,
-    fullSyncText: String,
-    moreOptionsDesc: String,
     onClearLog: () -> Unit,
     onSendNow: () -> Unit,
     onFullSync: () -> Unit
@@ -424,7 +404,7 @@ private fun NSClientMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = moreOptionsDesc
+                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
             )
         }
         DropdownMenu(
@@ -432,21 +412,21 @@ private fun NSClientMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(clearLogText) },
+                text = { Text(stringResource(R.string.clear_log)) },
                 onClick = {
                     showMenu = false
                     onClearLog()
                 }
             )
             DropdownMenuItem(
-                text = { Text(deliverNowText) },
+                text = { Text(stringResource(R.string.deliver_now)) },
                 onClick = {
                     showMenu = false
                     onSendNow()
                 }
             )
             DropdownMenuItem(
-                text = { Text(fullSyncText) },
+                text = { Text(stringResource(R.string.full_sync)) },
                 onClick = {
                     showMenu = false
                     onFullSync()

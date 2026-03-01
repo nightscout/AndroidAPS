@@ -35,22 +35,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-private val timeFormatPreview = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+private val timeFormatPreview = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault())
 
 @Composable
-fun TidepoolScreen(
+internal fun TidepoolScreen(
     viewModel: TidepoolViewModel,
     dateUtil: DateUtil,
-    rh: ResourceHelper,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
     onSettings: (() -> Unit)?,
@@ -63,16 +62,18 @@ fun TidepoolScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Set up toolbar
+    // Only title needs pre-resolving (plain String used in LaunchedEffect suspend block)
+    val title = stringResource(R.string.tidepool)
+
     LaunchedEffect(Unit) {
         setToolbarConfig(
             ToolbarConfig(
-                title = rh.gs(R.string.tidepool),
+                title = title,
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = rh.gs(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
                         )
                     }
                 },
@@ -81,12 +82,11 @@ fun TidepoolScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = rh.gs(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
                             )
                         }
                     }
                     TidepoolMenu(
-                        rh = rh,
                         onLogin = onLogin,
                         onLogout = onLogout,
                         onUploadNow = onUploadNow,
@@ -106,7 +106,7 @@ fun TidepoolScreen(
 }
 
 @Composable
-fun TidepoolScreenContent(
+private fun TidepoolScreenContent(
     uiState: TidepoolUiState,
     dateUtil: DateUtil? = null,
     modifier: Modifier = Modifier
@@ -114,13 +114,13 @@ fun TidepoolScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+            .padding(AapsSpacing.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
     ) {
         // Status row
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
         ) {
             Text(
                 text = stringResource(R.string.status),
@@ -150,7 +150,7 @@ fun TidepoolScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
         ) {
             items(
                 items = uiState.logList,
@@ -158,7 +158,7 @@ fun TidepoolScreenContent(
             ) { log ->
                 Text(
                     text = buildAnnotatedString {
-                        append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(log.date))
+                        append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(Instant.ofEpochMilli(log.date)))
                         append(" ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                             append(log.status)
@@ -194,7 +194,6 @@ private fun TidepoolScreenPreview() {
 
 @Composable
 private fun TidepoolMenu(
-    rh: ResourceHelper,
     onLogin: () -> Unit,
     onLogout: () -> Unit,
     onUploadNow: () -> Unit,
@@ -207,7 +206,7 @@ private fun TidepoolMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = rh.gs(app.aaps.core.ui.R.string.more_options)
+                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
             )
         }
         DropdownMenu(
@@ -215,35 +214,35 @@ private fun TidepoolMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(rh.gs(app.aaps.core.ui.R.string.login)) },
+                text = { Text(stringResource(app.aaps.core.ui.R.string.login)) },
                 onClick = {
                     showMenu = false
                     onLogin()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(app.aaps.core.ui.R.string.logout)) },
+                text = { Text(stringResource(app.aaps.core.ui.R.string.logout)) },
                 onClick = {
                     showMenu = false
                     onLogout()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.upload_now)) },
+                text = { Text(stringResource(R.string.upload_now)) },
                 onClick = {
                     showMenu = false
                     onUploadNow()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.full_sync)) },
+                text = { Text(stringResource(R.string.full_sync)) },
                 onClick = {
                     showMenu = false
                     onFullSync()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.clear_log)) },
+                text = { Text(stringResource(R.string.clear_log)) },
                 onClick = {
                     showMenu = false
                     onClearLog()

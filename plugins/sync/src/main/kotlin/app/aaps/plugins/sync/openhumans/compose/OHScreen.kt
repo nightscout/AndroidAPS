@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
@@ -41,9 +42,7 @@ internal fun OHScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Resolve strings in composable scope for use in LaunchedEffect
     val title = stringResource(R.string.open_humans)
-    val backDesc = stringResource(app.aaps.core.ui.R.string.back)
 
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -51,7 +50,7 @@ internal fun OHScreen(
                 title = title,
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDesc)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
                     }
                 },
                 actions = {}
@@ -142,5 +141,31 @@ private fun OHScreenContent(
                 Text(stringResource(R.string.logout))
             }
         }
+    }
+}
+
+@Preview(showBackground = true, name = "Not logged in")
+@Composable
+private fun OHScreenNotLoggedInPreview() {
+    MaterialTheme {
+        OHScreenContent(
+            uiState = OHUiState(isLoggedIn = false),
+            onSetup = {},
+            onLogout = {},
+            onUploadNow = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Logged in")
+@Composable
+private fun OHScreenLoggedInPreview() {
+    MaterialTheme {
+        OHScreenContent(
+            uiState = OHUiState(isLoggedIn = true, projectMemberId = "12345678"),
+            onSetup = {},
+            onLogout = {},
+            onUploadNow = {}
+        )
     }
 }

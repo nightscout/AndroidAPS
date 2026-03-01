@@ -8,6 +8,7 @@ import app.aaps.plugins.sync.nsclient.ReceiverDelegate.ConnectivityStatus
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -36,6 +37,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var l: L
     @Mock lateinit var authState: AuthState
+    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var tidepoolPlugin: TidepoolPlugin
     private lateinit var rateLimit: RateLimit
@@ -46,7 +48,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(connectivityFlow)
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         tidepoolPlugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
+            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer, viewModelFactory
         )
     }
 
@@ -70,7 +72,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         val plugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus,
             fabricPrivacy, realUploader, uploadChunk, rateLimit,
-            receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
+            receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer, viewModelFactory
         )
         plugin.onStart()
         Thread.sleep(500) // Ensure flow collector has started and processed initial value
@@ -94,7 +96,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         val plugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus,
             fabricPrivacy, realUploader, uploadChunk, rateLimit,
-            receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
+            receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer, viewModelFactory
         )
         plugin.onStart()
         connectivityFlow.value = ConnectivityStatus("Blocked", allowed = false, connected = false)

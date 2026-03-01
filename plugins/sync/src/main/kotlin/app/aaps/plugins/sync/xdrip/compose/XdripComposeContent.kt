@@ -1,12 +1,16 @@
 package app.aaps.plugins.sync.xdrip.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -16,11 +20,12 @@ import app.aaps.plugins.sync.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class XdripComposeContent(
-    private val xdripMvvmRepository: XdripMvvmRepository,
-    private val dataSyncSelector: DataSyncSelectorXdrip,
+internal class XdripComposeContent(
+    private val viewModelFactory: ViewModelProvider.Factory,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper
+    private val dataSyncSelector: DataSyncSelectorXdrip,
+    private val onClearLog: () -> Unit,
+    private val onFullSync: suspend () -> Unit
 ) : ComposablePluginContent {
 
     @Composable
@@ -30,24 +35,23 @@ class XdripComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
-        val viewModel = remember {
-            XdripViewModel(
-                rh = rh,
-                xdripMvvmRepository = xdripMvvmRepository,
-                dataSyncSelector = dataSyncSelector
-            ).also { it.loadInitialData() }
+        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
+        val viewModel: XdripViewModel = remember(viewModelStoreOwner) {
+            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[XdripViewModel::class.java]
         }
+
+        LaunchedEffect(Unit) { viewModel.loadInitialData() }
 
         var showFullSyncDialog by remember { mutableStateOf(false) }
 
         if (showFullSyncDialog) {
             OkCancelDialog(
-                title = rh.gs(R.string.xdrip),
-                message = rh.gs(R.string.full_xdrip_sync_comment),
+                title = stringResource(R.string.xdrip),
+                message = stringResource(R.string.full_xdrip_sync_comment),
                 onConfirm = {
                     showFullSyncDialog = false
                     scope.launch(Dispatchers.IO) {
-                        dataSyncSelector.resetToNextFullSync()
+                        onFullSync()
                     }
                 },
                 onDismiss = { showFullSyncDialog = false }
@@ -57,11 +61,10 @@ class XdripComposeContent(
         XdripScreen(
             viewModel = viewModel,
             dateUtil = dateUtil,
-            rh = rh,
             setToolbarConfig = setToolbarConfig,
             onNavigateBack = onNavigateBack,
             onSettings = onSettings,
-            onClearLog = { xdripMvvmRepository.clearLog() },
+            onClearLog = onClearLog,
             onFullSync = { showFullSyncDialog = true }
         )
     }

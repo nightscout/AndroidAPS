@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -27,6 +28,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.compose.XdripScreen
 import app.aaps.plugins.sync.xdrip.compose.XdripViewModel
@@ -44,6 +46,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var xdripMvvmRepository: XdripMvvmRepository
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     companion object {
 
@@ -53,16 +56,10 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     override var plugin: PluginBase? = null
 
-    private var viewModel: XdripViewModel? = null
+    private val viewModel: XdripViewModel by viewModels { viewModelFactory }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        viewModel = XdripViewModel(
-            rh = rh,
-            xdripMvvmRepository = xdripMvvmRepository,
-            dataSyncSelector = dataSyncSelector
-        )
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -73,18 +70,15 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
                     LocalDateUtil provides dateUtil
                 ) {
                     AapsTheme {
-                        viewModel?.let { vm ->
-                            XdripScreen(
-                                viewModel = vm,
-                                dateUtil = dateUtil,
-                                rh = rh,
-                                setToolbarConfig = {},
-                                onNavigateBack = {},
-                                onSettings = null,
-                                onClearLog = { xdripMvvmRepository.clearLog() },
-                                onFullSync = { handleFullSync() }
-                            )
-                        }
+                        XdripScreen(
+                            viewModel = viewModel,
+                            dateUtil = dateUtil,
+                            setToolbarConfig = {},
+                            onNavigateBack = {},
+                            onSettings = null,
+                            onClearLog = { xdripMvvmRepository.clearLog() },
+                            onFullSync = { handleFullSync() }
+                        )
                     }
                 }
             }
@@ -93,12 +87,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel?.loadInitialData()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel = null
+        viewModel.loadInitialData()
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {

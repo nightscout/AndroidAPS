@@ -42,8 +42,8 @@ class XdripMvvmRepository @Inject constructor(
 
     /** Add a new log entry */
     fun addLog(action: String, logText: String?) {
+        aapsLogger.debug(LTag.XDRIP, "$action $logText")
         _logList.update { currentList ->
-            aapsLogger.debug(LTag.XDRIP, "$action $logText")
             val newLog = XdripLog(action = action, logText = logText)
             listOf(newLog) + currentList.take(MAX_LOG_ENTRIES - 1)
         }

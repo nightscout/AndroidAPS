@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,15 +54,14 @@ import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.sync.R
 
 @Composable
-fun WearScreen(
+internal fun WearScreen(
     viewModel: WearViewModel,
-    rh: ResourceHelper,
     importExportPrefs: ImportExportPrefs,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
@@ -81,11 +81,14 @@ fun WearScreen(
     // Back handler for infos sub-screen
     BackHandler(enabled = uiState.showInfos) { viewModel.hideCwfInfos() }
 
+    // Only title needs pre-resolving (plain String used in LaunchedEffect suspend block)
+    val wearTitle = stringResource(app.aaps.core.ui.R.string.wear)
+
     // Toolbar config
     LaunchedEffect(uiState.showInfos, uiState.cwfInfosState?.title) {
         setToolbarConfig(
             ToolbarConfig(
-                title = if (uiState.showInfos) uiState.cwfInfosState?.title ?: "" else rh.gs(app.aaps.core.ui.R.string.wear),
+                title = if (uiState.showInfos) uiState.cwfInfosState?.title ?: "" else wearTitle,
                 navigationIcon = {
                     IconButton(onClick = {
                         if (uiState.showInfos) viewModel.hideCwfInfos()
@@ -93,7 +96,7 @@ fun WearScreen(
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = rh.gs(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
                         )
                     }
                 },
@@ -102,7 +105,7 @@ fun WearScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = rh.gs(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
                             )
                         }
                     }
@@ -155,19 +158,20 @@ private fun WearMainContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(AapsSpacing.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
         // Connection Card
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(AapsSpacing.large),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)
             ) {
                 Text(
                     text = uiState.connectedDevice,
@@ -185,18 +189,19 @@ private fun WearMainContent(
         // Custom Watchface Card (visible only when connected)
         if (uiState.isDeviceConnected) {
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(AapsSpacing.large),
+                    verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
                 ) {
                     Text(
                         text = stringResource(R.string.wear_custom_watchface, uiState.watchfaceName),
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(horizontal = 4.dp)
+                        modifier = Modifier.padding(horizontal = AapsSpacing.small)
                     )
 
                     // Row 1: Load + Info
@@ -215,13 +220,13 @@ private fun WearMainContent(
 
                     // Watchface preview image
                     uiState.watchfaceImage?.let { image ->
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(AapsSpacing.small))
                         Image(
                             bitmap = image,
                             contentDescription = uiState.watchfaceName,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
+                                .padding(horizontal = AapsSpacing.extraLarge),
                             contentScale = ContentScale.FillWidth
                         )
                     }
@@ -243,7 +248,7 @@ private fun ButtonRow(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
         OutlinedButton(
             onClick = button1.onClick,
@@ -275,8 +280,8 @@ private fun CwfInfosContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(AapsSpacing.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
         // Watchface image
         state.watchfaceImage?.let { image ->
@@ -288,7 +293,7 @@ private fun CwfInfosContent(
                     .align(Alignment.CenterHorizontally),
                 contentScale = ContentScale.Fit
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(AapsSpacing.medium))
         }
 
         // Metadata
@@ -306,48 +311,52 @@ private fun CwfInfosContent(
 
         // Preferences section
         if (state.preferences.isNotEmpty()) {
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
             Text(
                 text = state.prefTitle,
                 style = MaterialTheme.typography.titleSmall
             )
-            state.preferences.forEach { pref ->
-                ListItem(
-                    headlineContent = {
-                        Text(text = pref.label, style = MaterialTheme.typography.bodyMedium)
-                    },
-                    trailingContent = {
-                        Icon(
-                            imageVector = if (pref.isEnabled) Icons.Default.Check else Icons.Default.Close,
-                            contentDescription = if (pref.isEnabled) "On" else "Off",
-                            tint = if (pref.isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                )
+            Column {
+                state.preferences.forEach { pref ->
+                    ListItem(
+                        headlineContent = {
+                            Text(text = pref.label, style = MaterialTheme.typography.bodyMedium)
+                        },
+                        trailingContent = {
+                            Icon(
+                                imageVector = if (pref.isEnabled) Icons.Default.Check else Icons.Default.Close,
+                                contentDescription = stringResource(if (pref.isEnabled) R.string.enabled else R.string.disabled),
+                                tint = if (pref.isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    )
+                }
             }
         }
 
         // View elements section
         if (state.viewElements.isNotEmpty()) {
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
             Text(
                 text = stringResource(R.string.cwf_infos_view_title),
                 style = MaterialTheme.typography.titleSmall
             )
-            state.viewElements.forEach { viewItem ->
-                ListItem(
-                    headlineContent = {
-                        Text(text = viewItem.comment, style = MaterialTheme.typography.bodySmall)
-                    },
-                    leadingContent = {
-                        Text(
-                            text = viewItem.key,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                )
+            Column {
+                state.viewElements.forEach { viewItem ->
+                    ListItem(
+                        headlineContent = {
+                            Text(text = viewItem.comment, style = MaterialTheme.typography.bodySmall)
+                        },
+                        leadingContent = {
+                            Text(
+                                text = viewItem.key,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+                }
             }
         }
     }

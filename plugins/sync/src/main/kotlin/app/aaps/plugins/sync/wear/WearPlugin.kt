@@ -40,6 +40,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.wear.compose.WearComposeContent
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
@@ -67,7 +68,8 @@ class WearPlugin @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val importExportPrefs: ImportExportPrefs,
-    private val versionCheckerUtils: VersionCheckerUtils
+    private val versionCheckerUtils: VersionCheckerUtils,
+    private val viewModelFactory: ViewModelFactory
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -79,14 +81,8 @@ class WearPlugin @Inject constructor(
         .description(R.string.description_wear)
         .composeContent { plugin ->
             WearComposeContent(
-                wearPlugin = plugin as WearPlugin,
-                rxBus = rxBus,
-                rh = rh,
-                dateUtil = dateUtil,
-                importExportPrefs = importExportPrefs,
-                preferences = preferences,
-                versionCheckerUtils = versionCheckerUtils,
-                aapsLogger = aapsLogger
+                viewModelFactory = (plugin as WearPlugin).viewModelFactory,
+                importExportPrefs = plugin.importExportPrefs
             )
         },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences

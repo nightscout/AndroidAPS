@@ -19,6 +19,34 @@
 - `NSClientRepositoryImpl` is `@Singleton` — its log list survives across screen recreations correctly.
 - The `PluginBase.scope` is private; plugins must declare their own `CoroutineScope`.
 
+## Tidepool Compose Migration Patterns (2026-03-01)
+
+- `TidepoolComposeContent` constructs `TidepoolViewModel` via `remember {}` (not `ViewModelProvider`) — same latent lifecycle bug as `XdripComposeContent`. The Dagger `ViewModelFactory` is registered in `SyncModule` but NOT passed to `TidepoolComposeContent`. `NSClientComposeContent` is the correct reference: it accepts `viewModelFactory` and calls `ViewModelProvider(viewModelStoreOwner, viewModelFactory)[...]`.
+- `TidepoolFragment` manually `new`s the ViewModel in `onCreateView` without `ViewModelProvider` — no ViewModel store owner so `viewModelScope` is never cancelled on fragment backstack pop (only on `onDestroyView` when `viewModel = null`).
+- `TidepoolLog` has `var date` (mutable) — same issue as `NSClientLog`. `@Immutable` on `TidepoolUiState` containing `List<TidepoolLog>` is technically incorrect (mutable element).
+- Both `TidepoolScreen` and `XdripScreen` use `rh.gs()` (ResourceHelper) inside Composables instead of `stringResource()` — violates project convention. Pattern is widespread in this module but still a violation.
+- `TidepoolScreen` and `XdripScreen` both use hardcoded `16.dp`, `4.dp`, `8.dp`, `2.dp` instead of `AapsSpacing` constants.
+- `SimpleDateFormat` (line 47 of TidepoolScreen.kt) is a file-level `private val` — not thread-safe if multiple threads access the preview. Safe in practice because it's only used in preview with a single thread, but the pattern should still use `DateTimeFormatter` or be local.
+- `TidepoolPlugin` and `TidepoolFragment` duplicate all menu action lambdas — same 5 actions in 4 places (Fragment.onMenuItemSelected, Fragment.setContent lambdas, ComposeContent.Render lambdas, TidepoolPlugin.composeContent lambdas).
+- Preview uses `MaterialTheme` wrapper, not `AapsTheme` — project convention requires `AapsTheme`.
+- `TidepoolRepository.addLog()` calls `aapsLogger.debug()` inside the `update {}` lambda — side effect inside a state update lambda; should log before/after the update, not inside it.
+
+## Wear Compose Migration Patterns (2026-03-01)
+
+- `WearViewModel` is NOT registered in `SyncModule` via `@IntoMap @ViewModelKey` — it cannot use the Dagger `ViewModelFactory`. As a result `WearComposeContent` constructs it via plain `remember {}` — same latent lifecycle bug as Tidepool/Xdrip. Fix: register in SyncModule and pass `viewModelFactory` to `WearComposeContent`.
+- `WearComposeContent` calls `.also { it.requestCustomWatchface() }` inside `remember {}` — side-effect at composition time is fragile; should be in `LaunchedEffect(Unit)` in `WearScreen`.
+- `WearScreen` passes `rh: ResourceHelper` all the way from `WearComposeContent` down to the screen composable and uses `rh.gs()` in a `LaunchedEffect` (toolbar config) — the strings are resolved inside a LaunchedEffect so technically not in composition, but the `rh` reference should be replaced by pre-resolved `stringResource()` strings captured in the composable scope. Three specific violations: lines 88, 96, 105 of WearScreen.kt.
+- `WearScreen` has no text fields, so `clearFocusOnTap` is not needed — correct.
+- All hardcoded dp values in WearScreen: `16.dp` (lines 158, 224, 278), `8.dp` (lines 159, 194, 246, 279, 291), `12.dp` (lines 168, 193), `4.dp` (lines 199, 309, 333), `18.dp` (lines 252, 261), `6.dp` (lines 253, 262), `20.dp` (line 324), `300.dp` (line 287) — should use `AapsSpacing` for the generic ones; 300.dp and 18.dp need named domain constants.
+- Hardcoded `"On"` / `"Off"` strings used as contentDescription in CwfInfosContent (line 322) — must be string resources.
+- Preview wrappers use `MaterialTheme` — this is the CORRECT pattern for Compose previews in this project (AapsTheme crashes in preview). Confirmed as intentional.
+- `WearUiState`, `CwfInfosState`, `CwfPrefItem`, `CwfViewItem` are all proper `@Immutable` data classes with `val` fields — correct.
+- Modifier ordering is correct in all composable signatures: `modifier: Modifier = Modifier` is always the last parameter after required params, first optional.
+- `WearMainContent` and `CwfInfosContent` are `private` — correct visibility.
+- `WearScreen` is package-private (internal) — appropriate since it is called from `WearComposeContent` in the same package.
+
 ## See Also
 
 - Detailed review findings: see conversation history for NSClient Compose migration review (2026-03-01)
+- Detailed review findings: see conversation history for Tidepool Compose migration review (2026-03-01)
+- Detailed review findings: see conversation history for Wear Compose migration review (2026-03-01)

@@ -43,8 +43,8 @@ class TidepoolRepository @Inject constructor(
 
     /** Add a new log entry */
     fun addLog(status: String) {
+        aapsLogger.debug(LTag.TIDEPOOL, status)
         _logList.update { currentList ->
-            aapsLogger.debug(LTag.TIDEPOOL, status)
             val newLog = TidepoolLog(status = status)
             listOf(newLog) + currentList.take(MAX_LOG_ENTRIES - 1)
         }
