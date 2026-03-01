@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
@@ -75,7 +76,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val viewModelFactory: ViewModelFactory
 ) : Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -87,9 +89,9 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .composeContent { plugin ->
             OHComposeContent(
-                stateDelegate = (plugin as OpenHumansUploaderPlugin).stateDelegate,
-                plugin = plugin,
-                context = plugin.context
+                plugin = plugin as OpenHumansUploaderPlugin,
+                context = plugin.context,
+                viewModelFactory = plugin.viewModelFactory
             )
         },
     ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),

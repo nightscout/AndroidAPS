@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
 
@@ -40,13 +41,17 @@ internal fun OHScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    // Resolve strings in composable scope for use in LaunchedEffect
+    val title = stringResource(R.string.open_humans)
+    val backDesc = stringResource(app.aaps.core.ui.R.string.back)
+
     LaunchedEffect(Unit) {
         setToolbarConfig(
             ToolbarConfig(
-                title = "Open Humans",
+                title = title,
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDesc)
                     }
                 },
                 actions = {}
@@ -75,7 +80,7 @@ private fun OHScreenContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(AapsSpacing.extraLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -84,7 +89,7 @@ private fun OHScreenContent(
             contentDescription = null,
             modifier = Modifier
                 .size(200.dp)
-                .padding(bottom = 16.dp)
+                .padding(bottom = AapsSpacing.extraLarge)
         )
 
         Text(
@@ -101,7 +106,7 @@ private fun OHScreenContent(
                 stringResource(R.string.not_setup_info),
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = AapsSpacing.medium)
         )
 
         if (uiState.isLoggedIn && uiState.projectMemberId != null) {
@@ -109,14 +114,14 @@ private fun OHScreenContent(
                 text = stringResource(R.string.project_member_id, uiState.projectMemberId),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = AapsSpacing.extraLarge)
             )
         }
 
         if (!uiState.isLoggedIn) {
             Button(
                 onClick = onSetup,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = AapsSpacing.extraLarge)
             ) {
                 Text(stringResource(R.string.setup))
             }
@@ -125,14 +130,14 @@ private fun OHScreenContent(
         if (uiState.isLoggedIn) {
             Button(
                 onClick = onUploadNow,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = AapsSpacing.extraLarge)
             ) {
                 Text(stringResource(R.string.upload_now))
             }
 
             Button(
                 onClick = onLogout,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = AapsSpacing.extraLarge)
             ) {
                 Text(stringResource(R.string.logout))
             }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -17,7 +18,7 @@ internal data class OHUiState(
 )
 
 @Stable
-internal class OHViewModel(
+internal class OHViewModel @Inject constructor(
     private val stateDelegate: OHStateDelegate
 ) : ViewModel() {
 

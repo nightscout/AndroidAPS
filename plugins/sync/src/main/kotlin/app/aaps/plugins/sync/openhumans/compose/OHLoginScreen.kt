@@ -17,14 +17,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +43,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.ui.OHLoginViewModel
 
@@ -50,25 +55,43 @@ internal fun OHLoginScreen(
     onFinishActivity: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val onBack = { if (!viewModel.goBack()) onFinishActivity() }
 
-    BackHandler {
-        if (!viewModel.goBack()) onFinishActivity()
-    }
+    BackHandler { onBack() }
 
-    AnimatedContent(
-        targetState = state,
-        label = "login_wizard"
-    ) { currentState ->
-        when (currentState) {
-            OHLoginViewModel.State.WELCOME -> WelcomeStep(onNext = { viewModel.goToConsent() })
-            OHLoginViewModel.State.CONSENT -> ConsentStep(authUrl = authUrl)
-            OHLoginViewModel.State.CONFIRM -> ConfirmStep(
-                onCancel = { viewModel.cancel() },
-                onProceed = { viewModel.finish() }
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(R.string.open_humans)) },
+                navigationIcon = {
+                    if (state != OHLoginViewModel.State.FINISHING) {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            )
+                        }
+                    }
+                }
             )
+        }
+    ) { paddingValues ->
+        AnimatedContent(
+            targetState = state,
+            label = "login_wizard",
+            modifier = Modifier.padding(paddingValues)
+        ) { currentState ->
+            when (currentState) {
+                OHLoginViewModel.State.WELCOME -> WelcomeStep(onNext = { viewModel.goToConsent() })
+                OHLoginViewModel.State.CONSENT -> ConsentStep(authUrl = authUrl)
+                OHLoginViewModel.State.CONFIRM -> ConfirmStep(
+                    onCancel = { viewModel.cancel() },
+                    onProceed = { viewModel.finish() }
+                )
 
-            OHLoginViewModel.State.FINISHING -> FinishingStep()
-            OHLoginViewModel.State.DONE -> DoneStep(onClose = onFinishActivity)
+                OHLoginViewModel.State.FINISHING -> FinishingStep()
+                OHLoginViewModel.State.DONE -> DoneStep(onClose = onFinishActivity)
+            }
         }
     }
 }
@@ -79,7 +102,7 @@ private fun WelcomeStep(onNext: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(AapsSpacing.extraLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -94,14 +117,14 @@ private fun WelcomeStep(onNext: () -> Unit) {
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         )
 
         Text(
             text = stringResource(R.string.open_humans_description),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         )
 
         Text(
@@ -109,12 +132,12 @@ private fun WelcomeStep(onNext: () -> Unit) {
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         )
 
         Button(
             onClick = onNext,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         ) {
             Text(stringResource(R.string.next))
         }
@@ -130,7 +153,7 @@ private fun ConsentStep(authUrl: String) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(AapsSpacing.extraLarge)
     ) {
         Text(
             text = stringResource(R.string.consent),
@@ -142,20 +165,20 @@ private fun ConsentStep(authUrl: String) {
             text = stringResource(R.string.please_read__information),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier.padding(top = AapsSpacing.small)
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(AapsSpacing.extraLarge))
 
         // Terms of use
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
                     text = stringResource(R.string.terms_of_use),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(AapsSpacing.medium))
                 Text(
                     text = stringResource(R.string.info_openhumans),
                     style = MaterialTheme.typography.bodySmall
@@ -163,17 +186,17 @@ private fun ConsentStep(authUrl: String) {
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(AapsSpacing.large))
 
         // Data uploaded
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
                     text = stringResource(R.string.data_uploaded),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(AapsSpacing.medium))
                 DataList(
                     listOf(
                         R.string.glucose_values,
@@ -195,17 +218,17 @@ private fun ConsentStep(authUrl: String) {
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(AapsSpacing.large))
 
         // Data NOT uploaded
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
                     text = stringResource(R.string.data_not_uploaded),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.error
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(AapsSpacing.medium))
                 DataList(
                     listOf(
                         R.string.passwords,
@@ -217,7 +240,7 @@ private fun ConsentStep(authUrl: String) {
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(AapsSpacing.extraLarge))
 
         HorizontalDivider()
 
@@ -225,7 +248,7 @@ private fun ConsentStep(authUrl: String) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp)
+                .padding(vertical = AapsSpacing.large)
         ) {
             Text(
                 text = stringResource(R.string.agree),
@@ -271,7 +294,7 @@ private fun ConfirmStep(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(AapsSpacing.extraLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -286,12 +309,12 @@ private fun ConfirmStep(
             text = stringResource(R.string.uploading_proceed),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = AapsSpacing.medium)
         )
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(top = 16.dp)
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraLarge),
+            modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         ) {
             OutlinedButton(onClick = onCancel) {
                 Text(stringResource(R.string.cancel))
@@ -308,7 +331,7 @@ private fun FinishingStep() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(AapsSpacing.extraLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -323,13 +346,13 @@ private fun FinishingStep() {
             text = stringResource(R.string.this_may_take_a_few_seconds),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = AapsSpacing.medium)
         )
 
         LinearProgressIndicator(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = AapsSpacing.extraLarge)
         )
     }
 }
@@ -340,7 +363,7 @@ private fun DoneStep(onClose: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(AapsSpacing.extraLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -356,19 +379,19 @@ private fun DoneStep(onClose: () -> Unit) {
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         )
 
         Text(
             text = stringResource(R.string.silently_upload_date_note),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = AapsSpacing.medium)
         )
 
         Button(
             onClick = onClose,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = AapsSpacing.medium)
         ) {
             Text(stringResource(R.string.close))
         }

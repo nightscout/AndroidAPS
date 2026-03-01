@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.di
 import androidx.lifecycle.ViewModel
 import app.aaps.plugins.sync.openhumans.OpenHumansWorker
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
+import app.aaps.plugins.sync.openhumans.compose.OHViewModel
 import app.aaps.plugins.sync.openhumans.ui.OHLoginViewModel
 import dagger.Binds
 import dagger.Module
@@ -23,6 +24,11 @@ abstract class OpenHumansModule {
     @IntoMap
     @ViewModelKey(OHLoginViewModel::class)
     internal abstract fun bindLoginViewModel(viewModel: OHLoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OHViewModel::class)
+    internal abstract fun bindOHViewModel(viewModel: OHViewModel): ViewModel
 
     companion object {
 

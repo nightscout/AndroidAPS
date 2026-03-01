@@ -4,16 +4,18 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 
 internal class OHComposeContent(
-    private val stateDelegate: OHStateDelegate,
     private val plugin: OpenHumansUploaderPlugin,
-    private val context: Context
+    private val context: Context,
+    private val viewModelFactory: ViewModelProvider.Factory
 ) : ComposablePluginContent {
 
     @Composable
@@ -22,8 +24,9 @@ internal class OHComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel = remember {
-            OHViewModel(stateDelegate = stateDelegate)
+        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
+        val viewModel: OHViewModel = remember(viewModelStoreOwner) {
+            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[OHViewModel::class.java]
         }
 
         OHScreen(
