@@ -101,27 +101,27 @@ enum class StringKey(
     ProtectionMasterPassword(key = "master_password", defaultValue = "", titleResId = R.string.pref_title_master_password, isPassword = true, isHashed = true),
     ProtectionSettingsPassword(
         key = "settings_password", defaultValue = "", titleResId = R.string.pref_title_settings_password, isPassword = true, isHashed = true,
-        visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeSettings, ProtectionType.CUSTOM_PASSWORD.ordinal)
+        visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeSettings }, ProtectionType.CUSTOM_PASSWORD.ordinal)
     ),
     ProtectionSettingsPin(
         key = "settings_pin", defaultValue = "", titleResId = R.string.pref_title_settings_pin, isPin = true, isHashed = true,
-        visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeSettings, ProtectionType.CUSTOM_PIN.ordinal)
+        visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeSettings }, ProtectionType.CUSTOM_PIN.ordinal)
     ),
     ProtectionApplicationPassword(
         key = "application_password", defaultValue = "", titleResId = R.string.pref_title_application_password, isPassword = true, isHashed = true,
-        visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeApplication, ProtectionType.CUSTOM_PASSWORD.ordinal)
+        visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeApplication }, ProtectionType.CUSTOM_PASSWORD.ordinal)
     ),
     ProtectionApplicationPin(
         key = "application_pin", defaultValue = "", titleResId = R.string.pref_title_application_pin, isPin = true, isHashed = true,
-        visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeApplication, ProtectionType.CUSTOM_PIN.ordinal)
+        visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeApplication }, ProtectionType.CUSTOM_PIN.ordinal)
     ),
     ProtectionBolusPassword(
         key = "bolus_password", defaultValue = "", titleResId = R.string.pref_title_bolus_password, isPassword = true, isHashed = true,
-        visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeBolus, ProtectionType.CUSTOM_PASSWORD.ordinal)
+        visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeBolus }, ProtectionType.CUSTOM_PASSWORD.ordinal)
     ),
     ProtectionBolusPin(
         key = "bolus_pin", defaultValue = "", titleResId = R.string.pref_title_bolus_pin, isPin = true, isHashed = true,
-        visibility = PreferenceVisibility.intEquals(IntKey.ProtectionTypeBolus, ProtectionType.CUSTOM_PIN.ordinal)
+        visibility = PreferenceVisibility.intEquals({ IntKey.ProtectionTypeBolus }, ProtectionType.CUSTOM_PIN.ordinal)
     ),
 
     OverviewCopySettingsFromNs(key = "statuslights_copy_ns", defaultValue = "", titleResId = R.string.pref_title_copy_settings_from_ns),

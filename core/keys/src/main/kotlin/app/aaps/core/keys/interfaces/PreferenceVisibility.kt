@@ -63,10 +63,26 @@ fun interface PreferenceVisibility {
         }
 
         /**
+         * Creates a visibility condition that checks if an IntKey equals a specific value.
+         * Uses a lazy key provider to avoid circular enum class initialization.
+         */
+        fun intEquals(keyProvider: () -> IntPreferenceKey, value: Int) = PreferenceVisibility { ctx ->
+            ctx.intEquals(keyProvider(), value)
+        }
+
+        /**
          * Creates a visibility condition that checks if a StringKey is not empty.
          */
         fun stringNotEmpty(key: StringPreferenceKey) = PreferenceVisibility { ctx ->
             ctx.preferences.get(key).isNotEmpty()
+        }
+
+        /**
+         * Creates a visibility condition that checks if a StringKey is not empty.
+         * Uses a lazy key provider to avoid circular enum class initialization.
+         */
+        fun stringNotEmpty(keyProvider: () -> StringPreferenceKey) = PreferenceVisibility { ctx ->
+            ctx.preferences.get(keyProvider()).isNotEmpty()
         }
     }
 }

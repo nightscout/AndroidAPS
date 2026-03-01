@@ -132,7 +132,7 @@ enum class IntKey(
         titleResId = R.string.pref_title_protection_timeout,
         defaultedBySM = true,
         unitType = UnitType.SEC,
-        visibility = PreferenceVisibility.stringNotEmpty(StringKey.ProtectionMasterPassword)
+        visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
     ProtectionTypeSettings(
         key = "settings_protection",
@@ -148,7 +148,7 @@ enum class IntKey(
             ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
             ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
         ),
-        visibility = PreferenceVisibility.stringNotEmpty(StringKey.ProtectionMasterPassword)
+        visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
     ProtectionTypeApplication(
         key = "application_protection",
@@ -164,7 +164,7 @@ enum class IntKey(
             ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
             ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
         ),
-        visibility = PreferenceVisibility.stringNotEmpty(StringKey.ProtectionMasterPassword)
+        visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
     ProtectionTypeBolus(
         key = "bolus_protection",
@@ -180,7 +180,7 @@ enum class IntKey(
             ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
             ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
         ),
-        visibility = PreferenceVisibility.stringNotEmpty(StringKey.ProtectionMasterPassword)
+        visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
     SafetyMaxCarbs(key = "treatmentssafety_maxcarbs", defaultValue = 48, min = 1, max = 200, titleResId = R.string.pref_title_max_carbs, unitType = UnitType.GRAMS),
     LoopOpenModeMinChange(
