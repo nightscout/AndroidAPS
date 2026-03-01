@@ -57,14 +57,16 @@ class NSClientViewModel @Inject constructor(
                 uiState.update { it.copy(logList = logList) }
             }
         }
+        viewModelScope.launch {
+            nsClientRepository.urlUpdate.collect { url ->
+                uiState.update { it.copy(url = url) }
+            }
+        }
     }
 
     fun loadInitialData() {
         uiState.update {
-            it.copy(
-                url = nsClientPlugin?.address ?: "",
-                paused = preferences.get(NsclientBooleanKey.NsPaused)
-            )
+            it.copy(paused = preferences.get(NsclientBooleanKey.NsPaused))
         }
     }
 

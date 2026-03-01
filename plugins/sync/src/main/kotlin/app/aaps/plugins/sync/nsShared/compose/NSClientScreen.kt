@@ -47,20 +47,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.interfaces.nsclient.NSClientLog
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.R
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private val jsonPrettyPrint = Json { prettyPrint = true }
-private val timeFormatPreview = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+private val timeFormatPreview = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault())
 
 private const val JSON_EXPANDED = "json_expanded"
 private const val JSON_COLLAPSED = "json_collapsed"
@@ -69,7 +70,6 @@ private const val JSON_COLLAPSED = "json_collapsed"
 fun NSClientScreen(
     viewModel: NSClientViewModel,
     dateUtil: DateUtil,
-    rh: ResourceHelper,
     title: String,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
@@ -82,6 +82,14 @@ fun NSClientScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    // Resolve strings outside LaunchedEffect (composable scope required)
+    val backDesc = stringResource(app.aaps.core.ui.R.string.back)
+    val prefsDesc = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+    val clearLogText = stringResource(R.string.clear_log)
+    val deliverNowText = stringResource(R.string.deliver_now)
+    val fullSyncText = stringResource(R.string.full_sync)
+    val moreOptionsDesc = stringResource(app.aaps.core.ui.R.string.more_options)
+
     // Set up toolbar
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -91,7 +99,7 @@ fun NSClientScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = rh.gs(app.aaps.core.ui.R.string.back)
+                            contentDescription = backDesc
                         )
                     }
                 },
@@ -101,13 +109,16 @@ fun NSClientScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = rh.gs(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = prefsDesc
                             )
                         }
                     }
                     // Overflow menu at far right (Material Design convention)
                     NSClientMenu(
-                        rh = rh,
+                        clearLogText = clearLogText,
+                        deliverNowText = deliverNowText,
+                        fullSyncText = fullSyncText,
+                        moreOptionsDesc = moreOptionsDesc,
                         onClearLog = onClearLog,
                         onSendNow = onSendNow,
                         onFullSync = onFullSync
@@ -135,13 +146,13 @@ fun NSClientScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+            .padding(AapsSpacing.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
     ) {
         // URL row - only URL text is clickable
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -160,7 +171,7 @@ fun NSClientScreenContent(
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
             ) {
                 LabelValueRow(label = stringResource(R.string.status), value = uiState.status)
                 LabelValueRow(label = stringResource(R.string.queue), value = uiState.queue)
@@ -168,9 +179,9 @@ fun NSClientScreenContent(
 
             Row(
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = AapsSpacing.extraLarge)
                     .align(Alignment.CenterVertically),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -202,7 +213,7 @@ fun NSClientScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
         ) {
             items(
                 items = uiState.logList,
@@ -215,7 +226,7 @@ fun NSClientScreenContent(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = buildAnnotatedString {
-                                append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(log.date))
+                                append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(Instant.ofEpochMilli(log.date)))
                                 append(" ")
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                     append(log.action)
@@ -246,7 +257,7 @@ fun NSClientScreenContent(
                         ClickableAnnotatedText(
                             text = bodyText,
                             style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface),
-                            modifier = Modifier.padding(start = 16.dp),
+                            modifier = Modifier.padding(start = AapsSpacing.extraLarge),
                             onClick = { offset ->
                                 if (bodyText.getStringAnnotations(JSON_COLLAPSED, offset, offset).any()) {
                                     isJsonExpanded = true
@@ -303,7 +314,7 @@ fun NSClientScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun NSClientScreenPreview() {
-    MaterialTheme {
+    AapsTheme {
         NSClientScreenContent(
             uiState = NSClientUiState(
                 url = "https://nightscout.example.com",
@@ -321,7 +332,7 @@ private fun NSClientScreenPreview() {
 }
 
 @Composable
-fun ClickableAnnotatedText(
+private fun ClickableAnnotatedText(
     text: AnnotatedString,
     style: TextStyle,
     modifier: Modifier = Modifier,
@@ -382,7 +393,7 @@ private fun LabelValueRow(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
         Text(
             text = label,
@@ -399,7 +410,10 @@ private fun LabelValueRow(
 
 @Composable
 private fun NSClientMenu(
-    rh: ResourceHelper,
+    clearLogText: String,
+    deliverNowText: String,
+    fullSyncText: String,
+    moreOptionsDesc: String,
     onClearLog: () -> Unit,
     onSendNow: () -> Unit,
     onFullSync: () -> Unit
@@ -410,7 +424,7 @@ private fun NSClientMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = rh.gs(app.aaps.core.ui.R.string.more_options)
+                contentDescription = moreOptionsDesc
             )
         }
         DropdownMenu(
@@ -418,21 +432,21 @@ private fun NSClientMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.clear_log)) },
+                text = { Text(clearLogText) },
                 onClick = {
                     showMenu = false
                     onClearLog()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.deliver_now)) },
+                text = { Text(deliverNowText) },
                 onClick = {
                     showMenu = false
                     onSendNow()
                 }
             )
             DropdownMenuItem(
-                text = { Text(rh.gs(R.string.full_sync)) },
+                text = { Text(fullSyncText) },
                 onClick = {
                     showMenu = false
                     onFullSync()

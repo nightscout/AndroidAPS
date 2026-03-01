@@ -1,11 +1,16 @@
 package app.aaps.plugins.sync.nsShared.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,11 +18,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSClientRepository
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -31,16 +33,16 @@ import kotlinx.coroutines.withContext
  * Compose content provider for NSClient plugins.
  * This class provides the UI for NSClientV1 and NSClientV3 plugins.
  */
+private const val CLEANUP_RETENTION_DAYS = 93L
+
 class NSClientComposeContent(
-    private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val uel: UserEntryLogger,
     private val nsClientRepository: NSClientRepository,
-    private val activePlugin: ActivePlugin,
-    private val preferences: Preferences,
     private val nsClient: NsClient,
+    private val viewModelFactory: ViewModelProvider.Factory,
     private val title: String
 ) : ComposablePluginContent {
 
@@ -51,13 +53,9 @@ class NSClientComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
-        val viewModel = remember {
-            NSClientViewModel(
-                rh = rh,
-                activePlugin = activePlugin,
-                nsClientRepository = nsClientRepository,
-                preferences = preferences
-            )
+        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
+        val viewModel: NSClientViewModel = remember(viewModelStoreOwner) {
+            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[NSClientViewModel::class.java]
         }
 
         // Dialog states
@@ -67,13 +65,16 @@ class NSClientComposeContent(
         var resultMessage by remember { mutableStateOf("") }
 
         // Load initial data
-        remember { viewModel.loadInitialData(); true }
+        LaunchedEffect(Unit) { viewModel.loadInitialData() }
+
+        // Pre-resolve strings for use in coroutine callbacks
+        val clearedEntriesText = stringResource(app.aaps.core.ui.R.string.cleared_entries)
 
         // Full sync confirmation dialog
         if (showFullSyncDialog) {
             OkCancelDialog(
-                title = rh.gs(R.string.ns_client),
-                message = rh.gs(R.string.full_sync_comment),
+                title = stringResource(R.string.ns_client),
+                message = stringResource(R.string.full_sync_comment),
                 onConfirm = {
                     showFullSyncDialog = false
                     showCleanupDialog = true
@@ -85,17 +86,17 @@ class NSClientComposeContent(
         // Cleanup confirmation dialog
         if (showCleanupDialog) {
             OkCancelDialog(
-                title = rh.gs(R.string.ns_client),
-                message = rh.gs(app.aaps.core.ui.R.string.cleanup_db_confirm_sync),
+                title = stringResource(R.string.ns_client),
+                message = stringResource(app.aaps.core.ui.R.string.cleanup_db_confirm_sync),
                 onConfirm = {
                     showCleanupDialog = false
                     scope.launch {
                         try {
                             val result = withContext(Dispatchers.IO) {
-                                persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true)
+                                persistenceLayer.cleanupDatabase(CLEANUP_RETENTION_DAYS, deleteTrackedChanges = true)
                             }
                             if (result.isNotEmpty()) {
-                                resultMessage = "<b>${rh.gs(app.aaps.core.ui.R.string.cleared_entries)}</b><br>$result"
+                                resultMessage = "<b>$clearedEntriesText</b><br>$result"
                                 showResultDialog = true
                             }
                             aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
@@ -125,7 +126,7 @@ class NSClientComposeContent(
         // Result dialog
         if (showResultDialog) {
             OkDialog(
-                title = rh.gs(app.aaps.core.ui.R.string.result),
+                title = stringResource(app.aaps.core.ui.R.string.result),
                 message = resultMessage,
                 onDismiss = { showResultDialog = false }
             )
@@ -134,7 +135,6 @@ class NSClientComposeContent(
         NSClientScreen(
             viewModel = viewModel,
             dateUtil = dateUtil,
-            rh = rh,
             title = title,
             setToolbarConfig = setToolbarConfig,
             onNavigateBack = onNavigateBack,

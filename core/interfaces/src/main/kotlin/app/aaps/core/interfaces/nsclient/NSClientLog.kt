@@ -9,7 +9,7 @@ class NSClientLog(
     val json: JsonElement? = null
 ) {
 
-    var date = System.currentTimeMillis()
+    val date: Long = System.currentTimeMillis()
     val id: Long = idCounter.getAndIncrement()
 
     companion object {

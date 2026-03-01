@@ -61,6 +61,7 @@ import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -121,7 +122,8 @@ class NSClientV3Plugin @Inject constructor(
     private val l: L,
     private val nsClientRepository: NSClientRepository,
     private val uel: UserEntryLogger,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    private val viewModelFactory: ViewModelFactory
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -134,15 +136,13 @@ class NSClientV3Plugin @Inject constructor(
         .description(R.string.description_ns_client_v3)
         .composeContent { plugin ->
             NSClientComposeContent(
-                rh = rh,
                 dateUtil = dateUtil,
                 aapsLogger = aapsLogger,
                 persistenceLayer = persistenceLayer,
                 uel = uel,
                 nsClientRepository = nsClientRepository,
-                activePlugin = activePlugin,
-                preferences = preferences,
                 nsClient = plugin as NsClient,
+                viewModelFactory = viewModelFactory,
                 title = rh.gs(R.string.ns_client_v3_title)
             )
         },

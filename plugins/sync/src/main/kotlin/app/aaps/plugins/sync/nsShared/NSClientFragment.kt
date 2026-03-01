@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -28,6 +29,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.nsShared.compose.NSClientScreen
 import app.aaps.plugins.sync.nsShared.compose.NSClientViewModel
 import dagger.android.support.DaggerFragment
@@ -35,6 +37,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+private const val CLEANUP_RETENTION_DAYS = 93L
 
 class NSClientFragment : DaggerFragment(), PluginFragment {
 
@@ -48,20 +52,14 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override var plugin: PluginBase? = null
     private val nsClientPlugin get() = activePlugin.activeNsClient
 
-    private var viewModel: NSClientViewModel? = null
+    private val viewModel: NSClientViewModel by viewModels { viewModelFactory }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel = NSClientViewModel(
-            rh = rh,
-            activePlugin = activePlugin,
-            nsClientRepository = nsClientRepository,
-            preferences = preferences
-        )
-
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -71,37 +69,34 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
                     LocalDateUtil provides dateUtil
                 ) {
                     AapsTheme {
-                        viewModel?.let { vm ->
-                            NSClientScreen(
-                                viewModel = vm,
-                                dateUtil = dateUtil,
-                                rh = rh,
-                                title = rh.gs(R.string.ns_client),
-                                setToolbarConfig = { },
-                                onNavigateBack = {
-                                    activity?.onBackPressedDispatcher?.onBackPressed()
-                                },
-                                onPauseChanged = { isChecked ->
-                                    uel.log(action = if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, source = Sources.NSClient)
-                                    nsClientPlugin?.pause(isChecked)
-                                    vm.updatePaused(isChecked)
-                                },
-                                onClearLog = {
-                                    nsClientRepository.clearLog()
-                                },
-                                onSendNow = {
-                                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                                        nsClientPlugin?.resend("GUI")
-                                    }
-                                },
-                                onFullSync = {
-                                    handleFullSync()
-                                },
-                                onSettings = {
-                                    uiInteraction.runPreferencesForPlugin(requireActivity(), nsClientPlugin?.javaClass?.simpleName)
+                        NSClientScreen(
+                            viewModel = viewModel,
+                            dateUtil = dateUtil,
+                            title = rh.gs(R.string.ns_client),
+                            setToolbarConfig = { },
+                            onNavigateBack = {
+                                activity?.onBackPressedDispatcher?.onBackPressed()
+                            },
+                            onPauseChanged = { isChecked ->
+                                uel.log(action = if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, source = Sources.NSClient)
+                                nsClientPlugin?.pause(isChecked)
+                                viewModel.updatePaused(isChecked)
+                            },
+                            onClearLog = {
+                                nsClientRepository.clearLog()
+                            },
+                            onSendNow = {
+                                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                                    nsClientPlugin?.resend("GUI")
                                 }
-                            )
-                        }
+                            },
+                            onFullSync = {
+                                handleFullSync()
+                            },
+                            onSettings = {
+                                uiInteraction.runPreferencesForPlugin(requireActivity(), nsClientPlugin?.javaClass?.simpleName)
+                            }
+                        )
                     }
                 }
             }
@@ -110,12 +105,7 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel?.loadInitialData()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel = null
+        viewModel.loadInitialData()
     }
 
     private fun handleFullSync() {
@@ -130,7 +120,7 @@ class NSClientFragment : DaggerFragment(), PluginFragment {
                         viewLifecycleOwner.lifecycleScope.launch {
                             try {
                                 val result = withContext(Dispatchers.IO) {
-                                    persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true)
+                                    persistenceLayer.cleanupDatabase(CLEANUP_RETENTION_DAYS, deleteTrackedChanges = true)
                                 }
                                 if (result.isNotEmpty())
                                     uiInteraction.showOkDialog(
