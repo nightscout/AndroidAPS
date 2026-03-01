@@ -12,8 +12,10 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,11 +23,26 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.SnackbarColors
 import app.aaps.core.ui.compose.SnackbarMessage
+
+/**
+ * Custom visuals that carry the message type so the styling lambda can read it
+ * from [snackbarData.visuals] instead of the outer recomposition-sensitive parameter.
+ */
+private class TypedSnackbarVisuals(
+    override val message: String,
+    val type: SnackbarMessage,
+    override val withDismissAction: Boolean = true,
+    override val actionLabel: String? = null,
+    override val duration: SnackbarDuration = SnackbarDuration.Short
+) : SnackbarVisuals
 
 /**
  * Snackbar host that displays typed messages with appropriate styling.
@@ -55,10 +72,11 @@ fun AapsSnackbarHost(
 
     LaunchedEffect(message) {
         message?.let {
-            snackbarHostState.showSnackbar(
-                message = it.message,
-                withDismissAction = true
-            )
+            // showSnackbar suspends until the snackbar is dismissed or timed out.
+            // The message type is captured in TypedSnackbarVisuals so the styling
+            // lambda reads it from snackbarData — not from the outer `message` param
+            // which may become null if the caller clears it early.
+            snackbarHostState.showSnackbar(TypedSnackbarVisuals(message = it.message, type = it))
             onDismiss()
         }
     }
@@ -67,13 +85,10 @@ fun AapsSnackbarHost(
         hostState = snackbarHostState,
         modifier = modifier
     ) { snackbarData ->
-        val (containerColor, contentColor, icon) = when (message) {
-            is SnackbarMessage.Error -> Triple(colors.errorContainer, colors.onErrorContainer, Icons.Default.Error)
-            is SnackbarMessage.Warning -> Triple(colors.warningContainer, colors.onWarningContainer, Icons.Default.Warning)
-            is SnackbarMessage.Info -> Triple(colors.infoContainer, colors.onInfoContainer, Icons.Default.Info)
-            is SnackbarMessage.Success -> Triple(colors.successContainer, colors.onSuccessContainer, Icons.Default.CheckCircle)
-            null -> Triple(MaterialTheme.colorScheme.inverseSurface, MaterialTheme.colorScheme.inverseOnSurface, Icons.Default.Info)
-        }
+        val visuals = snackbarData.visuals
+        val type = (visuals as? TypedSnackbarVisuals)?.type
+
+        val (containerColor, contentColor, icon) = resolveStyle(type, colors)
 
         Snackbar(
             containerColor = containerColor,
@@ -96,10 +111,27 @@ fun AapsSnackbarHost(
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = snackbarData.visuals.message,
+                    text = visuals.message,
                     color = contentColor
                 )
             }
         }
     }
 }
+
+@Composable
+private fun resolveStyle(
+    type: SnackbarMessage?,
+    colors: SnackbarColors
+): Triple<Color, Color, ImageVector> =
+    when (type) {
+        is SnackbarMessage.Error -> Triple(colors.errorContainer, colors.onErrorContainer, Icons.Default.Error)
+        is SnackbarMessage.Warning -> Triple(colors.warningContainer, colors.onWarningContainer, Icons.Default.Warning)
+        is SnackbarMessage.Info -> Triple(colors.infoContainer, colors.onInfoContainer, Icons.Default.Info)
+        is SnackbarMessage.Success -> Triple(colors.successContainer, colors.onSuccessContainer, Icons.Default.CheckCircle)
+        null -> Triple(
+            MaterialTheme.colorScheme.inverseSurface,
+            MaterialTheme.colorScheme.inverseOnSurface,
+            Icons.Default.Info
+        )
+    }

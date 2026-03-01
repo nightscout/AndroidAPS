@@ -7,6 +7,8 @@ package app.aaps.core.ui.compose.preference
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 
@@ -57,4 +59,14 @@ fun AdaptiveSwitchPreferenceItem(
         },
         enabled = visibility.enabled
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AdaptiveSwitchPreferencePreview() {
+    PreviewTheme {
+        AdaptiveSwitchPreferenceItem(
+            booleanKey = BooleanKey.OverviewKeepScreenOn
+        )
+    }
 }

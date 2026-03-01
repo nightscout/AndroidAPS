@@ -12,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.StringPreferenceKey
@@ -124,6 +126,17 @@ fun AdaptivePasswordPreferenceItem(
                 scope.launch { snackbarHostState?.showSnackbar(notChangedMsg) }
                 showDialog = false
             }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AdaptivePasswordPreferencePreview() {
+    PreviewTheme {
+        AdaptivePasswordPreferenceItem(
+            stringKey = StringKey.ProtectionSettingsPassword,
+            hashPassword = { it }
         )
     }
 }

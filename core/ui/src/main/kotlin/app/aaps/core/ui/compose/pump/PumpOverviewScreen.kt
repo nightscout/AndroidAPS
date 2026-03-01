@@ -33,13 +33,17 @@ import app.aaps.core.ui.compose.statusLevelToColor
  * Shared pump overview screen used by all pump plugins.
  *
  * @param state The pump overview UI state produced by the per-pump ViewModel.
+ * @param modifier Modifier for the root layout.
+ * @param customContent Optional composable slot for pump-specific content (e.g. ComboV2 RT display frame).
  */
 @Composable
 fun PumpOverviewScreen(
-    state: PumpOverviewUiState
+    state: PumpOverviewUiState,
+    modifier: Modifier = Modifier,
+    customContent: (@Composable () -> Unit)? = null
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -55,14 +59,13 @@ fun PumpOverviewScreen(
             QueueStatusRow(queue)
         }
 
-        // Info section
-        val visibleRows = state.infoRows.filter { it.visible }
-        if (visibleRows.isNotEmpty()) {
-            InfoSection(visibleRows)
+        // Info section — pass all rows so AnimatedVisibility can animate in/out
+        if (state.infoRows.isNotEmpty()) {
+            InfoSection(state.infoRows)
         }
 
         // Custom content slot (e.g. ComboV2 RT display frame)
-        state.customContent?.invoke()
+        customContent?.invoke()
 
         // Primary action buttons
         val visiblePrimary = state.primaryActions.filter { it.visible }
@@ -132,13 +135,15 @@ private fun InfoSection(rows: List<PumpInfoRow>) {
         Column(modifier = Modifier.padding(16.dp)) {
             rows.forEachIndexed { index, row ->
                 AnimatedVisibility(visible = row.visible) {
-                    PumpInfoRowItem(row)
-                }
-                if (index < rows.lastIndex) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
+                    Column {
+                        PumpInfoRowItem(row)
+                        if (index < rows.lastIndex) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = MaterialTheme.colorScheme.outlineVariant
+                            )
+                        }
+                    }
                 }
             }
         }

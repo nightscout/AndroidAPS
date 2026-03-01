@@ -2,6 +2,7 @@ package app.aaps.core.ui.compose.dialogs
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -13,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 
 /**
  * A simple alert dialog with a title, message, and OK button.
@@ -52,7 +52,7 @@ fun OkDialog(
 @Preview(showBackground = true)
 @Composable
 private fun OkDialogPreview() {
-    AapsTheme {
+    MaterialTheme {
         OkDialog(
             title = "Information",
             message = "Operation completed successfully.",

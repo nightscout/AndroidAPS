@@ -120,6 +120,43 @@
   use M3 semantic colors.
 - `SmsCommunicatorOtpScreen` is missing `clearFocusOnTap` despite containing an `OutlinedTextField`.
 
+## Preference System Patterns (2026-03-01)
+
+- `sharedPreferenceStates` in `PreferenceState.kt` is a process-level singleton
+  (`mutableStateMapOf` at file scope). It is never cleared between screen navigations or process
+  reuse in tests. Stale values survive navigation. It also bypasses `Preferences.simpleMode`
+  reactive
+  updates for APS/NSClient/PumpControl mode flags, which are read directly from the
+  `Preferences` object (not from the shared state map) inside `calculatePreferenceVisibility`.
+- `rememberUnitDoublePreferenceState` (PreferenceState.kt line 483) re-computes `storedValue`,
+  `displayValue`, and `formatted` on every recomposition but only has `remember(key)` for the
+  state — the `displayState` is created with plain `remember` (no key) so it will not update if the
+  stored preference changes externally.
+- `ReactiveVisibilityContext.ReactivePreferencesWrapper` only intercepts `get(IntPreferenceKey)` and
+  `get(StringPreferenceKey)` — `get(BooleanPreferenceKey)` and `get(DoublePreferenceKey)` fall
+  through to the delegate and are NOT reactive for `visibility.isVisible()` conditions.
+- `PluginPreferencesScreen` contains two hardcoded English-only strings: "No compose preferences
+  available for this plugin" and "Plugin does not support preferences". These must be string
+  resources.
+- `ClickablePreferenceCategoryHeader` uses `context.getString()` inside composition for summary
+  text (line 77) — should use `stringResource()` instead.
+- `ClickablePreferenceCategoryHeader` has hardcoded contentDescription strings "Collapse"/"Expand"
+  (line 136) — must be string resources.
+- All dialog previews in `dialogs/` use `AapsTheme` as wrapper — project rule says previews MUST
+  use `MaterialTheme` (AapsTheme crashes with InvocationTargetException in preview tool).
+- `PumpOverviewUiState.customContent` is `(@Composable () -> Unit)?` — a lambda stored in a
+  `@Immutable` data class. The Compose compiler cannot verify lambda stability, so this breaks
+  `@Immutable`'s contract and causes unnecessary recompositions of `PumpOverviewScreen`.
+- `AapsSnackbarHost` has a race condition: icon/color is resolved from `message` (the outer param)
+  not from `snackbarData` — after `onDismiss()` is called, `message` becomes null before the
+  Snackbar finishes animating out, causing it to briefly flash to the neutral (null) color.
+- `InfoSection` in PumpOverviewScreen wraps already-filtered `visibleRows` (filtered by
+  `row.visible == true`) with `AnimatedVisibility(visible = row.visible)` — the `visible` flag on
+  every row will always be `true` inside InfoSection. The outer filter makes the inner
+  `AnimatedVisibility` redundant.
+- `TileButton` in PumpOverviewScreen has hardcoded `96.dp`, `28.dp`, `2.dp`, `8.dp` values — some
+  belong in AapsSpacing, others are domain-specific and need named constants.
+
 ## See Also
 
 - Detailed review findings: see conversation history for NSClient Compose migration review (
@@ -128,4 +165,6 @@
   2026-03-01)
 - Detailed review findings: see conversation history for Wear Compose migration review (2026-03-01)
 - Detailed review findings: see conversation history for SMS Communicator Compose migration review (
+  2026-03-01)
+- Detailed review findings: see conversation history for Compose preference/dialog/pump review (
   2026-03-01)

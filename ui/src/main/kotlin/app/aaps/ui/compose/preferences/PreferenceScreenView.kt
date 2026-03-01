@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.preferences
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,14 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.activity.compose.BackHandler
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.preference.LocalHighlightKey
 import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.preference.LocalHighlightKey
 import app.aaps.core.ui.compose.preference.LocalNavigateToCompose
 import app.aaps.core.ui.compose.preference.LocalSnackbarHostState
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
+import app.aaps.core.ui.compose.preference.SectionLevel
 import app.aaps.core.ui.compose.preference.addPreferenceContent
 import app.aaps.core.ui.compose.preference.rememberPreferenceSectionState
 import app.aaps.core.ui.compose.preference.verticalScrollIndicators
@@ -60,7 +61,7 @@ fun PreferenceScreenView(
 
     // Auto-expand the main section
     LaunchedEffect(screenDef.key) {
-        sectionState.toggle("${screenDef.key}_main")
+        sectionState.toggle("${screenDef.key}_main", SectionLevel.TOP_LEVEL)
     }
 
     BackHandler(enabled = composeScreen != null) {

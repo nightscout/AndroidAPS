@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import app.aaps.core.ui.compose.StatusLevel
 
@@ -14,8 +13,7 @@ data class PumpOverviewUiState(
     val infoRows: List<PumpInfoRow> = emptyList(),
     val primaryActions: List<PumpAction> = emptyList(),
     val managementActions: List<PumpAction> = emptyList(),
-    val queueStatus: String? = null,
-    val customContent: (@Composable () -> Unit)? = null
+    val queueStatus: String? = null
 )
 
 /**

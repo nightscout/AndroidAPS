@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.decimalPlaces
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
@@ -18,6 +20,7 @@ import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.step
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
+import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.SliderWithButtons
 import java.text.DecimalFormat
@@ -113,7 +116,7 @@ fun AdaptiveDoublePreferenceItem(
         val summaryText = if (rangeFormatResId != null) {
             stringResource(rangeFormatResId, value, doubleKey.min, doubleKey.max)
         } else {
-            "${valueFormat.format(value)}$unitLabel (${valueFormat.format(doubleKey.min)} - ${valueFormat.format(doubleKey.max)})"
+            stringResource(R.string.preference_range_summary, valueFormat.format(value), unitLabel, valueFormat.format(doubleKey.min), valueFormat.format(doubleKey.max))
         }
         TextFieldPreference(
             state = state,
@@ -123,6 +126,16 @@ fun AdaptiveDoublePreferenceItem(
             },
             enabled = visibility.enabled,
             summary = { Text(summaryText) }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AdaptiveDoublePreferencePreview() {
+    PreviewTheme {
+        AdaptiveDoublePreferenceItem(
+            doubleKey = DoubleKey.OverviewInsulinButtonIncrement1
         )
     }
 }

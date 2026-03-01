@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
@@ -131,6 +132,17 @@ fun AdaptiveMasterPasswordPreferenceItem(
                 scope.launch { snackbarHostState?.showSnackbar(notChangedMsg) }
                 showSetDialog = false
             }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AdaptiveMasterPasswordPreferencePreview() {
+    PreviewTheme {
+        AdaptiveMasterPasswordPreferenceItem(
+            checkPassword = { _, _ -> false },
+            hashPassword = { it }
         )
     }
 }

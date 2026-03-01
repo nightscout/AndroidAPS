@@ -2,6 +2,7 @@ package app.aaps.core.ui.compose.dialogs
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -11,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 
 /**
  * A modal time picker dialog.
@@ -60,7 +60,7 @@ fun TimePickerModal(
 @Preview(showBackground = true)
 @Composable
 private fun TimePickerModalPreview() {
-    AapsTheme {
+    MaterialTheme {
         TimePickerModal(
             onTimeSelected = { _, _ -> },
             onDismiss = {},

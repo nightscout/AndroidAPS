@@ -32,13 +32,12 @@ fun AdaptivePreferenceList(
     items.forEach { item ->
         when (item) {
             is PreferenceKey          -> {
-                // Handle standard preference keys
-                if (visibilityContext == null || item.visibility.isVisible(visibilityContext)) {
-                    AdaptivePreferenceItem(
-                        key = item,
-                        visibilityContext = visibilityContext
-                    )
-                }
+                // AdaptivePreferenceItem handles all visibility checks
+                // (simpleMode, mode flags, dependencies, engineeringMode, runtime visibility)
+                AdaptivePreferenceItem(
+                    key = item,
+                    visibilityContext = visibilityContext
+                )
             }
 
             is PreferenceSubScreenDef -> {

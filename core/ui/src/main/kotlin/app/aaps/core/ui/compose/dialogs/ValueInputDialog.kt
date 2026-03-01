@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
+
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -122,6 +122,10 @@ fun ValueInputDialog(
         } else null
     } else null
 
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = label?.let { { Text(it) } },
@@ -191,16 +195,12 @@ fun ValueInputDialog(
             }
         }
     )
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ValueInputDialogPreview() {
-    AapsTheme {
+    MaterialTheme {
         ValueInputDialog(
             currentValue = 5.0,
             valueRange = 0.0..10.0,

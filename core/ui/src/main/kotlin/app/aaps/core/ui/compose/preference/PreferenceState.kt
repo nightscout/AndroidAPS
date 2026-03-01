@@ -8,9 +8,10 @@ package app.aaps.core.ui.compose.preference
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -44,7 +45,8 @@ data class PreferenceVisibilityState(
  */
 private class ReactiveVisibilityContext(
     private val delegate: PreferenceVisibilityContext,
-    private val delegatePreferences: Preferences
+    private val delegatePreferences: Preferences,
+    private val sharedStates: SnapshotStateMap<String, Any?>
 ) : PreferenceVisibilityContext {
 
     override val isPatchPump: Boolean get() = delegate.isPatchPump
@@ -55,23 +57,30 @@ private class ReactiveVisibilityContext(
     override val isPumpInitialized: Boolean get() = delegate.isPumpInitialized
 
     // Return a reactive preferences wrapper
-    override val preferences: Preferences get() = ReactivePreferencesWrapper(delegatePreferences)
+    override val preferences: Preferences get() = ReactivePreferencesWrapper(delegatePreferences, sharedStates)
 
     /**
      * Wrapper that reads keys through the shared state map for reactivity.
      */
     private class ReactivePreferencesWrapper(
-        private val delegate: Preferences
+        private val delegate: Preferences,
+        private val sharedStates: SnapshotStateMap<String, Any?>
     ) : Preferences by delegate {
 
+        override fun get(key: BooleanPreferenceKey): Boolean {
+            return getSharedBooleanState(sharedStates, key.key, delegate.get(key))
+        }
+
         override fun get(key: IntPreferenceKey): Int {
-            // Read through shared state for reactivity
-            return getSharedIntState(key.key, delegate.get(key))
+            return getSharedIntState(sharedStates, key.key, delegate.get(key))
         }
 
         override fun get(key: StringPreferenceKey): String {
-            // Read through shared state for reactivity
-            return getSharedStringState(key.key, delegate.get(key))
+            return getSharedStringState(sharedStates, key.key, delegate.get(key))
+        }
+
+        override fun get(key: DoublePreferenceKey): Double {
+            return getSharedDoubleState(sharedStates, key.key, delegate.get(key))
         }
     }
 }
@@ -89,6 +98,7 @@ fun calculatePreferenceVisibility(
 ): PreferenceVisibilityState {
     val preferences = LocalPreferences.current
     val config = LocalConfig.current
+    val sharedStates = LocalSharedPreferenceStates.current
     // Use reactive state for simpleMode - this triggers recomposition when it changes
     val simpleModeState = rememberPreferenceBooleanState(app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
 
@@ -150,7 +160,7 @@ fun calculatePreferenceVisibility(
     // For reactive visibility, we need to read dependent IntKeys through shared state
     visibilityContext?.let { context ->
         // Create a reactive visibility context that reads through shared state
-        val reactiveContext = ReactiveVisibilityContext(context, preferences)
+        val reactiveContext = ReactiveVisibilityContext(context, preferences, sharedStates)
         if (!preferenceKey.visibility.isVisible(reactiveContext)) {
             visible = false
         }
@@ -174,6 +184,7 @@ fun calculateIntentPreferenceVisibility(
     visibilityContext: PreferenceVisibilityContext? = null
 ): PreferenceVisibilityState {
     val preferences = LocalPreferences.current
+    val sharedStates = LocalSharedPreferenceStates.current
     // Use reactive state for simpleMode - this triggers recomposition when it changes
     val simpleModeState = rememberPreferenceBooleanState(app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
 
@@ -229,7 +240,7 @@ fun calculateIntentPreferenceVisibility(
     // For reactive visibility, we need to read dependent IntKeys through shared state
     visibilityContext?.let { context ->
         // Create a reactive visibility context that reads through shared state
-        val reactiveContext = ReactiveVisibilityContext(context, preferences)
+        val reactiveContext = ReactiveVisibilityContext(context, preferences, sharedStates)
         if (!intentKey.visibility.isVisible(reactiveContext)) {
             visible = false
         }
@@ -243,47 +254,50 @@ fun calculateIntentPreferenceVisibility(
 }
 
 // =================================
-// Global Shared State Registry
+// Composition-Scoped Shared State Registry
 // =================================
 
 /**
- * Global registry for preference states. Ensures all components observing the same
- * preference key share the same state, enabling proper reactivity across the UI.
+ * CompositionLocal holding the shared preference state map.
+ * Scoped to the preference screen's composition — automatically cleaned up
+ * when the user navigates away. Provided by [ProvidePreferenceTheme].
  *
  * Key format: "type:key" (e.g., "string:sms_allowed_numbers", "boolean:use_smb")
  */
-private val sharedPreferenceStates = mutableStateMapOf<String, Any?>()
-
-private fun getSharedBooleanState(key: String, initialValue: Boolean): Boolean {
-    return sharedPreferenceStates.getOrPut("boolean:$key") { initialValue } as Boolean
+val LocalSharedPreferenceStates = compositionLocalOf<SnapshotStateMap<String, Any?>> {
+    noLocalProvidedFor("LocalSharedPreferenceStates")
 }
 
-private fun setSharedBooleanState(key: String, value: Boolean) {
-    sharedPreferenceStates["boolean:$key"] = value
+private fun getSharedBooleanState(map: SnapshotStateMap<String, Any?>, key: String, initialValue: Boolean): Boolean {
+    return map.getOrPut("boolean:$key") { initialValue } as Boolean
 }
 
-private fun getSharedStringState(key: String, initialValue: String): String {
-    return sharedPreferenceStates.getOrPut("string:$key") { initialValue } as String
+private fun setSharedBooleanState(map: SnapshotStateMap<String, Any?>, key: String, value: Boolean) {
+    map["boolean:$key"] = value
 }
 
-private fun setSharedStringState(key: String, value: String) {
-    sharedPreferenceStates["string:$key"] = value
+private fun getSharedStringState(map: SnapshotStateMap<String, Any?>, key: String, initialValue: String): String {
+    return map.getOrPut("string:$key") { initialValue } as String
 }
 
-private fun getSharedIntState(key: String, initialValue: Int): Int {
-    return sharedPreferenceStates.getOrPut("int:$key") { initialValue } as Int
+private fun setSharedStringState(map: SnapshotStateMap<String, Any?>, key: String, value: String) {
+    map["string:$key"] = value
 }
 
-private fun setSharedIntState(key: String, value: Int) {
-    sharedPreferenceStates["int:$key"] = value
+private fun getSharedIntState(map: SnapshotStateMap<String, Any?>, key: String, initialValue: Int): Int {
+    return map.getOrPut("int:$key") { initialValue } as Int
 }
 
-private fun getSharedDoubleState(key: String, initialValue: Double): Double {
-    return sharedPreferenceStates.getOrPut("double:$key") { initialValue } as Double
+private fun setSharedIntState(map: SnapshotStateMap<String, Any?>, key: String, value: Int) {
+    map["int:$key"] = value
 }
 
-private fun setSharedDoubleState(key: String, value: Double) {
-    sharedPreferenceStates["double:$key"] = value
+private fun getSharedDoubleState(map: SnapshotStateMap<String, Any?>, key: String, initialValue: Double): Double {
+    return map.getOrPut("double:$key") { initialValue } as Double
+}
+
+private fun setSharedDoubleState(map: SnapshotStateMap<String, Any?>, key: String, value: Double) {
+    map["double:$key"] = value
 }
 
 // =================================
@@ -299,8 +313,9 @@ fun rememberPreferenceBooleanState(
 ): MutableState<Boolean> {
     val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
+    val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceBooleanState(preferences, key, rxBus)
+        PreferenceBooleanState(preferences, key, rxBus, sharedStates)
     }
 }
 
@@ -313,8 +328,9 @@ fun rememberPreferenceStringState(
 ): MutableState<String> {
     val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
+    val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceStringState(preferences, key, rxBus)
+        PreferenceStringState(preferences, key, rxBus, sharedStates)
     }
 }
 
@@ -327,8 +343,9 @@ fun rememberPreferenceIntState(
 ): MutableState<Int> {
     val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
+    val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceIntState(preferences, key, rxBus)
+        PreferenceIntState(preferences, key, rxBus, sharedStates)
     }
 }
 
@@ -341,8 +358,9 @@ fun rememberPreferenceDoubleState(
 ): MutableState<Double> {
     val preferences = LocalPreferences.current
     val rxBus = LocalRxBus.current
+    val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceDoubleState(preferences, key, rxBus)
+        PreferenceDoubleState(preferences, key, rxBus, sharedStates)
     }
 }
 
@@ -354,18 +372,18 @@ fun rememberPreferenceDoubleState(
 internal class PreferenceBooleanState(
     private val preferences: Preferences,
     private val key: BooleanPreferenceKey,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<Boolean> {
 
     init {
-        // Initialize shared state if not present
-        getSharedBooleanState(key.key, preferences.get(key))
+        getSharedBooleanState(sharedStates, key.key, preferences.get(key))
     }
 
     override var value: Boolean
-        get() = getSharedBooleanState(key.key, preferences.get(key))
+        get() = getSharedBooleanState(sharedStates, key.key, preferences.get(key))
         set(value) {
-            setSharedBooleanState(key.key, value)
+            setSharedBooleanState(sharedStates, key.key, value)
             preferences.put(key, value)
             rxBus.send(EventPreferenceChange(key.key))
         }
@@ -378,18 +396,18 @@ internal class PreferenceBooleanState(
 internal class PreferenceStringState(
     private val preferences: Preferences,
     private val key: StringPreferenceKey,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<String> {
 
     init {
-        // Initialize shared state if not present
-        getSharedStringState(key.key, preferences.get(key))
+        getSharedStringState(sharedStates, key.key, preferences.get(key))
     }
 
     override var value: String
-        get() = getSharedStringState(key.key, preferences.get(key))
+        get() = getSharedStringState(sharedStates, key.key, preferences.get(key))
         set(value) {
-            setSharedStringState(key.key, value)
+            setSharedStringState(sharedStates, key.key, value)
             preferences.put(key, value)
             rxBus.send(EventPreferenceChange(key.key))
         }
@@ -402,20 +420,19 @@ internal class PreferenceStringState(
 internal class PreferenceIntState(
     private val preferences: Preferences,
     private val key: IntPreferenceKey,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<Int> {
 
     init {
-        // Initialize shared state if not present
-        getSharedIntState(key.key, preferences.get(key))
+        getSharedIntState(sharedStates, key.key, preferences.get(key))
     }
 
     override var value: Int
-        get() = getSharedIntState(key.key, preferences.get(key))
+        get() = getSharedIntState(sharedStates, key.key, preferences.get(key))
         set(value) {
-            // Clamp to min/max
             val clampedValue = value.coerceIn(key.min, key.max)
-            setSharedIntState(key.key, clampedValue)
+            setSharedIntState(sharedStates, key.key, clampedValue)
             preferences.put(key, clampedValue)
             rxBus.send(EventPreferenceChange(key.key))
         }
@@ -428,20 +445,19 @@ internal class PreferenceIntState(
 internal class PreferenceDoubleState(
     private val preferences: Preferences,
     private val key: DoublePreferenceKey,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<Double> {
 
     init {
-        // Initialize shared state if not present
-        getSharedDoubleState(key.key, preferences.get(key))
+        getSharedDoubleState(sharedStates, key.key, preferences.get(key))
     }
 
     override var value: Double
-        get() = getSharedDoubleState(key.key, preferences.get(key))
+        get() = getSharedDoubleState(sharedStates, key.key, preferences.get(key))
         set(value) {
-            // Clamp to min/max
             val clampedValue = value.coerceIn(key.min, key.max)
-            setSharedDoubleState(key.key, clampedValue)
+            setSharedDoubleState(sharedStates, key.key, clampedValue)
             preferences.put(key, clampedValue)
             rxBus.send(EventPreferenceChange(key.key))
         }
@@ -463,7 +479,8 @@ class UnitDoublePreferenceState(
     private val profileUtil: ProfileUtil,
     private val key: UnitDoublePreferenceKey,
     private val _displayValue: MutableState<String>,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val sharedStates: SnapshotStateMap<String, Any?>
 ) {
 
     val displayValue: String
@@ -471,6 +488,7 @@ class UnitDoublePreferenceState(
 
     fun updateDisplayValue(newValue: String) {
         _displayValue.value = newValue
+        setSharedStringState(sharedStates, "unit_display:${key.key}", newValue)
         // Convert from display units back to mg/dL for storage
         val displayDouble = newValue.toDoubleOrNull() ?: return
         val mgdlValue = profileUtil.convertToMgdlDetect(displayDouble)
@@ -486,17 +504,26 @@ fun rememberUnitDoublePreferenceState(
     val preferences = LocalPreferences.current
     val profileUtil = LocalProfileUtil.current
     val rxBus = LocalRxBus.current
-    // Get stored value (in mg/dL) and convert to display units
-    val storedValue = preferences.get(key)
-    val displayValue = profileUtil.valueInCurrentUnitsDetect(storedValue)
-    // Check if using mg/dL by comparing converted values (mg/dL stays the same, mmol/L gets divided)
-    val isMgdl = displayValue == storedValue || (storedValue > 0 && displayValue / storedValue > 0.9)
-    val precision = if (isMgdl) 0 else 1
-    val formatted = BigDecimal(displayValue).setScale(precision, RoundingMode.HALF_UP).toPlainString()
+    val sharedStates = LocalSharedPreferenceStates.current
 
-    val displayState = remember { mutableStateOf(formatted) }
+    // Format the current stored value for display
+    fun formatForDisplay(): String {
+        val storedValue = preferences.get(key)
+        val displayValue = profileUtil.valueInCurrentUnitsDetect(storedValue)
+        val isMgdl = displayValue == storedValue || (storedValue > 0 && displayValue / storedValue > 0.9)
+        val precision = if (isMgdl) 0 else 1
+        return BigDecimal(displayValue).setScale(precision, RoundingMode.HALF_UP).toPlainString()
+    }
+
+    // Back the display value with the shared state map so it's reactive
+    val formatted = formatForDisplay()
+    val displayState = remember(key) {
+        mutableStateOf(getSharedStringState(sharedStates, "unit_display:${key.key}", formatted))
+    }
+    // Update if the stored value changed externally (e.g. sync)
+    displayState.value = getSharedStringState(sharedStates, "unit_display:${key.key}", formatted)
 
     return remember(key) {
-        UnitDoublePreferenceState(preferences, profileUtil, key, displayState, rxBus)
+        UnitDoublePreferenceState(preferences, profileUtil, key, displayState, rxBus, sharedStates)
     }
 }

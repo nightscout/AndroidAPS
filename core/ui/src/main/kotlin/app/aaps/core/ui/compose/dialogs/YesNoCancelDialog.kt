@@ -1,13 +1,9 @@
 package app.aaps.core.ui.compose.dialogs
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -17,10 +13,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 
 /**
  * A dialog with Yes, No, and Cancel buttons.
@@ -49,28 +43,23 @@ fun YesNoCancelDialog(
             )
         },
         text = {
-            Column {
-                Text(text = AnnotatedString.fromHtml(message.replace("\n", "<br>")))
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onCancel) {
-                        Text(stringResource(R.string.cancel))
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(onClick = onNo) {
-                        Text(stringResource(R.string.no))
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(onClick = onYes) {
-                        Text(stringResource(R.string.yes))
-                    }
+            Text(text = AnnotatedString.fromHtml(message.replace("\n", "<br>")))
+        },
+        confirmButton = {
+            TextButton(onClick = onYes) {
+                Text(stringResource(R.string.yes))
+            }
+        },
+        dismissButton = {
+            Row {
+                TextButton(onClick = onCancel) {
+                    Text(stringResource(R.string.cancel))
+                }
+                TextButton(onClick = onNo) {
+                    Text(stringResource(R.string.no))
                 }
             }
         },
-        confirmButton = {},
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     )
 }
@@ -78,7 +67,7 @@ fun YesNoCancelDialog(
 @Preview(showBackground = true)
 @Composable
 private fun YesNoCancelDialogPreview() {
-    AapsTheme {
+    MaterialTheme {
         YesNoCancelDialog(
             title = "Save Changes",
             message = "Do you want to save your changes?",

@@ -24,6 +24,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -152,7 +154,12 @@ fun ProvidePreferenceTheme(
     theme: PreferenceTheme = preferenceTheme(),
     content: @Composable () -> Unit,
 ) {
-    CompositionLocalProvider(LocalPreferenceTheme provides theme, content = content)
+    val sharedPreferenceStates = remember { mutableStateMapOf<String, Any?>() }
+    CompositionLocalProvider(
+        LocalPreferenceTheme provides theme,
+        LocalSharedPreferenceStates provides sharedPreferenceStates,
+        content = content
+    )
 }
 
 internal fun noLocalProvidedFor(name: String): Nothing {

@@ -11,11 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.rangeResId
 import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
+import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SliderWithButtons
 import java.text.DecimalFormat
 
@@ -106,7 +109,7 @@ fun AdaptiveIntPreferenceItem(
         val summaryText = if (rangeFormatResId != null) {
             stringResource(rangeFormatResId, value, intKey.min, intKey.max)
         } else {
-            "$value$unitLabel (${intKey.min} - ${intKey.max})"
+            stringResource(R.string.preference_range_summary, value.toString(), unitLabel, intKey.min.toString(), intKey.max.toString())
         }
         TextFieldPreference(
             state = state,
@@ -116,6 +119,16 @@ fun AdaptiveIntPreferenceItem(
             },
             enabled = visibility.enabled,
             summary = { Text(summaryText) }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AdaptiveIntPreferencePreview() {
+    PreviewTheme {
+        AdaptiveIntPreferenceItem(
+            intKey = IntKey.OverviewCarbsButtonIncrement1
         )
     }
 }

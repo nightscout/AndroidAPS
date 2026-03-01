@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.preference
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,13 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-
-import androidx.activity.compose.BackHandler
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ComposeScreenContent
 
 /**
  * Screen for displaying plugin preferences using Compose.
@@ -106,7 +105,7 @@ fun PluginPreferencesScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No compose preferences available for this plugin",
+                                text = stringResource(app.aaps.core.ui.R.string.no_compose_preferences),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -138,7 +137,7 @@ private fun SinglePluginPreferencesRenderer(
                     title = { Text(title) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
                         }
                     }
                 )
@@ -152,7 +151,7 @@ private fun SinglePluginPreferencesRenderer(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Plugin does not support preferences",
+                    text = stringResource(app.aaps.core.ui.R.string.plugin_no_preferences),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -164,7 +163,7 @@ private fun SinglePluginPreferencesRenderer(
 
     // For single plugin view, start with the main section expanded
     LaunchedEffect(screen.key) {
-        sectionState.toggle("${screen.key}_main")
+        sectionState.toggle("${screen.key}_main", SectionLevel.TOP_LEVEL)
     }
 
     Scaffold(

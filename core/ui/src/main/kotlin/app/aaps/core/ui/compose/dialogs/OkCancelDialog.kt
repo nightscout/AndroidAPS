@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 
 /**
  * A confirmation dialog with OK and Cancel buttons.
@@ -118,7 +117,7 @@ fun OkCancelDialog(
 @Preview(showBackground = true)
 @Composable
 private fun OkCancelDialogPreview() {
-    AapsTheme {
+    MaterialTheme {
         OkCancelDialog(
             title = "Confirmation",
             message = "Are you sure you want to proceed?",

@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 
 /**
  * Dialog for querying a free-form password with optional explanation and warning messages.
@@ -145,7 +144,7 @@ fun QueryAnyPasswordDialog(
 @Preview(showBackground = true)
 @Composable
 private fun QueryAnyPasswordDialogPreview() {
-    AapsTheme {
+    MaterialTheme {
         QueryAnyPasswordDialog(
             title = "Import Password",
             passwordExplanation = "Enter the password used to encrypt the export file.",

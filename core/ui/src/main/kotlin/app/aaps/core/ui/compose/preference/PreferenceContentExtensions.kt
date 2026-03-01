@@ -56,7 +56,7 @@ fun LazyListScope.addPreferenceSubScreenDef(
             titleResId = def.titleResId,
             summaryItems = def.effectiveSummaryItems(),
             expanded = isExpanded,
-            onToggle = { sectionState?.toggle(sectionKey) },
+            onToggle = { sectionState?.toggle(sectionKey, SectionLevel.TOP_LEVEL) },
             iconResId = def.iconResId,
             icon = def.icon
         ) {
@@ -108,7 +108,7 @@ private fun RenderPreferenceItems(
                         titleResId = item.titleResId,
                         summaryItems = item.effectiveSummaryItems(),
                         expanded = isSubExpanded,
-                        onToggle = { sectionState?.toggle(subSectionKey) },
+                        onToggle = { sectionState?.toggle(subSectionKey, SectionLevel.SUB_SECTION, parentKey = parentKey) },
                         insideCard = true,
                         iconResId = null  // No icon for nested subscreens
                     )

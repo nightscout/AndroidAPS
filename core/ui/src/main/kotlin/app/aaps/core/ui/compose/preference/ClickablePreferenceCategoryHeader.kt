@@ -40,7 +40,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
@@ -71,10 +70,10 @@ internal fun ClickablePreferenceCategoryHeader(
         label = "expandIconRotation"
     )
 
-    // Build summary text from list of resource IDs
-    val context = LocalContext.current
-    val summaryText = if (summaryItems.isNotEmpty()) {
-        summaryItems.joinToString(", ") { context.getString(it) }
+    // Build summary text from list of resource IDs — resolve each string in composable context
+    val resolvedSummaries = summaryItems.map { stringResource(it) }
+    val summaryText = if (resolvedSummaries.isNotEmpty()) {
+        resolvedSummaries.joinToString(", ")
     } else null
 
     // Use symmetric padding for card headers
@@ -102,9 +101,9 @@ internal fun ClickablePreferenceCategoryHeader(
         CompositionLocalProvider(LocalContentColor provides theme.categoryColor) {
             // Icon (compose icon preferred, resource fallback)
             val iconPainter = when {
-                icon != null                      -> rememberVectorPainter(icon)
+                icon != null                         -> rememberVectorPainter(icon)
                 iconResId != null && iconResId != -1 -> painterResource(id = iconResId)
-                else                              -> null
+                else                                 -> null
             }
             if (iconPainter != null) {
                 Icon(
@@ -133,7 +132,7 @@ internal fun ClickablePreferenceCategoryHeader(
             }
             Icon(
                 imageVector = Icons.Default.ExpandMore,
-                contentDescription = if (expanded) "Collapse" else "Expand",
+                contentDescription = stringResource(if (expanded) app.aaps.core.ui.R.string.collapse else app.aaps.core.ui.R.string.expand),
                 modifier = Modifier
                     .size(theme.expandIconSize)
                     .rotate(rotationAngle)

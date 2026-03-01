@@ -21,10 +21,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun PreferenceCategory(title: @Composable () -> Unit, modifier: Modifier = Modifier) {
@@ -42,4 +44,12 @@ fun PreferenceCategory(title: @Composable () -> Unit, modifier: Modifier = Modif
         },
         modifier = modifier,
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreferenceCategoryPreview() {
+    PreviewTheme {
+        PreferenceCategory(title = { Text("General") })
+    }
 }

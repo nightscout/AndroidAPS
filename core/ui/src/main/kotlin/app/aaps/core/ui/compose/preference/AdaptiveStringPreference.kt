@@ -9,13 +9,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
@@ -100,6 +99,16 @@ fun AdaptiveStringPreferenceItem(
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun AdaptiveStringPreferencePreview() {
+    PreviewTheme {
+        AdaptiveStringPreferenceItem(
+            stringKey = StringKey.GeneralPatientName
+        )
+    }
+}
+
 /**
  * TextField with real-time validation error display.
  */
@@ -110,11 +119,11 @@ private fun ValidatedTextField(
     onOk: () -> Unit,
     validator: StringValidator
 ) {
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    // Validate on each change
-    val result = validator.validate(value.text)
-    errorMessage = if (!result.isValid) result.errorMessage else null
+    // Only re-validate when the text actually changes, not on every recomposition
+    val errorMessage = remember(value.text) {
+        val result = validator.validate(value.text)
+        if (!result.isValid) result.errorMessage else null
+    }
 
     OutlinedTextField(
         value = value,

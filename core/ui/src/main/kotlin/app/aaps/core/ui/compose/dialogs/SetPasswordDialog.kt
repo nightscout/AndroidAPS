@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 
 /**
  * Dialog for setting a new password or PIN.
@@ -97,7 +97,7 @@ fun SetPasswordDialog(
                     value = password2,
                     onValueChange = { password2 = it },
                     label = {
-                        Text(stringResource(if (pinInput) R.string.pin_hint else R.string.password_hint))
+                        Text(stringResource(if (pinInput) R.string.confirm_pin_hint else R.string.confirm_password_hint))
                     },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -129,7 +129,7 @@ fun SetPasswordDialog(
 @Preview(showBackground = true)
 @Composable
 private fun SetPasswordDialogPreview() {
-    AapsTheme {
+    MaterialTheme {
         SetPasswordDialog(
             title = "Set New Password",
             pinInput = false,
