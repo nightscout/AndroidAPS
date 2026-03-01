@@ -6,13 +6,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 
 internal class WearComposeContent(
-    private val viewModelFactory: ViewModelProvider.Factory,
-    private val importExportPrefs: ImportExportPrefs
+    private val viewModelFactory: ViewModelProvider.Factory
 ) : ComposablePluginContent {
 
     @Composable
@@ -32,7 +30,6 @@ internal class WearComposeContent(
 
         WearScreen(
             viewModel = viewModel,
-            importExportPrefs = importExportPrefs,
             setToolbarConfig = setToolbarConfig,
             onNavigateBack = onNavigateBack,
             onSettings = onSettings

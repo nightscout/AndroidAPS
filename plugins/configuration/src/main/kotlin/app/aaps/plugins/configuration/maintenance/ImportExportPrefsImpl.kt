@@ -1042,18 +1042,6 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun importCustomWatchface(activity: FragmentActivity) {
-        try {
-            if (activity is DaggerAppCompatActivityWithResult)
-                activity.callForCustomWatchfaceFile?.launch(null)
-        } catch (e: IllegalArgumentException) {
-            // this exception happens on some early implementations of ActivityResult contracts
-            // when registered and called for the second time
-            ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
-        }
-    }
-
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) {
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?: "", withDate) ?: return

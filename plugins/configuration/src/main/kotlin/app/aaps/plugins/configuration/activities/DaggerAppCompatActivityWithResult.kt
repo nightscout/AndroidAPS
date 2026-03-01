@@ -17,7 +17,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.CustomWatchfaceFileContract
 import app.aaps.plugins.configuration.maintenance.PrefsFileContract
 import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import dagger.android.support.DaggerAppCompatActivity
@@ -36,7 +35,6 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     var accessTree: ActivityResultLauncher<Uri?>? = null
     var callForPrefFile: ActivityResultLauncher<Void?>? = null
-    var callForCustomWatchfaceFile: ActivityResultLauncher<Void?>? = null
     var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
     var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     var onPermissionResultDenied: ((List<String>) -> Unit)? = null
@@ -85,8 +83,6 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
             // }
             importExportPrefs.doImportSharedPreferences(this)
         }
-        callForCustomWatchfaceFile = registerForActivityResult(CustomWatchfaceFileContract()) { }
-
         callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
             updateButtons()
         }
@@ -106,7 +102,6 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
         compositeDisposable.clear()
         accessTree = null
         callForPrefFile = null
-        callForCustomWatchfaceFile = null
         callForBatteryOptimization = null
         requestMultiplePermissions = null
         super.onDestroy()

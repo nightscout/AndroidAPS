@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.wear
 
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.di.ViewModelFactory
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
@@ -17,7 +16,6 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var dataHandlerMobile: DataHandlerMobile
     @Mock lateinit var dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
-    @Mock lateinit var importExportPrefs: ImportExportPrefs
     @Mock lateinit var versionCheckerUtils: VersionCheckerUtils
     @Mock lateinit var viewModelFactory: ViewModelFactory
 
@@ -35,7 +33,7 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, dateUtil, importExportPrefs, versionCheckerUtils, viewModelFactory)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, dateUtil, versionCheckerUtils, viewModelFactory)
     }
 
     @Test

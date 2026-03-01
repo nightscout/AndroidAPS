@@ -48,7 +48,6 @@ interface ImportExportPrefs {
 
     fun doImportSharedPreferences(activity: FragmentActivity)
     fun importSharedPreferences(activity: FragmentActivity)
-    fun importCustomWatchface(activity: FragmentActivity)
     fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean = true)
     fun prefsFileExists(): Boolean
     fun exportSharedPreferences(activity: FragmentActivity)

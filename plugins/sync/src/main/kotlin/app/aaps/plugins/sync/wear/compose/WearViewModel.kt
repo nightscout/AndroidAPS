@@ -9,18 +9,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
@@ -47,7 +51,9 @@ data class WearUiState(
     val watchfaceName: String = "",
     val watchfaceImage: ImageBitmap? = null,
     val showInfos: Boolean = false,
-    val cwfInfosState: CwfInfosState? = null
+    val cwfInfosState: CwfInfosState? = null,
+    val showImportList: Boolean = false,
+    val importItems: List<CwfImportItemState> = emptyList()
 )
 
 @Immutable
@@ -71,6 +77,20 @@ data class CwfPrefItem(val label: String, val isEnabled: Boolean)
 @Immutable
 data class CwfViewItem(val key: String, val comment: String)
 
+@Immutable
+data class CwfImportItemState(
+    val cwfFile: CwfFile,
+    val name: String,
+    val fileName: String,
+    val author: String,
+    val createdAt: String,
+    val version: String,
+    val isVersionOk: Boolean,
+    val prefCount: Int,
+    val hasPrefAuthorization: Boolean,
+    val watchfaceImage: ImageBitmap?
+)
+
 @Stable
 class WearViewModel @Inject constructor(
     private val wearPlugin: WearPlugin,
@@ -79,6 +99,7 @@ class WearViewModel @Inject constructor(
     private val dateUtil: DateUtil,
     private val preferences: Preferences,
     private val versionCheckerUtils: VersionCheckerUtils,
+    private val fileListProvider: FileListProvider,
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
@@ -228,5 +249,46 @@ class WearViewModel @Inject constructor(
         } catch (_: Exception) {
             emptyList()
         }
+    }
+
+    fun loadWatchfaceFiles() {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
+            val files = fileListProvider.listCustomWatchfaceFiles()
+                .sortedBy { it.cwfData.metadata[CwfMetadataKey.CWF_NAME] }
+            val items = files.map { cwfFile ->
+                val metadata = cwfFile.cwfData.metadata
+                val name = metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { av ->
+                    rh.gs(CwfMetadataKey.CWF_AUTHOR_VERSION.label, metadata[CwfMetadataKey.CWF_NAME], av)
+                } ?: rh.gs(CwfMetadataKey.CWF_NAME.label, metadata[CwfMetadataKey.CWF_NAME])
+                val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it.${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
+                CwfImportItemState(
+                    cwfFile = cwfFile,
+                    name = name,
+                    fileName = rh.gs(CwfMetadataKey.CWF_FILENAME.label, fileName),
+                    author = rh.gs(CwfMetadataKey.CWF_AUTHOR.label, metadata[CwfMetadataKey.CWF_AUTHOR] ?: ""),
+                    createdAt = rh.gs(CwfMetadataKey.CWF_CREATED_AT.label, metadata[CwfMetadataKey.CWF_CREATED_AT] ?: ""),
+                    version = rh.gs(CwfMetadataKey.CWF_VERSION.label, metadata[CwfMetadataKey.CWF_VERSION] ?: ""),
+                    isVersionOk = checkCustomVersion(metadata),
+                    prefCount = metadata.count { it.key.isPref },
+                    hasPrefAuthorization = cwfAuthorization,
+                    watchfaceImage = decodeWatchfaceImage(cwfFile.cwfData)
+                )
+            }
+            uiState.update { it.copy(showImportList = true, importItems = items) }
+        }
+    }
+
+    fun selectWatchface(cwfFile: CwfFile) {
+        val metadata = cwfFile.cwfData.metadata
+        preferences.put(StringNonKey.WearCwfWatchfaceName, metadata[CwfMetadataKey.CWF_NAME] ?: "")
+        preferences.put(StringNonKey.WearCwfAuthorVersion, metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
+        preferences.put(StringNonKey.WearCwfFileName, metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
+        rxBus.send(EventMobileToWearWatchface(cwfFile.zipByteArray))
+        uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
+    }
+
+    fun hideImportList() {
+        uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
     }
 }

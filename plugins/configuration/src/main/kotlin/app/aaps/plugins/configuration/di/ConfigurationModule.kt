@@ -16,7 +16,6 @@ import app.aaps.plugins.configuration.maintenance.MaintenanceFragment
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.configuration.maintenance.cloud.CloudDirectoryManagerImpl
 import app.aaps.plugins.configuration.maintenance.activities.CloudPrefImportListActivity
-import app.aaps.plugins.configuration.maintenance.activities.CustomWatchfaceImportListActivity
 import app.aaps.plugins.configuration.maintenance.activities.LogSettingActivity
 import app.aaps.plugins.configuration.maintenance.activities.PrefImportListActivity
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
@@ -42,7 +41,6 @@ abstract class ConfigurationModule {
     @ContributesAndroidInjector abstract fun contributesApsResultExportWorker(): ImportExportPrefsImpl.ApsResultExportWorker
     @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
     @ContributesAndroidInjector abstract fun contributesCloudPrefImportListActivity(): CloudPrefImportListActivity
-    @ContributesAndroidInjector abstract fun contributesCustomWatchfaceImportListActivity(): CustomWatchfaceImportListActivity
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
     @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
 

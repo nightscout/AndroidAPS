@@ -12,7 +12,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -67,7 +66,6 @@ class WearPlugin @Inject constructor(
     private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val importExportPrefs: ImportExportPrefs,
     private val versionCheckerUtils: VersionCheckerUtils,
     private val viewModelFactory: ViewModelFactory
 ) : PluginBaseWithPreferences(
@@ -81,8 +79,7 @@ class WearPlugin @Inject constructor(
         .description(R.string.description_wear)
         .composeContent { plugin ->
             WearComposeContent(
-                viewModelFactory = (plugin as WearPlugin).viewModelFactory,
-                importExportPrefs = plugin.importExportPrefs
+                viewModelFactory = (plugin as WearPlugin).viewModelFactory
             )
         },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences

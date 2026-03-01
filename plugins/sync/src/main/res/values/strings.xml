@@ -150,6 +150,7 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
+    <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
     <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
     <string name="cwf_infos_pref_required">List of prefs required for the Watchface</string>
     <string name="cwf_infos_view_title">List of fields included into the Watchface</string>

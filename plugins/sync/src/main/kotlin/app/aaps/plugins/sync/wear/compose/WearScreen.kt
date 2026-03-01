@@ -51,9 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.toast.ToastUtils
@@ -62,7 +60,6 @@ import app.aaps.plugins.sync.R
 @Composable
 internal fun WearScreen(
     viewModel: WearViewModel,
-    importExportPrefs: ImportExportPrefs,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
     onSettings: (() -> Unit)?,
@@ -78,21 +75,37 @@ internal fun WearScreen(
         }
     }
 
-    // Back handler for infos sub-screen
+    // Back handler for sub-screens
     BackHandler(enabled = uiState.showInfos) { viewModel.hideCwfInfos() }
+    BackHandler(enabled = uiState.showImportList) { viewModel.hideImportList() }
 
     // Only title needs pre-resolving (plain String used in LaunchedEffect suspend block)
     val wearTitle = stringResource(app.aaps.core.ui.R.string.wear)
+    val importTitle = stringResource(R.string.wear_import_custom_watchface_title)
+
+    // Determine current sub-screen
+    val subScreen = when {
+        uiState.showImportList -> SubScreen.IMPORT_LIST
+        uiState.showInfos     -> SubScreen.INFOS
+        else                   -> SubScreen.MAIN
+    }
 
     // Toolbar config
-    LaunchedEffect(uiState.showInfos, uiState.cwfInfosState?.title) {
+    LaunchedEffect(subScreen, uiState.cwfInfosState?.title) {
         setToolbarConfig(
             ToolbarConfig(
-                title = if (uiState.showInfos) uiState.cwfInfosState?.title ?: "" else wearTitle,
+                title = when (subScreen) {
+                    SubScreen.IMPORT_LIST -> importTitle
+                    SubScreen.INFOS       -> uiState.cwfInfosState?.title ?: ""
+                    SubScreen.MAIN        -> wearTitle
+                },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (uiState.showInfos) viewModel.hideCwfInfos()
-                        else onNavigateBack()
+                        when (subScreen) {
+                            SubScreen.IMPORT_LIST -> viewModel.hideImportList()
+                            SubScreen.INFOS       -> viewModel.hideCwfInfos()
+                            SubScreen.MAIN        -> onNavigateBack()
+                        }
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -101,7 +114,7 @@ internal fun WearScreen(
                     }
                 },
                 actions = {
-                    if (!uiState.showInfos && onSettings != null) {
+                    if (subScreen == SubScreen.MAIN && onSettings != null) {
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
@@ -117,31 +130,47 @@ internal fun WearScreen(
     val moreWatchfacesUrl = stringResource(R.string.wear_link_to_more_cwf_doc)
 
     AnimatedContent(
-        targetState = uiState.showInfos,
+        targetState = subScreen,
         label = "wear_screen"
-    ) { showInfos ->
-        val infosState = uiState.cwfInfosState
-        if (showInfos && infosState != null) {
-            CwfInfosContent(
-                state = infosState,
-                modifier = modifier
-            )
-        } else {
-            WearMainContent(
-                uiState = uiState,
-                onResendData = { viewModel.resendData() },
-                onOpenSettings = { viewModel.openSettingsOnWear() },
-                onLoadWatchface = { (context as? FragmentActivity)?.let { importExportPrefs.importCustomWatchface(it) } },
-                onInfosWatchface = { viewModel.showCwfInfos() },
-                onExportTemplate = { viewModel.exportCustomWatchface() },
-                onMoreWatchfaces = {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, moreWatchfacesUrl.toUri()))
-                },
-                modifier = modifier
-            )
+    ) { screen ->
+        when (screen) {
+            SubScreen.IMPORT_LIST -> {
+                CwfImportContent(
+                    items = uiState.importItems,
+                    onItemClick = { item -> viewModel.selectWatchface(item.cwfFile) },
+                    modifier = modifier
+                )
+            }
+
+            SubScreen.INFOS       -> {
+                val infosState = uiState.cwfInfosState
+                if (infosState != null) {
+                    CwfInfosContent(
+                        state = infosState,
+                        modifier = modifier
+                    )
+                }
+            }
+
+            SubScreen.MAIN        -> {
+                WearMainContent(
+                    uiState = uiState,
+                    onResendData = { viewModel.resendData() },
+                    onOpenSettings = { viewModel.openSettingsOnWear() },
+                    onLoadWatchface = { viewModel.loadWatchfaceFiles() },
+                    onInfosWatchface = { viewModel.showCwfInfos() },
+                    onExportTemplate = { viewModel.exportCustomWatchface() },
+                    onMoreWatchfaces = {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, moreWatchfacesUrl.toUri()))
+                    },
+                    modifier = modifier
+                )
+            }
         }
     }
 }
+
+private enum class SubScreen { MAIN, INFOS, IMPORT_LIST }
 
 @Composable
 private fun WearMainContent(

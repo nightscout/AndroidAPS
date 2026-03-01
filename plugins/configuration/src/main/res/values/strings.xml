@@ -133,9 +133,6 @@
     <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
-
     <!-- Maintenance -->
     <string name="metadata_label_format">File format</string>
     <string name="metadata_label_created_at">Created at</string>
