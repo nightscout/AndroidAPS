@@ -59,6 +59,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -129,11 +130,23 @@ class LoopPlugin @Inject constructor(
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val pumpStatusProvider: PumpStatusProvider,
+    private val decimalFormatter: DecimalFormatter,
     @ApplicationScope private val appScope: CoroutineScope
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
         .fragmentClass(LoopFragment::class.java.name)
+        .composeContent { plugin ->
+            app.aaps.plugins.aps.loop.compose.LoopComposeContent(
+                loop = plugin as Loop,
+                rxBus = rxBus,
+                rh = rh,
+                dateUtil = dateUtil,
+                decimalFormatter = decimalFormatter,
+                aapsLogger = aapsLogger,
+                preferences = preferences
+            )
+        }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_loop_closed_white)
         .icon(IcLoopClosed)
         .pluginName(app.aaps.core.ui.R.string.loop)
