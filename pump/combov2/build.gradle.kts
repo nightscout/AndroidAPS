@@ -10,9 +10,6 @@ plugins {
 
 android {
     namespace = "info.nightscout.pump.combov2"
-    buildFeatures {
-        dataBinding = true
-    }
 }
 
 dependencies {

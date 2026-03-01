@@ -11,7 +11,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -114,9 +113,8 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
             startPairingActivityLauncher.unregister()
         }
 
-        binding = DataBindingUtil.setContentView(
-            this, R.layout.combov2_pairing_activity
-        )
+        binding = Combov2PairingActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         title = rh.gs(R.string.combov2_pair_with_pump_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
