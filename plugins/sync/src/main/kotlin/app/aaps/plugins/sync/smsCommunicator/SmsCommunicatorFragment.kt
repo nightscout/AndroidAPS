@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.plugins.main.databinding.SmscommunicatorFragmentBinding
-import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
+import app.aaps.plugins.sync.databinding.SmscommunicatorFragmentBinding
+import app.aaps.plugins.sync.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

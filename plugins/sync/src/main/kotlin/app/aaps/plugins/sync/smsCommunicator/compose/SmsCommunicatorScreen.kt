@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator.compose
+package app.aaps.plugins.sync.smsCommunicator.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,11 +18,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.AapsSpacing
 
 @Composable
-fun SmsCommunicatorScreen(
+internal fun SmsCommunicatorScreen(
     viewModel: SmsCommunicatorViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +31,7 @@ fun SmsCommunicatorScreen(
 }
 
 @Composable
-fun SmsCommunicatorScreenContent(
+internal fun SmsCommunicatorScreenContent(
     uiState: SmsCommunicatorUiState,
     modifier: Modifier = Modifier
 ) {
@@ -48,8 +48,8 @@ fun SmsCommunicatorScreenContent(
         state = listState,
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+            .padding(AapsSpacing.medium),
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
     ) {
         itemsIndexed(uiState.messages) { _, sms ->
             SmsLogItem(sms = sms)

@@ -48,10 +48,6 @@ dependencies {
     // Actions
     api(libs.androidx.gridlayout)
 
-    //SmsCommunicator
-    api(libs.com.eatthepath.java.otp)
-    api(libs.com.github.kenglxn.qrgen.android)
-
     // Overview
     api(libs.com.google.android.flexbox)
 

@@ -4,14 +4,15 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.WorkManager
-import app.aaps.core.ui.compose.ViewModelFactory
-import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.ui.compose.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.plugins.sync.garmin.LoopHub
 import app.aaps.plugins.sync.garmin.LoopHubImpl
 import app.aaps.plugins.sync.nsShared.NSClientFragment
@@ -34,6 +35,8 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorViewModel
 import app.aaps.plugins.sync.tidepool.TidepoolFragment
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowIn
 import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
@@ -55,7 +58,8 @@ import dagger.multibindings.IntoMap
 @Module(
     includes = [
         SyncModule.Binding::class,
-        SyncModule.Provide::class
+        SyncModule.Provide::class,
+        SMSCommunicatorModule::class
     ]
 )
 
@@ -102,6 +106,7 @@ abstract class SyncModule {
         @Binds fun bindNSSettingsStatus(nsSettingsStatusImpl: NSSettingsStatusImpl): NSSettingsStatus
         @Binds fun bindDataSyncSelectorXdripInterface(dataSyncSelectorXdripImpl: DataSyncSelectorXdripImpl): DataSyncSelectorXdrip
         @Binds fun bindStoreDataForDb(storeDataForDbImpl: StoreDataForDbImpl): StoreDataForDb
+        @Binds fun bindSmsCommunicator(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XdripPlugin): XDripBroadcast
         @Binds fun bindLoopHub(loopHub: LoopHubImpl): LoopHub
 
@@ -127,6 +132,11 @@ abstract class SyncModule {
         @IntoMap
         @ViewModelKey(WearViewModel::class)
         fun bindWearViewModel(wearViewModel: WearViewModel): ViewModel
+
+        @Binds
+        @IntoMap
+        @ViewModelKey(SmsCommunicatorViewModel::class)
+        fun bindSmsCommunicatorViewModel(smsCommunicatorViewModel: SmsCommunicatorViewModel): ViewModel
     }
 
 }

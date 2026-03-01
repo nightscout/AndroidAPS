@@ -55,7 +55,7 @@
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_sync">Synchronization</string>
+    <string name="configbuilder_sync">Communication</string>
     <string name="configbuilder_general">General</string>
     <string name="protection">Protection</string>
     <string name="value_unavailable_short">n/a</string>

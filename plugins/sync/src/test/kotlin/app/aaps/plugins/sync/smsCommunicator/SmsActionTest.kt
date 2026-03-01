@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

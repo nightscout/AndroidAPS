@@ -1,9 +1,9 @@
-package app.aaps.plugins.main.di
+package app.aaps.plugins.sync.di
 
-import app.aaps.plugins.main.general.smsCommunicator.AuthRequest
-import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorFragment
-import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
+import app.aaps.plugins.sync.smsCommunicator.AuthRequest
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorFragment
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

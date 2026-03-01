@@ -53,8 +53,8 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
-import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.skins.SkinProvider
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import dagger.android.support.AndroidSupportInjection
 import java.util.Vector
 import javax.inject.Inject

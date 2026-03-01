@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 abstract class SmsAction(val pumpCommand: Boolean) : Runnable {
 

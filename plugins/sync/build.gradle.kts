@@ -62,6 +62,10 @@ dependencies {
     // DataLayerListenerService
     api(libs.com.google.android.gms.playservices.wearable)
 
+    // SMS Communicator (OTP + QR code)
+    api(libs.com.eatthepath.java.otp)
+    api(libs.com.github.kenglxn.qrgen.android)
+
     // Garmin
     api(libs.com.garmin.connectiq) { artifact { type = "aar" } }
     androidTestImplementation(libs.com.garmin.connectiq) { artifact { type = "aar" } }

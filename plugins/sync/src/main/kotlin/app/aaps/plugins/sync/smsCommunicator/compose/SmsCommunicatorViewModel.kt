@@ -1,7 +1,6 @@
-package app.aaps.plugins.main.general.smsCommunicator.compose
+package app.aaps.plugins.sync.smsCommunicator.compose
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.utils.DateUtil
@@ -9,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @Immutable
 data class SmsItem(
@@ -26,8 +26,7 @@ data class SmsCommunicatorUiState(
     val messages: List<SmsItem> = emptyList()
 )
 
-@Stable
-class SmsCommunicatorViewModel(
+class SmsCommunicatorViewModel @Inject constructor(
     private val repository: SmsCommunicatorRepository,
     private val dateUtil: DateUtil
 ) : ViewModel() {

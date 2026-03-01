@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 import android.Manifest
 import android.telephony.SmsManager
@@ -30,9 +30,10 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.plugins.aps.loop.LoopPlugin
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -69,7 +70,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var smsManager: SmsManager
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
+    @Mock lateinit var viewModelFactory: app.aaps.core.ui.compose.ViewModelFactory
 
+    private val repository = SmsCommunicatorRepository()
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     private val modeClosed = "Closed Loop"
@@ -99,9 +102,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             aapsLogger, rh, smsManager, aapsSchedulers, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, localProfileManager,
             commandQueue, loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
-            smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, authRequestProvider, pumpStatusProvider, notificationManager, testScope
+            smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, authRequestProvider, pumpStatusProvider, notificationManager, testScope,
+            viewModelFactory, repository
         )
-        smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.GENERAL, true)
+        smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
         doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
             callback.result = pumpEnactResultProvider.get().success(true)

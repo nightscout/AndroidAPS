@@ -41,7 +41,7 @@
     <string name="unattended_settings_export">Unattended Settings Export</string>
     <string name="unattended_settings_export_summary">Enabling this will securely store your password on your phone</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
-    
+
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="exported_to_cloud">Settings successfully exported to cloud storage</string>
     <string name="export_to_cloud_failed">Failed to export to cloud storage</string>
@@ -61,7 +61,7 @@
     <string name="configbuilder_profile">Profile</string>
     <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
     <string name="configbuilder_general_description">These are some general plugins you might find useful.</string>
-    <string name="configbuilder_sync_description">Data upload and synchronization plugins.</string>
+    <string name="configbuilder_sync_description">Data upload, synchronization and communication plugins.</string>
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
     <string name="configbuilder_loop_description">Use this to activate AAPS\' loop integration.</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
@@ -179,7 +179,7 @@
     <string name="import_settings_local">Import settings (Local)</string>
     <string name="import_settings_cloud">Import settings (Cloud)</string>
     <string name="import_settings_both">Import settings (Local/Cloud)</string>
-    
+
     <!-- Import source selection dialog -->
     <string name="select_import_source">Select Import Source</string>
     <string name="import_from_local">Import from Local Storage</string>
@@ -224,7 +224,7 @@
     <string name="google_drive_list_settings_error">Error listing settings files: %1$s</string>
     <string name="google_drive_download_failed">Failed to download file</string>
     <string name="google_drive_download_error">Error downloading file: %1$s</string>
-    
+
     <!-- Provider-agnostic cloud storage strings -->
     <string name="cloud_authorization_title">%1$s Authorization</string>
     <string name="cloud_authorization_message">%1$s authorization page has been opened in your browser.\n\nPlease complete the authorization, then return to this app.\n\nThis dialog will close automatically once authorization is completed.</string>
@@ -232,7 +232,7 @@
     <string name="cloud_auth_cancelled">Authorization cancelled</string>
     <string name="cloud_auth_timeout">Authorization timed out, please retry</string>
     <string name="cloud_token_expired_or_invalid">Cloud storage authorization has expired or is invalid. Please re-authorize.</string>
-    
+
     <!-- Authorization status strings -->
     <string name="authorization_status">Authorization Status</string>
     <string name="google_drive_authorized">Google Drive Authorized</string>

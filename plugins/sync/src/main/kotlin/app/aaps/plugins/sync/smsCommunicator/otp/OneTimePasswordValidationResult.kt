@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator.otp
+package app.aaps.plugins.sync.smsCommunicator.otp
 
 enum class OneTimePasswordValidationResult {
     OK,

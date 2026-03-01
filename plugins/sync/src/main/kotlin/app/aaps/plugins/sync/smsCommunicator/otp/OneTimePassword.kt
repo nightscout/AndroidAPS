@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator.otp
+package app.aaps.plugins.sync.smsCommunicator.otp
 
 import android.util.Base64
 import app.aaps.core.data.configuration.Constants

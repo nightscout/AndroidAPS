@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator.activities
+package app.aaps.plugins.sync.smsCommunicator.activities
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -18,10 +18,10 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.databinding.SmscommunicatorActivityOtpBinding
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.databinding.SmscommunicatorActivityOtpBinding
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import net.glxn.qrgen.android.QRCode

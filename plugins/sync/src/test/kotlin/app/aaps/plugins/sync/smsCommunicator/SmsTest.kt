@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 import android.telephony.SmsMessage
 import app.aaps.core.interfaces.smsCommunicator.Sms

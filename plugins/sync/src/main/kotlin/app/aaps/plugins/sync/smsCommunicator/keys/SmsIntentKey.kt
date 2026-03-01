@@ -1,10 +1,10 @@
-package app.aaps.plugins.main.general.smsCommunicator.keys
+package app.aaps.plugins.sync.smsCommunicator.keys
 
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
-import app.aaps.plugins.main.R
+import app.aaps.plugins.sync.R
 
 enum class SmsIntentKey(
     override val key: String,

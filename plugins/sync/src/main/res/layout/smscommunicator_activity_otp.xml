@@ -106,7 +106,7 @@
             android:text="@string/smscommunicator_otp_reset_btn"
             android:textColor="?attr/treatmentButton"
             app:icon="@drawable/ic_local_reset"
-            app:iconTint="@color/ic_local_reset"  />
+            app:iconTint="@color/ic_local_reset" />
 
     </LinearLayout>
 

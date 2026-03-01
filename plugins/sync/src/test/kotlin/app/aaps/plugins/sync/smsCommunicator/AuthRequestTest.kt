@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
@@ -7,9 +7,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

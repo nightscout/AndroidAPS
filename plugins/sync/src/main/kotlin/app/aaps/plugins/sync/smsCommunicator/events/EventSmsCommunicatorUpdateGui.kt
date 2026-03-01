@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator.events
+package app.aaps.plugins.sync.smsCommunicator.events
 
 import app.aaps.core.interfaces.rx.events.EventUpdateGui
 

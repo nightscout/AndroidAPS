@@ -206,6 +206,9 @@ class PersistenceLayerImpl @Inject constructor(
             SC::class.java  -> repository.changesOfType<StepsCount>()
                 .map { list -> list.map { it.fromDb() } }
 
+            FD::class.java  -> repository.changesOfType<Food>()
+                .map { list -> list.map { it.fromDb() } }
+
             else            -> throw IllegalArgumentException("Unsupported observation type: ${type.simpleName}")
         } as Flow<List<T>>
     }

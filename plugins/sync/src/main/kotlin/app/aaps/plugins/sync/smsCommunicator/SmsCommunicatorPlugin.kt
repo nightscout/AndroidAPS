@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.smsCommunicator
+package app.aaps.plugins.sync.smsCommunicator
 
 import android.Manifest
 import android.content.Context
@@ -70,6 +70,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.core.ui.compose.icons.IcPluginSms
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -79,15 +81,14 @@ import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
-import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorComposeContent
-import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorRepository
-import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
-import app.aaps.core.ui.compose.ComposeScreenContent
-import app.aaps.plugins.main.general.smsCommunicator.compose.SmsCommunicatorOtpScreen
-import app.aaps.plugins.main.general.smsCommunicator.keys.SmsIntentKey
-import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.smsCommunicator.activities.SmsCommunicatorOtpActivity
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorComposeContent
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorOtpScreen
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.smsCommunicator.events.EventSmsCommunicatorUpdateGui
+import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -134,15 +135,16 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val authRequestProvider: Provider<AuthRequest>,
     private val pumpStatusProvider: PumpStatusProvider,
     private val notificationManager: NotificationManager,
-    @ApplicationScope private val appScope: CoroutineScope
+    @ApplicationScope private val appScope: CoroutineScope,
+    private val viewModelFactory: ViewModelFactory,
+    val repository: SmsCommunicatorRepository
 ) : PluginBaseWithPreferences(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
         .composeContent { plugin ->
             SmsCommunicatorComposeContent(
-                repository = (plugin as SmsCommunicatorPlugin).repository,
-                dateUtil = dateUtil
+                viewModelFactory = (plugin as SmsCommunicatorPlugin).viewModelFactory
             )
         }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)
@@ -160,7 +162,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     @Volatile var messageToConfirm: AuthRequest? = null
     @Volatile var lastRemoteBolusTime: Long = 0
     override var messages = ArrayList<Sms>()
-    val repository = SmsCommunicatorRepository()
 
     private fun notifyMessagesChanged() {
         repository.updateMessages(messages)
