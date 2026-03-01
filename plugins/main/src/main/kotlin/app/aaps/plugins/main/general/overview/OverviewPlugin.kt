@@ -198,34 +198,6 @@ class OverviewPlugin @Inject constructor(
         } else view.text = ""
     }
 
-    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
-        key = "overview",
-        titleResId = app.aaps.core.ui.R.string.overview,
-        items = listOf(
-            BooleanKey.OverviewKeepScreenOn,
-
-            // Range settings subscreen
-            PreferenceSubScreenDef(
-                key = "range_settings",
-                titleResId = R.string.prefs_range_title,
-                items = listOf(
-                    UnitDoubleKey.OverviewLowMark,
-                    UnitDoubleKey.OverviewHighMark
-                )
-            ),
-
-            BooleanKey.OverviewShowNotesInDialogs,
-
-            // Advanced settings subscreen
-            PreferenceSubScreenDef(
-                key = "overview_advanced_settings",
-                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
-                items = listOf(BooleanKey.OverviewUseSuperBolus)
-            )
-        ),
-        iconResId = menuIcon
-    )
-
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null && requiredKey != "overview_buttons_settings" && requiredKey != "default_temp_targets_settings" && requiredKey != "prime_fill_settings" && requiredKey != "range_settings" && requiredKey != "statuslights_overview_advanced" && requiredKey != "overview_advanced_settings") return
@@ -321,11 +293,11 @@ class OverviewPlugin @Inject constructor(
             })
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "range_settings"
-                title = rh.gs(R.string.prefs_range_title)
+                title = rh.gs(app.aaps.core.keys.R.string.prefs_range_title)
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewLowMark, title = app.aaps.core.keys.R.string.pref_title_low_mark))
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewHighMark, title = app.aaps.core.keys.R.string.pref_title_high_mark))
             })
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowNotesInDialogs, title = R.string.overview_show_notes_field_in_dialogs_title))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowNotesInDialogs, title = app.aaps.core.keys.R.string.overview_show_notes_field_in_dialogs_title))
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 activePlugin.activePump
                 key = "statuslights_overview_advanced"

@@ -21,7 +21,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -147,10 +149,15 @@ private fun CategoryRow(
 
     val plugin = if (category.enabledCount == 1) category.enabledPlugins.firstOrNull() else null
     val composeIcon = plugin?.pluginDescription?.icon
+    val defaultCategoryIcon = when (category.type) {
+        PluginType.SYNC    -> Icons.Default.Sync
+        PluginType.GENERAL -> Icons.Default.Extension
+        else               -> Icons.Default.Settings
+    }
     val iconPainter =
         if (composeIcon != null) rememberVectorPainter(composeIcon)
         else if (plugin?.menuIcon != null && plugin.menuIcon != -1) painterResource(plugin.menuIcon)
-        else rememberVectorPainter(Icons.Default.Settings)
+        else rememberVectorPainter(defaultCategoryIcon)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -233,8 +240,7 @@ private fun CategoryDetailScreen(
                 items(category.plugins, key = { it.javaClass.simpleName }) { plugin ->
                     val pluginEnabled = plugin.isEnabled(category.type)
                     val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
-                    val showPrefs = hasPreferences && pluginEnabled &&
-                        (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode == true)
+                    val showPrefs = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode)
 
                     val canToggle = !plugin.pluginDescription.alwaysEnabled &&
                         (category.isMultiSelect || !pluginEnabled)

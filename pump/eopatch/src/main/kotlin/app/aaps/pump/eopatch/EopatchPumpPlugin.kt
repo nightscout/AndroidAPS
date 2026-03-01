@@ -530,7 +530,7 @@ class EopatchPumpPlugin @Inject constructor(
             EopatchIntKey.ExpirationReminder.withEntries((1..24).associateWith { "$it hr" }),
             EopatchBooleanKey.BuzzerReminder
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

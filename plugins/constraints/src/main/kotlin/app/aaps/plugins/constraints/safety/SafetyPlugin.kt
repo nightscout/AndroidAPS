@@ -1,6 +1,8 @@
 package app.aaps.plugins.constraints.safety
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shield
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -66,6 +68,7 @@ class SafetyPlugin @Inject constructor(
         .showInList { false }
         .pluginName(R.string.safety)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_header_warning)
+        .icon(Icons.Default.Shield)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, rh
 ), PluginConstraints, Safety {
@@ -220,6 +223,6 @@ class SafetyPlugin @Inject constructor(
             DoubleKey.SafetyMaxBolus,
             IntKey.SafetyMaxCarbs
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 }

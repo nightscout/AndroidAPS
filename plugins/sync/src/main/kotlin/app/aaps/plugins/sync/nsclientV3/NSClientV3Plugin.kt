@@ -920,6 +920,6 @@ class NSClientV3Plugin @Inject constructor(
                 )
             )
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 }

@@ -1,4 +1,4 @@
-package app.aaps.pump.danaRv2.services
+package app.aaps.pump.danarv2.services
 
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -10,7 +10,6 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.danarv2.comm.MessageHashTableRv2
-import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

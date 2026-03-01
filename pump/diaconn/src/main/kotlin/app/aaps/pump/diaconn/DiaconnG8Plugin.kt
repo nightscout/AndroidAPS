@@ -548,7 +548,7 @@ class DiaconnG8Plugin @Inject constructor(
             DiaconnBooleanKey.LogBatteryChange,
             DiaconnBooleanKey.SendLogsToCloud
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

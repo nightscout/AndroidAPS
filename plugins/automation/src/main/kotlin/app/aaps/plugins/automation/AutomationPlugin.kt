@@ -598,7 +598,7 @@ class AutomationPlugin @Inject constructor(
             StringKey.AutomationLocation
 
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

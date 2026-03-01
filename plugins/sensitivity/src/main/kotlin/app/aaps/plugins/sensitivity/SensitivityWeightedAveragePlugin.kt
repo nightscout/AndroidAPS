@@ -23,6 +23,7 @@ import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
+import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
@@ -45,6 +46,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
+        .icon(IcAs)
         .pluginName(R.string.sensitivity_weighted_average)
         .shortName(R.string.sensitivity_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)

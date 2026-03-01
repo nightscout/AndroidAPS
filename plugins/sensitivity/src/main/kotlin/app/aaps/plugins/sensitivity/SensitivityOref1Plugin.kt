@@ -23,6 +23,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
+import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
@@ -49,6 +50,7 @@ class SensitivityOref1Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
+        .icon(IcAs)
         .pluginName(R.string.sensitivity_oref1)
         .shortName(R.string.sensitivity_shortname)
         .enableByDefault(true)
@@ -252,7 +254,7 @@ class SensitivityOref1Plugin @Inject constructor(
                 )
             )
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

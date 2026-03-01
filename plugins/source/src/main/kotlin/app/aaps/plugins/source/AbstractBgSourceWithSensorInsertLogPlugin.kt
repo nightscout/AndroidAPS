@@ -45,6 +45,6 @@ abstract class AbstractBgSourceWithSensorInsertLogPlugin(
             BooleanKey.BgSourceCreateSensorChange
 
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 }

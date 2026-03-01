@@ -1,4 +1,4 @@
-package app.aaps.pump.danaRKorean.services
+package app.aaps.pump.danarkorean.services
 
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -10,7 +10,6 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarkorean.comm.MessageHashTableRKorean
-import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

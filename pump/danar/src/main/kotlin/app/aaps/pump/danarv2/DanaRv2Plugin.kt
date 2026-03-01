@@ -386,7 +386,7 @@ class DanaRv2Plugin @Inject constructor(
             DanaIntKey.Password,
             DanaIntKey.BolusSpeed
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     private fun getBondedBluetoothDevices(context: Context): List<String> {

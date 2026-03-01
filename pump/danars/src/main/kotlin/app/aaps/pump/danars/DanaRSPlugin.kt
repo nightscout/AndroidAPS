@@ -598,7 +598,7 @@ class DanaRSPlugin @Inject constructor(
             DanaBooleanKey.LogInsulinChange,
             DanaBooleanKey.LogCannulaChange
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

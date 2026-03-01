@@ -705,7 +705,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
             BooleanKey.OpenHumansWifiOnly,
             BooleanKey.OpenHumansChargingOnly
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

@@ -2242,7 +2242,7 @@ class ComboV2Plugin @Inject constructor(
             ComboBooleanKey.AutomaticBatteryEntry,
             ComboBooleanKey.VerboseLogging
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

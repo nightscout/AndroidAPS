@@ -74,6 +74,7 @@ fun AllPreferencesScreen(
 
     // Built-in preference screens from BuiltInSearchables (single source of truth)
     val generalPreferences = builtInSearchables.general
+    val appearancePreferences = builtInSearchables.appearance
     val protectionPreferences = builtInSearchables.protection
     val pumpPreferences = builtInSearchables.pump
     val alertsPreferences = builtInSearchables.alerts
@@ -188,6 +189,7 @@ fun AllPreferencesScreen(
                 ) {
                     // Built-in: General settings (first)
                     addPreferenceContent(generalPreferences, sectionState)
+                    addPreferenceContent(appearancePreferences, sectionState)
 
                     // Built-in: Protection settings
                     addPreferenceContent(protectionPreferences, sectionState)

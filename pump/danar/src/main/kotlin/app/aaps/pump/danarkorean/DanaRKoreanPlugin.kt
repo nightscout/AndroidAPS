@@ -354,7 +354,7 @@ class DanaRKoreanPlugin @Inject constructor(
             DanaIntKey.Password,
             DanaBooleanKey.UseExtended
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     private fun getBondedBluetoothDevices(context: Context): List<String> {

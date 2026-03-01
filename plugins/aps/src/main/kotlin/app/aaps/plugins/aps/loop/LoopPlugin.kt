@@ -81,6 +81,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.objects.extensions.json
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
+import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -134,6 +135,7 @@ class LoopPlugin @Inject constructor(
         .mainType(PluginType.LOOP)
         .fragmentClass(LoopFragment::class.java.name)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_loop_closed_white)
+        .icon(IcLoopClosed)
         .pluginName(app.aaps.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
@@ -1066,7 +1068,7 @@ class LoopPlugin @Inject constructor(
         items = listOf(
             IntKey.LoopOpenModeMinChange
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

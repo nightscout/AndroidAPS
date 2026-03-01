@@ -402,7 +402,7 @@ open class VirtualPumpPlugin @Inject constructor(
             ),
             BooleanKey.VirtualPumpStatusUpload
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

@@ -467,4 +467,9 @@
     <string name="pref_title_otp_setup">Authenticator setup</string>
     <string name="pref_title_quick_wizard_settings">QuickWizard settings</string>
     <string name="pref_title_xdrip_info">xDrip+ info</string>
+
+    <!--    Appearance preferences-->
+    <string name="prefs_range_title">Range for visualization</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
+
 </resources>

@@ -1,4 +1,4 @@
-package app.aaps.pump.danaR
+package app.aaps.pump.danar
 
 import android.bluetooth.BluetoothSocket
 import app.aaps.pump.dana.DanaPump

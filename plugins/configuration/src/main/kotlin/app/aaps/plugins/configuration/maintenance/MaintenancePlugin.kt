@@ -26,6 +26,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -74,6 +75,7 @@ class MaintenancePlugin @Inject constructor(
         .fragmentClass(MaintenanceFragment::class.java.name)
         .alwaysEnabled(true)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_maintenance)
+        .icon(IcPluginMaintenance)
         .pluginName(app.aaps.core.ui.R.string.maintenance)
         .shortName(R.string.maintenance_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
@@ -412,7 +414,7 @@ class MaintenancePlugin @Inject constructor(
                 )
             )
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

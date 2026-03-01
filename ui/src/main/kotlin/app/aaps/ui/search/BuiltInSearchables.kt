@@ -5,12 +5,14 @@ import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TipsAndUpdates
+import androidx.compose.material.icons.outlined.Palette
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.skin.SkinDescriptionProvider
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalculator
@@ -58,12 +60,33 @@ class BuiltInSearchables @Inject constructor(
                 StringKey.GeneralUnits,
                 StringKey.GeneralLanguage,
                 BooleanKey.GeneralSimpleMode,
+                BooleanKey.OverviewKeepScreenOn,
                 StringKey.GeneralPatientName,
-                StringKey.GeneralSkin.withEntries(skinEntries),
-                StringKey.GeneralDarkMode
             ),
             icon = Icons.Default.Settings
         )
+
+    val appearance = PreferenceSubScreenDef(
+        key = "appearance",
+        titleResId = app.aaps.core.ui.R.string.appearance,
+        items = listOf(
+
+            // Range settings subscreen
+            PreferenceSubScreenDef(
+                key = "range_settings",
+                titleResId = app.aaps.core.keys.R.string.prefs_range_title,
+                items = listOf(
+                    UnitDoubleKey.OverviewLowMark,
+                    UnitDoubleKey.OverviewHighMark
+                )
+            ),
+
+            BooleanKey.OverviewShowNotesInDialogs,
+            StringKey.GeneralSkin.withEntries(skinEntries),
+            StringKey.GeneralDarkMode
+        ),
+        icon = Icons.Outlined.Palette
+    )
 
     /**
      * Protection preferences (passwords, PINs, timeouts)
@@ -226,6 +249,7 @@ class BuiltInSearchables @Inject constructor(
     override fun getSearchableItems(): List<SearchableItem> = listOf(
         // Main preference screens (shown in AllPreferencesScreen)
         SearchableItem.Category(general),
+        SearchableItem.Category(appearance),
         SearchableItem.Category(protection),
         SearchableItem.Category(pump),
         SearchableItem.Category(alerts),

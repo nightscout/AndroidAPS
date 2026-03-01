@@ -459,7 +459,7 @@ class EquilPumpPlugin @Inject constructor(
             EquilBooleanPreferenceKey.EquilAlarmInsulin,
             EquilIntPreferenceKey.EquilTone
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 
     // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)

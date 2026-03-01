@@ -793,6 +793,7 @@
     <string name="nav_history_browser">History browser</string>
     <string name="nav_history_browser_desc">Browse historical data and graphs</string>
     <string name="overview">Overview</string>
+    <string name="appearance">Appearance</string>
     <string name="manage">Manage</string>
     <string name="localprofile">Profile</string>
     <string name="nav_setupwizard">Setup Wizard</string>

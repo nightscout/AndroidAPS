@@ -305,6 +305,6 @@ class WearPlugin @Inject constructor(
                 )
             )
         ),
-        iconResId = menuIcon
+        icon = Icons.Default.Watch
     )
 }

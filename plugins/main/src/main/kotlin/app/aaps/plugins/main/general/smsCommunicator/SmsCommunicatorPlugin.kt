@@ -1390,6 +1390,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             BooleanKey.SmsReportPumpUnreachable
 
         ),
-        iconResId = menuIcon
+        icon = pluginDescription.icon
     )
 }
