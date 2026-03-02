@@ -21,7 +21,16 @@ import javax.inject.Inject
 data class ConfigurationUiState(
     val pluginCategories: List<DrawerCategory> = emptyList(),
     val pluginStateVersion: Int = 0,
-    val isSimpleMode: Boolean = true
+    val isSimpleMode: Boolean = true,
+    val hardwarePumpConfirmation: HardwarePumpConfirmation? = null
+)
+
+@Immutable
+data class HardwarePumpConfirmation(
+    val message: String,
+    val plugin: PluginBase,
+    val type: PluginType,
+    val enabled: Boolean
 )
 
 @Stable
@@ -52,7 +61,36 @@ class ConfigurationViewModel @Inject constructor(
     }
 
     fun togglePluginEnabled(plugin: PluginBase, type: PluginType, enabled: Boolean) {
-        configBuilder.performPluginSwitch(plugin, enabled, type)
+        val confirmationMessage = configBuilder.requestPluginSwitch(plugin, enabled, type)
+        if (confirmationMessage != null) {
+            uiState.update { state ->
+                state.copy(
+                    hardwarePumpConfirmation = HardwarePumpConfirmation(
+                        message = confirmationMessage,
+                        plugin = plugin,
+                        type = type,
+                        enabled = enabled
+                    )
+                )
+            }
+        } else {
+            refreshCategories()
+        }
+    }
+
+    fun confirmHardwarePumpSwitch() {
+        val confirmation = uiState.value.hardwarePumpConfirmation ?: return
+        configBuilder.confirmPumpPluginSwitch(confirmation.plugin, confirmation.enabled, confirmation.type)
+        uiState.update { it.copy(hardwarePumpConfirmation = null) }
+        refreshCategories()
+    }
+
+    fun dismissHardwarePumpDialog() {
+        uiState.update { it.copy(hardwarePumpConfirmation = null) }
+        refreshCategories()
+    }
+
+    private fun refreshCategories() {
         val categories = buildPluginCategories()
         uiState.update { state ->
             state.copy(

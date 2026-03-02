@@ -203,6 +203,47 @@ class ConfigBuilderPlugin @Inject constructor(
         }
     }
 
+    override fun requestPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType): String? {
+        return when {
+            plugin.getType() == PluginType.PUMP && plugin.name != rh.gs(app.aaps.core.ui.R.string.virtual_pump) -> {
+                val allowHardwarePump = preferences.get(ConfigurationBooleanKey.AllowHardwarePump)
+                if (allowHardwarePump) {
+                    performPluginSwitch(plugin, enabled, type)
+                    pumpSync.connectNewPump()
+                    null
+                } else {
+                    rh.gs(R.string.allow_hardware_pump_text)
+                }
+            }
+
+            plugin.getType() == PluginType.PUMP                                                                 -> {
+                performPluginSwitch(plugin, enabled, type)
+                pumpSync.connectNewPump()
+                null
+            }
+
+            else                                                                                                -> {
+                performPluginSwitch(plugin, enabled, type)
+                null
+            }
+        }
+    }
+
+    override fun confirmPumpPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType) {
+        performPluginSwitch(plugin, enabled, type)
+        pumpSync.connectNewPump()
+        preferences.put(ConfigurationBooleanKey.AllowHardwarePump, true)
+        scope.launch {
+            uel.log(
+                action = Action.HW_PUMP_ALLOWED,
+                source = Sources.ConfigBuilder,
+                note = rh.gs(plugin.pluginDescription.pluginName),
+                value = ValueWithUnit.SimpleString(rh.gsNotLocalised(plugin.pluginDescription.pluginName))
+            )
+        }
+        aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
+    }
+
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
         if (!config.AAPSCLIENT) {
             if (enabled && !changedPlugin.isEnabled()) {

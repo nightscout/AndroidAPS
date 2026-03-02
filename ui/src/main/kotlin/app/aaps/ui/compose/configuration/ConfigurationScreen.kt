@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -32,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -58,10 +60,13 @@ fun ConfigurationScreen(
     categories: List<DrawerCategory>,
     isSimpleMode: Boolean,
     pluginStateVersion: Int,
+    hardwarePumpConfirmation: HardwarePumpConfirmation?,
     onNavigateBack: () -> Unit,
     onPluginClick: (PluginBase) -> Unit,
     onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
     onPluginPreferencesClick: (PluginBase) -> Unit,
+    onConfirmHardwarePump: () -> Unit,
+    onDismissHardwarePump: () -> Unit,
 ) {
     var selectedTypeOrdinal by rememberSaveable { mutableStateOf(-1) }
     val selectedCategory = if (selectedTypeOrdinal >= 0) {
@@ -70,6 +75,24 @@ fun ConfigurationScreen(
 
     if (selectedCategory != null) {
         BackHandler { selectedTypeOrdinal = -1 }
+    }
+
+    if (hardwarePumpConfirmation != null) {
+        AlertDialog(
+            onDismissRequest = onDismissHardwarePump,
+            title = { Text(stringResource(app.aaps.core.ui.R.string.confirmation)) },
+            text = { Text(hardwarePumpConfirmation.message) },
+            confirmButton = {
+                TextButton(onClick = onConfirmHardwarePump) {
+                    Text(stringResource(android.R.string.ok))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissHardwarePump) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            }
+        )
     }
 
     Crossfade(

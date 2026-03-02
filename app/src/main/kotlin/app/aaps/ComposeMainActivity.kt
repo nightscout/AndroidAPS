@@ -941,6 +941,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             categories = configState.pluginCategories,
                             isSimpleMode = configState.isSimpleMode,
                             pluginStateVersion = configState.pluginStateVersion,
+                            hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
                             onNavigateBack = { navController.popBackStack() },
                             onPluginClick = { plugin -> handlePluginClick(plugin) },
                             onPluginEnableToggle = { plugin, type, enabled ->
@@ -953,7 +954,12 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                         navController.navigate(AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName))
                                     }
                                 }
-                            }
+                            },
+                            onConfirmHardwarePump = {
+                                configurationViewModel.confirmHardwarePumpSwitch()
+                                permissionsViewModel.refresh(this@ComposeMainActivity)
+                            },
+                            onDismissHardwarePump = { configurationViewModel.dismissHardwarePumpDialog() }
                         )
                     }
 
