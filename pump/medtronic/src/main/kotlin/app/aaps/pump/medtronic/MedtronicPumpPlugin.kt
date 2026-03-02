@@ -57,6 +57,7 @@ import app.aaps.pump.common.defs.PumpDriverState
 import app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity
 import app.aaps.pump.common.driver.refresh.PumpDataRefreshAction
 import app.aaps.pump.common.driver.refresh.PumpDataRefreshType
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
@@ -214,6 +215,19 @@ class MedtronicPumpPlugin @Inject constructor(
                 .toObservable(EventRileyLinkDeviceStatusChange::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
+        )
+        disposable.add(
+            rxBus
+                .toObservable(EventPreferenceChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event ->
+                    if (event.isChanged(MedtronicStringPreferenceKey.Serial.key)) {
+                        aapsLogger.debug(LTag.PUMP, "Medtronic serial number changed, reporting new pump")
+                        medtronicPumpStatus.serialNumber = preferences.getIfExists(MedtronicStringPreferenceKey.Serial) ?: ""
+                        pumpSync.connectNewPump()
+                        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+                    }
+                }, fabricPrivacy::logException)
         )
         super.onStart()
     }
