@@ -2,8 +2,11 @@ package app.aaps.pump.eopatch.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.core.ui.compose.ViewModelKey
+import app.aaps.pump.eopatch.EopatchPumpPlugin
 import app.aaps.pump.eopatch.OsAlarmReceiver
 import app.aaps.pump.eopatch.alarm.AlarmManager
 import app.aaps.pump.eopatch.alarm.AlarmRegistry
@@ -25,6 +28,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -96,4 +100,11 @@ abstract class EopatchModule {
 
     @ContributesAndroidInjector
     abstract fun contributesOsAlarmReceiver(): OsAlarmReceiver
+
+    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(1110)
+    abstract fun bindEopatchPumpPlugin(plugin: EopatchPumpPlugin): PluginBase
 }

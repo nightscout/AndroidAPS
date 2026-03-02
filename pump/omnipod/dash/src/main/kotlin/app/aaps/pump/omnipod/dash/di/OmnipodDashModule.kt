@@ -1,13 +1,16 @@
 package app.aaps.pump.omnipod.dash.di
 
-import app.aaps.pump.omnipod.common.di.ActivityScope
-import app.aaps.pump.omnipod.common.di.OmnipodWizardModule
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManager
 import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManagerImpl
 import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManager
 import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManagerImpl
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManagerImpl
+import app.aaps.pump.omnipod.common.di.ActivityScope
+import app.aaps.pump.omnipod.common.di.OmnipodWizardModule
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.ui.DashPodHistoryActivity
 import app.aaps.pump.omnipod.dash.ui.DashPodManagementActivity
 import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
@@ -16,6 +19,8 @@ import app.aaps.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWiza
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntKey
+import dagger.multibindings.IntoMap
 
 @Module(includes = [OmnipodDashHistoryModule::class])
 @Suppress("unused")
@@ -51,4 +56,11 @@ abstract class OmnipodDashModule {
 
     @Binds
     abstract fun bindsOmnipodDashManagerImpl(omnipodManager: OmnipodDashManagerImpl): OmnipodDashManager
+
+    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(1080)
+    abstract fun bindOmnipodDashPumpPlugin(plugin: OmnipodDashPumpPlugin): PluginBase
 }

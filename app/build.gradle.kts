@@ -150,6 +150,13 @@ android {
         buildConfig = true
         compose = true
     }
+
+    sourceSets {
+        getByName("full") { kotlin.srcDir("src/withPumps/kotlin") }
+        getByName("pumpcontrol") { kotlin.srcDir("src/withPumps/kotlin") }
+        getByName("aapsclient2") { kotlin.srcDir("src/aapsclient/kotlin") }
+        getByName("aapsclient3") { kotlin.srcDir("src/aapsclient/kotlin") }
+    }
 }
 
 allprojects {
@@ -186,23 +193,31 @@ dependencies {
     implementation(project(":implementation"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
-    implementation(project(":pump:combov2"))
-    implementation(project(":pump:dana"))
-    implementation(project(":pump:danars"))
-    implementation(project(":pump:danar"))
-    implementation(project(":pump:diaconn"))
-    implementation(project(":pump:eopatch"))
-    implementation(project(":pump:medtrum"))
-    implementation(project(":pump:equil"))
-    implementation(project(":pump:insight"))
-    implementation(project(":pump:medtronic"))
-    implementation(project(":pump:common"))
-    implementation(project(":pump:omnipod:common"))
-    implementation(project(":pump:omnipod:eros"))
-    implementation(project(":pump:omnipod:dash"))
-    implementation(project(":pump:rileylink"))
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
+
+    // Pump drivers — only for full + pumpcontrol flavors
+    val pumpDependencies = listOf(
+        ":pump:combov2",
+        ":pump:dana",
+        ":pump:danars",
+        ":pump:danar",
+        ":pump:diaconn",
+        ":pump:eopatch",
+        ":pump:medtrum",
+        ":pump:equil",
+        ":pump:insight",
+        ":pump:medtronic",
+        ":pump:common",
+        ":pump:omnipod:common",
+        ":pump:omnipod:eros",
+        ":pump:omnipod:dash",
+        ":pump:rileylink"
+    )
+    pumpDependencies.forEach {
+        "fullImplementation"(project(it))
+        "pumpcontrolImplementation"(project(it))
+    }
 
     implementation(libs.androidx.lifecycle.process)
 

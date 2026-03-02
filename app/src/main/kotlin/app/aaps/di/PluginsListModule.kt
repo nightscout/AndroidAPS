@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin
@@ -55,24 +56,12 @@ import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.tizen.TizenPlugin
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
-import app.aaps.pump.danar.DanaRPlugin
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import app.aaps.pump.danars.DanaRSPlugin
-import app.aaps.pump.danarv2.DanaRv2Plugin
-import app.aaps.pump.diaconn.DiaconnG8Plugin
-import app.aaps.pump.eopatch.EopatchPumpPlugin
-import app.aaps.pump.equil.EquilPumpPlugin
-import app.aaps.pump.insight.InsightPlugin
-import app.aaps.pump.medtronic.MedtronicPumpPlugin
-import app.aaps.pump.medtrum.MedtrumPlugin
-import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
-import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import info.nightscout.pump.combov2.ComboV2Plugin
+import dagger.multibindings.Multibinds
 import javax.inject.Qualifier
 
 @Suppress("unused")
@@ -145,88 +134,16 @@ abstract class PluginsListModule {
     @IntKey(80)
     abstract fun bindSensitivityOref1Plugin(plugin: SensitivityOref1Plugin): PluginBase
 
-    @Binds
+    // Pumps use @IntKey range 1000–1200. VirtualPump=1000, real drivers start at 1010.
+    // Each pump module registers its own @PumpDriver binding.
+    @Multibinds
     @PumpDriver
-    @IntoMap
-    @IntKey(90)
-    abstract fun bindDanaRPlugin(plugin: DanaRPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(100)
-    abstract fun bindDanaRKoreanPlugin(plugin: DanaRKoreanPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(110)
-    abstract fun bindDanaRv2Plugin(plugin: DanaRv2Plugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(120)
-    abstract fun bindDanaRSPlugin(plugin: DanaRSPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(130)
-    abstract fun bindLocalInsightPlugin(plugin: InsightPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(140)
-    abstract fun bindComboV2Plugin(plugin: ComboV2Plugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(145)
-    abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(148)
-    abstract fun bindOmnipodDashPumpPlugin(plugin: OmnipodDashPumpPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(150)
-    abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(155)
-    abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(156)
-    abstract fun bindEopatchPumpPlugin(plugin: EopatchPumpPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(160)
-    abstract fun bindMedtrumPlugin(plugin: MedtrumPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(170)
-    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
+    abstract fun pumpDrivers(): Map<Int, PluginBase>
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(180)
+    @IntKey(1000)
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
     @Binds
@@ -489,9 +406,6 @@ abstract class PluginsListModule {
 
     @Qualifier
     annotation class AllConfigs
-
-    @Qualifier
-    annotation class PumpDriver
 
     @Qualifier
     annotation class NotNSClient
