@@ -146,9 +146,7 @@ android {
 
     useLibrary("org.apache.http.legacy")
 
-    //Deleting it causes a binding error
     buildFeatures {
-        dataBinding = true
         buildConfig = true
         compose = true
     }
@@ -161,7 +159,6 @@ allprojects {
 
 dependencies {
     // in order to use internet"s versions you"d need to enable Jetifier again
-    // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
@@ -206,6 +203,8 @@ dependencies {
     implementation(project(":pump:rileylink"))
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
+
+    implementation(libs.androidx.lifecycle.process)
 
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))

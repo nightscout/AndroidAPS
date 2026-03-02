@@ -2,6 +2,8 @@ package app.aaps.pump.eopatch.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.ui.compose.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.pump.eopatch.OsAlarmReceiver
 import app.aaps.pump.eopatch.alarm.AlarmManager
 import app.aaps.pump.eopatch.alarm.AlarmRegistry
@@ -11,14 +13,14 @@ import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManager
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.ble.PreferenceManagerImpl
-import app.aaps.pump.eopatch.ui.*
+import app.aaps.pump.eopatch.compose.EopatchOverviewViewModel
+import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
+import app.aaps.pump.eopatch.ui.AlarmHelperActivity
+import app.aaps.pump.eopatch.ui.DialogHelperActivity
+import app.aaps.pump.eopatch.ui.EopatchActivity
 import app.aaps.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
 import app.aaps.pump.eopatch.ui.dialogs.AlarmDialog
 import app.aaps.pump.eopatch.ui.dialogs.CommonDialog
-import app.aaps.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
-import app.aaps.pump.eopatch.ui.viewmodel.EopatchViewModel
-import app.aaps.core.ui.compose.ViewModelFactory
-import app.aaps.core.ui.compose.ViewModelKey
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -67,63 +69,19 @@ abstract class EopatchModule {
     @Binds
     @IntoMap
     @EopatchPluginQualifier
-    @ViewModelKey(EopatchViewModel::class)
-    internal abstract fun bindsEopatchViewModel(viewModel: EopatchViewModel): ViewModel
+    @ViewModelKey(EopatchPatchViewModel::class)
+    internal abstract fun bindsEopatchPatchViewModel(viewModel: EopatchPatchViewModel): ViewModel
 
-    // #### FRAGMENTS ##############################################################################
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchOverviewFragment(): EopatchOverviewFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchSafeDeactivationFragment(): EopatchSafeDeactivationFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchTurningOffAlarmFragment(): EopatchTurningOffAlarmFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchRemoveFragment(): EopatchRemoveFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchWakeUpFragment(): EopatchWakeUpFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchConnectNewFragment(): EopatchConnectNewFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchRemoveNeedleCapFragment(): EopatchRemoveNeedleCapFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchRemoveProtectionTapeFragment(): EopatchRemoveProtectionTapeFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchSafetyCheckFragment(): EopatchSafetyCheckFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchRotateKnobFragment(): EopatchRotateKnobFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesEopatchBasalScheduleFragment(): EopatchBasalScheduleFragment
-
+    // #### DIALOGS (still needed for alarm/dialog helper activities) ################################
     @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun contributesAlarmDialog(): AlarmDialog
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesCommonDialog(): ActivationNotCompleteDialog
+    internal abstract fun contributesActivationNotCompleteDialog(): ActivationNotCompleteDialog
 
-    // Activities
+    // #### ACTIVITIES (alarm-driven entry points + helpers) ###########################################
     @ContributesAndroidInjector
     abstract fun contributesEopatchActivity(): EopatchActivity
 

@@ -1,4 +1,4 @@
-package app.aaps.pump.medtrum.compose
+package app.aaps.core.ui.compose.pump
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -15,6 +15,7 @@
     <string name="eopatch_wakeup_time">Wake-up date &amp; time</string>
     <string name="eopatch_expiration_time">Expiration time</string>
     <string name="eopatch_status">Status</string>
+    <string name="eopatch_not_activated">Not activated</string>
 
     <string name="eopatch_base_basal_rate">Base Basal Rate</string>
     <string name="eopatch_temp_basal_rate">Temp Basal Rate</string>
@@ -86,6 +87,12 @@
     <string name="patch_activate_reminder_desc">Patch activation has not been completed.\n Continue.</string>
     <string name="patch_communication_check_helper_1">Bring your smart device closer to the Patch.</string>
     <string name="patch_communication_check_helper_2">Please move to another location and try again.</string>
+    <string name="patch_scan_failed_desc">Failed to find the Patch. Please make sure the Patch is nearby and try again.</string>
+    <string name="patch_bonding_failed_desc">Failed to pair with the Patch. Please try again.</string>
+    <string name="patch_get_info_failed_desc">Failed to get Patch information. Please try again.</string>
+    <string name="patch_self_test_failed_desc">Patch self test failed. Please try again.</string>
+    <string name="patch_safety_check_failed_desc">Safety check failed. Please try again.</string>
+    <string name="patch_needle_sensing_failed_desc">Needle sensing failed. Please try again.</string>
     <string name="patch_communication_failed">Communication Error</string>
     <string name="patch_communication_succeed">Communication success</string>
     <string name="patch_communication_succeed_message">Connected with the Patch.</string>

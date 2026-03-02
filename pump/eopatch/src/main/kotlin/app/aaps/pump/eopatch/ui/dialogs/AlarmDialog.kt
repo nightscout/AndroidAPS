@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -17,11 +19,9 @@ import app.aaps.core.ui.R
 import app.aaps.pump.eopatch.alarm.AlarmCode
 import app.aaps.pump.eopatch.alarm.AlarmProcess
 import app.aaps.pump.eopatch.alarm.IAlarmProcess
-import app.aaps.pump.eopatch.bindingadapters.setOnSafeClickListener
 import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
-import app.aaps.pump.eopatch.databinding.DialogAlarmBinding
 import app.aaps.pump.eopatch.ui.AlarmHelperActivity
 import app.aaps.pump.eopatch.vo.Alarms
 import dagger.android.support.DaggerDialogFragment
@@ -50,9 +50,12 @@ class AlarmDialog : DaggerDialogFragment() {
     private lateinit var mAlarmProcess: IAlarmProcess
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-    private var _binding: DialogAlarmBinding? = null
+    private var titleView: TextView? = null
+    private var statusView: TextView? = null
+    private var okButton: Button? = null
+    private var muteButton: Button? = null
+    private var mute5minButton: Button? = null
     private var disposable: Disposable? = null
-    private val binding get() = _binding!!
 
     private var isHolding = false
     private var isMute = false
@@ -78,15 +81,20 @@ class AlarmDialog : DaggerDialogFragment() {
             sound = bundle.getInt("sound", R.raw.error)
         }
         aapsLogger.debug("Alarm dialog displayed")
-        _binding = DialogAlarmBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(app.aaps.pump.eopatch.R.layout.dialog_alarm, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.title.text = title
-        binding.ok.setOnSafeClickListener {
+        titleView = view.findViewById(app.aaps.pump.eopatch.R.id.title)
+        statusView = view.findViewById(app.aaps.pump.eopatch.R.id.status)
+        okButton = view.findViewById(app.aaps.pump.eopatch.R.id.ok)
+        muteButton = view.findViewById(app.aaps.pump.eopatch.R.id.mute)
+        mute5minButton = view.findViewById(app.aaps.pump.eopatch.R.id.mute5min)
+
+        titleView?.text = title
+        okButton?.setOnClickListener {
             aapsLogger.debug("USER ENTRY: Alarm dialog ok button pressed")
             alarmCode?.let { ac ->
                 mAlarmProcess.doAction(requireContext(), ac)
@@ -113,12 +121,12 @@ class AlarmDialog : DaggerDialogFragment() {
             }
             stopAlarm("OK clicked")
         }
-        binding.mute.setOnSafeClickListener {
+        muteButton?.setOnClickListener {
             aapsLogger.debug("USER ENTRY: Error dialog mute button pressed")
             isMute = true
             stopAlarm("Mute clicked")
         }
-        binding.mute5min.setOnSafeClickListener {
+        mute5minButton?.setOnClickListener {
             aapsLogger.debug("USER ENTRY: Error dialog mute 5 min button pressed")
             stopAlarm("Mute5m clicked")
             isMute = true
@@ -153,12 +161,16 @@ class AlarmDialog : DaggerDialogFragment() {
         if (isHolding && !isMute) {
             startAlarm("onResume")
         }
-        binding.status.text = status
+        statusView?.text = status
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        titleView = null
+        statusView = null
+        okButton = null
+        muteButton = null
+        mute5minButton = null
         disposable?.dispose()
         disposable = null
     }

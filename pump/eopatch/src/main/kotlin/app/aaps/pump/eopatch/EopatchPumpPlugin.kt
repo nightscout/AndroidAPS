@@ -3,6 +3,7 @@ package app.aaps.pump.eopatch
 import android.Manifest
 import android.content.Context
 import android.os.SystemClock
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
@@ -18,6 +19,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -48,10 +51,11 @@ import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.code.BolusExDuration
+import app.aaps.pump.eopatch.compose.EopatchComposeContent
+import app.aaps.pump.eopatch.di.EopatchPluginQualifier
 import app.aaps.pump.eopatch.keys.EopatchBooleanKey
 import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.keys.EopatchStringNonKey
-import app.aaps.pump.eopatch.ui.EopatchOverviewFragment
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasal
@@ -82,11 +86,20 @@ class EopatchPumpPlugin @Inject constructor(
     private val notificationManager: NotificationManager,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val patchConfig: PatchConfig,
-    private val normalBasalManager: NormalBasalManager
+    private val normalBasalManager: NormalBasalManager,
+    private val protectionCheck: ProtectionCheck,
+    private val blePreCheck: BlePreCheck,
+    @EopatchPluginQualifier private val viewModelFactory: ViewModelProvider.Factory
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(EopatchOverviewFragment::class.java.name)
+        .composeContent { _ ->
+            EopatchComposeContent(
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck,
+                viewModelFactory = viewModelFactory
+            )
+        }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)

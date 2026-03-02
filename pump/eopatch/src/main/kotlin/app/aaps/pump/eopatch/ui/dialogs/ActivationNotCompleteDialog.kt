@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.pump.eopatch.bindingadapters.setOnSafeClickListener
+import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.ble.IPatchManager
-import app.aaps.pump.eopatch.databinding.DialogCommonBinding
 import app.aaps.pump.eopatch.ui.DialogHelperActivity
 import app.aaps.pump.eopatch.ui.EopatchActivity
 import app.aaps.pump.eopatch.vo.PatchConfig
@@ -28,8 +29,9 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
     var message: String = ""
     var title: String = ""
 
-    private var _binding: DialogCommonBinding? = null
-    private val binding get() = _binding!!
+    private var titleView: TextView? = null
+    private var messageView: TextView? = null
+    private var okButton: Button? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,15 +46,18 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
             bundle.getString("title")?.let { title = it }
             bundle.getString("message")?.let { message = it }
         }
-        _binding = DialogCommonBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.dialog_common, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.title.text = title
-        binding.ok.setOnSafeClickListener {
+        titleView = view.findViewById(R.id.title)
+        messageView = view.findViewById(R.id.message)
+        okButton = view.findViewById(R.id.ok)
+
+        titleView?.text = title
+        okButton?.setOnClickListener {
             helperActivity?.apply {
                 startActivity(EopatchActivity.createIntent(this, patchConfig.lifecycleEvent.lifeCycle, false))
             }
@@ -73,12 +78,14 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.message.text = message
+        messageView?.text = message
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        titleView = null
+        messageView = null
+        okButton = null
     }
 
     override fun dismiss() {

@@ -157,6 +157,68 @@
 - `TileButton` in PumpOverviewScreen has hardcoded `96.dp`, `28.dp`, `2.dp`, `8.dp` values — some
   belong in AapsSpacing, others are domain-specific and need named constants.
 
+## EOPatch2 Compose Migration Patterns (2026-03-02)
+
+- EOPatch2 DI is correct: `@Binds @IntoMap @EopatchPluginQualifier @ViewModelKey` with a scoped
+  `ViewModelProvider.Factory` provided via `@EopatchPluginQualifier`. `ViewModelProvider(owner,
+  factory)` used properly in both `EopatchComposeContent` and `EopatchActivity`.
+- `EopatchOverviewViewModel` bridges RxJava to `MutableStateFlow` correctly:
+  `observeOn(aapsSchedulers.main)` before `.value = it` assignment is safe for `StateFlow`.
+- Recurring pattern: `LaunchedEffect(Unit)` in step composables that call BLE operations (scan,
+  safety check) — risk of re-firing on re-composition and starting duplicate RxJava operations.
+  Guard with a `SetupStep` check or key on the step value.
+- Recurring bug: dispatching dialogs in `EopatchPatchScreen` by matching the `SharedFlow` event
+  type works, but `EopatchOverviewEvent.ShowToast` is collected in BOTH `EopatchComposeContent`
+  and `EopatchOverviewScreen` simultaneously, causing double-toast. Only one collector should own
+  each event type.
+- Recurring anti-pattern: label string matching to dispatch actions (`suspendLabel`/`resumeLabel`
+  comparison in `EopatchOverviewScreen`). Use a typed ID or tag on `PumpAction` instead.
+- Hardcoded Korean string `"기초1"` passed as format arg in `programEnabledMessage` — will ship
+  in production. Always verify localized format string arguments are not placeholder values.
+- `mB012UpdateDisposable` in `EopatchPatchViewModel` not added to `CompositeDisposable` and not
+  restarted after `reset()` — alarm reminder silently stops working on workflow restart.
+- `deactivatePatch()` uses an untracked `Single.timer(10, TimeUnit.SECONDS).subscribe()` — add
+  the disposable to `CompositeDisposable`.
+- `EopatchActivity.createIntentForCheckConnection()` missing `EXTRA_START_WITH_COMM_CHECK`, so
+  `PatchStep.CHECK_CONNECTION` is passed to `initializePatchStep()` but has no UI branch —
+  screen renders blank.
+- `EopatchActivity` lacks `FLAG_KEEP_SCREEN_ON` for alarm-driven flows.
+- `rh` and `patchManager` are `val` (public) on both ViewModels — should be `private val`.
+- `WizardStepLayout` and `StepProgressIndicator` are new shared components in
+  `core/ui/compose/pump/`.
+- No `@Preview` composables in any of the new EOPatch2 Compose files.
+- `EopatchOverviewScreen` and `EopatchPatchScreen` have no explicit visibility — should be
+  `internal`.
+- `_events MutableSharedFlow` with `extraBufferCapacity = 10` is not cleared in `reset()` — stale
+  events from prior workflow can replay to new collectors after workflow restart.
+
+## EOPatch2 Completeness Review Findings (2026-03-02)
+
+- `dispatchTouchEvent` B012 alarm reminder on every touch is NOT ported — only called in specific
+  ViewModel paths; during long step viewing B012 fires incorrectly.
+- Resume/Pause when patch not connected: old code launched
+  `EopatchActivity.createIntentForCheckConnection`
+  via `ActivityResultLauncher`; new code calls BLE operation directly without connectivity check.
+- `isDiscardedWithNotConn` dual-button (Finish / Activate New Patch) on RemoveStep is not ported.
+- `PatchStep.CHECK_CONNECTION` unhandled in new `EopatchPatchScreen` — falls into `else {}` branch.
+- `onCommCheckComplete()` logic is broken: on timer expiry in `deactivatePatch()`, neither success
+  listener nor error dialog is emitted when bonded+disconnected; deactivation silently does nothing.
+- `SafetyCheckStep` dismiss button calls `handleCancel()` (closes workflow) instead of
+  `moveStep(SAFETY_CHECK)` (stays on step) — regression from old behavior.
+- `updateExpirationTime()` subscription has empty body — countdown timer on SafeDeactivationStep
+  is frozen; `patchRemainedTime` is a plain `get()` not a StateFlow.
+- `WakeUpStep` missing Cancel button that existed in old fragment_eopatch_wake_up.xml.
+- `TurningOffAlarmStep` button text changed from "Next" to "Confirm" (cosmetic but visible).
+- `BasalScheduleStep` button text changed from "Finish" to "Confirm" (cosmetic but visible).
+- `SafeDeactivationStep` has new secondary "Discard" button that was not in old XML layout — adds
+  unintended shortcut to forced discard.
+- `RotateKnobStep` treats NEEDLE_SENSING_FAILED and ACTIVATION_FAILED identically (same dialog,
+  same retry) — old code showed distinct states for activation failure.
+- `_events MutableSharedFlow` not cleared in `reset()` — stale events replay to new workflow.
+- `BlePreCheckHost` and `EopatchPatchScreen` compose simultaneously; `initializePatchStep` fires
+  before BLE pre-check completes — old Activity gated step init on pre-check completion.
+- Protection check (`PREFERENCES`) applied to both activation and deactivation; old code had none.
+
 ## See Also
 
 - Detailed review findings: see conversation history for NSClient Compose migration review (

@@ -1,0 +1,41 @@
+package app.aaps.pump.eopatch.compose.steps
+
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.pump.eopatch.R
+import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
+
+@Composable
+fun TurningOffAlarmStep(viewModel: EopatchPatchViewModel) {
+    WizardStepLayout(
+        primaryButton = WizardButton(
+            text = stringResource(R.string.next),
+            onClick = { viewModel.onConfirm() }
+        )
+    ) {
+        Text(
+            text = stringResource(R.string.patch_manually_turning_off_alarm_title),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Text(
+            text = stringResource(R.string.patch_manually_turning_off_alarm_desc_1),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(R.string.patch_manually_turning_off_alarm_desc_2),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(R.string.patch_manually_turning_off_alarm_step_1),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(R.string.patch_manually_turning_off_alarm_step_2),
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}

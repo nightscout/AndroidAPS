@@ -10,11 +10,12 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.AlarmHelperActivity"
-            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
+            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize" />
         <activity
             android:name=".ui.DialogHelperActivity"
-            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
-        <receiver android:name=".OsAlarmReceiver"/>
-	</application>
+            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize" />
+
+        <receiver android:name=".OsAlarmReceiver" />
+    </application>
 
 </manifest>

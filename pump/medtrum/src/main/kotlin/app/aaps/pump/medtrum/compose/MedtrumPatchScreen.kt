@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.pump.StepProgressIndicator
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.compose.steps.ActivateStep
