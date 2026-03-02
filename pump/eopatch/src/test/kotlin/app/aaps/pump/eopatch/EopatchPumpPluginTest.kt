@@ -1,10 +1,13 @@
 package app.aaps.pump.eopatch
 
 import android.Manifest
+import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.eopatch.core.scan.BleConnectionState
@@ -22,6 +25,9 @@ class EopatchPumpPluginTest : EopatchTestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var bleConnectionState: BleConnectionState
     @Mock lateinit var profile: Profile
+    @Mock lateinit var protectionCheck: ProtectionCheck
+    @Mock lateinit var blePreCheck: BlePreCheck
+    @Mock lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var plugin: EopatchPumpPlugin
 
@@ -46,7 +52,8 @@ class EopatchPumpPluginTest : EopatchTestBase() {
 
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
-            alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager
+            alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
+            protectionCheck, blePreCheck, viewModelFactory
         )
     }
 

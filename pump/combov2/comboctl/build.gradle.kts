@@ -26,6 +26,7 @@ dependencies {
     api(libs.androidx.core)
 
     testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
     testImplementation(project(":shared:tests"))
 
     testImplementation(libs.io.kotlintest.runner.junit5)
