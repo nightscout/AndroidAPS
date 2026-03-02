@@ -89,6 +89,7 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Exporteer instellingen</string>
     <string name="disableloop">Loop deactiveren</string>
+    <string name="disabled_loop">Loop uitgeschakeld</string>
     <string name="resumeloop">Hervat loop</string>
     <string name="suspendloop">Onderbreek loop</string>
     <string name="duration_min_label">Duur [min]</string>
@@ -102,6 +103,7 @@
     <string name="name_short">Naam:</string>
     <string name="time">Tijd</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Laden…</string>
     <string name="notes_label">Notities</string>
     <string name="remove_button">Verwijder</string>
     <string name="add_new">Nieuwe toevoegen</string>
@@ -115,8 +117,10 @@
     <string name="duration_label">Tijdsduur</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
+    <string name="pump_running">Pomp is actief</string>
     <string name="notconfigured">Niet ingesteld</string>
     <string name="loopsuspended">Loop pauzeren</string>
+    <string name="loop_suspended_by_dst">Loop onderbroken voor zomer/wintertijd (DST)</string>
     <string name="trend_arrow">Trendpijl</string>
     <string name="a11y_autosens_label">Autosens</string>
     <string name="required">nodig</string>
@@ -151,12 +155,17 @@
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="invalid">Ongeldig</string>
     <string name="login">Aanmelden</string>
+    <string name="logout">Uitloggen</string>
     <string name="prime_fill">Prime/Vul</string>
+    <string name="site_rotation">Site rotatie</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="stoptemptarget">Stop tijdelijk doel</string>
     <string name="closedloop">Closed loop</string>
     <string name="openloop">Open loop</string>
     <string name="lowglucosesuspend">Stop bij laag</string>
+    <string name="pump_disconnected">Pomp niet verbonden</string>
+    <string name="pump_suspended">Pomp is onderbroken</string>
+    <string name="mode_reverted">Modus teruggezet</string>
     <string name="dia">DIA</string>
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
@@ -215,6 +224,8 @@
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
     <string name="careportal_pump_site_change">Infuus wissel</string>
     <string name="cgm_sensor_insert">CGM Sens. ingebracht</string>
+    <string name="careportal_pump_site_management">Pomp sites</string>
+    <string name="careportal_cgm_site_management">CGM sites</string>
     <string name="careportal_cgmsensorstart">CGM Sens. Start</string>
     <string name="careportal_cgm_sensor_stop">CGM Sensor stoppen</string>
     <string name="careportal_dad_alert">Hulphond waarschuwing</string>
@@ -230,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Pomp bat. wissel</string>
     <string name="temporary_target">Tijdelijk streefdoel</string>
+    <string name="running_mode">Actieve modus</string>
     <string name="careportal_temporarytargetvalue">Tijdelijk streefdoel</string>
     <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
     <string name="boluswizard">Bolus wizard</string>
@@ -247,6 +259,39 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Opnemen</string>
+    <string name="location_front_right_upper_chest">Borst rechts</string>
+    <string name="location_front_left_upper_chest">Borst links</string>
+    <string name="location_side_right_upper_arm">Rechter bovenarm</string>
+    <string name="location_side_left_upper_arm">Linker bovenarm</string>
+    <string name="location_back_right_upper_arm">Rechter bovenarm achterzijde</string>
+    <string name="location_back_left_upper_arm">Linker bovenarm achterzijde</string>
+    <string name="location_side_right_upper_abdomen">Rechterbovenkant buik buitenzijde</string>
+    <string name="location_side_left_upper_abdomen">Linker bovenkant buik buitenzijde</string>
+    <string name="location_side_right_lower_abdomen">Rechter onderkant buik buitenzijde</string>
+    <string name="location_side_left_lower_abdomen">Linker onderkant buik buitenzijde</string>
+    <string name="location_front_right_upper_abdomen">Rechter bovenkant buik voorzijde</string>
+    <string name="location_front_left_upper_abdomen">Linker bovenkant buik voorzijde</string>
+    <string name="location_front_right_lower_abdomen">Rechter onderkant buik voorzijde</string>
+    <string name="location_front_left_lower_abdomen">Linker onderkant buik voorzijde</string>
+    <string name="location_back_right_buttock">Rechterbil</string>
+    <string name="location_back_left_buttock">Linkerbil</string>
+    <string name="location_side_right_upper_thigh">Buitenzijde bovenbeen hoog, rechts</string>
+    <string name="location_side_left_upper_thigh">Buitenzijde bovenbeen hoog, links</string>
+    <string name="location_side_right_lower_thigh">Buitenzijde bovenbeen laag, rechts</string>
+    <string name="location_side_left_lower_thigh">Buitenzijde bovenbeen laag, links</string>
+    <string name="location_front_right_upper_thigh">Voorzijde bovenbeen hoog, rechts</string>
+    <string name="location_front_left_upper_thigh">Voorzijde bovenbeen hoog, links</string>
+    <string name="location_front_right_lower_thigh">Voorzijde bovenbeen laag, rechts</string>
+    <string name="location_front_left_lower_thigh">Voorzijde bovenbeen laag, links</string>
+    <string name="arrow_up">Omhoog</string>
+    <string name="arrow_up_right">Omhoog rechts</string>
+    <string name="arrow_right">Rechts</string>
+    <string name="arrow_down_right">Omlaag rechts</string>
+    <string name="arrow_down">Omlaag</string>
+    <string name="arrow_down_left">Omlaag links</string>
+    <string name="arrow_left">Links</string>
+    <string name="arrow_up_left">Omhoog links</string>
+    <string name="arrow_center">Midden</string>
     <!--    Command-->
     <string name="connectiontimedout">Connectie verlopen</string>
     <!--    PumpEnactResult-->
@@ -292,6 +337,8 @@
     <string name="uel_lgs_loop_mode">LGS LOOP MODUS</string>
     <string name="uel_open_loop_mode">OPEN LOOP MODUS</string>
     <string name="uel_loop_disabled">LOOP UITGESCHAKELD</string>
+    <string name="uel_loop_resumed">LOOP GEACTIVEERD</string>
+    <string name="uel_pump_running">POMP ACTIEF</string>
     <string name="uel_reconnect">VERBIND OPNIEW</string>
     <string name="uel_disconnect">VERBINDING VERBREKEN</string>
     <string name="uel_resume">HERVATTEN</string>
@@ -304,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">ANNULEER VERLENGDE BOLUS</string>
     <string name="uel_cancel_tt">STOP TIJDELIJK DOEL</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">SENSOR LOCATIE</string>
     <string name="uel_site_change">INFUUSPLEK WIJZIGING</string>
+    <string name="uel_site_location">SITE LOCATIE</string>
     <string name="uel_reservoir_change">RESERVOIRWISSEL</string>
     <string name="uel_calibration">KALIBREREN</string>
     <string name="uel_prime_bolus">VUL BOLUS</string>
@@ -367,6 +416,9 @@
     <string name="uel_loop_change">LOOP VERANDERD</string>
     <string name="uel_loop_removed">LOOP VERWIJDERD</string>
     <string name="uel_other">OVERIGE</string>
+    <string name="uel_running_mode">BEDRIJFSMODE</string>
+    <string name="uel_running_mode_removed">BEDRIJFSMODE VERWIJDERD</string>
+    <string name="uel_running_mode_updarted">BEDRIJFSMODE GEWIJZIGD</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profiel laag doel</string>
     <string name="profile_high_target">Profiel hoog doel</string>
@@ -591,4 +643,5 @@
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Basaal</b>: %1$.2f%% (%2$.2f E/h)<br><b>Duur</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Basaal</b>: %1$.2f E/h (%2$.2f%%) <br><b>Duur</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS speelt geluid"</string>
 </resources>
