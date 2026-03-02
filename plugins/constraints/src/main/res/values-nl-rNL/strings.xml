@@ -11,6 +11,7 @@
     <string name="application_expired">Applicatie is verlopen</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
+    <string name="version_expire">Versie %1$s vervalt op %2$s en schakelt dan naar LGS modus</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Herberekende data gebruikt</string>
