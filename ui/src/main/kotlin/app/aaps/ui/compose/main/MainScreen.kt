@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.ui.compose.AapsFab
@@ -99,6 +100,11 @@ fun MainScreen(
     onNotificationActionClick: (AapsNotification) -> Unit,
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
+    // Pump setup
+    showPumpSetup: Boolean = false,
+    pumpSetupIcon: ImageVector? = null,
+    pumpSetupLabel: String? = null,
+    onPumpSetupClick: () -> Unit = {},
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -180,6 +186,10 @@ fun MainScreen(
                         showAutomationSheet = true
                     },
                     automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
+                    showPumpSetup = showPumpSetup,
+                    pumpSetupIcon = pumpSetupIcon,
+                    pumpSetupLabel = pumpSetupLabel,
+                    onPumpSetupClick = onPumpSetupClick,
                     permissionsMissing = permissionsMissing,
                     onPermissionsClick = onPermissionsClick,
                 )

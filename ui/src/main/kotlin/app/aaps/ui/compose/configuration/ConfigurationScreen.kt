@@ -150,9 +150,9 @@ private fun CategoryRow(
     val plugin = if (category.enabledCount == 1) category.enabledPlugins.firstOrNull() else null
     val composeIcon = plugin?.pluginDescription?.icon
     val defaultCategoryIcon = when (category.type) {
-        PluginType.SYNC    -> Icons.Default.Sync
+        PluginType.SYNC -> Icons.Default.Sync
         PluginType.GENERAL -> Icons.Default.Extension
-        else               -> Icons.Default.Settings
+        else -> Icons.Default.Settings
     }
     val iconPainter =
         if (composeIcon != null) rememberVectorPainter(composeIcon)
@@ -351,6 +351,6 @@ private fun ConfigPluginItem(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 2.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable { onPluginClick() }
+            .then(if (isEnabled) Modifier.clickable { onPluginClick() } else Modifier)
     )
 }

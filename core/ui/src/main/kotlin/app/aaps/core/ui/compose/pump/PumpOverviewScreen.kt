@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.StatusLevel
@@ -32,9 +31,17 @@ import app.aaps.core.ui.compose.statusLevelToColor
 /**
  * Shared pump overview screen used by all pump plugins.
  *
+ * Layout order:
+ * 1. Status banner (connection/pump state)
+ * 2. Queue status (if present)
+ * 3. Info rows card (label:value pairs)
+ * 4. Custom content slot (pump image, RT display, etc.)
+ * 5. Primary action buttons (Refresh, Reset Alarms, etc.)
+ * 6. Management action buttons (Change Patch, Pair, etc.)
+ *
  * @param state The pump overview UI state produced by the per-pump ViewModel.
  * @param modifier Modifier for the root layout.
- * @param customContent Optional composable slot for pump-specific content (e.g. ComboV2 RT display frame).
+ * @param customContent Optional composable slot for pump-specific content.
  */
 @Composable
 fun PumpOverviewScreen(
@@ -49,67 +56,55 @@ fun PumpOverviewScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Status banner
-        state.statusBanner?.let { banner ->
-            StatusBannerRow(banner)
-        }
+        // 1. Status banner
+        state.statusBanner?.let { StatusBannerRow(it) }
 
-        // Queue status
-        state.queueStatus?.let { queue ->
-            QueueStatusRow(queue)
-        }
+        // 2. Queue status
+        state.queueStatus?.let { QueueStatusRow(it) }
 
-        // Info section — pass all rows so AnimatedVisibility can animate in/out
+        // 3. Info rows
         if (state.infoRows.isNotEmpty()) {
             InfoSection(state.infoRows)
         }
 
-        // Custom content slot (e.g. ComboV2 RT display frame)
+        // 4. Custom content (pump image, etc.)
         customContent?.invoke()
 
-        // Primary action buttons
-        val visiblePrimary = state.primaryActions.filter { it.visible }
-        if (visiblePrimary.isNotEmpty()) {
-            ActionButtonsGrid(visiblePrimary)
-        }
+        // 5. Primary actions
+        ActionButtons(state.primaryActions)
 
-        // Management action buttons
-        val visibleManagement = state.managementActions.filter { it.visible }
-        if (visibleManagement.isNotEmpty()) {
-            ActionButtonsGrid(visibleManagement)
-        }
+        // 6. Management actions
+        ActionButtons(state.managementActions)
     }
 }
 
+// ── Status banner ──────────────────────────────────────────────────────────
+
 @Composable
 private fun StatusBannerRow(banner: StatusBanner) {
-    val backgroundColor = when (banner.level) {
-        StatusLevel.CRITICAL    -> MaterialTheme.colorScheme.errorContainer
-        StatusLevel.WARNING     -> MaterialTheme.colorScheme.tertiaryContainer
-        StatusLevel.NORMAL      -> MaterialTheme.colorScheme.primaryContainer
-        StatusLevel.UNSPECIFIED -> MaterialTheme.colorScheme.surfaceContainerHigh
-    }
-    val textColor = when (banner.level) {
-        StatusLevel.CRITICAL    -> MaterialTheme.colorScheme.onErrorContainer
-        StatusLevel.WARNING     -> MaterialTheme.colorScheme.onTertiaryContainer
-        StatusLevel.NORMAL      -> MaterialTheme.colorScheme.onPrimaryContainer
-        StatusLevel.UNSPECIFIED -> MaterialTheme.colorScheme.onSurface
+    val (bgColor, fgColor) = when (banner.level) {
+        StatusLevel.CRITICAL    -> MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
+        StatusLevel.WARNING     -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
+        StatusLevel.NORMAL      -> MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
+        StatusLevel.UNSPECIFIED -> MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
     }
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
-        color = backgroundColor
+        color = bgColor
     ) {
         Text(
             text = banner.text,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
-            color = textColor
+            color = fgColor
         )
     }
 }
+
+// ── Queue status ───────────────────────────────────────────────────────────
 
 @Composable
 private fun QueueStatusRow(queue: String) {
@@ -127,16 +122,16 @@ private fun QueueStatusRow(queue: String) {
     }
 }
 
+// ── Info section ───────────────────────────────────────────────────────────
+
 @Composable
 private fun InfoSection(rows: List<PumpInfoRow>) {
-    AapsCard(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    AapsCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             rows.forEachIndexed { index, row ->
                 AnimatedVisibility(visible = row.visible) {
                     Column {
-                        PumpInfoRowItem(row)
+                        InfoRowItem(row)
                         if (index < rows.lastIndex) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 8.dp),
@@ -151,9 +146,7 @@ private fun InfoSection(rows: List<PumpInfoRow>) {
 }
 
 @Composable
-private fun PumpInfoRowItem(row: PumpInfoRow) {
-    val valueColor = statusLevelToColor(row.level)
-
+private fun InfoRowItem(row: PumpInfoRow) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -169,87 +162,43 @@ private fun PumpInfoRowItem(row: PumpInfoRow) {
             text = row.value,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
-            color = valueColor,
+            color = statusLevelToColor(row.level),
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1.2f)
         )
     }
 }
 
+// ── Action buttons ─────────────────────────────────────────────────────────
+
 @Composable
-private fun ActionButtonsGrid(actions: List<PumpAction>) {
-    actions.chunked(2).forEach { rowActions ->
+private fun ActionButtons(actions: List<PumpAction>) {
+    val visible = actions.filter { it.visible }
+    if (visible.isEmpty()) return
+
+    visible.chunked(2).forEach { row ->
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            rowActions.forEach { action ->
-                TileButton(
-                    text = action.label,
-                    iconRes = action.iconRes,
+            row.forEach { action ->
+                FilledTonalButton(
                     onClick = action.onClick,
                     enabled = action.enabled,
                     modifier = Modifier.weight(1f)
-                )
+                ) {
+                    Icon(
+                        painter = painterResource(id = action.iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(text = action.label)
+                }
             }
-            if (rowActions.size == 1) {
+            if (row.size == 1) {
                 Spacer(modifier = Modifier.weight(1f))
             }
-        }
-    }
-}
-
-@Composable
-private fun TileButton(
-    text: String,
-    iconRes: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true
-) {
-    val containerColor = if (enabled)
-        MaterialTheme.colorScheme.surfaceContainerHigh
-    else
-        MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
-    val contentColor = if (enabled)
-        MaterialTheme.colorScheme.onSurface
-    else
-        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-    val iconColor = if (enabled)
-        MaterialTheme.colorScheme.primary
-    else
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
-
-    Surface(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = modifier.height(96.dp),
-        shape = MaterialTheme.shapes.extraLarge,
-        color = containerColor,
-        contentColor = contentColor,
-        tonalElevation = 2.dp
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 8.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = iconRes),
-                contentDescription = null,
-                modifier = Modifier.size(28.dp),
-                tint = iconColor
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = text,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Center
-            )
         }
     }
 }

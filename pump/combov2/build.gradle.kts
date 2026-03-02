@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     id("kotlin-android")
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -43,8 +43,6 @@ dependencies {
     api(platform(libs.kotlinx.serialization.bom))
     runtimeOnly(libs.kotlinx.serialization.core)
 
-    kapt(libs.com.google.dagger.compiler)
-    kapt(libs.com.google.dagger.android.processor)
-    // Workaround for Kotlin 2.3.0: Dagger bundles older kotlin-metadata-jvm that doesn't support 2.3.0 metadata
-    kapt(libs.kotlin.metadata.jvm)
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
 }

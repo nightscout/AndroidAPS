@@ -2,31 +2,16 @@ package app.aaps.pump.medtrum.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.ui.compose.ViewModelFactory
+import app.aaps.core.ui.compose.ViewModelKey
+import app.aaps.pump.medtrum.compose.MedtrumOverviewViewModel
+import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
+import app.aaps.pump.medtrum.services.MedtrumService
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import app.aaps.pump.medtrum.services.MedtrumService
-import app.aaps.pump.medtrum.ui.MedtrumActivateCompleteFragment
-import app.aaps.pump.medtrum.ui.MedtrumActivateFragment
-import app.aaps.pump.medtrum.ui.MedtrumActivity
-import app.aaps.pump.medtrum.ui.MedtrumAttachPatchFragment
-import app.aaps.pump.medtrum.ui.MedtrumDeactivatePatchFragment
-import app.aaps.pump.medtrum.ui.MedtrumDeactivationCompleteFragment
-import app.aaps.pump.medtrum.ui.MedtrumOverviewFragment
-import app.aaps.pump.medtrum.ui.MedtrumPreparePatchConnectFragment
-import app.aaps.pump.medtrum.ui.MedtrumPreparePatchFragment
-import app.aaps.pump.medtrum.ui.MedtrumPrimeCompleteFragment
-import app.aaps.pump.medtrum.ui.MedtrumPrimeFragment
-import app.aaps.pump.medtrum.ui.MedtrumPrimingFragment
-import app.aaps.pump.medtrum.ui.MedtrumRetryActivationConnectFragment
-import app.aaps.pump.medtrum.ui.MedtrumRetryActivationFragment
-import app.aaps.pump.medtrum.ui.MedtrumStartDeactivationFragment
-import app.aaps.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
-import app.aaps.pump.medtrum.ui.viewmodel.MedtrumViewModel
-import app.aaps.core.ui.compose.ViewModelFactory
-import app.aaps.core.ui.compose.ViewModelKey
 import javax.inject.Provider
 
 @Module(includes = [MedtrumCommModule::class])
@@ -47,76 +32,15 @@ abstract class MedtrumModule {
     @IntoMap
     @MedtrumPluginQualifier
     @ViewModelKey(MedtrumOverviewViewModel::class)
-    internal abstract fun bindsMedtrumOverviewViewmodel(viewModel: MedtrumOverviewViewModel): ViewModel
+    internal abstract fun bindsMedtrumOverviewViewModel(viewModel: MedtrumOverviewViewModel): ViewModel
 
     @Binds
     @IntoMap
     @MedtrumPluginQualifier
-    @ViewModelKey(MedtrumViewModel::class)
-    internal abstract fun bindsMedtrumViewModel(viewModel: MedtrumViewModel): ViewModel
-
-    // FRAGMENTS
-    @ContributesAndroidInjector
-    abstract fun contributesMedtrumOverviewFragment(): MedtrumOverviewFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesStartDeactivationFragment(): MedtrumStartDeactivationFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesDeactivatePatchFragment(): MedtrumDeactivatePatchFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesDeactivationCompleteFragment(): MedtrumDeactivationCompleteFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesPreparePatchFragment(): MedtrumPreparePatchFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesPreparePatchConnectFragment(): MedtrumPreparePatchConnectFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesRetryActivationFragment(): MedtrumRetryActivationFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesRetryActivationConnectFragment(): MedtrumRetryActivationConnectFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesPrimeFragment(): MedtrumPrimeFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesPrimeCompleteFragment(): MedtrumPrimeCompleteFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesPrimingFragment(): MedtrumPrimingFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesAttachPatchFragment(): MedtrumAttachPatchFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesActivateFragment(): MedtrumActivateFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesActivateCompleteFragment(): MedtrumActivateCompleteFragment
-
-    // ACTIVITIES
-    @ContributesAndroidInjector
-    abstract fun contributesMedtrumActivity(): MedtrumActivity
+    @ViewModelKey(MedtrumPatchViewModel::class)
+    internal abstract fun bindsMedtrumPatchViewModel(viewModel: MedtrumPatchViewModel): ViewModel
 
     // SERVICE
     @ContributesAndroidInjector
     abstract fun contributesMedtrumService(): MedtrumService
-
 }

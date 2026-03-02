@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BlePreCheckResult
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.utils.extensions.safeEnable
 import javax.inject.Inject
@@ -27,7 +28,6 @@ class BlePreCheckImpl @Inject constructor(
         private const val PERMISSION_REQUEST_BLUETOOTH = 30242 // arbitrary.
 
     }
-
 
     override fun prerequisitesCheck(activity: AppCompatActivity, additionalPermissions: List<String>?): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -56,10 +56,29 @@ class BlePreCheckImpl @Inject constructor(
         return true
     }
 
+    override fun checkBleReady(context: Context): BlePreCheckResult {
+        if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            return BlePreCheckResult.BLE_NOT_SUPPORTED
+        }
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return BlePreCheckResult.PERMISSIONS_MISSING
+        }
+
+        val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+        bluetoothAdapter?.safeEnable(3000)
+        if (bluetoothAdapter?.isEnabled != true) {
+            return BlePreCheckResult.BLE_NOT_ENABLED
+        }
+
+        return BlePreCheckResult.READY
+    }
 
     private fun checkAdditionalPermissions(additionalPermissions: List<String>?, activity: AppCompatActivity): Boolean {
 
-        if (additionalPermissions==null || additionalPermissions.isEmpty()) {
+        if (additionalPermissions.isNullOrEmpty()) {
             aapsLogger.debug(LTag.PUMP, "No additional permissions found !")
             return true
         }

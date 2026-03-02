@@ -8,8 +8,19 @@ import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
@@ -56,12 +70,16 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.ProtectionHost
+import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
@@ -312,6 +330,12 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
                         val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
 
+                        // Pump setup button in bottom bar
+                        val pumpPlugin = activePlugin.activePump as PluginBase
+                        val showPumpSetup = !activePlugin.activePump.isInitialized() && pumpPlugin.hasComposeContent()
+                        val pumpSetupIcon = if (showPumpSetup) pumpPlugin.pluginDescription.icon ?: Pump else null
+                        val pumpSetupLabel = if (showPumpSetup) stringResource(pumpPlugin.pluginDescription.pluginName) else null
+
                         val onProfileManagement: () -> Unit = {
                             protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                                 if (result == ProtectionResult.GRANTED) {
@@ -534,6 +558,12 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             },
                             autoShowNotificationSheet = _autoShowNotifications.value,
                             onAutoShowConsumed = { _autoShowNotifications.value = false },
+                            showPumpSetup = showPumpSetup,
+                            pumpSetupIcon = pumpSetupIcon,
+                            pumpSetupLabel = pumpSetupLabel,
+                            onPumpSetupClick = {
+                                navController.navigate(AppRoute.PumpSetup.route)
+                            },
                             permissionsMissing = permState.hasAnyMissing,
                             onPermissionsClick = {
                                 permissionsViewModel.showSheet()
@@ -834,6 +864,75 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             builtInSearchables = builtInSearchables,
                             onBackClick = { navController.popBackStack() }
                         )
+                    }
+
+                    composable(AppRoute.PumpSetup.route) {
+                        val pumpPlugin = activePlugin.activePump as PluginBase
+                        val composeContent = pumpPlugin.getComposeContent()
+                        if (composeContent is ComposablePluginContent) {
+                            val navigateBack: @Composable () -> Unit = {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                    )
+                                }
+                            }
+                            val settingsAction: @Composable RowScope.() -> Unit = {
+                                IconButton(onClick = {
+                                    protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                                        if (result == ProtectionResult.GRANTED) {
+                                            navController.navigate(
+                                                AppRoute.PluginPreferences.createRoute(pumpPlugin.javaClass.simpleName)
+                                            )
+                                        }
+                                    }
+                                }) {
+                                    Icon(
+                                        Icons.Filled.Settings,
+                                        contentDescription = stringResource(app.aaps.core.ui.R.string.settings)
+                                    )
+                                }
+                            }
+                            var toolbarConfig by remember {
+                                mutableStateOf(
+                                    ToolbarConfig(
+                                        title = pumpPlugin.name,
+                                        navigationIcon = navigateBack,
+                                        actions = settingsAction
+                                    )
+                                )
+                            }
+                            Scaffold(
+                                topBar = {
+                                    AapsTopAppBar(
+                                        title = { Text(toolbarConfig.title) },
+                                        navigationIcon = { toolbarConfig.navigationIcon() },
+                                        actions = { toolbarConfig.actions(this) }
+                                    )
+                                }
+                            ) { paddingValues ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(paddingValues)
+                                ) {
+                                    composeContent.Render(
+                                        setToolbarConfig = { config -> toolbarConfig = config },
+                                        onNavigateBack = { navController.popBackStack() },
+                                        onSettings = {
+                                            protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                                                if (result == ProtectionResult.GRANTED) {
+                                                    navController.navigate(
+                                                        AppRoute.PluginPreferences.createRoute(pumpPlugin.javaClass.simpleName)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     composable(AppRoute.Configuration.route) {

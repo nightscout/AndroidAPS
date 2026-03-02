@@ -65,6 +65,7 @@ sealed class AppRoute(val route: String) {
         }
     }
 
+    data object PumpSetup : AppRoute("pump_setup")
     data object Configuration : AppRoute("configuration")
     data object ImportSettings : AppRoute("import_settings/{source}") {
 

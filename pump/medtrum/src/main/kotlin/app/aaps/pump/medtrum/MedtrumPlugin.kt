@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -26,6 +27,8 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Medtrum
@@ -58,6 +61,8 @@ import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
+import app.aaps.pump.medtrum.compose.MedtrumComposeContent
+import app.aaps.pump.medtrum.di.MedtrumPluginQualifier
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
 import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
@@ -66,7 +71,6 @@ import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import app.aaps.pump.medtrum.ui.MedtrumOverviewFragment
 import app.aaps.pump.medtrum.util.MedtrumSnUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -92,16 +96,25 @@ class MedtrumPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val protectionCheck: ProtectionCheck,
+    private val blePreCheck: BlePreCheck,
+    @MedtrumPluginQualifier private val viewModelFactory: ViewModelProvider.Factory
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(MedtrumOverviewFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_medtrum_128)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.medtrum_pump_description),
+        .description(R.string.medtrum_pump_description)
+        .composeContent { _ ->
+            MedtrumComposeContent(
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck,
+                viewModelFactory = viewModelFactory
+            )
+        },
     ownPreferences = listOf(
         MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java,
         MedtrumIntNonKey::class.java, MedtrumLongNonKey::class.java, MedtrumStringNonKey::class.java, MedtrumDoubleNonKey::class.java

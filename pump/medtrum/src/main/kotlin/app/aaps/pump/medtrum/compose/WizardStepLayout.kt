@@ -1,0 +1,90 @@
+package app.aaps.pump.medtrum.compose
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+@Immutable
+data class WizardButton(
+    val text: String,
+    val onClick: () -> Unit,
+    val enabled: Boolean = true,
+    val loading: Boolean = false
+)
+
+@Composable
+fun WizardStepLayout(
+    primaryButton: WizardButton? = null,
+    secondaryButton: WizardButton? = null,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
+        // Scrollable content area
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            content = content
+        )
+
+        // Bottom buttons pinned
+        if (primaryButton != null || secondaryButton != null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                secondaryButton?.let { btn ->
+                    OutlinedButton(
+                        onClick = btn.onClick,
+                        enabled = btn.enabled && !btn.loading,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(btn.text)
+                    }
+                }
+                primaryButton?.let { btn ->
+                    Button(
+                        onClick = btn.onClick,
+                        enabled = btn.enabled && !btn.loading,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        if (btn.loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(btn.text)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

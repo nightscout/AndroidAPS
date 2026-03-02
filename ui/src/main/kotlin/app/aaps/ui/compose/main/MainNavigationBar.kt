@@ -15,6 +15,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.icons.IcAutomation
@@ -29,6 +30,10 @@ fun MainNavigationBar(
     quickWizardCount: Int = 0,
     onAutomationClick: () -> Unit = {},
     automationCount: Int = 0,
+    showPumpSetup: Boolean = false,
+    pumpSetupIcon: ImageVector? = null,
+    pumpSetupLabel: String? = null,
+    onPumpSetupClick: () -> Unit = {},
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {}
 ) {
@@ -102,6 +107,27 @@ fun MainNavigationBar(
             label = { Text(text = stringResource(CoreUiR.string.manage)) },
             colors = navColors
         )
+
+        // Pump setup (visible only when pump not initialized and has compose content)
+        if (showPumpSetup && pumpSetupIcon != null && pumpSetupLabel != null) {
+            NavigationBarItem(
+                selected = false,
+                onClick = onPumpSetupClick,
+                icon = {
+                    BadgedBox(
+                        badge = { Badge { Text("!") } }
+                    ) {
+                        Icon(
+                            imageVector = pumpSetupIcon,
+                            contentDescription = pumpSetupLabel,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                label = { Text(text = pumpSetupLabel) },
+                colors = navColors
+            )
+        }
 
         // Permissions (visible only when some are missing)
         if (permissionsMissing) {
