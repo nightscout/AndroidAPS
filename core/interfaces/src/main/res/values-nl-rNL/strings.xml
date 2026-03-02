@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Toedienen van %1$.2fE</string>
+    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E toegediend</string>
     <string name="bolus_delivered_successfully">Bolus van %1$.2fE succesvol toegediend</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
