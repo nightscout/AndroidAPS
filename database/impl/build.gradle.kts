@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
     kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("test-module-dependencies")

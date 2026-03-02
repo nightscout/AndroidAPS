@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
     id("kotlin-parcelize")
     id("android-module-dependencies")
     id("all-open-dependencies")

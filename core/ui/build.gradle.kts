@@ -3,7 +3,6 @@ import kotlin.math.min
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
-    id("kotlin-android")
     id("android-module-dependencies")
 }
 

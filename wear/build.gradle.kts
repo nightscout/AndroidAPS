@@ -4,7 +4,6 @@ import java.util.Date
 plugins {
     alias(libs.plugins.ksp)
     id("com.android.application")
-    id("kotlin-android")
     kotlin("plugin.serialization")
     id("android-app-dependencies")
     id("test-app-dependencies")
@@ -100,6 +99,7 @@ android {
     }
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
 }
 

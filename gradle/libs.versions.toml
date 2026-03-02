@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "8.13.2"
+gradlePlugin = "9.0.1"
 googleServices = "4.4.4"
 kotlin = "2.3.10"
 wearable = "2.9.0"
@@ -18,11 +18,11 @@ annotation = "1.9.1"
 
 # Compose
 activityCompose = "1.12.4"
-composeBom = "2026.02.00"
+composeBom = "2026.02.01"
 navigationCompose = "2.9.7"
 lifecycleRuntimeKtx = "2.10.0"
 vico = "3.0.1"
-composeUi = "1.10.3"
+composeUi = "1.10.4"
 
 [plugins]
 android-library = { id = "com.android.library" }
@@ -30,7 +30,6 @@ klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.0.1" }
 moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [libraries]
@@ -43,7 +42,7 @@ com-google-dagger-android-processor = { group = "com.google.dagger", name = "dag
 com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.6" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.9.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.10.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
@@ -117,14 +116,14 @@ androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version =
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version = "2.3.0" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work" }
-androidx-wear = { group = "androidx.wear", name = "wear", version = "1.3.0" }
+androidx-wear = { group = "androidx.wear", name = "wear", version = "1.4.0" }
 androidx-wear-tiles = { group = "androidx.wear.tiles", name = "tiles", version = "1.5.0" }
 androidx-wear-protolayout = { group = "androidx.wear.protolayout", name = "protolayout", version = "1.3.0" }
 androidx-wear-protolayout-expression = { group = "androidx.wear.protolayout", name = "protolayout-expression", version = "1.3.0" }
 androidx-wear-watchface = { group = "androidx.wear.watchface", name = "watchface", version = "1.2.1" }
-androidx-wear-watchface-complications-data = { group = "androidx.wear.watchface", name = "watchface-complications-data", version = "1.2.1" }
-androidx-wear-watchface-complications-datasource = { group = "androidx.wear.watchface", name = "watchface-complications-data-source", version = "1.2.1" }
-androidx-wear-watchface-complications-datasource-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version = "1.2.1" }
+androidx-wear-watchface-complications-data = { group = "androidx.wear.watchface", name = "watchface-complications-data", version = "1.3.0" }
+androidx-wear-watchface-complications-datasource = { group = "androidx.wear.watchface", name = "watchface-complications-data-source", version = "1.3.0" }
+androidx-wear-watchface-complications-datasource-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version = "1.3.0" }
 
 io-reactivex-rxjava3-rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version = "3.1.17" }
 io-reactivex-rxjava3-rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1" }

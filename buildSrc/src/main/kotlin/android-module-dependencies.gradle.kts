@@ -1,22 +1,18 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
 }
 
 android {
     compileSdk = Versions.compileSdk
     defaultConfig {
         minSdk = Versions.minSdk
-        @Suppress("DEPRECATION")
-        targetSdk = Versions.targetSdk
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         named("release") {
             isMinifyEnabled = false
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"))
+            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
         named("debug") {
             enableUnitTestCoverage = true
