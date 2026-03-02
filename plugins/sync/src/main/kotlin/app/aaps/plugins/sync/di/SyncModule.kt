@@ -53,6 +53,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 
 @Module(
@@ -62,7 +64,7 @@ import dagger.multibindings.IntoMap
         SMSCommunicatorModule::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class SyncModule {
 
@@ -92,6 +94,7 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesWatchUpdaterService(): DataLayerListenerServiceMobile
 
     @Module
+    @InstallIn(SingletonComponent::class)
     open class Provide {
 
         @Reusable
@@ -100,6 +103,7 @@ abstract class SyncModule {
     }
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Binding {
 
         @Binds fun bindProcessedDeviceStatusData(processedDeviceStatusDataImpl: ProcessedDeviceStatusDataImpl): ProcessedDeviceStatusData

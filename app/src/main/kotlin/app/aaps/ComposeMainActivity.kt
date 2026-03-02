@@ -2,10 +2,15 @@ package app.aaps
 
 import android.Manifest
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Box
@@ -47,6 +52,9 @@ import app.aaps.compose.navigation.AppRoute
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -58,8 +66,11 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -67,6 +78,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
@@ -88,8 +101,10 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
-import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
+import app.aaps.plugins.configuration.maintenance.PrefsFileContract
+import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
@@ -145,13 +160,21 @@ import app.aaps.ui.compose.wizardDialog.WizardDialogViewModel
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
+@AndroidEntryPoint
+class ComposeMainActivity : AppCompatActivity() {
 
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -169,6 +192,12 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
+
+    private var accessTree: ActivityResultLauncher<Uri?>? = null
+    private var callForPrefFile: ActivityResultLauncher<Void?>? = null
+    private var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
+    private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
+    private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
     // ViewModels
     @Inject lateinit var mainViewModel: MainViewModel
@@ -202,6 +231,44 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Theme switch listener (from base class)
+        disposable += rxBus.toObservable(EventThemeSwitch::class.java).subscribe { recreate() }
+
+        // Activity result launchers (from base class)
+        accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            uri?.let {
+                val lastPathSegment = uri.lastPathSegment ?: ""
+                val pathAfterColon = if (lastPathSegment.contains(":")) lastPathSegment.substringAfterLast(":") else lastPathSegment
+                val directoryName = pathAfterColon.substringAfterLast("/", pathAfterColon)
+                val managedSubdirectories = listOf("preferences", "extra", "exports", "temp")
+                if (managedSubdirectories.any { it.equals(directoryName, ignoreCase = true) }) {
+                    uiInteraction.showError(
+                        this,
+                        rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_selected),
+                        rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_message, directoryName)
+                    )
+                    return@registerForActivityResult
+                }
+                contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                preferences.put(StringKey.AapsDirectoryUri, uri.toString())
+            }
+        }
+        callForPrefFile = registerForActivityResult(PrefsFileContract()) {
+            importExportPrefs.doImportSharedPreferences(this)
+        }
+        callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
+            updateButtons()
+        }
+        requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val denied = mutableListOf<String>()
+            permissions.entries.forEach {
+                aapsLogger.info(LTag.CORE, "Permission ${it.key} ${it.value}")
+                if (!it.value) denied.add(it.key)
+            }
+            if (denied.isNotEmpty()) onPermissionResultDenied?.invoke(denied)
+            updateButtons()
+        }
 
         onPermissionResultDenied = { denied ->
             permissionsViewModel.onPermissionsDenied(
@@ -1035,14 +1102,31 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    override fun updateButtons() {
+    private fun updateButtons() {
         // Called by activity result callbacks (battery optimization, runtime permissions)
         permissionsViewModel.refresh(this)
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CloudConstants.CLOUD_IMPORT_REQUEST_CODE && resultCode == RESULT_OK) {
+            importExportPrefs.doImportSharedPreferences(this)
+        }
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         disposable.clear()
+        accessTree = null
+        callForPrefFile = null
+        callForBatteryOptimization = null
+        requestMultiplePermissions = null
+        onPermissionResultDenied = null
+        super.onDestroy()
     }
 
     private fun setupEventListeners() {

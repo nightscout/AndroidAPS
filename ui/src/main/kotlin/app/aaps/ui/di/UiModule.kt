@@ -32,13 +32,17 @@ import app.aaps.ui.widget.WidgetConfigureActivity
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 
 @Module(includes = [UiModule.Bindings::class])
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class UiModule {
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindOverviewDataCache(impl: OverviewDataCacheImpl): OverviewDataCache

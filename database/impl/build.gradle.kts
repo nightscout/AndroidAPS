@@ -38,9 +38,11 @@ dependencies {
 
     api(libs.com.google.dagger.android)
     api(libs.com.google.dagger.android.support)
+    api(libs.com.google.dagger.hilt.android)
 
     androidTestImplementation(libs.androidx.room.testing)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 }

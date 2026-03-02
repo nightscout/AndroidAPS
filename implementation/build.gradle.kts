@@ -44,5 +44,6 @@ dependencies {
     api(libs.androidx.lifecycle.runtime.compose)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

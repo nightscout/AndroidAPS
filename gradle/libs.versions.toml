@@ -19,6 +19,7 @@ annotation = "1.9.1"
 # Compose
 activityCompose = "1.12.4"
 composeBom = "2026.02.01"
+hiltNavigationCompose = "1.2.0"
 navigationCompose = "2.9.7"
 lifecycleRuntimeKtx = "2.10.0"
 vico = "3.0.1"
@@ -28,6 +29,7 @@ composeUi = "1.10.4"
 android-library = { id = "com.android.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.0.1" }
 moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -40,6 +42,8 @@ com-google-dagger-compiler = { group = "com.google.dagger", name = "dagger-compi
 com-google-dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
 com-google-dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
 com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
+com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
+com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.6" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.10.0" }
@@ -188,6 +192,7 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 com-patrykandpatrick-vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
 com-patrykandpatrick-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }

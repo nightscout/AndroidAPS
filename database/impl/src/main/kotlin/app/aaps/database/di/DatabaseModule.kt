@@ -17,10 +17,13 @@ import app.aaps.database.entities.TABLE_THERAPY_EVENTS
 import app.aaps.database.entities.TABLE_USER_ENTRY
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 open class DatabaseModule {
 
     @DbFileName

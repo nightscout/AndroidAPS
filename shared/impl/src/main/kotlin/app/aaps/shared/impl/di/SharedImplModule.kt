@@ -17,12 +17,15 @@ import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module(
     includes = [
     ]
 )
+@InstallIn(SingletonComponent::class)
 open class SharedImplModule {
 
     @Provides

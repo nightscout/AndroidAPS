@@ -18,10 +18,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
 @Module(includes = [OmnipodErosHistoryModule::class])
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class OmnipodErosModule {
 

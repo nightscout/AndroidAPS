@@ -23,9 +23,12 @@ import app.aaps.pump.omnipod.dash.ui.wizard.deactivation.viewmodel.info.DashPodD
 import app.aaps.pump.omnipod.dash.ui.wizard.deactivation.viewmodel.info.DashStartPodDeactivationViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.migration.DisableInstallInCheck
 import dagger.multibindings.IntoMap
 
+// Installed into @ContributesAndroidInjector subcomponent, not SingletonComponent.
 @Module
+@DisableInstallInCheck
 @Suppress("unused")
 abstract class OmnipodDashWizardViewModelsModule {
     // #### VIEW MODELS ############################################################################

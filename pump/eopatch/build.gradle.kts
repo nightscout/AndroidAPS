@@ -32,5 +32,6 @@ dependencies {
     api(libs.com.jakewharton.rx3.replaying.share)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

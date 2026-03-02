@@ -35,6 +35,7 @@ dependencies {
     api(libs.androidx.compose.material.icons.extended)
     api(libs.androidx.compose.runtime)
     api(libs.androidx.lifecycle.runtime.compose)
+    api(libs.androidx.hilt.navigation.compose)
     api(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     api(libs.androidx.core)
@@ -43,5 +44,6 @@ dependencies {
     api(libs.com.squareup.okhttp3.okhttp)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

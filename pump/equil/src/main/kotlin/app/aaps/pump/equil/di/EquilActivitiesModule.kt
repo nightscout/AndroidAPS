@@ -17,8 +17,11 @@ import app.aaps.pump.equil.ui.pair.EquilPairFragmentBase
 import app.aaps.pump.equil.ui.pair.EquilPairSerialNumberFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class EquilActivitiesModule {
 

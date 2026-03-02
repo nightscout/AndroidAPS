@@ -14,11 +14,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import javax.inject.Provider
 
 @Module(includes = [MedtrumCommModule::class])
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class MedtrumModule {
 

@@ -8,9 +8,12 @@ Migrate 26 ViewModels in `ComposeMainActivity` from plain Dagger `@Inject` field
 Legacy XML Activities/Fragments/Services/Receivers stay on `dagger.android` — no changes needed.
 Hilt and `dagger.android` coexist: Hilt auto-provides `DispatchingAndroidInjector<Any>`.
 
-## Status: BLOCKED — Databinding vs JavaPoet conflict
+## Status: Phases 0-3 COMPLETE — Hilt infrastructure in place
 
-### The Blocker
+Phases 0-3 (Gradle setup, @InstallIn, @HiltAndroidApp, @AndroidEntryPoint) are done.
+Full build succeeds. Next: Phase 4 (convert ViewModels to @HiltViewModel).
+
+### Previous Blocker (RESOLVED)
 
 The **Hilt Gradle plugin** requires `com.squareup:javapoet:1.13.0` at runtime.
 AGP's `androidx.databinding:databinding-compiler-common` (pulled in by `dataBinding = true`)
@@ -208,14 +211,40 @@ Remove 20 `@Inject lateinit var` VM fields from Activity.
 
 ---
 
-## Key Findings from Attempt
+## Key Findings
+
+### AGP 9 + Dagger 2.59.2 works with Hilt
+
+With AGP 9.0.1 and no databinding, Dagger 2.59.2 Hilt plugin works correctly.
 
 ### Hilt plugin compatibility matrix
 
 | Dagger | Min AGP | JavaPoet needed | Works with databinding? |
 |--------|---------|-----------------|------------------------|
 | 2.58   | 8.x     | 1.13.0          | NO — javapoet conflict |
-| 2.59+  | 9.0.0+  | 1.13.0          | Unknown (AGP 9 has own databinding issues) |
+| 2.59+  | 9.0.0+  | 1.13.0          | YES (no databinding after migration) |
+
+### Every library module needs `ksp(hilt-compiler)`
+
+Hilt discovers `@InstallIn` modules via generated metadata. Each module must have
+`ksp(libs.com.google.dagger.hilt.compiler)` alongside `ksp(libs.com.google.dagger.compiler)`.
+Without it, the aggregating task can't find bindings (88 MissingBinding errors).
+
+### `@ContributesAndroidInjector` subcomponent modules must NOT have `@InstallIn`
+
+Modules used as `modules = [...]` in `@ContributesAndroidInjector` belong to the
+generated subcomponent, not `SingletonComponent`. Use `@DisableInstallInCheck` instead.
+Example: `OmnipodWizardModule`, `OmnipodDashWizardViewModelsModule`, `OmnipodErosWizardViewModelsModule`.
+
+### Test-only modules need `@DisableInstallInCheck`
+
+`TestDatabaseModule` provides a duplicate `AppDatabase` binding. It should not be in
+`SingletonComponent` — use `@DisableInstallInCheck` to exclude from Hilt.
+
+### `AndroidInjectionModule` must be explicitly included
+
+Unlike the old `AppComponent` which listed `AndroidInjectionModule::class`, Hilt doesn't
+auto-include it. Added it to `AppModule`'s `includes` for `dagger.android` compatibility.
 
 ### `enableAggregatingTask = false` is not viable
 
@@ -249,16 +278,8 @@ Has its own `DaggerApplication` + `WearComponent`. Completely separate, untouche
 
 ---
 
-## Prerequisites (must complete before starting)
+## Prerequisites (ALL COMPLETE)
 
-1. **Remove `dataBinding = true` from all modules:**
-   - `app/build.gradle.kts` — verify nothing uses databinding, then remove
-   - `pump/combov2/build.gradle.kts` — migrate layouts to Compose/viewBinding
-   - `pump/eopatch/build.gradle.kts` — migrate layouts to Compose/viewBinding
-   - `pump/medtrum/build.gradle.kts` — migrate layouts to Compose/viewBinding
-
-2. **Verify build succeeds without databinding** before starting Hilt migration
-
-3. **Consider Dagger version:**
-   - After databinding removal, Dagger 2.58 should work (no javapoet conflict)
-   - Alternatively, upgrade to latest Dagger if AGP 9 is also done
+1. ~~Remove `dataBinding = true` from all modules~~ — DONE (Compose migration)
+2. ~~AGP 9 upgrade~~ — DONE (AGP 9.0.1)
+3. ~~Dagger 2.59.2~~ — DONE

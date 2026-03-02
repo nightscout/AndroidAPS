@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.diaconn.DiaconnG8Plugin
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
@@ -17,6 +19,7 @@ import dagger.multibindings.IntoMap
         DiaconnLogUploaderModule::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class DiaconnG8Module {
 

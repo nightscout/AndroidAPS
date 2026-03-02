@@ -70,5 +70,6 @@ dependencies {
     androidTestImplementation(libs.com.garmin.connectiq) { artifact { type = "aar" } }
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

@@ -23,9 +23,12 @@ import app.aaps.pump.omnipod.eros.ui.wizard.deactivation.viewmodel.info.ErosPodD
 import app.aaps.pump.omnipod.eros.ui.wizard.deactivation.viewmodel.info.ErosStartPodDeactivationViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.migration.DisableInstallInCheck
 import dagger.multibindings.IntoMap
 
+// Installed into @ContributesAndroidInjector subcomponent, not SingletonComponent.
 @Module
+@DisableInstallInCheck
 @Suppress("unused")
 abstract class OmnipodErosWizardViewModelsModule {
     // #### VIEW MODELS ############################################################################

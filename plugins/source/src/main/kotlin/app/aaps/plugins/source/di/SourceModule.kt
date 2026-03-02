@@ -22,6 +22,8 @@ import app.aaps.plugins.source.compose.BgSourceViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 
 @Module(
@@ -29,7 +31,7 @@ import dagger.multibindings.IntoMap
         SourceModule.Bindings::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class SourceModule {
 
@@ -46,6 +48,7 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource

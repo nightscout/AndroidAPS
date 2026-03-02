@@ -22,6 +22,8 @@ import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Suppress("unused")
 @Module(
@@ -31,6 +33,7 @@ import dagger.android.ContributesAndroidInjector
         CloudStorageModule::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 abstract class ConfigurationModule {
 
     @ContributesAndroidInjector abstract fun contributesSingleFragmentActivity(): SingleFragmentActivity
@@ -45,6 +48,7 @@ abstract class ConfigurationModule {
     @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindPrefFileListProvider(prefFileListProviderImpl: FileListProviderImpl): FileListProvider
