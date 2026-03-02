@@ -434,6 +434,7 @@ fun BgGraphCompose(
                 verticalAxisPosition = Axis.Position.Vertical.End
             ),
             startAxis = VerticalAxis.rememberStart(
+                itemPlacer = VerticalAxis.ItemPlacer.step({ 1.0 }),
                 label = rememberTextComponent(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
