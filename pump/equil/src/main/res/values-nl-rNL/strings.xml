@@ -9,6 +9,7 @@
     <string name="equil_date_device">Laatste verbinding</string>
     <string name="equil_dressing">Vervang reservoir</string>
     <string name="equil_dressing_onkey_msg">De zuiger automatisch naar de bodem van het reservoir aan het verplaatsen. Deze zal automatisch stoppen in de eindstand. Klik op \'Stop\' om te onderbreken indien nodig.</string>
+    <string name="equil_finish">Beëindigen</string>
     <string name="equil_next">Volgende</string>
     <string name="equil_hint_dressing">Deze operatie zal de toediening van de insuline stopzetten en de zuiger van de pomp terugplaatsen naar de bodem van het reservoir!</string>
     <string name="equil_history">Geschiedenis</string>
@@ -148,6 +149,7 @@
     <string name="equil_set_pair_password">Instellen koppelwachtwoord</string>
     <string name="equil_hint1">Na het installeren van de pomp op het basisplaat, selecteer of de lucht uit de binnenste naald moet worden verwijderd.</string>
     <string name="equil_unbind">Apparaat ontkoppelen</string>
+    <string name="equil_device_unpaired">Apparaat niet gekoppeld</string>
     <string name="equil_assemble">Monteer de pomp, het gevulde reservoir en de opgeladen batterij</string>
     <string name="equil_devices_number">Voer nieuw pomp ID in</string>
     <string name="equil_insert">Prime het reservoir totdat er een druppel insuline aan de punt van de naald zichtbaar is</string>
@@ -159,4 +161,5 @@
     <string name="equil_pump_updated">Pomp bijgewerkt</string>
     <string name="equil_replace_reservoir">Het reservoir is leeg. Vervang het reservoir</string>
     <string name="error_mustbe6hexadidits">Moet 6 tekens bevatten uit ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Ontkoppel opdracht is mislukt. Pomp wordt toch verwijderd. Wachtwoord ingesteld tijdens het koppelen wordt niet van de pomp verwijderd.</string>
 </resources>
