@@ -3,12 +3,14 @@ package app.aaps.plugins.sync.openhumans.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 internal class OHLoginViewModel @Inject constructor(
     private val plugin: OpenHumansUploaderPlugin
 ) : ViewModel() {

@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -22,7 +21,6 @@ class XdripPluginTest : TestBaseWithProfile() {
     @Mock lateinit var xdripMvvmRepository: XdripMvvmRepository
     @Mock lateinit var dataSyncSelector: DataSyncSelectorXdrip
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var xdripPlugin: XdripPlugin
     private lateinit var rateLimit: RateLimit
@@ -60,8 +58,7 @@ class XdripPluginTest : TestBaseWithProfile() {
             glucoseStatusProvider,
             xdripMvvmRepository,
             dataSyncSelector,
-            persistenceLayer,
-            viewModelFactory
+            persistenceLayer
         )
     }
 

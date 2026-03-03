@@ -300,7 +300,7 @@ interface UiInteraction {
      * @param secondMessage The secondary message to display in the dialog (styled with accent color).
      * @param ok The action to perform when the OK button is clicked. Run in UI thread.
      * @param cancel The action to perform when the Cancel button is clicked or the dialog is dismissed. Run in UI thread.
-     * @param icon The drawable resource ID for the custom icon. Defaults to a check icon if null.
+     * @param icon The drawable resource ID for the custom icon. Defaults to a check icon if null.1
      */
     fun showOkCancelDialog(context: Context, title: String = context.getString(R.string.confirmation), message: String, secondMessage: String, ok: (() -> Unit)?, cancel: (() -> Unit)? = null, @DrawableRes icon: Int? = null)
 

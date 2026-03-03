@@ -38,7 +38,6 @@ import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
@@ -75,7 +74,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var storeDataForDb: StoreDataForDbImpl
     private lateinit var sut: NSClientV3Plugin
@@ -94,7 +92,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             NSClientV3Plugin(
                 aapsLogger, rh, preferences, rxBus, context,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-                nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin, viewModelFactory
+                nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
             )
         sut.nsAndroidClient = nsAndroidClient
         sut.nsClientV3Service = nsClientV3Service

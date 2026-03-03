@@ -3,22 +3,18 @@ package app.aaps.plugins.source
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 
 class XdripSourcePluginTest : TestBaseWithProfile() {
-
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var xdripSourcePlugin: XdripSourcePlugin
 
     @BeforeEach
     fun setup() {
-        xdripSourcePlugin = XdripSourcePlugin(rh, aapsLogger, preferences, config, viewModelFactory)
+        xdripSourcePlugin = XdripSourcePlugin(rh, aapsLogger, preferences, config)
     }
 
     @Test fun advancedFilteringSupported() {

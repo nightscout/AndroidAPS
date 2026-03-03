@@ -35,7 +35,6 @@ import app.aaps.core.utils.isRunningTest
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import app.aaps.core.ui.compose.ViewModelFactory
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.runBlocking
 import java.security.SecureRandom
@@ -55,13 +54,11 @@ class RandomBgPlugin @Inject constructor(
     private val virtualPump: VirtualPump,
     preferences: Preferences,
     config: Config,
-    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                viewModelFactory = (plugin as RandomBgPlugin).viewModelFactory,
                 title = rh.gs(R.string.random_bg)
             )
         }

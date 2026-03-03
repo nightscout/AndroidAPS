@@ -35,6 +35,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.ui.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +48,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 
+@HiltViewModel
 @Stable
 class InsulinDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
@@ -81,7 +83,6 @@ class InsulinDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
-    // TODO: Migrate to @HiltViewModel with SavedStateHandle to properly scope ViewModel to NavBackStackEntry
     init {
         val now = dateUtil.now()
         val pump = activePlugin.activePump

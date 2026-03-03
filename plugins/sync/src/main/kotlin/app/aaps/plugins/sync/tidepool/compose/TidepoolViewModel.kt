@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -17,6 +18,7 @@ data class TidepoolUiState(
     val logList: List<TidepoolLog> = emptyList()
 )
 
+@HiltViewModel
 @Stable
 class TidepoolViewModel @Inject constructor(
     private val tidepoolRepository: TidepoolRepository,

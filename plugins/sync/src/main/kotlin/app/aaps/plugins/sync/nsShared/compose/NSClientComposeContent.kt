@@ -8,9 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -42,7 +40,6 @@ class NSClientComposeContent(
     private val uel: UserEntryLogger,
     private val nsClientRepository: NSClientRepository,
     private val nsClient: NsClient,
-    private val viewModelFactory: ViewModelProvider.Factory,
     private val title: String
 ) : ComposablePluginContent {
 
@@ -53,10 +50,7 @@ class NSClientComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
-        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
-        val viewModel: NSClientViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[NSClientViewModel::class.java]
-        }
+        val viewModel: NSClientViewModel = hiltViewModel()
 
         // Dialog states
         var showFullSyncDialog by remember { mutableStateOf(false) }

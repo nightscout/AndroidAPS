@@ -1,13 +1,12 @@
 package app.aaps.plugins.sync.wear
 
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -17,7 +16,6 @@ class WearPluginTest : TestBaseWithProfile() {
     @Mock lateinit var dataHandlerMobile: DataHandlerMobile
     @Mock lateinit var dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
     @Mock lateinit var versionCheckerUtils: VersionCheckerUtils
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var wearPlugin: WearPlugin
     private lateinit var rateLimit: RateLimit
@@ -33,7 +31,7 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, dateUtil, versionCheckerUtils, viewModelFactory)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, dateUtil, versionCheckerUtils)
     }
 
     @Test

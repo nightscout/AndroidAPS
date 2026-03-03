@@ -5,39 +5,39 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.lifecycle.ViewModelProvider
-import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.pump.eopatch.code.PatchLifecycle
 import app.aaps.pump.eopatch.code.PatchStep
 import app.aaps.pump.eopatch.compose.EopatchPatchScreen
 import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
 import app.aaps.pump.eopatch.compose.PatchEvent
-import app.aaps.pump.eopatch.di.EopatchPluginQualifier
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Activity retained for alarm-driven external entry points (AlarmProcess, ActivationNotCompleteDialog).
  * The main UI entry point is now via EopatchComposeContent in the plugin.
  */
-class EopatchActivity : TranslatedDaggerAppCompatActivity() {
+@AndroidEntryPoint
+class EopatchActivity : AppCompatActivity() {
 
-    @EopatchPluginQualifier
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
+    private val patchViewModel: EopatchPatchViewModel by viewModels()
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-
-        val patchViewModel = ViewModelProvider(this, viewModelFactory)[EopatchPatchViewModel::class.java]
 
         // Process intent
         val step = intent?.getSerializableExtra(EXTRA_START_PATCH_STEP) as? PatchStep

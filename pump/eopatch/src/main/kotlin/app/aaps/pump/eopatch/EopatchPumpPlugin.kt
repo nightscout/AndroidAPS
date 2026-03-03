@@ -3,7 +3,6 @@ package app.aaps.pump.eopatch
 import android.Manifest
 import android.content.Context
 import android.os.SystemClock
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
@@ -52,7 +51,6 @@ import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.code.BolusExDuration
 import app.aaps.pump.eopatch.compose.EopatchComposeContent
-import app.aaps.pump.eopatch.di.EopatchPluginQualifier
 import app.aaps.pump.eopatch.keys.EopatchBooleanKey
 import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.keys.EopatchStringNonKey
@@ -88,16 +86,14 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchConfig: PatchConfig,
     private val normalBasalManager: NormalBasalManager,
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck,
-    @EopatchPluginQualifier private val viewModelFactory: ViewModelProvider.Factory
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .composeContent { _ ->
             EopatchComposeContent(
                 protectionCheck = protectionCheck,
-                blePreCheck = blePreCheck,
-                viewModelFactory = viewModelFactory
+                blePreCheck = blePreCheck
             )
         }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)

@@ -3,6 +3,7 @@ package app.aaps.ui.search
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
  * Handles search state, debounced queries, and results.
  * Runs local search and wiki search in parallel.
  */
+@HiltViewModel
 @Stable
 class SearchViewModel @Inject constructor(
     private val searchIndexBuilder: SearchIndexBuilder,

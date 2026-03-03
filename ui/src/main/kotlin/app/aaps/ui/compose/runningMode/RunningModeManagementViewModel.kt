@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.SnackbarMessage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +35,7 @@ import javax.inject.Inject
  * ViewModel for RunningModeScreen (replacement for LoopDialog).
  * Handles loop mode changes, suspend/resume, and pump disconnect/reconnect.
  */
+@HiltViewModel
 @Stable
 class RunningModeManagementViewModel @Inject constructor(
     private val loop: Loop,

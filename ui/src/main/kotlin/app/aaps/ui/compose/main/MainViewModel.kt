@@ -26,6 +26,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import kotlin.math.abs
 
+@HiltViewModel
 @Stable
 class MainViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,

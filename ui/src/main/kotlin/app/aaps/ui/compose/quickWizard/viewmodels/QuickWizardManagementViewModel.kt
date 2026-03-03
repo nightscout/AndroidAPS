@@ -16,6 +16,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.events.EventQuickWizardChange
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.channels.BufferOverflow
@@ -26,13 +27,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * ViewModel for QuickWizardManagementScreen managing QuickWizard entries and editing.
  */
+@HiltViewModel
 @Stable
-@Singleton
 class QuickWizardManagementViewModel @Inject constructor(
     private val quickWizard: QuickWizard,
     private val rxBus: RxBus,

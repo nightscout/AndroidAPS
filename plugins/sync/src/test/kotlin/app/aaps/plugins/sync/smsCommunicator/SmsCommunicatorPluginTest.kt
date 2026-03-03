@@ -70,8 +70,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var smsManager: SmsManager
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
-    @Mock lateinit var viewModelFactory: app.aaps.core.ui.compose.ViewModelFactory
-
     private val repository = SmsCommunicatorRepository()
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
@@ -103,7 +101,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             commandQueue, loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, authRequestProvider, pumpStatusProvider, notificationManager, testScope,
-            viewModelFactory, repository
+            repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
         doAnswer { invocation: InvocationOnMock ->

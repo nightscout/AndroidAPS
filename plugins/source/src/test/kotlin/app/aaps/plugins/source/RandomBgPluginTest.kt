@@ -4,7 +4,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.keys.IntKey
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -20,12 +19,11 @@ class RandomBgPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var virtualPump: VirtualPump
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var randomBgPlugin: RandomBgPlugin
 
     @BeforeEach fun prepare() {
-        randomBgPlugin = RandomBgPlugin(context, rh, aapsLogger, persistenceLayer, virtualPump, preferences, config, viewModelFactory)
+        randomBgPlugin = RandomBgPlugin(context, rh, aapsLogger, persistenceLayer, virtualPump, preferences, config)
     }
 
     @Test

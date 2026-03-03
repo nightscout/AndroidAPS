@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.careDialog
 
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
@@ -22,6 +23,7 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +33,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 @Stable
 class CareDialogViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
@@ -58,11 +62,8 @@ class CareDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
-    private var lastEventType: UiInteraction.EventType? = null
-
-    fun initForEventType(eventType: UiInteraction.EventType) {
-        if (lastEventType == eventType) return
-        lastEventType = eventType
+    init {
+        val eventType = UiInteraction.EventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
         val units = profileFunction.getUnits()
         val currentBg = profileUtil.fromMgdlToUnits(
             glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0

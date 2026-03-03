@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SnackbarMessage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +33,7 @@ import javax.inject.Inject
 /**
  * ViewModel for BgSourceScreen managing blood glucose readings state and business logic.
  */
+@HiltViewModel
 @Stable
 class BgSourceViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,

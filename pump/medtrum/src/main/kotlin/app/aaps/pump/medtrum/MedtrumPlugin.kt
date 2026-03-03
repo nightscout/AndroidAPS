@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -62,7 +61,6 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.compose.MedtrumComposeContent
-import app.aaps.pump.medtrum.di.MedtrumPluginQualifier
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
 import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
@@ -98,8 +96,7 @@ class MedtrumPlugin @Inject constructor(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck,
-    @MedtrumPluginQualifier private val viewModelFactory: ViewModelProvider.Factory
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -111,8 +108,7 @@ class MedtrumPlugin @Inject constructor(
         .composeContent { _ ->
             MedtrumComposeContent(
                 protectionCheck = protectionCheck,
-                blePreCheck = blePreCheck,
-                viewModelFactory = viewModelFactory
+                blePreCheck = blePreCheck
             )
         },
     ownPreferences = listOf(

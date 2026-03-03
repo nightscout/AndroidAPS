@@ -1,11 +1,7 @@
 package app.aaps.pump.eopatch.di
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.ui.compose.ViewModelFactory
-import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.pump.eopatch.EopatchPumpPlugin
 import app.aaps.pump.eopatch.OsAlarmReceiver
 import app.aaps.pump.eopatch.alarm.AlarmManager
@@ -16,39 +12,24 @@ import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManager
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.ble.PreferenceManagerImpl
-import app.aaps.pump.eopatch.compose.EopatchOverviewViewModel
-import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
 import app.aaps.pump.eopatch.ui.AlarmHelperActivity
 import app.aaps.pump.eopatch.ui.DialogHelperActivity
-import app.aaps.pump.eopatch.ui.EopatchActivity
 import app.aaps.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
 import app.aaps.pump.eopatch.ui.dialogs.AlarmDialog
 import app.aaps.pump.eopatch.ui.dialogs.CommonDialog
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module(includes = [EopatchPrefModule::class])
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class EopatchModule {
-
-    companion object {
-
-        @Provides
-        @EopatchPluginQualifier
-        fun providesViewModelFactory(@EopatchPluginQualifier viewModels: MutableMap<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory {
-            return ViewModelFactory(viewModels)
-        }
-
-    }
 
     @Binds
     @Singleton
@@ -66,19 +47,6 @@ abstract class EopatchModule {
     @Singleton
     abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
 
-    // #### VIEW MODELS ############################################################################
-    @Binds
-    @IntoMap
-    @EopatchPluginQualifier
-    @ViewModelKey(EopatchOverviewViewModel::class)
-    internal abstract fun bindsEopatchOverviewViewmodel(viewModel: EopatchOverviewViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @EopatchPluginQualifier
-    @ViewModelKey(EopatchPatchViewModel::class)
-    internal abstract fun bindsEopatchPatchViewModel(viewModel: EopatchPatchViewModel): ViewModel
-
     // #### DIALOGS (still needed for alarm/dialog helper activities) ################################
     @FragmentScope
     @ContributesAndroidInjector
@@ -89,8 +57,7 @@ abstract class EopatchModule {
     internal abstract fun contributesActivationNotCompleteDialog(): ActivationNotCompleteDialog
 
     // #### ACTIVITIES (alarm-driven entry points + helpers) ###########################################
-    @ContributesAndroidInjector
-    abstract fun contributesEopatchActivity(): EopatchActivity
+    // EopatchActivity is now @AndroidEntryPoint (Hilt-injected)
 
     @ContributesAndroidInjector
     abstract fun contributesAlarmHelperActivity(): AlarmHelperActivity

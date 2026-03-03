@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -38,6 +39,7 @@ data class AutomationUiState(
     val items: List<AutomationActionItem> = emptyList()
 )
 
+@HiltViewModel
 @Stable
 class AutomationViewModel @Inject constructor(
     private val automation: Automation,

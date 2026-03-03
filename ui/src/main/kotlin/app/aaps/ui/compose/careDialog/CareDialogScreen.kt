@@ -42,6 +42,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
@@ -67,17 +68,11 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CareDialogScreen(
-    viewModel: CareDialogViewModel,
-    eventType: UiInteraction.EventType,
+    viewModel: CareDialogViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
     onShowSiteRotationDialog: (Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Initialize ViewModel for this event type
-    LaunchedEffect(eventType) {
-        viewModel.initForEventType(eventType)
-    }
 
     // Observe side effects
     LaunchedEffect(Unit) {
@@ -99,9 +94,9 @@ fun CareDialogScreen(
     if (showConfirmation) {
         val summaryLines = viewModel.buildConfirmationSummary()
         OkCancelDialog(
-            title = stringResource(eventType.titleResId()),
+            title = stringResource(uiState.eventType.titleResId()),
             message = summaryLines.joinToString("<br/>"),
-            icon = eventType.icon(),
+            icon = uiState.eventType.icon(),
             onConfirm = {
                 viewModel.confirmAndSave()
                 onNavigateBack()
@@ -130,7 +125,7 @@ fun CareDialogScreen(
 
     CareDialogContent(
         uiState = uiState,
-        eventType = eventType,
+        eventType = uiState.eventType,
         dateString = viewModel.dateUtil.dateString(uiState.eventTime),
         timeString = viewModel.dateUtil.timeString(uiState.eventTime),
         onMeterTypeChange = viewModel::updateMeterType,

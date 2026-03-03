@@ -29,6 +29,7 @@ import app.aaps.pump.eopatch.extension.takeOne
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasalManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +57,7 @@ sealed class EopatchOverviewEvent {
     data class ShowToast(val messageResId: Int, val isError: Boolean = false) : EopatchOverviewEvent()
 }
 
+@HiltViewModel
 @Stable
 class EopatchOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,

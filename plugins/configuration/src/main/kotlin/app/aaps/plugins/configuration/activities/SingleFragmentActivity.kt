@@ -1,11 +1,13 @@
 package app.aaps.plugins.configuration.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,8 +32,12 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -45,10 +51,14 @@ import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.configuration.R
+import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
+@AndroidEntryPoint
+class SingleFragmentActivity : AppCompatActivity() {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -57,6 +67,12 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var visibilityContext: PreferenceVisibilityContext
     @Inject lateinit var cryptoUtil: CryptoUtil
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var uiInteraction: UiInteraction
+
+    private val compositeDisposable = CompositeDisposable()
 
     private var plugin: PluginBase? = null
 
@@ -75,8 +91,14 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     // Toggle between Compose and Fragment rendering (debug only)
     private var forceFragment = false
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe { recreate() })
 
         forceFragment = savedInstanceState?.getBoolean(KEY_FORCE_FRAGMENT, false) ?: false
 
@@ -84,6 +106,11 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
         val currentPlugin = plugin ?: return
 
         setupPluginContent(currentPlugin, savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

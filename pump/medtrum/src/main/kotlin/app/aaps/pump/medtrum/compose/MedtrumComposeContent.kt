@@ -11,8 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -24,8 +23,7 @@ import app.aaps.pump.medtrum.code.PatchStep
 
 class MedtrumComposeContent(
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck,
-    private val viewModelFactory: ViewModelProvider.Factory
+    private val blePreCheck: BlePreCheck
 ) : ComposablePluginContent {
 
     @Composable
@@ -35,10 +33,7 @@ class MedtrumComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val context = LocalContext.current
-        val viewModelStoreOwner = context as ViewModelStoreOwner
-        val overviewViewModel: MedtrumOverviewViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[MedtrumOverviewViewModel::class.java]
-        }
+        val overviewViewModel: MedtrumOverviewViewModel = hiltViewModel()
 
         // Patch workflow state
         var showPatchWorkflow by remember { mutableStateOf(false) }
@@ -102,9 +97,7 @@ class MedtrumComposeContent(
             )
 
             // Create PatchViewModel scoped to the workflow
-            val patchViewModel: MedtrumPatchViewModel = remember(viewModelStoreOwner) {
-                ViewModelProvider(viewModelStoreOwner, viewModelFactory)[MedtrumPatchViewModel::class.java]
-            }
+            val patchViewModel: MedtrumPatchViewModel = hiltViewModel()
 
             // Reset and initialize with the start step
             LaunchedEffect(startPatchStep) {

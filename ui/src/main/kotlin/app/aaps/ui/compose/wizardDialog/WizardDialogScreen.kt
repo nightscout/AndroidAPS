@@ -68,6 +68,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -94,19 +95,12 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun WizardDialogScreen(
-    viewModel: WizardDialogViewModel,
+    viewModel: WizardDialogViewModel = hiltViewModel(),
     wizardSettingsDef: PreferenceSubScreenDef,
-    initialCarbs: Int? = null,
-    initialNotes: String? = null,
     onNavigateBack: () -> Unit,
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Initialize ViewModel
-    LaunchedEffect(Unit) {
-        viewModel.init(initialCarbs, initialNotes)
-    }
 
     // Observe side effects
     LaunchedEffect(Unit) {

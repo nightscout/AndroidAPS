@@ -7,10 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -21,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class XdripComposeContent(
-    private val viewModelFactory: ViewModelProvider.Factory,
     private val dateUtil: DateUtil,
     private val dataSyncSelector: DataSyncSelectorXdrip,
     private val onClearLog: () -> Unit,
@@ -35,10 +32,7 @@ internal class XdripComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
-        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
-        val viewModel: XdripViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[XdripViewModel::class.java]
-        }
+        val viewModel: XdripViewModel = hiltViewModel()
 
         LaunchedEffect(Unit) { viewModel.loadInitialData() }
 

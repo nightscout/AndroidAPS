@@ -2,12 +2,10 @@ package app.aaps.plugins.source
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
@@ -16,13 +14,11 @@ import org.mockito.kotlin.whenever
 
 class DexcomPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var viewModelFactory: ViewModelFactory
-
     private lateinit var dexcomPlugin: DexcomPlugin
 
     @BeforeEach
     fun setup() {
-        dexcomPlugin = DexcomPlugin(rh, aapsLogger, context, config, preferences, viewModelFactory)
+        dexcomPlugin = DexcomPlugin(rh, aapsLogger, context, config, preferences)
     }
 
     @Test

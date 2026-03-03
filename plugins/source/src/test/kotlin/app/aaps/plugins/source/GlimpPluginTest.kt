@@ -1,21 +1,17 @@
 package app.aaps.plugins.source
 
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 
 class GlimpPluginTest : TestBaseWithProfile() {
-
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var glimpPlugin: GlimpPlugin
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config, viewModelFactory)
+        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config)
     }
 
     @Test

@@ -1,11 +1,12 @@
 package app.aaps.ui.compose.stats.viewmodels
 
 import android.content.Context
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.TDD
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -14,7 +15,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
-import app.aaps.core.data.model.TDD
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -28,6 +28,7 @@ import app.aaps.ui.compose.stats.CycleSeries
 import app.aaps.ui.compose.stats.TddCyclePatternData
 import app.aaps.ui.compose.stats.TddStatsData
 import app.aaps.ui.compose.stats.TirStatsData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +40,7 @@ import javax.inject.Inject
 /**
  * ViewModel for StatsScreen managing statistics data loading and state.
  */
+@HiltViewModel
 @Stable
 class StatsViewModel @Inject constructor(
     private val tddCalculator: TddCalculator,
@@ -184,7 +186,7 @@ class StatsViewModel @Inject constructor(
             // Fetch in 28-day chunks (6 × 28 = 168 days) to report progress
             for (chunk in 0 until totalChunks) {
                 val chunkTdds = withContext(Dispatchers.IO) {
-                    val daysBack = (chunk + 1).toLong() * 28
+                    (chunk + 1).toLong() * 28
                     val timestamp = dateUtil.now() - chunk.toLong() * 28 * 24 * 3600 * 1000
                     tddCalculator.calculate(timestamp, 28, allowMissingDays = true)
                 }

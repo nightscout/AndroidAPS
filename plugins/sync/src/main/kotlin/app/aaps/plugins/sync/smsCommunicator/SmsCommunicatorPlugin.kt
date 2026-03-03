@@ -71,7 +71,6 @@ import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.ComposeScreenContent
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.core.ui.compose.icons.IcPluginSms
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -136,7 +135,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val pumpStatusProvider: PumpStatusProvider,
     private val notificationManager: NotificationManager,
     @ApplicationScope private val appScope: CoroutineScope,
-    private val viewModelFactory: ViewModelFactory,
     val repository: SmsCommunicatorRepository
 ) : PluginBaseWithPreferences(
     PluginDescription()
@@ -144,7 +142,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
         .composeContent { plugin ->
             SmsCommunicatorComposeContent(
-                viewModelFactory = (plugin as SmsCommunicatorPlugin).viewModelFactory
             )
         }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)

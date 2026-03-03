@@ -27,6 +27,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -102,6 +103,7 @@ data class SensitivityUiState(
     val hasData: Boolean = false
 )
 
+@HiltViewModel
 @Stable
 class GraphViewModel @Inject constructor(
     cache: OverviewDataCache,

@@ -1,8 +1,6 @@
 package app.aaps.plugins.sync.di
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
@@ -11,14 +9,10 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.core.ui.compose.ViewModelFactory
-import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.plugins.sync.garmin.LoopHub
 import app.aaps.plugins.sync.garmin.LoopHubImpl
-import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsShared.compose.NSClientRepositoryImpl
-import app.aaps.plugins.sync.nsShared.compose.NSClientViewModel
 import app.aaps.plugins.sync.nsclient.data.NSSettingsStatusImpl
 import app.aaps.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
 import app.aaps.plugins.sync.nsclient.services.NSClientService
@@ -36,17 +30,11 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorViewModel
-import app.aaps.plugins.sync.tidepool.TidepoolFragment
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowIn
-import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
-import app.aaps.plugins.sync.wear.compose.WearViewModel
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
 import app.aaps.plugins.sync.xdrip.DataSyncSelectorXdripImpl
-import app.aaps.plugins.sync.xdrip.XdripFragment
 import app.aaps.plugins.sync.xdrip.XdripPlugin
-import app.aaps.plugins.sync.xdrip.compose.XdripViewModel
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import dagger.Binds
 import dagger.Module
@@ -55,7 +43,6 @@ import dagger.Reusable
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
@@ -67,8 +54,6 @@ import dagger.multibindings.IntoMap
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class SyncModule {
-
-    @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
 
     @ContributesAndroidInjector abstract fun contributesNSClientService(): NSClientService
     @ContributesAndroidInjector abstract fun contributesNSClientV3Service(): NSClientV3Service
@@ -86,9 +71,7 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesLoadDeviceStatusWorker(): LoadDeviceStatusWorker
     @ContributesAndroidInjector abstract fun contributesDataSyncWorker(): DataSyncWorker
 
-    @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesAuthFlowInActivity(): AuthFlowIn
-    @ContributesAndroidInjector abstract fun contributesXdripFragment(): XdripFragment
     @ContributesAndroidInjector abstract fun contributesXdripDataSyncWorker(): XdripDataSyncWorker
     @ContributesAndroidInjector abstract fun contributesWearDataReceiver(): WearDataReceiver
     @ContributesAndroidInjector abstract fun contributesWatchUpdaterService(): DataLayerListenerServiceMobile
@@ -114,33 +97,7 @@ abstract class SyncModule {
         @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XdripPlugin): XDripBroadcast
         @Binds fun bindLoopHub(loopHub: LoopHubImpl): LoopHub
 
-        @Binds fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
         @Binds fun bindNSClientRepository(nsClientRepositoryImpl: NSClientRepositoryImpl): NSClientRepository
-
-        @Binds
-        @IntoMap
-        @ViewModelKey(NSClientViewModel::class)
-        fun bindNSClientViewModel(nsClientViewModel: NSClientViewModel): ViewModel
-
-        @Binds
-        @IntoMap
-        @ViewModelKey(XdripViewModel::class)
-        fun bindXdripViewModel(xdripViewModel: XdripViewModel): ViewModel
-
-        @Binds
-        @IntoMap
-        @ViewModelKey(TidepoolViewModel::class)
-        fun bindTidepoolViewModel(tidepoolViewModel: TidepoolViewModel): ViewModel
-
-        @Binds
-        @IntoMap
-        @ViewModelKey(WearViewModel::class)
-        fun bindWearViewModel(wearViewModel: WearViewModel): ViewModel
-
-        @Binds
-        @IntoMap
-        @ViewModelKey(SmsCommunicatorViewModel::class)
-        fun bindSmsCommunicatorViewModel(smsCommunicatorViewModel: SmsCommunicatorViewModel): ViewModel
     }
 
 }

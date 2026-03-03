@@ -16,12 +16,14 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 /**
  * ViewModel for TreatmentsScreen that holds all dependencies and provides child ViewModels.
  * This centralizes dependency management and simplifies the composable call site.
  */
+@HiltViewModel
 @Stable
 class TreatmentsViewModel @Inject constructor(
     val persistenceLayer: PersistenceLayer,

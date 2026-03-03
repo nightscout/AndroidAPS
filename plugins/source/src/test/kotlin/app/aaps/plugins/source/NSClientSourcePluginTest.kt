@@ -5,7 +5,6 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -18,11 +17,10 @@ class NSClientSourcePluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var config: Config
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     @BeforeEach
     fun setup() {
-        nsClientSourcePlugin = NSClientSourcePlugin(rh, aapsLogger, config, viewModelFactory)
+        nsClientSourcePlugin = NSClientSourcePlugin(rh, aapsLogger, config)
     }
 
     @Test

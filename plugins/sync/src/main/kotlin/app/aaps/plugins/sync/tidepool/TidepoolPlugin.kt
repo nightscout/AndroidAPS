@@ -34,7 +34,6 @@ import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.tidepool.compose.TidepoolComposeContent
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
@@ -72,7 +71,6 @@ class TidepoolPlugin @Inject constructor(
     private val tidepoolRepository: TidepoolRepository,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
-    private val viewModelFactory: ViewModelFactory
 ) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -80,19 +78,17 @@ class TidepoolPlugin @Inject constructor(
         .shortName(R.string.tidepool_shortname)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_tidepool)
         .icon(IcPluginTidepool)
-        .fragmentClass(TidepoolFragment::class.qualifiedName)
-        .composeContent { plugin ->
+        .composeContent {
             TidepoolComposeContent(
-                viewModelFactory = (plugin as TidepoolPlugin).viewModelFactory,
-                dateUtil = plugin.dateUtil,
-                onLogin = { plugin.authFlowOut.doTidePoolInitialLogin("menu") },
+                dateUtil = dateUtil,
+                onLogin = { authFlowOut.doTidePoolInitialLogin("menu") },
                 onLogout = {
-                    plugin.authFlowOut.clearAllSavedData()
-                    plugin.tidepoolUploader.resetInstance()
+                    authFlowOut.clearAllSavedData()
+                    tidepoolUploader.resetInstance()
                 },
-                onUploadNow = { plugin.rxBus.send(EventTidepoolDoUpload()) },
+                onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
                 onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
-                onClearLog = { plugin.tidepoolRepository.clearLog() }
+                onClearLog = { tidepoolRepository.clearLog() }
             )
         }
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
