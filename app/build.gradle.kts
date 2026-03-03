@@ -153,10 +153,10 @@ android {
     }
 
     sourceSets {
-        getByName("full") { kotlin.srcDir("src/withPumps/kotlin") }
-        getByName("pumpcontrol") { kotlin.srcDir("src/withPumps/kotlin") }
-        getByName("aapsclient2") { kotlin.srcDir("src/aapsclient/kotlin") }
-        getByName("aapsclient3") { kotlin.srcDir("src/aapsclient/kotlin") }
+        getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
+        getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
+        getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
+        getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
     }
 }
 

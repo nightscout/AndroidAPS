@@ -8,12 +8,12 @@ plugins {
 android {
     namespace = "info.nightscout.comboctl"
     sourceSets.getByName("main") {
-        kotlin.srcDir("src/commonMain/kotlin")
-        kotlin.srcDir("src/androidMain/kotlin")
+        kotlin.directories.add("src/commonMain/kotlin")
+        kotlin.directories.add("src/androidMain/kotlin")
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
     }
     sourceSets.getByName("test") {
-        kotlin.srcDir("src/jvmTest/kotlin")
+        kotlin.directories.add("src/jvmTest/kotlin")
     }
 }
 
