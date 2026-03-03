@@ -1,5 +1,6 @@
 package app.aaps
 
+import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.IntentFilter
@@ -54,8 +55,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.JsonHelper
-import app.aaps.di.AppComponent
-import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
@@ -75,7 +74,9 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
 import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import dagger.hilt.android.HiltAndroidApp
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
@@ -91,7 +92,11 @@ import javax.inject.Provider
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 
-class MainApp : DaggerApplication() {
+@HiltAndroidApp
+class MainApp : Application(), HasAndroidInjector {
+
+    @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -115,7 +120,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
-    lateinit var appComponent: AppComponent
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
@@ -521,14 +525,6 @@ class MainApp : DaggerApplication() {
         // NOTE: Old preferences are NOT removed to keep legacy TempTargetDialog functional
         // They are marked as @Deprecated in preference key definitions
         // Removal will be done when legacy UI is completely removed in the future
-    }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        appComponent = DaggerAppComponent
-            .builder()
-            .application(this)
-            .build()
-        return appComponent
     }
 
     private val timeDateReceiver = TimeDateOrTZChangeReceiver()

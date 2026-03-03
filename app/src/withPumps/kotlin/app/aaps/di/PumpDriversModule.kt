@@ -15,6 +15,8 @@ import app.aaps.pump.medtrum.di.MedtrumModule
 import app.aaps.pump.omnipod.dash.di.OmnipodDashModule
 import app.aaps.pump.omnipod.eros.di.OmnipodErosModule
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import info.nightscout.pump.combov2.di.ComboV2Module
 
 @Module(
@@ -36,4 +38,5 @@ import info.nightscout.pump.combov2.di.ComboV2Module
         EquilModule::class,
     ]
 )
+@InstallIn(SingletonComponent::class)
 abstract class PumpDriversModule

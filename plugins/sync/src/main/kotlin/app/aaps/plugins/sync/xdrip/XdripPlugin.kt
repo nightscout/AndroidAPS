@@ -53,7 +53,6 @@ import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.toJson
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.plugins.sync.xdrip.compose.XdripComposeContent
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.extensions.toXdripJson
@@ -98,18 +97,15 @@ class XdripPlugin @Inject constructor(
     private val xdripMvvmRepository: XdripMvvmRepository,
     private val dataSyncSelector: DataSyncSelectorXdrip,
     private val persistenceLayer: PersistenceLayer,
-    private val viewModelFactory: ViewModelFactory
 ) : XDripBroadcast, Sync, PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
-        .fragmentClass(XdripFragment::class.java.name)
-        .composeContent { plugin ->
+        .composeContent {
             XdripComposeContent(
-                viewModelFactory = (plugin as XdripPlugin).viewModelFactory,
-                dateUtil = plugin.dateUtil,
-                dataSyncSelector = plugin.dataSyncSelector,
-                onClearLog = { plugin.xdripMvvmRepository.clearLog() },
-                onFullSync = { plugin.dataSyncSelector.resetToNextFullSync() }
+                dateUtil = dateUtil,
+                dataSyncSelector = dataSyncSelector,
+                onClearLog = { xdripMvvmRepository.clearLog() },
+                onFullSync = { dataSyncSelector.resetToNextFullSync() }
             )
         }
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))

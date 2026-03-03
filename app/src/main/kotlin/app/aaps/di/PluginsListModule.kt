@@ -59,6 +59,8 @@ import app.aaps.plugins.sync.xdrip.XdripPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import dagger.multibindings.Multibinds
@@ -66,6 +68,7 @@ import javax.inject.Qualifier
 
 @Suppress("unused")
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class PluginsListModule {
 
     @Binds

@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,6 +52,7 @@ sealed interface ImportStep {
     data class Error(val message: String) : ImportStep
 }
 
+@HiltViewModel
 @Stable
 class ImportViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

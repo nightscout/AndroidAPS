@@ -65,7 +65,11 @@ sealed class AppRoute(val route: String) {
         }
     }
 
-    data object PumpSetup : AppRoute("pump_setup")
+    data object PluginContent : AppRoute("plugin_content/{pluginIndex}") {
+
+        fun createRoute(pluginIndex: Int) = "plugin_content/$pluginIndex"
+    }
+
     data object Configuration : AppRoute("configuration")
     data object ImportSettings : AppRoute("import_settings/{source}") {
 

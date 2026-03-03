@@ -7,6 +7,8 @@ import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
@@ -16,6 +18,7 @@ import dagger.multibindings.IntoMap
         DanaRServicesModule::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class DanaRModule {
 

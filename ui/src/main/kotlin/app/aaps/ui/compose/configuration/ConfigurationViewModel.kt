@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.compose.main.DrawerCategory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -33,6 +34,7 @@ data class HardwarePumpConfirmation(
     val enabled: Boolean
 )
 
+@HiltViewModel
 @Stable
 class ConfigurationViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,

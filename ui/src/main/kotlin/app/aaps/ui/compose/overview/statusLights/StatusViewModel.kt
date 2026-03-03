@@ -23,6 +23,7 @@ import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +35,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+@HiltViewModel
 @Stable
 class StatusViewModel @Inject constructor(
     private val rh: ResourceHelper,

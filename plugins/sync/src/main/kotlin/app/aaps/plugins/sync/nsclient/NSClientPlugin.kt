@@ -43,8 +43,6 @@ import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
-import app.aaps.core.ui.compose.ViewModelFactory
-import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
@@ -76,11 +74,9 @@ class NSClientPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
-    private val viewModelFactory: ViewModelFactory
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .fragmentClass(NSClientFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
         .icon(IcPluginNsClient)
         .pluginName(R.string.ns_client_title)
@@ -95,7 +91,6 @@ class NSClientPlugin @Inject constructor(
                 uel = uel,
                 nsClientRepository = nsClientRepository,
                 nsClient = plugin as NsClient,
-                viewModelFactory = viewModelFactory,
                 title = rh.gs(R.string.ns_client_title)
             )
         },

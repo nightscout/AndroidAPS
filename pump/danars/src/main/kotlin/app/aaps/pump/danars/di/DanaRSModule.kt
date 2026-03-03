@@ -7,6 +7,8 @@ import app.aaps.pump.danars.comm.DanaRSPacket
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
@@ -17,6 +19,7 @@ import dagger.multibindings.IntoMap
         DanaRSServicesModule::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class DanaRSModule {
 

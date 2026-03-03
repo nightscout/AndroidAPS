@@ -4,6 +4,7 @@ import java.util.Date
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("com.android.application")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -235,6 +236,8 @@ dependencies {
     ksp(libs.com.google.dagger.android.processor)
     kspAndroidTest(libs.com.google.dagger.android.processor)
     ksp(libs.com.google.dagger.compiler)
+    implementation(libs.com.google.dagger.hilt.android)
+    ksp(libs.com.google.dagger.hilt.compiler)
 
     // MainApp
     api(libs.com.uber.rxdogtag2.rxdogtag)

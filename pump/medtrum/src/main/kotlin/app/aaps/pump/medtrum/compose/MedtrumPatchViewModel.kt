@@ -15,6 +15,7 @@ import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.encryption.Crypt
 import app.aaps.pump.medtrum.services.MedtrumService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,6 +40,7 @@ enum class WizardPage {
     RETRY_ACTIVATION
 }
 
+@HiltViewModel
 @Stable
 class MedtrumPatchViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

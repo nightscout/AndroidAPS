@@ -40,6 +40,7 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.ui.compose.profileManagement.ProfileCompareData
 import app.aaps.ui.compose.profileManagement.buildProfileCompareData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -54,6 +55,7 @@ import javax.inject.Inject
 /**
  * ViewModel for ProfileManagementScreen managing profile list and operations.
  */
+@HiltViewModel
 @Stable
 class ProfileManagementViewModel @Inject constructor(
     private val localProfileManager: LocalProfileManager,

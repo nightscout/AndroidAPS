@@ -90,6 +90,8 @@ import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
@@ -97,11 +99,12 @@ import dagger.android.ContributesAndroidInjector
         CommandQueueModule::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 class ImplementationModule {
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @ContributesAndroidInjector fun contributesNetworkChangeReceiver(): NetworkChangeReceiver

@@ -28,7 +28,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import app.aaps.core.ui.compose.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,13 +40,11 @@ class XdripSourcePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                viewModelFactory = (plugin as XdripSourcePlugin).viewModelFactory,
                 title = rh.gs(R.string.source_xdrip)
             )
         }

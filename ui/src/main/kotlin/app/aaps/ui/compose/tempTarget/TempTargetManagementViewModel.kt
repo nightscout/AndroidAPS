@@ -22,6 +22,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.SnackbarMessage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,15 +34,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /**
  * ViewModel for TempTargetManagementScreen managing TT presets and activation.
  */
+@HiltViewModel
 @Stable
-@Singleton
 class TempTargetManagementViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,

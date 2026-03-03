@@ -5,11 +5,11 @@ import app.aaps.ReplayApsResultsTest
 import app.aaps.RunningConfigurationTest
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.migration.DisableInstallInCheck
 
-/**
- * Android injectors of test classes
- */
+// Used in DaggerTestAppComponent (plain Dagger), not Hilt.
 @Module
+@DisableInstallInCheck
 @Suppress("unused")
 abstract class TestsInjectionModule {
 

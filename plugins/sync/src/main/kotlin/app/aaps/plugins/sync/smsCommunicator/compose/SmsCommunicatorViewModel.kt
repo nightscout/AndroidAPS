@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.utils.DateUtil
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -26,6 +27,7 @@ data class SmsCommunicatorUiState(
     val messages: List<SmsItem> = emptyList()
 )
 
+@HiltViewModel
 class SmsCommunicatorViewModel @Inject constructor(
     private val repository: SmsCommunicatorRepository,
     private val dateUtil: DateUtil

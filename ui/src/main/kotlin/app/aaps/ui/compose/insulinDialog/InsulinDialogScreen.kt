@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -67,7 +68,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun InsulinDialogScreen(
-    viewModel: InsulinDialogViewModel,
+    viewModel: InsulinDialogViewModel = hiltViewModel(),
     insulinButtonsDef: PreferenceSubScreenDef,
     bgInfoState: StateFlow<BgInfoUiState>,
     iobUiState: StateFlow<IobUiState>,

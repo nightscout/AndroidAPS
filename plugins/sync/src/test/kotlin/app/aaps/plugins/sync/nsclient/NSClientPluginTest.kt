@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.ui.compose.ViewModelFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -21,14 +20,13 @@ class NSClientPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var nsClientPlugin: NSClientPlugin
 
     @BeforeEach fun prepare() {
         nsClientPlugin = NSClientPlugin(
             aapsLogger, rxBus, rh, context, preferences, receiverDelegate, dataSyncSelectorV1,
-            dateUtil, profileUtil, nsSettingsStatus, decimalFormatter, nsClientRepository, persistenceLayer, uel, activePlugin, viewModelFactory
+            dateUtil, profileUtil, nsSettingsStatus, decimalFormatter, nsClientRepository, persistenceLayer, uel, activePlugin
         )
     }
 

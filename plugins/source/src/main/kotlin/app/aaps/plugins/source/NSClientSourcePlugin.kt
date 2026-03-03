@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.ui.compose.icons.IcPluginNsClientBg
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import app.aaps.core.ui.compose.ViewModelFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,13 +21,11 @@ class NSClientSourcePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config,
-    private val viewModelFactory: ViewModelFactory
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                viewModelFactory = (plugin as NSClientSourcePlugin).viewModelFactory,
                 title = rh.gs(R.string.ns_client_bg)
             )
         }

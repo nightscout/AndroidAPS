@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.fillDialog
 
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.BS
@@ -27,6 +28,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.ui.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,8 +40,10 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.abs
 
+@HiltViewModel
 @Stable
 class FillDialogViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val constraintChecker: ConstraintsChecker,
     private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
@@ -69,11 +73,8 @@ class FillDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
-    private var lastPreselect: FillPreselect? = null
-
-    fun init(preselect: FillPreselect = FillPreselect.NONE) {
-        if (lastPreselect == preselect) return
-        lastPreselect = preselect
+    init {
+        val preselect = FillPreselect.entries[savedStateHandle.get<Int>("preselect") ?: 0]
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 

@@ -33,6 +33,7 @@ import app.aaps.shared.impl.weardata.JsonKeys
 import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.shared.impl.weardata.ViewKeys
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -91,6 +92,7 @@ data class CwfImportItemState(
     val watchfaceImage: ImageBitmap?
 )
 
+@HiltViewModel
 @Stable
 class WearViewModel @Inject constructor(
     private val wearPlugin: WearPlugin,

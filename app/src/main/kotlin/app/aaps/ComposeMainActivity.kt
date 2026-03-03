@@ -2,11 +2,17 @@ package app.aaps
 
 import android.Manifest
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
@@ -33,12 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -48,7 +51,10 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -58,8 +64,11 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -68,6 +77,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -85,24 +95,23 @@ import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
-import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
+import app.aaps.plugins.configuration.maintenance.PrefsFileContract
+import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
-import app.aaps.ui.compose.carbsDialog.CarbsDialogViewModel
 import app.aaps.ui.compose.careDialog.CareDialogScreen
-import app.aaps.ui.compose.careDialog.CareDialogViewModel
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
-import app.aaps.ui.compose.fillDialog.FillDialogViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
-import app.aaps.ui.compose.insulinDialog.InsulinDialogViewModel
 import app.aaps.ui.compose.main.MainMenuItem
 import app.aaps.ui.compose.main.MainScreen
 import app.aaps.ui.compose.main.MainViewModel
@@ -137,21 +146,26 @@ import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementScreen
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatmentDialog.TreatmentDialogScreen
-import app.aaps.ui.compose.treatmentDialog.TreatmentDialogViewModel
 import app.aaps.ui.compose.treatments.TreatmentsScreen
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.wizardDialog.WizardDialogScreen
-import app.aaps.ui.compose.wizardDialog.WizardDialogViewModel
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
+@AndroidEntryPoint
+class ComposeMainActivity : AppCompatActivity() {
 
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -170,38 +184,77 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
 
-    // ViewModels
-    @Inject lateinit var mainViewModel: MainViewModel
-    @Inject lateinit var manageViewModel: ManageViewModel
-    @Inject lateinit var maintenanceViewModel: MaintenanceViewModel
-    @Inject lateinit var statusViewModel: StatusViewModel
-    @Inject lateinit var treatmentViewModel: TreatmentViewModel
-    @Inject lateinit var automationViewModel: AutomationViewModel
-    @Inject lateinit var graphViewModel: GraphViewModel
-    @Inject lateinit var treatmentsViewModel: TreatmentsViewModel
-    @Inject lateinit var tempTargetManagementViewModel: TempTargetManagementViewModel
-    @Inject lateinit var quickWizardManagementViewModel: QuickWizardManagementViewModel
-    @Inject lateinit var statsViewModel: StatsViewModel
-    @Inject lateinit var profileHelperViewModel: ProfileHelperViewModel
-    @Inject lateinit var profileEditorViewModel: ProfileEditorViewModel
-    @Inject lateinit var profileManagementViewModel: ProfileManagementViewModel
-    @Inject lateinit var runningModeManagementViewModel: RunningModeManagementViewModel
-    @Inject lateinit var careDialogViewModel: CareDialogViewModel
-    @Inject lateinit var fillDialogViewModel: FillDialogViewModel
-    @Inject lateinit var carbsDialogViewModel: CarbsDialogViewModel
-    @Inject lateinit var insulinDialogViewModel: InsulinDialogViewModel
-    @Inject lateinit var treatmentDialogViewModel: TreatmentDialogViewModel
-    @Inject lateinit var wizardDialogViewModel: WizardDialogViewModel
-    @Inject lateinit var importViewModel: ImportViewModel
-    @Inject lateinit var searchViewModel: SearchViewModel
-    @Inject lateinit var permissionsViewModel: PermissionsViewModel
-    @Inject lateinit var configurationViewModel: ConfigurationViewModel
+    private var accessTree: ActivityResultLauncher<Uri?>? = null
+    private var callForPrefFile: ActivityResultLauncher<Void?>? = null
+    private var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
+    private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
+    private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
+    // ViewModels (Hilt-provided via @HiltViewModel)
+    private val mainViewModel: MainViewModel by viewModels()
+    private val manageViewModel: ManageViewModel by viewModels()
+    private val maintenanceViewModel: MaintenanceViewModel by viewModels()
+    private val statusViewModel: StatusViewModel by viewModels()
+    private val treatmentViewModel: TreatmentViewModel by viewModels()
+    private val automationViewModel: AutomationViewModel by viewModels()
+    private val graphViewModel: GraphViewModel by viewModels()
+    private val treatmentsViewModel: TreatmentsViewModel by viewModels()
+    private val tempTargetManagementViewModel: TempTargetManagementViewModel by viewModels()
+    private val quickWizardManagementViewModel: QuickWizardManagementViewModel by viewModels()
+    private val statsViewModel: StatsViewModel by viewModels()
+    private val profileHelperViewModel: ProfileHelperViewModel by viewModels()
+    private val profileEditorViewModel: ProfileEditorViewModel by viewModels()
+    private val profileManagementViewModel: ProfileManagementViewModel by viewModels()
+    private val runningModeManagementViewModel: RunningModeManagementViewModel by viewModels()
+    private val importViewModel: ImportViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by viewModels()
+    private val permissionsViewModel: PermissionsViewModel by viewModels()
+    private val configurationViewModel: ConfigurationViewModel by viewModels()
+
+    private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Theme switch listener (from base class)
+        disposable += rxBus.toObservable(EventThemeSwitch::class.java).subscribe { recreate() }
+
+        // Activity result launchers (from base class)
+        accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            uri?.let {
+                val lastPathSegment = uri.lastPathSegment ?: ""
+                val pathAfterColon = if (lastPathSegment.contains(":")) lastPathSegment.substringAfterLast(":") else lastPathSegment
+                val directoryName = pathAfterColon.substringAfterLast("/", pathAfterColon)
+                val managedSubdirectories = listOf("preferences", "extra", "exports", "temp")
+                if (managedSubdirectories.any { it.equals(directoryName, ignoreCase = true) }) {
+                    uiInteraction.showError(
+                        this,
+                        rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_selected),
+                        rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_message, directoryName)
+                    )
+                    return@registerForActivityResult
+                }
+                contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                preferences.put(StringKey.AapsDirectoryUri, uri.toString())
+            }
+        }
+        callForPrefFile = registerForActivityResult(PrefsFileContract()) {
+            importExportPrefs.doImportSharedPreferences(this)
+        }
+        callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
+            updateButtons()
+        }
+        requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val denied = mutableListOf<String>()
+            permissions.entries.forEach {
+                aapsLogger.info(LTag.CORE, "Permission ${it.key} ${it.value}")
+                if (!it.value) denied.add(it.key)
+            }
+            if (denied.isNotEmpty()) onPermissionResultDenied?.invoke(denied)
+            updateButtons()
+        }
 
         onPermissionResultDenied = { denied ->
             permissionsViewModel.onPermissionsDenied(
@@ -220,7 +273,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
 
     @Composable
     private fun MainContent() {
-        val navController = rememberNavController()
+        val navController = rememberNavController().also { this.navController = it }
 
         CompositionLocalProvider(
             LocalPreferences provides preferences,
@@ -562,7 +615,8 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             pumpSetupIcon = pumpSetupIcon,
                             pumpSetupLabel = pumpSetupLabel,
                             onPumpSetupClick = {
-                                navController.navigate(AppRoute.PumpSetup.route)
+                                val pluginIndex = activePlugin.getPluginsList().indexOf(pumpPlugin)
+                                navController.navigate(AppRoute.PluginContent.createRoute(pluginIndex))
                             },
                             permissionsMissing = permState.hasAnyMissing,
                             onPermissionsClick = {
@@ -629,15 +683,8 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                 type = androidx.navigation.NavType.IntType
                             }
                         )
-                    ) { backStackEntry ->
-                        val ordinal = backStackEntry.arguments?.getInt("eventTypeOrdinal") ?: 0
-                        val eventType = UiInteraction.EventType.entries[ordinal]
-                        val vm: CareDialogViewModel = viewModel(
-                            factory = daggerViewModel { careDialogViewModel }
-                        )
+                    ) {
                         CareDialogScreen(
-                            viewModel = vm,
-                            eventType = eventType,
                             onNavigateBack = { navController.popBackStack() },
                             onShowSiteRotationDialog = {
                                 uiInteraction.runSiteRotationDialog(supportFragmentManager)
@@ -652,15 +699,8 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                 type = androidx.navigation.NavType.IntType
                             }
                         )
-                    ) { backStackEntry ->
-                        val preselectOrdinal = backStackEntry.arguments?.getInt("preselect") ?: 0
-                        val preselect = FillPreselect.entries[preselectOrdinal]
-                        val vm: FillDialogViewModel = viewModel(
-                            factory = daggerViewModel { fillDialogViewModel }
-                        )
+                    ) {
                         FillDialogScreen(
-                            viewModel = vm,
-                            preselect = preselect,
                             fillButtonsDef = builtInSearchables.fillButtons,
                             onNavigateBack = { navController.popBackStack() },
                             onShowSiteRotationDialog = {
@@ -673,11 +713,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(route = AppRoute.CarbsDialog.route) {
-                        val vm: CarbsDialogViewModel = viewModel(
-                            factory = daggerViewModel { carbsDialogViewModel }
-                        )
                         CarbsDialogScreen(
-                            viewModel = vm,
                             carbsButtonsDef = builtInSearchables.carbsButtons,
                             bgInfoState = graphViewModel.bgInfoState,
                             iobUiState = graphViewModel.iobUiState,
@@ -690,11 +726,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(route = AppRoute.InsulinDialog.route) {
-                        val vm: InsulinDialogViewModel = viewModel(
-                            factory = daggerViewModel { insulinDialogViewModel }
-                        )
                         InsulinDialogScreen(
-                            viewModel = vm,
                             insulinButtonsDef = builtInSearchables.insulinButtons,
                             bgInfoState = graphViewModel.bgInfoState,
                             iobUiState = graphViewModel.iobUiState,
@@ -707,11 +739,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     composable(route = AppRoute.TreatmentDialog.route) {
-                        val vm: TreatmentDialogViewModel = viewModel(
-                            factory = daggerViewModel { treatmentDialogViewModel }
-                        )
                         TreatmentDialogScreen(
-                            viewModel = vm,
                             bgInfoState = graphViewModel.bgInfoState,
                             iobUiState = graphViewModel.iobUiState,
                             cobUiState = graphViewModel.cobUiState,
@@ -736,17 +764,9 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                 defaultValue = null
                             }
                         )
-                    ) { backStackEntry ->
-                        val carbs = backStackEntry.arguments?.getString("carbs")?.toIntOrNull()
-                        val notes = backStackEntry.arguments?.getString("notes")
-                        val vm: WizardDialogViewModel = viewModel(
-                            factory = daggerViewModel { wizardDialogViewModel }
-                        )
+                    ) {
                         WizardDialogScreen(
-                            viewModel = vm,
                             wizardSettingsDef = builtInSearchables.wizardSettings,
-                            initialCarbs = carbs,
-                            initialNotes = notes,
                             onNavigateBack = { navController.popBackStack() },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -866,9 +886,17 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                         )
                     }
 
-                    composable(AppRoute.PumpSetup.route) {
-                        val pumpPlugin = activePlugin.activePump as PluginBase
-                        val composeContent = pumpPlugin.getComposeContent()
+                    composable(
+                        route = AppRoute.PluginContent.route,
+                        arguments = listOf(
+                            androidx.navigation.navArgument("pluginIndex") {
+                                type = androidx.navigation.NavType.IntType
+                            }
+                        )
+                    ) { backStackEntry ->
+                        val pluginIndex = backStackEntry.arguments?.getInt("pluginIndex") ?: return@composable
+                        val plugin = activePlugin.getPluginsList().getOrNull(pluginIndex) ?: return@composable
+                        val composeContent = plugin.getComposeContent()
                         if (composeContent is ComposablePluginContent) {
                             val navigateBack: @Composable () -> Unit = {
                                 IconButton(onClick = { navController.popBackStack() }) {
@@ -883,7 +911,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                     protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                                         if (result == ProtectionResult.GRANTED) {
                                             navController.navigate(
-                                                AppRoute.PluginPreferences.createRoute(pumpPlugin.javaClass.simpleName)
+                                                AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName)
                                             )
                                         }
                                     }
@@ -897,7 +925,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                             var toolbarConfig by remember {
                                 mutableStateOf(
                                     ToolbarConfig(
-                                        title = pumpPlugin.name,
+                                        title = plugin.name,
                                         navigationIcon = navigateBack,
                                         actions = settingsAction
                                     )
@@ -924,7 +952,7 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
                                             protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                                                 if (result == ProtectionResult.GRANTED) {
                                                     navController.navigate(
-                                                        AppRoute.PluginPreferences.createRoute(pumpPlugin.javaClass.simpleName)
+                                                        AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName)
                                                     )
                                                 }
                                             }
@@ -1041,14 +1069,31 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    override fun updateButtons() {
+    private fun updateButtons() {
         // Called by activity result callbacks (battery optimization, runtime permissions)
         permissionsViewModel.refresh(this)
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CloudConstants.CLOUD_IMPORT_REQUEST_CODE && resultCode == RESULT_OK) {
+            importExportPrefs.doImportSharedPreferences(this)
+        }
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         disposable.clear()
+        accessTree = null
+        callForPrefFile = null
+        callForBatteryOptimization = null
+        requestMultiplePermissions = null
+        onPermissionResultDenied = null
+        super.onDestroy()
     }
 
     private fun setupEventListeners() {
@@ -1309,14 +1354,13 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun handlePluginClick(plugin: PluginBase) {
-        if (!plugin.hasFragment() && !plugin.hasComposeContent()) {
-            return
-        }
-        lifecycleScope.launch {
-            val pluginIndex = activePlugin.getPluginsList().indexOf(plugin)
+        val pluginIndex = activePlugin.getPluginsList().indexOf(plugin)
+        if (plugin.hasComposeContent()) {
+            navController?.navigate(AppRoute.PluginContent.createRoute(pluginIndex))
+        } else if (plugin.hasFragment()) {
             startActivity(
-                Intent(this@ComposeMainActivity, SingleFragmentActivity::class.java)
-                    .setAction(this@ComposeMainActivity::class.simpleName)
+                Intent(this, SingleFragmentActivity::class.java)
+                    .setAction(this::class.simpleName)
                     .putExtra("plugin", pluginIndex)
             )
         }
@@ -1324,13 +1368,3 @@ class ComposeMainActivity : DaggerAppCompatActivityWithResult() {
 
 }
 
-/**
- * Creates a [ViewModelProvider.Factory] that returns a Dagger-provided ViewModel instance.
- * Used with [viewModel] composable to scope Dagger-injected ViewModels to NavBackStackEntry,
- * so they survive configuration changes but are recreated on navigation.
- */
-@Suppress("UNCHECKED_CAST")
-fun <T : ViewModel> daggerViewModel(provider: () -> T): ViewModelProvider.Factory =
-    object : ViewModelProvider.Factory {
-        override fun <V : ViewModel> create(modelClass: Class<V>): V = provider() as V
-    }

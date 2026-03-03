@@ -29,6 +29,7 @@ import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -46,6 +47,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
+@HiltViewModel
 @Stable
 class EopatchPatchViewModel @Inject constructor(
     val rh: ResourceHelper,

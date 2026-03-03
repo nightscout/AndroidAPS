@@ -1,35 +1,20 @@
 package app.aaps.plugins.sync.di
 
-import androidx.lifecycle.ViewModel
-import app.aaps.core.ui.compose.ViewModelKey
 import app.aaps.plugins.sync.openhumans.OpenHumansWorker
-import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
-import app.aaps.plugins.sync.openhumans.compose.OHViewModel
-import app.aaps.plugins.sync.openhumans.ui.OHLoginViewModel
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Suppress("unused")
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class OpenHumansModule {
 
-    @ContributesAndroidInjector
-    abstract fun contributesOHLoginActivity(): OHLoginActivity
+    // OHLoginActivity is now @AndroidEntryPoint (Hilt-injected)
 
     @ContributesAndroidInjector abstract fun contributesOpenHumansWorker(): OpenHumansWorker
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(OHLoginViewModel::class)
-    internal abstract fun bindLoginViewModel(viewModel: OHLoginViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(OHViewModel::class)
-    internal abstract fun bindOHViewModel(viewModel: OHViewModel): ViewModel
 
     companion object {
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("kotlin-parcelize")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -35,7 +36,7 @@ dependencies {
     api(libs.androidx.work.runtime)
     // Maintenance
     api(libs.androidx.gridlayout)
-    
+
     // HTTP client for Google Drive API
     implementation(libs.com.squareup.okhttp3.okhttp)
 
@@ -50,6 +51,9 @@ dependencies {
     api(libs.androidx.compose.runtime)
     api(libs.androidx.lifecycle.runtime.compose)
 
+    implementation(libs.com.google.dagger.hilt.android)
+
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

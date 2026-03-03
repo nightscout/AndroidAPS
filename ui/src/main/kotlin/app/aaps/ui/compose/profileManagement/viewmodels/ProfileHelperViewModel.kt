@@ -1,8 +1,8 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
 import android.content.Context
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
@@ -25,6 +25,7 @@ import app.aaps.ui.compose.profileHelper.ProfileType
 import app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfile
 import app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfileDPV
 import app.aaps.ui.compose.stats.TddStatsData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,6 +38,7 @@ import javax.inject.Inject
 /**
  * ViewModel for ProfileHelperScreen managing profile comparison state and business logic.
  */
+@HiltViewModel
 @Stable
 class ProfileHelperViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,

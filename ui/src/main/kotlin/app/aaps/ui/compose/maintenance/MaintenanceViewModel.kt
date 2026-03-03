@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,6 +51,7 @@ sealed interface MaintenanceEvent {
     data object BringToForeground : MaintenanceEvent
 }
 
+@HiltViewModel
 @Stable
 class MaintenanceViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

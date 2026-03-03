@@ -21,5 +21,6 @@ dependencies {
     api(libs.com.google.android.material)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

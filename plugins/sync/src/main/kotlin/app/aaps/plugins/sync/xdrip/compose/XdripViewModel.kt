@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.ui.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -19,6 +20,7 @@ data class XdripUiState(
     val logList: List<XdripLog> = emptyList()
 )
 
+@HiltViewModel
 @Stable
 class XdripViewModel @Inject constructor(
     private val rh: ResourceHelper,

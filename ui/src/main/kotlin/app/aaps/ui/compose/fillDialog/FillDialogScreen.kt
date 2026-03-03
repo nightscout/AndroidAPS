@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -61,19 +62,13 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun FillDialogScreen(
-    viewModel: FillDialogViewModel,
-    preselect: FillPreselect = FillPreselect.NONE,
+    viewModel: FillDialogViewModel = hiltViewModel(),
     fillButtonsDef: PreferenceSubScreenDef,
     onNavigateBack: () -> Unit,
     onShowSiteRotationDialog: (Long) -> Unit,
     onShowDeliveryError: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Initialize ViewModel
-    LaunchedEffect(preselect) {
-        viewModel.init(preselect)
-    }
 
     // Dialog states (rememberSaveable to survive rotation)
     var showConfirmation by rememberSaveable { mutableStateOf(false) }

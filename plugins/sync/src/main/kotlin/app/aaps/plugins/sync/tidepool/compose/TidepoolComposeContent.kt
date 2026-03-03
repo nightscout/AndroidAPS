@@ -2,16 +2,12 @@ package app.aaps.plugins.sync.tidepool.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 
 internal class TidepoolComposeContent(
-    private val viewModelFactory: ViewModelProvider.Factory,
     private val dateUtil: DateUtil,
     private val onLogin: () -> Unit,
     private val onLogout: () -> Unit,
@@ -26,10 +22,7 @@ internal class TidepoolComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
-        val viewModel: TidepoolViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[TidepoolViewModel::class.java]
-        }
+        val viewModel: TidepoolViewModel = hiltViewModel()
 
         LaunchedEffect(Unit) {
             viewModel.loadInitialData()

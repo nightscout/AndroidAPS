@@ -31,7 +31,6 @@ import app.aaps.core.ui.compose.icons.IcPluginByoda
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import app.aaps.core.ui.compose.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,13 +43,11 @@ class DexcomPlugin @Inject constructor(
     private val context: Context,
     config: Config,
     preferences: Preferences,
-    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                viewModelFactory = (plugin as DexcomPlugin).viewModelFactory,
                 title = rh.gs(R.string.dexcom_app_patched)
             )
         }

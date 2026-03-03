@@ -5,11 +5,12 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
-import javax.inject.Inject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @Immutable
 internal data class OHUiState(
@@ -17,6 +18,7 @@ internal data class OHUiState(
     val projectMemberId: String? = null
 )
 
+@HiltViewModel
 @Stable
 internal class OHViewModel @Inject constructor(
     private val stateDelegate: OHStateDelegate

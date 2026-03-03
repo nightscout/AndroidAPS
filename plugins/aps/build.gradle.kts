@@ -35,5 +35,7 @@ dependencies {
     //Logger
     api(libs.org.slf4j.api)
 
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

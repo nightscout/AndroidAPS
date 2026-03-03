@@ -57,12 +57,15 @@ import app.aaps.plugins.automation.ui.MapPickerActivity
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
         AutomationModule.Bindings::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class AutomationModule {
 
@@ -122,6 +125,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun contributesLocationService(): LocationService
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindAutomation(automationPlugin: AutomationPlugin): Automation

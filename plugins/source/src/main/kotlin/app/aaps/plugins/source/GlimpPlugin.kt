@@ -20,7 +20,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcPluginGlimp
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import app.aaps.core.ui.compose.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,13 +30,11 @@ class GlimpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    private val viewModelFactory: ViewModelFactory
 ) : AbstractBgSourcePlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                viewModelFactory = (plugin as GlimpPlugin).viewModelFactory,
                 title = rh.gs(R.string.glimp)
             )
         }

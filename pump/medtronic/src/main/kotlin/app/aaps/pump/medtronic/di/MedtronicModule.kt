@@ -12,10 +12,13 @@ import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class MedtronicModule {
 

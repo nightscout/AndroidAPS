@@ -16,13 +16,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
+import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 /**
- * Injections needed for [TestApplication]
+ * Injections needed for [TestApplication].
+ * Uses plain Dagger component (DaggerTestAppComponent), not Hilt.
  */
 @Suppress("unused")
 @Module(
@@ -31,6 +33,7 @@ import javax.inject.Singleton
         TestModule.Provide::class
     ]
 )
+@DisableInstallInCheck
 open class TestModule {
 
     @Provides
@@ -52,6 +55,7 @@ open class TestModule {
     }
 
     @Module
+    @DisableInstallInCheck
     open class Provide {
 
         @Provides
@@ -66,6 +70,7 @@ open class TestModule {
     }
 
     @Module
+    @DisableInstallInCheck
     interface AppBindings {
 
         @Binds fun bindContext(mainApp: TestApplication): Context

@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.profile.ProfileSealed
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -71,6 +72,7 @@ data class ProfileUiState(
     val tabErrors: Map<ProfileErrorType, String> = emptyMap()
 )
 
+@HiltViewModel
 @Stable
 class ProfileEditorViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

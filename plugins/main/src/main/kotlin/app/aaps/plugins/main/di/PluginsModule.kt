@@ -8,6 +8,8 @@ import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
@@ -20,13 +22,14 @@ import dagger.android.ContributesAndroidInjector
         OverviewModule::class,
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class PluginsModule {
 
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindOverview(overviewPlugin: OverviewPlugin): Overview

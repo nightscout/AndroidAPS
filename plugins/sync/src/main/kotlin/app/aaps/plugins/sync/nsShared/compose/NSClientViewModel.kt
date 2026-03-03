@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -26,6 +27,7 @@ data class NSClientUiState(
     val logList: List<NSClientLog> = emptyList()
 )
 
+@HiltViewModel
 @Stable
 class NSClientViewModel @Inject constructor(
     private val rh: ResourceHelper,

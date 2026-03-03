@@ -3,10 +3,7 @@ package app.aaps.plugins.sync.openhumans.compose
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
@@ -14,8 +11,7 @@ import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 
 internal class OHComposeContent(
     private val plugin: OpenHumansUploaderPlugin,
-    private val context: Context,
-    private val viewModelFactory: ViewModelProvider.Factory
+    private val context: Context
 ) : ComposablePluginContent {
 
     @Composable
@@ -24,10 +20,7 @@ internal class OHComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
-        val viewModel: OHViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[OHViewModel::class.java]
-        }
+        val viewModel: OHViewModel = hiltViewModel()
 
         OHScreen(
             viewModel = viewModel,

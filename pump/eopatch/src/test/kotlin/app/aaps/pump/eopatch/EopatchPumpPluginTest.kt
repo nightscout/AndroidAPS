@@ -1,7 +1,6 @@
 package app.aaps.pump.eopatch
 
 import android.Manifest
-import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
@@ -27,7 +26,6 @@ class EopatchPumpPluginTest : EopatchTestBase() {
     @Mock lateinit var profile: Profile
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var blePreCheck: BlePreCheck
-    @Mock lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var plugin: EopatchPumpPlugin
 
@@ -53,7 +51,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck, viewModelFactory
+            protectionCheck, blePreCheck
         )
     }
 

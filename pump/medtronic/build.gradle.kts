@@ -26,5 +26,6 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

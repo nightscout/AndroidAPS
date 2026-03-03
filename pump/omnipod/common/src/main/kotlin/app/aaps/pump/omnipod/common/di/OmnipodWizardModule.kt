@@ -14,10 +14,13 @@ import app.aaps.pump.omnipod.common.ui.wizard.deactivation.fragment.info.StartPo
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.migration.DisableInstallInCheck
 import javax.inject.Provider
 
 @Suppress("unused")
+// Installed into @ContributesAndroidInjector subcomponent, not SingletonComponent.
 @Module
+@DisableInstallInCheck
 abstract class OmnipodWizardModule {
 
     companion object {

@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.constraints.ConstraintObject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
+@HiltViewModel
 @Stable
 class TreatmentDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
@@ -58,7 +60,6 @@ class TreatmentDialogViewModel @Inject constructor(
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
 
-    // TODO: Migrate to @HiltViewModel with SavedStateHandle to properly scope ViewModel to NavBackStackEntry
     init {
         val pump = activePlugin.activePump
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()

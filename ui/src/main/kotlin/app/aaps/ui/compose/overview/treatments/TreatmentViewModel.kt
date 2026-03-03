@@ -27,6 +27,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.ui.compose.main.QuickWizardItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
+@HiltViewModel
 @Stable
 class TreatmentViewModel @Inject constructor(
     private val rh: ResourceHelper,
@@ -117,12 +119,12 @@ class TreatmentViewModel @Inject constructor(
 
         // Global disable reason (applies to all entries)
         val globalReason = when {
-            lastBG == null -> rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg)
-            profile == null -> rh.gs(app.aaps.core.ui.R.string.noprofile)
-            !pump.isInitialized() -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
-            pump.isSuspended() -> rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
+            lastBG == null                           -> rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg)
+            profile == null                          -> rh.gs(app.aaps.core.ui.R.string.noprofile)
+            !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
+            pump.isSuspended()                       -> rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
             runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
-            else -> null
+            else                                     -> null
         }
 
         if (globalReason != null) {

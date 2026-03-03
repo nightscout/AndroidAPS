@@ -1,10 +1,7 @@
 package app.aaps.plugins.source.compose
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 
@@ -14,7 +11,6 @@ import app.aaps.core.ui.compose.ToolbarConfig
  * use the same UI to display blood glucose readings.
  */
 internal class BgSourceComposeContent(
-    private val viewModelFactory: ViewModelProvider.Factory,
     private val title: String
 ) : ComposablePluginContent {
 
@@ -24,10 +20,7 @@ internal class BgSourceComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
-        val viewModel: BgSourceViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[BgSourceViewModel::class.java]
-        }
+        val viewModel: BgSourceViewModel = hiltViewModel()
 
         BgSourceScreen(
             viewModel = viewModel,

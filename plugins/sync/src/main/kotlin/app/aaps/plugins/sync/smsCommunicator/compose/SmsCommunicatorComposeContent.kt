@@ -1,16 +1,11 @@
 package app.aaps.plugins.sync.smsCommunicator.compose
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 
-class SmsCommunicatorComposeContent(
-    private val viewModelFactory: ViewModelProvider.Factory
-) : ComposablePluginContent {
+class SmsCommunicatorComposeContent : ComposablePluginContent {
 
     @Composable
     override fun Render(
@@ -18,10 +13,7 @@ class SmsCommunicatorComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
-        val viewModel: SmsCommunicatorViewModel = remember(viewModelStoreOwner) {
-            ViewModelProvider(viewModelStoreOwner, viewModelFactory)[SmsCommunicatorViewModel::class.java]
-        }
+        val viewModel: SmsCommunicatorViewModel = hiltViewModel()
 
         SmsCommunicatorScreen(viewModel = viewModel)
     }

@@ -11,14 +11,18 @@ import app.aaps.plugins.main.skins.SkinProviderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import javax.inject.Qualifier
 
 @Module(includes = [SkinsModule.Bindings::class])
+@InstallIn(SingletonComponent::class)
 open class SkinsModule {
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
         @Binds
         fun bindSkinProvider(impl: SkinProviderImpl): SkinProvider

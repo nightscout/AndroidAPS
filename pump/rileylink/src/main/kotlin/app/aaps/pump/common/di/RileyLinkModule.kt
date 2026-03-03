@@ -19,8 +19,11 @@ import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class RileyLinkModule {
 

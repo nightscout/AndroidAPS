@@ -25,6 +25,7 @@ import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -42,6 +43,7 @@ sealed class MedtrumOverviewEvent {
     data class ShowDialog(val title: String, val message: String) : MedtrumOverviewEvent()
 }
 
+@HiltViewModel
 @Stable
 class MedtrumOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

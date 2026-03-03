@@ -13,6 +13,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
@@ -20,6 +22,7 @@ import dagger.android.ContributesAndroidInjector
         OverviewModule.Provide::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class OverviewModule {
 
@@ -27,6 +30,7 @@ abstract class OverviewModule {
     @ContributesAndroidInjector abstract fun graphDataInjector(): GraphData
 
     @Module
+    @InstallIn(SingletonComponent::class)
     class Provide {
 
         @Provides
@@ -38,6 +42,7 @@ abstract class OverviewModule {
     }
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindOverviewMenus(overviewMenusImpl: OverviewMenusImpl): OverviewMenus
