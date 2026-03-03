@@ -111,20 +111,21 @@ class QuickLaunchConfigViewModel @Inject constructor(
         saveAndReload(updated)
     }
 
-    fun removeAction(action: QuickLaunchAction) {
-        val current = currentActions()
-        val updated = current.filter { actionKey(it) != actionKey(action) }
-        saveAndReload(updated)
+    fun removeActionAt(index: Int) {
+        val current = currentActions().toMutableList()
+        if (index in current.indices) {
+            current.removeAt(index)
+            saveAndReload(current)
+        }
     }
 
-    fun updateProfileAction(oldAction: QuickLaunchAction.ProfileAction, newPercentage: Int, newDuration: Int) {
-        val current = currentActions()
-        val updated = current.map { action ->
-            if (action is QuickLaunchAction.ProfileAction && actionKey(action) == actionKey(oldAction))
-                action.copy(percentage = newPercentage, durationMinutes = newDuration)
-            else action
+    fun updateProfileActionAt(index: Int, newPercentage: Int, newDuration: Int) {
+        val current = currentActions().toMutableList()
+        if (index in current.indices && current[index] is QuickLaunchAction.ProfileAction) {
+            current[index] = (current[index] as QuickLaunchAction.ProfileAction)
+                .copy(percentage = newPercentage, durationMinutes = newDuration)
+            saveAndReload(current)
         }
-        saveAndReload(updated)
     }
 
     fun moveItem(fromIndex: Int, toIndex: Int) {

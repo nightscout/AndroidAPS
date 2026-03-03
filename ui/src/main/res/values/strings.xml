@@ -268,6 +268,11 @@
     <string name="quick_launch_category_temp_target">Temp Target Presets</string>
     <string name="quick_launch_category_quick_wizard">Quick Wizard</string>
     <string name="quick_launch_category_automation">Automation</string>
+    <string name="quick_launch_all_selected">All items selected</string>
+    <string name="quick_launch_no_quick_wizard">Add Quick Wizard entries to use them here</string>
+    <string name="quick_launch_no_automation">Create user automation actions to use them here</string>
+    <string name="quick_launch_no_tt_presets">Add Temp Target presets to use them here</string>
+    <string name="quick_launch_no_profiles">Create profiles in Local Profile to use them here</string>
     <string name="quick_launch_edit_profile_preset">Edit profile preset</string>
     <string name="quick_launch_profile_percentage">Percentage</string>
     <string name="quick_launch_profile_duration">Duration</string>

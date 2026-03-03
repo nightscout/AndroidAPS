@@ -35,7 +35,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -56,7 +58,8 @@ fun QuickLauchConfigScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    var editingProfileAction by remember { mutableStateOf<QuickLaunchAction.ProfileAction?>(null) }
+    var editingProfileIndex by remember { mutableIntStateOf(-1) }
+    val editingProfileAction = (state.selectedItems.getOrNull(editingProfileIndex)?.action as? QuickLaunchAction.ProfileAction)
 
     LaunchedEffect(Unit) { viewModel.loadState() }
 
@@ -65,10 +68,10 @@ fun QuickLauchConfigScreen(
             profileName = action.profileName,
             initialPercentage = action.percentage,
             initialDurationMinutes = action.durationMinutes,
-            onDismiss = { editingProfileAction = null },
+            onDismiss = { editingProfileIndex = -1 },
             onConfirm = { pct, dur ->
-                viewModel.updateProfileAction(action, pct, dur)
-                editingProfileAction = null
+                viewModel.updateProfileActionAt(editingProfileIndex, pct, dur)
+                editingProfileIndex = -1
             }
         )
     }
@@ -76,6 +79,15 @@ fun QuickLauchConfigScreen(
     val lazyListState = rememberLazyListState()
     val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
         viewModel.moveItem(from.index - 1, to.index - 1) // -1 to account for the header item
+    }
+    val coroutineScope = rememberCoroutineScope()
+    var previousSelectedCount by remember { mutableIntStateOf(state.selectedItems.size) }
+    LaunchedEffect(state.selectedItems.size) {
+        if (state.selectedItems.size > previousSelectedCount) {
+            // Scroll to the last selected item (index 0 = header, so last item = size)
+            coroutineScope.launch { lazyListState.animateScrollToItem(state.selectedItems.size) }
+        }
+        previousSelectedCount = state.selectedItems.size
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -108,20 +120,32 @@ fun QuickLauchConfigScreen(
 
             itemsIndexed(
                 items = state.selectedItems,
-                key = { _, item -> "selected_${item.action.typeId}_${item.action.dynamicId ?: ""}" }
-            ) { _, item ->
+                key = { index, item ->
+                    val base = "selected_${item.action.typeId}_${item.action.dynamicId ?: ""}"
+                    val dupIndex = state.selectedItems.take(index).count {
+                        it.action.typeId == item.action.typeId && it.action.dynamicId == item.action.dynamicId
+                    }
+                    if (dupIndex > 0) "${base}_$dupIndex" else base
+                }
+            ) { index, item ->
+                val base = "selected_${item.action.typeId}_${item.action.dynamicId ?: ""}"
+                val dupIndex = state.selectedItems.take(index).count {
+                    it.action.typeId == item.action.typeId && it.action.dynamicId == item.action.dynamicId
+                }
+                val stableKey = if (dupIndex > 0) "${base}_$dupIndex" else base
                 ReorderableItem(
                     reorderableState,
-                    key = "selected_${item.action.typeId}_${item.action.dynamicId ?: ""}"
+                    key = stableKey,
+                    modifier = Modifier.animateItem()
                 ) { isDragging ->
                     val elevation = if (isDragging) 8.dp else 0.dp
                     Surface(shadowElevation = elevation, tonalElevation = elevation) {
                         SelectedActionItem(
                             item = item,
-                            onRemove = { viewModel.removeAction(item.action) },
-                            onEdit = (item.action as? QuickLaunchAction.ProfileAction)?.let { pa ->
-                                { editingProfileAction = pa }
-                            },
+                            onRemove = { viewModel.removeActionAt(index) },
+                            onEdit = if (item.action is QuickLaunchAction.ProfileAction) {
+                                { editingProfileIndex = index }
+                            } else null,
                             dragModifier = Modifier.draggableHandle()
                         )
                     }
@@ -130,81 +154,93 @@ fun QuickLauchConfigScreen(
 
             // ── Available: Treatment ──
             val treatmentItems = state.availableStaticItems.filter { it.action.category == QuickLaunchAction.Category.TREATMENT }
-            if (treatmentItems.isNotEmpty()) {
-                item(key = "divider_treatment") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-                }
-                item(key = "header_treatment") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_treatment))
-                }
+            item(key = "divider_treatment") {
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            }
+            item(key = "header_treatment") {
+                SectionHeader(stringResource(R.string.quick_launch_category_treatment))
+            }
+            if (treatmentItems.isEmpty()) {
+                item(key = "empty_treatment") { EmptyHint(stringResource(R.string.quick_launch_all_selected)) }
+            } else {
                 items(treatmentItems, key = { "avail_${it.action.typeId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
             // ── Available: Care Portal ──
             val careItems = state.availableStaticItems.filter { it.action.category == QuickLaunchAction.Category.CARE }
-            if (careItems.isNotEmpty()) {
-                item(key = "divider_care") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-                }
-                item(key = "header_care") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_care))
-                }
+            item(key = "divider_care") {
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            }
+            item(key = "header_care") {
+                SectionHeader(stringResource(R.string.quick_launch_category_care))
+            }
+            if (careItems.isEmpty()) {
+                item(key = "empty_care") { EmptyHint(stringResource(R.string.quick_launch_all_selected)) }
+            } else {
                 items(careItems, key = { "avail_${it.action.typeId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
             // ── Dynamic: Quick Wizard ──
-            if (state.availableQuickWizardItems.isNotEmpty()) {
-                item(key = "divider_qw") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-                }
-                item(key = "header_qw") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_quick_wizard))
-                }
+            item(key = "divider_qw") {
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            }
+            item(key = "header_qw") {
+                SectionHeader(stringResource(R.string.quick_launch_category_quick_wizard))
+            }
+            if (state.availableQuickWizardItems.isEmpty()) {
+                item(key = "empty_qw") { EmptyHint(stringResource(R.string.quick_launch_no_quick_wizard)) }
+            } else {
                 items(state.availableQuickWizardItems, key = { "avail_qw_${it.action.dynamicId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
             // ── Dynamic: Automation ──
-            if (state.availableAutomationItems.isNotEmpty()) {
-                item(key = "divider_auto") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-                }
-                item(key = "header_auto") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_automation))
-                }
+            item(key = "divider_auto") {
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            }
+            item(key = "header_auto") {
+                SectionHeader(stringResource(R.string.quick_launch_category_automation))
+            }
+            if (state.availableAutomationItems.isEmpty()) {
+                item(key = "empty_auto") { EmptyHint(stringResource(R.string.quick_launch_no_automation)) }
+            } else {
                 items(state.availableAutomationItems, key = { "avail_auto_${it.action.dynamicId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
             // ── Dynamic: TT Presets ──
-            if (state.availableTtPresetItems.isNotEmpty()) {
-                item(key = "divider_tt") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-                }
-                item(key = "header_tt") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_temp_target))
-                }
+            item(key = "divider_tt") {
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            }
+            item(key = "header_tt") {
+                SectionHeader(stringResource(R.string.quick_launch_category_temp_target))
+            }
+            if (state.availableTtPresetItems.isEmpty()) {
+                item(key = "empty_tt") { EmptyHint(stringResource(R.string.quick_launch_no_tt_presets)) }
+            } else {
                 items(state.availableTtPresetItems, key = { "avail_tt_${it.action.dynamicId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
             // ── Dynamic: Profiles ──
-            if (state.availableProfileItems.isNotEmpty()) {
-                item(key = "divider_profiles") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-                }
-                item(key = "header_profiles") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_profile))
-                }
+            item(key = "divider_profiles") {
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            }
+            item(key = "header_profiles") {
+                SectionHeader(stringResource(R.string.quick_launch_category_profile))
+            }
+            if (state.availableProfileItems.isEmpty()) {
+                item(key = "empty_profiles") { EmptyHint(stringResource(R.string.quick_launch_no_profiles)) }
+            } else {
                 items(state.availableProfileItems, key = { "avail_profile_${it.action.dynamicId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
@@ -217,7 +253,7 @@ fun QuickLauchConfigScreen(
                     SectionHeader(stringResource(group.labelResId))
                 }
                 items(group.items, key = { "avail_plugin_${it.action.dynamicId}" }) { item ->
-                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) })
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
                 }
             }
 
@@ -313,10 +349,12 @@ private fun SelectedActionItem(
 @Composable
 private fun AvailableActionItem(
     item: ResolvedQuickLaunchItem,
-    onAdd: () -> Unit
+    onAdd: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val color = item.action.tintColor()
     ListItem(
+        modifier = modifier,
         headlineContent = {
             Text(text = item.label, color = color)
         },
