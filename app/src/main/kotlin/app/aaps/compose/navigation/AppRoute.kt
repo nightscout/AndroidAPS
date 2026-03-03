@@ -70,6 +70,7 @@ sealed class AppRoute(val route: String) {
         fun createRoute(pluginIndex: Int) = "plugin_content/$pluginIndex"
     }
 
+    data object QuickLaunchConfig : AppRoute("quick_launch_config")
     data object Configuration : AppRoute("configuration")
     data object ImportSettings : AppRoute("import_settings/{source}") {
 

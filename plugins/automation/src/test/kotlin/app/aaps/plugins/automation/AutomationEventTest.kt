@@ -1,7 +1,5 @@
 package app.aaps.plugins.automation
 
-import androidx.datastore.preferences.core.preferencesOf
-import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -52,12 +50,22 @@ class AutomationEventTest : TestBase() {
         event.addAction(ActionSMBChange(injector))
 
         // export to json
-        val eventJsonExpected =
-            "{\"userAction\":false,\"autoRemove\":false,\"readOnly\":false,\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"data\\\\\\\":{\\\\\\\"connectorType\\\\\\\":\\\\\\\"AND\\\\\\\",\\\\\\\"triggerList\\\\\\\":[]},\\\\\\\"type\\\\\\\":\\\\\\\"TriggerConnector\\\\\\\"}\\\"]},\\\"type\\\":\\\"TriggerConnector\\\"}\",\"title\":\"Test\",\"systemAction\":false,\"actions\":[\"{\\\"data\\\":{\\\"smbState\\\":true},\\\"type\\\":\\\"ActionSMBChange\\\"}\"],\"enabled\":true}"
-        JSONAssert.assertEquals(eventJsonExpected, event.toJSON(), true)
+        val eventJson = event.toJSON()
+        val parsed = JSONObject(eventJson)
+        // Verify id is present and is a valid UUID
+        assertThat(parsed.has("id")).isTrue()
+        assertThat(parsed.getString("id")).isNotEmpty()
+        // Verify other fields (lenient because of id)
+        assertThat(parsed.getString("title")).isEqualTo("Test")
+        assertThat(parsed.getBoolean("enabled")).isTrue()
+        assertThat(parsed.getBoolean("userAction")).isFalse()
+        assertThat(parsed.getBoolean("systemAction")).isFalse()
 
         // clone
-        val clone = AutomationEventObject(injector).fromJSON(eventJsonExpected)
+        val clone = AutomationEventObject(injector).fromJSON(eventJson)
+
+        // check id preserved
+        assertThat(clone.id).isEqualTo(event.id)
 
         // check title
         assertThat(clone.title).isEqualTo(event.title)
@@ -72,6 +80,24 @@ class AutomationEventTest : TestBase() {
         assertThat(clone.actions).hasSize(1)
         assertThat(event.actions).isNotSameInstanceAs(clone.actions)
         JSONAssert.assertEquals(clone.toJSON(), clone.toJSON(), true)
+    }
+
+    @Test fun idPreservedOnRoundtrip() {
+        val event = AutomationEventObject(injector)
+        event.title = "Test"
+        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        val originalId = event.id
+        val clone = AutomationEventObject(injector).fromJSON(event.toJSON())
+        assertThat(clone.id).isEqualTo(originalId)
+    }
+
+    @Test fun idGeneratedWhenMissingInJson() {
+        // Simulate legacy JSON without id field
+        val legacyJson =
+            "{\"userAction\":false,\"autoRemove\":false,\"readOnly\":false,\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[]},\\\"type\\\":\\\"TriggerConnector\\\"}\",\"title\":\"Legacy\",\"systemAction\":false,\"actions\":[],\"enabled\":true}"
+        val event = AutomationEventObject(injector).fromJSON(legacyJson)
+        assertThat(event.id).isNotEmpty()
+        assertThat(event.title).isEqualTo("Legacy")
     }
 
     @Test fun hasStopProcessing() {

@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 
 interface AutomationEvent {
 
+    val id: String
     var isEnabled: Boolean
     var title: String
     fun canRun(): Boolean

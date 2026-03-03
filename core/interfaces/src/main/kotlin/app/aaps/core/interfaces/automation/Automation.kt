@@ -3,6 +3,7 @@ package app.aaps.core.interfaces.automation
 interface Automation {
 
     fun userEvents(): List<AutomationEvent>
+    fun findEventById(id: String): AutomationEvent?
     fun processEvent(someEvent: AutomationEvent)
 
     /**

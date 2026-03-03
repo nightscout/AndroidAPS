@@ -2,6 +2,7 @@ package app.aaps.ui.search
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
@@ -116,6 +117,14 @@ class DialogSearchables @Inject constructor() : SearchableProvider {
                 dialogTitleResId = CoreUiR.string.quickwizard_managemnt,
                 dialogIcon = IcQuickwizard,
                 dialogSummaryResId = CoreUiR.string.manage_quickwizard_desc
+            )
+        )
+        add(
+            SearchableItem.Dialog(
+                dialogKey = "quick_launch_config",
+                dialogTitleResId = app.aaps.ui.R.string.quick_launch_configure,
+                dialogIcon = Icons.Default.Settings,
+                dialogSummaryResId = app.aaps.ui.R.string.quick_launch_configure_desc
             )
         )
 

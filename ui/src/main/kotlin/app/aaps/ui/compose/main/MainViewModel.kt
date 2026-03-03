@@ -5,14 +5,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.overview.graph.TempTargetState
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.Pump
@@ -21,11 +28,16 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
+import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
+import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
+import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
+import app.aaps.ui.compose.tempTarget.toTTPresets
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +46,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -52,11 +65,23 @@ class MainViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val constraintChecker: ConstraintsChecker,
     private val quickWizard: QuickWizard,
-    private val aapsLogger: AAPSLogger
+    private val automation: Automation,
+    private val persistenceLayer: PersistenceLayer,
+    private val localProfileManager: LocalProfileManager,
+    private val aapsLogger: AAPSLogger,
+    private val quickLaunchResolver: QuickLaunchResolver
 ) : ViewModel() {
 
     val uiState: StateFlow<MainUiState>
         field = MutableStateFlow(MainUiState())
+
+    /** Toolbar items as a separate StateFlow to avoid unnecessary recompositions of the main UI */
+    val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>>
+        field = MutableStateFlow(emptyList())
+
+    /** Pending confirmation dialog (automation/TT preset actions) */
+    val actionConfirmation: StateFlow<ActionConfirmation?>
+        field = MutableStateFlow(null)
 
     val versionName: String get() = config.VERSION_NAME
     val appIcon: Int get() = iconsProvider.getIcon()
@@ -73,6 +98,7 @@ class MainViewModel @Inject constructor(
     init {
         uiState.update { it.copy(isSimpleMode = preferences.simpleMode) }
         observeTempTargetAndProfile()
+        refreshQuickLaunch()
     }
 
     /**
@@ -296,4 +322,128 @@ class MainViewModel @Inject constructor(
             icon = iconsProvider.getIcon()
         )
     }
+
+    // ── Toolbar ──
+
+    /**
+     * Load toolbar actions from preferences, validate dynamic entries, and resolve display info.
+     * Call this on init and whenever relevant data changes (preferences, automations, profiles, etc.)
+     */
+    fun refreshQuickLaunch() {
+        val json = preferences.get(StringNonKey.QuickLaunchActions)
+        val actions = QuickLaunchSerializer.fromJson(json)
+
+        // Validate dynamic actions and collect valid ones
+        val validated = actions.filter { action -> quickLaunchResolver.isValid(action) }
+
+        // If validation removed items, persist the cleaned list
+        if (validated.size != actions.size) {
+            preferences.put(StringNonKey.QuickLaunchActions, QuickLaunchSerializer.toJson(validated))
+        }
+
+        // Resolve display properties
+        quickLaunchItems.update { validated.map { quickLaunchResolver.resolveItem(it) } }
+    }
+
+    fun requestAutomationConfirmation(automationId: String) {
+        val event = automation.findEventById(automationId) ?: return
+        val message = event.actionsDescription().joinToString("\n") { "• $it" }
+        actionConfirmation.update {
+            ActionConfirmation(
+                title = event.title,
+                message = message,
+                onConfirmAction = ConfirmableAction.ExecuteAutomation(automationId)
+            )
+        }
+    }
+
+    fun requestTempTargetPresetConfirmation(presetId: String) {
+        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
+        val preset = presets.find { it.id == presetId } ?: return
+        val name = preset.name ?: preset.nameRes?.let { rh.gs(it) } ?: "?"
+        val durationMin = (preset.duration / 60000L).toInt()
+        val message = "$name\n${rh.gs(app.aaps.core.ui.R.string.format_mins, durationMin)}"
+        actionConfirmation.update {
+            ActionConfirmation(
+                title = rh.gs(app.aaps.core.ui.R.string.temp_target_management),
+                message = message,
+                onConfirmAction = ConfirmableAction.ActivateTempTargetPreset(presetId)
+            )
+        }
+    }
+
+    fun requestProfileConfirmation(profileName: String, percentage: Int, durationMinutes: Int) {
+        val details = buildString {
+            append(profileName)
+            if (percentage != 100) append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_confirm_pct, percentage)}")
+            if (durationMinutes > 0) append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_confirm_dur, durationMinutes)}")
+            else append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_permanent)}")
+        }
+        actionConfirmation.update {
+            ActionConfirmation(
+                title = rh.gs(app.aaps.ui.R.string.activate_profile),
+                message = details,
+                onConfirmAction = ConfirmableAction.ActivateProfile(profileName, percentage, durationMinutes)
+            )
+        }
+    }
+
+    fun dismissActionConfirmation() {
+        actionConfirmation.update { null }
+    }
+
+    fun executeConfirmableAction(action: ConfirmableAction) {
+        actionConfirmation.update { null }
+        when (action) {
+            is ConfirmableAction.ExecuteAutomation        -> {
+                val event = automation.findEventById(action.automationId) ?: return
+                automation.processEvent(event)
+            }
+
+            is ConfirmableAction.ActivateTempTargetPreset -> {
+                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
+                val preset = presets.find { it.id == action.presetId } ?: return
+                viewModelScope.launch {
+                    val tempTarget = TT(
+                        timestamp = dateUtil.now(),
+                        duration = preset.duration,
+                        reason = preset.reason,
+                        lowTarget = preset.targetValue,
+                        highTarget = preset.targetValue
+                    )
+                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        temporaryTarget = tempTarget,
+                        action = Action.TT,
+                        source = Sources.TTDialog,
+                        note = null,
+                        listValues = listOf(
+                            ValueWithUnit.Mgdl(preset.targetValue),
+                            ValueWithUnit.Minute((preset.duration / 60000L).toInt())
+                        )
+                    )
+                }
+            }
+
+            is ConfirmableAction.ActivateProfile          -> {
+                val store = localProfileManager.profile ?: return
+                profileFunction.createProfileSwitch(
+                    profileStore = store,
+                    profileName = action.profileName,
+                    durationInMinutes = action.durationMinutes,
+                    percentage = action.percentage,
+                    timeShiftInHours = 0,
+                    timestamp = dateUtil.now(),
+                    action = Action.PROFILE_SWITCH,
+                    source = Sources.ProfileSwitchDialog,
+                    note = null,
+                    listValues = listOf(
+                        ValueWithUnit.SimpleString(action.profileName),
+                        ValueWithUnit.Percent(action.percentage),
+                        ValueWithUnit.Minute(action.durationMinutes)
+                    )
+                )
+            }
+        }
+    }
+
 }

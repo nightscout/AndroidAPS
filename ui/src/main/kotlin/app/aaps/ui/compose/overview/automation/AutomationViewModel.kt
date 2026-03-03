@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -25,10 +24,10 @@ import javax.inject.Inject
 
 @Immutable
 data class AutomationActionItem(
+    val eventId: String,
     val title: String,
     @Deprecated("replace by compose icons")
     @DrawableRes val iconResId: Int?,
-    val eventHashCode: Int,
     val actionsDescription: List<String> = emptyList(),
     val triggerIconResIds: List<Int> = emptyList(),
     val actionIconResIds: List<Int> = emptyList()
@@ -53,8 +52,6 @@ class AutomationViewModel @Inject constructor(
     val uiState: StateFlow<AutomationUiState>
         field = MutableStateFlow(AutomationUiState())
 
-    private var currentAutomationEvents: List<AutomationEvent> = emptyList()
-
     init {
         setupEventListeners()
         refreshState()
@@ -74,20 +71,18 @@ class AutomationViewModel @Inject constructor(
 
             val isSuspended = loop.runningMode.isSuspended()
             if (isSuspended || !pump.isInitialized() || profile == null || config.showUserActionsOnWatchOnly()) {
-                currentAutomationEvents = emptyList()
                 uiState.update { it.copy(items = emptyList()) }
                 return@launch
             }
 
             val events = automation.userEvents().filter { it.isEnabled && it.canRun() }
-            currentAutomationEvents = events
 
             val items = events.map { event ->
                 @Suppress("DEPRECATION")
                 AutomationActionItem(
+                    eventId = event.id,
                     title = event.title,
                     iconResId = event.firstActionIcon(),
-                    eventHashCode = event.hashCode(),
                     actionsDescription = event.actionsDescription(),
                     triggerIconResIds = event.triggerIcons().toList(),
                     actionIconResIds = event.actionIcons().toList()
@@ -97,12 +92,4 @@ class AutomationViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Process an automation event by its hashCode identifier.
-     * Called from the UI after user confirms the action.
-     */
-    fun processAutomationEvent(eventHashCode: Int) {
-        val event = currentAutomationEvents.find { it.hashCode() == eventHashCode } ?: return
-        automation.processEvent(event)
-    }
 }

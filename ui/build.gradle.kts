@@ -38,6 +38,7 @@ dependencies {
     api(libs.androidx.hilt.navigation.compose)
     api(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.sh.calvin.reorderable)
     api(libs.androidx.core)
     api(libs.kotlinx.datetime)
 

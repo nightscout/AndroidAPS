@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.ui.compose.AapsFab
@@ -34,7 +35,6 @@ import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.overview.OverviewScreen
-import app.aaps.ui.compose.overview.automation.AutomationActionItem
 import app.aaps.ui.compose.overview.automation.AutomationBottomSheet
 import app.aaps.ui.compose.overview.automation.AutomationViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
@@ -42,6 +42,9 @@ import app.aaps.ui.compose.overview.manage.ManageSheetState
 import app.aaps.ui.compose.overview.manage.ManageViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 import app.aaps.ui.compose.overview.treatments.TreatmentBottomSheet
+import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
+import app.aaps.ui.compose.quickLaunch.QuickLaunchToolbar
+import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchResults
 import app.aaps.ui.search.SearchUiState
@@ -49,6 +52,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
+    mainViewModel: MainViewModel,
     uiState: MainUiState,
     versionName: String,
     appIcon: Int,
@@ -108,6 +112,9 @@ fun MainScreen(
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
+    // Toolbar
+    quickLaunchItems: List<ResolvedQuickLaunchItem> = emptyList(),
+    onQuickLaunchActionClick: (QuickLaunchAction) -> Unit = {},
     calcProgress: Int,
     graphViewModel: GraphViewModel,
     statusLightsDef: PreferenceSubScreenDef,
@@ -119,7 +126,6 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     var showTreatmentSheet by remember { mutableStateOf(false) }
     var showAutomationSheet by remember { mutableStateOf(false) }
-    var confirmAutomationItem by remember { mutableStateOf<AutomationActionItem?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Sync drawer state with ui state
@@ -194,10 +200,8 @@ fun MainScreen(
                     onPermissionsClick = onPermissionsClick,
                 )
             },
-            floatingActionButton = {
-                SwitchUiFab(onClick = onSwitchToClassicUi)
-            }
         ) { paddingValues ->
+            val hasToolbar = quickLaunchItems.isNotEmpty()
             Box(modifier = Modifier.fillMaxSize()) {
                 OverviewScreen(
                     profileName = uiState.profileName,
@@ -228,7 +232,8 @@ fun MainScreen(
                     onNotificationActionClick = onNotificationActionClick,
                     autoShowNotificationSheet = autoShowNotificationSheet,
                     onAutoShowConsumed = onAutoShowConsumed,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    fabBottomOffset = if (hasToolbar) 56.dp else 0.dp
                 )
 
                 // Search results overlay
@@ -251,6 +256,27 @@ fun MainScreen(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(paddingValues)
+                )
+
+                // Floating quick-action toolbar
+                if (hasToolbar) {
+                    QuickLaunchToolbar(
+                        items = quickLaunchItems,
+                        onActionClick = onQuickLaunchActionClick,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = paddingValues.calculateBottomPadding() + 8.dp)
+                    )
+                }
+
+                // FABs — positioned above the toolbar when it's visible
+                val fabBottomPadding = paddingValues.calculateBottomPadding() +
+                    if (hasToolbar) 64.dp else 16.dp
+                SwitchUiFab(
+                    onClick = onSwitchToClassicUi,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = fabBottomPadding, end = 16.dp)
                 )
             }
         }
@@ -287,21 +313,18 @@ fun MainScreen(
         AutomationBottomSheet(
             onDismiss = { showAutomationSheet = false },
             automationItems = automationState.items,
-            onItemClick = { item -> confirmAutomationItem = item }
+            onItemClick = { item -> mainViewModel.requestAutomationConfirmation(item.eventId) }
         )
     }
 
-    // Automation confirmation dialog
-    confirmAutomationItem?.let { item ->
-        val message = item.actionsDescription.joinToString("\n") { "• $it" }
+    // Shared confirmation dialog (automation actions, TT presets — from toolbar or bottom sheets)
+    val actionConfirmation by mainViewModel.actionConfirmation.collectAsStateWithLifecycle()
+    actionConfirmation?.let { confirmation ->
         OkCancelDialog(
-            title = item.title,
-            message = message,
-            onConfirm = {
-                automationViewModel.processAutomationEvent(item.eventHashCode)
-                confirmAutomationItem = null
-            },
-            onDismiss = { confirmAutomationItem = null }
+            title = confirmation.title,
+            message = confirmation.message,
+            onConfirm = { mainViewModel.executeConfirmableAction(confirmation.onConfirmAction) },
+            onDismiss = { mainViewModel.dismissActionConfirmation() }
         )
     }
 

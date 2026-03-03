@@ -60,6 +60,7 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -137,6 +138,9 @@ import app.aaps.ui.compose.profileManagement.ProfileManagementScreen
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewModel
+import app.aaps.ui.compose.quickLaunch.QuickLauchConfigScreen
+import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
+import app.aaps.ui.compose.quickLaunch.QuickLaunchConfigViewModel
 import app.aaps.ui.compose.quickWizard.QuickWizardManagementScreen
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
@@ -183,6 +187,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
+    @Inject lateinit var localProfileManager: LocalProfileManager
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var callForPrefFile: ActivityResultLauncher<Void?>? = null
@@ -382,6 +387,7 @@ class ComposeMainActivity : AppCompatActivity() {
                         val searchState by searchViewModel.uiState.collectAsStateWithLifecycle()
                         val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
                         val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
+                        val quickLaunchItems by mainViewModel.quickLaunchItems.collectAsStateWithLifecycle()
 
                         // Pump setup button in bottom bar
                         val pumpPlugin = activePlugin.activePump as PluginBase
@@ -459,6 +465,7 @@ class ComposeMainActivity : AppCompatActivity() {
                         )
 
                         MainScreen(
+                            mainViewModel = mainViewModel,
                             uiState = state,
                             versionName = mainViewModel.versionName,
                             appIcon = mainViewModel.appIcon,
@@ -622,6 +629,9 @@ class ComposeMainActivity : AppCompatActivity() {
                             onPermissionsClick = {
                                 permissionsViewModel.showSheet()
                             },
+                            // Toolbar
+                            quickLaunchItems = quickLaunchItems,
+                            onQuickLaunchActionClick = { action -> handleQuickLaunchAction(action, navController) },
                             calcProgress = calcProgress,
                             graphViewModel = graphViewModel,
                             statusLightsDef = builtInSearchables.statusLights,
@@ -963,6 +973,17 @@ class ComposeMainActivity : AppCompatActivity() {
                         }
                     }
 
+                    composable(AppRoute.QuickLaunchConfig.route) {
+                        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                        QuickLauchConfigScreen(
+                            viewModel = quickLaunchConfigViewModel,
+                            onNavigateBack = {
+                                mainViewModel.refreshQuickLaunch()
+                                navController.popBackStack()
+                            }
+                        )
+                    }
+
                     composable(AppRoute.Configuration.route) {
                         val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
                         app.aaps.ui.compose.configuration.ConfigurationScreen(
@@ -1109,6 +1130,8 @@ class ComposeMainActivity : AppCompatActivity() {
                            if (event.isChanged(StringKey.GeneralLanguage.key)) {
                                finish()
                            }
+                           // Refresh toolbar when relevant preferences change
+                           mainViewModel.refreshQuickLaunch()
                        }, fabricPrivacy::logException)
     }
 
@@ -1141,6 +1164,90 @@ class ComposeMainActivity : AppCompatActivity() {
                 }
 
             else                                   -> Unit
+        }
+    }
+
+    private fun handleQuickLaunchAction(action: QuickLaunchAction, navController: NavController) {
+        when (action) {
+            // Dialog-based actions — open the appropriate dialog
+            QuickLaunchAction.Insulin              ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.InsulinDialog.route)
+                }
+
+            QuickLaunchAction.Carbs                ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.CarbsDialog.route)
+                }
+
+            QuickLaunchAction.Wizard               ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.WizardDialog.createRoute())
+                }
+
+            QuickLaunchAction.Treatment            ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.TreatmentDialog.route)
+                }
+
+            QuickLaunchAction.Cgm                  -> {
+                if (xDripSource.isEnabled()) openCgmApp("com.eveningoutpost.dexdrip")
+                else if (dexcomBoyda.isEnabled()) dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
+            }
+
+            QuickLaunchAction.Calibration          ->
+                if (xDripSource.isEnabled()) uiInteraction.runCalibrationDialog(supportFragmentManager)
+
+            QuickLaunchAction.ProfileSwitch        ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.Profile.route)
+                }
+
+            QuickLaunchAction.BgCheck              -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
+            QuickLaunchAction.Note                 -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.NOTE.ordinal))
+            QuickLaunchAction.Exercise             -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
+            QuickLaunchAction.Question             -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
+            QuickLaunchAction.Announcement         -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
+            QuickLaunchAction.SensorInsert         -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.SENSOR_INSERT.ordinal))
+            QuickLaunchAction.BatteryChange        -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BATTERY_CHANGE.ordinal))
+
+            QuickLaunchAction.CannulaChange        ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.SITE_CHANGE.ordinal))
+                }
+
+            QuickLaunchAction.Fill                 ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.CARTRIDGE_CHANGE.ordinal))
+                }
+
+            QuickLaunchAction.SiteRotation         -> uiInteraction.runSiteRotationDialog(supportFragmentManager)
+
+            QuickLaunchAction.QuickLaunchConfig    -> navController.navigate(AppRoute.QuickLaunchConfig.route)
+
+            // Dynamic actions — preset-based, show confirmation first
+            is QuickLaunchAction.QuickWizardAction ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) mainViewModel.executeQuickWizard(this, action.guid)
+                }
+
+            is QuickLaunchAction.AutomationAction  ->
+                mainViewModel.requestAutomationConfirmation(action.automationId)
+
+            is QuickLaunchAction.TempTargetPreset  ->
+                mainViewModel.requestTempTargetPresetConfirmation(action.presetId)
+
+            is QuickLaunchAction.ProfileAction     ->
+                protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+                    if (result == ProtectionResult.GRANTED) {
+                        mainViewModel.requestProfileConfirmation(action.profileName, action.percentage, action.durationMinutes)
+                    }
+                }
+
+            is QuickLaunchAction.PluginAction      -> {
+                val pluginIndex = activePlugin.getPluginsList().indexOfFirst { it.javaClass.simpleName == action.className }
+                if (pluginIndex >= 0) navController.navigate(AppRoute.PluginContent.createRoute(pluginIndex))
+            }
         }
     }
 
@@ -1287,6 +1394,8 @@ class ComposeMainActivity : AppCompatActivity() {
                             }
                         }
                     }
+
+                    "quick_launch_config"     -> navController.navigate(AppRoute.QuickLaunchConfig.route)
 
                     // Dialogs
                     "carbs_dialog"            -> {

@@ -810,6 +810,8 @@
 
     <!-- Actions Screen -->
     <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="reorder">Reorder</string>
     <string name="actions">Actions</string>
     <string name="status">Status</string>
     <string name="pump_actions">Pump actions</string>

@@ -50,3 +50,28 @@ data class QuickWizardItem(
     val isEnabled: Boolean = false,
     val disabledReason: String? = null
 )
+
+/**
+ * Confirmation dialog data for actions that need a confirm step before executing.
+ * Shared by toolbar quick actions, automation bottom sheet, and TT presets.
+ */
+@Immutable
+data class ActionConfirmation(
+    val title: String,
+    val message: String,
+    val onConfirmAction: ConfirmableAction
+)
+
+/**
+ * The action to execute when a confirmation dialog is confirmed.
+ */
+sealed class ConfirmableAction {
+
+    data class ExecuteAutomation(val automationId: String) : ConfirmableAction()
+    data class ActivateTempTargetPreset(val presetId: String) : ConfirmableAction()
+    data class ActivateProfile(
+        val profileName: String,
+        val percentage: Int,
+        val durationMinutes: Int
+    ) : ConfirmableAction()
+}

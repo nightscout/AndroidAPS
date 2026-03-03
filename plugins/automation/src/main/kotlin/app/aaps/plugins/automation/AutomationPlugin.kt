@@ -257,12 +257,15 @@ class AutomationPlugin @Inject constructor(
     private fun loadFromSP() {
         automationEvents.clear()
         val data = preferences.get(AutomationStringKey.AutomationEvents)
+        var needsResave = false
         if (data != "")
             try {
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
+                    val hadId = o.has("id") && o.optString("id", "").isNotEmpty()
                     val event = AutomationEventObject(injector).fromJSON(o.toString())
+                    if (!hadId) needsResave = true
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
@@ -270,6 +273,8 @@ class AutomationPlugin @Inject constructor(
             }
         else
             automationEvents.add(AutomationEventObject(injector).fromJSON(EMPTY_EVENT))
+        // Persist generated IDs for events that didn't have one
+        if (needsResave) storeToSP()
     }
 
     internal fun processActions() {
@@ -420,6 +425,10 @@ class AutomationPlugin @Inject constructor(
             if (event.userAction && event.isEnabled) list.add(event)
         }
         return list
+    }
+
+    override fun findEventById(id: String): AutomationEvent? {
+        return synchronized(this) { automationEvents.find { it.id == id } }
     }
 
     fun getActionDummyObjects(): List<Action> {

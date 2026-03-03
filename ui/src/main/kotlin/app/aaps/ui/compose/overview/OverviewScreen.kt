@@ -50,6 +50,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
@@ -104,6 +105,7 @@ fun OverviewScreen(
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
     paddingValues: PaddingValues,
+    fabBottomOffset: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -273,7 +275,7 @@ fun OverviewScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(paddingValues)
-                .padding(end = 16.dp, bottom = 72.dp)
+                .padding(end = 16.dp, bottom = 72.dp + fabBottomOffset)
         )
     }
 

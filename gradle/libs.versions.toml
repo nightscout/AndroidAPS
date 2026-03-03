@@ -200,4 +200,5 @@ com-patrykandpatrick-vico-compose-m3 = { group = "com.patrykandpatrick.vico", na
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeUi" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
+sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "2.4.3" }
 

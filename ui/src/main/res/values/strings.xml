@@ -256,4 +256,24 @@
         <item>Negative only</item>
     </string-array>
 
+    <!-- Toolbar configuration -->
+    <string name="quick_launch_configure">Configure QuickLaunch</string>
+    <string name="quick_launch_configure_desc">Customize quick-action buttons on overview</string>
+    <string name="quick_launch_selected_actions">Selected actions</string>
+    <string name="quick_launch_available_actions">Available actions</string>
+    <string name="quick_launch_no_dynamic_items">No items available</string>
+    <string name="quick_launch_category_treatment">Treatment</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Profile</string>
+    <string name="quick_launch_category_temp_target">Temp Target Presets</string>
+    <string name="quick_launch_category_quick_wizard">Quick Wizard</string>
+    <string name="quick_launch_category_automation">Automation</string>
+    <string name="quick_launch_edit_profile_preset">Edit profile preset</string>
+    <string name="quick_launch_profile_percentage">Percentage</string>
+    <string name="quick_launch_profile_duration">Duration</string>
+    <string name="quick_launch_profile_permanent">Permanent</string>
+    <string name="quick_launch_profile_confirm">Activate profile %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+
 </resources>
