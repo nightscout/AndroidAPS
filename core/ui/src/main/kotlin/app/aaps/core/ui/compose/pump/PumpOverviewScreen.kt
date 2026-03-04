@@ -70,11 +70,8 @@ fun PumpOverviewScreen(
         // 4. Custom content (pump image, etc.)
         customContent?.invoke()
 
-        // 5. Primary actions
-        ActionButtons(state.primaryActions)
-
-        // 6. Management actions
-        ActionButtons(state.managementActions)
+        // 5+6. Action buttons (primary + management, 2 per row)
+        ActionButtons(state.primaryActions + state.managementActions)
     }
 }
 

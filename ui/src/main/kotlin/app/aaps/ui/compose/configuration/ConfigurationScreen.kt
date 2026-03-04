@@ -1,7 +1,9 @@
 package app.aaps.ui.compose.configuration
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,12 +39,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -68,14 +69,7 @@ fun ConfigurationScreen(
     onConfirmHardwarePump: () -> Unit,
     onDismissHardwarePump: () -> Unit,
 ) {
-    var selectedTypeOrdinal by rememberSaveable { mutableStateOf(-1) }
-    val selectedCategory = if (selectedTypeOrdinal >= 0) {
-        categories.find { it.type.ordinal == selectedTypeOrdinal }
-    } else null
-
-    if (selectedCategory != null) {
-        BackHandler { selectedTypeOrdinal = -1 }
-    }
+    var expandedTypeOrdinal by rememberSaveable { mutableStateOf(-1) }
 
     if (hardwarePumpConfirmation != null) {
         AlertDialog(
@@ -95,35 +89,6 @@ fun ConfigurationScreen(
         )
     }
 
-    Crossfade(
-        targetState = selectedCategory,
-        label = "configNav"
-    ) { category ->
-        if (category != null) {
-            CategoryDetailScreen(
-                category = category,
-                isSimpleMode = isSimpleMode,
-                pluginStateVersion = pluginStateVersion,
-                onNavigateBack = { selectedTypeOrdinal = -1 },
-                onNavigate = onNavigate,
-                onPluginEnableToggle = onPluginEnableToggle
-            )
-        } else {
-            CategoryListScreen(
-                categories = categories,
-                onCategoryClick = { selectedTypeOrdinal = it.type.ordinal },
-                onNavigateBack = onNavigateBack
-            )
-        }
-    }
-}
-
-@Composable
-private fun CategoryListScreen(
-    categories: List<DrawerCategory>,
-    onCategoryClick: (DrawerCategory) -> Unit,
-    onNavigateBack: () -> Unit,
-) {
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -139,16 +104,67 @@ private fun CategoryListScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            items(categories, key = { it.type }) { category ->
-                CategoryRow(
-                    category = category,
-                    onClick = { onCategoryClick(category) }
-                )
+        key(pluginStateVersion) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                categories.forEach { category ->
+                    val isExpanded = expandedTypeOrdinal == category.type.ordinal
+
+                    item(key = "cat_${category.type}") {
+                        val singleEnabled = category.enabledPlugins.singleOrNull()
+
+                        CategoryRow(
+                            category = category,
+                            isExpanded = isExpanded,
+                            onRowClick = if (singleEnabled != null) {
+                                { onNavigate(NavigationRequest.Plugin(singleEnabled.javaClass.simpleName)) }
+                            } else {
+                                { expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal }
+                            },
+                            onExpandClick = {
+                                expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal
+                            }
+                        )
+                    }
+
+                    item(key = "detail_${category.type}") {
+                        AnimatedVisibility(
+                            visible = isExpanded,
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                    .padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 8.dp)
+                            ) {
+                                category.plugins.forEach { plugin ->
+                                    val pluginEnabled = plugin.isEnabled(category.type)
+                                    val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
+                                    val showPrefs = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode)
+                                    val canToggle = !plugin.pluginDescription.alwaysEnabled &&
+                                        (category.isMultiSelect || !pluginEnabled)
+
+                                    ConfigPluginItem(
+                                        plugin = plugin,
+                                        isEnabled = pluginEnabled,
+                                        canToggle = canToggle,
+                                        showPreferences = showPrefs,
+                                        onPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.javaClass.simpleName)) },
+                                        onEnableToggle = { enabled ->
+                                            onPluginEnableToggle(plugin, category.type, enabled)
+                                        },
+                                        onPreferencesClick = { onNavigate(NavigationRequest.PluginPreferences(plugin.javaClass.simpleName)) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -157,7 +173,9 @@ private fun CategoryListScreen(
 @Composable
 private fun CategoryRow(
     category: DrawerCategory,
-    onClick: () -> Unit,
+    isExpanded: Boolean,
+    onRowClick: () -> Unit,
+    onExpandClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val categoryName = stringResource(category.titleRes)
@@ -172,21 +190,26 @@ private fun CategoryRow(
     val plugin = if (category.enabledCount == 1) category.enabledPlugins.firstOrNull() else null
     val composeIcon = plugin?.pluginDescription?.icon
     val defaultCategoryIcon = when (category.type) {
-        PluginType.SYNC -> Icons.Default.Sync
+        PluginType.SYNC    -> Icons.Default.Sync
         PluginType.GENERAL -> Icons.Default.Extension
-        else -> Icons.Default.Settings
+        else               -> Icons.Default.Settings
     }
     val iconPainter =
         if (composeIcon != null) rememberVectorPainter(composeIcon)
         else if (plugin?.menuIcon != null && plugin.menuIcon != -1) painterResource(plugin.menuIcon)
         else rememberVectorPainter(defaultCategoryIcon)
 
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (isExpanded) 90f else 0f,
+        label = "chevron"
+    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(start = 24.dp, top = 12.dp, bottom = 12.dp, end = 16.dp)
+            .clickable(onClick = onRowClick)
+            .padding(start = 24.dp, top = 12.dp, bottom = 12.dp, end = 4.dp)
     ) {
         Icon(
             painter = iconPainter,
@@ -211,74 +234,14 @@ private fun CategoryRow(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(24.dp)
-        )
-    }
-}
-
-@Composable
-private fun CategoryDetailScreen(
-    category: DrawerCategory,
-    isSimpleMode: Boolean,
-    pluginStateVersion: Int,
-    onNavigateBack: () -> Unit,
-    onNavigate: (NavigationRequest) -> Unit,
-    onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
-) {
-    val enabledIndex = category.plugins
-        .indexOfFirst { it.isEnabled(category.type) }
-        .coerceAtLeast(0)
-    val listState = remember(category.type) {
-        LazyListState(firstVisibleItemIndex = enabledIndex)
-    }
-
-    Scaffold(
-        topBar = {
-            AapsTopAppBar(
-                title = { Text(stringResource(category.titleRes)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
-                        )
-                    }
-                }
+        IconButton(onClick = onExpandClick) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = if (isExpanded) stringResource(app.aaps.core.ui.R.string.collapse)
+                else stringResource(app.aaps.core.ui.R.string.expand),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.rotate(chevronRotation)
             )
-        }
-    ) { paddingValues ->
-        key(pluginStateVersion) {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                items(category.plugins, key = { it.javaClass.simpleName }) { plugin ->
-                    val pluginEnabled = plugin.isEnabled(category.type)
-                    val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
-                    val showPrefs = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode)
-
-                    val canToggle = !plugin.pluginDescription.alwaysEnabled &&
-                        (category.isMultiSelect || !pluginEnabled)
-
-                    ConfigPluginItem(
-                        plugin = plugin,
-                        isEnabled = pluginEnabled,
-                        canToggle = canToggle,
-                        showPreferences = showPrefs,
-                        onPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.javaClass.simpleName)) },
-                        onEnableToggle = { enabled ->
-                            onPluginEnableToggle(plugin, category.type, enabled)
-                        },
-                        onPreferencesClick = { onNavigate(NavigationRequest.PluginPreferences(plugin.javaClass.simpleName)) }
-                    )
-                }
-            }
         }
     }
 }
@@ -355,10 +318,11 @@ private fun ConfigPluginItem(
                     IconButton(onClick = onPreferencesClick) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
-                            contentDescription = null,
+                            contentDescription = stringResource(app.aaps.core.ui.R.string.settings),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    Spacer(modifier = Modifier.width(4.dp))
                 }
                 Switch(
                     checked = isEnabled,
@@ -370,8 +334,8 @@ private fun ConfigPluginItem(
         },
         colors = ListItemDefaults.colors(containerColor = containerColor),
         modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
             .clip(RoundedCornerShape(12.dp))
-            .then(if (isEnabled) Modifier.clickable { onPluginClick() } else Modifier)
+            .clickable(enabled = isEnabled, onClick = onPluginClick)
     )
 }
