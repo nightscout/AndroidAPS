@@ -42,7 +42,6 @@ data class MainUiState(
     // QuickWizard entries for treatment bottom sheet
     val quickWizardItems: List<QuickWizardItem> = emptyList(),
     // Navigation-triggered dialogs
-    val showEbLoopStopConfirmation: Boolean = false,
     val showAuthFailedDialog: Boolean = false
 )
 

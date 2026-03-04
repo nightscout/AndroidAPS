@@ -123,7 +123,7 @@ class ActionsFragment : DaggerFragment() {
                 uiInteraction.showOkCancelDialog(
                     context = requireActivity(),
                     title = app.aaps.core.ui.R.string.extended_bolus,
-                    message = R.string.ebstopsloop,
+                    message = app.aaps.core.ui.R.string.ebstopsloop,
                     ok = { uiInteraction.runExtendedBolusDialog(childFragmentManager) }
                 )
             })

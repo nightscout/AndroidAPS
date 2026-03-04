@@ -91,7 +91,6 @@ import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -112,9 +111,11 @@ import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.ui.compose.automationSheet.AutomationViewModel
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
+import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
@@ -124,12 +125,10 @@ import app.aaps.ui.compose.maintenance.ImportSettingsScreen
 import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.ImportViewModel
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
-import app.aaps.ui.compose.automationSheet.AutomationViewModel
-import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.manageSheet.ManageSheetHost
 import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
-import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
 import app.aaps.ui.compose.permissionsSheet.PermissionsSheet
 import app.aaps.ui.compose.permissionsSheet.PermissionsSideEffect
 import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
@@ -151,11 +150,13 @@ import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeScreen
 import app.aaps.ui.compose.stats.StatsScreen
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
+import app.aaps.ui.compose.tempBasalDialog.TempBasalDialogScreen
 import app.aaps.ui.compose.tempTarget.TempTargetManagementScreen
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatmentDialog.TreatmentDialogScreen
 import app.aaps.ui.compose.treatments.TreatmentsScreen
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
+import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
 import app.aaps.ui.compose.wizardDialog.WizardDialogScreen
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.SearchIndexEntry
@@ -421,18 +422,6 @@ class ComposeMainActivity : AppCompatActivity() {
                             )
                         }
 
-                        // Extended bolus: confirm loop-stop before launching dialog
-                        if (state.showEbLoopStopConfirmation) {
-                            OkCancelDialog(
-                                title = stringResource(app.aaps.core.ui.R.string.extended_bolus),
-                                message = stringResource(app.aaps.plugins.main.R.string.ebstopsloop),
-                                onConfirm = {
-                                    mainViewModel.setShowEbLoopStopConfirmation(false)
-                                    uiInteraction.runExtendedBolusDialog(supportFragmentManager)
-                                },
-                                onDismiss = { mainViewModel.setShowEbLoopStopConfirmation(false) }
-                            )
-                        }
 
                         MainScreen(
                             mainViewModel = mainViewModel,
@@ -661,6 +650,24 @@ class ComposeMainActivity : AppCompatActivity() {
                             bgInfoState = graphViewModel.bgInfoState,
                             iobUiState = graphViewModel.iobUiState,
                             cobUiState = graphViewModel.cobUiState,
+                            onNavigateBack = { navController.popBackStack() },
+                            onShowDeliveryError = { comment ->
+                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        )
+                    }
+
+                    composable(route = AppRoute.TempBasalDialog.route) {
+                        TempBasalDialogScreen(
+                            onNavigateBack = { navController.popBackStack() },
+                            onShowDeliveryError = { comment ->
+                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        )
+                    }
+
+                    composable(route = AppRoute.ExtendedBolusDialog.route) {
+                        ExtendedBolusDialogScreen(
                             onNavigateBack = { navController.popBackStack() },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -1184,58 +1191,58 @@ class ComposeMainActivity : AppCompatActivity() {
     private fun navigateToElement(elementType: ElementType, navController: NavController) {
         when (elementType) {
             // Navigation screens (drawer)
-            ElementType.TREATMENTS              -> navController.navigate(AppRoute.Treatments.route)
+            ElementType.TREATMENTS                   -> navController.navigate(AppRoute.Treatments.route)
             ElementType.STATISTICS,
-            ElementType.TDD_CYCLE_PATTERN       -> navController.navigate(AppRoute.Stats.route)
+            ElementType.TDD_CYCLE_PATTERN            -> navController.navigate(AppRoute.Stats.route)
 
-            ElementType.PROFILE_HELPER          -> navController.navigate(AppRoute.ProfileHelper.route)
-            ElementType.HISTORY_BROWSER         -> startActivity(Intent(this@ComposeMainActivity, uiInteraction.historyBrowseActivity))
-            ElementType.SETUP_WIZARD            -> startActivity(Intent(this@ComposeMainActivity, SetupWizardActivity::class.java))
-            ElementType.MAINTENANCE             -> mainViewModel.setShowMaintenanceSheet(true)
-            ElementType.CONFIGURATION           -> navController.navigate(AppRoute.Configuration.route)
-            ElementType.ABOUT                   -> mainViewModel.setShowAboutDialog(true)
+            ElementType.PROFILE_HELPER               -> navController.navigate(AppRoute.ProfileHelper.route)
+            ElementType.HISTORY_BROWSER              -> startActivity(Intent(this@ComposeMainActivity, uiInteraction.historyBrowseActivity))
+            ElementType.SETUP_WIZARD                 -> startActivity(Intent(this@ComposeMainActivity, SetupWizardActivity::class.java))
+            ElementType.MAINTENANCE                  -> mainViewModel.setShowMaintenanceSheet(true)
+            ElementType.CONFIGURATION                -> navController.navigate(AppRoute.Configuration.route)
+            ElementType.ABOUT                        -> mainViewModel.setShowAboutDialog(true)
 
             // Management screens
-            ElementType.PROFILE_MANAGEMENT_PLAY -> navController.navigate(AppRoute.Profile.createRoute(ScreenMode.PLAY))
-            ElementType.PROFILE_MANAGEMENT_EDIT -> navController.navigate(AppRoute.Profile.createRoute(ScreenMode.EDIT))
-            ElementType.TEMP_TARGET_MANAGEMENT_PLAY -> navController.navigate(AppRoute.TempTargetManagement.createRoute(ScreenMode.PLAY))
-            ElementType.TEMP_TARGET_MANAGEMENT_EDIT -> navController.navigate(AppRoute.TempTargetManagement.createRoute(ScreenMode.EDIT))
+            ElementType.PROFILE_MANAGEMENT_PLAY      -> navController.navigate(AppRoute.Profile.createRoute(ScreenMode.PLAY))
+            ElementType.PROFILE_MANAGEMENT_EDIT      -> navController.navigate(AppRoute.Profile.createRoute(ScreenMode.EDIT))
+            ElementType.TEMP_TARGET_MANAGEMENT_PLAY  -> navController.navigate(AppRoute.TempTargetManagement.createRoute(ScreenMode.PLAY))
+            ElementType.TEMP_TARGET_MANAGEMENT_EDIT  -> navController.navigate(AppRoute.TempTargetManagement.createRoute(ScreenMode.EDIT))
             ElementType.QUICK_WIZARD_MANAGEMENT_PLAY -> navController.navigate(AppRoute.QuickWizardManagement.createRoute(ScreenMode.PLAY))
             ElementType.QUICK_WIZARD_MANAGEMENT_EDIT -> navController.navigate(AppRoute.QuickWizardManagement.createRoute(ScreenMode.EDIT))
-            ElementType.RUNNING_MODE            -> navController.navigate(AppRoute.RunningMode.route)
-            ElementType.QUICK_LAUNCH_CONFIG     -> navController.navigate(AppRoute.QuickLaunchConfig.route)
+            ElementType.RUNNING_MODE                 -> navController.navigate(AppRoute.RunningMode.route)
+            ElementType.QUICK_LAUNCH_CONFIG          -> navController.navigate(AppRoute.QuickLaunchConfig.route)
 
             // Treatment dialogs
-            ElementType.CARBS                   -> navController.navigate(AppRoute.CarbsDialog.route)
-            ElementType.INSULIN                 -> navController.navigate(AppRoute.InsulinDialog.route)
-            ElementType.TREATMENT               -> navController.navigate(AppRoute.TreatmentDialog.route)
-            ElementType.FILL                    -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.CARTRIDGE_CHANGE.ordinal))
-            ElementType.CANNULA_CHANGE          -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.SITE_CHANGE.ordinal))
-            ElementType.BOLUS_WIZARD            -> navController.navigate(AppRoute.WizardDialog.createRoute())
-            ElementType.TEMP_BASAL              -> uiInteraction.runTempBasalDialog(supportFragmentManager)
-            ElementType.EXTENDED_BOLUS          -> mainViewModel.setShowEbLoopStopConfirmation(true)
+            ElementType.CARBS                        -> navController.navigate(AppRoute.CarbsDialog.route)
+            ElementType.INSULIN                      -> navController.navigate(AppRoute.InsulinDialog.route)
+            ElementType.TREATMENT                    -> navController.navigate(AppRoute.TreatmentDialog.route)
+            ElementType.FILL                         -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.CARTRIDGE_CHANGE.ordinal))
+            ElementType.CANNULA_CHANGE               -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.SITE_CHANGE.ordinal))
+            ElementType.BOLUS_WIZARD                 -> navController.navigate(AppRoute.WizardDialog.createRoute())
+            ElementType.TEMP_BASAL                   -> navController.navigate(AppRoute.TempBasalDialog.route)
+            ElementType.EXTENDED_BOLUS               -> navController.navigate(AppRoute.ExtendedBolusDialog.route)
 
             // CGM
-            ElementType.CGM_XDRIP               -> openCgmApp("com.eveningoutpost.dexdrip")
-            ElementType.CGM_DEX                 -> dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
+            ElementType.CGM_XDRIP                    -> openCgmApp("com.eveningoutpost.dexdrip")
+            ElementType.CGM_DEX                      -> dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
 
-            ElementType.CALIBRATION             -> uiInteraction.runCalibrationDialog(supportFragmentManager)
+            ElementType.CALIBRATION                  -> uiInteraction.runCalibrationDialog(supportFragmentManager)
 
             // Careportal
-            ElementType.BG_CHECK                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
-            ElementType.SENSOR_INSERT           -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.SENSOR_INSERT.ordinal))
-            ElementType.BATTERY_CHANGE          -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BATTERY_CHANGE.ordinal))
-            ElementType.NOTE                    -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.NOTE.ordinal))
-            ElementType.EXERCISE                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
-            ElementType.QUESTION                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
-            ElementType.ANNOUNCEMENT            -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
-            ElementType.SITE_ROTATION           -> uiInteraction.runSiteRotationDialog(supportFragmentManager)
+            ElementType.BG_CHECK                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
+            ElementType.SENSOR_INSERT                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.SENSOR_INSERT.ordinal))
+            ElementType.BATTERY_CHANGE               -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BATTERY_CHANGE.ordinal))
+            ElementType.NOTE                         -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.NOTE.ordinal))
+            ElementType.EXERCISE                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
+            ElementType.QUESTION                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
+            ElementType.ANNOUNCEMENT                 -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
+            ElementType.SITE_ROTATION                -> uiInteraction.runSiteRotationDialog(supportFragmentManager)
 
             // Settings
-            ElementType.SETTINGS                -> navController.navigate(AppRoute.Preferences.route)
+            ElementType.SETTINGS                     -> navController.navigate(AppRoute.Preferences.route)
 
             // App lifecycle
-            ElementType.EXIT                    -> {
+            ElementType.EXIT                         -> {
                 finish()
                 configBuilder.exitApp("Menu", Sources.Aaps, false)
             }
@@ -1248,7 +1255,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.SENSITIVITY,
             ElementType.USER_ENTRY,
             ElementType.LOOP,
-            ElementType.AAPS                    -> {
+            ElementType.AAPS                         -> {
             }
         }
     }

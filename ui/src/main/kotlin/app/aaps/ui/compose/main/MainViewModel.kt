@@ -307,10 +307,6 @@ class MainViewModel @Inject constructor(
         uiState.update { it.copy(showMaintenanceSheet = show) }
     }
 
-    fun setShowEbLoopStopConfirmation(show: Boolean) {
-        uiState.update { it.copy(showEbLoopStopConfirmation = show) }
-    }
-
     fun setShowAuthFailedDialog(show: Boolean) {
         uiState.update { it.copy(showAuthFailedDialog = show) }
     }

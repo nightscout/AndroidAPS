@@ -676,6 +676,7 @@
     <string name="device_changed" comment="26 characters max for translation">Device changed</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Tempbasal delivery error</string>
+    <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="not_set_short">Not set</string>
     <string name="pump_busy">Pump is busy</string>
     <string name="connection_error">Pump connection error</string>
