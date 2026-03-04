@@ -82,9 +82,8 @@ class ProtectionCheckImpl @Inject constructor(
     }
 
     private fun activeSession(protection: ProtectionCheck.Protection): Boolean {
-        var timeout = TimeUnit.SECONDS.toMillis(preferences.get(IntKey.ProtectionTimeout).toLong())
-        // Default timeout to pass the resume check at start of an activity
-        timeout = if (timeout < 1000) 1000 else timeout
+        val timeout = TimeUnit.SECONDS.toMillis(preferences.get(IntKey.ProtectionTimeout).toLong())
+        if (timeout <= 0) return false // 0 = always ask
         val last = lastAuthorization[protection.ordinal]
         val diff = dateUtil.now() - last
         return diff < timeout

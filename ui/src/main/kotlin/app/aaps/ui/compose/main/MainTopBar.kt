@@ -19,20 +19,6 @@ import androidx.compose.ui.unit.dp
 import app.aaps.ui.search.M3SearchBar
 import app.aaps.ui.search.SearchUiState
 
-sealed class MainMenuItem(val id: String) {
-    data object Preferences : MainMenuItem("preferences")
-    data object PluginPreferences : MainMenuItem("plugin_preferences")
-    data object Treatments : MainMenuItem("treatments")
-    data object HistoryBrowser : MainMenuItem("history_browser")
-    data object SetupWizard : MainMenuItem("setup_wizard")
-    data object Stats : MainMenuItem("stats")
-    data object ProfileHelper : MainMenuItem("profile_helper")
-    data object Maintenance : MainMenuItem("maintenance")
-    data object Configuration : MainMenuItem("configuration")
-    data object About : MainMenuItem("about")
-    data object Exit : MainMenuItem("exit")
-}
-
 /**
  * Main top bar with M3-style search bar.
  * Layout: [Menu] [----Search Bar----] [Settings]

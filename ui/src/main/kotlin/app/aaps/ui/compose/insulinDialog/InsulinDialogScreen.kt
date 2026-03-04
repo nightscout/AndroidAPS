@@ -46,12 +46,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
@@ -113,8 +115,8 @@ fun InsulinDialogScreen(
             OkCancelDialog(
                 title = stringResource(CoreUiR.string.bolus),
                 message = summaryLines.joinToString("<br/>"),
-                icon = IcBolus,
-                iconTint = AapsTheme.elementColors.insulin,
+                icon = ElementType.INSULIN.icon(),
+                iconTint = ElementType.INSULIN.color(),
                 onConfirm = {
                     viewModel.confirmAndSave()
                     onNavigateBack()
@@ -129,8 +131,8 @@ fun InsulinDialogScreen(
         OkCancelDialog(
             title = stringResource(CoreUiR.string.bolus),
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = IcBolus,
-            iconTint = AapsTheme.elementColors.insulin,
+            icon = ElementType.INSULIN.icon(),
+            iconTint = ElementType.INSULIN.color(),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -220,13 +222,13 @@ private fun InsulinDialogContent(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = IcBolus,
+                            imageVector = ElementType.INSULIN.icon(),
                             contentDescription = null,
-                            tint = AapsTheme.elementColors.insulin,
+                            tint = ElementType.INSULIN.color(),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(stringResource(CoreUiR.string.overview_insulin_label))
+                        Text(stringResource(ElementType.INSULIN.labelResId()))
                     }
                 },
                 navigationIcon = {

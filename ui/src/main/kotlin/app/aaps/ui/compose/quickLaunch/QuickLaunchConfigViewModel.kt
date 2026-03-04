@@ -52,7 +52,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
     fun loadState() {
         val json = preferences.get(StringNonKey.QuickLaunchActions)
         val selectedActions = QuickLaunchSerializer.fromJson(json)
-            .filter { it !is QuickLaunchAction.QuickLaunchConfig } // Config button managed separately
+            .filter { it != QuickLaunchAction.QuickLaunchConfig } // Config button managed separately
 
         val selectedSet = selectedActions.map { actionKey(it) }.toSet()
 
@@ -140,7 +140,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
     private fun currentActions(): List<QuickLaunchAction> {
         val json = preferences.get(StringNonKey.QuickLaunchActions)
         return QuickLaunchSerializer.fromJson(json)
-            .filter { it !is QuickLaunchAction.QuickLaunchConfig }
+            .filter { it != QuickLaunchAction.QuickLaunchConfig }
     }
 
     private fun saveAndReload(actions: List<QuickLaunchAction>) {

@@ -10,6 +10,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.tempTarget.toTTPresets
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,7 +30,8 @@ class QuickLaunchResolver @Inject constructor(
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
     private val localProfileManager: LocalProfileManager,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val elementAvailability: ElementAvailability
 ) {
 
     fun resolveItem(action: QuickLaunchAction): ResolvedQuickLaunchItem {
@@ -37,7 +42,7 @@ class QuickLaunchResolver @Inject constructor(
         return ResolvedQuickLaunchItem(
             action = action,
             label = resolveLabel(action),
-            icon = action.icon(),
+            icon = action.elementType?.icon() ?: Icons.Default.Extension,
             enabled = true,
             description = resolveDescription(action)
         )
@@ -66,7 +71,7 @@ class QuickLaunchResolver @Inject constructor(
             plugin != null && plugin.isEnabled(plugin.pluginDescription.mainType) && plugin.hasComposeContent()
         }
 
-        else                                   -> true
+        else                                   -> action.elementType?.let { elementAvailability.isAvailable(it) } ?: true
     }
 
     fun resolveLabel(action: QuickLaunchAction): String = when (action) {
@@ -83,7 +88,7 @@ class QuickLaunchResolver @Inject constructor(
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.let { rh.gs(it.pluginDescription.pluginName) } ?: "?"
 
         else                                   -> {
-            val resId = action.labelResId()
+            val resId = action.elementType?.labelResId() ?: 0
             if (resId != 0) rh.gs(resId) else action.typeId
         }
     }
@@ -111,7 +116,7 @@ class QuickLaunchResolver @Inject constructor(
             ?.pluginDescription?.description?.takeIf { it != -1 }?.let { rh.gs(it) }
 
         else                                   -> {
-            val resId = action.descriptionResId()
+            val resId = action.elementType?.descriptionResId() ?: 0
             if (resId != 0) rh.gs(resId) else null
         }
     }

@@ -56,7 +56,7 @@ fun StatsScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.statistics)) },
+                title = { Text(stringResource(app.aaps.core.ui.R.string.statistics)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -297,7 +297,7 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.tdd_cycle_pattern),
+                            text = stringResource(app.aaps.core.ui.R.string.tdd_cycle_pattern),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.weight(1f))

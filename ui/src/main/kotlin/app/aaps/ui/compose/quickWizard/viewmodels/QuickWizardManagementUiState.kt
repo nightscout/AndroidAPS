@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.quickWizard.viewmodels
 
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
@@ -40,7 +41,10 @@ data class QuickWizardManagementUiState(
     // UI control
     val showNotesField: Boolean = false,
     val showSuperBolusOption: Boolean = false,
-    val showWearOptions: Boolean = false
+    val showWearOptions: Boolean = false,
+
+    // Screen mode
+    val screenMode: ScreenMode = ScreenMode.EDIT
 )
 
 /**

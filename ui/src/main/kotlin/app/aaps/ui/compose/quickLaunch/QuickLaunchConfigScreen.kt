@@ -33,11 +33,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -47,7 +45,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.navigation.ElementCategory
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
+import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -92,7 +93,7 @@ fun QuickLauchConfigScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         AapsTopAppBar(
-            title = { Text(stringResource(R.string.quick_launch_configure)) },
+            title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
@@ -153,7 +154,9 @@ fun QuickLauchConfigScreen(
             }
 
             // ── Available: Treatment ──
-            val treatmentItems = state.availableStaticItems.filter { it.action.category == QuickLaunchAction.Category.TREATMENT }
+            val treatmentItems = state.availableStaticItems.filter {
+                it.action.elementType?.category in setOf(ElementCategory.TREATMENT, ElementCategory.CGM)
+            }
             item(key = "divider_treatment") {
                 HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
             }
@@ -169,7 +172,9 @@ fun QuickLauchConfigScreen(
             }
 
             // ── Available: Care Portal ──
-            val careItems = state.availableStaticItems.filter { it.action.category == QuickLaunchAction.Category.CARE }
+            val careItems = state.availableStaticItems.filter {
+                it.action.elementType?.category in setOf(ElementCategory.CAREPORTAL, ElementCategory.DEVICE)
+            }
             item(key = "divider_care") {
                 HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
             }
@@ -290,7 +295,7 @@ private fun SelectedActionItem(
     onEdit: (() -> Unit)?,
     dragModifier: Modifier
 ) {
-    val color = item.action.tintColor()
+    val color = item.action.elementType?.color() ?: MaterialTheme.colorScheme.primary
     ListItem(
         headlineContent = {
             Text(text = item.label, color = color)
@@ -352,7 +357,7 @@ private fun AvailableActionItem(
     onAdd: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val color = item.action.tintColor()
+    val color = item.action.elementType?.color() ?: MaterialTheme.colorScheme.primary
     ListItem(
         modifier = modifier,
         headlineContent = {

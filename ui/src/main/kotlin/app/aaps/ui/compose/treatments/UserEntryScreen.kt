@@ -58,6 +58,8 @@ import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import app.aaps.ui.compose.treatments.viewmodels.UserEntryViewModel
 
@@ -291,20 +293,20 @@ private fun UserEntryItem(
 }
 
 /**
- * Map Action.ColorGroup to theme colors
+ * Map Action.ColorGroup to ElementType colors
  */
 @Composable
 private fun Action.ColorGroup.toElementColor(): Color = when (this) {
-    Action.ColorGroup.InsulinTreatment -> AapsTheme.elementColors.insulin
-    Action.ColorGroup.BasalTreatment   -> AapsTheme.elementColors.tempBasal
-    Action.ColorGroup.CarbTreatment    -> AapsTheme.elementColors.carbs
-    Action.ColorGroup.TT               -> AapsTheme.elementColors.tempTarget
-    Action.ColorGroup.Profile          -> AapsTheme.elementColors.profileSwitch
-    Action.ColorGroup.Loop             -> AapsTheme.elementColors.loop
-    Action.ColorGroup.Careportal       -> AapsTheme.elementColors.careportal
-    Action.ColorGroup.Pump             -> AapsTheme.elementColors.pump
-    Action.ColorGroup.Aaps             -> AapsTheme.elementColors.aaps
-    Action.ColorGroup.RunningMode      -> AapsTheme.elementColors.runningMode
+    Action.ColorGroup.InsulinTreatment -> ElementType.INSULIN.color()
+    Action.ColorGroup.BasalTreatment   -> ElementType.TEMP_BASAL.color()
+    Action.ColorGroup.CarbTreatment    -> ElementType.CARBS.color()
+    Action.ColorGroup.TT               -> ElementType.TEMP_TARGET_MANAGEMENT_PLAY.color()
+    Action.ColorGroup.Profile          -> ElementType.PROFILE_MANAGEMENT_PLAY.color()
+    Action.ColorGroup.Loop             -> ElementType.LOOP.color()
+    Action.ColorGroup.Careportal       -> ElementType.NOTE.color()
+    Action.ColorGroup.Pump             -> ElementType.PUMP.color()
+    Action.ColorGroup.Aaps             -> ElementType.AAPS.color()
+    Action.ColorGroup.RunningMode      -> ElementType.RUNNING_MODE.color()
 }
 
 /**

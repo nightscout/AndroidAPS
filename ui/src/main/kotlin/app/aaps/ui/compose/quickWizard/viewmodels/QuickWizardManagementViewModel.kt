@@ -14,6 +14,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.events.EventQuickWizardChange
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,6 +64,10 @@ class QuickWizardManagementViewModel @Inject constructor(
 
     sealed class SideEffect {
         data class ScrollToEntry(val index: Int) : SideEffect()
+    }
+
+    fun setScreenMode(mode: ScreenMode) {
+        uiState.update { it.copy(screenMode = mode) }
     }
 
     init {

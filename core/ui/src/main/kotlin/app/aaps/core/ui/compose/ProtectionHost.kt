@@ -81,6 +81,7 @@ fun ProtectionHost(
                     ProtectionCheck.Protection.PREFERENCES -> StringKey.ProtectionSettingsPassword
                     ProtectionCheck.Protection.APPLICATION -> StringKey.ProtectionApplicationPassword
                     ProtectionCheck.Protection.BOLUS       -> StringKey.ProtectionBolusPassword
+                    ProtectionCheck.Protection.NONE        -> return // should never reach here
                 }
                 val storedHash = preferences.get(passwordKey)
                 QueryPasswordDialog(
@@ -102,6 +103,7 @@ fun ProtectionHost(
                     ProtectionCheck.Protection.PREFERENCES -> StringKey.ProtectionSettingsPin
                     ProtectionCheck.Protection.APPLICATION -> StringKey.ProtectionApplicationPin
                     ProtectionCheck.Protection.BOLUS       -> StringKey.ProtectionBolusPin
+                    ProtectionCheck.Protection.NONE        -> return // should never reach here
                 }
                 val storedHash = preferences.get(pinKey)
                 QueryPasswordDialog(

@@ -37,7 +37,8 @@ interface ProtectionCheck {
     enum class Protection {
         PREFERENCES,
         APPLICATION,
-        BOLUS
+        BOLUS,
+        NONE
     }
 
     fun isLocked(protection: Protection): Boolean

@@ -2,6 +2,7 @@ package app.aaps.ui.compose.main
 
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
 
 /**
  * State of the TempTarget chip in Overview
@@ -33,13 +34,16 @@ data class MainUiState(
     val tempTargetText: String = "",
     val tempTargetState: TempTargetChipState = TempTargetChipState.None,
     val tempTargetProgress: Float = 0f, // 0-1 progress for active temp target
-    val tempTargetReason: String? = null, // TT reason for icon coloring
+    val tempTargetReason: TT.Reason? = null, // TT reason for icon coloring
     // Running mode state for chip
     val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
     val runningModeText: String = "",
     val runningModeProgress: Float = 0f, // 0-1 progress for temporary modes
     // QuickWizard entries for treatment bottom sheet
-    val quickWizardItems: List<QuickWizardItem> = emptyList()
+    val quickWizardItems: List<QuickWizardItem> = emptyList(),
+    // Navigation-triggered dialogs
+    val showEbLoopStopConfirmation: Boolean = false,
+    val showAuthFailedDialog: Boolean = false
 )
 
 @Immutable

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,17 +56,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.formatMinutesAsDuration
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.PageIndicatorDots
 import java.util.Calendar
 import kotlin.math.absoluteValue
-import app.aaps.core.ui.compose.icons.IcTtHigh as TempTargetIcon
 
 /**
  * Screen for managing temporary target presets and activating TTs.
@@ -78,10 +83,18 @@ import app.aaps.core.ui.compose.icons.IcTtHigh as TempTargetIcon
 @Composable
 fun TempTargetManagementScreen(
     viewModel: TempTargetManagementViewModel,
-    onNavigateBack: () -> Unit = {}
+    initialMode: ScreenMode = ScreenMode.EDIT,
+    onNavigateBack: () -> Unit = {},
+    onRequestEditMode: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+
+    // Set initial screen mode
+    LaunchedEffect(initialMode) {
+        viewModel.setScreenMode(initialMode)
+    }
 
     // Refresh runtime data when screen resumes (handles preference changes, active TT updates)
     // Uses refreshData() instead of loadData() to preserve editor fields during rotation
@@ -213,13 +226,13 @@ fun TempTargetManagementScreen(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = TempTargetIcon,
+                                imageVector = ElementType.TEMP_TARGET_MANAGEMENT_EDIT.icon(),
                                 contentDescription = null,
-                                tint = AapsTheme.elementColors.tempTarget,
+                                tint = ElementType.TEMP_TARGET_MANAGEMENT_EDIT.color(),
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.padding(start = 8.dp))
-                            Text(stringResource(app.aaps.core.ui.R.string.temporary_targets))
+                            Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT_EDIT.labelResId()))
                         }
                     },
                     navigationIcon = {
@@ -231,14 +244,24 @@ fun TempTargetManagementScreen(
                         }
                     },
                     actions = {
-                        // Save button (shown when editor has unsaved changes)
-                        if (uiState.selectedPreset != null && viewModel.hasUnsavedChanges()) {
-                            IconButton(onClick = { viewModel.saveCurrentPreset() }) {
+                        if (isPlayMode) {
+                            // Edit mode button (shown in PLAY mode)
+                            IconButton(onClick = onRequestEditMode) {
                                 Icon(
-                                    imageVector = Icons.Filled.Check,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.save),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
                                 )
+                            }
+                        } else {
+                            // Save button (shown when editor has unsaved changes in EDIT mode)
+                            if (uiState.selectedPreset != null && viewModel.hasUnsavedChanges()) {
+                                IconButton(onClick = { viewModel.saveCurrentPreset() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = stringResource(app.aaps.core.ui.R.string.save),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
                         }
                     }
@@ -411,51 +434,53 @@ fun TempTargetManagementScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Floating Toolbar (M3 specs: pill shape, elevation, surfaceContainerHigh)
-                    Surface(
-                        shape = RoundedCornerShape(percent = 50),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        shadowElevation = 6.dp,
-                        tonalElevation = 6.dp
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                    // Floating Toolbar — hidden in PLAY mode
+                    if (!isPlayMode) {
+                        Surface(
+                            shape = RoundedCornerShape(percent = 50),
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            shadowElevation = 6.dp,
+                            tonalElevation = 6.dp
                         ) {
-                            IconButton(onClick = { viewModel.addNewPreset() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = "Add preset"
-                                )
-                            }
-                            // Revert button (only for fixed presets when editor values differ from defaults)
-                            val showRevert = uiState.selectedPreset?.isDeletable == false &&
-                                viewModel.isEditorDifferentFromDefaults()
-                            if (showRevert) {
-                                IconButton(onClick = { viewModel.revertToDefaults() }) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(onClick = { viewModel.addNewPreset() }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Refresh,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.revert_to_defaults)
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = "Add preset"
                                     )
                                 }
-                            }
-                            IconButton(
-                                onClick = { showDeleteDialog = true },
-                                enabled = uiState.selectedPreset?.isDeletable == true
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = stringResource(R.string.remove_label),
-                                    tint = if (uiState.selectedPreset?.isDeletable == true)
-                                        MaterialTheme.colorScheme.error
-                                    else
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                )
+                                // Revert button (only for fixed presets when editor values differ from defaults)
+                                val showRevert = uiState.selectedPreset?.isDeletable == false &&
+                                    viewModel.isEditorDifferentFromDefaults()
+                                if (showRevert) {
+                                    IconButton(onClick = { viewModel.revertToDefaults() }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Refresh,
+                                            contentDescription = stringResource(app.aaps.core.ui.R.string.revert_to_defaults)
+                                        )
+                                    }
+                                }
+                                IconButton(
+                                    onClick = { showDeleteDialog = true },
+                                    enabled = uiState.selectedPreset?.isDeletable == true
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = stringResource(R.string.remove_label),
+                                        tint = if (uiState.selectedPreset?.isDeletable == true)
+                                            MaterialTheme.colorScheme.error
+                                        else
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    )
+                                }
                             }
                         }
                     }
 
-                    // FAB for primary action (Activate)
+                    // FAB for primary action (Activate) — always visible
                     AapsFab(
                         onClick = { showActivateDialog = true }
                     ) {

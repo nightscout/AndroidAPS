@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import app.aaps.ui.compose.overview.graphs.CobUiState
 import app.aaps.ui.compose.overview.graphs.IobUiState
@@ -88,7 +90,7 @@ fun DialogStatusBar(
                 Text(
                     text = iob.text,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = AapsTheme.elementColors.insulin,
+                    color = ElementType.INSULIN.color(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -106,7 +108,7 @@ fun DialogStatusBar(
                 Text(
                     text = cob.text,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = AapsTheme.elementColors.carbs,
+                    color = ElementType.CARBS.color(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

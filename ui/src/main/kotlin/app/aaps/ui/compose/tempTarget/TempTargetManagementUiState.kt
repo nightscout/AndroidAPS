@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
@@ -54,6 +55,13 @@ data class TempTargetManagementUiState(
 
     /** Whether to show notes field (from preferences) */
     val showNotesField: Boolean = false,
+
+    // ===== Loading/Error state =====
+
+    // ===== Screen mode =====
+
+    /** Current screen mode (PLAY = activate only, EDIT = full editing) */
+    val screenMode: ScreenMode = ScreenMode.EDIT,
 
     // ===== Loading/Error state =====
 

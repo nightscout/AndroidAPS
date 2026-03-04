@@ -30,6 +30,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Save</string>
+    <string name="switch_to_edit">Edit</string>
     <string name="snooze">Snooze</string>
     <string name="snooze_15m">Snooze 15m</string>
     <string name="snooze_30m">Snooze 30m</string>
@@ -309,6 +310,20 @@
     <string name="manage_extended_bolus_desc">Start extended bolus delivery</string>
     <string name="manage_site_rotation_desc">Track and rotate infusion sites</string>
     <string name="manage_quickwizard_desc">Manage quick wizard presets</string>
+    <string name="treatment_note_desc">Add a note to your records</string>
+    <string name="treatment_question_desc">Log a question for your care team</string>
+    <string name="treatment_cgm_desc">Enter CGM reading</string>
+    <string name="treatment_calibration_desc">Calibrate CGM sensor</string>
+    <string name="treatment_bg_check_desc">Record blood glucose check</string>
+    <string name="treatment_exercise_desc">Log exercise activity</string>
+    <string name="treatment_announcement_desc">Post announcement</string>
+    <string name="treatment_sensor_insert_desc">Record CGM sensor insertion</string>
+    <string name="treatment_battery_change_desc">Record pump battery change</string>
+    <string name="treatment_cannula_change_desc">Record cannula/infusion set change</string>
+    <string name="treatment_fill_desc">Prime and fill cannula</string>
+    <string name="temp_basal">Temp basal</string>
+    <string name="user_entry">User entry</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -804,6 +819,14 @@
     <string name="localprofile">Profile</string>
     <string name="nav_setupwizard">Setup Wizard</string>
     <string name="nav_setupwizard_desc">Configure AAPS step by step</string>
+    <string name="statistics">Statistics</string>
+    <string name="statistics_desc">View statistics and reports</string>
+    <string name="tdd_cycle_pattern">TDD Cycle Pattern</string>
+    <string name="tdd_cycle_pattern_desc">Overlay daily insulin totals in 28-day cycles to spot recurring patterns</string>
+    <string name="nav_profile_helper">Profile helper</string>
+    <string name="nav_profile_helper_desc">Build your profile based on weight or TDD</string>
+    <string name="quick_launch_configure">Configure QuickLaunch</string>
+    <string name="quick_launch_configure_desc">Customize quick-action buttons on overview</string>
 
     <!-- Alerts -->
     <string name="localalertsettings_title">Local alerts</string>
@@ -818,6 +841,7 @@
     <string name="tempbasal_button">TempBasal</string>
     <string name="extended_bolus_button">Extended Bolus</string>
     <string name="tools">Tools</string>
+    <string name="device_maintenance">Device Maintenance</string>
     <string name="from_label">From</string>
     <string name="to_label">To</string>
     <string name="sensor_label">Sensor</string>

@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.overview.graph
 
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 
 /**
@@ -325,7 +326,7 @@ data class TempTargetDisplayData(
     val state: TempTargetState,          // NONE/ACTIVE/ADJUSTED for UI styling
     val timestamp: Long,                 // When TT started (for progress calculation)
     val duration: Long,                  // TT duration in ms (0 if not active)
-    val reason: String? = null           // TT reason for icon coloring (null if no TT)
+    val reason: TT.Reason? = null         // TT reason for icon coloring (null if no TT)
 )
 
 /**

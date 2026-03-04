@@ -3,6 +3,10 @@ package app.aaps.core.ui.search
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.PreferenceKey
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 
 /**
@@ -89,30 +93,22 @@ sealed class SearchableItem {
     }
 
     /**
-     * A searchable dialog or dialog settings section.
-     * Navigates to the dialog or its configuration.
+     * A searchable dialog or navigation screen.
+     * [ElementType] is the type-safe key — also provides icon, label, and description.
      *
-     * @param dialogKey Unique key for this dialog
-     * @param dialogTitleResId Resource ID for the dialog title
-     * @param dialogIconResId Optional icon resource ID
-     * @param dialogIcon Optional Compose ImageVector icon (preferred over iconResId)
-     * @param dialogSummaryResId Optional summary resource ID
+     * @param elementType The element type (serves as key AND visual identity)
      */
     data class Dialog(
-        val dialogKey: String,
-        val dialogTitleResId: Int,
-        @Deprecated("use dialogIcon")
-        val dialogIconResId: Int? = null,
-        val dialogIcon: ImageVector? = null,
-        val dialogSummaryResId: Int? = null
+        val elementType: ElementType
     ) : SearchableItem() {
 
-        override val key: String = dialogKey
-        override val titleResId: Int = dialogTitleResId
+        override val key: String = elementType.name
+        override val titleResId: Int = elementType.labelResId()
+
         @Deprecated("use icon")
-        override val iconResId: Int? = dialogIconResId
-        override val icon: ImageVector? = dialogIcon
-        override val summaryResId: Int? = dialogSummaryResId
+        override val iconResId: Int? = null
+        override val icon: ImageVector = elementType.icon()
+        override val summaryResId: Int? = elementType.descriptionResId().takeIf { it != 0 }
     }
 
     /**

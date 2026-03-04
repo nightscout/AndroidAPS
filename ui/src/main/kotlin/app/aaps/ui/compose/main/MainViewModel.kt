@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -98,7 +99,7 @@ class MainViewModel @Inject constructor(
     init {
         uiState.update { it.copy(isSimpleMode = preferences.simpleMode) }
         observeTempTargetAndProfile()
-        refreshQuickLaunch()
+        observeQuickLaunch()
     }
 
     /**
@@ -306,6 +307,14 @@ class MainViewModel @Inject constructor(
         uiState.update { it.copy(showMaintenanceSheet = show) }
     }
 
+    fun setShowEbLoopStopConfirmation(show: Boolean) {
+        uiState.update { it.copy(showEbLoopStopConfirmation = show) }
+    }
+
+    fun setShowAuthFailedDialog(show: Boolean) {
+        uiState.update { it.copy(showAuthFailedDialog = show) }
+    }
+
     // Build about dialog data
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
@@ -325,12 +334,17 @@ class MainViewModel @Inject constructor(
 
     // ── Toolbar ──
 
+    private fun observeQuickLaunch() {
+        preferences.observe(StringNonKey.QuickLaunchActions)
+            .onEach { refreshQuickLaunch(it) }
+            .launchIn(viewModelScope)
+    }
+
     /**
      * Load toolbar actions from preferences, validate dynamic entries, and resolve display info.
      * Call this on init and whenever relevant data changes (preferences, automations, profiles, etc.)
      */
-    fun refreshQuickLaunch() {
-        val json = preferences.get(StringNonKey.QuickLaunchActions)
+    fun refreshQuickLaunch(json: String = preferences.get(StringNonKey.QuickLaunchActions)) {
         val actions = QuickLaunchSerializer.fromJson(json)
 
         // Validate dynamic actions and collect valid ones

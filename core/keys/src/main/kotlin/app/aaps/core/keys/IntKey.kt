@@ -127,7 +127,7 @@ enum class IntKey(
     ProtectionTimeout(
         key = "protection_timeout",
         defaultValue = 1,
-        min = 1,
+        min = 0,
         max = 180,
         titleResId = R.string.pref_title_protection_timeout,
         defaultedBySM = true,

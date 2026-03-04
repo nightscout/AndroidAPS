@@ -411,7 +411,7 @@ class OverviewDataCacheImpl @Inject constructor(
                 state = TempTargetState.ACTIVE,
                 timestamp = tempTarget.timestamp,
                 duration = tempTarget.duration,
-                reason = tempTarget.reason.text
+                reason = tempTarget.reason
             )
         } else {
             // No active TT - check profile

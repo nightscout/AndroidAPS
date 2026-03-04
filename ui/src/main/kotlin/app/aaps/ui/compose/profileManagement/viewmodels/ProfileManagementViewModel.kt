@@ -38,6 +38,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.compose.profileManagement.ProfileCompareData
 import app.aaps.ui.compose.profileManagement.buildProfileCompareData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,6 +77,10 @@ class ProfileManagementViewModel @Inject constructor(
 
     val uiState: StateFlow<ProfileManagementUiState>
         field = MutableStateFlow(ProfileManagementUiState())
+
+    fun setScreenMode(mode: ScreenMode) {
+        uiState.update { it.copy(screenMode = mode) }
+    }
 
     init {
         loadData()
@@ -491,5 +496,6 @@ data class ProfileManagementUiState(
     val profileErrors: List<List<ProfileValidationError>> = emptyList(),
     val selectedProfile: Profile? = null,
     val compareData: ProfileCompareData? = null,
+    val screenMode: ScreenMode = ScreenMode.EDIT,
     val isLoading: Boolean = true
 )

@@ -53,6 +53,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.ui.compose.main.DrawerCategory
 
 @Composable
@@ -62,9 +63,8 @@ fun ConfigurationScreen(
     pluginStateVersion: Int,
     hardwarePumpConfirmation: HardwarePumpConfirmation?,
     onNavigateBack: () -> Unit,
-    onPluginClick: (PluginBase) -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
     onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
-    onPluginPreferencesClick: (PluginBase) -> Unit,
     onConfirmHardwarePump: () -> Unit,
     onDismissHardwarePump: () -> Unit,
 ) {
@@ -105,9 +105,8 @@ fun ConfigurationScreen(
                 isSimpleMode = isSimpleMode,
                 pluginStateVersion = pluginStateVersion,
                 onNavigateBack = { selectedTypeOrdinal = -1 },
-                onPluginClick = onPluginClick,
-                onPluginEnableToggle = onPluginEnableToggle,
-                onPluginPreferencesClick = onPluginPreferencesClick
+                onNavigate = onNavigate,
+                onPluginEnableToggle = onPluginEnableToggle
             )
         } else {
             CategoryListScreen(
@@ -227,9 +226,8 @@ private fun CategoryDetailScreen(
     isSimpleMode: Boolean,
     pluginStateVersion: Int,
     onNavigateBack: () -> Unit,
-    onPluginClick: (PluginBase) -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
     onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
-    onPluginPreferencesClick: (PluginBase) -> Unit,
 ) {
     val enabledIndex = category.plugins
         .indexOfFirst { it.isEnabled(category.type) }
@@ -273,11 +271,11 @@ private fun CategoryDetailScreen(
                         isEnabled = pluginEnabled,
                         canToggle = canToggle,
                         showPreferences = showPrefs,
-                        onPluginClick = { onPluginClick(plugin) },
+                        onPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.javaClass.simpleName)) },
                         onEnableToggle = { enabled ->
                             onPluginEnableToggle(plugin, category.type, enabled)
                         },
-                        onPreferencesClick = { onPluginPreferencesClick(plugin) }
+                        onPreferencesClick = { onNavigate(NavigationRequest.PluginPreferences(plugin.javaClass.simpleName)) }
                     )
                 }
             }

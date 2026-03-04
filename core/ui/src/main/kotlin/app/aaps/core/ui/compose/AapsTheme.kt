@@ -21,6 +21,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UiMode
+import app.aaps.core.ui.compose.navigation.DarkElementColors
+import app.aaps.core.ui.compose.navigation.ElementColors
+import app.aaps.core.ui.compose.navigation.LightElementColors
+import app.aaps.core.ui.compose.navigation.LocalElementColors
 
 /**
  * CompositionLocal providing access to user preferences for theme configuration.

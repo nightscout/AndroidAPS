@@ -1,12 +1,18 @@
 package app.aaps.compose.navigation
 
+import app.aaps.core.ui.compose.ScreenMode
+
 /**
  * Navigation routes for the Compose-based main activity.
  */
 sealed class AppRoute(val route: String) {
 
     data object Main : AppRoute("main")
-    data object Profile : AppRoute("profile")
+    data object Profile : AppRoute("profile?mode={mode}") {
+
+        fun createRoute(mode: ScreenMode = ScreenMode.EDIT) = "profile?mode=${mode.name}"
+    }
+
     data object ProfileEditor : AppRoute("profile_editor/{profileIndex}") {
 
         fun createRoute(profileIndex: Int) = "profile_editor/$profileIndex"
@@ -18,8 +24,16 @@ sealed class AppRoute(val route: String) {
     }
 
     data object Treatments : AppRoute("treatments")
-    data object TempTargetManagement : AppRoute("temp_target_management")
-    data object QuickWizardManagement : AppRoute("quick_wizard_management")
+    data object TempTargetManagement : AppRoute("temp_target_management?mode={mode}") {
+
+        fun createRoute(mode: ScreenMode = ScreenMode.EDIT) = "temp_target_management?mode=${mode.name}"
+    }
+
+    data object QuickWizardManagement : AppRoute("quick_wizard_management?mode={mode}") {
+
+        fun createRoute(mode: ScreenMode = ScreenMode.EDIT) = "quick_wizard_management?mode=${mode.name}"
+    }
+
     data object Stats : AppRoute("stats")
     data object ProfileHelper : AppRoute("profile_helper")
     data object Preferences : AppRoute("preferences")

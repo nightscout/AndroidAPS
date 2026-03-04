@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +36,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.components.DialogStatusBar
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import app.aaps.ui.compose.overview.graphs.CobUiState
@@ -86,9 +89,9 @@ fun TreatmentDialogScreen(
         } else {
             val summaryLines = viewModel.buildConfirmationSummary()
             OkCancelDialog(
-                title = stringResource(CoreUiR.string.overview_treatment_label),
+                title = stringResource(ElementType.TREATMENT.labelResId()),
                 message = summaryLines.joinToString("<br/>"),
-                icon = Icons.Default.Add,
+                icon = ElementType.TREATMENT.icon(),
                 onConfirm = {
                     viewModel.confirmAndSave()
                     onNavigateBack()
@@ -101,9 +104,9 @@ fun TreatmentDialogScreen(
     // No action dialog
     if (showNoAction) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.overview_treatment_label),
+            title = stringResource(ElementType.TREATMENT.labelResId()),
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = Icons.Default.Add,
+            icon = ElementType.TREATMENT.icon(),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -140,13 +143,13 @@ private fun TreatmentDialogContent(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = ElementType.TREATMENT.icon(),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = ElementType.TREATMENT.color(),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(stringResource(CoreUiR.string.overview_treatment_label))
+                        Text(stringResource(ElementType.TREATMENT.labelResId()))
                     }
                 },
                 navigationIcon = {

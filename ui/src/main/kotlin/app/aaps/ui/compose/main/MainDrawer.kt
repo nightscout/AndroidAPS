@@ -12,9 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,24 +20,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.icons.IcClinicalNotes
-import app.aaps.core.ui.compose.icons.IcHistory
-import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
-import app.aaps.core.ui.compose.icons.IcPluginMaintenance
-import app.aaps.core.ui.compose.icons.IcProfile
-import app.aaps.core.ui.compose.icons.IcSetupWizard
-import app.aaps.core.ui.compose.icons.IcStats
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.NavigationRequest
+import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 
 @Composable
 fun MainDrawer(
     versionName: String,
     appIcon: Int,
-    onMenuItemClick: (MainMenuItem) -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
     isTreatmentsEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -75,77 +69,41 @@ fun MainDrawer(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            DrawerMenuItem(
-                //iconRes = app.aaps.core.objects.R.drawable.ic_treatments,
-                icon = IcClinicalNotes,
-                label = stringResource(app.aaps.core.ui.R.string.treatments),
-                description = stringResource(app.aaps.core.ui.R.string.treatments_desc),
-                enabled = isTreatmentsEnabled,
-                onClick = { onMenuItemClick(MainMenuItem.Treatments) }
-            )
-
-            DrawerMenuItem(
-                icon = IcHistory,
-                label = stringResource(app.aaps.core.ui.R.string.nav_history_browser),
-                description = stringResource(app.aaps.core.ui.R.string.nav_history_browser_desc),
-                onClick = { onMenuItemClick(MainMenuItem.HistoryBrowser) }
-            )
-
-            DrawerMenuItem(
-                icon = IcStats,
-                label = stringResource(app.aaps.ui.R.string.statistics),
-                description = stringResource(app.aaps.ui.R.string.statistics_desc),
-                onClick = { onMenuItemClick(MainMenuItem.Stats) }
-            )
-
-            DrawerMenuItem(
-                icon = IcProfile,
-                label = stringResource(app.aaps.ui.R.string.nav_profile_helper),
-                description = stringResource(app.aaps.ui.R.string.nav_profile_helper_desc),
-                onClick = { onMenuItemClick(MainMenuItem.ProfileHelper) }
-            )
-
-            DrawerMenuItem(
-                icon = IcPluginMaintenance,
-                label = stringResource(app.aaps.core.ui.R.string.maintenance),
-                description = stringResource(app.aaps.core.ui.R.string.description_maintenance),
-                onClick = { onMenuItemClick(MainMenuItem.Maintenance) }
-            )
-
-            DrawerMenuItem(
-                icon = IcSetupWizard,
-                label = stringResource(app.aaps.core.ui.R.string.nav_setupwizard),
-                description = stringResource(app.aaps.core.ui.R.string.nav_setupwizard_desc),
-                onClick = { onMenuItemClick(MainMenuItem.SetupWizard) }
-            )
-
-            DrawerMenuItem(
-                icon = IcPluginConfigBuilder,
-                label = stringResource(app.aaps.core.ui.R.string.nav_configuration),
-                description = stringResource(app.aaps.core.ui.R.string.nav_configuration_desc),
-                onClick = { onMenuItemClick(MainMenuItem.Configuration) }
-            )
+            DrawerMenuItem(ElementType.TREATMENTS, enabled = isTreatmentsEnabled) { onNavigate(NavigationRequest.Element(ElementType.TREATMENTS)) }
+            DrawerMenuItem(ElementType.HISTORY_BROWSER) { onNavigate(NavigationRequest.Element(ElementType.HISTORY_BROWSER)) }
+            DrawerMenuItem(ElementType.STATISTICS) { onNavigate(NavigationRequest.Element(ElementType.STATISTICS)) }
+            DrawerMenuItem(ElementType.PROFILE_HELPER) { onNavigate(NavigationRequest.Element(ElementType.PROFILE_HELPER)) }
+            DrawerMenuItem(ElementType.MAINTENANCE) { onNavigate(NavigationRequest.Element(ElementType.MAINTENANCE)) }
+            DrawerMenuItem(ElementType.SETUP_WIZARD) { onNavigate(NavigationRequest.Element(ElementType.SETUP_WIZARD)) }
+            DrawerMenuItem(ElementType.CONFIGURATION) { onNavigate(NavigationRequest.Element(ElementType.CONFIGURATION)) }
         }
 
         // Bottom section with About and Exit
         HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(modifier = Modifier.height(8.dp))
 
-        DrawerMenuItem(
-            icon = Icons.Default.Info,
-            label = stringResource(app.aaps.core.ui.R.string.nav_about),
-            description = stringResource(app.aaps.core.ui.R.string.nav_about_desc),
-            onClick = { onMenuItemClick(MainMenuItem.About) }
-        )
-
-        DrawerMenuItem(
-            icon = Icons.AutoMirrored.Filled.ExitToApp,
-            label = stringResource(app.aaps.core.ui.R.string.nav_exit),
-            onClick = { onMenuItemClick(MainMenuItem.Exit) }
-        )
+        DrawerMenuItem(ElementType.ABOUT) { onNavigate(NavigationRequest.Element(ElementType.ABOUT)) }
+        DrawerMenuItem(ElementType.EXIT) { onNavigate(NavigationRequest.Element(ElementType.EXIT)) }
 
         Spacer(modifier = Modifier.height(16.dp))
     }
+}
+
+/** DrawerMenuItem that derives icon, label, and description from [ElementType]. */
+@Composable
+private fun DrawerMenuItem(
+    elementType: ElementType,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    val descResId = elementType.descriptionResId()
+    DrawerMenuItem(
+        icon = elementType.icon(),
+        label = stringResource(elementType.labelResId()),
+        description = if (descResId != 0) stringResource(descResId) else null,
+        enabled = enabled,
+        onClick = onClick
+    )
 }
 
 @Composable
@@ -153,16 +111,12 @@ private fun DrawerMenuItem(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: ImageVector? = null,
-    iconRes: Int? = null,
+    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
     description: String? = null,
     enabled: Boolean = true,
 ) {
-    val iconPainter = when {
-        icon != null -> rememberVectorPainter(icon)
-        iconRes != null -> painterResource(id = iconRes)
-        else -> error("DrawerMenuItem requires either icon or iconRes")
-    }
+    val iconPainter = icon?.let { rememberVectorPainter(it) }
+        ?: error("DrawerMenuItem requires an icon")
     val tint = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
     val textColor = if (enabled) MaterialTheme.colorScheme.onSurface

@@ -48,8 +48,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.PageIndicatorDots
@@ -70,11 +74,19 @@ import kotlin.math.absoluteValue
 @Composable
 fun ProfileManagementScreen(
     viewModel: ProfileManagementViewModel,
+    initialMode: ScreenMode = ScreenMode.EDIT,
     onNavigateBack: () -> Unit = {},
+    onRequestEditMode: () -> Unit = {},
     onEditProfile: (Int) -> Unit = {},
     onActivateProfile: (Int) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+
+    // Set initial screen mode
+    LaunchedEffect(initialMode) {
+        viewModel.setScreenMode(initialMode)
+    }
 
     // Dialog states
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -128,13 +140,13 @@ fun ProfileManagementScreen(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = IcProfile,
+                                imageVector = ElementType.PROFILE_MANAGEMENT_EDIT.icon(),
                                 contentDescription = null,
-                                tint = AapsTheme.elementColors.profileSwitch,
+                                tint = ElementType.PROFILE_MANAGEMENT_EDIT.color(),
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.padding(start = 8.dp))
-                            Text(stringResource(app.aaps.core.ui.R.string.profile_management))
+                            Text(stringResource(ElementType.PROFILE_MANAGEMENT_EDIT.labelResId()))
                         }
                     },
                     navigationIcon = {
@@ -143,6 +155,16 @@ fun ProfileManagementScreen(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(app.aaps.core.ui.R.string.back)
                             )
+                        }
+                    },
+                    actions = {
+                        if (isPlayMode) {
+                            IconButton(onClick = onRequestEditMode) {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                )
+                            }
                         }
                     }
                 )
@@ -296,58 +318,60 @@ fun ProfileManagementScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Floating Toolbar (M3 specs: pill shape, elevation, surfaceContainerHigh)
-                    Surface(
-                        shape = RoundedCornerShape(percent = 50),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        shadowElevation = 6.dp,
-                        tonalElevation = 6.dp
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                    // Floating Toolbar — hidden in PLAY mode
+                    if (!isPlayMode) {
+                        Surface(
+                            shape = RoundedCornerShape(percent = 50),
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            shadowElevation = 6.dp,
+                            tonalElevation = 6.dp
                         ) {
-                            IconButton(onClick = { viewModel.addNewProfile() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = stringResource(R.string.add_new_profile)
-                                )
-                            }
-                            IconButton(onClick = { onEditProfile(currentPage) }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = stringResource(R.string.edit_label)
-                                )
-                            }
-                            IconButton(onClick = {
-                                profileToClone = currentPage
-                                showCloneDialog = true
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ContentCopy,
-                                    contentDescription = stringResource(R.string.clone_label)
-                                )
-                            }
-                            IconButton(
-                                onClick = {
-                                    profileToDelete = currentPage
-                                    showDeleteDialog = true
-                                },
-                                enabled = uiState.profileNames.size > 1
+                            Row(
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = stringResource(R.string.remove_label),
-                                    tint = if (uiState.profileNames.size > 1)
-                                        MaterialTheme.colorScheme.error
-                                    else
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                )
+                                IconButton(onClick = { viewModel.addNewProfile() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = stringResource(R.string.add_new_profile)
+                                    )
+                                }
+                                IconButton(onClick = { onEditProfile(currentPage) }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Edit,
+                                        contentDescription = stringResource(R.string.edit_label)
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    profileToClone = currentPage
+                                    showCloneDialog = true
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ContentCopy,
+                                        contentDescription = stringResource(R.string.clone_label)
+                                    )
+                                }
+                                IconButton(
+                                    onClick = {
+                                        profileToDelete = currentPage
+                                        showDeleteDialog = true
+                                    },
+                                    enabled = uiState.profileNames.size > 1
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = stringResource(R.string.remove_label),
+                                        tint = if (uiState.profileNames.size > 1)
+                                            MaterialTheme.colorScheme.error
+                                        else
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    )
+                                }
                             }
                         }
                     }
 
-                    // FAB for primary action (Activate)
+                    // FAB for primary action (Activate) — always visible
                     AapsFab(
                         onClick = { onActivateProfile(currentPage) }
                     ) {

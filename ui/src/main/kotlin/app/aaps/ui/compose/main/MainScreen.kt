@@ -28,6 +28,8 @@ import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.alertDialogs.AboutAlertDialog
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
@@ -35,16 +37,17 @@ import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.overview.OverviewScreen
-import app.aaps.ui.compose.overview.automation.AutomationBottomSheet
-import app.aaps.ui.compose.overview.automation.AutomationViewModel
+import app.aaps.ui.compose.automationSheet.AutomationBottomSheet
+import app.aaps.ui.compose.automationSheet.AutomationViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
-import app.aaps.ui.compose.overview.manage.ManageSheetState
-import app.aaps.ui.compose.overview.manage.ManageViewModel
+import app.aaps.ui.compose.manageSheet.ManageSheetState
+import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
-import app.aaps.ui.compose.overview.treatments.TreatmentBottomSheet
+import app.aaps.ui.compose.treatmentsSheet.TreatmentBottomSheet
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchToolbar
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
+import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchResults
 import app.aaps.ui.search.SearchUiState
@@ -54,14 +57,12 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     mainViewModel: MainViewModel,
     uiState: MainUiState,
-    versionName: String,
-    appIcon: Int,
     aboutDialogData: AboutDialogData?,
     manageSheetState: ManageSheetState,
     manageViewModel: ManageViewModel,
     maintenanceViewModel: MaintenanceViewModel,
     statusViewModel: StatusViewModel,
-    treatmentViewModel: app.aaps.ui.compose.overview.treatments.TreatmentViewModel,
+    treatmentViewModel: TreatmentViewModel,
     automationViewModel: AutomationViewModel,
     // Search
     searchUiState: SearchUiState,
@@ -71,9 +72,7 @@ fun MainScreen(
     onSearchResultClick: (SearchIndexEntry) -> Unit,
     // Menu/navigation
     onMenuClick: () -> Unit,
-    onProfileManagementClick: () -> Unit,
-    onPreferencesClick: () -> Unit,
-    onMenuItemClick: (MainMenuItem) -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
     onDrawerClosed: () -> Unit,
     onSwitchToClassicUi: () -> Unit,
     onAboutDialogDismiss: () -> Unit,
@@ -83,21 +82,6 @@ fun MainScreen(
     onBringToForeground: () -> Unit,
     onImportSettingsNavigate: (ImportSource) -> Unit,
     onRecreateActivity: () -> Unit,
-    // Overview status callbacks
-    onSensorInsertClick: () -> Unit,
-    onFillClick: () -> Unit,
-    onInsulinChangeClick: () -> Unit,
-    onBatteryChangeClick: () -> Unit,
-    // Actions callbacks
-    onRunningModeClick: () -> Unit,
-    onTempTargetClick: () -> Unit,
-    onCarbsClick: () -> Unit,
-    onInsulinClick: () -> Unit,
-    onTreatmentClick: () -> Unit,
-    onCgmClick: (() -> Unit)?,
-    onCalibrationClick: (() -> Unit)?,
-    onQuickWizardClick: ((String) -> Unit)? = null,
-    onCalculatorClick: (() -> Unit)? = null,
     // Notifications
     notifications: List<AapsNotification>,
     onDismissNotification: (AapsNotification) -> Unit,
@@ -105,10 +89,9 @@ fun MainScreen(
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
     // Pump setup
-    showPumpSetup: Boolean = false,
+    pumpSetupClassName: String? = null,
     pumpSetupIcon: ImageVector? = null,
     pumpSetupLabel: String? = null,
-    onPumpSetupClick: () -> Unit = {},
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -147,14 +130,14 @@ fun MainScreen(
         drawerState = drawerState,
         drawerContent = {
             MainDrawer(
-                versionName = versionName,
-                appIcon = appIcon,
-                onMenuItemClick = { menuItem ->
+                versionName = mainViewModel.versionName,
+                appIcon = mainViewModel.appIcon,
+                onNavigate = { request ->
                     scope.launch {
                         drawerState.close()
                         onDrawerClosed()
                     }
-                    onMenuItemClick(menuItem)
+                    onNavigate(request)
                 },
                 isTreatmentsEnabled = uiState.isProfileLoaded
             )
@@ -173,7 +156,7 @@ fun MainScreen(
                             onMenuClick()
                         }
                     },
-                    onPreferencesClick = onPreferencesClick,
+                    onPreferencesClick = { onNavigate(NavigationRequest.Element(ElementType.SETTINGS)) },
                     onSearchQueryChange = onSearchQueryChange,
                     onSearchClear = onSearchClear,
                     onSearchActiveChange = onSearchActiveChange
@@ -192,10 +175,10 @@ fun MainScreen(
                         showAutomationSheet = true
                     },
                     automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
-                    showPumpSetup = showPumpSetup,
+                    pumpSetupClassName = pumpSetupClassName,
                     pumpSetupIcon = pumpSetupIcon,
                     pumpSetupLabel = pumpSetupLabel,
-                    onPumpSetupClick = onPumpSetupClick,
+                    onNavigate = onNavigate,
                     permissionsMissing = permissionsMissing,
                     onPermissionsClick = onPermissionsClick,
                 )
@@ -220,13 +203,7 @@ fun MainScreen(
                     manageViewModel = manageViewModel,
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,
-                    onProfileManagementClick = onProfileManagementClick,
-                    onTempTargetClick = onTempTargetClick,
-                    onRunningModeClick = onRunningModeClick,
-                    onSensorInsertClick = onSensorInsertClick,
-                    onFillClick = onFillClick,
-                    onInsulinChangeClick = onInsulinChangeClick,
-                    onBatteryChangeClick = onBatteryChangeClick,
+                    onNavigate = onNavigate,
                     notifications = notifications,
                     onDismissNotification = onDismissNotification,
                     onNotificationActionClick = onNotificationActionClick,
@@ -296,13 +273,7 @@ fun MainScreen(
             isDexcomSource = treatmentState.isDexcomSource,
             showSettingsIcon = treatmentState.showSettingsIcon,
             quickWizardItems = treatmentState.quickWizardItems,
-            onCarbsClick = onCarbsClick,
-            onInsulinClick = onInsulinClick,
-            onTreatmentClick = onTreatmentClick,
-            onCgmClick = onCgmClick,
-            onCalibrationClick = onCalibrationClick,
-            onQuickWizardClick = onQuickWizardClick,
-            onCalculatorClick = onCalculatorClick,
+            onNavigate = onNavigate,
             treatmentButtonsDef = treatmentButtonsDef,
         )
     }

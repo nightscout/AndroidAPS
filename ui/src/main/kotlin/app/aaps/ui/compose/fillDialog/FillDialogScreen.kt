@@ -45,12 +45,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.icons.IcCannulaChange
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
@@ -106,10 +108,10 @@ fun FillDialogScreen(
             showNoAction = true
         } else {
             OkCancelDialog(
-                title = stringResource(CoreUiR.string.prime_fill),
+                title = stringResource(ElementType.FILL.labelResId()),
                 message = summaryLines.joinToString("<br/>"),
-                icon = IcCannulaChange,
-                iconTint = AapsTheme.elementColors.insulin,
+                icon = ElementType.FILL.icon(),
+                iconTint = ElementType.FILL.color(),
                 onConfirm = {
                     viewModel.confirmAndSave()
                     onNavigateBack()
@@ -122,10 +124,10 @@ fun FillDialogScreen(
     // No action dialog
     if (showNoAction) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.prime_fill),
+            title = stringResource(ElementType.FILL.labelResId()),
             message = stringResource(CoreUiR.string.no_action_selected),
-            icon = IcCannulaChange,
-            iconTint = AapsTheme.elementColors.insulin,
+            icon = ElementType.FILL.icon(),
+            iconTint = ElementType.FILL.color(),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -201,7 +203,7 @@ private fun FillDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(CoreUiR.string.prime_fill)) },
+                title = { Text(stringResource(ElementType.FILL.labelResId())) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -246,7 +248,7 @@ private fun FillDialogContent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    imageVector = IcCannulaChange,
+                    imageVector = ElementType.FILL.icon(),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 8.dp)

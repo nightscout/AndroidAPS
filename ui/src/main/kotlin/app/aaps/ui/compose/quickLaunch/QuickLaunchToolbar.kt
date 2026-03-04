@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.navigation.color
 
 @Immutable
 data class ResolvedQuickLaunchItem(
@@ -121,7 +122,7 @@ private fun ToolbarIconButton(
             Icon(
                 imageVector = item.icon,
                 contentDescription = item.label,
-                tint = item.action.tintColor(),
+                tint = item.action.elementType?.color() ?: MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -169,7 +170,7 @@ private fun OverflowMenuButton(
                         Icon(
                             imageVector = item.icon,
                             contentDescription = null,
-                            tint = item.action.tintColor(),
+                            tint = item.action.elementType?.color() ?: MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
                     },

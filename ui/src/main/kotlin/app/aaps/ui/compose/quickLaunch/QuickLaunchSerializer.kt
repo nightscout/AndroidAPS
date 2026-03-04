@@ -47,7 +47,7 @@ object QuickLaunchSerializer {
                 deserializeAction(type, id, obj)?.let { result.add(it) }
             }
             // Ensure ToolbarConfig is always present and last
-            result.removeAll { it is QuickLaunchAction.QuickLaunchConfig }
+            result.removeAll { it == QuickLaunchAction.QuickLaunchConfig }
             result.add(QuickLaunchAction.QuickLaunchConfig)
             result
         } catch (_: Exception) {

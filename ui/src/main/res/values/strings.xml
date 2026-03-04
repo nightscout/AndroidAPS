@@ -36,8 +36,6 @@
     <string name="cgp_pgr_extremely_high">Extremely high risk</string>
     <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
     <string name="do_you_want_recalculate_tdd_stats">Do you want to recalculate TDD stats?</string>
-    <string name="statistics">Statistics</string>
-    <string name="statistics_desc">View statistics and reports</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="invalid_age">Invalid age entry</string>
     <string name="invalid_weight">Invalid weight entry</string>
@@ -166,8 +164,6 @@
     <string name="basal_pct_from_tdd_label">% of basal</string>
     <string name="selected_profile">Selected:</string>
     <string name="comparation">Comparation</string>
-    <string name="nav_profile_helper">Profile helper</string>
-    <string name="nav_profile_helper_desc">Build your profile based on weight or TDD</string>
     <string name="motol_default_profile">Default profile</string>
     <string name="current_profile">Current profile</string>
     <string name="available_profile">Available profile</string>
@@ -238,8 +234,6 @@
     <string name="permission_nav_label">Permissions</string>
 
     <!--    TDD Cycle Pattern -->
-    <string name="tdd_cycle_pattern">TDD Cycle Pattern</string>
-    <string name="tdd_cycle_pattern_desc">Overlay daily insulin totals in 28-day cycles to spot recurring patterns</string>
     <string name="cycle_offset">Cycle offset</string>
     <string name="raw_tdd">Raw TDD</string>
     <string name="cleaned_tdd">Cleaned TDD</string>
@@ -257,8 +251,6 @@
     </string-array>
 
     <!-- Toolbar configuration -->
-    <string name="quick_launch_configure">Configure QuickLaunch</string>
-    <string name="quick_launch_configure_desc">Customize quick-action buttons on overview</string>
     <string name="quick_launch_selected_actions">Selected actions</string>
     <string name="quick_launch_available_actions">Available actions</string>
     <string name="quick_launch_no_dynamic_items">No items available</string>

@@ -24,9 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.objects.wizard.QuickWizardEntry
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
-import app.aaps.core.ui.compose.icons.IcQuickwizard
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.R as CoreR
 
 /**
@@ -74,9 +75,9 @@ fun QuickWizardCarouselCard(
         ) {
             // Icon in top left corner
             Icon(
-                imageVector = IcQuickwizard,
+                imageVector = ElementType.QUICK_WIZARD.icon(),
                 contentDescription = null,
-                tint = AapsTheme.elementColors.carbs,
+                tint = ElementType.QUICK_WIZARD.color(),
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(16.dp)

@@ -56,11 +56,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.profileManagement.ProfileCompareContent
 import app.aaps.ui.compose.profileManagement.buildBasalRows
@@ -321,13 +323,13 @@ private fun ProfileHelperContent(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = IcProfile,
+                            imageVector = ElementType.PROFILE_HELPER.icon(),
                             contentDescription = null,
-                            tint = AapsTheme.elementColors.profileSwitch,
+                            tint = ElementType.PROFILE_HELPER.color(),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(stringResource(R.string.nav_profile_helper))
+                        Text(stringResource(ElementType.PROFILE_HELPER.labelResId()))
                     }
                 },
                 navigationIcon = {

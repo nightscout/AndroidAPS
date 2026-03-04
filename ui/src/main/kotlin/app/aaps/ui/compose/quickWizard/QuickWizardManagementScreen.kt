@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,9 +51,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.icons.IcQuickwizard
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.PageIndicatorDots
@@ -72,11 +77,19 @@ import app.aaps.core.ui.R as CoreR
 @Composable
 fun QuickWizardManagementScreen(
     viewModel: QuickWizardManagementViewModel,
+    initialMode: ScreenMode = ScreenMode.EDIT,
     onNavigateBack: () -> Unit = {},
+    onRequestEditMode: () -> Unit = {},
     onExecuteClick: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY
+
+    // Set initial screen mode
+    LaunchedEffect(initialMode) {
+        viewModel.setScreenMode(initialMode)
+    }
 
     // State to trigger pager scroll (set by navigation event, consumed by pager)
     var scrollToPage by remember { mutableStateOf<Int?>(null) }
@@ -141,9 +154,9 @@ fun QuickWizardManagementScreen(
         )
     }
 
-    // Back button handler - check for unsaved changes
+    // Back button handler - check for unsaved changes (skip in PLAY mode)
     BackHandler {
-        if (viewModel.hasUnsavedChanges()) {
+        if (!isPlayMode && viewModel.hasUnsavedChanges()) {
             showUnsavedChangesDialog = true
         } else {
             onNavigateBack()
@@ -163,17 +176,17 @@ fun QuickWizardManagementScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Icon(
-                                imageVector = IcQuickwizard,
+                                imageVector = ElementType.QUICK_WIZARD_MANAGEMENT_EDIT.icon(),
                                 contentDescription = null,
-                                tint = AapsTheme.elementColors.carbs,
+                                tint = ElementType.QUICK_WIZARD_MANAGEMENT_EDIT.color(),
                                 modifier = Modifier.size(24.dp)
                             )
-                            Text(stringResource(CoreR.string.quickwizard_managemnt))
+                            Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT_EDIT.labelResId()))
                         }
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                            if (viewModel.hasUnsavedChanges()) {
+                            if (!isPlayMode && viewModel.hasUnsavedChanges()) {
                                 showUnsavedChangesDialog = true
                             } else {
                                 onNavigateBack()
@@ -186,14 +199,24 @@ fun QuickWizardManagementScreen(
                         }
                     },
                     actions = {
-                        // Save button (shown when editor has unsaved changes)
-                        if (uiState.entries.isNotEmpty() && uiState.hasUnsavedChanges) {
-                            IconButton(onClick = { viewModel.saveCurrentEntry() }) {
+                        if (isPlayMode) {
+                            // Edit mode button (shown in PLAY mode)
+                            IconButton(onClick = onRequestEditMode) {
                                 Icon(
-                                    imageVector = Icons.Filled.Check,
-                                    contentDescription = stringResource(CoreR.string.save),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = stringResource(CoreR.string.switch_to_edit)
                                 )
+                            }
+                        } else {
+                            // Save button (shown when editor has unsaved changes in EDIT mode)
+                            if (uiState.entries.isNotEmpty() && uiState.hasUnsavedChanges) {
+                                IconButton(onClick = { viewModel.saveCurrentEntry() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = stringResource(CoreR.string.save),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
                         }
                     }
@@ -296,14 +319,14 @@ fun QuickWizardManagementScreen(
                             currentPage = pagerState.currentPage
                         )
 
-                        // QuickWizard Editor (always visible)
+                        // QuickWizard Editor (hidden in PLAY mode)
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
                                 .verticalScroll(rememberScrollState())
                         ) {
-                            if (uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
+                            if (!isPlayMode && uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
                                 QuickWizardEditor(
                                     buttonText = uiState.editorButtonText,
                                     carbs = uiState.editorCarbs,
@@ -366,56 +389,58 @@ fun QuickWizardManagementScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Floating Toolbar
-                    Surface(
-                        shape = RoundedCornerShape(percent = 50),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        shadowElevation = 6.dp,
-                        tonalElevation = 6.dp
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                    // Floating Toolbar — hidden in PLAY mode
+                    if (!isPlayMode) {
+                        Surface(
+                            shape = RoundedCornerShape(percent = 50),
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            shadowElevation = 6.dp,
+                            tonalElevation = 6.dp
                         ) {
-                            // Add button
-                            IconButton(onClick = { viewModel.addNewEntry() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = stringResource(CoreR.string.add)
-                                )
-                            }
-                            // Clone button
-                            IconButton(
-                                onClick = { viewModel.cloneCurrentEntry() },
-                                enabled = uiState.entries.isNotEmpty()
+                            Row(
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ContentCopy,
-                                    contentDescription = "Clone",
-                                    tint = if (uiState.entries.isNotEmpty())
-                                        MaterialTheme.colorScheme.onSurface
-                                    else
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                )
-                            }
-                            // Delete button
-                            IconButton(
-                                onClick = { showDeleteDialog = true },
-                                enabled = uiState.entries.isNotEmpty()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = stringResource(R.string.remove_label),
-                                    tint = if (uiState.entries.isNotEmpty())
-                                        MaterialTheme.colorScheme.error
-                                    else
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                )
+                                // Add button
+                                IconButton(onClick = { viewModel.addNewEntry() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = stringResource(CoreR.string.add)
+                                    )
+                                }
+                                // Clone button
+                                IconButton(
+                                    onClick = { viewModel.cloneCurrentEntry() },
+                                    enabled = uiState.entries.isNotEmpty()
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ContentCopy,
+                                        contentDescription = "Clone",
+                                        tint = if (uiState.entries.isNotEmpty())
+                                            MaterialTheme.colorScheme.onSurface
+                                        else
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    )
+                                }
+                                // Delete button
+                                IconButton(
+                                    onClick = { showDeleteDialog = true },
+                                    enabled = uiState.entries.isNotEmpty()
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = stringResource(R.string.remove_label),
+                                        tint = if (uiState.entries.isNotEmpty())
+                                            MaterialTheme.colorScheme.error
+                                        else
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    )
+                                }
                             }
                         }
                     }
 
-                    // FAB for Execute/Play
+                    // FAB for Execute/Play — always visible
                     if (uiState.entries.isNotEmpty()) {
                         AapsFab(
                             onClick = { onExecuteClick(uiState.selectedGuid) }

@@ -54,22 +54,31 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcSettingsOff
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.ui.compose.main.TempTargetChipState
+import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.notificationsSheet.NotificationBottomSheet
+import app.aaps.ui.compose.notificationsSheet.NotificationFab
 import app.aaps.ui.compose.overview.aapsClient.AapsClientStatusCard
+import app.aaps.ui.compose.overview.chips.IobCobChipsRow
+import app.aaps.ui.compose.overview.chips.ProfileChip
+import app.aaps.ui.compose.overview.chips.RunningModeChip
+import app.aaps.ui.compose.overview.chips.SensitivityChip
+import app.aaps.ui.compose.overview.chips.TempTargetChip
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
-import app.aaps.ui.compose.overview.manage.ManageViewModel
-import app.aaps.ui.compose.overview.notifications.NotificationBottomSheet
-import app.aaps.ui.compose.overview.notifications.NotificationFab
+import app.aaps.ui.compose.overview.graphs.GraphsSection
 import app.aaps.ui.compose.overview.statusLights.StatusItem
 import app.aaps.ui.compose.overview.statusLights.StatusSectionContent
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
@@ -82,7 +91,7 @@ fun OverviewScreen(
     tempTargetText: String,
     tempTargetState: TempTargetChipState,
     tempTargetProgress: Float,
-    tempTargetReason: String?,
+    tempTargetReason: TT.Reason?,
     runningMode: RM.Mode,
     runningModeText: String,
     runningModeProgress: Float,
@@ -92,13 +101,7 @@ fun OverviewScreen(
     manageViewModel: ManageViewModel,
     statusViewModel: StatusViewModel,
     statusLightsDef: PreferenceSubScreenDef,
-    onProfileManagementClick: () -> Unit,
-    onTempTargetClick: () -> Unit,
-    onRunningModeClick: () -> Unit,
-    onSensorInsertClick: () -> Unit,
-    onFillClick: () -> Unit,
-    onInsulinChangeClick: () -> Unit,
-    onBatteryChangeClick: () -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
     notifications: List<AapsNotification>,
     onDismissNotification: (AapsNotification) -> Unit,
     onNotificationActionClick: (AapsNotification) -> Unit,
@@ -190,7 +193,7 @@ fun OverviewScreen(
                                 text = runningModeText,
                                 progress = runningModeProgress,
                                 modifier = Modifier.weight(1f),
-                                onClick = onRunningModeClick
+                                onClick = { onNavigate(NavigationRequest.Element(ElementType.RUNNING_MODE)) }
                             )
                             if (isSimpleMode) {
                                 Icon(
@@ -210,7 +213,7 @@ fun OverviewScreen(
                             profileName = profileName,
                             isModified = isProfileModified,
                             progress = profileProgress,
-                            onClick = onProfileManagementClick
+                            onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT_PLAY)) }
                         )
                     }
                     // TempTarget chip (show when text is available)
@@ -220,7 +223,7 @@ fun OverviewScreen(
                             state = tempTargetState,
                             progress = tempTargetProgress,
                             reason = tempTargetReason,
-                            onClick = onTempTargetClick
+                            onClick = { onNavigate(NavigationRequest.Element(ElementType.TEMP_TARGET_MANAGEMENT_PLAY)) }
                         )
                     }
                     // IOB + COB chips row
@@ -241,10 +244,7 @@ fun OverviewScreen(
                 batteryStatus = statusState.batteryStatus,
                 showFill = statusState.showFill,
                 showPumpBatteryChange = statusState.showPumpBatteryChange,
-                onSensorInsertClick = onSensorInsertClick,
-                onFillClick = onFillClick,
-                onInsulinChangeClick = onInsulinChangeClick,
-                onBatteryChangeClick = onBatteryChangeClick,
+                onNavigate = onNavigate,
                 statusLightsDef = statusLightsDef,
                 onCopyFromNightscout = { manageViewModel.copyStatusLightsFromNightscout() }
             )
@@ -264,7 +264,7 @@ fun OverviewScreen(
             }
 
             // Graph content - New Compose/Vico graphs
-            OverviewGraphsSection(graphViewModel = graphViewModel)
+            GraphsSection(graphViewModel = graphViewModel)
         }
 
         // Notification FAB overlay
@@ -299,10 +299,7 @@ private fun OverviewStatusSection(
     batteryStatus: StatusItem?,
     showFill: Boolean,
     showPumpBatteryChange: Boolean,
-    onSensorInsertClick: () -> Unit,
-    onFillClick: () -> Unit,
-    onInsulinChangeClick: () -> Unit,
-    onBatteryChangeClick: () -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
     statusLightsDef: PreferenceSubScreenDef,
     onCopyFromNightscout: () -> Unit
 ) {
@@ -396,10 +393,16 @@ private fun OverviewStatusSection(
                         insulinStatus = insulinStatus,
                         cannulaStatus = cannulaStatus,
                         batteryStatus = batteryStatus,
-                        onSensorInsertClick = onSensorInsertClick,
-                        onFillClick = if (showFill) onFillClick else null,
-                        onInsulinChangeClick = if (showFill) onInsulinChangeClick else null,
-                        onBatteryChangeClick = if (showPumpBatteryChange) onBatteryChangeClick else null
+                        onSensorInsertClick = { onNavigate(NavigationRequest.Element(ElementType.SENSOR_INSERT)) },
+                        onFillClick = if (showFill) {
+                            { onNavigate(NavigationRequest.Element(ElementType.CANNULA_CHANGE)) }
+                        } else null,
+                        onInsulinChangeClick = if (showFill) {
+                            { onNavigate(NavigationRequest.Element(ElementType.FILL)) }
+                        } else null,
+                        onBatteryChangeClick = if (showPumpBatteryChange) {
+                            { onNavigate(NavigationRequest.Element(ElementType.BATTERY_CHANGE)) }
+                        } else null
                     )
                 }
             }

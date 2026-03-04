@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.icons.IcAutomation
+import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
 
@@ -30,10 +31,10 @@ fun MainNavigationBar(
     quickWizardCount: Int = 0,
     onAutomationClick: () -> Unit = {},
     automationCount: Int = 0,
-    showPumpSetup: Boolean = false,
+    pumpSetupClassName: String? = null,
     pumpSetupIcon: ImageVector? = null,
     pumpSetupLabel: String? = null,
-    onPumpSetupClick: () -> Unit = {},
+    onNavigate: (NavigationRequest) -> Unit = {},
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {}
 ) {
@@ -109,10 +110,10 @@ fun MainNavigationBar(
         )
 
         // Pump setup (visible only when pump not initialized and has compose content)
-        if (showPumpSetup && pumpSetupIcon != null && pumpSetupLabel != null) {
+        if (pumpSetupClassName != null && pumpSetupIcon != null && pumpSetupLabel != null) {
             NavigationBarItem(
                 selected = false,
-                onClick = onPumpSetupClick,
+                onClick = { onNavigate(NavigationRequest.Plugin(pumpSetupClassName)) },
                 icon = {
                     BadgedBox(
                         badge = { Badge { Text("!") } }

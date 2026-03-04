@@ -50,6 +50,8 @@ import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.icons.Pump
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempBasalViewModel
@@ -248,7 +250,7 @@ private fun TempBasalItem(
                     text = stringResource(R.string.tbr_type_flag_extended),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
-                    color = Color(AapsTheme.elementColors.tempBasal.value)
+                    color = ElementType.TEMP_BASAL.color()
                 )
             }
 
@@ -257,7 +259,7 @@ private fun TempBasalItem(
                     text = stringResource(R.string.tbr_type_flag_suspended),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
-                    color = Color(AapsTheme.elementColors.tempBasal.value)
+                    color = ElementType.TEMP_BASAL.color()
                 )
             }
 
@@ -266,7 +268,7 @@ private fun TempBasalItem(
                     text = stringResource(R.string.tbr_type_flag_emulated_suspended),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
-                    color = Color(AapsTheme.elementColors.tempBasal.value)
+                    color = ElementType.TEMP_BASAL.color()
                 )
             }
 
@@ -275,7 +277,7 @@ private fun TempBasalItem(
                     text = stringResource(R.string.tbr_type_flag_superbolus),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
-                    color = Color(AapsTheme.elementColors.tempBasal.value)
+                    color = ElementType.TEMP_BASAL.color()
                 )
             }
 

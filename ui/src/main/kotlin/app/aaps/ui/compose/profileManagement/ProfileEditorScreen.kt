@@ -57,12 +57,13 @@ import app.aaps.core.graph.TargetBgProfileGraphCompose
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.SliderWithButtons
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
-import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
 import app.aaps.ui.compose.profileManagement.viewmodels.SingleProfileState
@@ -110,9 +111,9 @@ fun ProfileEditorScreen(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = IcProfile,
+                            imageVector = ElementType.PROFILE_MANAGEMENT_EDIT.icon(),
                             contentDescription = null,
-                            tint = AapsTheme.elementColors.profileSwitch,
+                            tint = ElementType.PROFILE_MANAGEMENT_EDIT.color(),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -625,7 +626,7 @@ private fun BasalContent(
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${stringResource(app.aaps.core.ui.R.string.format_insulin_units, viewModel.getBasalSum())}",
+                        text = "∑ ${stringResource(R.string.format_insulin_units, viewModel.getBasalSum())}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

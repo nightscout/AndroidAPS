@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -77,6 +78,10 @@ class TempTargetManagementViewModel @Inject constructor(
 
     sealed class SideEffect {
         data class ScrollToPreset(val index: Int) : SideEffect()
+    }
+
+    fun setScreenMode(mode: ScreenMode) {
+        uiState.update { it.copy(screenMode = mode) }
     }
 
     init {
