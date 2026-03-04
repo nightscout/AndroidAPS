@@ -4,8 +4,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
@@ -28,12 +26,8 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
-import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
 
 /**
  * Wraps content in MaterialTheme + ProvidePreferenceTheme + fake Preferences for @Preview functions.
@@ -45,8 +39,7 @@ internal fun PreviewTheme(content: @Composable () -> Unit) {
         ProvidePreferenceTheme {
             CompositionLocalProvider(
                 LocalPreferences provides PreviewPreferences,
-                LocalConfig provides PreviewConfig,
-                LocalRxBus provides PreviewRxBus
+                LocalConfig provides PreviewConfig
             ) {
                 content()
             }
@@ -78,6 +71,7 @@ private object PreviewPreferences : Preferences {
     override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, defaultValue: Boolean): Boolean = defaultValue
     override fun getIfExists(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean = key.defaultValue
     override fun put(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, value: Boolean) {}
+    override fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean> = MutableStateFlow(key.defaultValue)
     override fun remove(key: ComposedKey, vararg arguments: Any) {}
 
     override fun get(key: StringNonPreferenceKey): String = key.defaultValue
@@ -88,6 +82,7 @@ private object PreviewPreferences : Preferences {
     override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String = key.defaultValue
     override fun getIfExists(key: StringComposedNonPreferenceKey, vararg arguments: Any): String = key.defaultValue
     override fun put(key: StringComposedNonPreferenceKey, vararg arguments: Any, value: String) {}
+    override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> = MutableStateFlow(key.defaultValue)
 
     override fun get(key: DoubleNonPreferenceKey): Double = key.defaultValue
     override fun get(key: DoublePreferenceKey): Double = key.defaultValue
@@ -97,6 +92,7 @@ private object PreviewPreferences : Preferences {
     override fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double = key.defaultValue
     override fun getIfExists(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double = key.defaultValue
     override fun put(key: DoubleComposedNonPreferenceKey, vararg arguments: Any, value: Double) {}
+    override fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double> = MutableStateFlow(key.defaultValue)
 
     override fun get(key: UnitDoublePreferenceKey): Double = key.defaultValue
     override fun getIfExists(key: UnitDoublePreferenceKey): Double = key.defaultValue
@@ -110,6 +106,7 @@ private object PreviewPreferences : Preferences {
     override fun observe(key: IntNonPreferenceKey): StateFlow<Int> = MutableStateFlow(key.defaultValue)
     override fun inc(key: IntNonPreferenceKey) {}
     override fun get(key: IntComposedNonPreferenceKey, vararg arguments: Any): Int = key.defaultValue
+    override fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int> = MutableStateFlow(key.defaultValue)
     override fun get(key: IntPreferenceKey): Int = key.defaultValue
 
     override fun get(key: LongNonPreferenceKey): Long = key.defaultValue
@@ -121,6 +118,7 @@ private object PreviewPreferences : Preferences {
     override fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long = key.defaultValue
     override fun getIfExists(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long = key.defaultValue
     override fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long) {}
+    override fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long> = MutableStateFlow(key.defaultValue)
 
     override fun remove(key: NonPreferenceKey) {}
     override fun isUnitDependent(key: String): Boolean = false
@@ -172,12 +170,3 @@ private object PreviewConfig : Config {
     override fun disableLeakCanary(): Boolean = true
 }
 
-/**
- * Minimal RxBus implementation for Compose @Preview functions.
- */
-private object PreviewRxBus : RxBus {
-
-    override fun send(event: Event) {}
-    override fun <T : Any> toObservable(eventType: Class<T>): Observable<T> = Observable.empty()
-    override fun <T : Event> toFlow(eventType: Class<T>): Flow<T> = emptyFlow()
-}

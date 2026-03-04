@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,8 +57,6 @@ class AutomationViewModel @Inject constructor(
     }
 
     private fun setupEventListeners() {
-        rxBus.toFlow(EventPreferenceChange::class.java)
-            .onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventRefreshOverview::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
     }

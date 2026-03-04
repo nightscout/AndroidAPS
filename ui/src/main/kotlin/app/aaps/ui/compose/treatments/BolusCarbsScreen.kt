@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -81,6 +82,7 @@ fun BolusCarbsScreen(
     // Dialog state
     var showDeleteDialog by remember { mutableStateOf(false) }
     var deleteDialogMessage by remember { mutableStateOf("") }
+    var showInfoBcr by remember { mutableStateOf<BCR?>(null) }
 
     val profile = remember(uiState.mealLinks) { viewModel.getProfile() }
 
@@ -102,6 +104,15 @@ fun BolusCarbsScreen(
                 showInvalidated = uiState.showInvalidated,
                 onToggleInvalidated = { viewModel.toggleInvalidated() }
             )
+        )
+    }
+
+    // Wizard info dialog
+    showInfoBcr?.let { bcr ->
+        WizardInfoDialog(
+            bcr = bcr,
+            decimalFormatter = viewModel.decimalFormatter,
+            onDismiss = { showInfoBcr = null }
         )
     }
 
@@ -152,6 +163,7 @@ fun BolusCarbsScreen(
                                     viewModel.enterSelectionMode(ml)
                                 }
                             },
+                            onCalculatorClick = { bcr -> showInfoBcr = bcr },
                             profile = profile,
                             activePlugin = activePlugin,
                             rh = viewModel.rh,
@@ -191,6 +203,7 @@ private fun MealLinkItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
+    onCalculatorClick: (BCR) -> Unit,
     profile: Profile?,
     activePlugin: ActivePlugin,
     rh: ResourceHelper,
@@ -228,12 +241,17 @@ private fun MealLinkItem(
 
                         Box(modifier = Modifier.weight(1f))
 
-                        Icon(
-                            imageVector = ElementType.BOLUS_WIZARD.icon(),
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.boluswizard),
-                            modifier = Modifier.size(21.dp),
-                            tint = ElementType.BOLUS_WIZARD.color()
-                        )
+                        IconButton(
+                            onClick = { onCalculatorClick(bcr) },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = ElementType.BOLUS_WIZARD.icon(),
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.boluswizard),
+                                modifier = Modifier.size(21.dp),
+                                tint = ElementType.BOLUS_WIZARD.color()
+                            )
+                        }
 
                         if (bcr.ids.nightscoutId != null) {
                             Icon(

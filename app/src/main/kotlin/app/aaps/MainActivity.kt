@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -64,6 +63,13 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 import javax.inject.Inject
 
@@ -71,6 +77,7 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivityWithResult() {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var smsCommunicator: SmsCommunicator
@@ -113,7 +120,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
 
         // initialize screen wake lock
-        processPreferenceChange(EventPreferenceChange(BooleanKey.OverviewKeepScreenOn.key))
+        setWakeLock()
 
         disposable += rxBus
             .toObservable(EventRebuildTabs::class.java)
@@ -123,10 +130,10 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                            else setupViews()
                            setWakeLock()
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        scope = newScope
+        preferences.observe(BooleanKey.OverviewKeepScreenOn).drop(1).onEach { setWakeLock() }.launchIn(newScope)
+        preferences.observe(StringKey.GeneralSkin).drop(1).onEach { recreate() }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.main)
@@ -220,6 +227,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         binding.mainPager.adapter = null
         binding.mainDrawerLayout.removeDrawerListener(actionBarDrawerToggle)
         mainMenuProvider?.let { removeMenuProvider(it) }
+        scope?.cancel()
+        scope = null
         disposable.clear()
     }
 
@@ -239,11 +248,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun setWakeLock() {
         val keepScreenOn = preferences.get(BooleanKey.OverviewKeepScreenOn)
         if (keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
-
-    private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(BooleanKey.OverviewKeepScreenOn.key)) setWakeLock()
-        if (ev.isChanged(StringKey.GeneralSkin.key)) recreate()
     }
 
     private fun setupViews() {

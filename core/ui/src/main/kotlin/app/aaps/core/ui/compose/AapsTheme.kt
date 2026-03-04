@@ -6,17 +6,12 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -31,12 +26,6 @@ import app.aaps.core.ui.compose.navigation.LocalElementColors
  * Used to retrieve dark mode setting and react to preference changes.
  */
 val LocalPreferences = compositionLocalOf<Preferences> { error("No Preferences provided") }
-
-/**
- * CompositionLocal providing access to RxBus for listening to app-wide events.
- * Used to react to preference changes (e.g., dark mode toggle) in real-time.
- */
-val LocalRxBus = compositionLocalOf<RxBus> { error("No RxBus provided") }
 
 /**
  * CompositionLocal providing access to DateUtil for date/time formatting.
@@ -165,7 +154,7 @@ object AapsTheme {
  * **Features:**
  * - Material 3 color scheme (light/dark mode)
  * - User preference-based theme selection (Light, Dark, System)
- * - Reactive theme switching (listens to preference changes via RxBus)
+ * - Reactive theme switching (listens to preference changes via Flow)
  * - Custom AndroidAPS color schemes (ProfileHelperColors)
  *
  * **Theme Modes:**
@@ -191,20 +180,8 @@ fun AapsTheme(
     content: @Composable () -> Unit
 ) {
     val preferences = LocalPreferences.current
-    val rxBus = LocalRxBus.current
-    var uiMode by remember { mutableStateOf(UiMode.fromString(preferences.get(StringKey.GeneralDarkMode))) }
-
-    DisposableEffect(rxBus, preferences) {
-        val disposable = rxBus.toObservable(EventPreferenceChange::class.java)
-            .filter { it.changedKey == StringKey.GeneralDarkMode.key }
-            .subscribe {
-                uiMode = UiMode.fromString(preferences.get(StringKey.GeneralDarkMode))
-            }
-
-        onDispose {
-            disposable.dispose()
-        }
-    }
+    val darkModeValue by preferences.observe(StringKey.GeneralDarkMode).collectAsState()
+    val uiMode = UiMode.fromString(darkModeValue)
 
     val lightColors = lightColorScheme()
     val darkColors = darkColorScheme()

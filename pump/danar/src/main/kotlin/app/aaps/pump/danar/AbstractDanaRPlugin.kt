@@ -26,7 +26,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.roundTo
@@ -43,6 +42,13 @@ import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
@@ -82,6 +88,7 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     protected var executionService: AbstractDanaRExecutionService? = null
     protected var disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     override var pumpDescription = PumpDescription()
         protected set
 
@@ -92,21 +99,20 @@ abstract class AbstractDanaRPlugin protected constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe { danaPump.reset() }
 
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { event: EventPreferenceChange ->
-                if (event.isChanged(DanaStringKey.RName.key)) {
-                    danaPump.reset()
-                    pumpSync.connectNewPump(true)
-                    commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
-                }
-            }
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(DanaStringKey.RName).drop(1).onEach {
+            danaPump.reset()
+            pumpSync.connectNewPump(true)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+        }.launchIn(newScope)
         danaPump.serialNumber = preferences.get(DanaStringKey.RName) // fill at start to allow password reset
     }
 
     override fun onStop() {
         super.onStop()
+        scope?.cancel()
+        scope = null
         disposable.clear()
     }
 

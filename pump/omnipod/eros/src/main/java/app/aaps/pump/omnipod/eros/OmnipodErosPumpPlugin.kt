@@ -47,7 +47,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -106,6 +105,15 @@ import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.joda.time.Instant
@@ -158,6 +166,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
 ), Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private val displayConnectionMessages = false
     private val statusChecker: Runnable
 
@@ -271,36 +280,34 @@ class OmnipodErosPumpPlugin @Inject constructor(
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(OmnipodBooleanPreferenceKey.BasalBeepsEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.BolusBeepsEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.TbrBeepsEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SmbBeepsEnabled.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.ShowSuspendDeliveryButton.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.ShowPulseLogButton.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.ShowRileyLinkStatsButton.key) ||
-                               event.isChanged(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.BatteryChangeLogging.key) ||
-                               event.isChanged(ErosBooleanPreferenceKey.TimeChangeEnabled.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts.key)
-                           ) {
-                               aapsOmnipodErosManager.reloadSettings()
-                           } else if (event.isChanged(OmnipodBooleanPreferenceKey.ExpirationReminder.key) ||
-                               event.isChanged(OmnipodIntPreferenceKey.ExpirationAlarmHours.key) ||
-                               event.isChanged(OmnipodBooleanPreferenceKey.LowReservoirAlert.key) ||
-                               event.isChanged(OmnipodIntPreferenceKey.LowReservoirAlertUnits.key)
-                           ) {
-                               if (!verifyPodAlertConfiguration()) {
-                                   commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
-                               }
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        merge(
+            preferences.observe(OmnipodBooleanPreferenceKey.BasalBeepsEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.BolusBeepsEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.TbrBeepsEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SmbBeepsEnabled).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.ShowSuspendDeliveryButton).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.ShowPulseLogButton).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.ShowRileyLinkStatsButton).drop(1).map {},
+            preferences.observe(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.BatteryChangeLogging).drop(1).map {},
+            preferences.observe(ErosBooleanPreferenceKey.TimeChangeEnabled).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.AutomaticallyAcknowledgeAlerts).drop(1).map {},
+        ).onEach { aapsOmnipodErosManager.reloadSettings() }.launchIn(newScope)
+        merge(
+            preferences.observe(OmnipodBooleanPreferenceKey.ExpirationReminder).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.ExpirationAlarmHours).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
+        ).onEach {
+            if (!verifyPodAlertConfiguration()) {
+                commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
+            }
+        }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
@@ -391,6 +398,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
     override fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "OmnipodPumpPlugin.onStop()")
+        scope?.cancel()
+        scope = null
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()
         handler = null

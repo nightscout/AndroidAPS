@@ -50,16 +50,15 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.R
-import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -127,8 +126,7 @@ class PrefImportSummaryDialog @Inject constructor(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         ImportSummaryDialog(

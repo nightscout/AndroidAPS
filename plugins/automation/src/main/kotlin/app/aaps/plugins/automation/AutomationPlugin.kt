@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBTChange
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
@@ -93,6 +92,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -197,15 +197,10 @@ class AutomationPlugin @Inject constructor(
             .onEach { processActions() }
             .launchIn(newScope)
 
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ e ->
-                           if (e.isChanged(StringKey.AutomationLocation.key)) {
-                               locationServiceHelper.stopService(context)
-                               locationServiceHelper.startService(context)
-                           }
-                       }, fabricPrivacy::logException)
+        preferences.observe(StringKey.AutomationLocation).drop(1).onEach {
+            locationServiceHelper.stopService(context)
+            locationServiceHelper.startService(context)
+        }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(aapsSchedulers.io)

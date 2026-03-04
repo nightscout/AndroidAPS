@@ -29,8 +29,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -45,10 +43,16 @@ import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -75,7 +79,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
-    private val rxBus: RxBus,
 ) : Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -99,7 +102,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     private var uploadCounter by counterDelegate
     private val appId by appIdDelegate
 
-    private val preferenceChangeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     // Not used Sync interface members
     override val hasWritePermission: Boolean = true
@@ -108,21 +111,23 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
     override fun onStart() {
         super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         setupNotificationChannels()
         if (openHumansState != null) scheduleWorker(false)
-        preferenceChangeDisposable += rxBus.toObservable(EventPreferenceChange::class.java).subscribe {
-            onSharedPreferenceChanged(it)
-        }
+        merge(
+            preferences.observe(BooleanKey.OpenHumansWifiOnly).drop(1).map {},
+            preferences.observe(BooleanKey.OpenHumansChargingOnly).drop(1).map {}
+        ).onEach {
+            if (openHumansState != null) scheduleWorker(true)
+        }.launchIn(newScope)
     }
 
     override fun onStop() {
         super.onStop()
         cancelWorker()
-        preferenceChangeDisposable.clear()
-    }
-
-    private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf(BooleanKey.OpenHumansWifiOnly.key, BooleanKey.OpenHumansChargingOnly.key) && openHumansState != null) scheduleWorker(true)
+        scope?.cancel()
+        scope = null
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {

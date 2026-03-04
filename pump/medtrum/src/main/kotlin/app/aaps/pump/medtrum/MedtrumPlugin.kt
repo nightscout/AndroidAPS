@@ -43,7 +43,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -72,6 +71,13 @@ import app.aaps.pump.medtrum.services.MedtrumService
 import app.aaps.pump.medtrum.util.MedtrumSnUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -119,6 +125,7 @@ class MedtrumPlugin @Inject constructor(
 ), Pump, Medtrum {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private var medtrumService: MedtrumService? = null
 
     override fun onStart() {
@@ -131,15 +138,11 @@ class MedtrumPlugin @Inject constructor(
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           // Update max insulin limits when serial number changes (determines pump type)
-                           if (event.isChanged(MedtrumStringKey.MedtrumSnInput.key)) {
-                               updateMaxInsulinLimitsForPumpType()
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(MedtrumStringKey.MedtrumSnInput).drop(1).onEach {
+            updateMaxInsulinLimitsForPumpType()
+        }.launchIn(newScope)
 
         // Force enable pump unreachable alert due to some failure modes of Medtrum pump
         preferences.put(BooleanKey.AlertPumpUnreachable, true)
@@ -147,6 +150,8 @@ class MedtrumPlugin @Inject constructor(
 
     override fun onStop() {
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStop()")
+        scope?.cancel()
+        scope = null
         context.unbindService(mConnection)
         disposable.clear()
         super.onStop()

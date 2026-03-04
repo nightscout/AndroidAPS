@@ -57,7 +57,6 @@ import app.aaps.pump.common.defs.PumpDriverState
 import app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity
 import app.aaps.pump.common.driver.refresh.PumpDataRefreshAction
 import app.aaps.pump.common.driver.refresh.PumpDataRefreshType
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
@@ -104,6 +103,13 @@ import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import app.aaps.pump.medtronic.util.MedtronicUtil.Companion.isSame
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -178,6 +184,7 @@ class MedtronicPumpPlugin @Inject constructor(
 ), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null
+    private var scope: CoroutineScope? = null
 
     // variables for handling statuses and history (most moved to PumpAbstract now)
     private var lastPumpHistoryEntry: PumpHistoryEntry? = null
@@ -216,20 +223,21 @@ class MedtronicPumpPlugin @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
         )
-        disposable.add(
-            rxBus
-                .toObservable(EventPreferenceChange::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ event ->
-                    if (event.isChanged(MedtronicStringPreferenceKey.Serial.key)) {
-                        aapsLogger.debug(LTag.PUMP, "Medtronic serial number changed, reporting new pump")
-                        medtronicPumpStatus.serialNumber = preferences.getIfExists(MedtronicStringPreferenceKey.Serial) ?: ""
-                        pumpSync.connectNewPump()
-                        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
-                    }
-                }, fabricPrivacy::logException)
-        )
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(MedtronicStringPreferenceKey.Serial).drop(1).onEach {
+            aapsLogger.debug(LTag.PUMP, "Medtronic serial number changed, reporting new pump")
+            medtronicPumpStatus.serialNumber = preferences.getIfExists(MedtronicStringPreferenceKey.Serial) ?: ""
+            pumpSync.connectNewPump()
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+        }.launchIn(newScope)
         super.onStart()
+    }
+
+    override fun onStop() {
+        scope?.cancel()
+        scope = null
+        super.onStop()
     }
 
     override fun updatePreferenceSummary(pref: Preference) {
@@ -657,7 +665,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable)
         if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
-            aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::deliverBolus - Delivery Canceled.");
+            aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::deliverBolus - Delivery Canceled.")
             return setNotReachable(isBolus = true, success = true)
         }
 

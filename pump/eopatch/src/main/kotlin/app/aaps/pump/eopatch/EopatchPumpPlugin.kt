@@ -36,7 +36,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -61,6 +60,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -108,6 +116,7 @@ class EopatchPumpPlugin @Inject constructor(
 ), Pump {
 
     private val mDisposables = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private var mPumpType: PumpType = PumpType.EOFLOW_EOPATCH2
     private var mLastDataTime: Long = 0
@@ -124,16 +133,15 @@ class EopatchPumpPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        mDisposables += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(EopatchIntKey.LowReservoirReminder.key) || event.isChanged(EopatchIntKey.ExpirationReminder.key)) {
-                               patchManager.changeReminderSetting()
-                           } else if (event.isChanged(EopatchBooleanKey.BuzzerReminder.key)) {
-                               patchManager.changeBuzzerSetting()
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        merge(
+            preferences.observe(EopatchIntKey.LowReservoirReminder).drop(1).map {},
+            preferences.observe(EopatchIntKey.ExpirationReminder).drop(1).map {},
+        ).onEach { patchManager.changeReminderSetting() }.launchIn(newScope)
+        preferences.observe(EopatchBooleanKey.BuzzerReminder).drop(1).onEach {
+            patchManager.changeBuzzerSetting()
+        }.launchIn(newScope)
 
         mDisposables += rxBus
             .toObservable(EventAppInitialized::class.java)
@@ -158,6 +166,9 @@ class EopatchPumpPlugin @Inject constructor(
     override fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "EOPatchPumpPlugin onStop()")
+        scope?.cancel()
+        scope = null
+        mDisposables.clear()
     }
 
     override fun isInitialized(): Boolean {

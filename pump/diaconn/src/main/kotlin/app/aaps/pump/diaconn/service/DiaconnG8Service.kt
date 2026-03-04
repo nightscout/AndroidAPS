@@ -28,7 +28,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -79,6 +78,13 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -114,6 +120,7 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private val mBinder: IBinder = LocalBinder()
     private var lastApproachingDailyLimit: Long = 0
 
@@ -121,20 +128,17 @@ class DiaconnG8Service : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           if (it.isChanged(DiaconnIntKey.BolusSpeed.key)) {
-                               diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
-                               diaconnG8Pump.speed = preferences.get(DiaconnIntKey.BolusSpeed)
-                               updateBolusSpeedInPump = true
-                           }
-                       }, fabricPrivacy::logException)
+        preferences.observe(DiaconnIntKey.BolusSpeed).drop(1).onEach {
+            diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
+            diaconnG8Pump.speed = preferences.get(DiaconnIntKey.BolusSpeed)
+            updateBolusSpeedInPump = true
+        }.launchIn(newScope)
     }
 
     inner class LocalBinder : Binder() {
@@ -152,6 +156,8 @@ class DiaconnG8Service : DaggerService() {
     }
 
     override fun onDestroy() {
+        scope?.cancel()
+        scope = null
         disposable.clear()
         super.onDestroy()
     }

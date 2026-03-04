@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.sync.di.AuthUrl
 import app.aaps.plugins.sync.openhumans.compose.OHLoginScreen
@@ -47,8 +46,7 @@ class OHLoginActivity : AppCompatActivity() {
 
         setContent {
             CompositionLocalProvider(
-                LocalPreferences provides preferences,
-                LocalRxBus provides rxBus
+                LocalPreferences provides preferences
             ) {
                 AapsTheme {
                     OHLoginScreen(

@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
@@ -55,6 +54,13 @@ import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Vector
 import javax.inject.Inject
 import javax.inject.Provider
@@ -101,6 +107,8 @@ class DanaRKoreanPlugin @Inject constructor(
     pumpEnactResultProvider
 ) {
 
+    private var scope: CoroutineScope? = null
+
     init {
         pluginDescription.description(app.aaps.pump.dana.R.string.description_pump_dana_r_korean)
         pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
@@ -108,16 +116,13 @@ class DanaRKoreanPlugin @Inject constructor(
 
     override fun onStart() {
         context.bindService(Intent(context, DanaRKoreanExecutionService::class.java), mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           if (it.isChanged(DanaBooleanKey.UseExtended.key)) {
-                               if (pumpSync.expectedPumpState().extendedBolus != null) {
-                                   executionService?.extendedBolusStop()
-                               }
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(DanaBooleanKey.UseExtended).drop(1).onEach {
+            if (pumpSync.expectedPumpState().extendedBolus != null) {
+                executionService?.extendedBolusStop()
+            }
+        }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -126,6 +131,8 @@ class DanaRKoreanPlugin @Inject constructor(
     }
 
     override fun onStop() {
+        scope?.cancel()
+        scope = null
         context.unbindService(mConnection)
         disposable.clear()
         super.onStop()

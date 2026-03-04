@@ -36,7 +36,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
@@ -62,6 +61,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
@@ -126,29 +127,23 @@ class IobCobCalculatorPlugin @Inject constructor(
                     newHistoryData(timestamp, bgDataReload = false, triggeredByNewBG = false)
                 }
             }.launchIn(newScope)
-        // EventPreferenceChange
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(IntKey.AutosensPeriod.key) ||
-                               event.isChanged(StringKey.SafetyAge.key) ||
-                               event.isChanged(DoubleKey.AbsorptionMaxTime.key) ||
-                               event.isChanged(DoubleKey.ApsAmaMin5MinCarbsImpact.key) ||
-                               event.isChanged(DoubleKey.ApsSmbMin5MinCarbsImpact.key) ||
-                               event.isChanged(DoubleKey.AbsorptionCutOff.key) ||
-                               event.isChanged(DoubleKey.AutosensMax.key) ||
-                               event.isChanged(DoubleKey.AutosensMin.key) ||
-                               event.isChanged(IntKey.InsulinOrefPeak.key)
-                           ) {
-                               resetDataAndRunCalculation("onEventPreferenceChange")
-                           }
-                           if (event.isChanged(IntNonKey.RangeToDisplay.key)) {
-                               overviewData.initRange()
-                               calculationWorkflow.runOnScaleChanged(this, overviewData)
-                               scheduleHistoryDataChange(0, reloadBgData = false)
-                           }
-                       }, fabricPrivacy::logException)
+        // Preference changes
+        merge(
+            preferences.observe(IntKey.AutosensPeriod).drop(1).map {},
+            preferences.observe(StringKey.SafetyAge).drop(1).map {},
+            preferences.observe(DoubleKey.AbsorptionMaxTime).drop(1).map {},
+            preferences.observe(DoubleKey.ApsAmaMin5MinCarbsImpact).drop(1).map {},
+            preferences.observe(DoubleKey.ApsSmbMin5MinCarbsImpact).drop(1).map {},
+            preferences.observe(DoubleKey.AbsorptionCutOff).drop(1).map {},
+            preferences.observe(DoubleKey.AutosensMax).drop(1).map {},
+            preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
+            preferences.observe(IntKey.InsulinOrefPeak).drop(1).map {},
+        ).onEach { resetDataAndRunCalculation("onPreferenceChange") }.launchIn(newScope)
+        preferences.observe(IntNonKey.RangeToDisplay).drop(1).onEach {
+            overviewData.initRange()
+            calculationWorkflow.runOnScaleChanged(this@IobCobCalculatorPlugin, overviewData)
+            scheduleHistoryDataChange(0, reloadBgData = false)
+        }.launchIn(newScope)
         // GlucoseValue changes → reload BG data + trigger loop
         persistenceLayer.observeChanges(GV::class.java)
             .onEach { gvList ->

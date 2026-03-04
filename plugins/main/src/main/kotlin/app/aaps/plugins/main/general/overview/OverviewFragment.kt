@@ -70,7 +70,6 @@ import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
@@ -119,7 +118,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -246,7 +248,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay += 6
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             preferences.put(IntNonKey.RangeToDisplay, overviewData.rangeToDisplay)
-            rxBus.send(EventPreferenceChange(IntNonKey.RangeToDisplay.key))
             preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
             false
         }
@@ -320,7 +321,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
                            preferences.put(IntNonKey.RangeToDisplay, it.hours)
-                           rxBus.send(EventPreferenceChange(IntNonKey.RangeToDisplay.key))
                            preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -339,10 +339,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .toObservable(EventAcceptOpenLoopChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleUpdateGUI() }, fabricPrivacy::logException)
+        merge(
+            preferences.observe(BooleanKey.OverviewShowCarbsButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowTreatmentButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowWizardButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowInsulinButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowCalibrationButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowCgmButton).drop(1).map {},
+            preferences.observe(UnitDoubleKey.OverviewLowMark).drop(1).map {},
+            preferences.observe(UnitDoubleKey.OverviewHighMark).drop(1).map {},
+            preferences.observe(BooleanNonKey.AutosensUsedOnMainPhone).drop(1).map {},
+            preferences.observe(DoubleKey.AutosensMax).drop(1).map {},
+            preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
+        ).onEach { scheduleUpdateGUI() }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventNewOpenLoopNotification::class.java)
             .observeOn(aapsSchedulers.io)

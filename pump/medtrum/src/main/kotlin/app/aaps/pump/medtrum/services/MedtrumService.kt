@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -70,7 +69,11 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
@@ -115,7 +118,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private var currentState: State = IdleState()
     private var mPacket: MedtrumPacket? = null
 
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     val isConnected: Boolean
         get() = medtrumPump.connectionState == ConnectionState.CONNECTED
@@ -129,41 +132,72 @@ class MedtrumService : DaggerService(), BLECommCallback {
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(MedtrumStringKey.MedtrumSnInput.key)) {
-                               aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
-                               medtrumPump.loadUserSettingsFromSP()
-                               medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN).value
-                               medtrumPump.resetPatchParameters()
-                               pumpSync.connectNewPump()
-                               medtrumPump.setFakeTBRIfNotSet()
-                           }
-                           if (event.isChanged(MedtrumBooleanKey.MedtrumWarningNotification.key)
-                               || event.isChanged(MedtrumIntKey.MedtrumPumpExpiryWarningHours.key)
-                           ) {
-                               medtrumPump.loadUserSettingsFromSP()
-                           }
-                           if (event.isChanged(MedtrumStringKey.MedtrumAlarmSettings.key)
-                               || event.isChanged(MedtrumBooleanKey.MedtrumPatchExpiration.key)
-                               || event.isChanged(MedtrumIntKey.MedtrumHourlyMaxInsulin.key)
-                               || event.isChanged(MedtrumIntKey.MedtrumDailyMaxInsulin.key)
-                           ) {
-                               medtrumPump.loadUserSettingsFromSP()
-                               commandQueue.setUserOptions(object : Callback() {
-                                   override fun run() {
-                                       if (medtrumPlugin.isInitialized() && !this.result.success) {
-                                           notificationManager.post(
-                                               NotificationId.PUMP_SETTINGS_FAILED,
-                                               R.string.pump_setting_failed,
-                                           )
-                                       }
-                                   }
-                               })
-                           }
-                       }, fabricPrivacy::logException)
+        preferences.observe(MedtrumStringKey.MedtrumSnInput).drop(1).onEach {
+            aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
+            medtrumPump.loadUserSettingsFromSP()
+            medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN).value
+            medtrumPump.resetPatchParameters()
+            pumpSync.connectNewPump()
+            medtrumPump.setFakeTBRIfNotSet()
+        }.launchIn(scope)
+        preferences.observe(MedtrumBooleanKey.MedtrumWarningNotification).drop(1).onEach {
+            medtrumPump.loadUserSettingsFromSP()
+        }.launchIn(scope)
+        preferences.observe(MedtrumIntKey.MedtrumPumpExpiryWarningHours).drop(1).onEach {
+            medtrumPump.loadUserSettingsFromSP()
+        }.launchIn(scope)
+        preferences.observe(MedtrumStringKey.MedtrumAlarmSettings).drop(1).onEach {
+            medtrumPump.loadUserSettingsFromSP()
+            commandQueue.setUserOptions(object : Callback() {
+                override fun run() {
+                    if (medtrumPlugin.isInitialized() && !this.result.success) {
+                        notificationManager.post(
+                            NotificationId.PUMP_SETTINGS_FAILED,
+                            R.string.pump_setting_failed,
+                        )
+                    }
+                }
+            })
+        }.launchIn(scope)
+        preferences.observe(MedtrumBooleanKey.MedtrumPatchExpiration).drop(1).onEach {
+            medtrumPump.loadUserSettingsFromSP()
+            commandQueue.setUserOptions(object : Callback() {
+                override fun run() {
+                    if (medtrumPlugin.isInitialized() && !this.result.success) {
+                        notificationManager.post(
+                            NotificationId.PUMP_SETTINGS_FAILED,
+                            R.string.pump_setting_failed,
+                        )
+                    }
+                }
+            })
+        }.launchIn(scope)
+        preferences.observe(MedtrumIntKey.MedtrumHourlyMaxInsulin).drop(1).onEach {
+            medtrumPump.loadUserSettingsFromSP()
+            commandQueue.setUserOptions(object : Callback() {
+                override fun run() {
+                    if (medtrumPlugin.isInitialized() && !this.result.success) {
+                        notificationManager.post(
+                            NotificationId.PUMP_SETTINGS_FAILED,
+                            R.string.pump_setting_failed,
+                        )
+                    }
+                }
+            })
+        }.launchIn(scope)
+        preferences.observe(MedtrumIntKey.MedtrumDailyMaxInsulin).drop(1).onEach {
+            medtrumPump.loadUserSettingsFromSP()
+            commandQueue.setUserOptions(object : Callback() {
+                override fun run() {
+                    if (medtrumPlugin.isInitialized() && !this.result.success) {
+                        notificationManager.post(
+                            NotificationId.PUMP_SETTINGS_FAILED,
+                            R.string.pump_setting_failed,
+                        )
+                    }
+                }
+            })
+        }.launchIn(scope)
         scope.launch {
             medtrumPump.pumpStateFlow.collect { pumpState ->
                 handlePumpStateUpdate(pumpState)

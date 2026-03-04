@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -54,6 +53,13 @@ import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.Duration
@@ -86,6 +92,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposables: CompositeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var refreshLoop: Runnable
@@ -182,6 +189,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         handler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
+        val newScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        scope = newScope
         disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.main)
@@ -203,17 +212,17 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                            updateQueueStatus()
                            updatePodActionButtons()
                        }, fabricPrivacy::logException)
-        disposables += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           updatePodActionButtons()
-                       }, fabricPrivacy::logException)
+        preferences.observe(IntKey.AlertsPumpUnreachableThreshold)
+            .drop(1)
+            .onEach { updatePodActionButtons() }
+            .launchIn(newScope)
         updateUi()
     }
 
     override fun onPause() {
         super.onPause()
+        scope?.cancel()
+        scope = null
         disposables.clear()
         handler.removeCallbacksAndMessages(null)
     }

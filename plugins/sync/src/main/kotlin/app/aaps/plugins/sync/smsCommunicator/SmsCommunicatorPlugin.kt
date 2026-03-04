@@ -49,17 +49,14 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -88,10 +85,13 @@ import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.Strings
 import org.joda.time.DateTime
@@ -110,13 +110,11 @@ class SmsCommunicatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val smsManager: SmsManager?,
-    private val aapsSchedulers: AapsSchedulers,
     preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePlugin,
     private val localProfileManager: LocalProfileManager,
     private val commandQueue: CommandQueue,
@@ -154,7 +152,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     aapsLogger, rh, preferences
 ), SmsCommunicator {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     var allowedNumbers: MutableList<String> = ArrayList()
     @Volatile var messageToConfirm: AuthRequest? = null
     @Volatile var lastRemoteBolusTime: Long = 0
@@ -191,16 +189,19 @@ class SmsCommunicatorPlugin @Inject constructor(
     )
 
     override fun onStart() {
-        processSettings(null)
+        processSettings()
         super.onStart()
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(StringKey.SmsAllowedNumbers)
+            .drop(1)
+            .onEach { processSettings() }
+            .launchIn(newScope)
     }
 
     override fun onStop() {
-        disposable.clear()
+        scope?.cancel()
+        scope = null
         super.onStop()
     }
 
@@ -251,16 +252,14 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processSettings(ev: EventPreferenceChange?) {
-        if (ev == null || ev.isChanged(StringKey.SmsAllowedNumbers.key)) {
-            val settings = preferences.get(StringKey.SmsAllowedNumbers)
-            allowedNumbers.clear()
-            val substrings = settings.split(";").toTypedArray()
-            for (number in substrings) {
-                val cleaned = number.replace("\\s+".toRegex(), "")
-                allowedNumbers.add(cleaned)
-                aapsLogger.debug(LTag.SMS, "Found allowed number: $cleaned")
-            }
+    private fun processSettings() {
+        val settings = preferences.get(StringKey.SmsAllowedNumbers)
+        allowedNumbers.clear()
+        val substrings = settings.split(";").toTypedArray()
+        for (number in substrings) {
+            val cleaned = number.replace("\\s+".toRegex(), "")
+            allowedNumbers.add(cleaned)
+            aapsLogger.debug(LTag.SMS, "Found allowed number: $cleaned")
         }
     }
 

@@ -35,12 +35,9 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -53,11 +50,15 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -67,9 +68,7 @@ import javax.inject.Singleton
 open class VirtualPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    private var fabricPrivacy: FabricPrivacy,
     rh: ResourceHelper,
-    private val aapsSchedulers: AapsSchedulers,
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     commandQueue: CommandQueue,
@@ -107,7 +106,7 @@ open class VirtualPumpPlugin @Inject constructor(
     aapsLogger, rh, preferences, commandQueue
 ), Pump, VirtualPump {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     val batteryPercentFlow: StateFlow<Int>
         field = MutableStateFlow(50)
@@ -151,15 +150,15 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(StringKey.VirtualPumpType.key)) refreshConfiguration() }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(StringKey.VirtualPumpType).drop(1).onEach { refreshConfiguration() }.launchIn(newScope)
         refreshConfiguration()
     }
 
     override fun onStop() {
-        disposable.clear()
+        scope?.cancel()
+        scope = null
         super.onStop()
     }
 

@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -28,21 +27,21 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UIRunnable
+import app.aaps.pump.omnipod.common.EventOmnipodDashPumpValuesChanged
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
-import app.aaps.pump.omnipod.common.EventOmnipodDashPumpValuesChanged
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.databinding.OmnipodDashOverviewBinding
 import app.aaps.pump.omnipod.dash.databinding.OmnipodDashOverviewBluetoothStatusBinding
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
-import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -203,15 +202,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             .subscribe(
                 {
                     updateQueueStatus()
-                    updatePodActionButtons()
-                },
-                fabricPrivacy::logException
-            )
-        disposables += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                {
                     updatePodActionButtons()
                 },
                 fabricPrivacy::logException

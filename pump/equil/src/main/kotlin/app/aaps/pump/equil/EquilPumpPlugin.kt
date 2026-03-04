@@ -33,7 +33,6 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -61,6 +60,13 @@ import app.aaps.pump.equil.manager.command.PumpEvent
 import app.aaps.pump.equil.manager.customCommands.CmdModeAndHistoryGet
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import javax.inject.Inject
@@ -103,6 +109,7 @@ class EquilPumpPlugin @Inject constructor(
     private val bolusProfile: BolusProfile = BolusProfile()
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     override fun onStart() {
         super.onStart()
@@ -129,32 +136,30 @@ class EquilPumpPlugin @Inject constructor(
                            }
                        }, fabricPrivacy::logException)
 
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(EquilIntPreferenceKey.EquilTone.key)) {
-                               val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
-                               commandQueue.customCommand(
-                                   CmdAlarmSet(mode, aapsLogger, preferences, equilManager),
-                                   object : Callback() {
-                                       override fun run() {
-                                           if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
-                                           else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                                       }
-                                   })
-                           } else if (event.isChanged(DoubleKey.SafetyMaxBolus.key)) {
-                               val profile = pumpSync.expectedPumpState().profile ?: return@subscribe
-                               commandQueue.customCommand(
-                                   CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
-                                   object : Callback() {
-                                       override fun run() {
-                                           if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
-                                           else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                                       }
-                                   })
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(EquilIntPreferenceKey.EquilTone).drop(1).onEach {
+            val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
+            commandQueue.customCommand(
+                CmdAlarmSet(mode, aapsLogger, preferences, equilManager),
+                object : Callback() {
+                    override fun run() {
+                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
+                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                    }
+                })
+        }.launchIn(newScope)
+        preferences.observe(DoubleKey.SafetyMaxBolus).drop(1).onEach {
+            val profile = pumpSync.expectedPumpState().profile ?: return@onEach
+            commandQueue.customCommand(
+                CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
+                object : Callback() {
+                    override fun run() {
+                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
+                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                    }
+                })
+        }.launchIn(newScope)
     }
 
     var tempActivationProgress = ActivationProgress.NONE
@@ -168,6 +173,8 @@ class EquilPumpPlugin @Inject constructor(
     override fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()")
+        scope?.cancel()
+        scope = null
         disposable.clear()
     }
 

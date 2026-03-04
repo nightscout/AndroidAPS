@@ -23,7 +23,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.dialogs.ErrorDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
@@ -173,8 +172,7 @@ class AlertDialogs(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         OkDialog(
@@ -208,8 +206,7 @@ class AlertDialogs(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         YesNoCancelDialog(
@@ -253,8 +250,7 @@ class AlertDialogs(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         ErrorDialog(
@@ -296,8 +292,7 @@ class AlertDialogs(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         OkCancelDialog(

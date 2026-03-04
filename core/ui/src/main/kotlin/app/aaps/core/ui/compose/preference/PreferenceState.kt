@@ -13,8 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
@@ -27,7 +25,6 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
-import app.aaps.core.ui.compose.LocalRxBus
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -312,10 +309,9 @@ fun rememberPreferenceBooleanState(
     key: BooleanPreferenceKey
 ): MutableState<Boolean> {
     val preferences = LocalPreferences.current
-    val rxBus = LocalRxBus.current
     val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceBooleanState(preferences, key, rxBus, sharedStates)
+        PreferenceBooleanState(preferences, key, sharedStates)
     }
 }
 
@@ -327,10 +323,9 @@ fun rememberPreferenceStringState(
     key: StringPreferenceKey
 ): MutableState<String> {
     val preferences = LocalPreferences.current
-    val rxBus = LocalRxBus.current
     val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceStringState(preferences, key, rxBus, sharedStates)
+        PreferenceStringState(preferences, key, sharedStates)
     }
 }
 
@@ -342,10 +337,9 @@ fun rememberPreferenceIntState(
     key: IntPreferenceKey
 ): MutableState<Int> {
     val preferences = LocalPreferences.current
-    val rxBus = LocalRxBus.current
     val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceIntState(preferences, key, rxBus, sharedStates)
+        PreferenceIntState(preferences, key, sharedStates)
     }
 }
 
@@ -357,10 +351,9 @@ fun rememberPreferenceDoubleState(
     key: DoublePreferenceKey
 ): MutableState<Double> {
     val preferences = LocalPreferences.current
-    val rxBus = LocalRxBus.current
     val sharedStates = LocalSharedPreferenceStates.current
     return remember(key, preferences) {
-        PreferenceDoubleState(preferences, key, rxBus, sharedStates)
+        PreferenceDoubleState(preferences, key, sharedStates)
     }
 }
 
@@ -372,7 +365,6 @@ fun rememberPreferenceDoubleState(
 internal class PreferenceBooleanState(
     private val preferences: Preferences,
     private val key: BooleanPreferenceKey,
-    private val rxBus: RxBus,
     private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<Boolean> {
 
@@ -385,7 +377,6 @@ internal class PreferenceBooleanState(
         set(value) {
             setSharedBooleanState(sharedStates, key.key, value)
             preferences.put(key, value)
-            rxBus.send(EventPreferenceChange(key.key))
         }
 
     override fun component1(): Boolean = value
@@ -396,7 +387,6 @@ internal class PreferenceBooleanState(
 internal class PreferenceStringState(
     private val preferences: Preferences,
     private val key: StringPreferenceKey,
-    private val rxBus: RxBus,
     private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<String> {
 
@@ -409,7 +399,6 @@ internal class PreferenceStringState(
         set(value) {
             setSharedStringState(sharedStates, key.key, value)
             preferences.put(key, value)
-            rxBus.send(EventPreferenceChange(key.key))
         }
 
     override fun component1(): String = value
@@ -420,7 +409,6 @@ internal class PreferenceStringState(
 internal class PreferenceIntState(
     private val preferences: Preferences,
     private val key: IntPreferenceKey,
-    private val rxBus: RxBus,
     private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<Int> {
 
@@ -434,7 +422,6 @@ internal class PreferenceIntState(
             val clampedValue = value.coerceIn(key.min, key.max)
             setSharedIntState(sharedStates, key.key, clampedValue)
             preferences.put(key, clampedValue)
-            rxBus.send(EventPreferenceChange(key.key))
         }
 
     override fun component1(): Int = value
@@ -445,7 +432,6 @@ internal class PreferenceIntState(
 internal class PreferenceDoubleState(
     private val preferences: Preferences,
     private val key: DoublePreferenceKey,
-    private val rxBus: RxBus,
     private val sharedStates: SnapshotStateMap<String, Any?>
 ) : MutableState<Double> {
 
@@ -459,7 +445,6 @@ internal class PreferenceDoubleState(
             val clampedValue = value.coerceIn(key.min, key.max)
             setSharedDoubleState(sharedStates, key.key, clampedValue)
             preferences.put(key, clampedValue)
-            rxBus.send(EventPreferenceChange(key.key))
         }
 
     override fun component1(): Double = value
@@ -479,7 +464,6 @@ class UnitDoublePreferenceState(
     private val profileUtil: ProfileUtil,
     private val key: UnitDoublePreferenceKey,
     private val _displayValue: MutableState<String>,
-    private val rxBus: RxBus,
     private val sharedStates: SnapshotStateMap<String, Any?>
 ) {
 
@@ -493,7 +477,6 @@ class UnitDoublePreferenceState(
         val displayDouble = newValue.toDoubleOrNull() ?: return
         val mgdlValue = profileUtil.convertToMgdlDetect(displayDouble)
         preferences.put(key, mgdlValue)
-        rxBus.send(EventPreferenceChange(key.key))
     }
 }
 
@@ -503,7 +486,6 @@ fun rememberUnitDoublePreferenceState(
 ): UnitDoublePreferenceState {
     val preferences = LocalPreferences.current
     val profileUtil = LocalProfileUtil.current
-    val rxBus = LocalRxBus.current
     val sharedStates = LocalSharedPreferenceStates.current
 
     // Format the current stored value for display
@@ -524,6 +506,6 @@ fun rememberUnitDoublePreferenceState(
     displayState.value = getSharedStringState(sharedStates, "unit_display:${key.key}", formatted)
 
     return remember(key) {
-        UnitDoublePreferenceState(preferences, profileUtil, key, displayState, rxBus, sharedStates)
+        UnitDoublePreferenceState(preferences, profileUtil, key, displayState, sharedStates)
     }
 }

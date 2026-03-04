@@ -35,7 +35,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.source.NSClientSource
@@ -358,7 +357,6 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun pause(newState: Boolean) {
         preferences.put(NsclientBooleanKey.NsPaused, newState)
-        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override fun detectedNsVersion(): String? = nsAndroidClient?.lastStatus?.version

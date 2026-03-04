@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
@@ -34,6 +33,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -46,9 +47,18 @@ import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -83,6 +93,7 @@ class WearPlugin @Inject constructor(
 ) {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     private val _connectedDevice = MutableStateFlow<String?>(null)
     val connectedDevice: StateFlow<String?> = _connectedDevice.asStateFlow()
@@ -100,6 +111,8 @@ class WearPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         dataLayerListenerServiceMobileHelper.startService(context)
         disposable += rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
@@ -120,13 +133,25 @@ class WearPlugin @Inject constructor(
                                if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = BolusProgressData.percent, status = BolusProgressData.wearStatus)))
                            }
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           dataHandlerMobile.resendData("EventPreferenceChange")
-                           checkCustomWatchfacePreferences()
-                       }, fabricPrivacy::logException)
+        merge(
+            // Preferences sent to watch via resendData()
+            preferences.observe(BooleanKey.WearControl).drop(1).map {},
+            preferences.observe(IntKey.OverviewBolusPercentage).drop(1).map {},
+            preferences.observe(IntKey.SafetyMaxCarbs).drop(1).map {},
+            preferences.observe(DoubleKey.SafetyMaxBolus).drop(1).map {},
+            preferences.observe(DoubleKey.OverviewInsulinButtonIncrement1).drop(1).map {},
+            preferences.observe(DoubleKey.OverviewInsulinButtonIncrement2).drop(1).map {},
+            preferences.observe(IntKey.OverviewCarbsButtonIncrement1).drop(1).map {},
+            preferences.observe(IntKey.OverviewCarbsButtonIncrement2).drop(1).map {},
+            // Custom watchface preferences
+            preferences.observe(BooleanKey.WearCustomWatchfaceAuthorization).drop(1).map {},
+            preferences.observe(StringNonKey.WearCwfWatchfaceName).drop(1).map {},
+            preferences.observe(StringNonKey.WearCwfAuthorVersion).drop(1).map {},
+            preferences.observe(StringNonKey.WearCwfFileName).drop(1).map {},
+        ).onEach {
+            dataHandlerMobile.resendData("PreferenceChange")
+            checkCustomWatchfacePreferences()
+        }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
@@ -186,6 +211,8 @@ class WearPlugin @Inject constructor(
     }
 
     override fun onStop() {
+        scope?.cancel()
+        scope = null
         disposable.clear()
         super.onStop()
         dataLayerListenerServiceMobileHelper.stopService(context)

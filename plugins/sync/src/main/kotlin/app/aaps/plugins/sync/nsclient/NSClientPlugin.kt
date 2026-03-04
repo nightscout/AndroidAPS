@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
@@ -147,7 +146,6 @@ class NSClientPlugin @Inject constructor(
 
     override fun pause(newState: Boolean) {
         preferences.put(NsclientBooleanKey.NsPaused, newState)
-        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override val address: String get() = nsClientService?.nsURL ?: ""

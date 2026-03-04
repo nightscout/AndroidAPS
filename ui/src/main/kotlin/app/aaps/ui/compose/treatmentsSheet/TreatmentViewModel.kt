@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.keys.BooleanKey
@@ -32,7 +31,10 @@ import app.aaps.ui.compose.navigation.ElementAvailability
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -66,8 +68,14 @@ class TreatmentViewModel @Inject constructor(
     }
 
     private fun setupEventListeners() {
-        rxBus.toFlow(EventPreferenceChange::class.java)
-            .onEach { refreshState() }.launchIn(viewModelScope)
+        merge(
+            preferences.observe(BooleanKey.OverviewShowCgmButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowCalibrationButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowTreatmentButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowInsulinButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowCarbsButton).drop(1).map {},
+            preferences.observe(BooleanKey.OverviewShowWizardButton).drop(1).map {},
+        ).onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventRefreshOverview::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
     }

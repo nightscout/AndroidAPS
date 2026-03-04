@@ -10,13 +10,18 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UiMode
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,17 +42,17 @@ class ThemeSwitcherPlugin @Inject constructor(
     aapsLogger, rh
 ) {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     override fun onStart() {
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .subscribe {
-                if (it.isChanged(StringKey.GeneralDarkMode.key)) {
-                    setThemeMode()
-                    rxBus.send(EventThemeSwitch())
-                }
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(StringKey.GeneralDarkMode).drop(1).onEach {
+            withContext(Dispatchers.Main) {
+                setThemeMode()
             }
+            rxBus.send(EventThemeSwitch())
+        }.launchIn(newScope)
     }
 
     fun setThemeMode() {
@@ -64,6 +69,7 @@ class ThemeSwitcherPlugin @Inject constructor(
     }
 
     override fun onStop() {
-        disposable.dispose()
+        scope?.cancel()
+        scope = null
     }
 }

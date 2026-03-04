@@ -45,7 +45,6 @@ import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.ui.compose.profileManagement.ProfileCompareContent
 import app.aaps.ui.compose.profileManagement.ProfileSingleContent
 import app.aaps.ui.compose.profileManagement.ProfileViewerData
@@ -127,7 +126,6 @@ class ProfileViewerActivity : DaggerAppCompatActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
-                LocalRxBus provides rxBus,
                 LocalDateUtil provides dateUtil,
                 LocalConfig provides config,
                 LocalProfileUtil provides profileUtil

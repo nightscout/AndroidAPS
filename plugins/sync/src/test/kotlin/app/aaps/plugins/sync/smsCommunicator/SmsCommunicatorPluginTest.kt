@@ -97,9 +97,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         val authRequestProvider = Provider { AuthRequest(aapsLogger, smsCommunicatorPlugin, rh, otp, dateUtil, commandQueue) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            aapsLogger, rh, smsManager, aapsSchedulers, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, localProfileManager,
-            commandQueue, loop, iobCobCalculator, xDripBroadcast,
-            otp, config, dateUtilMocked, uel,
+            aapsLogger, rh, smsManager, preferences, constraintChecker, rxBus, profileFunction, profileUtil, activePlugin, localProfileManager,
+            commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, authRequestProvider, pumpStatusProvider, notificationManager, testScope,
             repository
         )

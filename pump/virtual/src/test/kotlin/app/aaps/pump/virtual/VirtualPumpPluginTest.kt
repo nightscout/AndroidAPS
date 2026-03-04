@@ -28,7 +28,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepareMocks() {
         virtualPumpPlugin = VirtualPumpPlugin(
-            aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, preferences, profileFunction,
+            aapsLogger, rxBus, rh, preferences, profileFunction,
             commandQueue, pumpSync, config, dateUtil, processedDeviceStatusData, persistenceLayer, pumpEnactResultProvider, notificationManager, testScope
         )
     }

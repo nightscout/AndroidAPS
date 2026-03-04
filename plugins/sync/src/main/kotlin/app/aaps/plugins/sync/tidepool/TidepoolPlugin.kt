@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
@@ -137,15 +136,10 @@ class TidepoolPlugin @Inject constructor(
                         doUpload("GlucoseValue")
                 }
             }.launchIn(scope)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(TidepoolBooleanKey.UseTestServers.key)) {
-                               authFlowOut.clearAllSavedData()
-                               tidepoolUploader.resetInstance()
-                           }
-                       }, fabricPrivacy::logException)
+        preferences.observe(TidepoolBooleanKey.UseTestServers).drop(1).onEach {
+            authFlowOut.clearAllSavedData()
+            tidepoolUploader.resetInstance()
+        }.launchIn(scope)
         authFlowOut.initAuthState()
     }
 

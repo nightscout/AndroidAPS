@@ -55,7 +55,6 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.ui.services.AlarmSoundService
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
@@ -92,7 +91,6 @@ class ErrorActivity : DaggerAppCompatActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
-                LocalRxBus provides rxBus,
                 LocalDateUtil provides dateUtil,
                 LocalConfig provides config
             ) {

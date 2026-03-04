@@ -26,11 +26,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.StringKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -68,8 +65,7 @@ class MaintenanceViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val iobCobCalculator: IobCobCalculator,
     private val overviewData: OverviewData,
-    private val overviewDataCache: OverviewDataCache,
-    private val rxBus: RxBus
+    private val overviewDataCache: OverviewDataCache
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<MaintenanceEvent>()
@@ -206,7 +202,6 @@ class MaintenanceViewModel @Inject constructor(
                     iobCobCalculator.ads.reset()
                     iobCobCalculator.clearCache()
                 }
-                rxBus.send(EventPreferenceChange(StringKey.GeneralUnits.key))
                 _events.emit(MaintenanceEvent.RecreateActivity)
             } catch (e: Exception) {
                 aapsLogger.error("Error clearing databases", e)

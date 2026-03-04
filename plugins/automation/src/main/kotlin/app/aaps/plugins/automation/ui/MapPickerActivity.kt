@@ -39,7 +39,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.events.EventPlaceSelected
@@ -77,8 +76,7 @@ class MapPickerActivity : DaggerAppCompatActivity() {
 
         setContent {
             CompositionLocalProvider(
-                LocalPreferences provides preferences,
-                LocalRxBus provides rxBus
+                LocalPreferences provides preferences
             ) {
                 AapsTheme {
                     MapPickerScreen(

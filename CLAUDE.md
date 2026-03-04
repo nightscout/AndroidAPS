@@ -1,5 +1,15 @@
 # Project Preferences
 
+## CRITICAL: Bash Command Rules (applies to ALL agents too)
+
+- **NEVER use `cd && command` or `cd; command` in Bash calls** — triggers security approval prompts
+  on Windows. Use absolute paths or `git -C` instead:
+    - ✅ `git -C E:/GitHub/AndroidAPS diff HEAD -- path/to/file`
+    - ✅ `git diff HEAD -- path/to/file` (CWD is already project root)
+    - ❌ `cd E:/GitHub/AndroidAPS && git diff HEAD`
+    - ❌ `cd /path; git status`
+- When spawning agents that use Bash, ALWAYS include this rule in the agent prompt
+
 ## Token Usage Reduction (Delay Conversation Compaction)
 
 - **Use Task agents for exploration instead of direct Glob/Grep:**
@@ -69,6 +79,7 @@
   Contains working commands for this local system
 - **Update `.claude/CLAUDE_COMMANDS.md` continuously** - When discovering new working commands,
   useful patterns, or fixes for broken commands, add them to the file immediately
+- See **CRITICAL: Bash Command Rules** section at top — never use `cd &&` or `cd;` patterns.
 - On KSP error during compilation just compile again. Do not clean build.
 - On file locked error stop gradle daemons
 - Never install app automatically

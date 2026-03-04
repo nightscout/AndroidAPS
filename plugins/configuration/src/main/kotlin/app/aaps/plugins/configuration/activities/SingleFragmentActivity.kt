@@ -45,7 +45,6 @@ import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalHashPassword
@@ -159,7 +158,6 @@ class SingleFragmentActivity : AppCompatActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
-                LocalRxBus provides rxBus,
                 LocalConfig provides config,
                 LocalProfileUtil provides profileUtil,
                 LocalCheckPassword provides cryptoUtil::checkPassword,

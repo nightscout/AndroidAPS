@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.ceilTo
@@ -57,6 +56,13 @@ import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.services.DanaRExecutionService
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Vector
 import javax.inject.Inject
 import javax.inject.Provider
@@ -116,6 +122,8 @@ class DanaRPlugin @Inject constructor(
         }
     }
 
+    private var scope: CoroutineScope? = null
+
     init {
         pumpDescription.fillFor(PumpType.DANA_R)
     }
@@ -123,16 +131,13 @@ class DanaRPlugin @Inject constructor(
     override fun onStart() {
         val intent = Intent(context, DanaRExecutionService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           if (it.isChanged(DanaBooleanKey.UseExtended.key)) {
-                               if (pumpSync.expectedPumpState().extendedBolus != null) {
-                                   executionService?.extendedBolusStop()
-                               }
-                           }
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(DanaBooleanKey.UseExtended).drop(1).onEach {
+            if (pumpSync.expectedPumpState().extendedBolus != null) {
+                executionService?.extendedBolusStop()
+            }
+        }.launchIn(newScope)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -141,6 +146,8 @@ class DanaRPlugin @Inject constructor(
     }
 
     override fun onStop() {
+        scope?.cancel()
+        scope = null
         context.unbindService(mConnection)
         disposable.clear()
         super.onStop()

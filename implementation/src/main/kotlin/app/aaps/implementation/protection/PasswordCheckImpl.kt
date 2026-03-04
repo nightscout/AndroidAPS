@@ -25,7 +25,6 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalRxBus
 import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
@@ -103,8 +102,7 @@ class PasswordCheckImpl @Inject constructor(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         QueryPasswordDialog(
@@ -159,8 +157,7 @@ class PasswordCheckImpl @Inject constructor(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         SetPasswordDialog(
@@ -244,8 +241,7 @@ class PasswordCheckImpl @Inject constructor(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
             setContent {
                 CompositionLocalProvider(
-                    LocalPreferences provides preferences,
-                    LocalRxBus provides rxBus
+                    LocalPreferences provides preferences
                 ) {
                     AapsTheme {
                         QueryAnyPasswordDialog(
