@@ -105,7 +105,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
-         alue.set(true, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
+         value.set(true, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         return value
     }
 
