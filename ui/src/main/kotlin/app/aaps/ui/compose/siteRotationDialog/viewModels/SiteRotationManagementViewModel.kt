@@ -16,6 +16,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.compose.siteRotationDialog.viewModels.BodyType
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 @Stable
 class SiteRotationManagementViewModel @Inject constructor(
     var rh: ResourceHelper,

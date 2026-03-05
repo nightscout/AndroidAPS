@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.icons.library
 
+import android.graphics.Path
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.PathParser
 import app.aaps.core.data.model.TE.Location
 
 /**
@@ -24,9 +26,9 @@ val ChildFront: ImageVector by lazy {
     ImageVector.Builder(
         name = "ChildFront",
         defaultWidth = 48.dp,
-        defaultHeight = 128.dp,
+        defaultHeight = 90.dp,
         viewportWidth = 48f,
-        viewportHeight = 128f
+        viewportHeight = 90f
     ).apply {
         // Main body (background)
         path(
@@ -180,252 +182,32 @@ val ChildFront: ImageVector by lazy {
             close()
         }
 
-        // Red spots (various locations) - Child has no SIDE_ARM zones
-        path(
-            name = Location.FRONT_RIGHT_LOWER_THIGH.name,
-            fill = SolidColor(Color(0xFFEF6A4C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(17.357f, 55.586f)
-            curveToRelative(0.269f, 1.641f, 0.655f, 3.29f, 0.885f, 3.633f)
-            curveToRelative(0.121f, 0.18f, 0.779f, 0.199f, 1.084f, 0.198f)
-            curveToRelative(1.337f, -0.004f, 1.853f, -0.281f, 1.865f, -1.103f)
-            curveToRelative(0.011f, -0.753f, 0.093f, -1.69f, 0.181f, -2.6f)
-            curveTo(20.021f, 55.69f, 18.682f, 55.647f, 17.357f, 55.586f)
-            close()
-        }
-
-        path(
-            name = Location.FRONT_RIGHT_UPPER_THIGH.name,
-            fill = SolidColor(Color(0xFFEF6A4C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(19.935f, 51.691f)
-            curveToRelative(-0.807f, -0.058f, -2.318f, -0.168f, -2.75f, 0.303f)
-            curveToRelative(-0.253f, 0.275f, -0.1f, 1.929f, 0.173f, 3.591f)
-            curveToRelative(1.325f, 0.061f, 2.663f, 0.104f, 4.015f, 0.128f)
-            curveToRelative(0.1f, -1.033f, 0.209f, -2.031f, 0.235f, -2.687f)
-            curveTo(21.644f, 52.079f, 21.309f, 51.791f, 19.935f, 51.691f)
-            close()
-        }
-
-        path(
-            name = Location.FRONT_LEFT_LOWER_THIGH.name,
-            fill = SolidColor(Color(0xFFEF6A4C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(26.808f, 58.314f)
-            curveToRelative(0.012f, 0.822f, 0.528f, 1.099f, 1.865f, 1.103f)
-            curveToRelative(0.305f, 0.001f, 0.963f, -0.018f, 1.084f, -0.198f)
-            curveToRelative(0.23f, -0.343f, 0.616f, -1.993f, 0.885f, -3.633f)
-            curveToRelative(-1.325f, 0.061f, -2.663f, 0.104f, -4.015f, 0.128f)
-            curveTo(26.716f, 56.624f, 26.797f, 57.561f, 26.808f, 58.314f)
-            close()
-        }
-
-        path(
-            name = Location.FRONT_LEFT_UPPER_THIGH.name,
-            fill = SolidColor(Color(0xFFEF6A4C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(28.065f, 51.691f)
-            curveToRelative(-1.374f, 0.099f, -1.709f, 0.388f, -1.673f, 1.335f)
-            curveToRelative(0.025f, 0.656f, 0.135f, 1.655f, 0.235f, 2.687f)
-            curveToRelative(1.352f, -0.024f, 2.691f, -0.067f, 4.015f, -0.128f)
-            curveToRelative(0.273f, -1.662f, 0.425f, -3.315f, 0.173f, -3.591f)
-            curveTo(30.383f, 51.524f, 28.872f, 51.633f, 28.065f, 51.691f)
-            close()
-        }
-
-        // Head/face areas (using CHEST locations as in WomanFront)
-        path(
-            name = Location.FRONT_RIGHT_LOWER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(18.257f, 43.738f)
-            curveToRelative(1.851f, 0.062f, 3.771f, 0.095f, 5.743f, 0.095f)
-            verticalLineToRelative(-2.177f)
-            curveToRelative(-0.879f, 0f, -1.59f, -0.709f, -1.598f, -1.586f)
-            curveToRelative(-1.3f, -0.017f, -2.582f, -0.055f, -3.842f, -0.113f)
-            curveTo(18.486f, 41.258f, 18.385f, 42.523f, 18.257f, 43.738f)
-            close()
-        }
-
-        path(
-            name = Location.FRONT_RIGHT_UPPER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(24f, 38.458f)
-            verticalLineTo(35.54f)
-            curveToRelative(-1.815f, 0f, -3.585f, 0.029f, -5.299f, 0.081f)
-            curveToRelative(-0.011f, 1.483f, -0.06f, 2.931f, -0.14f, 4.337f)
-            curveToRelative(1.26f, 0.058f, 2.542f, 0.096f, 3.842f, 0.113f)
-            curveToRelative(0f, -0.005f, -0.001f, -0.009f, -0.001f, -0.014f)
-            curveTo(22.401f, 39.174f, 23.117f, 38.458f, 24f, 38.458f)
-            close()
-        }
-
-        // Abdomen areas
-        path(
-            name = Location.SIDE_RIGHT_LOWER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(16.345f, 40.573f)
-            curveToRelative(-0.073f, 1.148f, -0.143f, 2.14f, -0.185f, 3.081f)
-            curveToRelative(0.687f, 0.032f, 1.388f, 0.06f, 2.097f, 0.084f)
-            curveToRelative(0.128f, -1.216f, 0.229f, -2.48f, 0.303f, -3.78f)
-            curveToRelative(-0.727f, -0.034f, -1.443f, -0.076f, -2.154f, -0.123f)
-            curveTo(16.387f, 40.08f, 16.36f, 40.332f, 16.345f, 40.573f)
-            close()
-        }
-
-        path(
-            name = Location.SIDE_RIGHT_UPPER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(16.785f, 35.691f)
-            curveToRelative(-0.128f, 1.389f, -0.273f, 2.785f, -0.378f, 4.145f)
-            curveToRelative(0.711f, 0.047f, 1.428f, 0.089f, 2.154f, 0.123f)
-            curveToRelative(0.08f, -1.406f, 0.129f, -2.854f, 0.14f, -4.337f)
-            curveTo(18.054f, 35.641f, 17.414f, 35.664f, 16.785f, 35.691f)
-            close()
-        }
-
-        path(
-            name = Location.FRONT_LEFT_LOWER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(24f, 41.657f)
-            verticalLineToRelative(2.177f)
-            curveToRelative(1.972f, 0f, 3.892f, -0.033f, 5.743f, -0.095f)
-            curveToRelative(-0.128f, -1.216f, -0.229f, -2.48f, -0.303f, -3.78f)
-            curveToRelative(-1.26f, 0.058f, -2.542f, 0.096f, -3.842f, 0.113f)
-            curveTo(25.59f, 40.948f, 24.879f, 41.657f, 24f, 41.657f)
-            close()
-        }
-
-        path(
-            name = Location.FRONT_LEFT_UPPER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(24f, 35.54f)
-            verticalLineToRelative(2.918f)
-            curveToRelative(0.883f, 0f, 1.599f, 0.716f, 1.599f, 1.599f)
-            curveToRelative(0f, 0.005f, -0.001f, 0.009f, -0.001f, 0.014f)
-            curveToRelative(1.3f, -0.017f, 2.582f, -0.055f, 3.842f, -0.113f)
-            curveToRelative(-0.08f, -1.406f, -0.129f, -2.854f, -0.14f, -4.337f)
-            curveTo(27.586f, 35.568f, 25.814f, 35.54f, 24f, 35.54f)
-            close()
-        }
-
-        // Additional abdomen areas
-        path(
-            name = Location.SIDE_LEFT_LOWER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(29.743f, 43.738f)
-            curveToRelative(0.699f, -0.023f, 1.388f, -0.051f, 2.065f, -0.082f)
-            curveToRelative(-0.07f, -1.242f, -0.198f, -2.255f, -0.274f, -2.842f)
-            curveToRelative(-0.042f, -0.329f, -0.079f, -0.647f, -0.115f, -0.966f)
-            curveToRelative(-0.654f, 0.042f, -1.313f, 0.08f, -1.979f, 0.111f)
-            curveTo(29.514f, 41.258f, 29.615f, 42.523f, 29.743f, 43.738f)
-            close()
-        }
-
-        path(
-            name = Location.SIDE_LEFT_UPPER_ABDOMEN.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(29.299f, 35.621f)
-            curveToRelative(0.011f, 1.483f, 0.06f, 2.931f, 0.14f, 4.337f)
-            curveToRelative(0.667f, -0.031f, 1.326f, -0.069f, 1.979f, -0.111f)
-            curveToRelative(-0.168f, -1.46f, -0.28f, -2.83f, -0.343f, -4.162f)
-            curveTo(30.492f, 35.66f, 29.899f, 35.639f, 29.299f, 35.621f)
-            close()
-        }
-
-        // Note: Child has no SIDE_ARM zones
     }.build()
+}
+
+/**
+ * Contains SVG path data for each zone of the child body front view.
+ */
+object ChildFrontPaths {
+    val pathData: Map<Location, String> = mapOf(
+        Location.FRONT_RIGHT_LOWER_THIGH to "M17.357,55.586 c0.269,1.641 0.655,3.29 0.885,3.633 c0.121,0.18 0.779,0.199 1.084,0.198 c1.337,-0.004 1.853,-0.281 1.865,-1.103 c0.011,-0.753 0.093,-1.69 0.181,-2.6 C20.021,55.69 18.682,55.647 17.357,55.586z",
+        Location.FRONT_RIGHT_UPPER_THIGH to "M19.935,51.691 c-0.807,-0.058 -2.318,-0.168 -2.75,0.303 c-0.253,0.275 -0.1,1.929 0.173,3.591 c1.325,0.061 2.663,0.104 4.015,0.128 c0.1,-1.033 0.209,-2.031 0.235,-2.687 C21.644,52.079 21.309,51.791 19.935,51.691z",
+        Location.FRONT_LEFT_LOWER_THIGH to "M26.808,58.314 c0.012,0.822 0.528,1.099 1.865,1.103 c0.305,0.001 0.963,-0.018 1.084,-0.198 c0.23,-0.343 0.616,-1.993 0.885,-3.633 c-1.325,0.061 -2.663,0.104 -4.015,0.128 C26.716,56.624 26.797,57.561 26.808,58.314z",
+        Location.FRONT_LEFT_UPPER_THIGH to "M28.065,51.691 c-1.374,0.099 -1.709,0.388 -1.673,1.335 c0.025,0.656 0.135,1.655 0.235,2.687 c1.352,-0.024 2.691,-0.067 4.015,-0.128 c0.273,-1.662 0.425,-3.315 0.173,-3.591 C30.383,51.524 28.872,51.633 28.065,51.691z",
+        Location.FRONT_RIGHT_LOWER_ABDOMEN to "M18.257,43.738 c1.851,0.062 3.771,0.095 5.743,0.095 v-2.177 c-0.879,0 -1.59,-0.709 -1.598,-1.586 c-1.3,-0.017 -2.582,-0.055 -3.842,-0.113 C18.486,41.258 18.385,42.523 18.257,43.738z",
+        Location.FRONT_RIGHT_UPPER_ABDOMEN to "M24,38.458 v-2.918 c-1.815,0 -3.585,0.029 -5.299,0.081 c-0.011,1.483 -0.06,2.931 -0.14,4.337 c1.26,0.058 2.542,0.096 3.842,0.113 c0,-0.005 -0.001,-0.009 -0.001,-0.014 C22.401,39.174 23.117,38.458 24,38.458z",
+        Location.SIDE_RIGHT_LOWER_ABDOMEN to "M16.345,40.573 c-0.073,1.148 -0.143,2.14 -0.185,3.081 c0.687,0.032 1.388,0.06 2.097,0.084 c0.128,-1.216 0.229,-2.48 0.303,-3.78 c-0.727,-0.034 -1.443,-0.076 -2.154,-0.123 C16.387,40.08 16.36,40.332 16.345,40.573z",
+        Location.SIDE_RIGHT_UPPER_ABDOMEN to "M16.785,35.691 c-0.128,1.389 -0.273,2.785 -0.378,4.145 c0.711,0.047 1.428,0.089 2.154,0.123 c0.08,-1.406 0.129,-2.854 0.14,-4.337 C18.054,35.641 17.414,35.664 16.785,35.691z",
+        Location.FRONT_LEFT_LOWER_ABDOMEN to "M24,41.657 v2.177 c1.972,0 3.892,-0.033 5.743,-0.095 c-0.128,-1.216 -0.229,-2.48 -0.303,-3.78 c-1.26,0.058 -2.542,0.096 -3.842,0.113 C25.59,40.948 24.879,41.657 24,41.657z",
+        Location.FRONT_LEFT_UPPER_ABDOMEN to "M24,35.54 v2.918 c0.883,0 1.599,0.716 1.599,1.599 c0,0.005 -0.001,0.009 -0.001,0.014 c1.3,-0.017 2.582,-0.055 3.842,-0.113 c-0.08,-1.406 -0.129,-2.854 -0.14,-4.337 C27.586,35.568 25.814,35.54 24,35.54z",
+        Location.SIDE_LEFT_LOWER_ABDOMEN to "M29.743,43.738 c0.699,-0.023 1.388,-0.051 2.065,-0.082 c-0.07,-1.242 -0.198,-2.255 -0.274,-2.842 c-0.042,-0.329 -0.079,-0.647 -0.115,-0.966 c-0.654,0.042 -1.313,0.08 -1.979,0.111 C29.514,41.258 29.615,42.523 29.743,43.738z",
+        Location.SIDE_LEFT_UPPER_ABDOMEN to "M29.299,35.621 c0.011,1.483 0.06,2.931 0.14,4.337 c0.667,-0.031 1.326,-0.069 1.979,-0.111 c-0.168,-1.46 -0.28,-2.83 -0.343,-4.162 C30.492,35.66 29.899,35.639 29.299,35.621z"
+    )
+    val zones: List<Pair<Location, Path>> by lazy {
+        pathData.map { (location, svgData) ->
+            location to PathParser.createPathFromPathData(svgData)
+        }
+    }
 }
 
 @Preview(showBackground = true)

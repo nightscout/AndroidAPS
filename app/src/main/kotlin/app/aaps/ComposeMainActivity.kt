@@ -197,8 +197,6 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var localProfileManager: LocalProfileManager
-    @Inject lateinit var siteRotationEditorViewModel: SiteRotationEditorViewModel
-    @Inject lateinit var siteRotationManagementViewModel: SiteRotationManagementViewModel
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var callForPrefFile: ActivityResultLauncher<Void?>? = null
@@ -226,6 +224,8 @@ class ComposeMainActivity : AppCompatActivity() {
     private val searchViewModel: SearchViewModel by viewModels()
     private val permissionsViewModel: PermissionsViewModel by viewModels()
     private val configurationViewModel: ConfigurationViewModel by viewModels()
+    private val siteRotationEditorViewModel: SiteRotationEditorViewModel by viewModels()
+    private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
     private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)
@@ -1264,7 +1264,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.EXERCISE                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
             ElementType.QUESTION                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
             ElementType.ANNOUNCEMENT                 -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
-            ElementType.SITE_ROTATION                -> uiInteraction.runSiteRotationDialog(supportFragmentManager)
+            ElementType.SITE_ROTATION                -> navController.navigate(AppRoute.SiteRotationManagement.route)
 
             // Settings
             ElementType.SETTINGS                     -> navController.navigate(AppRoute.Preferences.route)

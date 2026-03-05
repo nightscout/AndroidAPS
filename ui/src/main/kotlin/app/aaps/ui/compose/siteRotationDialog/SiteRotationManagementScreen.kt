@@ -2,16 +2,13 @@ package app.aaps.ui.compose.siteRotationDialog
 
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -211,19 +208,30 @@ fun SiteRotationManagementScreen(
                                 .padding(horizontal = 16.dp)
                         ) {
                             BodyView(
+                                filteredLocationColor = uiState.filteredLocationColor,
+                                showPumpSites = uiState.showPumpSites,
+                                showCgmSites = uiState.showCgmSites,
+                                selectedLocation = uiState.selectedLocation,
                                 bodyType = uiState.showBodyType,
                                 isFrontView = true,
+                                onZoneClick = { location ->
+                                    viewModel.selectLocation(location)
+                                },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .aspectRatio(48f / 128f) // ou mieux : utiliser le ratio de l'image
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
                             BodyView(
+                                filteredLocationColor = uiState.filteredLocationColor,
+                                showPumpSites = uiState.showPumpSites,
+                                showCgmSites = uiState.showCgmSites,
+                                selectedLocation = uiState.selectedLocation,
                                 bodyType = uiState.showBodyType,
                                 isFrontView = false,
+                                onZoneClick = { location ->
+                                    viewModel.selectLocation(location)
+                                },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .aspectRatio(48f / 128f)
                             )
                         }
                     }
@@ -231,7 +239,7 @@ fun SiteRotationManagementScreen(
 
 
                 SiteEntryList(
-                    entries = uiState.filteredEntries,
+                    filteredEntries = uiState.filteredEntries,
                     showEditButton = true,
                     dateUtil = viewModel.dateUtil,
                     translator = viewModel.translator,

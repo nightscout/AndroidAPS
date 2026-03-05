@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.siteRotationDialog
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,7 +42,7 @@ import app.aaps.ui.R
  */
 @Composable
 fun SiteEntryList(
-    entries: List<TE>,
+    filteredEntries: List<TE>,
     showEditButton: Boolean,
     dateUtil: app.aaps.core.interfaces.utils.DateUtil,
     translator: app.aaps.core.interfaces.utils.Translator,
@@ -54,7 +53,7 @@ fun SiteEntryList(
     LazyColumn(
         modifier = modifier
     ) {
-        items(entries) { te ->
+        items(filteredEntries) { te ->
             SiteEntryRow(
                 te = te,
                 showEditButton = showEditButton,
