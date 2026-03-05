@@ -50,16 +50,16 @@ class ObjectivesPlugin @Inject constructor(
             objective.startedOn = 0
             objective.accomplishedOn = 0
         }
-        preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
-        preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true)
+        preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, false)
+        preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, false)
         preferences.put(IntNonKey.ObjectivesManualEnacts, 0)
-        preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesActionsUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
     }
 
     fun allPriorAccomplished(position: Int): Boolean {
@@ -78,6 +78,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+        value.set(true, "", this)
         return value
     }
 
@@ -86,6 +87,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (objectives[LGS_OBJECTIVE].isStarted && !objectives[LGS_OBJECTIVE].isAccomplished)
             value.set(true, rh.gs(R.string.objectivenotfinished, LGS_OBJECTIVE + 1), this)
+         value.set(true, "", this)
         return value
     }
 
@@ -94,6 +96,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
+         value.set(true, "", this)
         return value
     }
 
@@ -102,6 +105,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
+         value.set(true, "", this)
         return value
     }
 
@@ -110,6 +114,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[SMB_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
+         value.set(true, "", this)
         return value
     }
 
@@ -118,6 +123,7 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[AUTO_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
+         value.set(true, "", this)
         return value
     }
 
