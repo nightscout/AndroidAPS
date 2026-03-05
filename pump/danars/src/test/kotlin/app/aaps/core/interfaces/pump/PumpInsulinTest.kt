@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.pump
 
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 class PumpInsulinTest : TestBase() {
 

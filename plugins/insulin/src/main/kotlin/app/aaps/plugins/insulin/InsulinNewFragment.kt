@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConcentrationChange
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -59,7 +58,6 @@ class InsulinNewFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
 
-
     private var _binding: InsulinNewFragmentBinding? = null
 
     // This property is only valid between onCreateView and
@@ -68,14 +66,14 @@ class InsulinNewFragment : DaggerFragment() {
 
     private val currentInsulin: ICfg get() = insulinPlugin.currentInsulin
     private val iCfg: ICfg get() = insulinPlugin.iCfg
-    private var selectedTemplate = InsulinType.OREF_RAPID_ACTING    // Default Insulin (should only be used on new install)
+    private var selectedTemplate = InsulinType.OREF_RAPID_ACTING    // Default Insulin (should only be used on new installation)
     private var selectedConcentration = ConcentrationType.U100    // Default Concentration
     private val insulinList: List<CharSequence> get() = insulinPlugin.insulinList(0.0)
     private val minPeak: Double get() = hardLimits.minPeak().toDouble()
     private val maxPeak: Double get() = hardLimits.maxPeak().toDouble()
     private val availableConcentrationList: List<CharSequence>
         get() = insulinPlugin.getAvailableConcentrationLabels()
-    private val confirmationNeeded : Boolean
+    private val confirmationNeeded: Boolean
         get() = !concentrationConfirmed || (currentConcentration != targetConcentration && recentUpdate) || insulinPlugin.iCfg.concentration != currentConcentration
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val concentrationConfirmed: Boolean
@@ -86,9 +84,6 @@ class InsulinNewFragment : DaggerFragment() {
         get() = preferences.get(DoubleNonKey.ApprovedConcentration)
     private val targetConcentration
         get() = preferences.get(DoubleNonKey.NewConcentration)
-
-
-
 
     private val textWatch = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -206,7 +201,7 @@ class InsulinNewFragment : DaggerFragment() {
                 activity?.let { uiInteraction.showOkDialog(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
                 selectedTemplate = InsulinType.OREF_RAPID_ACTING
-                insulinPlugin.addNewInsulin(insulinPlugin.deepClone(selectedTemplate.iCfg, true).also { it.isNew = true})
+                insulinPlugin.addNewInsulin(insulinPlugin.deepClone(selectedTemplate.iCfg, true).also { it.isNew = true })
                 binding.concentrationList.setText(rh.gs(ConcentrationType.U100.label), false)
                 updateGui()
             }

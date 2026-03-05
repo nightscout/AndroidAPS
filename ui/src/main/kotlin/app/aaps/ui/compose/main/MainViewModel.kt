@@ -450,7 +450,8 @@ class MainViewModel @Inject constructor(
                         ValueWithUnit.SimpleString(action.profileName),
                         ValueWithUnit.Percent(action.percentage),
                         ValueWithUnit.Minute(action.durationMinutes)
-                    )
+                    ),
+                    iCfg = activePlugin.activeInsulin.iCfg
                 )
             }
         }

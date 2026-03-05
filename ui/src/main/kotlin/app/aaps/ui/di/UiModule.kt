@@ -66,7 +66,6 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
     @ContributesAndroidInjector abstract fun contributesConcentrationDialog(): ConcentrationDialog
     @ContributesAndroidInjector abstract fun contributesConcentrationActivity(): ConcentrationActivity
-    @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
     @ContributesAndroidInjector abstract fun contributesProfileViewerActivity(): ProfileViewerActivity
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog

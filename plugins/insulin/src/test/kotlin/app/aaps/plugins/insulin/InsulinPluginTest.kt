@@ -1,12 +1,12 @@
 package app.aaps.plugins.insulin
 
 import app.aaps.core.data.model.BS
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -40,6 +40,7 @@ class InsulinPluginTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var appScope: CoroutineScope
 
     @BeforeEach
@@ -47,7 +48,7 @@ class InsulinPluginTest : TestBase() {
         // dia 5.0 h, Peak 30 min
         insulinConfiguration = "{\"insulins\":[{\"insulinLabel\":\"test\",\"insulinEndTime\":18000000,\"insulinPeakTime\":1800000,\"concentration\":1.0}]}"
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn(insulinConfiguration)
-        sut = InsulinPlugin(preferences, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin, aapsSchedulers, fabricPrivacy, persistenceLayer, appScope)
+        sut = InsulinPlugin(preferences, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction, uel, activePlugin, aapsSchedulers, fabricPrivacy, persistenceLayer, notificationManager, appScope)
         sut.loadSettings()
     }
 

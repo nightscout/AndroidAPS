@@ -138,7 +138,6 @@ class IobCobCalculatorPlugin @Inject constructor(
             preferences.observe(DoubleKey.AbsorptionCutOff).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMax).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
-            preferences.observe(IntKey.InsulinOrefPeak).drop(1).map {},
         ).onEach { resetDataAndRunCalculation("onPreferenceChange") }.launchIn(newScope)
         preferences.observe(IntNonKey.RangeToDisplay).drop(1).onEach {
             overviewData.initRange()
