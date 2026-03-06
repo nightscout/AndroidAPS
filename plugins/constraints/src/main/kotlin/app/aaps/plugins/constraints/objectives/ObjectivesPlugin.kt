@@ -46,9 +46,15 @@ class ObjectivesPlugin @Inject constructor(
 ), PluginConstraints, Objectives {
 
     fun reset() {
+        val now = System.currentTimeMillis()
         for (objective in objectives) {
-           objective.startedOn = 0
-           objective.accomplishedOn = 0
+        //   objective.startedOn = 0
+         //  objective.accomplishedOn = 0
+        objective.startedOn = now
+        objective.accomplishedOn = now  
+preferences.put(IntNonKey.ObjectivesManualEnacts, 50)
+preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
+preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
        }
        
         preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
@@ -56,7 +62,7 @@ class ObjectivesPlugin @Inject constructor(
         preferences.put(IntNonKey.ObjectivesManualEnacts, 25)
         preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
         preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
-        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
+        preferences.put(Bool2 909eanNonKey.ObjectivesReconnectUsed, true)
         preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
         preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
         preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
@@ -66,7 +72,8 @@ class ObjectivesPlugin @Inject constructor(
     fun allPriorAccomplished(position: Int): Boolean {
         var accomplished = true
         for (i in 0 until position) {
-            accomplished = accomplished && objectives[i].isAccomplished
+           // accomplished = accomplished && objectives[i].isAccomplished
+            accomplished = accomplished
         }     
         return accomplished
     }
@@ -76,6 +83,7 @@ class ObjectivesPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
+         return  value.set(true, rh.gs(R.string.objectives_openloop_learned, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
@@ -143,7 +151,7 @@ class ObjectivesPlugin @Inject constructor(
     }
 
    // override fun isAccomplished(index: Int) = objectives[index].isAccomplished
-   override fun isAccomplished(index: Int): Boolean = true
+   override fun isAccomplished(index: Int): true
     //override fun isStarted(index: Int): Boolean = objectives[index].isStarted
     override fun isStarted(index: Int): Boolean = true
 }
