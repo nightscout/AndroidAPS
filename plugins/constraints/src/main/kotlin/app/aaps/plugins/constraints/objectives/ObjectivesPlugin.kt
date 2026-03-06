@@ -62,7 +62,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
         preferences.put(IntNonKey.ObjectivesManualEnacts, 25)
         preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
         preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
-        preferences.put(Bool2 909eanNonKey.ObjectivesReconnectUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
         preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
         preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
         preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
@@ -151,7 +151,8 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
     }
 
    // override fun isAccomplished(index: Int) = objectives[index].isAccomplished
-   override fun isAccomplished(index: Int): true
+   override fun isAccomplished(index: Int)= true
     //override fun isStarted(index: Int): Boolean = objectives[index].isStarted
     override fun isStarted(index: Int): Boolean = true
+
 }
