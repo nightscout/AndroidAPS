@@ -76,54 +76,60 @@ class ObjectivesPlugin @Inject constructor(
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
+        return value.set(true, rh.gs(R.string.objectivefinished, FIRST_OBJECTIVE + 1), this)
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
-        value.set(true, rh.gs(R.string.objectivefinished, FIRST_OBJECTIVE + 1), this)
+       
         return value
     }
 
     override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
+        return  value.set(true, rh.gs(R.string.objectivefinished, LGS_OBJECTIVE + 1), this)
         if (objectives[LGS_OBJECTIVE].isStarted && !objectives[LGS_OBJECTIVE].isAccomplished)
             value.set(true, rh.gs(R.string.objectivenotfinished, LGS_OBJECTIVE + 1), this)
-         value.set(true, rh.gs(R.string.objectivefinished, LGS_OBJECTIVE + 1), this)
+         
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
+       return value.set(true, rh.gs(R.string.objectivefinished, CLOSED_LOOP_OBJECTIVE + 1), this)
         if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
-         value.set(true, rh.gs(R.string.objectivefinished, CLOSED_LOOP_OBJECTIVE + 1), this)
+         
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
+        return  value.set(true, rh.gs(R.string.objectivefinished, AUTOSENS_OBJECTIVE + 1), this)
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
-         value.set(true, rh.gs(R.string.objectivefinished, AUTOSENS_OBJECTIVE + 1), this)
+        
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
+        return  value.set(true, rh.gs(R.string.objectivefinished, SMB_OBJECTIVE + 1), this)
         if (!objectives[SMB_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
-         value.set(true, rh.gs(R.string.objectivefinished, SMB_OBJECTIVE + 1), this)
+        
         return value
     }
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
+        return value.set(true, rh.gs(R.string.objectivefinished, AUTO_OBJECTIVE + 1), this)
         if (!objectives[AUTO_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
-         value.set(true, rh.gs(R.string.objectivefinished, AUTO_OBJECTIVE + 1), this)
+         
         return value
     }
 
