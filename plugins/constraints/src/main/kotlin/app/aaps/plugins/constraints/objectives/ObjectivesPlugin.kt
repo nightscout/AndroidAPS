@@ -105,7 +105,7 @@ class ObjectivesPlugin @Inject constructor(
             value.set(false, rh.gs(R.string.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
          
         return value
-    }CLOSED_LOOP
+    }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
@@ -120,7 +120,7 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-      return  value.set(true, rh.gs(R.string.objectireturn valueves_smb_learned, SMB_OBJECTIVE + 1), this)
+      return  value.set(true, rh.gs(R.string.objectives_smb_learned, SMB_OBJECTIVE + 1), this)
      
         if (objectives.isEmpty()) return value
  
