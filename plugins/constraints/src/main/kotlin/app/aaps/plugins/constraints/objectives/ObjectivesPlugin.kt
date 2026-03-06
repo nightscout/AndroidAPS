@@ -44,13 +44,13 @@ class ObjectivesPlugin @Inject constructor(
     ownPreferences = listOf(ObjectivesBooleanComposedKey::class.java, ObjectivesLongComposedKey::class.java),
     aapsLogger, rh, preferences
 ), PluginConstraints, Objectives {
-/**
-  *  fun reset() {
-   *     for (objective in objectives) {
-    *        objective.startedOn = 0
-     *       objective.accomplishedOn = 0
-      *  }
-     */   
+
+    fun reset() {
+        for (objective in objectives) {
+           objective.startedOn = 0
+           objective.accomplishedOn = 0
+       }
+       
         preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
         preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true)
         preferences.put(IntNonKey.ObjectivesManualEnacts, 25)
@@ -67,7 +67,7 @@ class ObjectivesPlugin @Inject constructor(
         var accomplished = true
         for (i in 0 until position) {
             accomplished = accomplished && objectives[i].isAccomplished
-        }     return  value.set(true, rh.gs(R.string.objectivefinished, LGS_OBJECTIVE + 1), this)
+        }     
         return accomplished
     }
 
@@ -76,7 +76,7 @@ class ObjectivesPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         return value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+         return value.set(true, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
@@ -86,7 +86,7 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+        return value.set(true, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
    
         if (objectives[LGS_OBJECTIVE].isStarted && !objectives[LGS_OBJECTIVE].isAccomplished)
@@ -97,7 +97,7 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+        return value.set(true, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
       
         if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
@@ -108,9 +108,8 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+        return value.set(true, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
-     
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         
@@ -119,7 +118,7 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+        return value.set(true, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
  
         if (!objectives[SMB_OBJECTIVE].isStarted)
@@ -130,7 +129,7 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+        return value.set(true rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         if (objectives.isEmpty()) return value
 
         if (!objectives[AUTO_OBJECTIVE].isStarted)
