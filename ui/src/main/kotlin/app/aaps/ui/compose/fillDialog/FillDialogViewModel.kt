@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -14,12 +15,13 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -58,7 +60,9 @@ class FillDialogViewModel @Inject constructor(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val insulinManager: InsulinManager,
+    private val profileFunction: ProfileFunction
 ) : ViewModel() {
 
     val uiState: StateFlow<FillDialogUiState>
@@ -82,6 +86,10 @@ class FillDialogViewModel @Inject constructor(
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 
+        val availableInsulins = insulinManager.insulins.map { it.deepClone() }
+        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+        val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
+
         uiState.update {
             FillDialogUiState(
                 insulin = 0.0,
@@ -97,8 +105,11 @@ class FillDialogViewModel @Inject constructor(
                 presetButton3 = preferences.get(DoubleKey.ActionsFillButton3),
                 insulinAfterConstraints = 0.0,
                 constraintApplied = false,
+                availableInsulins = availableInsulins,
+                selectedInsulin = currentInsulin,
+                activeInsulinLabel = activeLabel,
+                pumpUnitsWarning = if (!ch.isU100()) rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()) else null,
                 showBolus = !config.AAPSCLIENT,
-                concentrationApplied = false,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode)
             )
@@ -119,13 +130,11 @@ class FillDialogViewModel @Inject constructor(
         val constrained = constraintChecker.applyBolusConstraints(
             ConstraintObject(value, aapsLogger)
         ).value()
-        val correctedInsulin = ch.fromPump(PumpInsulin(constrained)) // For Prime/Fill, amount should be considered as CU so CU->IU is required
         uiState.update {
             it.copy(
                 insulin = value,
                 insulinAfterConstraints = constrained,
-                constraintApplied = abs(constrained - value) > 0.01,
-                insulinAfterConcentration = correctedInsulin
+                constraintApplied = abs(constrained - value) > 0.01
             )
         }
     }
@@ -136,6 +145,10 @@ class FillDialogViewModel @Inject constructor(
 
     fun updateCartridgeChange(checked: Boolean) {
         uiState.update { it.copy(insulinCartridgeChange = checked) }
+    }
+
+    fun selectInsulin(iCfg: ICfg) {
+        uiState.update { it.copy(selectedInsulin = iCfg) }
     }
 
     fun updateNotes(value: String) {
@@ -170,11 +183,8 @@ class FillDialogViewModel @Inject constructor(
                     )
                 )
             }
-            if ((state.siteChange || state.insulinCartridgeChange) && !ch.isU100()) {    // include concentration correction and volume information
-                lines.add(rh.gs(R.string.fill_warning_concentration, ch.insulinConcentrationString()).formatColor(null, rh, app.aaps.core.ui.R.attr.warningColor))
-                lines.add(
-                    rh.gs(R.string.fill_warning_concentration2) + ": " + ch.bolusWithConvertedVolume(state.insulinAfterConcentration).formatColor(null, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
-                )
+            if (!ch.isU100()) {
+                lines.add(rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()).formatColor(null, rh, app.aaps.core.ui.R.attr.warningColor))
             }
         }
 
@@ -184,6 +194,13 @@ class FillDialogViewModel @Inject constructor(
 
         if (state.insulinCartridgeChange) {
             lines.add(rh.gs(R.string.record_insulin_cartridge_change))
+        }
+
+        if (state.insulinChanged) {
+            lines.add(
+                rh.gs(R.string.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: "")
+                    .formatColor(null, rh, app.aaps.core.ui.R.attr.warningColor)
+            )
         }
 
         if (state.notes.isNotEmpty()) {
@@ -202,21 +219,32 @@ class FillDialogViewModel @Inject constructor(
         val eventTime = state.eventTime - (state.eventTime % 1000)
         val notes = state.notes
 
-        val hasAction = state.insulinAfterConcentration > 0 || state.siteChange || state.insulinCartridgeChange
-
-        if (!hasAction) {
+        if (!state.hasAction) {
             sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
             return
         }
 
+        val doProfileSwitch = state.insulinChanged
+        val hasPrimeBolus = state.insulinAfterConstraints > 0
+
         // Prime bolus
-        if (state.insulinAfterConcentration > 0) {
+        if (hasPrimeBolus) {
             uel.log(
                 action = Action.PRIME_BOLUS, source = Sources.FillDialog,
                 note = notes,
-                value = ValueWithUnit.Insulin(state.insulinAfterConcentration)
+                value = ValueWithUnit.Insulin(state.insulinAfterConstraints)
             )
-            requestPrimeBolus(state.insulinAfterConcentration, notes)
+            requestPrimeBolus(state.insulinAfterConstraints, notes) {
+                // After successful prime, do profile switch if insulin changed
+                if (doProfileSwitch) {
+                    profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                }
+            }
+        } else {
+            // No prime — do profile switch immediately if insulin changed
+            if (doProfileSwitch) {
+                profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+            }
         }
 
         // Site change
@@ -275,7 +303,7 @@ class FillDialogViewModel @Inject constructor(
     fun decimalFormat(): DecimalFormat =
         decimalFormatter.pumpSupportedBolusFormat(uiState.value.bolusStep)
 
-    private fun requestPrimeBolus(insulin: Double, notes: String) {
+    private fun requestPrimeBolus(insulin: Double, notes: String, onSuccess: (() -> Unit)? = null) {
         val detailedBolusInfo = DetailedBolusInfo().also {
             it.insulin = insulin
             it.bolusType = BS.Type.PRIMING
@@ -285,6 +313,8 @@ class FillDialogViewModel @Inject constructor(
             override fun run() {
                 if (!result.success) {
                     sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                } else {
+                    onSuccess?.invoke()
                 }
             }
         })

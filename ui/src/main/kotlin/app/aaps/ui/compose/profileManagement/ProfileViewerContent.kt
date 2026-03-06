@@ -22,6 +22,7 @@ import app.aaps.core.graph.BasalProfileGraphCompose
 import app.aaps.core.graph.IcProfileGraphCompose
 import app.aaps.core.graph.IsfProfileGraphCompose
 import app.aaps.core.graph.TargetBgProfileGraphCompose
+import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
@@ -87,7 +88,7 @@ fun ProfileSingleContent(
                     )
                 }
             }
-            profile.iCfg?.let {
+            profile.iCfg?.let { iCfg ->
                 ElevatedCard(
                     modifier = Modifier.weight(1f),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
@@ -95,7 +96,19 @@ fun ProfileSingleContent(
                     Column(modifier = Modifier.padding(16.dp)) {
                         ProfileRow(
                             label = stringResource(R.string.insulin_label),
-                            value = it.insulinLabel
+                            value = iCfg.insulinLabel
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.concentration_label),
+                            value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.peak_label),
+                            value = stringResource(R.string.format_mins, iCfg.peak)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.dia_label),
+                            value = stringResource(R.string.format_hours, iCfg.dia)
                         )
                     }
                 }
@@ -312,7 +325,7 @@ fun ProfileCompareContent(
                     )
                 }
             }
-            profile1.iCfg?.let {
+            profile1.iCfg?.let { iCfg ->
                 ElevatedCard(
                     modifier = Modifier.weight(1f),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
@@ -320,7 +333,19 @@ fun ProfileCompareContent(
                     Column(modifier = Modifier.padding(16.dp)) {
                         ProfileRow(
                             label = stringResource(R.string.insulin_label),
-                            value = it.insulinLabel
+                            value = iCfg.insulinLabel
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.concentration_label),
+                            value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.peak_label),
+                            value = stringResource(R.string.format_mins, iCfg.peak)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.dia_label),
+                            value = stringResource(R.string.format_hours, iCfg.dia)
                         )
                     }
                 }

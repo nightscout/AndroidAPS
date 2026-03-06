@@ -2,6 +2,7 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -20,6 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class PumpStatusProviderImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val pumpSync: PumpSync,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
@@ -32,7 +34,7 @@ class PumpStatusProviderImpl @Inject constructor(
 
     override fun shortStatus(veryShort: Boolean): String {
         val pump = activePlugin.activePump
-        val iCfg = activePlugin.activeInsulin.iCfg
+        val iCfg = insulin.iCfg
         val lines = mutableListOf<String>()
         if (!pump.isInitialized())
             lines += rh.gs(R.string.short_status_not_initialized)

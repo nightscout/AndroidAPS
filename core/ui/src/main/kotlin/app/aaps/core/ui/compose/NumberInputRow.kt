@@ -73,6 +73,7 @@ fun NumberInputRow(
     decimalPlaces: Int = 0,
     dialogLabelResId: Int = 0,
     dialogSummary: String? = null,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -102,6 +103,8 @@ fun NumberInputRow(
         unitLabel = unitLabel
     )
 
+    val contentAlpha = if (enabled) 1f else 0.38f
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -115,14 +118,14 @@ fun NumberInputRow(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha)
             )
             Text(
                 text = displayText,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { showDialog = true }
+                color = MaterialTheme.colorScheme.primary.copy(alpha = contentAlpha),
+                modifier = if (enabled) Modifier.clickable { showDialog = true } else Modifier
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -132,11 +135,12 @@ fun NumberInputRow(
             valueRange = valueRange,
             step = step,
             controlPoints = controlPoints,
+            enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
     }
 
-    if (showDialog) {
+    if (showDialog && enabled) {
         ValueInputDialog(
             currentValue = value,
             valueRange = valueRange,

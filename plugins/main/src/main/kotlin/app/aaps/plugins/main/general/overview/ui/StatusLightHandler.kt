@@ -6,6 +6,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -31,6 +32,7 @@ class StatusLightHandler @Inject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val warnColors: WarnColors,
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
@@ -64,7 +66,7 @@ class StatusLightHandler @Inject constructor(
 
         val insulinUnit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
         if (cannulaUsage != null) scope.launch { handleUsage(cannulaUsage, insulinUnit) }
-        val iCfg = activePlugin.activeInsulin.iCfg
+        val iCfg = insulin.iCfg
         if (pump.pumpDescription.isPatchPump) {
             handlePatchReservoirLevel(
                 reservoirLevel,

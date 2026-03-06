@@ -9,6 +9,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -65,6 +66,7 @@ class NsIncomingDataProcessor @Inject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val localProfileManager: LocalProfileManager,
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
@@ -150,7 +152,7 @@ class NsIncomingDataProcessor @Inject constructor(
                 when (treatment) {
                     is NSBolus                  ->
                         if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT || doFullSync)
-                            storeDataForDb.addToBoluses(treatment.toBolus(activePlugin.activeInsulin))
+                            storeDataForDb.addToBoluses(treatment.toBolus(insulin))
 
                     is NSCarbs                  ->
                         if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT || doFullSync)
@@ -179,14 +181,14 @@ class NsIncomingDataProcessor @Inject constructor(
 
                     is NSEffectiveProfileSwitch ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toEffectiveProfileSwitch(dateUtil, activePlugin.activeInsulin)?.let { effectiveProfileSwitch ->
+                            treatment.toEffectiveProfileSwitch(dateUtil, insulin)?.let { effectiveProfileSwitch ->
                                 storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toProfileSwitch(localProfileManager, dateUtil, activePlugin.activeInsulin)?.let { profileSwitch ->
+                            treatment.toProfileSwitch(localProfileManager, dateUtil, insulin)?.let { profileSwitch ->
                                 storeDataForDb.addToProfileSwitches(profileSwitch)
                             }
                         }

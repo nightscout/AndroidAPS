@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.times
@@ -23,8 +21,6 @@ private const val STRING_JSON = """{"data":{"profileToSwitchTo":"Test"},"type":"
 
 class ActionProfileSwitchTest : ActionsTestBase() {
 
-    @Mock lateinit var insulin: Insulin
-
     private val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
     private lateinit var sut: ActionProfileSwitch
 
@@ -35,7 +31,6 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         whenever(rh.gs(app.aaps.core.ui.R.string.notexists)).thenReturn("not exists")
         whenever(rh.gs(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
         whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
         whenever(insulin.iCfg).thenReturn(iCfg)
 
         sut = ActionProfileSwitch(injector)

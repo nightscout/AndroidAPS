@@ -107,4 +107,14 @@ interface ProfileFunction {
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
         action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
     ): Boolean
+
+    /**
+     * Re-apply the currently active profile switch with a different insulin configuration.
+     * Preserves the original profile name, percentage, timeshift, and remaining duration.
+     *
+     * @param iCfg new insulin configuration to apply
+     * @param source Source for UserEntry logging
+     * @return true if profile switch was created
+     */
+    fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
 }

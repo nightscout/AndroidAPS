@@ -17,7 +17,6 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
-import app.aaps.plugins.insulin.InsulinPlugin
 import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
@@ -91,12 +90,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(20)
     abstract fun bindActionsPlugin(plugin: ActionsPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(30)
-    abstract fun bindInsulinPlugin(plugin: InsulinPlugin): PluginBase
 
     @Binds
     @AllConfigs

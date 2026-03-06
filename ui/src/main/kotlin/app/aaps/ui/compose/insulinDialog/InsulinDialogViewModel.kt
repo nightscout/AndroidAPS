@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -56,6 +57,7 @@ class InsulinDialogViewModel @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
+    private val activeInsulin: Insulin,
     val config: Config,
     private val automation: Automation,
     private val uel: UserEntryLogger,
@@ -244,7 +246,7 @@ class InsulinDialogViewModel @Inject constructor(
         val notes = state.notes
         val recordOnlyChecked = state.recordOnlyChecked
         val units = profileFunction.getUnits()
-        val iCfg = profileFunction.getProfile()?.iCfg ?: activePlugin.activeInsulin.iCfg // Todo: iCfg can be different for external boluses
+        val iCfg = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg // Todo: iCfg can be different for external boluses
 
         // Insert temp target if eating soon checked
         if (state.eatingSoonTtChecked) {

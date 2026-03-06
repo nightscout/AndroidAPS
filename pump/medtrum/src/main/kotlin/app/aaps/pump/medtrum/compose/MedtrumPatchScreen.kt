@@ -40,6 +40,7 @@ import app.aaps.pump.medtrum.compose.steps.DeactivatingStep
 import app.aaps.pump.medtrum.compose.steps.PrepareStep
 import app.aaps.pump.medtrum.compose.steps.PrimeStep
 import app.aaps.pump.medtrum.compose.steps.RetryActivationStep
+import app.aaps.pump.medtrum.compose.steps.SelectInsulinStep
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +57,7 @@ fun MedtrumPatchScreen(
     // Back handler
     val canGoBack = patchStep in listOf(
         PatchStep.PREPARE_PATCH,
+        PatchStep.SELECT_INSULIN,
         PatchStep.START_DEACTIVATION,
         PatchStep.RETRY_ACTIVATION,
         PatchStep.COMPLETE,
@@ -65,6 +67,7 @@ fun MedtrumPatchScreen(
     BackHandler(enabled = true) {
         when (patchStep) {
             PatchStep.PREPARE_PATCH,
+            PatchStep.SELECT_INSULIN,
             PatchStep.START_DEACTIVATION,
             PatchStep.RETRY_ACTIVATION      -> {
                 viewModel.handleCancel()
@@ -112,6 +115,7 @@ fun MedtrumPatchScreen(
                         IconButton(onClick = {
                             when (patchStep) {
                                 PatchStep.PREPARE_PATCH,
+                                PatchStep.SELECT_INSULIN,
                                 PatchStep.START_DEACTIVATION,
                                 PatchStep.RETRY_ACTIVATION      -> viewModel.handleCancel()
 
@@ -158,6 +162,8 @@ fun MedtrumPatchScreen(
                 when (step) {
                     PatchStep.PREPARE_PATCH,
                     PatchStep.PREPARE_PATCH_CONNECT    -> PrepareStep(viewModel, onCancel)
+
+                    PatchStep.SELECT_INSULIN           -> SelectInsulinStep(viewModel, onCancel)
 
                     PatchStep.PRIME,
                     PatchStep.PRIMING,

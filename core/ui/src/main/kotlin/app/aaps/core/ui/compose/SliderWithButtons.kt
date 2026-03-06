@@ -76,6 +76,7 @@ fun SliderWithButtons(
     unitLabelResId: Int = 0,
     dialogLabel: String? = null,
     dialogSummary: String? = null,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val minValue = valueRange.start
@@ -185,7 +186,7 @@ fun SliderWithButtons(
                     val roundedValue = roundToStep(newValue, step).coerceIn(minValue, maxValue)
                     onValueChange(roundedValue)
                 },
-                enabled = value > minValue,
+                enabled = enabled && value > minValue,
                 modifier = Modifier.size(32.dp)
             ) {
                 Icon(
@@ -204,6 +205,7 @@ fun SliderWithButtons(
                         val rounded = roundToStep(newValue, step)
                         onValueChange(rounded.coerceIn(minValue, maxValue))
                     },
+                    enabled = enabled,
                     valueRange = 0f..1f,
                     modifier = Modifier.weight(1f)
                 )
@@ -219,7 +221,7 @@ fun SliderWithButtons(
                     val roundedValue = roundToStep(newValue, step).coerceIn(minValue, maxValue)
                     onValueChange(roundedValue)
                 },
-                enabled = value < maxValue,
+                enabled = enabled && value < maxValue,
                 modifier = Modifier.size(32.dp)
             ) {
                 Icon(
@@ -239,7 +241,7 @@ fun SliderWithButtons(
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .widthIn(min = if (isMinutesUnit || valueFormatResId != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
-                        .clickable { showDialog = true }
+                        .then(if (enabled) Modifier.clickable { showDialog = true } else Modifier)
                         .padding(start = 4.dp)
                 )
             }
@@ -247,7 +249,7 @@ fun SliderWithButtons(
     }
 
     // Value input dialog
-    if (showDialog) {
+    if (showDialog && enabled) {
         ValueInputDialog(
             currentValue = value,
             valueRange = valueRange,

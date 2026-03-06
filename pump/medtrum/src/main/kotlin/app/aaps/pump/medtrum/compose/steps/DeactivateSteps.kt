@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -44,10 +45,21 @@ fun ConfirmDeactivateStep(
         )
     }
 
+    ConfirmDeactivateContent(
+        onNext = { showConfirmDialog = true },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+internal fun ConfirmDeactivateContent(
+    onNext: () -> Unit,
+    onCancel: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = { showConfirmDialog = true }
+            onClick = onNext
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
@@ -73,25 +85,35 @@ fun DeactivatingStep(
     onCancel: () -> Unit
 ) {
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
-
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
 
-    // Trigger deactivation
     LaunchedEffect(Unit) {
         viewModel.deactivatePatch()
     }
 
-    // Auto-navigate on stopped
     LaunchedEffect(setupStep) {
         if (setupStep == MedtrumPatchViewModel.SetupStep.STOPPED) {
             viewModel.moveStep(PatchStep.DEACTIVATION_COMPLETE)
         }
     }
 
+    DeactivatingContent(
+        isError = isError,
+        onDiscard = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+internal fun DeactivatingContent(
+    isError: Boolean,
+    onDiscard: () -> Unit,
+    onCancel: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = if (isError) WizardButton(
             text = stringResource(R.string.discard),
-            onClick = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) }
+            onClick = onDiscard
         ) else WizardButton(
             text = stringResource(R.string.next),
             onClick = {},
@@ -121,14 +143,25 @@ fun DeactivatingStep(
 fun DeactivateCompleteStep(
     viewModel: MedtrumPatchViewModel
 ) {
+    DeactivateCompleteContent(
+        onNewPatch = { viewModel.moveStep(PatchStep.PREPARE_PATCH) },
+        onDone = { viewModel.moveStep(PatchStep.COMPLETE) }
+    )
+}
+
+@Composable
+internal fun DeactivateCompleteContent(
+    onNewPatch: () -> Unit,
+    onDone: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = { viewModel.moveStep(PatchStep.PREPARE_PATCH) }
+            onClick = onNewPatch
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.ok),
-            onClick = { viewModel.moveStep(PatchStep.COMPLETE) }
+            onClick = onDone
         )
     ) {
         Text(
@@ -149,4 +182,38 @@ fun DeactivateCompleteStep(
     }
 }
 
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
+// region Previews
+
+@Preview(showBackground = true, name = "Confirm Deactivate")
+@Composable
+private fun PreviewConfirmDeactivate() {
+    MaterialTheme {
+        ConfirmDeactivateContent(onNext = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Deactivating - In Progress")
+@Composable
+private fun PreviewDeactivating() {
+    MaterialTheme {
+        DeactivatingContent(isError = false, onDiscard = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Deactivating - Error")
+@Composable
+private fun PreviewDeactivatingError() {
+    MaterialTheme {
+        DeactivatingContent(isError = true, onDiscard = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Deactivate Complete")
+@Composable
+private fun PreviewDeactivateComplete() {
+    MaterialTheme {
+        DeactivateCompleteContent(onNewPatch = {}, onDone = {})
+    }
+}
+
+// endregion

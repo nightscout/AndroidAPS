@@ -3,23 +3,19 @@ package app.aaps.ui.di
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.BolusProgressHelperActivity
-import app.aaps.ui.activities.ConcentrationActivity
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.activities.ProfileViewerActivity
 import app.aaps.ui.activities.QuickWizardListActivity
 import app.aaps.ui.activities.TDDStatsActivity
-import app.aaps.ui.activities.fragments.ConcentrationFragment
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import app.aaps.ui.dialogs.BolusProgressDialog
 import app.aaps.ui.dialogs.CalibrationDialog
 import app.aaps.ui.dialogs.CarbsDialog
 import app.aaps.ui.dialogs.CareDialog
-import app.aaps.ui.dialogs.ConcentrationDialog
 import app.aaps.ui.dialogs.EditQuickWizardDialog
 import app.aaps.ui.dialogs.ExtendedBolusDialog
 import app.aaps.ui.dialogs.FillDialog
 import app.aaps.ui.dialogs.InsulinDialog
-import app.aaps.ui.dialogs.InsulinSwitchDialog
 import app.aaps.ui.dialogs.LoopDialog
 import app.aaps.ui.dialogs.ProfileSwitchDialog
 import app.aaps.ui.dialogs.SiteRotationDialog
@@ -64,14 +60,11 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
-    @ContributesAndroidInjector abstract fun contributesConcentrationDialog(): ConcentrationDialog
-    @ContributesAndroidInjector abstract fun contributesConcentrationActivity(): ConcentrationActivity
     @ContributesAndroidInjector abstract fun contributesProfileViewerActivity(): ProfileViewerActivity
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
     @ContributesAndroidInjector abstract fun contributesSiteRotationDialog(): SiteRotationDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
-    @ContributesAndroidInjector abstract fun contributesInsulinSwitchDialog(): InsulinSwitchDialog
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
     @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
@@ -84,5 +77,4 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity
-    @ContributesAndroidInjector abstract fun contributesConcentrationFragment(): ConcentrationFragment
 }

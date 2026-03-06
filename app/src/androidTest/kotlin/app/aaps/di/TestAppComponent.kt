@@ -9,7 +9,6 @@ import app.aaps.plugins.aps.di.ApsModule
 import app.aaps.plugins.automation.di.AutomationModule
 import app.aaps.plugins.configuration.di.ConfigurationModule
 import app.aaps.plugins.constraints.di.PluginsConstraintsModule
-import app.aaps.plugins.insulin.di.InsulinModule
 import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
@@ -48,7 +47,6 @@ import javax.inject.Singleton
         // -> DatabaseModule::class, replace by in-memory database
         TestDatabaseModule::class,
         ImplementationModule::class,
-        InsulinModule::class,
         OpenHumansModule::class,
         PluginsModule::class,
         SharedImplModule::class,

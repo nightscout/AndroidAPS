@@ -27,12 +27,7 @@ fun NSProfileSwitch.toProfileSwitch(localProfileManager: LocalProfileManager, da
     val iCfg =
         iCfg?.let {
             ICfg(insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime, concentration = it.concentration)
-        } ?: ICfg(
-            insulinLabel = insulinFallback.friendlyName,
-            insulinEndTime = (insulinFallback.dia * 60 * 60 * 1000).toLong(),
-            insulinPeakTime = (insulinFallback.peak * 60 * 1000).toLong(),
-            concentration = 1.0
-        )
+        } ?: insulinFallback.iCfg
 
 
     return PS(

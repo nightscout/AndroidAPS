@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
@@ -55,6 +56,7 @@ import kotlin.math.abs
 @Stable
 class MainViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     val config: Config,
     val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
@@ -451,7 +453,7 @@ class MainViewModel @Inject constructor(
                         ValueWithUnit.Percent(action.percentage),
                         ValueWithUnit.Minute(action.durationMinutes)
                     ),
-                    iCfg = activePlugin.activeInsulin.iCfg
+                    iCfg = insulin.iCfg
                 )
             }
         }

@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -68,7 +69,8 @@ class TestOpenAPSAMAPlugin @Inject constructor(
     private val preferences: Preferences,
     private val importExportPrefs: ImportExportPrefs,
     private val config: Config,
-    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
+    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
+    private val ch: ConcentrationHelper
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -182,7 +184,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
                     HardLimits.LIMIT_TEMP_TARGET_BG[1]
                 )
         }
-        if (!hardLimits.checkHardLimits(profile.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
+        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
         if (!hardLimits.checkHardLimits(
                 profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
                 app.aaps.core.ui.R.string.profile_carbs_ratio_value,
@@ -192,7 +194,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         ) return
         if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
-        if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
+        if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
             val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
@@ -209,7 +211,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         start = System.currentTimeMillis()
         try {
             determineBasalAdapterAMAJS.setData(
-                profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.activePump.baseBasalRate, iobArray, glucoseStatus, mealData,
+                profile, maxIob, maxBasal, minBg, maxBg, targetBg, ch.fromPump(activePlugin.activePump.baseBasalRate), iobArray, glucoseStatus, mealData,
                 lastAutosensResult.ratio,
                 isTempTarget,
                 tdd1D = null,

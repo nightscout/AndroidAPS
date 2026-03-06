@@ -1,11 +1,11 @@
 package app.aaps.implementation.pump
 
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -22,8 +22,9 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.implementation.plugin.PluginStore
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -32,14 +33,15 @@ class PumpWithConcentrationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val constraintsChecker: ConstraintsChecker,
-    private val config: Config
+    private val preferences: Preferences
 ) : PumpWithConcentration {
 
     @VisibleForTesting val activePumpInternal
         get() = activePlugin.activePumpInternal
 
     override fun selectedActivePump(): Pump = activePumpInternal
-    private val concentration: Double get() = if (config.enableInsulinConcentration()) profileFunction.getProfile()?.insulinConcentration() ?: 1.0 else 1.0
+    private val concentrationEnabled: Boolean get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
+    private val concentration: Double get() = if (concentrationEnabled) profileFunction.getProfile()?.insulinConcentration() ?: 1.0 else 1.0
 
     override fun isInitialized(): Boolean = activePumpInternal.isInitialized()
     override fun isSuspended(): Boolean = activePumpInternal.isSuspended()
@@ -71,12 +73,29 @@ class PumpWithConcentrationImpl @Inject constructor(
     override fun setNeutralTempAtFullHour(): Boolean = activePumpInternal.setNeutralTempAtFullHour()
     override fun isBatteryChangeLoggingEnabled(): Boolean = activePumpInternal.isBatteryChangeLoggingEnabled()
     override fun isUseRileyLinkBatteryLevel(): Boolean = activePumpInternal.isUseRileyLinkBatteryLevel()
-    override fun finishHandshaking() { activePumpInternal.finishHandshaking() }
-    override fun connect(reason: String) { activePumpInternal.connect(reason) }
-    override fun disconnect(reason: String) { activePumpInternal.disconnect(reason) }
-    override fun stopConnecting() { activePumpInternal.stopConnecting() }
-    override fun stopBolusDelivering() { activePumpInternal.stopBolusDelivering() }
-    override fun executeCustomAction(customActionType: CustomActionType) { activePumpInternal.executeCustomAction(customActionType) }
+    override fun finishHandshaking() {
+        activePumpInternal.finishHandshaking()
+    }
+
+    override fun connect(reason: String) {
+        activePumpInternal.connect(reason)
+    }
+
+    override fun disconnect(reason: String) {
+        activePumpInternal.disconnect(reason)
+    }
+
+    override fun stopConnecting() {
+        activePumpInternal.stopConnecting()
+    }
+
+    override fun stopBolusDelivering() {
+        activePumpInternal.stopBolusDelivering()
+    }
+
+    override fun executeCustomAction(customActionType: CustomActionType) {
+        activePumpInternal.executeCustomAction(customActionType)
+    }
 
     override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = error("Must no be called directly. Use: setNewBasalProfile(profile: EffectiveProfile)")
     override fun setNewBasalProfile(profile: EffectiveProfile): PumpEnactResult = activePumpInternal.setNewBasalProfile(profile.toPump())
@@ -86,7 +105,9 @@ class PumpWithConcentrationImpl @Inject constructor(
 
     override val baseBasalRate: PumpRate get() = activePumpInternal.baseBasalRate
 
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = activePumpInternal.deliverTreatment(detailedBolusInfo.also { it.insulin /= concentration } )
+    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = activePumpInternal.deliverTreatment(
+        detailedBolusInfo.also { if (it.bolusType != BS.Type.PRIMING) it.insulin /= concentration }
+    )
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
         profileFunction.getProfile()?.let { profile ->
@@ -108,22 +129,25 @@ class PumpWithConcentrationImpl @Inject constructor(
         } ?: error("No profile running")
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
-        if (config.enableInsulinConcentration()) {
+        if (concentrationEnabled) {
             activePumpInternal.setExtendedBolus(insulin / concentration, durationInMinutes)
         } else activePumpInternal.setExtendedBolus(insulin, durationInMinutes)
 
     /** PumpWithConcentration.pumpDescription should be used instead of Pump.pumpDescription outside Pump Driver to have corrected values */
-    override val pumpDescription: PumpDescription =
-        if (config.enableInsulinConcentration()) {
-            activePumpInternal.pumpDescription.clone().also {
-                it.bolusStep *= concentration
-                it.extendedBolusStep *= concentration
-                it.maxTempAbsolute *= concentration
-                it.tempAbsoluteStep *= concentration
-                it.basalStep *= concentration
-                it.basalMinimumRate *= concentration
-                it.basalMaximumRate *= concentration
-                it.maxReservoirReading = (it.maxReservoirReading * concentration).toInt()
-            }
-        } else activePumpInternal.pumpDescription
+    override val pumpDescription: PumpDescription
+        get() {
+            val conc = concentration
+            return if (conc != 1.0) {
+                activePumpInternal.pumpDescription.clone().also {
+                    it.bolusStep *= conc
+                    it.extendedBolusStep *= conc
+                    it.maxTempAbsolute *= conc
+                    it.tempAbsoluteStep *= conc
+                    it.basalStep *= conc
+                    it.basalMinimumRate *= conc
+                    it.basalMaximumRate *= conc
+                    it.maxReservoirReading = (it.maxReservoirReading * conc).toInt()
+                }
+            } else activePumpInternal.pumpDescription
+        }
 }

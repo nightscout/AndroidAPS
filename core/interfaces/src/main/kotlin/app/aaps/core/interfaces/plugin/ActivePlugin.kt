@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.profile.ProfileSource
@@ -29,12 +28,6 @@ interface ActivePlugin {
      *  Currently selected Profile plugin
      */
     val activeProfileSource: ProfileSource
-
-    /**
-     *  Currently selected Insulin plugin
-     *  Default RapidActing
-     */
-    val activeInsulin: Insulin
 
     /**
      *  Currently selected APS plugin

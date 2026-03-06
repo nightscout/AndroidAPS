@@ -22,7 +22,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
@@ -68,7 +67,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var insulin: Insulin
     @Mock lateinit var l: L
     @Mock lateinit var nsClientV3Service: NSClientV3Service
     @Mock lateinit var nsClientRepository: NSClientRepository
@@ -86,7 +84,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)
         sut =
             NSClientV3Plugin(
@@ -306,7 +303,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            iCfg = activePlugin.activeInsulin.iCfg.also {
+            iCfg = insulin.iCfg.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
@@ -342,7 +339,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            iCfg = activePlugin.activeInsulin.iCfg.also {
+            iCfg = insulin.iCfg.also {
                 it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(

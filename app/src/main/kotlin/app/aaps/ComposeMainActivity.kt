@@ -118,6 +118,8 @@ import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
+import app.aaps.ui.compose.insulinManagement.InsulinManagementScreen
+import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.main.MainScreen
 import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.maintenance.ImportSettingsScreen
@@ -209,6 +211,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private val automationViewModel: AutomationViewModel by viewModels()
     private val graphViewModel: GraphViewModel by viewModels()
     private val treatmentsViewModel: TreatmentsViewModel by viewModels()
+    private val insulinManagementViewModel: InsulinManagementViewModel by viewModels()
     private val tempTargetManagementViewModel: TempTargetManagementViewModel by viewModels()
     private val quickWizardManagementViewModel: QuickWizardManagementViewModel by viewModels()
     private val statsViewModel: StatsViewModel by viewModels()
@@ -505,6 +508,23 @@ class ComposeMainActivity : AppCompatActivity() {
                             graphViewModel = graphViewModel,
                             statusLightsDef = builtInSearchables.statusLights,
                             treatmentButtonsDef = builtInSearchables.treatmentButtons
+                        )
+                    }
+
+                    composable(
+                        AppRoute.InsulinManagement.route,
+                        arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
+                    ) { backStackEntry ->
+                        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+                        InsulinManagementScreen(
+                            viewModel = insulinManagementViewModel,
+                            initialMode = mode,
+                            onNavigateBack = { navController.popBackStack() },
+                            onRequestEditMode = {
+                                withProtection(ProtectionCheck.Protection.PREFERENCES) {
+                                    insulinManagementViewModel.setScreenMode(ScreenMode.EDIT)
+                                }
+                            }
                         )
                     }
 
@@ -1201,6 +1221,8 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.ABOUT                        -> mainViewModel.setShowAboutDialog(true)
 
             // Management screens
+            ElementType.INSULIN_MANAGEMENT_PLAY      -> navController.navigate(AppRoute.InsulinManagement.createRoute(ScreenMode.PLAY))
+            ElementType.INSULIN_MANAGEMENT_EDIT      -> navController.navigate(AppRoute.InsulinManagement.createRoute(ScreenMode.EDIT))
             ElementType.PROFILE_MANAGEMENT_PLAY      -> navController.navigate(AppRoute.Profile.createRoute(ScreenMode.PLAY))
             ElementType.PROFILE_MANAGEMENT_EDIT      -> navController.navigate(AppRoute.Profile.createRoute(ScreenMode.EDIT))
             ElementType.TEMP_TARGET_MANAGEMENT_PLAY  -> navController.navigate(AppRoute.TempTargetManagement.createRoute(ScreenMode.PLAY))

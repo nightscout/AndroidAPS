@@ -1,10 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.plugins.automation.AutomationPlugin
@@ -22,8 +20,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpPluginWithConcentration: PumpWithConcentration
-    @Mock lateinit var insulin: Insulin
-
     val pumpDescription = PumpDescription()
 
     @BeforeEach
@@ -48,6 +44,9 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.glucoseStatusProvider = smbGlucoseStatusProvider
                 it.dateUtil = dateUtil
                 it.profileUtil = profileUtil
+            }
+            if (it is TriggerReservoirLevel) {
+                it.insulin = insulin
             }
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction

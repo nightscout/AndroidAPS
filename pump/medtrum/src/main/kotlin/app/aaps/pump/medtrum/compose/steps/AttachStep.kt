@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -19,10 +20,21 @@ fun AttachStep(
     viewModel: MedtrumPatchViewModel,
     onCancel: () -> Unit
 ) {
+    AttachStepContent(
+        onNext = { viewModel.moveStep(PatchStep.ACTIVATE) },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+internal fun AttachStepContent(
+    onNext: () -> Unit,
+    onCancel: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = { viewModel.moveStep(PatchStep.ACTIVATE) }
+            onClick = onNext
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
@@ -42,4 +54,11 @@ fun AttachStep(
     }
 }
 
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
+@Preview(showBackground = true, name = "Attach Step")
+@Composable
+private fun PreviewAttachStep() {
+    MaterialTheme {
+        AttachStepContent(onNext = {}, onCancel = {})
+    }
+}
+

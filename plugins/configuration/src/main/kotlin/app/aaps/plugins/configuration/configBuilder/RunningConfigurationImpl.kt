@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -31,6 +30,7 @@ import javax.inject.Inject
 @Reusable
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val configBuilder: ConfigBuilder,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
@@ -51,7 +51,7 @@ class RunningConfigurationImpl @Inject constructor(
         if (!pumpInterface.isInitialized()) return json
         if (counter++ % every == 0)
             try {
-                val insulinInterface = activePlugin.activeInsulin
+                val insulinInterface = insulin
                 val sensitivityInterface = activePlugin.activeSensitivity
                 val overviewInterface = activePlugin.activeOverview
                 val safetyInterface = activePlugin.activeSafety
@@ -85,18 +85,8 @@ class RunningConfigurationImpl @Inject constructor(
             if (config.VERSION_NAME.startsWith(it).not())
                 notificationManager.post(NotificationId.NSCLIENT_VERSION_DOES_NOT_MATCH, R.string.nsclient_version_does_not_match)
         }
-        configuration.insulin?.let {
-            val insulin = InsulinType.fromInt(it)
-            for (p in activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)) {
-                val insulinPlugin = p as Insulin
-                if (insulinPlugin.id == insulin) {
-                    if (!p.isEnabled()) {
-                        aapsLogger.debug(LTag.CORE, "Changing insulin plugin to ${insulin.name}")
-                        configBuilder.performPluginSwitch(p, true, PluginType.INSULIN)
-                    }
-                    configuration.insulinConfiguration?.let { ic -> insulinPlugin.applyConfiguration(ic) }
-                }
-            }
+        configuration.insulinConfiguration?.let { ic ->
+            insulin.applyConfiguration(ic)
         }
 
         configuration.aps?.let {

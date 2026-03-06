@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -136,12 +135,8 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
                 actions.add(
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
-            if ((siteChange || insulinChange) && !ch.isU100()) {    // include concentration correction and volume information
-                insulinAfterConstraints = ch.fromPump(PumpInsulin(insulinAfterConstraints)) // For Prime/Fill, amount should be considered as CU so CU->IU is required
-                actions.add(rh.gs(R.string.fill_warning_concentration, ch.insulinConcentrationString()).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-                actions.add(
-                    rh.gs(R.string.fill_warning_concentration2) + ": " + ch.bolusWithConvertedVolume(insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
-                )
+            if (!ch.isU100()) {
+                actions.add(rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             }
         }
         if (siteChange)

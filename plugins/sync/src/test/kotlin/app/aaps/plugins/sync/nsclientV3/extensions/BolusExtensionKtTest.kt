@@ -22,8 +22,7 @@ internal class BolusExtensionKtTest : TestBase() {
     @BeforeEach
     fun doMock() {
         `when`(insulin.friendlyName).thenReturn("Name")
-        `when`(insulin.dia).thenReturn(8.0)
-        `when`(insulin.peak).thenReturn(45)
+        `when`(insulin.iCfg).thenReturn(ICfg(insulinLabel = "Name", insulinEndTime = (8.0 * 3600 * 1000).toLong(), insulinPeakTime = 45 * 60 * 1000, concentration = 1.0))
     }
 
     val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)

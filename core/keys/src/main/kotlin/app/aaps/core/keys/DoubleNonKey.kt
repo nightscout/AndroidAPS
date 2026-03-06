@@ -8,6 +8,4 @@ enum class DoubleNonKey(
     override val exportable: Boolean = true
 ) : DoubleNonPreferenceKey {
 
-    NewConcentration("new_concentration", 1.0),
-    ApprovedConcentration("approved_concentration", 1.0)
 }

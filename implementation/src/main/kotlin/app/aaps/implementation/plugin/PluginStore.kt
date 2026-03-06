@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -88,7 +87,6 @@ class PluginStore @Inject constructor(
     private var activeBgSourceStore: BgSource? = null
     private var activePumpStore: Pump? = null
     private var activeAPSStore: APS? = null
-    private var activeInsulinStore: Insulin? = null
     private var activeSensitivityStore: Sensitivity? = null
     private var activeSmoothingStore: Smoothing? = null
 
@@ -145,16 +143,6 @@ class PluginStore @Inject constructor(
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
         }
         setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
-
-        // PluginType.INSULIN
-        pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)
-        activeInsulinStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.INSULIN) as Insulin?
-        if (activeInsulinStore == null) {
-            activeInsulinStore = getDefaultPlugin(PluginType.INSULIN) as Insulin
-            (activeInsulinStore as PluginBase).setPluginEnabled(PluginType.INSULIN, true)
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting InsulinInterface")
-        }
-        setFragmentVisibilities((activeInsulinStore as PluginBase).name, pluginsInCategory, PluginType.INSULIN)
 
         // PluginType.SENSITIVITY
         pluginsInCategory = getSpecificPluginsList(PluginType.SENSITIVITY)
@@ -227,9 +215,6 @@ class PluginStore @Inject constructor(
 
     override val activeProfileSource: ProfileSource
         get() = getSpecificPluginsListByInterface(ProfileSource::class.java).first() as ProfileSource
-
-    override val activeInsulin: Insulin
-        get() = activeInsulinStore ?: getDefaultPlugin(PluginType.INSULIN) as Insulin
 
     // App may not be initialized yet. Wait before second return
     override val activeAPS: APS

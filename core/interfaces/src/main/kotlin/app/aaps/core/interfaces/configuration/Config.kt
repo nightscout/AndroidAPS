@@ -35,7 +35,6 @@ interface Config {
     fun ignoreNightscoutV3Errors(): Boolean
     fun doNotSendSmsOnProfileChange(): Boolean
     fun enableAutotune(): Boolean
-    fun enableInsulinConcentration(): Boolean
 
     /**
      * Disable LeakCanary (memory leaks detection). By default it's enabled in DEBUG builds.

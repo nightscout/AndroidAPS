@@ -59,12 +59,7 @@ fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, insulinFa
 
     val iCfg =
         if (insulinLabel != null && insulinEndTime != null && insulinPeakTime != null && concentration != null) ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration)
-        else ICfg(
-            insulinLabel = insulinFallback.friendlyName,
-            insulinEndTime = (insulinFallback.dia * 60 * 60 * 1000).toLong(),
-            insulinPeakTime = (insulinFallback.peak * 60 * 1000).toLong(),
-            concentration = 1.0
-        )
+        else insulinFallback.iCfg
 
     if (timestamp == 0L) return null
     val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null

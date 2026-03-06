@@ -84,16 +84,6 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Synchronized
     private fun updateGUI() {
         binding.categories.removeAllViews()
-        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode())
-            configBuilder.createViewsForPlugins(
-                title = app.aaps.core.ui.R.string.configbuilder_insulin,
-                description = R.string.configbuilder_insulin_description,
-                pluginType = PluginType.INSULIN,
-                plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN),
-                pluginViewHolders = pluginViewHolders,
-                activity = requireActivity(),
-                parent = binding.categories
-            )
         if (!config.AAPSCLIENT) {
             configBuilder.createViewsForPlugins(
                 title = app.aaps.core.ui.R.string.configbuilder_bgsource,

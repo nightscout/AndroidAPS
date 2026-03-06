@@ -13,7 +13,6 @@ class TriggerReservoirLevelTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
         whenever(pumpPluginWithConcentration.reservoirLevel).thenReturn(PumpInsulin(6.0))
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
         whenever(insulin.iCfg).thenReturn(someICfg)
 
         var t: TriggerReservoirLevel = TriggerReservoirLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -54,7 +53,7 @@ class TriggerReservoirLevelTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        val t= TriggerReservoirLevel(injector)
+        val t = TriggerReservoirLevel(injector)
         assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_insulin))
     }
 }

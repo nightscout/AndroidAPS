@@ -39,7 +39,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
             ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger)
         }
         autotunePlugin = AutotunePlugin(
-            aapsLogger, rh, preferences, rxBus, profileFunction, dateUtil, activePlugin, localProfileManager,
+            aapsLogger, rh, preferences, rxBus, profileFunction, dateUtil, activePlugin, insulin, localProfileManager,
             autotuneFS, autotuneIob, autotunePrep, autotuneCore, config, uel, profileStoreProvider, atProfileProvider
         )
     }

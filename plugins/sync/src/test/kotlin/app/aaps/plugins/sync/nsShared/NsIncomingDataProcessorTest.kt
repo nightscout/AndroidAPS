@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nsShared
 
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
@@ -47,8 +46,6 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var storeDataForDb: StoreDataForDb
     @Mock lateinit var nsClientRepository: NSClientRepository
-    @Mock lateinit var insulin: Insulin
-
     private val nsiCfg = NSICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
     @BeforeEach
@@ -59,8 +56,6 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(true)
         // Default NSClient to be enabled
         whenever(nsClientSource.isEnabled()).thenReturn(true)
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
-
 
         processor = NsIncomingDataProcessor(
             aapsLogger = aapsLogger,
@@ -68,6 +63,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             preferences = preferences,
             dateUtil = dateUtil,
             activePlugin = activePlugin,
+            insulin = insulin,
             localProfileManager = localProfileManager,
             storeDataForDb = storeDataForDb,
             config = config,

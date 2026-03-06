@@ -14,15 +14,15 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -82,7 +82,7 @@ open class VirtualPumpPlugin @Inject constructor(
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
-    private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     @ApplicationScope private val appScope: CoroutineScope
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
@@ -245,7 +245,7 @@ open class VirtualPumpPlugin @Inject constructor(
             if (config.AAPSCLIENT) // do not store pump serial (record will not be marked PH)
                 appScope.launch {
                     persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(activePlugin.activeInsulin.iCfg),
+                        bolus = detailedBolusInfo.createBolus(insulin.iCfg),
                         action = Action.BOLUS,
                         source = Sources.Pump
                     )

@@ -40,7 +40,7 @@ import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -65,7 +65,7 @@ import app.aaps.ui.compose.treatments.viewmodels.BolusCarbsViewModel
  * Composable screen displaying boluses and carbs in a combined list.
  *
  * @param viewModel ViewModel managing state and business logic
- * @param activePlugin Active plugin for IOB calculations
+ * @param insulin Active insulin for label comparison
  * @param setToolbarConfig Lambda to set toolbar configuration
  * @param onNavigateBack Lambda to handle back navigation
  */
@@ -73,7 +73,7 @@ import app.aaps.ui.compose.treatments.viewmodels.BolusCarbsViewModel
 @Composable
 fun BolusCarbsScreen(
     viewModel: BolusCarbsViewModel,
-    activePlugin: ActivePlugin,
+    insulin: Insulin,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit = { }
 ) {
@@ -165,7 +165,7 @@ fun BolusCarbsScreen(
                             },
                             onCalculatorClick = { bcr -> showInfoBcr = bcr },
                             profile = profile,
-                            activePlugin = activePlugin,
+                            insulin = insulin,
                             rh = viewModel.rh,
                             decimalFormatter = viewModel.decimalFormatter,
                             showInvalidated = uiState.showInvalidated
@@ -205,7 +205,7 @@ private fun MealLinkItem(
     onLongPress: () -> Unit,
     onCalculatorClick: (BCR) -> Unit,
     profile: Profile?,
-    activePlugin: ActivePlugin,
+    insulin: Insulin,
     rh: ResourceHelper,
     decimalFormatter: DecimalFormatter,
     showInvalidated: Boolean
@@ -328,6 +328,17 @@ private fun MealLinkItem(
                                 modifier = Modifier.padding(start = 10.dp),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        // Insulin label (when different from active)
+                        val activeLabel = insulin.iCfg.insulinLabel
+                        if (bolus.iCfg.insulinLabel != activeLabel) {
+                            Text(
+                                text = bolus.iCfg.insulinLabel,
+                                modifier = Modifier.padding(start = 4.dp),
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
 

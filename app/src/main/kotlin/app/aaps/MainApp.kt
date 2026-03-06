@@ -26,13 +26,13 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -436,10 +436,10 @@ class MainApp : Application(), HasAndroidInjector {
         // Migrate loop mode
         if (config.APS && sp.contains("aps_mode")) {
             val mode = when (sp.getString("aps_mode", "CLOSED")) {
-                "OPEN" -> RM.Mode.OPEN_LOOP
+                "OPEN"   -> RM.Mode.OPEN_LOOP
                 "CLOSED" -> RM.Mode.CLOSED_LOOP
-                "LGS" -> RM.Mode.CLOSED_LOOP_LGS
-                else -> RM.Mode.CLOSED_LOOP
+                "LGS"    -> RM.Mode.CLOSED_LOOP_LGS
+                else     -> RM.Mode.CLOSED_LOOP
             }
             runBlocking {
                 persistenceLayer.insertOrUpdateRunningMode(
@@ -481,7 +481,8 @@ class MainApp : Application(), HasAndroidInjector {
         if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false) ||
             sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) ||
             sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)) {
+            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)
+        ) {
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled")
             sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Visible")
             sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin")
@@ -496,7 +497,6 @@ class MainApp : Application(), HasAndroidInjector {
             sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin")
             sp.remove("insulin_oref_peak")
         }
-        sp.putBoolean("ConfigBuilder_Enabled_INSULIN_InsulinPlugin", true)
         // TODO Migrate insulin configurations
 
     }
@@ -577,7 +577,6 @@ class MainApp : Application(), HasAndroidInjector {
         // They are marked as @Deprecated in preference key definitions
         // Removal will be done when legacy UI is completely removed in the future
     }
-
 
     @SuppressLint("CheckResult")
     fun dataMigrations() {

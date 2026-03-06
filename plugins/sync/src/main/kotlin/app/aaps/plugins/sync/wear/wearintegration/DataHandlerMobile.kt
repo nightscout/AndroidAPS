@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -126,6 +127,7 @@ class DataHandlerMobile @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
     private val uiInteraction: UiInteraction,
@@ -439,6 +441,7 @@ class DataHandlerMobile @Inject constructor(
                            handleGetCustomWatchface(it)
                        }, fabricPrivacy::logException)
     }
+
     private fun maxOfNullable(vararg values: Long?): Long? {
         return values.filterNotNull().maxOrNull()
     }
@@ -1525,7 +1528,7 @@ class DataHandlerMobile @Inject constructor(
         } ?: ""
         // Reservoir Level
         val pump = activePlugin.activePump
-        val iCfg = activePlugin.activeInsulin.iCfg
+        val iCfg = insulin.iCfg
         val maxReading = pump.pumpDescription.maxReservoirReading.toDouble()
         val reservoir = pump.reservoirLevel.iU(iCfg.concentration).let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
         val reservoirString = if (reservoir > 0) decimalFormatter.to0Decimal(reservoir, rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)) else ""

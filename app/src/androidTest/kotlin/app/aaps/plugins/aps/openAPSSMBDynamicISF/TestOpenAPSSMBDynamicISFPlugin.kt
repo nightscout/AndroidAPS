@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -53,7 +54,8 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
     private val notificationManager: NotificationManager,
-    glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
+    glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
+    ch: ConcentrationHelper
 ) : TestOpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -73,7 +75,8 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     glucoseStatusProvider,
     bgQualityCheck,
     tddCalculator,
-    glucoseStatusCalculatorSMB
+    glucoseStatusCalculatorSMB,
+    ch
 ) {
 
     init {

@@ -7,7 +7,6 @@ import android.view.View
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -15,6 +14,8 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -71,6 +72,7 @@ class AutotunePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val localProfileManager: LocalProfileManager,
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob,
@@ -155,7 +157,7 @@ class AutotunePlugin @Inject constructor(
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile
         }
-        val localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, activePlugin.activeInsulin.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
+        val localInsulin = LocalInsulin("PumpInsulin", insulin.iCfg.peak, insulin.iCfg.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
 
         log("Start Autotune with $daysBack days back")
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
@@ -254,7 +256,7 @@ class AutotunePlugin @Inject constructor(
                     value = ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
-                val iCfg = activePlugin.activeInsulin.iCfg      // use Current running iCfg, changing iCfg with Automation not allowed
+                val iCfg = insulin.iCfg      // use Current running iCfg, changing iCfg with Automation not allowed
                 tunedP.profileStore(circadian)?.let { profileStore ->
                     if (profileFunction.createProfileSwitch(
                             profileStore = profileStore,
@@ -322,7 +324,7 @@ class AutotunePlugin @Inject constructor(
     private fun settings(runDate: Long, nbDays: Int, firstLoopStart: Long, lastLoopEnd: Long): String {
         var jsonString = ""
         val jsonSettings = JSONObject()
-        val insulinInterface = activePlugin.activeInsulin
+        val insulinInterface = insulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         val startDateString = dateUtil.toISOString(firstLoopStart).substring(0, 10)
         val endDateString = dateUtil.toISOString(lastLoopEnd - 24 * 60 * 60 * 1000L).substring(0, 10)
@@ -348,7 +350,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal))
             jsonSettings.put("tune_insulin_curve", false)
 
-            val peakTime: Int = insulinInterface.peak
+            val peakTime: Int = insulinInterface.iCfg.peak
             when {
                 insulinInterface.id === InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
                 insulinInterface.id === InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")

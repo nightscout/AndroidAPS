@@ -16,8 +16,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -196,5 +196,38 @@ class ProfileFunctionImpl @Inject constructor(
             return true
         }
         return false
+    }
+
+    override fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
+        val profile = getProfile()
+        val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
+        val profileStore = localProfileManager.profile ?: return false
+        val profileName = eps.originalProfileName
+        val percentage = eps.originalPercentage
+        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+        val now = dateUtil.now()
+
+        val durationMinutes = if (eps.originalDuration > 0) {
+            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
+        } else 0
+
+        return createProfileSwitch(
+            profileStore = profileStore,
+            profileName = profileName,
+            durationInMinutes = durationMinutes,
+            percentage = percentage,
+            timeShiftInHours = timeshiftHours,
+            timestamp = now,
+            action = Action.PROFILE_SWITCH,
+            source = source,
+            listValues = listOfNotNull(
+                ValueWithUnit.SimpleString(profileName),
+                ValueWithUnit.SimpleString(iCfg.insulinLabel),
+                ValueWithUnit.Percent(percentage),
+                ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
+                ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
+            ),
+            iCfg = iCfg
+        )
     }
 }

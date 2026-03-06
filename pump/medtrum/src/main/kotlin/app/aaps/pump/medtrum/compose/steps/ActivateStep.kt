@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
@@ -36,50 +37,63 @@ fun ActivateStep(
         }
     }
 
-    // Auto-navigate on activated
+    // Auto-navigate on activated and apply insulin profile switch if changed
     LaunchedEffect(setupStep) {
         if (setupStep == MedtrumPatchViewModel.SetupStep.ACTIVATED && patchStep == PatchStep.ACTIVATE) {
+            viewModel.executeInsulinProfileSwitch()
             viewModel.moveStep(PatchStep.ACTIVATE_COMPLETE)
         }
     }
 
-    WizardStepLayout(
-        primaryButton = when {
-            isActivating && !isError -> WizardButton(
-                text = stringResource(R.string.next),
-                onClick = {},
-                loading = true
-            )
+    val state = when {
+        isActivating && !isError -> ActivateState.ACTIVATING
+        isError                  -> ActivateState.ERROR
+        isComplete               -> ActivateState.COMPLETE
+        else                     -> ActivateState.ACTIVATING
+    }
 
-            isError                  -> WizardButton(
-                text = stringResource(R.string.retry),
-                onClick = {
-                    viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
-                    viewModel.moveStep(PatchStep.ACTIVATE)
-                }
-            )
-
-            isComplete               -> WizardButton(
-                text = stringResource(app.aaps.core.ui.R.string.ok),
-                onClick = { viewModel.moveStep(PatchStep.COMPLETE) }
-            )
-
-            else                     -> null
+    ActivateStepContent(
+        state = state,
+        reservoirText = viewModel.medtrumPump.reservoir.toString(),
+        onRetry = {
+            viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
+            viewModel.moveStep(PatchStep.ACTIVATE)
         },
-        secondaryButton = if (!isComplete) WizardButton(
+        onComplete = { viewModel.moveStep(PatchStep.COMPLETE) },
+        onCancel = onCancel
+    )
+}
+
+internal enum class ActivateState { ACTIVATING, ERROR, COMPLETE }
+
+@Composable
+internal fun ActivateStepContent(
+    state: ActivateState,
+    reservoirText: String = "",
+    onRetry: () -> Unit,
+    onComplete: () -> Unit,
+    onCancel: () -> Unit
+) {
+    WizardStepLayout(
+        primaryButton = when (state) {
+            ActivateState.ACTIVATING -> WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
+            ActivateState.ERROR      -> WizardButton(text = stringResource(R.string.retry), onClick = onRetry)
+            ActivateState.COMPLETE   -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.ok), onClick = onComplete)
+        },
+        secondaryButton = if (state != ActivateState.COMPLETE) WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
             onClick = onCancel
         ) else null
     ) {
-        when {
-            isActivating && !isError -> {
+        when (state) {
+            ActivateState.ACTIVATING -> {
                 Text(
                     text = stringResource(R.string.activating_pump),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
 
-            isError                  -> {
+            ActivateState.ERROR      -> {
                 Text(
                     text = stringResource(R.string.activating_error).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge,
@@ -87,9 +101,9 @@ fun ActivateStep(
                 )
             }
 
-            isComplete               -> {
+            ActivateState.COMPLETE   -> {
                 Text(
-                    text = stringResource(R.string.activating_complete, viewModel.medtrumPump.reservoir),
+                    text = stringResource(R.string.activating_complete, reservoirText),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(Modifier.height(8.dp))
@@ -108,4 +122,26 @@ fun ActivateStep(
     }
 }
 
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
+@Preview(showBackground = true, name = "Activate - Activating")
+@Composable
+private fun PreviewActivating() {
+    MaterialTheme {
+        ActivateStepContent(state = ActivateState.ACTIVATING, onRetry = {}, onComplete = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Activate - Error")
+@Composable
+private fun PreviewError() {
+    MaterialTheme {
+        ActivateStepContent(state = ActivateState.ERROR, onRetry = {}, onComplete = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Activate - Complete")
+@Composable
+private fun PreviewComplete() {
+    MaterialTheme {
+        ActivateStepContent(state = ActivateState.COMPLETE, reservoirText = "200", onRetry = {}, onComplete = {}, onCancel = {})
+    }
+}

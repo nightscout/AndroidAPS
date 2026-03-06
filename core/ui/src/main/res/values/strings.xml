@@ -104,7 +104,7 @@
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>
-    <string name="insulin_name_label">INS Name</string>
+    <string name="insulin_name_label">Insulin name</string>
     <string name="concentration_label">Concentration</string>
     <string name="format_concentration">U%1$.0f</string>
     <string name="peak_label">Peak</string>
@@ -184,7 +184,6 @@
     <string name="remove_label">REMOVE</string>
     <string name="activate_profile">Activate profile</string>
     <string name="activate_insulin">Activate insulin</string>
-    <string name="confirm_concentration">Confirm concentration</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
@@ -270,12 +269,6 @@
 
     <!--    Concentration-->
     <string name="ins_concentration_confirmed">Insulin %1$s confirmed</string>
-    <string name="ins_concentration_unchanged">Insulin %1$s confirmed, Target Insulin concentration %2$s has been cancelled</string>
-    <string name="insulin_concentration_label">Insulin: U</string>
-    <string name="concentration_title">For safety reason, you should confirm Insulin concentration put within your pump on each Reservoir Change to enable close loop:\n    - Previous Insulin concentration was: %1$s</string>
-    <string name="concentration_title2">This is a safety parameter which can lead to under or overdosing!\nCan you please confirm Insulin concentration put within your pump?\n    - Previous Insulin Concentration was: %1$s\n    - new Insulin Insulin Concentration is: %2$s\nYou should select insulin and do a ProfileSwitch to confirm the new insulin concentration.</string>
-    <string name="concentration_not_confirmed">Insulin concentration is not confirmed or incorrect.\nClosed Loop is disabled</string>
-    <string name="concentration_confirmation">Confirm Insulin Concentration</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>
@@ -326,6 +319,9 @@
     <string name="treatment_insulin_desc">Deliver bolus manually</string>
     <string name="treatment_carbs_desc">Record carbs without insulin</string>
     <string name="treatment_calculator_desc">Calculate bolus</string>
+    <string name="insulin_management">Insulin management</string>
+    <string name="manage_insulin_desc">Manage and activate insulin configurations</string>
+    <string name="concentration_disable_blocked">Cannot disable concentration support while non-U100 insulins exist. Remove all non-U100 insulin configurations and switch to a U100 profile first.</string>
     <string name="manage_profile_desc">Manage and activate profiles</string>
     <string name="manage_temp_target_desc">Manage and set temporary targets</string>
     <string name="manage_temp_basal_desc">Start temporary basal</string>

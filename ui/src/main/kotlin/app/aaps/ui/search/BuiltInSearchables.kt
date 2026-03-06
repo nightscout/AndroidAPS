@@ -6,6 +6,8 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Palette
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.skin.SkinDescriptionProvider
 import app.aaps.core.keys.BooleanKey
@@ -13,6 +15,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.withChangeGuard
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalculator
@@ -37,7 +40,9 @@ import javax.inject.Singleton
 @Singleton
 class BuiltInSearchables @Inject constructor(
     private val skinDescriptionProvider: SkinDescriptionProvider,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val insulinManager: InsulinManager,
+    private val insulin: Insulin
 ) : SearchableProvider {
 
     /**
@@ -60,6 +65,11 @@ class BuiltInSearchables @Inject constructor(
                 StringKey.GeneralUnits,
                 StringKey.GeneralLanguage,
                 BooleanKey.GeneralSimpleMode,
+                BooleanKey.GeneralInsulinConcentration.withChangeGuard {
+                    val hasNonU100Insulins = insulinManager.insulins.any { it.concentration != 1.0 }
+                    val runningNonU100 = insulin.iCfg.concentration != 1.0
+                    if (hasNonU100Insulins || runningNonU100) rh.gs(app.aaps.core.ui.R.string.concentration_disable_blocked) else null
+                },
                 BooleanKey.OverviewKeepScreenOn,
                 StringKey.GeneralPatientName,
             ),

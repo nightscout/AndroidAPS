@@ -65,6 +65,10 @@
 
     <string name="step_prepare_patch">Activate Patch</string>
     <string name="step_prepare_patch_connect">Connect and Fill</string>
+    <string name="step_select_insulin">Select Insulin</string>
+    <string name="select_insulin_description">Select the insulin you are filling the patch with. A profile switch will be applied after activation.</string>
+    <string name="current_insulin">Currently active</string>
+    <string name="change_insulin">Change</string>
     <string name="step_prime">Prime</string>
     <string name="step_priming">Priming</string>
     <string name="step_priming_complete">Priming Complete</string>

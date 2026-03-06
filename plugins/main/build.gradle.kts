@@ -29,7 +29,6 @@ dependencies {
 
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:aps"))
-    testImplementation(project(":plugins:insulin"))
     testImplementation(project(":shared:tests"))
 
     api(libs.androidx.appcompat)

@@ -3,8 +3,12 @@ package app.aaps.pump.medtrum.compose
 import android.os.SystemClock
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.medtrum.MedtrumPlugin
@@ -35,7 +39,7 @@ sealed class PatchEvent {
 }
 
 enum class WizardPage {
-    PREPARE, PRIME, ATTACH, ACTIVATE, COMPLETE,
+    PREPARE, SELECT_INSULIN, PRIME, ATTACH, ACTIVATE, COMPLETE,
     CONFIRM_DEACTIVATE, DEACTIVATING, DEACTIVATE_COMPLETE,
     RETRY_ACTIVATION
 }
@@ -46,7 +50,9 @@ class MedtrumPatchViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val medtrumPlugin: MedtrumPlugin,
     private val commandQueue: CommandQueue,
-    val medtrumPump: MedtrumPump
+    val medtrumPump: MedtrumPump,
+    private val insulinManager: InsulinManager,
+    private val profileFunction: ProfileFunction
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -76,6 +82,20 @@ class MedtrumPatchViewModel @Inject constructor(
 
     private val _currentStepIndex = MutableStateFlow(0)
     val currentStepIndex: StateFlow<Int> = _currentStepIndex.asStateFlow()
+
+    // Insulin selection state
+    private val _availableInsulins = MutableStateFlow<List<ICfg>>(emptyList())
+    val availableInsulins: StateFlow<List<ICfg>> = _availableInsulins.asStateFlow()
+
+    private val _selectedInsulin = MutableStateFlow<ICfg?>(null)
+    val selectedInsulin: StateFlow<ICfg?> = _selectedInsulin.asStateFlow()
+
+    private val _activeInsulinLabel = MutableStateFlow<String?>(null)
+    val activeInsulinLabel: StateFlow<String?> = _activeInsulinLabel.asStateFlow()
+
+    /** Whether the insulin change step should be shown (multiple insulins available) */
+    val showInsulinStep: Boolean
+        get() = _availableInsulins.value.size > 1
 
     // One-time events
     private val _events = MutableSharedFlow<PatchEvent>(extraBufferCapacity = 5)
@@ -181,6 +201,7 @@ class MedtrumPatchViewModel @Inject constructor(
                 PatchStep.FORCE_DEACTIVATION,
                 PatchStep.DEACTIVATION_COMPLETE,
                 PatchStep.PREPARE_PATCH,
+                PatchStep.SELECT_INSULIN,
                 PatchStep.RETRY_ACTIVATION      -> {
                     // No connection required
                 }
@@ -337,10 +358,33 @@ class MedtrumPatchViewModel @Inject constructor(
         }
     }
 
+    fun loadInsulins() {
+        if (_availableInsulins.value.isNotEmpty()) return
+        val insulins = insulinManager.insulins.map { it.deepClone() }
+        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+        val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
+        _availableInsulins.value = insulins
+        _selectedInsulin.value = current
+        _activeInsulinLabel.value = activeLabel
+    }
+
+    fun selectInsulin(iCfg: ICfg) {
+        _selectedInsulin.value = iCfg
+    }
+
+    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    fun executeInsulinProfileSwitch() {
+        val selected = _selectedInsulin.value ?: return
+        val activeLabel = _activeInsulinLabel.value
+        if (selected.insulinLabel == activeLabel) return
+        profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
+    }
+
     private fun prepareStep(newStep: PatchStep): PatchStep {
         val stringResId = when (newStep) {
             PatchStep.PREPARE_PATCH            -> R.string.step_prepare_patch
             PatchStep.PREPARE_PATCH_CONNECT    -> R.string.step_prepare_patch_connect
+            PatchStep.SELECT_INSULIN           -> R.string.step_select_insulin
             PatchStep.PRIME                    -> R.string.step_prime
             PatchStep.PRIMING                  -> R.string.step_priming
             PatchStep.PRIME_COMPLETE           -> R.string.step_priming_complete
@@ -389,21 +433,27 @@ class MedtrumPatchViewModel @Inject constructor(
     }
 
     private fun updateWizardPage(step: PatchStep) {
+        val hasInsulinStep = showInsulinStep
+        val totalActivation = if (hasInsulinStep) 6 else 5
+        val insulinOffset = if (hasInsulinStep) 1 else 0
+
         val (page, total, current) = when (step) {
-            // Activation flow: 5 steps
+            // Activation flow: 5 or 6 steps depending on insulin selection
             PatchStep.PREPARE_PATCH,
-            PatchStep.PREPARE_PATCH_CONNECT    -> Triple(WizardPage.PREPARE, 5, 0)
+            PatchStep.PREPARE_PATCH_CONNECT    -> Triple(WizardPage.PREPARE, totalActivation, 0)
+
+            PatchStep.SELECT_INSULIN           -> Triple(WizardPage.SELECT_INSULIN, totalActivation, 1)
 
             PatchStep.PRIME,
             PatchStep.PRIMING,
-            PatchStep.PRIME_COMPLETE           -> Triple(WizardPage.PRIME, 5, 1)
+            PatchStep.PRIME_COMPLETE           -> Triple(WizardPage.PRIME, totalActivation, 1 + insulinOffset)
 
-            PatchStep.ATTACH_PATCH             -> Triple(WizardPage.ATTACH, 5, 2)
+            PatchStep.ATTACH_PATCH             -> Triple(WizardPage.ATTACH, totalActivation, 2 + insulinOffset)
 
             PatchStep.ACTIVATE,
-            PatchStep.ACTIVATE_COMPLETE        -> Triple(WizardPage.ACTIVATE, 5, 3)
+            PatchStep.ACTIVATE_COMPLETE        -> Triple(WizardPage.ACTIVATE, totalActivation, 3 + insulinOffset)
 
-            PatchStep.COMPLETE                 -> Triple(WizardPage.COMPLETE, 5, 4)
+            PatchStep.COMPLETE                 -> Triple(WizardPage.COMPLETE, totalActivation, 4 + insulinOffset)
 
             // Deactivation flow: 3 steps
             PatchStep.START_DEACTIVATION       -> Triple(WizardPage.CONFIRM_DEACTIVATE, 3, 0)

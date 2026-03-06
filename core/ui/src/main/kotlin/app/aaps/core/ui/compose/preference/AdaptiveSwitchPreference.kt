@@ -4,11 +4,18 @@
 
 package app.aaps.core.ui.compose.preference
 
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 
@@ -43,22 +50,64 @@ fun AdaptiveSwitchPreferenceItem(
     if (!visibility.visible) return
 
     val state = rememberPreferenceBooleanState(booleanKey)
-    SwitchPreference(
-        state = state,
-        title = { Text(stringResource(effectiveTitleResId)) },
-        summary = when {
-            summaryOnResId != null && summaryOffResId != null -> {
-                { Text(stringResource(if (state.value) summaryOnResId else summaryOffResId)) }
-            }
+    val changeGuard = (booleanKey as? BooleanKeyWithChangeGuard)?.guard
 
-            effectiveSummaryResId != null                     -> {
-                { Text(stringResource(effectiveSummaryResId)) }
-            }
+    var guardMessage by remember { mutableStateOf<String?>(null) }
 
-            else                                              -> null
-        },
-        enabled = visibility.enabled
-    )
+    val summary: @Composable (() -> Unit)? = when {
+        summaryOnResId != null && summaryOffResId != null -> {
+            { Text(stringResource(if (state.value) summaryOnResId else summaryOffResId)) }
+        }
+
+        effectiveSummaryResId != null                     -> {
+            { Text(stringResource(effectiveSummaryResId)) }
+        }
+
+        else                                              -> null
+    }
+
+    if (changeGuard != null) {
+        SwitchPreference(
+            value = state.value,
+            onValueChange = { newValue ->
+                if (newValue) {
+                    // Turning on — always allowed
+                    state.value = true
+                } else {
+                    // Turning off — check guard
+                    val message = changeGuard()
+                    if (message == null) {
+                        state.value = false
+                    } else {
+                        guardMessage = message
+                    }
+                }
+            },
+            title = { Text(stringResource(effectiveTitleResId)) },
+            summary = summary,
+            enabled = visibility.enabled
+        )
+    } else {
+        SwitchPreference(
+            state = state,
+            title = { Text(stringResource(effectiveTitleResId)) },
+            summary = summary,
+            enabled = visibility.enabled
+        )
+    }
+
+    // Show guard rejection dialog
+    guardMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { guardMessage = null },
+            confirmButton = {
+                TextButton(onClick = { guardMessage = null }) {
+                    Text(stringResource(android.R.string.ok))
+                }
+            },
+            text = { Text(message) }
+        )
+    }
 }
 
 @Preview(showBackground = true)

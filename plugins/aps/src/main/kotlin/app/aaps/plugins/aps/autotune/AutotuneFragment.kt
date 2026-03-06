@@ -24,6 +24,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -70,6 +71,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var insulin: Insulin
     @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var uel: UserEntryLogger
@@ -272,7 +274,7 @@ class AutotuneFragment : DaggerFragment() {
                                     value = ValueWithUnit.SimpleString(tunedP.profileName)
                                 )
                                 val now = dateUtil.now()
-                                val iCfg = activePlugin.activeInsulin.iCfg
+                                val iCfg = insulin.iCfg
                                 profileFunction.createProfileSwitch(
                                     profileStore = it,
                                     profileName = tunedP.profileName,

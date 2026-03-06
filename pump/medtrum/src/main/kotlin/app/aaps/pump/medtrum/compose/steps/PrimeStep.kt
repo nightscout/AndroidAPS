@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
@@ -48,41 +49,52 @@ fun PrimeStep(
         }
     }
 
+    val state = when {
+        patchStep == PatchStep.PRIME -> PrimeState.READY
+        isPriming && !isError        -> PrimeState.PRIMING
+        isError                      -> PrimeState.ERROR
+        isPrimeComplete              -> PrimeState.COMPLETE
+        else                         -> PrimeState.READY
+    }
+
+    PrimeStepContent(
+        state = state,
+        primeProgress = primeProgress,
+        onStartPrime = { viewModel.moveStep(PatchStep.PRIMING) },
+        onRetry = {
+            viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.FILLED)
+            viewModel.moveStep(PatchStep.PRIMING)
+        },
+        onNext = { viewModel.moveStep(PatchStep.ATTACH_PATCH) },
+        onCancel = onCancel
+    )
+}
+
+internal enum class PrimeState { READY, PRIMING, ERROR, COMPLETE }
+
+@Composable
+internal fun PrimeStepContent(
+    state: PrimeState,
+    primeProgress: Int = 0,
+    onStartPrime: () -> Unit,
+    onRetry: () -> Unit,
+    onNext: () -> Unit,
+    onCancel: () -> Unit
+) {
     WizardStepLayout(
-        primaryButton = when {
-            patchStep == PatchStep.PRIME -> WizardButton(
-                text = stringResource(R.string.next),
-                onClick = { viewModel.moveStep(PatchStep.PRIMING) }
-            )
-
-            isPriming && !isError        -> WizardButton(
-                text = stringResource(R.string.next),
-                onClick = {},
-                loading = true
-            )
-
-            isError                      -> WizardButton(
-                text = stringResource(R.string.retry),
-                onClick = {
-                    viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.FILLED)
-                    viewModel.moveStep(PatchStep.PRIMING)
-                }
-            )
-
-            isPrimeComplete              -> WizardButton(
-                text = stringResource(R.string.next),
-                onClick = { viewModel.moveStep(PatchStep.ATTACH_PATCH) }
-            )
-
-            else                         -> null
+        primaryButton = when (state) {
+            PrimeState.READY    -> WizardButton(text = stringResource(R.string.next), onClick = onStartPrime)
+            PrimeState.PRIMING  -> WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
+            PrimeState.ERROR    -> WizardButton(text = stringResource(R.string.retry), onClick = onRetry)
+            PrimeState.COMPLETE -> WizardButton(text = stringResource(R.string.next), onClick = onNext)
         },
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
             onClick = onCancel
         )
     ) {
-        when {
-            patchStep == PatchStep.PRIME -> {
+        when (state) {
+            PrimeState.READY    -> {
                 Text(
                     text = stringResource(R.string.half_press_needle).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge
@@ -95,7 +107,7 @@ fun PrimeStep(
                 )
             }
 
-            isPriming && !isError        -> {
+            PrimeState.PRIMING  -> {
                 Text(
                     text = stringResource(R.string.wait_for_priming),
                     style = MaterialTheme.typography.bodyLarge
@@ -113,7 +125,7 @@ fun PrimeStep(
                 )
             }
 
-            isError                      -> {
+            PrimeState.ERROR    -> {
                 Text(
                     text = stringResource(R.string.priming_error).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge,
@@ -127,7 +139,7 @@ fun PrimeStep(
                 )
             }
 
-            isPrimeComplete              -> {
+            PrimeState.COMPLETE -> {
                 Text(
                     text = stringResource(R.string.press_next).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge
@@ -143,4 +155,34 @@ fun PrimeStep(
     }
 }
 
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
+@Preview(showBackground = true, name = "Prime - Ready")
+@Composable
+private fun PreviewReady() {
+    MaterialTheme {
+        PrimeStepContent(state = PrimeState.READY, onStartPrime = {}, onRetry = {}, onNext = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Prime - Priming")
+@Composable
+private fun PreviewPriming() {
+    MaterialTheme {
+        PrimeStepContent(state = PrimeState.PRIMING, primeProgress = 75, onStartPrime = {}, onRetry = {}, onNext = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Prime - Error")
+@Composable
+private fun PreviewError() {
+    MaterialTheme {
+        PrimeStepContent(state = PrimeState.ERROR, onStartPrime = {}, onRetry = {}, onNext = {}, onCancel = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Prime - Complete")
+@Composable
+private fun PreviewComplete() {
+    MaterialTheme {
+        PrimeStepContent(state = PrimeState.COMPLETE, onStartPrime = {}, onRetry = {}, onNext = {}, onCancel = {})
+    }
+}

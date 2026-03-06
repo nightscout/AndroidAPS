@@ -1,6 +1,7 @@
 package app.aaps.implementation.insulin
 
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -16,6 +17,7 @@ import javax.inject.Singleton
 class ConcentrationHelperImpl @Inject constructor(
     val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter
@@ -71,6 +73,6 @@ class ConcentrationHelperImpl @Inject constructor(
      * Provide current running iCfg concentration
      */
     override val concentration: Double
-        get() = activePlugin.activeInsulin.iCfg.concentration
+        get() = insulin.iCfg.concentration
 
 }

@@ -18,6 +18,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -28,18 +29,15 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventConcentrationChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.DoubleNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.ui.R
-import app.aaps.ui.activities.ConcentrationActivity
 import app.aaps.ui.databinding.DialogProfileswitchBinding
 import com.google.common.base.Joiner
 import kotlinx.coroutines.launch
@@ -55,6 +53,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var insulin: Insulin
     @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
@@ -69,12 +68,6 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     private var queryingProtection = false
     private var profileName: String? = null
     private var iCfg: ICfg? = null
-    private val currentConcentration: Double
-        get()= preferences.get(DoubleNonKey.ApprovedConcentration)
-    private val targetConcentration: Double
-        get()= preferences.get(DoubleNonKey.NewConcentration)
-    private val confirmOnly: Boolean
-        get() = currentConcentration == targetConcentration
 
     private var _binding: DialogProfileswitchBinding? = null
 
@@ -108,7 +101,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         onCreateViewGeneral()
         arguments?.let { bundle ->
             profileName = bundle.getString("profileName", null)
-            iCfg = bundle.getString("iCfg", null)?.let { ICfg.fromJson(JSONObject(it))}
+            iCfg = bundle.getString("iCfg", null)?.let { ICfg.fromJson(JSONObject(it)) }
         }
         _binding = DialogProfileswitchBinding.inflate(inflater, container, false)
         return binding.root
@@ -209,8 +202,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         if (isTT)
             actions.add(rh.gs(app.aaps.core.ui.R.string.temporary_target) + ": " + rh.gs(app.aaps.core.ui.R.string.activity))
 
-        val newICfg = iCfg ?:activePlugin.activeInsulin.iCfg
-            val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime, newICfg) ?: return false
+        val newICfg = iCfg ?: insulin.iCfg
+        val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime, newICfg) ?: return false
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), activePlugin.activePump, config, rh, notificationManager, hardLimits, false)
         if (validity.isValid)
             uiInteraction.showOkCancelDialog(
@@ -262,18 +255,6 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                 )
                             }
                         }
-                        iCfg?.let {
-                            activePlugin.activeInsulin.approveConcentration(it.concentration)
-                            rxBus.send(EventConcentrationChange())
-                        }
-                        if (activity is ConcentrationActivity) {
-                            activity?.finish()
-                        }
-                    }
-                },
-                cancel = {
-                    if (activity is ConcentrationActivity) {
-                        activity?.finish()
                     }
                 }
             )
@@ -281,12 +262,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             uiInteraction.showOkDialog(
                 context = requireActivity(),
                 title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
-                message = Joiner.on("<br/>").join(validity.reasons),
-                onFinish = {
-                    if (activity is ConcentrationActivity) {
-                        activity?.finish()
-                    }
-                }
+                message = Joiner.on("<br/>").join(validity.reasons)
             )
             return false
         }

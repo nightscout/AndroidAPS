@@ -14,11 +14,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -99,6 +99,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     @Mock lateinit var localProfileManager: LocalProfileManager
+    @Mock lateinit var insulin: Insulin
     @Mock lateinit var ch: ConcentrationHelper
 
     lateinit var dateUtil: DateUtil
@@ -212,6 +213,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(context.obtainStyledAttributes(anyOrNull(), any(), any(), any())).thenReturn(typedArray)
         whenever(dateUtil.now()).thenReturn(now)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
+        whenever(insulin.iCfg).thenReturn(someICfg)
         whenever(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
         whenever(preferences.observe(any<BooleanNonPreferenceKey>())).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(any<StringNonPreferenceKey>())).thenReturn(MutableStateFlow(""))
@@ -359,9 +361,11 @@ open class TestBaseWithProfile : TestBase() {
 
         whenever(ch.bolusProgressString(any())).thenReturn("AnyString")
         whenever(ch.fromPump(any<PumpRate>())).thenAnswer { invocation ->
-            (invocation.arguments[0] as PumpRate).cU }
+            (invocation.arguments[0] as PumpRate).cU
+        }
         whenever(ch.fromPump(any<PumpInsulin>())).thenAnswer { invocation ->
-            (invocation.arguments[0] as PumpInsulin).cU }
+            (invocation.arguments[0] as PumpInsulin).cU
+        }
     }
 
     @AfterEach

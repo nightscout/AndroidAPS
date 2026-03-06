@@ -3,7 +3,6 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.automation.triggers.Trigger
@@ -50,7 +49,7 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.smsCommunicator = smsCommunicator
             }
             if (it is ActionProfileSwitch) {
-                it.activePlugin = activePlugin
+                it.insulin = insulin
                 it.profileFunction = profileFunction
                 it.dateUtil = dateUtil
                 it.localProfileManager = localProfileManager
