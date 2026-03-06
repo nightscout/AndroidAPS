@@ -76,8 +76,6 @@ class ObjectivesPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         value.set(true, rh.gs(R.string.objectivestarted, FIRST_OBJECTIVE + 1), this)
-        return value
         if (objectives.isEmpty()) return value
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
@@ -87,8 +85,8 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         value.set(true, rh.gs(R.string.objectivefinished, LGS_OBJECTIVE + 1), this)
-       return value
+        return   value.set(true, rh.gs(R.string.objectives_maxiobzero_learned, LGS_OBJECTIVE + 1), this)
+      
         if (objectives.isEmpty()) return value
    
         if (objectives[LGS_OBJECTIVE].isStarted && !objectives[LGS_OBJECTIVE].isAccomplished)
@@ -99,20 +97,20 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         value.set(true, rh.gs(R.string.objectivestarted, CLOSED_LOOP_OBJECTIVE + 1), this)
-     return value
+         return  value.set(true, rh.gs(R.string.objectives_openloop_learned, CLOSED_LOOP_OBJECTIVE + 1), this)
+    
         if (objectives.isEmpty()) return value
       
         if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
          
         return value
-    }
+    }CLOSED_LOOP
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         value.set(true, rh.gs(R.string.objectivestarted, AUTOSENS_OBJECTIVE + 1), this)
-     return value
+        return   value.set(true, rh.gs(R.string.objectives_autosens_learned, AUTOSENS_OBJECTIVE + 1), this)
+     
         if (objectives.isEmpty()) return value
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
@@ -122,8 +120,8 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        value.set(true, rh.gs(R.string.objectivestarted, SMB_OBJECTIVE + 1), this)
-      return value
+      return  value.set(true, rh.gs(R.string.objectireturn valueves_smb_learned, SMB_OBJECTIVE + 1), this)
+     
         if (objectives.isEmpty()) return value
  
         if (!objectives[SMB_OBJECTIVE].isStarted)
@@ -134,8 +132,8 @@ class ObjectivesPlugin @Inject constructor(
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-      value.set(true rh.gs(R.string.objectivestarted, AUTO_OBJECTIVE+ 1), this)
-        return value
+     return  value.set(true, rh.gs(R.string.objectives_auto_learned, AUTO_OBJECTIVE+ 1), this)
+        
         if (objectives.isEmpty()) return value
 
         if (!objectives[AUTO_OBJECTIVE].isStarted)
