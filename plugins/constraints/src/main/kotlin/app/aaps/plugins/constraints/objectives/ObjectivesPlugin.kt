@@ -83,7 +83,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         return  value.set(true, rh.gs(R.string.objectives_openloop_learned, FIRST_OBJECTIVE + 1), this)
+         return  value.set(true, "", this)
         if (objectives.isEmpty()) return value
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
@@ -93,7 +93,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
 
     override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return   value.set(true, rh.gs(R.string.objectives_maxiobzero_learned, LGS_OBJECTIVE + 1), this)
+       return   value.set(true, "", this)
       
         if (objectives.isEmpty()) return value
    
@@ -105,7 +105,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-         return  value.set(true, rh.gs(R.string.objectives_openloop_learned, CLOSED_LOOP_OBJECTIVE + 1), this)
+         return  value.set(true, "", this)
     
         if (objectives.isEmpty()) return value
       
@@ -117,7 +117,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-        return   value.set(true, rh.gs(R.string.objectives_autosens_learned, AUTOSENS_OBJECTIVE + 1), this)
+      return   value.set(true, "", this)
      
         if (objectives.isEmpty()) return value
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
@@ -128,7 +128,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-      return  value.set(true, rh.gs(R.string.objectives_smb_learned, SMB_OBJECTIVE + 1), this)
+     return  value.set(true, "", this)
      
         if (objectives.isEmpty()) return value
  
@@ -140,7 +140,7 @@ preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
-     return  value.set(true, rh.gs(R.string.objectives_auto_learned, AUTO_OBJECTIVE+ 1), this)
+    return  value.set(true, "", this)
         
         if (objectives.isEmpty()) return value
 
