@@ -269,7 +269,8 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.accomplished.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
-                if (binding.fake.isChecked) {
+           //     if (binding.fake.isChecked) {
+                    if (true) {
                     objective.accomplishedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
@@ -308,7 +309,8 @@ class ObjectivesFragment : DaggerFragment() {
             }
             holder.binding.start.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
-                if (binding.fake.isChecked) {
+          //      if (binding.fake.isChecked) {
+                    if (true) {
                     objective.startedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
