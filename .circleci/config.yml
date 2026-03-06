@@ -17,16 +17,16 @@ jobs:
       - checkout
 
       - run:
-          name: Run compileFullDebugAndroidTestSources
+          name: Compile all test sources
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            env
             ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.daemon=true \
-            compileFullDebugAndroidTestSources
+            compileFullDebugAndroidTestSources \
+            compileFullDebugUnitTestSources
 
       - run:
           name: Create avd
@@ -47,20 +47,19 @@ jobs:
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
             export JAVA_TOOL_OPTIONS="-Xmx6g"
-            env
             ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseG1GC -XX:MaxMetaspaceSize=1g -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.workers.max=4 \
-            -Dorg.gradle.daemon=false \
+            -Dorg.gradle.daemon=true \
             connectedFullDebugAndroidTest
-          
+
       - run:
           name: Kill emulators
           command: |
             echo "Killing emulators"
             adb devices | grep emulator | cut -f1 | while read -r line; do adb -s $line emu kill; done
-          
+
       - run:
           name: Run testFullDebugUnitTest
           command: |
