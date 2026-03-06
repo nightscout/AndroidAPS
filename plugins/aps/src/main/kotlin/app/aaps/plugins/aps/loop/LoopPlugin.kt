@@ -218,12 +218,14 @@ class LoopPlugin @Inject constructor(
             RM.Mode.SUSPENDED_BY_USER -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
             RM.Mode.RESUME            -> error("Invalid mode")
         }
-        if (constraintChecker.isLoopInvocationAllowed().value().not()) {
+        //if (constraintChecker.isLoopInvocationAllowed().value().not()) {
+            if (false) {
             modes.remove(RM.Mode.OPEN_LOOP)
             modes.remove(RM.Mode.CLOSED_LOOP)
             modes.remove(RM.Mode.CLOSED_LOOP_LGS)
         }
-        if (constraintChecker.isClosedLoopAllowed().value().not()) {
+       // if (constraintChecker.isClosedLoopAllowed().value().not()) {
+            if (false) {
             modes.remove(RM.Mode.CLOSED_LOOP)
         }
         return modes
