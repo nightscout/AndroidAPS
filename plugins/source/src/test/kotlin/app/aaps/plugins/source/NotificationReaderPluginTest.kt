@@ -5,19 +5,19 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class GlimpPluginTest : TestBaseWithProfile() {
+class NotificationReaderPluginTest : TestBaseWithProfile() {
 
-    private lateinit var glimpPlugin: GlimpPlugin
+    private lateinit var notificationReaderPlugin: NotificationReaderPlugin
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config)
+        notificationReaderPlugin = NotificationReaderPlugin(rh, aapsLogger, preferences, config, context)
     }
 
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        glimpPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
+        notificationReaderPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

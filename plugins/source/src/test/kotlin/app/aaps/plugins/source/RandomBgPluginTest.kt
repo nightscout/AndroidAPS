@@ -53,11 +53,6 @@ class RandomBgPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun advancedFilteringSupported() {
-        assertThat(randomBgPlugin.advancedFilteringSupported()).isTrue()
-    }
-
-    @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
         randomBgPlugin.addPreferenceScreen(preferenceManager, screen, context, null)

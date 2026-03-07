@@ -22,11 +22,6 @@ class DexcomPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun advancedFilteringSupported() {
-        assertThat(dexcomPlugin.advancedFilteringSupported()).isTrue()
-    }
-
-    @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
         dexcomPlugin.addPreferenceScreen(preferenceManager, screen, context, null)

@@ -3,7 +3,6 @@ package app.aaps.plugins.source
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import androidx.annotation.VisibleForTesting
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
@@ -26,6 +25,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +49,7 @@ class XdripSourcePlugin @Inject constructor(
             )
         }
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
+        .icon(IcXDrip)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.source_xdrip)
         .preferencesVisibleInSimpleMode(false)
@@ -58,26 +59,7 @@ class XdripSourcePlugin @Inject constructor(
     preferences = preferences
 ), BgSource, XDripSource {
 
-    @VisibleForTesting
-    var advancedFiltering = false
     override var sensorBatteryLevel = -1
-
-    override fun advancedFilteringSupported(): Boolean = advancedFiltering
-
-    @VisibleForTesting
-    fun detectSource(glucoseValue: GV) {
-        advancedFiltering = arrayOf(
-            SourceSensor.DEXCOM_NATIVE_UNKNOWN,
-            SourceSensor.DEXCOM_G6_NATIVE,
-            SourceSensor.DEXCOM_G7_NATIVE,
-            SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
-            SourceSensor.DEXCOM_G7_NATIVE_XDRIP,
-            SourceSensor.DEXCOM_G7_XDRIP,
-            SourceSensor.LIBRE_2,
-            SourceSensor.LIBRE_2_NATIVE,
-            SourceSensor.LIBRE_3,
-        ).any { it == glucoseValue.sourceSensor }
-    }
 
     // cannot be inner class because of needed injection
     class XdripSourceWorker(
@@ -145,13 +127,11 @@ class XdripSourcePlugin @Inject constructor(
             }
             // Always update glucoseValues, but use the decided sensorStartTime
             if (glucoseValues[0].timestamp > 0 && glucoseValues[0].value > 0.0) {
-                val savedValues = try {
+                try {
                     persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), finalSensorStartTime)
                 } catch (e: Exception) {
                     ret = Result.failure(workDataOf("Error" to e.toString()))
-                    null
                 }
-                savedValues?.all()?.forEach { xdripSourcePlugin.detectSource(it) }
             } else return Result.failure(workDataOf("Error" to "missing glucoseValue"))
             xdripSourcePlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
             return ret

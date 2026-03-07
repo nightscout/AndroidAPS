@@ -212,7 +212,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         val smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
         val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
         val uamEnabled = preferences.get(BooleanKey.ApsUseUam)
-        val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
+        val advancedFiltering = runBlocking { persistenceLayer.isAdvancedFilteringSupported() }
         val autoSensOrDynIsfSensEnabled = if (preferences.get(BooleanKey.ApsUseDynamicSensitivity)) {
             preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)
         } else {

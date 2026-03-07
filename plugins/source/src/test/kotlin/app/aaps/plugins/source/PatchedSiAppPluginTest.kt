@@ -22,7 +22,8 @@ class PatchedSiAppPluginTest : TestBase() {
         patchedSiAppPlugin = PatchedSiAppPlugin(rh, aapsLogger, preferences, config)
     }
 
-    @Test fun advancedFilteringSupported() {
-        assertThat(patchedSiAppPlugin.advancedFilteringSupported()).isFalse()
+    @Test
+    fun `plugin is created`() {
+        assertThat(patchedSiAppPlugin).isNotNull()
     }
 }

@@ -349,6 +349,9 @@ class ComposeMainActivity : AppCompatActivity() {
                                                 data = "package:$packageName".toUri()
                                             }
                                         )
+
+                                    effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
+                                        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                                 }
 
                             is PermissionsSideEffect.ShowError               ->

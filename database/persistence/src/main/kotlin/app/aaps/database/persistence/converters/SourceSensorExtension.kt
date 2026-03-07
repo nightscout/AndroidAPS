@@ -30,14 +30,15 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.GLUNOVO_NATIVE         -> SourceSensor.GLUNOVO_NATIVE
         GlucoseValue.SourceSensor.INTELLIGO_NATIVE       -> SourceSensor.INTELLIGO_NATIVE
         GlucoseValue.SourceSensor.MM_600_SERIES          -> SourceSensor.MM_600_SERIES
+        GlucoseValue.SourceSensor.MM_SIMPLERA            -> SourceSensor.MM_SIMPLERA
         GlucoseValue.SourceSensor.EVERSENSE              -> SourceSensor.EVERSENSE
         GlucoseValue.SourceSensor.AIDEX                  -> SourceSensor.AIDEX
         GlucoseValue.SourceSensor.RANDOM                 -> SourceSensor.RANDOM
         GlucoseValue.SourceSensor.UNKNOWN                -> SourceSensor.UNKNOWN
         GlucoseValue.SourceSensor.OTTAI                  -> SourceSensor.OTTAI
         GlucoseValue.SourceSensor.SYAI_TAG               -> SourceSensor.SYAI_TAG
-        GlucoseValue.SourceSensor.SIBIONIC -> SourceSensor.SIBIONIC
-        GlucoseValue.SourceSensor.SINO     -> SourceSensor.SINO
+        GlucoseValue.SourceSensor.SIBIONIC               -> SourceSensor.SIBIONIC
+        GlucoseValue.SourceSensor.SINO                   -> SourceSensor.SINO
 
         GlucoseValue.SourceSensor.IOB_PREDICTION         -> SourceSensor.IOB_PREDICTION
         GlucoseValue.SourceSensor.A_COB_PREDICTION       -> SourceSensor.A_COB_PREDICTION
@@ -73,14 +74,15 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.GLUNOVO_NATIVE         -> GlucoseValue.SourceSensor.GLUNOVO_NATIVE
         SourceSensor.INTELLIGO_NATIVE       -> GlucoseValue.SourceSensor.INTELLIGO_NATIVE
         SourceSensor.MM_600_SERIES          -> GlucoseValue.SourceSensor.MM_600_SERIES
+        SourceSensor.MM_SIMPLERA            -> GlucoseValue.SourceSensor.MM_SIMPLERA
         SourceSensor.EVERSENSE              -> GlucoseValue.SourceSensor.EVERSENSE
         SourceSensor.AIDEX                  -> GlucoseValue.SourceSensor.AIDEX
         SourceSensor.RANDOM                 -> GlucoseValue.SourceSensor.RANDOM
         SourceSensor.UNKNOWN                -> GlucoseValue.SourceSensor.UNKNOWN
         SourceSensor.OTTAI                  -> GlucoseValue.SourceSensor.OTTAI
         SourceSensor.SYAI_TAG               -> GlucoseValue.SourceSensor.SYAI_TAG
-        SourceSensor.SIBIONIC -> GlucoseValue.SourceSensor.SIBIONIC
-        SourceSensor.SINO     -> GlucoseValue.SourceSensor.SINO
+        SourceSensor.SIBIONIC               -> GlucoseValue.SourceSensor.SIBIONIC
+        SourceSensor.SINO                   -> GlucoseValue.SourceSensor.SINO
 
         SourceSensor.IOB_PREDICTION         -> GlucoseValue.SourceSensor.IOB_PREDICTION
         SourceSensor.A_COB_PREDICTION       -> GlucoseValue.SourceSensor.A_COB_PREDICTION

@@ -22,6 +22,8 @@ enum class StringNonKey(
     TempTargetPresets(key = "temp_target_presets", defaultValue = "[]"),
     QuickLaunchActions(key = "quick_launch_actions", defaultValue = "[{\"type\":\"wizard\"},{\"type\":\"quick_launch_config\"}]"),
 
+    NotificationReaderPackages(key = "notification_reader_packages", defaultValue = ""),
+
     // Google Drive settings (internal, no preferences UI)
     GoogleDriveStorageType(key = "google_drive_storage_type", defaultValue = "local"),
     GoogleDriveFolderId(key = "google_drive_folder_id", defaultValue = ""),

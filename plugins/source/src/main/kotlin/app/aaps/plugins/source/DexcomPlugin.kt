@@ -69,8 +69,6 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
-    override fun advancedFilteringSupported(): Boolean = true
-
     override fun requiredPermissions(): List<PermissionGroup> =
         if (isDexcomAppInstalled()) listOf(
             PermissionGroup(

@@ -23,8 +23,7 @@ class TomatoPluginTest : TestBase() {
     }
 
     @Test
-    fun advancedFilteringSupported() {
-        assertThat(tomatoPlugin.advancedFilteringSupported()).isFalse()
+    fun `plugin is created`() {
+        assertThat(tomatoPlugin).isNotNull()
     }
-
 }

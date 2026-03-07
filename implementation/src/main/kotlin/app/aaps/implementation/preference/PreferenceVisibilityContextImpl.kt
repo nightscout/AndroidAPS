@@ -1,8 +1,10 @@
 package app.aaps.implementation.preference
 
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class PreferenceVisibilityContextImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
+    private val persistenceLayer: PersistenceLayer,
     override val preferences: Preferences
 ) : PreferenceVisibilityContext {
 
@@ -29,7 +32,7 @@ class PreferenceVisibilityContextImpl @Inject constructor(
         get() = activePlugin.activePump.isBatteryChangeLoggingEnabled()
 
     override val advancedFilteringSupported: Boolean
-        get() = activePlugin.activeBgSource.advancedFilteringSupported()
+        get() = runBlocking { persistenceLayer.isAdvancedFilteringSupported() }
 
     override val isPumpInitialized: Boolean
         get() = activePlugin.activePump.isInitialized()

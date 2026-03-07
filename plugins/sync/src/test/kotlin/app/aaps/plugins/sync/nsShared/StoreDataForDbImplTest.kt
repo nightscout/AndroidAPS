@@ -22,7 +22,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.VirtualPump
-import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.test.runTest
@@ -42,10 +41,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 
-@Suppress("JUnitMalformedDeclaration") class StoreDataForDbImplTest : TestBaseWithProfile() {
+class StoreDataForDbImplTest : TestBaseWithProfile() {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var nsClientSource: NSClientSource
     @Mock private lateinit var virtualPump: VirtualPump
     @Mock private lateinit var nsClientRepository: NSClientRepository
 
@@ -155,7 +153,6 @@ import org.mockito.kotlin.whenever
             persistenceLayer = persistenceLayer,
             preferences = preferences,
             config = config,
-            nsClientSource = nsClientSource,
             virtualPump = virtualPump,
             nsClientRepository = nsClientRepository
         )
@@ -495,7 +492,7 @@ import org.mockito.kotlin.whenever
         val bcrToDelete = bcr.apply { this.id = 999L }
         storeDataForDb.addToDeleteTreatment(nsId)
 
-        // Set preferences to false to prove they are ignored for BCR
+        // Set preferences too false to prove they are ignored for BCR
         whenever(persistenceLayer.getBolusCalculatorResultByNSId(nsId)).thenReturn(bcrToDelete)
         whenever(persistenceLayer.invalidateBolusCalculatorResult(any(), any(), any(), anyOrNull(), anyList())).thenReturn(PersistenceLayer.TransactionResult())
 

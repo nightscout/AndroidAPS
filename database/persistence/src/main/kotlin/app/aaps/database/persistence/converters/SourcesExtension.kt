@@ -41,10 +41,11 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Glunovo             -> Sources.Glunovo
         UserEntry.Sources.Intelligo           -> Sources.Intelligo
         UserEntry.Sources.Xdrip               -> Sources.Xdrip
-        UserEntry.Sources.Ottai    -> Sources.Ottai
-        UserEntry.Sources.SyaiTag  -> Sources.SyaiTag
-        UserEntry.Sources.SiBionic -> Sources.SiBionic
-        UserEntry.Sources.Sino     -> Sources.Sino
+        UserEntry.Sources.Ottai               -> Sources.Ottai
+        UserEntry.Sources.SyaiTag             -> Sources.SyaiTag
+        UserEntry.Sources.SiBionic            -> Sources.SiBionic
+        UserEntry.Sources.Sino                -> Sources.Sino
+        UserEntry.Sources.NotificationReader  -> Sources.NotificationReader
         UserEntry.Sources.LocalProfile        -> Sources.LocalProfile
         UserEntry.Sources.Loop                -> Sources.Loop
         UserEntry.Sources.Maintenance         -> Sources.Maintenance
@@ -123,10 +124,11 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Glunovo             -> UserEntry.Sources.Glunovo
         Sources.Intelligo           -> UserEntry.Sources.Intelligo
         Sources.Xdrip               -> UserEntry.Sources.Xdrip
-        Sources.Ottai    -> UserEntry.Sources.Ottai
-        Sources.SyaiTag  -> UserEntry.Sources.SyaiTag
-        Sources.SiBionic -> UserEntry.Sources.SiBionic
-        Sources.Sino     -> UserEntry.Sources.Sino
+        Sources.Ottai               -> UserEntry.Sources.Ottai
+        Sources.SyaiTag             -> UserEntry.Sources.SyaiTag
+        Sources.SiBionic            -> UserEntry.Sources.SiBionic
+        Sources.Sino                -> UserEntry.Sources.Sino
+        Sources.NotificationReader  -> UserEntry.Sources.NotificationReader
         Sources.LocalProfile        -> UserEntry.Sources.LocalProfile
         Sources.Loop                -> UserEntry.Sources.Loop
         Sources.Maintenance         -> UserEntry.Sources.Maintenance

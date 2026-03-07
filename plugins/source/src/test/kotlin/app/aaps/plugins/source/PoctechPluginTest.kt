@@ -22,7 +22,8 @@ class PoctechPluginTest : TestBase() {
         poctechPlugin = PoctechPlugin(rh, aapsLogger, preferences, config)
     }
 
-    @Test fun advancedFilteringSupported() {
-        assertThat(poctechPlugin.advancedFilteringSupported()).isFalse()
+    @Test
+    fun `plugin is created`() {
+        assertThat(poctechPlugin).isNotNull()
     }
 }
