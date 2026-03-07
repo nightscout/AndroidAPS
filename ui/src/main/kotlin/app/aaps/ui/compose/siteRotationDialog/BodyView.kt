@@ -31,7 +31,8 @@ fun BodyView(
     bodyType: BodyType,
     isFrontView: Boolean,
     onZoneClick: (TE.Location) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    editedTe: TE? = null
 ) {
     val background = if (isFrontView) bodyType.frontImage else bodyType.backImage
     val zones = if (isFrontView) bodyType.frontZones else bodyType.backZones
@@ -40,6 +41,8 @@ fun BodyView(
     val zoneColors = remember(filteredLocationColor, showPumpSites, showCgmSites) {
         computeZoneColors(filteredLocationColor, showPumpSites, showCgmSites)
     }
+
+    fun showLocation(location: TE.Location): Boolean = location.pump || (showCgmSites && editedTe?.type != TE.Type.CANNULA_CHANGE)
 
     BoxWithConstraints(modifier = modifier.aspectRatio(aspectRatio)) {
         val canvasWidth = constraints.maxWidth.toFloat()
@@ -66,7 +69,7 @@ fun BodyView(
                         val tapPoint = Offset(x, y)
 
                         zones.reversed().forEach { (location, path) ->
-                            if (path.containsPoint(tapPoint.x, tapPoint.y)) {
+                            if (path.containsPoint(tapPoint.x, tapPoint.y) && showLocation(location)) {
                                 onZoneClick(location)
                                 return@detectTapGestures
                             }
@@ -82,22 +85,24 @@ fun BodyView(
             matrix.scale(scaleX, scaleY)
 
             zones.forEach { (location, path) ->
-                val originalComposePath = path.asComposePath()
-                val transformedPath = ComposePath().apply {
-                    addPath(originalComposePath)
-                    transform(matrix)
+                if (showLocation(location)) {
+                    val originalComposePath = path.asComposePath()
+                    val transformedPath = ComposePath().apply {
+                        addPath(originalComposePath)
+                        transform(matrix)
+                    }
+                    val baseColor = zoneColors[location] ?: Color.LightGray
+                    drawPath(
+                        path = transformedPath,
+                        color = if (location == selectedLocation) Color(0xFF66FF66) else baseColor,
+                        style = Fill
+                    )
+                    drawPath(
+                        path = transformedPath,
+                        color = Color.Black,
+                        style = Stroke(width = 0.2835f * scaleX)
+                    )
                 }
-                val baseColor = zoneColors[location] ?: Color.LightGray
-                drawPath(
-                    path = transformedPath,
-                    color = if (location == selectedLocation) Color(0xFF66FF66) else baseColor,
-                    style = Fill
-                )
-                drawPath(
-                    path = transformedPath,
-                    color = Color.Black,
-                    style = Stroke(width = 0.2835f * scaleX)
-                )
             }
         }
     }

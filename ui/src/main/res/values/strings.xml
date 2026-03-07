@@ -273,5 +273,6 @@
     <string name="quick_launch_profile_confirm">Activate profile %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Select Arrow</string>
 
 </resources>

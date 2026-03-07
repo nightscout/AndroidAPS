@@ -960,7 +960,7 @@ class ComposeMainActivity : AppCompatActivity() {
                         )
                     }
 
-                    composable(AppRoute.SiteRotationEditor.route) { backStackEntry ->
+                    composable(AppRoute.SiteRotationEditor.route, arguments = listOf(navArgument("timestamp") { type = NavType.LongType })) { backStackEntry ->
                         val timestamp = backStackEntry.arguments?.getLong("timestamp") ?: 0L
                         SiteRotationEditorScreen(
                             viewModel = siteRotationEditorViewModel,

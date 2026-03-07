@@ -17,13 +17,14 @@ import app.aaps.core.ui.compose.icons.library.WomanFront
 import app.aaps.core.ui.compose.icons.library.WomanFrontPaths
 
 enum class BodyType(val value: Int,
+                    val sizeRatio: Float,
                     val frontImage: ImageVector,
                     val backImage: ImageVector,
                     val frontZones: List<Pair<TE.Location, Path>>,
                     val backZones: List<Pair<TE.Location, Path>>) {
-    MAN(0, ManFront, ManBack, ManFrontPaths.zones, ManBackPaths.zones),
-    WOMAN(1, WomanFront, WomanBack, WomanFrontPaths.zones, WomanBackPaths.zones),
-    CHILD(2, ChildFront, ChildBack, ChildFrontPaths.zones, ChildBackPaths.zones);
+    MAN(0, 1f, ManFront, ManBack, ManFrontPaths.zones, ManBackPaths.zones),
+    WOMAN(1, 0.95f, WomanFront, WomanBack, WomanFrontPaths.zones, WomanBackPaths.zones),
+    CHILD(2, 0.60f,ChildFront, ChildBack, ChildFrontPaths.zones, ChildBackPaths.zones);
 
     companion object {
         fun fromPref(pref: Int): BodyType = entries.firstOrNull { it.value == pref } ?: MAN
@@ -37,11 +38,10 @@ data class SiteRotationUiState(
     val showBackView: Boolean = true,
     val showBodyType: BodyType = BodyType.MAN,
     val selectedLocation: TE.Location = TE.Location.NONE,   // NONE = no filter
-    val selectedArrow: TE.Arrow = TE.Arrow.NONE,            // Editor Only
-    val selectedNote: String = "",                           // Editor Only
-    val isEdited: Boolean = false,                           // Editor Only
+    val isEdited: Boolean = false,                          // Editor Only
     val showPumpSites: Boolean = true,
-    val showCgmSites: Boolean = true
+    val showCgmSites: Boolean = true,
+    val editedTe: TE? = null                                // Editor Only
 ) {
     // filtererEntries dynamically filtered for siteEntryList
     val filteredEntries: List<TE>

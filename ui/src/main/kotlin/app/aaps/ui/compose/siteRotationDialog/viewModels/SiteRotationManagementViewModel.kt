@@ -14,8 +14,6 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.compose.siteRotationDialog.viewModels.BodyType
-import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
