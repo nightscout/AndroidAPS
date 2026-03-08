@@ -93,7 +93,8 @@ fun InsulinManagementScreen(
     viewModel: InsulinManagementViewModel,
     initialMode: ScreenMode = ScreenMode.EDIT,
     onNavigateBack: () -> Unit,
-    onRequestEditMode: () -> Unit = {}
+    onRequestEditMode: () -> Unit = {},
+    onNavigateToFillDialog: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -112,7 +113,8 @@ fun InsulinManagementScreen(
             uiState.editorDiaHours != s.dia ||
             uiState.editorConcentration.value != s.concentration
     } ?: uiState.editorName.isNotEmpty()
-    val canDelete = uiState.insulins.size > 1 && stored?.insulinLabel != uiState.activeInsulinLabel
+    val isCurrentActive = stored?.insulinLabel == uiState.activeInsulinLabel
+    val canDelete = uiState.insulins.size > 1 && !isCurrentActive
 
     // Dialog states
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -155,17 +157,6 @@ fun InsulinManagementScreen(
                 showDeleteDialog = false
             },
             onDismiss = { showDeleteDialog = false }
-        )
-    }
-
-    // Activate confirmation dialog
-    uiState.activationMessage?.let { message ->
-        OkCancelDialog(
-            title = stringResource(CoreUiR.string.activate_insulin),
-            message = message,
-            icon = IcPluginInsulin,
-            onConfirm = { viewModel.executeActivation() },
-            onDismiss = { viewModel.dismissActivation() }
         )
     }
 
@@ -292,12 +283,15 @@ fun InsulinManagementScreen(
                         ) {
                             Spacer(modifier = Modifier.height(8.dp))
 
+                            val editorEnabled = !isCurrentActive
+
                             // Name field
                             OutlinedTextField(
                                 value = uiState.editorName,
                                 onValueChange = { viewModel.updateEditorName(it) },
                                 label = { Text(stringResource(CoreUiR.string.insulin_name_label)) },
                                 singleLine = true,
+                                enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )
 
@@ -307,7 +301,8 @@ fun InsulinManagementScreen(
                             ConcentrationDropdown(
                                 selected = uiState.editorConcentration,
                                 concentrations = viewModel.concentrationList(),
-                                onSelect = { viewModel.updateEditorConcentration(it) }
+                                onSelect = { viewModel.updateEditorConcentration(it) },
+                                enabled = editorEnabled
                             )
 
                             Spacer(modifier = Modifier.height(12.dp))
@@ -320,14 +315,17 @@ fun InsulinManagementScreen(
                                 valueRange = viewModel.peakRange(),
                                 step = 1.0,
                                 unitLabelResId = KeysR.string.units_min,
+                                enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )
 
                             // "Load peak from" preset chips
-                            PeakPresetChips(
-                                presets = viewModel.presetList(),
-                                onPresetClick = { viewModel.loadPeakFromPreset(it) }
-                            )
+                            if (editorEnabled) {
+                                PeakPresetChips(
+                                    presets = viewModel.presetList(),
+                                    onPresetClick = { viewModel.loadPeakFromPreset(it) }
+                                )
+                            }
 
                             Spacer(modifier = Modifier.height(8.dp))
 
@@ -340,6 +338,7 @@ fun InsulinManagementScreen(
                                 step = 0.1,
                                 decimalPlaces = 1,
                                 unitLabelResId = KeysR.string.units_hours,
+                                enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )
 
@@ -402,13 +401,13 @@ fun InsulinManagementScreen(
                         }
                     }
 
-                    // Activate FAB
+                    // Activate FAB — routes to FillDialog (cartridge change) for safe insulin switching
                     AapsFab(
                         onClick = {
                             if (hasUnsavedChanges) {
                                 showUnsavedDialog = true
                             } else {
-                                viewModel.prepareActivation()
+                                onNavigateToFillDialog()
                             }
                         }
                     ) {
@@ -532,18 +531,20 @@ private fun PageIndicatorDots(
 private fun ConcentrationDropdown(
     selected: ConcentrationType,
     concentrations: List<ConcentrationType>,
-    onSelect: (ConcentrationType) -> Unit
+    onSelect: (ConcentrationType) -> Unit,
+    enabled: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        expanded = expanded && enabled,
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         OutlinedTextField(
             value = stringResource(selected.label),
             onValueChange = {},
             readOnly = true,
+            enabled = enabled,
             label = { Text(stringResource(CoreUiR.string.concentration_label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier

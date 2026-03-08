@@ -90,11 +90,7 @@
     <string name="a11y_add_new_insulin">Add new insulin</string>
     <string name="a11y_delete_current_insulin">Delete current insulin</string>
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
-    <string name="activate_insulin_no_profile">No active profile found</string>
-    <string name="activate_insulin_new_insulin">New insulin: %1$s</string>
-    <string name="activate_insulin_remaining">Remaining: %1$d min</string>
-    <string name="activate_insulin_profile_switch">Profile switch will be created:\n\n<b>%1$s</b></string>
-    <string name="load_peak_from">Load peak from</string>
+<string name="load_peak_from">Load peak from</string>
     <string name="cannot_delete_last_insulin">Cannot delete the last insulin</string>
     <string name="cannot_delete_active_insulin">Cannot delete the active insulin</string>
 

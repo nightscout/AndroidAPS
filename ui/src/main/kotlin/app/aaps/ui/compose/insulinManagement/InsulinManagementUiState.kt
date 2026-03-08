@@ -20,9 +20,6 @@ data class InsulinManagementUiState(
     val editorPeakMinutes: Int = 75,
     val editorDiaHours: Double = 5.0,
 
-    // Activation dialog
-    val activationMessage: String? = null,
-
     // Screen mode
     val screenMode: ScreenMode = ScreenMode.EDIT,
 

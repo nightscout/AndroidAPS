@@ -3,7 +3,6 @@ package app.aaps.ui.compose.insulinManagement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -12,13 +11,9 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.R
@@ -37,10 +32,7 @@ import app.aaps.core.ui.R as CoreUiR
 class InsulinManagementViewModel @Inject constructor(
     private val insulin: Insulin,
     private val insulinManager: InsulinManager,
-    private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
-    private val localProfileManager: LocalProfileManager,
-    private val dateUtil: DateUtil,
     private val hardLimits: HardLimits,
     private val uel: UserEntryLogger,
     val rh: ResourceHelper
@@ -244,48 +236,6 @@ class InsulinManagementViewModel @Inject constructor(
         return true
     }
 
-    fun prepareActivation() {
-        val state = uiState.value
-        val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return
-        val profile = profileFunction.getProfile()
-        if (profile == null) {
-            showSnackbar(rh.gs(R.string.activate_insulin_no_profile))
-            return
-        }
-
-        val eps = (profile as? ProfileSealed.EPS)?.value
-        val profileName = eps?.originalProfileName ?: return
-        val percentage = eps.originalPercentage
-        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
-        val durationMs = eps.originalDuration
-
-        val details = mutableListOf<String>()
-        details.add(profileName)
-        if (percentage != 100) details.add(rh.gs(CoreUiR.string.format_percent, percentage))
-        if (timeshiftHours != 0) details.add(rh.gs(CoreUiR.string.format_hours, timeshiftHours.toDouble()))
-        if (durationMs > 0) {
-            val remaining = ((durationMs - (dateUtil.now() - eps.timestamp)) / 60_000L).coerceAtLeast(0)
-            if (remaining > 0)
-                details.add(rh.gs(R.string.activate_insulin_remaining, remaining.toInt()))
-        }
-
-        val message = rh.gs(R.string.activate_insulin_new_insulin, iCfg.insulinLabel) +
-            "\n\n" + rh.gs(R.string.activate_insulin_profile_switch, details.joinToString(", "))
-
-        uiState.update { it.copy(activationMessage = message) }
-    }
-
-    fun dismissActivation() {
-        uiState.update { it.copy(activationMessage = null) }
-    }
-
-    fun executeActivation() {
-        uiState.update { it.copy(activationMessage = null) }
-        val state = uiState.value
-        val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return
-        profileFunction.createProfileSwitchWithNewInsulin(iCfg, Sources.Insulin)
-        refreshData()
-    }
 
     // Helpers
 
