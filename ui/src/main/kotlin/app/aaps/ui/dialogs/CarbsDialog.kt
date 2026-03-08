@@ -200,9 +200,9 @@ class CarbsDialog : DialogFragmentWithDate() {
                         ((activeTT.timestamp + activeTT.duration) - now) / 60000
 
                     // Prevent auto-checking HypoTT when:
-                    // 1. Active TT target is above Constants.ALLOW_SMB_WITH_HIGH_TT
+                    // 1. Active TT target is above normal target
                     // 2. Active TT lasts longer than the hypoTT preset
-                    if (activeTarget > Constants.ALLOW_SMB_WITH_HIGH_TT && remainingDurationMin > hypoTTDuration) {
+                    if (activeTarget > Constants.NORMAL_TARGET_MGDL && remainingDurationMin > hypoTTDuration) {
                         shouldAutoCheckHypo = false
                     }
                 }
