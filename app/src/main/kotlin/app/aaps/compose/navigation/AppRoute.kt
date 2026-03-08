@@ -97,4 +97,5 @@ sealed class AppRoute(val route: String) {
     object SiteRotationEditor : AppRoute("siteRotationEditor/{timestamp}") {
         fun createRoute(timestamp: Long) = "siteRotationEditor/$timestamp"
     }
+    object SiteRotationSettings : AppRoute("siteRotationSettings")
 }

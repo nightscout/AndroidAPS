@@ -58,7 +58,8 @@ import kotlinx.coroutines.launch
 fun SiteRotationManagementScreen(
     viewModel: SiteRotationManagementViewModel,
     onClose: () -> Unit,
-    onEditEntry: (Long) -> Unit
+    onEditEntry: (Long) -> Unit,
+    onPreferenceClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -102,7 +103,7 @@ fun SiteRotationManagementScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* Settings will be implemented later */ }) {
+                    IconButton(onClick = onPreferenceClick) {
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = stringResource(CoreUiR.string.settings)

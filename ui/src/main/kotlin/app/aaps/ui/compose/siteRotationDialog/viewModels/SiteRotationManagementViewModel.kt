@@ -95,6 +95,17 @@ class SiteRotationManagementViewModel @Inject constructor(
     }
 
     fun setBodyType(bodyType: BodyType) {
+        preferences.put(IntKey.SiteRotationUserProfile, bodyType.value)
         _uiState.value = _uiState.value.copy(showBodyType = bodyType)
+    }
+
+    fun setDefaultPumpSites(show: Boolean) {
+        preferences.put(BooleanKey.SiteRotationManagePump, show)
+        _uiState.value = _uiState.value.copy(showPumpSites = show)
+    }
+
+    fun setDefaultCgmSites(show: Boolean) {
+        preferences.put(BooleanKey.SiteRotationManageCgm, show)
+        _uiState.value = _uiState.value.copy(showCgmSites = show)
     }
 }
