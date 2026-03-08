@@ -446,20 +446,6 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-
-
-        <app.aaps.core.ui.elements.SingleClickButton
-            android:id="@+id/compose_demo"
-            style="@style/ButtonSmallFontStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_actions_refill"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:text="Compose Demo" />
-
-
     </LinearLayout>
 
 
