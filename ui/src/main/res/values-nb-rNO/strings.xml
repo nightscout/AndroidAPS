@@ -48,7 +48,7 @@
     <string name="site_management">Profil for stedsadministrasjon</string>
     <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, CGM-område eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
     <string name="select_site">Klikk nedenfor for å velge stedsplassering</string>
-    <string name="record_site_change">Registrer stedsplassering</string>
+    <string name="record_site_change">Registrer sted</string>
     <string name="edit_site">Rediger</string>
     <string name="record_site_location">Infusjonssted: %1$s</string>
     <string name="record_site_arrow">Områdepil: %1$s</string>

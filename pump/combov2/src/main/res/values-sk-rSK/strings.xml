@@ -66,7 +66,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Nastavenie bazálneho profilu</string>
     <string name="combov2_setting_tbr_cmddesc">Nastavenie %1$d%% dočasného bazálu na %2$d minút</string>
     <string name="combov2_cancelling_tbr">Zrušenie prebiehajúceho dočasného bazálu</string>
-    <string name="combov2_delivering_bolus_cmddesc">Podávanie %1$.1f JI</string>
+    <string name="combov2_delivering_bolus_cmddesc">Podávanie %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Načítavam CDD históriu</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualizácia dátumu a času v pumpe</string>
     <string name="combov2_updating_pump_status_cmddesc">Načítavam stav pumpy</string>
@@ -75,7 +75,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_verbose_logging">Povoliť podrobné logovanie Combo</string>
     <string name="combov2_getting_basal_profile">Získávanie bazálneho profilu; čítanie %1$d. faktora</string>
     <string name="combov2_setting_basal_profile">Nastavenie bazálneho profilu; zapisovanie %1$d. faktora</string>
-    <string name="combov2_delivering_bolus">Podávanie bolusu (podané %1$.1f z %2$.1f JI)</string>
+    <string name="combov2_delivering_bolus">Podávanie bolusu (podané %1$.1f z %2$.1f U)</string>
     <string name="combov2_cannot_deliver_pump_suspended">Nie je možné podať bolus - pumpa je pozastavená</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Nedostatok inzulínu v zásobníku</string>
     <string name="combov2_bolus_cancelled">Bolus zrušený</string>

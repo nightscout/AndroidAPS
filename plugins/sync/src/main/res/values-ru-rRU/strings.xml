@@ -69,7 +69,7 @@
     <string name="ns_alarms">Создать уведомления из оповещений NS</string>
     <string name="ns_announcements">Создать уведомления из оповещений NS</string>
     <string name="ns_alarm_stale_data_value_label">Порог оповещения об устаревших данных [min] (мин)</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Порог тревоги об устаревших данных [min] (мин)</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Порог оповещения об устаревших данных [min] (мин)</string>
     <string name="ns_log_app_started_event">Передать в NS запись о начале работы приложения</string>
     <string name="copy_existing_values">Копировать настройки NS (если есть)?</string>
     <string name="ns_use_ws_title">Подключаться к веб-сокету</string>

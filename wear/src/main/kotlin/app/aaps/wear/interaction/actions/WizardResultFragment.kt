@@ -173,14 +173,32 @@ class WizardResultFragment : Fragment() {
 
         builder.addCalculationRow(calculationRowsContainer, WizardCalculationRow(getString(R.string.wizard_result_total), totalInsulin))
 
+        // Calculate new IOB if IOB was used in calculation
+        // New IOB = Total Insulin - Current IOB (because IOB is subtracted in wizard)
+        // Only calculate if IOB was actually used (totalIob is not NaN means it was included)
+        val newIob = if (!totalIob.isNaN()) {
+            totalInsulin - totalIob // totalIob is negative so this is addition
+        } else {
+            null  // Don't show New IOB if IOB wasn't used in calculation
+        }
+
         // Setup collapsible calculation details
-        setupCalculationToggle(view)
+        setupCalculationToggle(view, newIob)
     }
 
-    private fun setupCalculationToggle(view: View) {
+    private fun setupCalculationToggle(view: View, newIob: Double?) {
         val calculationHeader = view.findViewById<LinearLayout>(R.id.calculation_header)
         val calculationDetails = view.findViewById<LinearLayout>(R.id.calculation_details)
         val expandIcon = view.findViewById<TextView>(R.id.expand_icon)
+        val newIobText = view.findViewById<TextView>(R.id.new_iob_text)
+
+        // Set new IOB value - only show if IOB was used in calculation
+        if (newIob != null) {
+            newIobText.text = getString(R.string.wizard_result_new_iob, decimalFormat.format(newIob))
+            newIobText.visibility = View.VISIBLE
+        } else {
+            newIobText.visibility = View.GONE
+        }
 
         var isExpanded = false
 

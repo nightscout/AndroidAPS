@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -57,6 +58,7 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -75,6 +77,16 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.buttonActivatePod.setOnClickListener {
+            val profile = profileFunction.getProfile()
+            if (profile == null) {
+                OKDialog.show(
+                    this,
+                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_warning),
+                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_set_profile_empty_profile)
+                )
+                return@setOnClickListener
+            }
+
             val type: PodActivationWizardActivity.Type = if (podStateManager.isPodInitialized
                 and podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIMING_COMPLETED)
             ) {

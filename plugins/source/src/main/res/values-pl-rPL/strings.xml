@@ -5,6 +5,7 @@
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Otrzymuj glikemię z xDrip+ i kompatybilnych aplikacji (Juggluco itp.).</string>
     <string name="dexcom_app_patched">Dexcom Patched</string>
     <string name="dexcom_short">DEX.PATCH.</string>
     <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
@@ -24,9 +25,18 @@
     <string name="random_bg">Losowa glikemia</string>
     <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
     <string name="random_bg_short">BG</string>
+    <string name="bgsource_settings">Ustawienia źródła glikemii</string>
+    <string name="bgsource_log_sensor_change_title">Akceptuj start sensora</string>
+    <string name="bgsource_log_sensor_change_summary">Utwórz zdarzenie \"CGM Sensor Insert\" w Careportal automatycznie po odebraniu informacji o starcie sensora z lokalnego źródła glikemii</string>
     <string name="direction">kierunek</string>
     <string name="bg_generation_interval_minutes">Interwał generowania glikemii w minutach</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Otrzymuj glikemię z patchowanej aplikacji Sibionic SI.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Otrzymuj glikemię z patchowanej aplikacji Sino.</string>
 </resources>

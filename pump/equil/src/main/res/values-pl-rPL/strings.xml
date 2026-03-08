@@ -9,6 +9,7 @@
     <string name="equil_date_device">Ostatnie połączenie</string>
     <string name="equil_dressing">Zmień zbiornik</string>
     <string name="equil_dressing_onkey_msg">Automatycznie przesuwam tłok na dno zbiornika. Zatrzyma się sam po dotarciu na dół. Kliknij \'Zatrzymaj\', aby w razie potrzeby przerwać.</string>
+    <string name="equil_finish">Zakończ</string>
     <string name="equil_next">Dalej</string>
     <string name="equil_hint_dressing">Ta operacja zatrzyma podawanie insuliny i spowoduje cofnięcie tłoka pompy do dołu!</string>
     <string name="equil_history">Historia</string>
@@ -154,6 +155,7 @@
     <string name="equil_set_pair_password">Ustaw hasło parowania</string>
     <string name="equil_hint1">Po zainstalowaniu pompy na płytce bazowej wybierz, czy usunąć powietrze z igły, która ma być wkłuta.</string>
     <string name="equil_unbind">Rozłącz urządzenie</string>
+    <string name="equil_device_unpaired">Urządzenie odparowane</string>
     <string name="equil_assemble">Zmontuj pompę, wypełniony zbiornik i naładowaną baterię</string>
     <string name="equil_devices_number">Wprowadź nowy identyfikator pompy</string>
     <string name="equil_insert">Proszę napełnij zbiornik z insuliną aż do pojawienia się kropli insuliny na końcu igły</string>
@@ -165,4 +167,5 @@
     <string name="equil_pump_updated">Pompa zaktualizowana</string>
     <string name="equil_replace_reservoir">Zbiornik jest pusty. Proszę wymienić zbiornik</string>
     <string name="error_mustbe6hexadidits">Musi składać się z 6 znaków spośród: ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Nie udało się odparować. Pompa i tak zostanie usunięta. Hasło ustawione podczas parowania nie jest usuwane z pompy.</string>
 </resources>

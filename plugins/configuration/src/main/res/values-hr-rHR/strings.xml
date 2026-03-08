@@ -8,6 +8,7 @@
     <string name="need_storage_permission">Aplikaciji je potrebno dopuštenje za pohranu kako bi mogla pohranjivati datoteke dnevnika i izvoziti postavke</string>
     <string name="need_whitelisting">%1$s potrebno stavljanje na popis dopuštenih za optimizaciju baterije za pravilan rad</string>
     <string name="profile">Profil</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Zahtjev</string>
     <string name="error_asking_for_permissions">Pogreška pri traženju dopuštenja</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na popis dopuštenih za optimizaciju baterije - mogli biste imati problema s performansama.</string>
@@ -59,4 +60,9 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritam šifriranja nije podržan ili nije naveden!</string>
     <!-- Custom Watchface -->
     <!-- Maintenance -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

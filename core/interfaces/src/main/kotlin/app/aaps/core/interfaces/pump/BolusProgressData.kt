@@ -20,6 +20,7 @@ object BolusProgressData {
         bolusEnded = false
         stopPressed = false
         status = ""
+        wearStatus = ""
         percent = 0
     }
 
@@ -48,6 +49,7 @@ object BolusProgressData {
      * Last received status update
      */
     var status = ""
+    var wearStatus = ""
     var percent = 0
 
     var bolusEnded = false

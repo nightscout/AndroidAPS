@@ -79,16 +79,16 @@ class DateUtilImpl @Inject constructor(
     }
 
     override fun secondsOfTheDayToMillisecondsOfHoursAndMinutes(seconds: Int): Long {
-        val startOfToday = LocalDate.now(clock).atStartOfDay(systemZone)
+        val today = LocalDate.now(clock)
         val totalMinutes = seconds / 60
-        val targetTime = startOfToday.plusMinutes(totalMinutes.toLong())
-        return targetTime.toInstant().toEpochMilli()
+        val time = java.time.LocalTime.of(totalMinutes / 60, totalMinutes % 60)
+        return today.atTime(time).atZone(systemZone).toInstant().toEpochMilli()
     }
 
     override fun secondsOfTheDayToMilliseconds(seconds: Int): Long {
-        val startOfToday = LocalDate.now(clock).atStartOfDay(systemZone)
-        val targetTime = startOfToday.plusSeconds(seconds.toLong())
-        return targetTime.toInstant().toEpochMilli()
+        val today = LocalDate.now(clock)
+        val time = java.time.LocalTime.ofSecondOfDay(seconds.toLong())
+        return today.atTime(time).atZone(systemZone).toInstant().toEpochMilli()
     }
 
     override fun toSeconds(hhColonMm: String): Int {

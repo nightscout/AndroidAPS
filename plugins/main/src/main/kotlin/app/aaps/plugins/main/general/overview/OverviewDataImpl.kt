@@ -31,9 +31,15 @@ import app.aaps.core.objects.extensions.isInProgress
 import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.core.objects.extensions.toStringShort
 import com.jjoe64.graphview.series.DataPoint
-import java.util.Calendar
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Instant
 
 @Singleton
 class OverviewDataImpl @Inject constructor(
@@ -104,15 +110,13 @@ class OverviewDataImpl @Inject constructor(
     override fun initRange() {
         rangeToDisplay = preferences.get(IntNonKey.RangeToDisplay)
 
-        val calendar = Calendar.getInstance().also {
-            it.timeInMillis = System.currentTimeMillis()
-            it[Calendar.MILLISECOND] = 0
-            it[Calendar.SECOND] = 0
-            it[Calendar.MINUTE] = 0
-            it.add(Calendar.HOUR, 1)
-        }
+        val tz = TimeZone.currentSystemDefault()
+        val now = Instant.fromEpochMilliseconds(System.currentTimeMillis())
+        val local = now.toLocalDateTime(tz)
+        val truncatedHour = LocalDateTime(local.year, local.month, local.day, local.hour, 0)
+        val nextFullHour = truncatedHour.toInstant(tz).plus(1, DateTimeUnit.HOUR, tz)
 
-        toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
+        toTime = nextFullHour.toEpochMilliseconds() + 100000 // a little bit more to avoid wrong rounding - GraphView specific
         fromTime = toTime - T.hours(rangeToDisplay.toLong()).msecs()
         endTime = toTime
     }

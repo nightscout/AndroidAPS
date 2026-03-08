@@ -102,7 +102,7 @@
     <string name="triggerReservoirLevelDesc">Stav zásobníka %1$s %2$.0f</string>
     <string name="triggerPumpBatteryLevelLabel">Vek batérie v pumpe</string>
     <string name="triggerPumpBatteryLevelDesc">Úroveň nabitia batérie v pumpe %1$s %2$.0f</string>
-    <string name="iob_u">IOB [JI]:</string>
+    <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Vzdial. [m]:</string>
     <string name="recurringTime">Čas zotavovania</string>
     <string name="every">Každých</string>

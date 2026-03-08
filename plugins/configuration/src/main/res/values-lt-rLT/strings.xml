@@ -48,6 +48,7 @@
     <string name="unattended_settings_export">Automatinis nustatymų eksportavimas</string>
     <string name="unattended_settings_export_summary">Įjungus šią parinktį, jūsų slaptažodis bus saugiai saugomas jūsų telefone</string>
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
     <string name="error_asking_for_permissions">Leidimo užklausos klaida</string>
@@ -166,4 +167,9 @@
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
     <string name="reset_aps_results">Iš naujo nustatyti APS rezultatus</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS katalogą.</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

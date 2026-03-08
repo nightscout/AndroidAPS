@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Entregando %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU entregado</string>
     <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado con éxito</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>

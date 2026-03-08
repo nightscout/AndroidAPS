@@ -10,6 +10,25 @@
     <string name="pump_status_busy">Occupato</string>
     <string name="pump_status_suspended">Sospeso</string>
     <string name="pump_status_executing_command">Esecuzione comando</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Ottieni le impostazioni</string>
+    <string name="pump_cmd_desc_get_firmware">Ottieni Firmware Micro</string>
+    <string name="pump_cmd_desc_get_basal_profile">Ottieni profilo basale</string>
+    <string name="pump_cmd_desc_set_basal_profile">Imposta profilo basale</string>
+    <string name="pump_cmd_desc_get_tbr">Ottieni basale temporanea</string>
+    <string name="pump_cmd_desc_cancel_tbr">Cancella basale temporanea</string>
+    <string name="pump_cmd_desc_set_tbr">Imposta basale temporanea</string>
+    <string name="pump_cmd_desc_set_bolus">Imposta bolo</string>
+    <string name="pump_cmd_desc_get_bolus">Ottieni boli</string>
+    <string name="pump_cmd_desc_cancel_bolus">Cancella bolo</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Ottieni insulina rimanente</string>
+    <string name="pump_cmd_desc_get_battery_status">Ottieni stato batteria</string>
+    <string name="pump_cmd_desc_get_time">Ottieni ora</string>
+    <string name="pump_cmd_desc_set_time">Imposta ora</string>
+    <string name="pump_cmd_desc_get_pump_status">Ottieni stato micro</string>
+    <string name="pump_cmd_desc_get_history">Ottieni Storico</string>
+    <string name="pump_cmd_desc_get_history_params">Ottieni Storico %s</string>
+    <string name="pump_cmd_desc_custom">Comando personalizzato</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basali</string>
     <string name="history_group_configuration">Configurazioni</string>
@@ -31,6 +50,7 @@
     <string name="time_last_3_hours">Ultime 3 ore</string>
     <string name="time_last_6_hours">Ultime 6 ore</string>
     <string name="time_last_12_hours">Ultime 12 ore</string>
+    <string name="time_last_24_hours">Ultime 24 ore</string>
     <string name="time_last_2_days">Ultimi 2 giorni</string>
     <string name="time_last_4_days">Ultimi 4 giorni</string>
     <string name="time_last_week">Ultima settimana</string>

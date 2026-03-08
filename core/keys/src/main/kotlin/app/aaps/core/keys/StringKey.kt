@@ -51,6 +51,11 @@ enum class StringKey(
     NsClientWifiSsids("ns_wifi_ssids", "", dependency = BooleanKey.NsClientUseWifi),
     NsClientAccessToken("nsclient_token", "", isPassword = true),
 
+    // Google Drive settings
+    GoogleDriveStorageType("google_drive_storage_type", "local"),
+    GoogleDriveFolderId("google_drive_folder_id", ""),
+    GoogleDriveRefreshToken("google_drive_refresh_token", "", isPassword = true),
+
     PumpCommonBolusStorage("pump_sync_storage_bolus", ""),
     PumpCommonTbrStorage("pump_sync_storage_tbr", ""),
 }

@@ -7,7 +7,7 @@ package app.aaps.core.data.pump.defs
 enum class PumpType(
     val description: String,
     private val manufacturer: ManufacturerType? = null,
-    private val model: String = "NONE",
+    val model: String = "NONE",
     private val bolusSize: Double = 0.0,
     private val specialBolusSize: DoseStepSize? = null,
     private val extendedBolusSettings: DoseSettings? = null,

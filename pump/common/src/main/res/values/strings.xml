@@ -13,6 +13,27 @@
     <string name="pump_status_suspended">Suspended</string>
     <string name="pump_status_executing_command">Executing Command</string>
 
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Get Settings</string>
+    <string name="pump_cmd_desc_get_firmware">Get Pump Firmware</string>
+    <string name="pump_cmd_desc_get_basal_profile">Get Basal Profile</string>
+    <string name="pump_cmd_desc_set_basal_profile">Set Basal Profile</string>
+    <string name="pump_cmd_desc_get_tbr">Get Temporary Basal</string>
+    <string name="pump_cmd_desc_cancel_tbr">Cancel Temporary Basal</string>
+    <string name="pump_cmd_desc_set_tbr">Set Temporary Basal</string>
+    <string name="pump_cmd_desc_set_bolus">Set Bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Get Bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Cancel Bolus</string>
+
+    <string name="pump_cmd_desc_get_remaining_insulin">Get Remaining Insulin</string>
+    <string name="pump_cmd_desc_get_battery_status">Get Battery Status</string>
+    <string name="pump_cmd_desc_get_time">Get Time</string>
+    <string name="pump_cmd_desc_set_time">Set Time</string>
+    <string name="pump_cmd_desc_get_pump_status">Get Pump Status</string>
+    <string name="pump_cmd_desc_get_history">Get History</string>
+    <string name="pump_cmd_desc_get_history_params">Get History %s</string>
+    <string name="pump_cmd_desc_custom">Custom command</string>
+
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basals</string>
     <string name="history_group_configuration">Configurations</string>
@@ -35,6 +56,7 @@
     <string name="time_last_3_hours">Last 3 hours</string>
     <string name="time_last_6_hours">Last 6 hours</string>
     <string name="time_last_12_hours">Last 12 hours</string>
+    <string name="time_last_24_hours">Last 24 hours</string>
     <string name="time_last_2_days">Last 2 days</string>
     <string name="time_last_4_days">Last 4 days</string>
     <string name="time_last_week">Last week</string>

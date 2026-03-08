@@ -3,6 +3,7 @@ package app.aaps.pump.omnipod.dash.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -17,10 +18,11 @@ import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
 import app.aaps.pump.omnipod.dash.databinding.OmnipodDashPodManagementBinding
-import app.aaps.pump.omnipod.dash.driver.pod.definition.ActivationProgress
-import app.aaps.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import app.aaps.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
+import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -32,6 +34,7 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
+    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
@@ -51,6 +54,27 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.buttonActivatePod.setOnClickListener {
+            val profile = profileFunction.getProfile()
+            if (profile == null) {
+                OKDialog.show(
+                    this,
+                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_warning),
+                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_set_profile_empty_profile)
+                )
+                return@setOnClickListener
+            }
+
+            try {
+                mapProfileToBasalProgram(profile)
+            } catch (e: IllegalArgumentException) {
+                OKDialog.show(
+                    this,
+                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_warning),
+                    e.message ?: rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_set_basal_failed)
+                )
+                return@setOnClickListener
+            }
+
             val type: PodActivationWizardActivity.Type =
                 if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIME_COMPLETED)) {
                     PodActivationWizardActivity.Type.SHORT

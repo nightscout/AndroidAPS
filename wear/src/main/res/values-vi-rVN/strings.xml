@@ -31,7 +31,7 @@
     <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
     <string name="pref_show_phone_battery">Hiển thị pin điện thoại</string>
     <string name="pref_show_rig_battery">Hiển thị mức pin Rig</string>
-    <string name="pref_show_basal_rate">Hiển thị liều basal</string>
+    <string name="pref_show_basal_rate">Hiển thị tỷ lệ liều nền</string>
     <string name="pref_show_temp_target">Hiển thị mục tiêu tạm thời</string>
     <string name="pref_show_reservoir_level">Hiển thị mức insulin</string>
     <string name="pref_show_loop_status">Hiển thị trạng thái vòng lặp</string>
@@ -99,7 +99,7 @@
     <string name="action_wizard_confirmation">Yêu cầu tính toán</string>
     <string name="action_fill_confirmation">Yêu cầu nạp insulin</string>
     <string name="action_ecarb_confirmation">Lượng carb cần nạp</string>
-    <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi cấu hình</string>
+    <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi Hồ sơ</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Mục tiêu\n [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Thấp\n[%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao\n[%s]</string>
@@ -122,8 +122,8 @@
     <string name="press_to_cancel">nhấn để hủy</string>
     <string name="cancel_bolus">HỦY LIỀU BOLUS</string>
     <string name="status_pump">Pump</string>
-    <string name="status_loop">Loop</string>
-    <string name="status_profile_switch">Chuyển cấu hình</string>
+    <string name="status_loop">Vòng lặp</string>
+    <string name="status_profile_switch">Chuyển Hồ sơ</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
@@ -224,7 +224,7 @@
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
-    <string name="complication_br">Tỷ lệ liều Basal</string>
+    <string name="complication_br">Tỷ lệ liều nền</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">Biểu tượng CoB</string>
     <string name="complication_cob_detailed">Chi tiết CoB</string>
@@ -234,7 +234,7 @@
     <string name="status_loop_state">Trạng thái vòng lặp</string>
     <string name="label_loop_state_title">AAPS(Trạng thái vòng lặp)</string>
     <string name="action_loop_state_selected">Đã yêu cầu trạng thái vòng lặp</string>
-    <string name="wizard_total_insulin">Tổng insulin</string>
+    <string name="wizard_total_insulin">Tổng Insulin</string>
     <string name="wizard_calculation">Tính toán</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
@@ -243,13 +243,14 @@
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">Xu hướng 15 phút</string>
     <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">IOB mới: %1$s U</string>
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Carbs (%1$d g)</string>
     <string name="wizard_result_subtotal">Tổng phụ</string>
     <string name="wizard_result_total">Tổng</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
+    <string name="wizard_result_correction_percentage">Hiệu chỉnh. %1$d%%</string>
     <string name="expand_calculation_details">Nhấn để mở rộng chi tiết tính toán</string>
     <string name="wizard_confirmation_sent">Gửi</string>
     <string name="tile_settings">Cài đặt Tile</string>
@@ -258,8 +259,8 @@
     <string name="loop_status_tbr_duration">%1$d phút</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
     <string name="loop_status_tbr_duration_remaining">Còn %1$d phút</string>
-    <string name="loop_status_tbr_continues">Tiếp tục liều Basal tạm thời</string>
-    <string name="loop_status_tbr_cancel">Đang thiết lập basal thường</string>
+    <string name="loop_status_tbr_continues">Tiếp tục liều nền tạm thời</string>
+    <string name="loop_status_tbr_cancel">Đang thiết lập liều nền thường</string>
     <string name="loop_status_smb">%1$.2f U</string>
     <string name="loop_status_no_last_run">N/A</string>
     <string name="loop_status_closed">Vòng lặp kín</string>
@@ -267,7 +268,7 @@
     <string name="loop_status_lgs">Tạm ngừng khi đường huyết thấp</string>
     <string name="loop_status_disabled">Đã tắt vòng lặp</string>
     <string name="loop_status_suspended">Đã tạm dừng vòng lặp</string>
-    <string name="loop_status_disconnected">Pump đã ngắt kết nối</string>
+    <string name="loop_status_disconnected">Bơm đã ngắt kết nối</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Không xác định</string>
     <string name="loop_status_result">Kết quả vòng lặp</string>

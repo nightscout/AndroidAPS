@@ -367,6 +367,17 @@ class MainApp : DaggerApplication() {
             }
         }
 
+        // Migrate Tidepool from username/password to OAuth2
+        if (sp.contains("tidepool_username") || sp.contains("tidepool_password")) {
+            sp.remove("tidepool_username")
+            sp.remove("tidepool_password")
+            sp.remove("tidepool_test_login")
+            // Clear OAuth2 state to force re-authentication
+            sp.remove("tidepool_auth_state")
+            sp.remove("tidepool_service_configuration")
+            sp.remove("tidepool_subscription_id")
+        }
+
         // Migrate loop mode
         if (config.APS && sp.contains("aps_mode")) {
             val mode = when (sp.getString("aps_mode", "CLOSED")) {

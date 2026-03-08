@@ -20,7 +20,7 @@
     <string name="sort_items">Сортировать элементы</string>
     <string name="unitsnosemicolon">Единицы</string>
     <string name="authorizationfailed">Ошибка авторизации</string>
-    <string name="cannula">Катетер помпы</string>
+    <string name="cannula">Канюля</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
     <!-- WEAR OS-->
     <string name="remove_selected_items">Удалить выбранные элементы</string>

@@ -57,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Pompa odłączona</string>
     <string name="smscommunicator_reconnect">Pompa ponownie podłączona</string>
     <string name="smscommunicator_remote_command_not_allowed">Zdalne komendy nie są dozwolone</string>
+    <string name="smscommunicator_remote_command_not_possible">Zdalne polecenie nie jest możliwe</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus zdalny niedostępny. Spróbuj ponownie później.</string>
     <string name="smscommunicator_basal_reply_with_code">Aby rozpocząć bazę %1$.2f U/h przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Aby przełączyć profil na %1$s %2$d%% odpowiedz kodem %3$s</string>
@@ -128,6 +129,7 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Zdefiniuj profil opisujący zapotrzebowanie na insulinę.</string>
     <string name="a11y_add_new_to_list">dodaj nowy do listy</string>
     <string name="do_you_want_switch_profile">Czy chcesz przełączyć profil i porzucić zmiany wprowadzone w bieżącym profilu?</string>
     <string name="save_or_reset_changes_first">Najpierw zapisz lub wycofaj bieżące zmiany</string>
@@ -150,6 +152,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CEL</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label_warning">Twój algorytm potrafi dostarczyć dynamiczne obliczenia ISF. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych lub wyłącznie jako wartości referencyjne</string>
+    <string name="ic_dynamic_label_warning">Twój algorytm potrafi dostarczyć dynamiczne obliczenia IC. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych lub wyłącznie jako wartości referencyjne</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
@@ -158,6 +162,7 @@
     <string name="extended_bolus_button">Bolus Przedłużony</string>
     <string name="extended_bolus_cancel_button">Anuluj bolus przedłużony </string>
     <string name="tools">Narzędzia</string>
+    <string name="site_rotation">Zmiana miejsca</string>
     <string name="nav_history_browser">Przegląd historii</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">czas:</string>
@@ -212,6 +217,7 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ (upewnij się, że \'Akceptuj kalibracje\' są włączone w xDrip+ w sekcji \'Ustawienia innych aplikacji\').</string>
+    <string name="show_cgm_button_summary">Otwiera xDrip+ lub aplikację Dexcom (możesz wrócić do AAPS androidowym przyciskiem \"cofnij\").</string>
     <string name="not_available_full">Niedostępne</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="change_your_input">Zmień wprowadzone dane!</string>

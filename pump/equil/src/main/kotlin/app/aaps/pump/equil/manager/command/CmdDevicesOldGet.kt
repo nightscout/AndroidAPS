@@ -174,7 +174,14 @@ class CmdDevicesOldGet(
         }
     }
 
-    fun isSupport(): Boolean = firmwareVersion >= EquilConst.EQUIL_SUPPORT_LEVEL
+    fun isSupport(serialNumber: String): Boolean {
+        val firstChar = serialNumber.firstOrNull()?.uppercaseChar()
+        val needsVersionCheck = setOf('0', '1', '3', 'A', 'D')
+        return when (firstChar) {
+            in needsVersionCheck -> firmwareVersion >= EquilConst.EQUIL_SUPPORT_LEVEL
+            else -> true
+        }
+    }
 
     override fun getEventType(): EquilHistoryRecord.EventType? = null
 }

@@ -38,6 +38,10 @@ import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.plugins.configuration.databinding.MaintenanceFragmentBinding
 import app.aaps.plugins.configuration.maintenance.activities.LogSettingActivity
+import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageManager
+import app.aaps.plugins.configuration.maintenance.cloud.CloudDirectoryDialog
+import app.aaps.plugins.configuration.maintenance.cloud.ExportOptionsDialog
+import app.aaps.plugins.configuration.maintenance.cloud.events.EventCloudStorageStatusChanged
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -64,6 +68,9 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fileListProvider: FileListProvider
+    @Inject lateinit var cloudStorageManager: CloudStorageManager
+    @Inject lateinit var cloudDirectoryDialog: CloudDirectoryDialog
+    @Inject lateinit var exportOptionsDialog: ExportOptionsDialog
 
     private val disposable = CompositeDisposable()
     private var inMenu = false
@@ -172,13 +179,54 @@ class MaintenanceFragment : DaggerFragment() {
                 importExportPrefs.importSharedPreferences(activity as FragmentActivity)
             }
         }
+        // Local directory: only used for selecting AAPS base folder
         binding.directory.setOnClickListener {
-            maintenancePlugin.selectAapsDirectory(requireActivity() as DaggerAppCompatActivityWithResult)
+            (requireActivity() as? DaggerAppCompatActivityWithResult)?.let { act ->
+                maintenancePlugin.selectAapsDirectory(act)
+            }
+        }
+        // Cloud directory: choose not to use or Google Drive
+        binding.cloudDirectory.setOnClickListener {
+            (requireActivity() as? DaggerAppCompatActivityWithResult)?.let { act ->
+                cloudDirectoryDialog.showCloudDirectoryDialog(
+                    act,
+                    onLocalSelected = { /* Choose not to use cloud: set storage type to local, no action */ },
+                    onCloudSelected = { /* Authorization and folder selection handled in dialog */ },
+                    onStorageChanged = { 
+                        updateStorageErrorState()
+                        updateDynamicButtonText()
+                        updateExportOptionsButtonState()
+                    }
+                )
+            }
+        }
+        
+        // Cloud directory error icon click - show toast with error info
+        binding.cloudDirectoryErrorIcon.setOnClickListener {
+            app.aaps.core.ui.toast.ToastUtils.warnToast(requireContext(), rh.gs(R.string.cloud_token_expired_or_invalid))
+        }
+        
+        // Export destination: configure destination for various export functions
+        binding.exportOptions.setOnClickListener {
+            val hasCloudDirectory = cloudStorageManager.isCloudStorageActive()
+            if (!hasCloudDirectory) {
+                // Show message if cloud directory is not set up
+                app.aaps.core.ui.toast.ToastUtils.warnToast(requireContext(), rh.gs(R.string.setup_cloud_directory_first))
+                return@setOnClickListener
+            }
+            (requireActivity() as? DaggerAppCompatActivityWithResult)?.let { act ->
+                exportOptionsDialog.showExportOptionsDialog(act) {
+                    // Settings changed callback - update button text
+                    updateDynamicButtonText()
+                }
+            }
         }
         binding.navLogsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
         binding.exportCsv.setOnClickListener {
+            aapsLogger.info(LTag.CORE, "CSV_EXPORT exportCsv button clicked")
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.ue_export_to_csv) + "?") {
+                    aapsLogger.info(LTag.CORE, "CSV_EXPORT user confirmed, calling exportUserEntriesCsv")
                     uel.log(Action.EXPORT_CSV, Sources.Maintenance)
                     importExportPrefs.exportUserEntriesCsv(activity)
                 }
@@ -190,7 +238,33 @@ class MaintenanceFragment : DaggerFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (inMenu) queryProtection() else updateProtectedUi()
+        // Check and restore cloud settings (prevent settings loss after app update)
+        checkAndRestoreCloudSettings()
+        
+        // Subscribe to cloud storage status changes to update UI immediately
+        disposable += rxBus
+            .toObservable(EventCloudStorageStatusChanged::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateStorageErrorState() }, fabricPrivacy::logException)
+        
+        if (inMenu) queryProtection() else {
+            updateProtectedUi()
+            updateStorageErrorState()
+            updateDynamicButtonText()
+            updateExportOptionsButtonState()
+        }
+    }
+    
+    /**
+     * Check and restore cloud storage settings
+     */
+    private fun checkAndRestoreCloudSettings() {
+        try {
+            // Trigger auto-restore logic
+            cloudStorageManager.getActiveStorageType()
+        } catch (e: Exception) {
+            aapsLogger.warn(LTag.CORE, "Failed to check cloud storage settings", e)
+        }
     }
 
     @Synchronized
@@ -204,6 +278,79 @@ class MaintenanceFragment : DaggerFragment() {
         val isLocked = protectionCheck.isLocked(PREFERENCES)
         binding.mainLayout.visibility = isLocked.not().toVisibility()
         binding.unlock.visibility = isLocked.toVisibility()
+        
+        // Update storage error state when UI becomes available
+        if (!isLocked) {
+            updateStorageErrorState()
+            updateDynamicButtonText()
+        }
+    }
+
+    private fun updateStorageErrorState() {
+        // Local directory - no error icon needed (local storage doesn't have connection errors)
+        binding.directoryErrorIcon.visibility = View.GONE
+        
+        // Cloud directory error - show when cloud is active but token is invalid/expired
+        val isCloudActive = cloudStorageManager.isCloudStorageActive()
+        val provider = cloudStorageManager.getActiveProvider()
+        val hasValidCredentials = provider?.hasValidCredentials() ?: false
+        val hasCloudConnectionError = provider?.hasConnectionError() ?: false
+        
+        // Show error icon if cloud is active but credentials are invalid or there's a connection error
+        val showCloudError = isCloudActive && (!hasValidCredentials || hasCloudConnectionError)
+        binding.cloudDirectoryErrorIcon.visibility = if (showCloudError) View.VISIBLE else View.GONE
+    }
+    
+    /**
+     * Update export options button state based on cloud directory selection
+     */
+    private fun updateExportOptionsButtonState() {
+        val hasCloudDirectory = cloudStorageManager.isCloudStorageActive()
+        binding.exportOptions.alpha = if (hasCloudDirectory) 1.0f else 0.5f
+    }
+    
+    /**
+     * Update dynamic button text based on export destination settings
+     */
+    private fun updateDynamicButtonText() {
+        val isAllCloud = exportOptionsDialog.isAllCloudEnabled()
+        val isCloudActive = cloudStorageManager.isCloudStorageActive()
+        
+        // Log button text
+        val isLogCloud = isAllCloud || exportOptionsDialog.isLogCloudEnabled()
+        binding.logSend.text = rh.gs(
+            if (isLogCloud) R.string.send_logs_to_cloud else R.string.send_all_logs
+        )
+        
+        // CSV button text
+        val isCsvCloud = isAllCloud || exportOptionsDialog.isCsvCloudEnabled()
+        binding.exportCsv.text = rh.gs(
+            if (isCsvCloud) R.string.export_csv_to_cloud else R.string.export_csv_to_local
+        )
+        
+        // Settings export/import destinations
+        val isSettingsLocal = exportOptionsDialog.isSettingsLocalEnabled()
+        val isSettingsCloud = exportOptionsDialog.isSettingsCloudEnabled()
+        val bothEnabled = isSettingsLocal && isSettingsCloud && isCloudActive
+        val cloudOnly = isSettingsCloud && isCloudActive && !isSettingsLocal
+        
+        // Export button text
+        binding.navExport.text = rh.gs(
+            when {
+                bothEnabled -> R.string.export_settings_both
+                cloudOnly -> R.string.export_settings_cloud
+                else -> R.string.export_settings_local
+            }
+        )
+        
+        // Import button text
+        binding.navImport.text = rh.gs(
+            when {
+                bothEnabled -> R.string.import_settings_both
+                cloudOnly -> R.string.import_settings_cloud
+                else -> R.string.import_settings_local
+            }
+        )
     }
 
     private fun queryProtection() {

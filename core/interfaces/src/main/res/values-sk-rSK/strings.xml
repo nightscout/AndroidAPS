@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Events-->
-    <string name="bolus_delivering">Podávanie %1$.2fJI</string>
-    <string name="bolus_delivered_successfully">Bolus %1$.2fJI podaný úspešne</string>
+    <string name="bolus_delivering">Podávanie %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU podaných</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2fU podaný úspešne</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Ovládač pumpy zmenený.</string>
     <!--    DateUtil-->
@@ -90,8 +91,8 @@
     <string name="default_custom_watchface_external_comment">Predvolený ciferník vrátane externých zobrazení pre sledovateľov, môžete kliknúť na tlačidlo EXPORTOVAŤ CIFERNÍK ak chcete vygenerovať šablónu</string>
     <string name="wear_default_watchface">Predvolený ciferník</string>
     <string name="wear_more_watchfaces">Ďalšie ciferníky</string>
-    <string name="temp_basal_absolute_rate">%1$.2f JI/h @%2$s %3$d/%4$d</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d</string>
-    <string name="temp_basal_extended_bolus">E %1$.2f JI/h @%2$s %3$d/%4$d min</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Navždy</string>
 </resources>

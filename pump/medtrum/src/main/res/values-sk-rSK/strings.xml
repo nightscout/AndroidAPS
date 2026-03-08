@@ -19,11 +19,11 @@
     <string name="active_bolus_label">Aktívny bolus</string>
     <string name="pump_state_label">Stav pumpy</string>
     <string name="active_alarms_label">Aktívne alarmy</string>
-    <string name="reservoir_level"> %.2f JI</string>
+    <string name="reservoir_level"> %.2f U</string>
     <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Typ bazálu</string>
     <string name="basal_rate_label">Bazálna dávka</string>
-    <string name="current_basal_rate"> %.2f JI/h</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Typ pumpy</string>
     <string name="fw_version_label">Verzia FW</string>
     <string name="patch_no_label">Č. Patch</string>
@@ -79,7 +79,7 @@
     <string name="patch_not_active_note">Základňa by nemala byť pripojená ku kanyle až do dalšieho kroku!</string>
     <string name="connect_pump_base">Pripojte základňu k novej kanyle, odstráňte zostávajúci vzduch a doplňte inzulínom, potom stlačte tlačítko <b>Ďalšia</b>.</string>
     <string name="note_min_70_units">Poznámka: Pre aktiváciu je potrebných najmenej 70 jednotiek inzulínu.</string>
-    <string name="reservoir_text_and_level">Zásobník: %.2fJI</string>
+    <string name="reservoir_text_and_level">Zásobník: %.2f U</string>
     <string name="do_not_attach_to_body">Zatiaľ nepripájajte Patch k telu.</string>
     <string name="half_press_needle">Stlačte tlačítko ihly do polovice. Potom stlačte tlačítko <b>Ďalšia</b> pre spustenie plnenia.</string>
     <string name="wait_for_priming">Počkajte prosím na dokončenie plnenia.</string>

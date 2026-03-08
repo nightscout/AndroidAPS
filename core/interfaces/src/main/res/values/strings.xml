@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Delivering %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU delivered</string>
     <string name="bolus_delivered_successfully">Bolus %1$.2fU delivered successfully</string>
 
     <!-- PumpPluginBase -->

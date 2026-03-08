@@ -9,6 +9,7 @@
     <string name="pump_status_busy">Zauzet</string>
     <string name="pump_status_suspended">Suspendiran</string>
     <string name="pump_status_executing_command">Izvršavanje naredbe</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_all">Svi</string>
     <string name="history_group_bolus">Bolusi</string>

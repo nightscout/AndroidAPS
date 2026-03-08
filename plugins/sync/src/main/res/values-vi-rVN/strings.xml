@@ -43,19 +43,19 @@
     <string name="clear_log">Xóa nhật ký</string>
     <string name="full_sync">Đồng bộ toàn bộ</string>
     <string name="full_sync_comment">Đồng bộ toàn bộ? Quá trình này có thể mất nhiều giờ và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong NS.</string>
-    <string name="ns_sync_options">Synchronization</string>
-    <string name="ns_upload_summary">Cấu hình, bolus, carb và basal tạm thời được tải lên NS</string>
+    <string name="ns_sync_options">Đồng bộ hóa</string>
+    <string name="ns_upload_summary">Hồ sơ, bolus, carb và liều nền tạm thời được tải lên NS</string>
     <string name="ns_upload">Tải dữ liệu lên NS</string>
-    <string name="ns_receive_profile_store">Nhận dữ liệu cấu hình đã lưu</string>
-    <string name="ns_receive_profile_store_summary">Đồng bộ cấu hình từ trình chỉnh sửa cấu hình của NS</string>
+    <string name="ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
+    <string name="ns_receive_profile_store_summary">Đồng bộ Hồ sơ từ trình chỉnh sửa Hồ sơ của NS</string>
     <string name="ns_receive_temp_target">Nhận mục tiêu tạm thời</string>
     <string name="ns_receive_temp_target_summary">Chấp nhận mục tiêu tạm thời từ NS hoặc AAPSClient</string>
-    <string name="ns_receive_profile_switch">Nhận chuyển đổi cấu hình</string>
-    <string name="ns_receive_profile_switch_summary">Chấp nhận chuyển đổi cấu hình được nhập qua NS hoặc AAPSClient</string>
+    <string name="ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ</string>
+    <string name="ns_receive_profile_switch_summary">Chấp nhận chuyển đổi Hồ sơ được nhập qua NS hoặc AAPSClient</string>
     <string name="ns_receive_running_mode">Nhận sự kiện Running mode</string>
     <string name="ns_receive_running_mode_summary">Chấp nhận sự kiện Running mode từ NS hoặc AAPSClient</string>
     <string name="ns_receive_tbr_eb">Nhận TBR và EB</string>
-    <string name="ns_receive_tbr_eb_summary">Chấp nhận basal tạm thời (TBR) và bolus mở rộng (EB) được nhập từ một phiên bản khác</string>
+    <string name="ns_receive_tbr_eb_summary">Chấp nhận liều nền tạm thời (TBR) và bolus mở rộng (EB) được nhập từ một phiên bản khác</string>
     <string name="ns_receive_insulin">Nhận insulin</string>
     <string name="ns_receive_insulin_summary">Chấp nhận insulin được nhập qua NS hoặc AAPSClient (không được bơm, chỉ tính vào IOB)</string>
     <string name="ns_receive_carbs">Nhận carb</string>
@@ -112,7 +112,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Theo dõi và điều khiển AAPS từ đồng hồ WearOS.</string>
     <string name="no_watch_connected">(Không có đồng hồ kết nối)</string>
-    <string name="pump_status">Trạng thái Pump</string>
+    <string name="pump_status">Trạng thái Bơm</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Quickwizard đã chọn không còn khả dụng nữa, vui lòng làm mới ô của bạn</string>
@@ -156,8 +156,8 @@
     <string name="units_short">U</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
-    <string name="no_active_profile">Không có chuyển đổi cấu hình nào hoạt động!</string>
-    <string name="profile_message">Cấu hình: %1$s\nDịch chuyển thời gian: %2$d giờ\nPhần trăm: %3$d%%\nThời lượng: %4$d phút</string>
+    <string name="no_active_profile">Không có chuyển đổi Hồ sơ nào hoạt động!</string>
+    <string name="profile_message">Hồ sơ: %1$s\nDịch chuyển thời gian: %2$d giờ\nPhần trăm: %3$d%%\nThời lượng: %4$d phút</string>
     <string name="target_only_aps_mode">Các mục tiêu chỉ áp dụng trong chế độ APS!</string>
     <string name="no_history">Không có dữ liệu lịch sử!</string>
     <string name="temp_target">Mục tiêu tạm thời</string>
@@ -165,7 +165,7 @@
     <string name="default_range">PHẠM VI MẶC ĐỊNH</string>
     <string name="target">mục tiêu</string>
     <string name="rate_duration">Tốc độ: %1$.2fU/giờ (%2$.2f%%) \nThời gian: %3$d phút</string>
-    <string name="no_profile">Không có cấu hình nào được tải</string>
+    <string name="no_profile">Không có Hồ sơ nào được tải</string>
     <string name="aps_only">Chỉ áp dụng trong chế độ APS!</string>
     <string name="last_aps_result_na">Kết quả không khả dụng!</string>
     <string name="loop_status_closed">ĐÓNG VÒNG LẶP</string>
@@ -182,7 +182,7 @@
     <string name="wear_action_loop_state_no_nsclient">AAPSClient không được hỗ trợ cho hành động này</string>
     <string name="wear_action_loop_state_requires_duration">Hành động này yêu cầu thời gian thực hiện</string>
     <string name="wear_action_loop_state_pump_suspended">Bơm đã tạm dừng!</string>
-    <string name="wear_action_loop_state_profile_invalid">Cấu hình không hợp lệ!</string>
+    <string name="wear_action_loop_state_profile_invalid">Hồ sơ không hợp lệ!</string>
     <string name="wear_action_loop_state_unauthorized">Vui lòng thử lại.</string>
     <string name="wear_action_loop_state_invalid">Trạng thái vòng lặp không hợp lệ</string>
     <string name="wear_action_loop_state_title">TRẠNG THÁI VÒNG LẶP</string>
@@ -196,7 +196,7 @@
     <string name="wear_action_loop_state_now_pump_suspended">Bơm đã tạm dừng</string>
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Không hợp lệ</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Pump đã ngắt kết nối</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Bơm đã ngắt kết nối</string>
     <string name="garmin_request_key">Request Key</string>
     <string name="garmin_request_key_summary">Khóa tùy chọn giúp bảo mật kết nối HTTP giữa Garmin và AAPS.</string>
 </resources>

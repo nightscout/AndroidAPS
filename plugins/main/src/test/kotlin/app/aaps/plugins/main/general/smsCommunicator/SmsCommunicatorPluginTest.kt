@@ -155,6 +155,11 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         whenever(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
         whenever(rh.gs(R.string.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
+        whenever(rh.gs(eq(R.string.smscommunicator_restart_reply_with_code), any())).thenAnswer { i: InvocationOnMock ->
+            "To restart AAPS reply with code ${i.arguments[1]}"
+        }
+        whenever(rh.gs(R.string.smscommunicator_restarting)).thenReturn("AAPS is restarting")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_restarting)).thenReturn("AAPS is restarting")
         whenever(rh.gs(R.string.sms_iob)).thenReturn("IOB:")
         whenever(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
         whenever(rh.gs(R.string.sms_min_ago)).thenReturn("%1\$dmin ago")
@@ -581,11 +586,29 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
 
-        //RESTART
+        //RESTART - requires confirmation
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "RESTART")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("RESTART")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To restart AAPS reply with code")
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("AAPS is restarting")
+
+        //RESTART - wrong code
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "RESTART")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("RESTART")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To restart AAPS reply with code")
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
+        smsCommunicatorPlugin.processSms(Sms("1234", "WRONG_CODE"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo("WRONG_CODE")
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Wrong code. Command cancelled.")
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
 
         //HELP
         smsCommunicatorPlugin.messages = ArrayList()
