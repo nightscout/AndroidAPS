@@ -2,6 +2,7 @@
 <resources>
     <!-- PumpCommon - Pump Abstract -->
     <!-- PumpCommon - Pump Status -->
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bázis</string>
     <string name="history_group_statistic">Statisztikák</string>

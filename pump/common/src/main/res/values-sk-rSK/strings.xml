@@ -10,6 +10,25 @@
     <string name="pump_status_busy">Zaneprázdnený</string>
     <string name="pump_status_suspended">Pozastavené</string>
     <string name="pump_status_executing_command">Vykonávanie príkazu</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Načítanie nastavení</string>
+    <string name="pump_cmd_desc_get_firmware">Načítanie firmvéru pumpy</string>
+    <string name="pump_cmd_desc_get_basal_profile">Načítanie bazálneho profilu</string>
+    <string name="pump_cmd_desc_set_basal_profile">Nastavte bazálny profil</string>
+    <string name="pump_cmd_desc_get_tbr">Načítanie dočasného bazálu</string>
+    <string name="pump_cmd_desc_cancel_tbr">Zrušiť dočasný bazál</string>
+    <string name="pump_cmd_desc_set_tbr">Nastaviť dočasný bazál</string>
+    <string name="pump_cmd_desc_set_bolus">Nastaviť bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Načítať Bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Zrušiť bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Načítať zostávajúci inzulín</string>
+    <string name="pump_cmd_desc_get_battery_status">Načítať stav batérie</string>
+    <string name="pump_cmd_desc_get_time">Načítanie času</string>
+    <string name="pump_cmd_desc_set_time">Nastaviť čas</string>
+    <string name="pump_cmd_desc_get_pump_status">Načítavam stav pumpy</string>
+    <string name="pump_cmd_desc_get_history">Načítavam históriu</string>
+    <string name="pump_cmd_desc_get_history_params">Načítavanie histórie %s</string>
+    <string name="pump_cmd_desc_custom">Vlastný príkaz</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazály</string>
     <string name="history_group_configuration">Konfigurácie</string>
@@ -31,6 +50,7 @@
     <string name="time_last_3_hours">Posledné 3 hodiny</string>
     <string name="time_last_6_hours">Posledných 6 hodín</string>
     <string name="time_last_12_hours">Posledných 12 hodín</string>
+    <string name="time_last_24_hours">Posledných 24 hodín</string>
     <string name="time_last_2_days">Posledné 2 dni</string>
     <string name="time_last_4_days">Posledné 4 dni</string>
     <string name="time_last_week">Posledný týždeň</string>

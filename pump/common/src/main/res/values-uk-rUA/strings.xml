@@ -2,6 +2,7 @@
 <resources>
     <!-- PumpCommon - Pump Abstract -->
     <!-- PumpCommon - Pump Status -->
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <!-- Time -->
     <!-- BLE Config -->

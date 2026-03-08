@@ -31,7 +31,7 @@
     <string name="direction">方向</string>
     <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai / 歐態</string>
     <string name="description_source_patched_syai_tag_app">從 Syai / 與歐態應用程式接收血糖資料。</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>

@@ -12,11 +12,11 @@
     <string name="eopatch_wakeup_time">Ngày &amp; giờ đánh thức</string>
     <string name="eopatch_expiration_time">Thời gian hết hạn</string>
     <string name="eopatch_status">Trạng thái</string>
-    <string name="eopatch_base_basal_rate">Tỷ lệ basal cơ bản</string>
-    <string name="eopatch_temp_basal_rate">Tỷ lệ Basal tạm thời</string>
+    <string name="eopatch_base_basal_rate">Tỷ lệ liều nền cơ bản</string>
+    <string name="eopatch_temp_basal_rate">Tỷ lệ liều nền tạm thời</string>
     <string name="eopatch_total_delivered">Tổng lượng đã tiêm</string>
-    <string name="invalid_basal_rate">Basal trong cấu hình nhỏ hơn 0,05 U/giờ. EOPatch có đơn vị tiêm tối thiểu là 0,05 U. Vui lòng thử lại sau khi đặt cấu hình lớn hơn đơn vị tiêm tối thiểu.</string>
-    <string name="no_profile_selected">Chưa chọn cấu hình. Vui lòng chọn cấu hình và thử lại.</string>
+    <string name="invalid_basal_rate">Liều nền trong Hồ sơ nhỏ hơn 0,05 U/giờ. EOPatch có đơn vị tiêm tối thiểu là 0.05 U. Vui lòng thử lại sau khi đặt cấu hình lớn hơn đơn vị tiêm tối thiểu.</string>
+    <string name="no_profile_selected">Chưa chọn Hồ sơ. Vui lòng chọn Hồ sơ và thử lại.</string>
     <string name="symbol_day">ngày</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -28,8 +28,8 @@
     <string name="patch_discard_complete_title">Đã hoàn tất việc bỏ Patch.</string>
     <string name="patch_discard_complete_desc">Patch đã được hủy kích hoạt.\nHãy bỏ Patch đi.\nTháo Patch ra khỏi cơ thể.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Hiện tại đang tiêm bolus. Bạn có thực sự muốn hủy việc tiêm insulin và bỏ Patch không?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Hiện tại đang tiêm insulin nền tạm thời. Bạn có thực sự muốn hủy việc tiêm insulin và bỏ Patch không?</string>
-    <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Hiện tại đang tiêm bolus và insulin nền tạm thời. Bạn có thực sự muốn hủy việc tiêm insulin và bỏ Patch không?</string>
+    <string name="patch_change_confirm_temp_basal_is_active_desc">Hiện tại đang tiêm liều nền tạm thời. Bạn có thực sự muốn hủy việc tiêm insulin và bỏ Patch không?</string>
+    <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Hiện tại đang tiêm liều bolus và liều nền tạm thời. Bạn có thực sự muốn hủy việc tiêm insulin và bỏ Patch không?</string>
     <string name="patch_change_confirm_desc">Bạn có chắc chắn muốn bỏ Patch không?</string>
     <string name="patch_remaining_insulin">Insulin còn lại</string>
     <string name="patch_remaining_usage_period">Thời gian còn lại</string>
@@ -84,9 +84,9 @@
     <string name="patch_cancel_pairing">Hủy ghép nối</string>
     <string name="symbol_days">ngày</string>
     <string name="all_dose_unit">&#160;U</string>
-    <string name="insulin_suspend_msg1">Khi tạm dừng, Bolus và Temp basal đang truyền sẽ bị hủy.\n\nTốc độ: %1$s U/giờ\nThời gian còn lại: %2$s\n&amp;Insulin còn lại: %3$.2f U</string>
+    <string name="insulin_suspend_msg1">Khi tạm dừng, liều Bolus và liều nền tạm thời đang truyền sẽ bị hủy.\n\nTốc độ: %1$s U/giờ\nThời gian còn lại: %2$s\n&amp;Insulin còn lại: %3$.2f U</string>
     <string name="insulin_suspend_msg2">Khi tạm dừng, Bolus đang truyền sẽ bị hủy.\n\nInsulin còn lại: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Khi tạm dừng, Temp Basal đang truyền sẽ bị hủy.\n\nTốc độ: %1$s U/giờ\nThời gian còn lại: %2$s</string>
+    <string name="insulin_suspend_msg3">Khi tạm dừng, liều nền tạm thời đang truyền sẽ bị hủy.\n\nTốc độ: %1$s U/giờ\nThời gian còn lại: %2$s</string>
     <string name="insulin_suspend_msg4">Việc truyền insulin sẽ bị tạm dừng.</string>
     <string name="string_change_patch">Hủy bỏ/Thay Patch</string>
     <string name="string_activate_patch">Kích hoạt Patch</string>
@@ -109,7 +109,7 @@
     <string name="needle_insertion_error_1">Lỗi khi đưa kim vào.</string>
     <string name="needle_insertion_error_2">Kiểm tra xem hướng của lỗ sau khi xoay cần thao tác có thẳng không, sau đó nhấn ‘Thử lại’.</string>
     <string name="needle_insertion_error_3">Nhấn ‘Hủy bỏ’ để hủy kích hoạt Patch.</string>
-    <string name="string_suspend_time_insulin_delivery_title">Thời gian tạm dừng Basal</string>
+    <string name="string_suspend_time_insulin_delivery_title">Thời gian tạm dừng liều nền</string>
     <string name="string_resume_insulin_delivery_title">Phục hồi liều insulin</string>
     <string name="string_resume_insulin_delivery_message">Kết thúc tạm ngừng tiêm insulin.\nNhấn \'Xác nhận\' để tiếp tục tiêm insulin.\n\n[Cảnh báo]\nViệc tiêm insulin sẽ không tiếp tục cho đến khi bạn nhấn \'Xác nhận\'.\nNếu bạn không nhấn \'Xác nhận\', bạn có thể bị tăng đường huyết.</string>
     <string name="string_suspended_insulin_delivery_message">Việc tiêm insulin đã bị tạm dừng.</string>

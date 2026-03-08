@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">正在注射 %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU 已輸送</string>
     <string name="bolus_delivered_successfully">注射 %1$.2fU 已成功完成</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">幫浦驅動程式已更改。</string>

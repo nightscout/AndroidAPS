@@ -17,4 +17,12 @@
     <string name="night_tir">TIR \'s nachts</string>
     <string name="carbs_short" comment="max 6 characters">Koolhydraten</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Laatste connectie: %1$d min geleden</string>
+    <string name="short_status_alert">Alarm: %1$s</string>
+    <string name="short_status_last_bolus">Laatste bolus: %1$s E @ %2$s</string>
+    <string name="short_status_temp_basal">Tijdelijk: %1$s</string>
+    <string name="short_status_extended">Verlengd: %1$s</string>
+    <string name="short_status_reservoir">Reservoir: %1$dE</string>
+    <string name="short_status_battery">Batt: %1$d%%</string>
+    <string name="short_status_not_initialized">Pomp niet geïnitialiseerd</string>
 </resources>

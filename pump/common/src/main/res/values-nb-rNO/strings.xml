@@ -10,6 +10,25 @@
     <string name="pump_status_busy">Opptatt</string>
     <string name="pump_status_suspended">Pauset</string>
     <string name="pump_status_executing_command">Utfører kommando</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Hent innstillinger</string>
+    <string name="pump_cmd_desc_get_firmware">Hent pumpens firmware</string>
+    <string name="pump_cmd_desc_get_basal_profile">Hent basalprofil</string>
+    <string name="pump_cmd_desc_set_basal_profile">Angi basalprofil</string>
+    <string name="pump_cmd_desc_get_tbr">Hent midlertidig basal</string>
+    <string name="pump_cmd_desc_cancel_tbr">Avbryt midlertidig basal</string>
+    <string name="pump_cmd_desc_set_tbr">Angi midlertidig basal</string>
+    <string name="pump_cmd_desc_set_bolus">Angi bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Hent bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Avbryt bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Hent gjenværende insulinmengde</string>
+    <string name="pump_cmd_desc_get_battery_status">Hent batteristatus</string>
+    <string name="pump_cmd_desc_get_time">Hent tid</string>
+    <string name="pump_cmd_desc_set_time">Angi tid</string>
+    <string name="pump_cmd_desc_get_pump_status">Hent pumpestatus</string>
+    <string name="pump_cmd_desc_get_history">Hent historikk</string>
+    <string name="pump_cmd_desc_get_history_params">Hent historikk %s</string>
+    <string name="pump_cmd_desc_custom">Egendefinert kommando</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basaldoser</string>
     <string name="history_group_configuration">Konfigurasjoner</string>
@@ -31,6 +50,7 @@
     <string name="time_last_3_hours">Siste 3 timer</string>
     <string name="time_last_6_hours">Siste 6 timer</string>
     <string name="time_last_12_hours">Siste 12 timer</string>
+    <string name="time_last_24_hours">Siste 24 timer</string>
     <string name="time_last_2_days">Siste 2 dager</string>
     <string name="time_last_4_days">Siste 4 dager</string>
     <string name="time_last_week">Siste uke</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="profile">Профіль</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <!--    ConfigBuilder-->
     <!--ImportExport-->
     <!--    Maintenance-->
@@ -16,4 +17,9 @@
     <string name="metadata_label_encryption">Шифрування файлу</string>
     <string name="metadata_format_new">Новий метод шифрування</string>
     <string name="metadata_format_other">Невідомий формат експорту</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

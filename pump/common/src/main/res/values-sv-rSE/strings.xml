@@ -10,6 +10,7 @@
     <string name="pump_status_busy">Upptagen</string>
     <string name="pump_status_suspended">Pausad</string>
     <string name="pump_status_executing_command">Kör kommando</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basaldoser</string>
     <string name="history_group_configuration">Konfigurationer</string>

@@ -48,6 +48,7 @@
     <string name="unattended_settings_export">Gözetimsiz Ayarlar Dışa Aktarımı</string>
     <string name="unattended_settings_export_summary">Bunu etkinleştirmek, parolanızı telefonunuzda güvenli bir şekilde saklayacaktır</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">İstek</string>
     <string name="apsmode_title">APS modu</string>
     <string name="error_asking_for_permissions">İzin istenirken hata</string>
@@ -166,4 +167,9 @@
     <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
     <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Dosya sistemine erişim hatası. Lütfen AAPS dizinini doğru seçin.</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

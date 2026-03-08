@@ -12,9 +12,9 @@
     <string name="commanderror">Chyba príkazu</string>
     <string name="speederror">Chyba rýchlosti</string>
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
-    <string name="boluserrorcode">Požadované: %1$.2fJI Podané: %2$.2fJI Chyba: %3$s</string>
+    <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
     <string name="danar_valuenotsetproperly">Hodnota nenastavená správne</string>
-    <string name="danar_setbasalstep001">Nastavte bazálny krok 0.01JI/h</string>
+    <string name="danar_setbasalstep001">Nastavte bazálny krok 0.01U/h</string>
     <string name="resetpairing">Reset informácií o párovaní?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKód: %4$02X</string>
     <string name="processinghistory">Spracúvam udalosť</string>
@@ -84,7 +84,7 @@
     <string name="danarpump_shortname">DANA</string>
     <string name="nobtadapter">Bluetooth adaptér nenájdený</string>
     <string name="devicenotfound">Vybrané zariadenie nenájdené</string>
-    <string name="danar_switchtouhmode">Zmeniť v pumpe režim z JI/d na JI/h</string>
+    <string name="danar_switchtouhmode">Zmeniť v pumpe režim z U/d na U/h</string>
     <string name="danarkoreanpump">Kórejská DanaR</string>
     <string name="danarpump">DanaR</string>
     <string name="pumpdrivercorrected">Ovládač pumpy opravený</string>

@@ -10,6 +10,25 @@
     <string name="pump_status_busy">忙碌中</string>
     <string name="pump_status_suspended">已暫停</string>
     <string name="pump_status_executing_command">執行命令中</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">讀取設定</string>
+    <string name="pump_cmd_desc_get_firmware">讀取幫浦韌體</string>
+    <string name="pump_cmd_desc_get_basal_profile">讀取基礎率設定檔</string>
+    <string name="pump_cmd_desc_set_basal_profile">設定基礎率設定檔</string>
+    <string name="pump_cmd_desc_get_tbr">讀取臨時基礎率</string>
+    <string name="pump_cmd_desc_cancel_tbr">取消臨時基礎率</string>
+    <string name="pump_cmd_desc_set_tbr">設定臨時基礎率</string>
+    <string name="pump_cmd_desc_set_bolus">設定注射</string>
+    <string name="pump_cmd_desc_get_bolus">讀取注射</string>
+    <string name="pump_cmd_desc_cancel_bolus">取消注射</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">讀取剩餘胰島素</string>
+    <string name="pump_cmd_desc_get_battery_status">讀取電池狀態</string>
+    <string name="pump_cmd_desc_get_time">讀取時間</string>
+    <string name="pump_cmd_desc_set_time">設定時間</string>
+    <string name="pump_cmd_desc_get_pump_status">讀取幫浦狀態</string>
+    <string name="pump_cmd_desc_get_history">讀取歷史紀錄</string>
+    <string name="pump_cmd_desc_get_history_params">讀取歷史紀錄 %s</string>
+    <string name="pump_cmd_desc_custom">自訂指令</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">基礎率</string>
     <string name="history_group_configuration">配置</string>
@@ -31,6 +50,7 @@
     <string name="time_last_3_hours">過去三小時</string>
     <string name="time_last_6_hours">過去六小時</string>
     <string name="time_last_12_hours">過去十二小時</string>
+    <string name="time_last_24_hours">過去 24 小時</string>
     <string name="time_last_2_days">過去兩天</string>
     <string name="time_last_4_days">過去四天</string>
     <string name="time_last_week">過去一週</string>

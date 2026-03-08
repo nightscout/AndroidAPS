@@ -11,14 +11,14 @@
     <string name="application_pin">Mã PIN ứng dụng</string>
     <string name="bolus_password">Mật khẩu liều Bolus</string>
     <string name="bolus_pin">Mã PIN liều Bolus</string>
-    <string name="protection_timeout_title">Thời gian lưu giữ mật khẩu và mã PIN [giây]</string>
+    <string name="protection_timeout_title">Thời gian lưu mật khẩu và mã PIN [giây]</string>
     <string name="protection_timeout_summary">Thời gian trước khi phải nhập mật khẩu hoặc mã PIN</string>
     <string name="biometric">Sinh trắc học</string>
     <string name="custom_password">Mật khẩu tùy chọn</string>
     <string name="custom_pin">Mã PIN tùy chọn</string>
     <string name="noprotection">Không bảo mật</string>
     <string name="unsecure_fallback_biometric">Phương án dự phòng không an toàn</string>
-    <string name="unsecure_fallback_descriotion_biometric">Để bảo mật sinh trắc học hoạt động hiệu quả, cần phải đặt mật khẩu chính làm phương án dự phòng.\n\nVui lòng đặt mật khẩu chính!</string>
+    <string name="unsecure_fallback_descriotion_biometric">Để dùng sinh trắc học, bạn cần thiết lập mật khẩu chính làm phương án dự phòng.\n\n Cài đặt mật khẩu chính ngay!</string>
     <string name="password_set">Mật khẩu đã được đặt!</string>
     <string name="datastore_password_cleared">Mật khẩu dùng cho Xuất dữ liệu đã được xóa!</string>
     <string name="pin_set">Mã PIN đã được đặt!</string>

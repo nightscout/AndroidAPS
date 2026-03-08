@@ -10,6 +10,25 @@
     <string name="pump_status_busy">Bezig</string>
     <string name="pump_status_suspended">Onderbroken</string>
     <string name="pump_status_executing_command">Commando uitvoeren</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Instellingen ophalen</string>
+    <string name="pump_cmd_desc_get_firmware">Firmware van de pomp ophalen</string>
+    <string name="pump_cmd_desc_get_basal_profile">Basaal profiel ophalen</string>
+    <string name="pump_cmd_desc_set_basal_profile">Basaal profiel Instellen</string>
+    <string name="pump_cmd_desc_get_tbr">Tijdelijke basaal ophalen</string>
+    <string name="pump_cmd_desc_cancel_tbr">Tijdelijk basaal annuleren</string>
+    <string name="pump_cmd_desc_set_tbr">Tijdelijke basaal instellen</string>
+    <string name="pump_cmd_desc_set_bolus">Bolus instellen</string>
+    <string name="pump_cmd_desc_get_bolus">Bolus ophalen</string>
+    <string name="pump_cmd_desc_cancel_bolus">Bolus annuleren</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Resterende insuline ophalen</string>
+    <string name="pump_cmd_desc_get_battery_status">Batterijstatus ophalen</string>
+    <string name="pump_cmd_desc_get_time">Tijd ophalen</string>
+    <string name="pump_cmd_desc_set_time">Tijd instellen</string>
+    <string name="pump_cmd_desc_get_pump_status">Pomp status ophalen</string>
+    <string name="pump_cmd_desc_get_history">Historie ophalen</string>
+    <string name="pump_cmd_desc_get_history_params">Historie ophalen %s</string>
+    <string name="pump_cmd_desc_custom">Aangepast commando</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basaalstanden</string>
     <string name="history_group_configuration">Instellingen</string>
@@ -20,6 +39,7 @@
     <string name="history_group_bolus">Bolussen</string>
     <string name="history_group_prime">Vullen</string>
     <string name="history_group_alarm">Alarmen</string>
+    <string name="history_group_glucose">Glucose</string>
     <string name="history_group_base">Basis</string>
     <string name="history_group_other">Anders</string>
     <string name="history_group_events">Alle gebeurtenissen</string>
@@ -30,18 +50,21 @@
     <string name="time_last_3_hours">Laatste 3 uur</string>
     <string name="time_last_6_hours">Laatste 6 uur</string>
     <string name="time_last_12_hours">Laatste 12 uur</string>
+    <string name="time_last_24_hours">Laatste 24 uur</string>
     <string name="time_last_2_days">Afgelopen 2 dagen</string>
     <string name="time_last_4_days">Afgelopen 4 dagen</string>
     <string name="time_last_week">Vorige week</string>
     <string name="time_last_month">Vorige maand</string>
     <!-- BLE Config -->
     <string name="ble_config_button_scan_start">Scannen</string>
+    <string name="ble_config_scan_stop">Stop</string>
     <string name="ble_config_scan_selected">Geselecteerd</string>
     <string name="ble_config_scan_scanning">Scannen</string>
     <string name="ble_config_scan_finished">Scannen voltooid</string>
     <string name="ble_config_scan_error">Scanfout: %1$d</string>
     <string name="ble_config_remove">Verwijderen</string>
     <!-- Pump History -->
+    <string name="pump_history_type">Type:</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

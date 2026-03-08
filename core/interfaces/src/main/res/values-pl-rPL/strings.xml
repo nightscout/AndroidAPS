@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Events-->
+    <string name="bolus_delivering">Dostarczam %1$.2fU</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2fU dostarczony prawidłowo</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Zmieniono ster. pompy.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$dmin temu</string>
+    <string name="secago">%1$ds temu</string>
     <string name="minago_long">%1$d minut temu</string>
+    <string name="hoursago">%1$.1fh temu</string>
     <string name="days_ago">%1$.1f dni temu</string>
     <string name="days_ago_round">%1$.0f dni temu</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s dzień %2$s godziny temu</item>
+        <item quantity="few">%1$s dni %2$s godziny temu</item>
+        <item quantity="many">%1$s dni %2$s godziny temu</item>
+        <item quantity="other">%1$s dni %2$s godziny temu</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s godzinę temu</item>
+        <item quantity="few">%1$s godziny temu</item>
+        <item quantity="many">%1$s godzin temu</item>
+        <item quantity="other">%1$s godzin temu</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">chwilę temu</item>
+        <item quantity="few">%1$s minuty temu</item>
+        <item quantity="many">%1$s minut temu</item>
+        <item quantity="other">%1$s minut temu</item>
+    </plurals>
+    <string name="seconds_ago">sekundy temu</string>
     <string name="in_days">za %1$.0f dni</string>
     <string name="in_days_round">za %1$.0f dni</string>
     <string name="shorthour">h</string>
@@ -32,6 +56,7 @@
     <string name="connecting_for">Łączenie przez %1$d s</string>
     <string name="handshaking">Nawiązywanie połączenia</string>
     <string name="connected">Połączono</string>
+    <string name="authorized">Zautoryzowano</string>
     <string name="disconnecting">Rozłączanie</string>
     <string name="waiting_for_disconnection">Oczekiwanie na rozłączenie</string>
     <!-- Custom Watchface -->
@@ -65,4 +90,8 @@
     <string name="default_custom_watchface_external_comment">Domyślna tarcza zegarka, w tym zewnętrzne podglądy dla obserwujących. Możesz kliknąć na przycisk EKSPORT TARCZY aby wygenerować szablon</string>
     <string name="wear_default_watchface">Domyślna Tarcza</string>
     <string name="wear_more_watchfaces">Więcej tarcz zegarka</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Na zawsze</string>
 </resources>

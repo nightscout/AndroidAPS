@@ -157,7 +157,7 @@
     <string name="login">Login</string>
     <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
-    <string name="site_rotation">Rotasjon av stedsområder</string>
+    <string name="site_rotation">Rotasjon av sted</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Avbryt midlertidig mål</string>
     <string name="closedloop">Lukket Loop</string>

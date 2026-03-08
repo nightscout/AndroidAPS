@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_only_numeric_digits_allowed">Chỉ được phép nhập các chữ số.</string>
-    <string name="error_only_numeric_digits_range_allowed">Chỉ được phép nhập các chữ số trong khoảng %1$s - %2$s.</string>
+    <string name="error_only_numeric_digits_range_allowed">Chỉ chấp nhận số trong khoảng %1$s - %2$s.</string>
     <string name="error_this_field_cannot_contain_special_character">Trường này không được chứa ký tự đặc biệt nào</string>
     <string name="error_only_standard_letters_are_allowed">Chỉ được phép nhập các chữ cái chuẩn</string>
     <string name="error_field_must_not_be_empty">Trường này không được để trống</string>

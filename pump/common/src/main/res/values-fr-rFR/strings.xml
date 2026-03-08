@@ -10,6 +10,7 @@
     <string name="pump_status_busy">Occupé</string>
     <string name="pump_status_suspended">Suspendu</string>
     <string name="pump_status_executing_command">Exécution de la commande</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basales</string>
     <string name="history_group_configuration">Configurations</string>

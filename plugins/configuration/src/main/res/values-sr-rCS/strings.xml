@@ -4,6 +4,7 @@
     <string name="end_user_license_agreement_text">NE SME SE KORISTITI ZA DONOŠENJE MEDICINSKIH ODLUKA. NE POSTOJI GARANCIJA ZA PROGRAM, U MERI DOPUŠTENOJ PRIMJENJIVIM ZAKONOM. OSIM KADA JE DRUGAČE NAVEDENO U PISANJU NOSILACA AUTORSKOG PRAVA I/ILI DRUGE STRANE OBEZBEĐUJU PROGRAM „KAKAV JESTE“ BEZ BILO KOJE GARANCIJE, BILO IZRIČENE ILI PODRAZUMEVANE, UKLJUČUJUĆI, ALI NE OGRANIČAVAJUĆI SE NA, PODRAZUMEVANE GARANCIJE O PRODAJNOSTI I PRIKLADNOSTI ZA ODREĐENU NAMENU. CEO RIZIK PO KVALITETU I PERFORMANSE PROGRAMA JE NA VAMA. AKO SE POKAŽE NEISPRAVAN PROGRAM, VI PREUZIMATE TROŠKOVE SVIH NEOPHODNIH SERVISIRANJA, POPRAVKE ILI KOREKCIJE.</string>
     <string name="end_user_license_agreement_i_understand">RAZUMEM I SLAŽEM SE</string>
     <string name="profile">Profil</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Zahtev</string>
     <string name="apsmode_title">APS režim</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na belu listu za optimizaciju baterije – mogli biste imati problema s performansama.</string>
@@ -54,4 +55,9 @@
     <!-- Maintenance -->
     <!-- Custom Watchface -->
     <!-- Maintenance -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

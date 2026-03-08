@@ -44,6 +44,7 @@
     <string name="data_choices">אפשרויות נתונים</string>
     <string name="fabric_upload">העלאה ל-Fabric</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">בקשה</string>
     <string name="apsmode_title">מצב APS</string>
     <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
@@ -160,4 +161,10 @@
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
+    <!-- Google Drive Storage -->
+    <string name="export_options">אפשרויות ייצוא</string>
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

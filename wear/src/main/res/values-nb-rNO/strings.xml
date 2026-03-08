@@ -243,6 +243,7 @@
     <string name="wizard_result_bg_tt">BS (Midl. mål: %1$s)</string>
     <string name="wizard_result_trend">15\' trend</string>
     <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Ny IOB: %1$s E</string>
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Karbo (%1$d g)</string>
     <string name="wizard_result_subtotal">Delsum</string>

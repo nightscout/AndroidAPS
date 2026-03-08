@@ -20,14 +20,14 @@
     <string name="a11y_bg_quality_doubles">mục nhập kép</string>
     <string name="a11y_bg_quality_flat">Dữ liệu bằng phẳng. Được coi là sai</string>
     <!-- Safety -->
-    <string name="limitingextendedbolus">Giới hạn liều bolus mở rộng ở %1$.1f U vì %2$s</string>
+    <string name="limitingextendedbolus">Giới hạn liều bolus kéo dài ở %1$.1f U bởi vì %2$s</string>
     <string name="limitingcarbs">Hạn chế carbs ở mức %1$d g vì %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pump không hỗ trợ basal tạm thời</string>
+    <string name="pumpisnottempbasalcapable">Bơm không hỗ trợ liều nền tạm thời</string>
     <string name="closed_loop_disabled_on_dev_branch">Đang chạy phiên bản phát triển. Vòng lặp kín đã bị vô hiệu hóa.</string>
-    <string name="closed_loop_disabled_with_eb">Vòng lặp kín bị vô hiệu hóa do đang chạy bolus mở rộng</string>
+    <string name="closed_loop_disabled_with_eb">Vòng lặp kín bị vô hiệu hóa do đang chạy bolus kéo dài</string>
     <string name="smbalwaysdisabled">SMB luôn bật và SMB sau khi ăn đã bị vô hiệu hóa vì nguồn BG hiện tại không hỗ trợ lọc nâng cao</string>
     <string name="smbnotallowedinopenloopmode">SMB không được phép trong chế độ vòng lặp mở</string>
-    <string name="maxvalueinpreferences">giá trị tối đa trong phần Tùy chọn(preferences)</string>
+    <string name="maxvalueinpreferences">giá trị tối đa trong phần Tùy chọn</string>
     <string name="hardlimit">giới hạn cứng</string>
     <string name="treatmentssafety_title">An toàn trong điều trị</string>
     <!-- Objectives -->
