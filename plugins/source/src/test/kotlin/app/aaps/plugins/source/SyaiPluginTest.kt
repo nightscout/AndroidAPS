@@ -21,6 +21,6 @@ class SyaiPluginTest : TestBase() {
     }
 
     @Test fun advancedFilteringSupported() {
-        assertThat(syaiPlugin.advancedFilteringSupported()).isFalse()
+        assertThat(syaiPlugin.advancedFilteringSupported()).isTrue()
     }
 }
