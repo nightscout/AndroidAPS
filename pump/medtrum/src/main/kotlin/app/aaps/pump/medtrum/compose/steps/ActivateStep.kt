@@ -142,5 +142,3 @@ private fun PreviewComplete() {
         ActivateStepContent(state = ActivateState.COMPLETE, reservoirLevel = 200.0, onRetry = {}, onComplete = {}, onCancel = {})
     }
 }
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

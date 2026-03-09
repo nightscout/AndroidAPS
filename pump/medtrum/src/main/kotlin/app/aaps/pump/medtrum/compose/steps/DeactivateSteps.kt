@@ -229,7 +229,3 @@ private fun PreviewDeactivateComplete() {
         DeactivateCompleteContent(onNewPatch = {}, onDone = {})
     }
 }
-
-// endregion
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

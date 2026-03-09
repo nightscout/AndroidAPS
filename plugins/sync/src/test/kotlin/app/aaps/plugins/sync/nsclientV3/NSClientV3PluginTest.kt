@@ -84,8 +84,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository)
         sut =
             NSClientV3Plugin(
                 aapsLogger, rh, preferences, rxBus, context,

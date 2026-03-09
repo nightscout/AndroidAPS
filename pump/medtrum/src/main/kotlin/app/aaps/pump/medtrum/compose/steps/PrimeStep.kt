@@ -32,7 +32,6 @@ fun PrimeStep(
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
     val primeProgress by viewModel.medtrumPump.primeProgressFlow.collectAsStateWithLifecycle()
 
-    val isPrime = patchStep == PatchStep.PRIME
     val isPriming = patchStep == PatchStep.PRIMING
     val isPrimeComplete = patchStep == PatchStep.PRIME_COMPLETE
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
@@ -184,5 +183,3 @@ private fun PreviewComplete() {
         PrimeStepContent(state = PrimeState.COMPLETE, onStartPrime = {}, onRetry = {}, onNext = {}, onCancel = {})
     }
 }
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

@@ -175,6 +175,3 @@ private fun PreviewError() {
         PrepareStepContent(state = PrepareState.ERROR, pumpState = "STOPPED", onNext = {}, onFilled = {}, onRetry = {}, onCancel = {})
     }
 }
-
-// Simple HTML tag stripper for bold-annotated resource strings
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

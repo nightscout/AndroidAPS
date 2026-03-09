@@ -359,11 +359,11 @@ open class TestBaseWithProfile : TestBase() {
         profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil) }
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
 
-        whenever(ch.bolusProgressString(any())).thenReturn("AnyString")
+        whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("AnyString")
         whenever(ch.fromPump(any<PumpRate>())).thenAnswer { invocation ->
             (invocation.arguments[0] as PumpRate).cU
         }
-        whenever(ch.fromPump(any<PumpInsulin>())).thenAnswer { invocation ->
+        whenever(ch.fromPump(any<PumpInsulin>(), any<Boolean>())).thenAnswer { invocation ->
             (invocation.arguments[0] as PumpInsulin).cU
         }
     }

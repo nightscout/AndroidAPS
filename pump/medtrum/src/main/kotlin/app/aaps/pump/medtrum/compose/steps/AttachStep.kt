@@ -61,5 +61,3 @@ private fun PreviewAttachStep() {
         AttachStepContent(onNext = {}, onCancel = {})
     }
 }
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
