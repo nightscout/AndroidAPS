@@ -54,7 +54,7 @@ fun ActivateStep(
 
     ActivateStepContent(
         state = state,
-        reservoirText = viewModel.medtrumPump.reservoir.toString(),
+        reservoirLevel = viewModel.medtrumPump.reservoir,
         onRetry = {
             viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
             viewModel.moveStep(PatchStep.ACTIVATE)
@@ -69,7 +69,7 @@ internal enum class ActivateState { ACTIVATING, ERROR, COMPLETE }
 @Composable
 internal fun ActivateStepContent(
     state: ActivateState,
-    reservoirText: String = "",
+    reservoirLevel: Double = 0.0,
     onRetry: () -> Unit,
     onComplete: () -> Unit,
     onCancel: () -> Unit
@@ -103,7 +103,7 @@ internal fun ActivateStepContent(
 
             ActivateState.COMPLETE   -> {
                 Text(
-                    text = stringResource(R.string.activating_complete, reservoirText),
+                    text = stringResource(R.string.activating_complete, reservoirLevel),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(Modifier.height(8.dp))
@@ -142,6 +142,6 @@ private fun PreviewError() {
 @Composable
 private fun PreviewComplete() {
     MaterialTheme {
-        ActivateStepContent(state = ActivateState.COMPLETE, reservoirText = "200", onRetry = {}, onComplete = {}, onCancel = {})
+        ActivateStepContent(state = ActivateState.COMPLETE, reservoirLevel = 200.0, onRetry = {}, onComplete = {}, onCancel = {})
     }
 }
