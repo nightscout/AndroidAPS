@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothGattService
-import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.Intent
@@ -28,7 +27,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.scanForActivity
@@ -68,7 +66,8 @@ class BLEComm @Inject internal constructor(
     private val dateUtil: DateUtil,
     private val preferences: Preferences,
     private val configBuilder: ConfigBuilder,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val bluetoothAdapter: BluetoothAdapter?
 ) {
 
     companion object {
@@ -87,7 +86,6 @@ class BLEComm @Inject internal constructor(
     private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DanaRSPacket? = null
     private val mSendQueue = ArrayList<ByteArray>()
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
