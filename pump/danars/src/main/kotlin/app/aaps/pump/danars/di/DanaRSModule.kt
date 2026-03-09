@@ -7,6 +7,8 @@ import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSPacket
+import app.aaps.pump.danars.services.BleTransport
+import app.aaps.pump.danars.services.BleTransportImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -36,6 +38,9 @@ abstract class DanaRSModule {
         @Provides
         fun providesBluetoothAdapter(context: Context): BluetoothAdapter? = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     }
+
+    @Binds
+    abstract fun bindBleTransport(impl: BleTransportImpl): BleTransport
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
     @Binds
