@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -184,11 +185,20 @@ private fun ActionButtons(actions: List<PumpAction>) {
                     enabled = action.enabled,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(
-                        painter = painterResource(id = action.iconRes),
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    if (action.icon != null) {
+                        Icon(
+                            imageVector = action.icon,
+                            contentDescription = action.label,
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.Unspecified
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(id = action.iconRes),
+                            contentDescription = action.label,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.size(8.dp))
                     Text(text = action.label)
                 }

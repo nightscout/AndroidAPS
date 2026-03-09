@@ -2,6 +2,8 @@ package app.aaps.pump.equil
 
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.equil.driver.definition.ActivationProgress
@@ -25,6 +27,8 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var equilManager: EquilManager
+    @Mock lateinit var protectionCheck: ProtectionCheck
+    @Mock lateinit var blePreCheck: BlePreCheck
 
     private lateinit var equilPumpPlugin: EquilPumpPlugin
 
@@ -34,8 +38,8 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(anyInt())).thenReturn("")
         equilPumpPlugin =
             EquilPumpPlugin(
-                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context,
-                fabricPrivacy, pumpSync, equilManager, pumpEnactResultProvider, constraintsChecker, notificationManager
+                aapsLogger, rh, preferences, commandQueue, rxBus, context,
+                pumpSync, equilManager, pumpEnactResultProvider, constraintsChecker, notificationManager, protectionCheck, blePreCheck
             )
     }
 
@@ -57,8 +61,9 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `isInitialized should return true`() {
-        assertTrue(equilPumpPlugin.isInitialized())
+    fun `isInitialized should delegate to equilManager`() {
+        // Default mock returns false for isActivationCompleted()
+        assertFalse(equilPumpPlugin.isInitialized())
     }
 
     @Test

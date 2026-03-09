@@ -1,6 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.ui.compose.StatusLevel
 
 /**
@@ -51,7 +52,8 @@ enum class ActionCategory {
 @Immutable
 data class PumpAction(
     val label: String,
-    val iconRes: Int,
+    val iconRes: Int = 0,
+    val icon: ImageVector? = null,
     val category: ActionCategory = ActionCategory.PRIMARY,
     val enabled: Boolean = true,
     val visible: Boolean = true,
