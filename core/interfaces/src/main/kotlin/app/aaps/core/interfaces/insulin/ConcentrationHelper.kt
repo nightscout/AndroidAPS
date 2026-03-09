@@ -15,7 +15,7 @@ interface ConcentrationHelper {
      * @param amount PumpInsulin
      * @return Double (concerted value in IU)
      */
-    fun fromPump(amount: PumpInsulin): Double
+    fun fromPump(amount: PumpInsulin, isPriming: Boolean = false): Double
 
     /**
      * Convert concentrated absolute rate received from pump to IU using current concentration (conversion managed within PumpRate)
@@ -76,7 +76,7 @@ interface ConcentrationHelper {
      *
      * @param amount PumpInsulin
      */
-    fun bolusProgressString(delivered: PumpInsulin): String
+    fun bolusProgressString(delivered: PumpInsulin, isPriming: Boolean = false): String
 
     /**
      * show bolus Progress information for wear (to be used within EventOverviewBolusProgress)
@@ -84,7 +84,7 @@ interface ConcentrationHelper {
      * @param amount PumpInsulin
      * @param total Double
      */
-    fun bolusProgressString(delivered: PumpInsulin, total: Double): String
+    fun bolusProgressString(delivered: PumpInsulin, total: Double, isPriming: Boolean = false): String
 
     /**
      * Provide current concentration approved by user

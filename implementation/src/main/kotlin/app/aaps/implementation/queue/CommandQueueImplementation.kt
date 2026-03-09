@@ -348,7 +348,7 @@ class CommandQueueImplementation @Inject constructor(
         detailedBolusInfo.carbs =
             constraintChecker.applyCarbsConstraints(ConstraintObject(detailedBolusInfo.carbs.toInt(), aapsLogger)).value().toDouble()
         // add new command to queue
-        BolusProgressData.set(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, id = detailedBolusInfo.id)
+        BolusProgressData.set(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, id = detailedBolusInfo.id, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
         if (detailedBolusInfo.bolusType == BS.Type.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
         } else {

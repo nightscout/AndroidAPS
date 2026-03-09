@@ -25,7 +25,7 @@ class ConcentrationHelperImpl @Inject constructor(
 
     override fun isU100(): Boolean = concentration == 1.0
 
-    override fun fromPump(amount: PumpInsulin): Double = amount.iU(concentration)
+    override fun fromPump(amount: PumpInsulin, isPriming: Boolean): Double = if (isPriming) amount.cU else amount.iU(concentration)
 
     override fun fromPump(rate: PumpRate): Double = rate.iU(concentration, true)
 
@@ -65,9 +65,9 @@ class ConcentrationHelperImpl @Inject constructor(
         amount / concentration * 10
     )
 
-    override fun bolusProgressString(delivered: PumpInsulin): String = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivering, fromPump(delivered))
+    override fun bolusProgressString(delivered: PumpInsulin, isPriming: Boolean): String = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivering, fromPump(delivered, isPriming))
 
-    override fun bolusProgressString(delivered: PumpInsulin, total: Double): String = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_so_far, fromPump(delivered), total)
+    override fun bolusProgressString(delivered: PumpInsulin, total: Double, isPriming: Boolean): String = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_so_far, fromPump(delivered, isPriming), total)
 
     /**
      * Provide current running iCfg concentration
