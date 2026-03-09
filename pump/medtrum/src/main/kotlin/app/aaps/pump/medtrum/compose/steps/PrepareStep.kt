@@ -55,7 +55,7 @@ fun PrepareStep(
 
     PrepareStepContent(
         state = state,
-        pumpSN = viewModel.medtrumPump.pumpSN.toString(),
+        pumpSN = viewModel.medtrumPump.pumpSN,
         reservoirLevel = reservoirLevel,
         pumpState = viewModel.medtrumPump.pumpState.toString(),
         onNext = { viewModel.moveStep(PatchStep.PREPARE_PATCH_CONNECT) },
@@ -76,7 +76,7 @@ internal enum class PrepareState { INITIAL, CONNECTING, FILLED, ERROR }
 @Composable
 internal fun PrepareStepContent(
     state: PrepareState,
-    pumpSN: String = "",
+    pumpSN: Long = 0L,
     reservoirLevel: Double = 0.0,
     pumpState: String = "",
     onNext: () -> Unit,
@@ -159,7 +159,7 @@ internal fun PrepareStepContent(
 @Composable
 private fun PreviewInitial() {
     MaterialTheme {
-        PrepareStepContent(state = PrepareState.INITIAL, pumpSN = "12345678", onNext = {}, onFilled = {}, onRetry = {}, onCancel = {})
+        PrepareStepContent(state = PrepareState.INITIAL, pumpSN = 12345678L, onNext = {}, onFilled = {}, onRetry = {}, onCancel = {})
     }
 }
 
