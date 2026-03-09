@@ -54,6 +54,7 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
@@ -302,11 +303,12 @@ private fun FillDialogContent(
 
             // Insulin change section
             AnimatedVisibility(visible = uiState.showInsulinChange) {
-                InsulinChangeSection(
+                SelectInsulin(
                     availableInsulins = uiState.availableInsulins,
                     selectedInsulin = uiState.selectedInsulin,
                     activeInsulinLabel = uiState.activeInsulinLabel,
-                    onInsulinSelect = onInsulinSelect
+                    onInsulinSelect = onInsulinSelect,
+                    concentrationDropDownEnabled = uiState.concentrationEnabled
                 )
             }
 
@@ -566,12 +568,13 @@ private fun PreviewAapsClient() {
 @Composable
 private fun PreviewInsulinSelectionExpanded() {
     MaterialTheme {
-        InsulinChangeSection(
+        SelectInsulin(
             availableInsulins = previewInsulins,
             selectedInsulin = previewInsulins[0],
             activeInsulinLabel = "Fiasp U100",
             onInsulinSelect = {},
-            initialExpanded = true
+            initialExpanded = true,
+            concentrationDropDownEnabled = true
         )
     }
 }

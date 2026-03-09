@@ -30,11 +30,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,10 +58,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.graph.InsulinGraphCompose
-import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -93,8 +89,7 @@ fun InsulinManagementScreen(
     viewModel: InsulinManagementViewModel,
     initialMode: ScreenMode = ScreenMode.EDIT,
     onNavigateBack: () -> Unit,
-    onRequestEditMode: () -> Unit = {},
-    onNavigateToFillDialog: () -> Unit = {}
+    onRequestEditMode: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -157,6 +152,17 @@ fun InsulinManagementScreen(
                 showDeleteDialog = false
             },
             onDismiss = { showDeleteDialog = false }
+        )
+    }
+
+    // Activate confirmation dialog
+    uiState.activationMessage?.let { message ->
+        OkCancelDialog(
+            title = stringResource(CoreUiR.string.activate_insulin),
+            message = message,
+            icon = IcPluginInsulin,
+            onConfirm = { viewModel.executeActivation() },
+            onDismiss = { viewModel.dismissActivation() }
         )
     }
 
@@ -400,22 +406,23 @@ fun InsulinManagementScreen(
                             }
                         }
                     }
-
-                    // Activate FAB — routes to FillDialog (cartridge change) for safe insulin switching
-                    AapsFab(
-                        onClick = {
-                            if (hasUnsavedChanges) {
-                                showUnsavedDialog = true
-                            } else {
-                                onNavigateToFillDialog()
+                    val currentIcfgConcentration = uiState.insulins.getOrNull(uiState.currentCardIndex)?.concentration ?: 0.0
+                    if (currentIcfgConcentration == uiState.activeConcentration)
+                    // Activate FAB
+                        AapsFab(
+                            onClick = {
+                                if (hasUnsavedChanges) {
+                                    showUnsavedDialog = true
+                                } else {
+                                    viewModel.prepareActivation()
+                                }
                             }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = null
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = null
-                        )
-                    }
                 }
             }
 
@@ -526,44 +533,3 @@ private fun PageIndicatorDots(
 
 // --- Concentration Dropdown ---
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ConcentrationDropdown(
-    selected: ConcentrationType,
-    concentrations: List<ConcentrationType>,
-    onSelect: (ConcentrationType) -> Unit,
-    enabled: Boolean = true
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded && enabled,
-        onExpandedChange = { if (enabled) expanded = !expanded }
-    ) {
-        OutlinedTextField(
-            value = stringResource(selected.label),
-            onValueChange = {},
-            readOnly = true,
-            enabled = enabled,
-            label = { Text(stringResource(CoreUiR.string.concentration_label)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            concentrations.forEach { concentration ->
-                DropdownMenuItem(
-                    text = { Text(stringResource(concentration.label)) },
-                    onClick = {
-                        onSelect(concentration)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}

@@ -183,6 +183,7 @@
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">REMOVE</string>
     <string name="activate_profile">Activate profile</string>
+    <string name="activate_insulin">Activate insulin</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
@@ -266,8 +267,11 @@
     <string name="reason">Reason</string>
     <string name="nochangerequested">No change requested</string>
 
-    <!--    Concentration-->
+    <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insulin %1$s confirmed</string>
+    <string name="current_insulin">Currently active</string>
+    <string name="change_insulin">Change</string>
+    <string name="select_insulin_description">Select the insulin you are filling the pump with. A profile switch will be applied after activation/prime.</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>

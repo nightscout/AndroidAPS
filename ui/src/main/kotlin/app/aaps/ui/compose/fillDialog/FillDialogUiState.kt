@@ -42,7 +42,8 @@ data class FillDialogUiState(
     // Config
     val showBolus: Boolean = true,
     val showNotesFromPreferences: Boolean = false,
-    val simpleMode: Boolean = true
+    val simpleMode: Boolean = true,
+    val concentrationEnabled: Boolean = false
 ) {
 
     /** Whether any actionable item is selected */

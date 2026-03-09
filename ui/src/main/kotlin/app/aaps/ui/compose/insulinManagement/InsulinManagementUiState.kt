@@ -12,6 +12,7 @@ data class InsulinManagementUiState(
     val insulins: List<ICfg> = emptyList(),
     val currentCardIndex: Int = 0,
     val activeInsulinLabel: String? = null,
+    val activeConcentration: Double = 1.0,
 
     // Editor fields
     val editorName: String = "",
@@ -19,6 +20,9 @@ data class InsulinManagementUiState(
     val editorConcentration: ConcentrationType = ConcentrationType.U100,
     val editorPeakMinutes: Int = 75,
     val editorDiaHours: Double = 5.0,
+
+    // Activation dialog
+    val activationMessage: String? = null,
 
     // Screen mode
     val screenMode: ScreenMode = ScreenMode.EDIT,

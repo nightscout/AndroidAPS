@@ -527,9 +527,6 @@ class ComposeMainActivity : AppCompatActivity() {
                                 withProtection(ProtectionCheck.Protection.PREFERENCES) {
                                     insulinManagementViewModel.setScreenMode(ScreenMode.EDIT)
                                 }
-                            },
-                            onNavigateToFillDialog = {
-                                navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.CARTRIDGE_CHANGE.ordinal))
                             }
                         )
                     }

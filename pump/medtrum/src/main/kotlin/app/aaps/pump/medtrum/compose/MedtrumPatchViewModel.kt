@@ -11,6 +11,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
@@ -52,11 +54,13 @@ class MedtrumPatchViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     val medtrumPump: MedtrumPump,
     private val insulinManager: InsulinManager,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-
+    val concentrationEnabled: Boolean
+        get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
     private val medtrumService: MedtrumService?
         get() = medtrumPlugin.getService()
 

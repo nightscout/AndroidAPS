@@ -111,7 +111,8 @@ class FillDialogViewModel @Inject constructor(
                 pumpUnitsWarning = if (!ch.isU100()) rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()) else null,
                 showBolus = !config.AAPSCLIENT,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
-                simpleMode = preferences.get(BooleanKey.GeneralSimpleMode)
+                simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
+                concentrationEnabled = preferences.get(BooleanKey.GeneralInsulinConcentration)
             )
         }
     }
