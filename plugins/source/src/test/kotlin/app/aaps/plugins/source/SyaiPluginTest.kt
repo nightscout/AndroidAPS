@@ -22,7 +22,8 @@ class SyaiPluginTest : TestBase() {
         syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences, config)
     }
 
-    @Test fun advancedFilteringSupported() {
-        assertThat(syaiPlugin.advancedFilteringSupported()).isTrue()
+    @Test
+    fun `plugin is created`() {
+        assertThat(syaiPlugin).isNotNull()
     }
 }

@@ -19,6 +19,7 @@ import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.UE
+import app.aaps.core.data.model.advancedFilteringSupported
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -418,6 +419,13 @@ interface PersistenceLayer {
 
     // GV
     suspend fun getLastGlucoseValue(): GV?
+
+    /**
+     * Check if the latest glucose value's sensor supports advanced filtering.
+     * Derived from [getLastGlucoseValue]'s [app.aaps.core.data.model.SourceSensor].
+     */
+    suspend fun isAdvancedFilteringSupported(): Boolean =
+        getLastGlucoseValue()?.sourceSensor?.advancedFilteringSupported() ?: false
 
     /**
      *  Get highest id in database

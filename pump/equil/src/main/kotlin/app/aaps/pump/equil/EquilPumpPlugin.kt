@@ -17,6 +17,9 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -32,15 +35,14 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.pump.equil.compose.EquilComposeContent
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.driver.definition.ActivationProgress
@@ -57,10 +59,7 @@ import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
-import app.aaps.pump.equil.manager.command.PumpEvent
 import app.aaps.pump.equil.manager.customCommands.CmdModeAndHistoryGet
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -80,19 +79,24 @@ class EquilPumpPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val pumpSync: PumpSync,
     private val equilManager: EquilManager,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val constraintsChecker: ConstraintsChecker,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val protectionCheck: ProtectionCheck,
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(EquilFragment::class.java.name)
+        .composeContent { _ ->
+            EquilComposeContent(
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
@@ -109,36 +113,31 @@ class EquilPumpPlugin @Inject constructor(
     private val pumpType = PumpType.EQUIL
     private val bolusProfile: BolusProfile = BolusProfile()
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
 
     override fun onStart() {
         super.onStart()
         equilManager.init()
-        disposable += rxBus
-            .toObservable(EventEquilDataChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ playAlarm() }, fabricPrivacy::logException)
-
-        disposable += rxBus
-            .toObservable(EventEquilAlarm::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ eventEquilError ->
-                           commandQueue.performing()?.let {
-                               if (it.commandType == Command.CommandType.BOLUS) {
-                                   aapsLogger.info(
-                                       LTag.PUMPCOMM,
-                                       "eventEquilError.tips====${eventEquilError.tips}"
-                                   )
-                                   notificationManager.dismiss(NotificationId.EQUIL_ALARM)
-                                   notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, soundRes = app.aaps.core.ui.R.raw.alarm)
-                                   stopBolusDelivering()
-                               }
-                           }
-                       }, fabricPrivacy::logException)
 
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+
+        rxBus.toFlow(EventEquilDataChanged::class.java)
+            .onEach { playAlarm() }
+            .launchIn(newScope)
+
+        rxBus.toFlow(EventEquilAlarm::class.java)
+            .onEach { eventEquilError ->
+                commandQueue.performing()?.let {
+                    if (it.commandType == Command.CommandType.BOLUS) {
+                        aapsLogger.info(LTag.PUMPCOMM, "eventEquilError.tips====${eventEquilError.tips}")
+                        notificationManager.dismiss(NotificationId.EQUIL_ALARM)
+                        notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, soundRes = app.aaps.core.ui.R.raw.alarm)
+                        stopBolusDelivering()
+                    }
+                }
+            }
+            .launchIn(newScope)
         preferences.observe(EquilIntPreferenceKey.EquilTone).drop(1).onEach {
             val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
             commandQueue.customCommand(
@@ -168,7 +167,6 @@ class EquilPumpPlugin @Inject constructor(
 
     init {
         pumpDescription = PumpDescription().fillFor(pumpType)
-        PumpEvent.init(rh)
     }
 
     override fun onStop() {
@@ -176,10 +174,9 @@ class EquilPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()")
         scope?.cancel()
         scope = null
-        disposable.clear()
     }
 
-    override fun isInitialized(): Boolean = true
+    override fun isInitialized(): Boolean = equilManager.isActivationCompleted()
     override fun isConnected(): Boolean = true
     override fun isConnecting(): Boolean = false
     override fun isBusy(): Boolean = false

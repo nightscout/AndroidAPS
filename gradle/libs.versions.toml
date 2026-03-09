@@ -163,6 +163,7 @@ org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", v
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version = "5.0.5" }
+com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta01" }
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.2" }
 org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6.1.20" }

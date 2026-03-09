@@ -62,3 +62,4 @@ private fun PreviewAttachStep() {
     }
 }
 
+private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

@@ -15,11 +15,6 @@ class GlimpPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun advancedFilteringSupported() {
-        assertThat(glimpPlugin.advancedFilteringSupported()).isFalse()
-    }
-
-    @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
         glimpPlugin.addPreferenceScreen(preferenceManager, screen, context, null)

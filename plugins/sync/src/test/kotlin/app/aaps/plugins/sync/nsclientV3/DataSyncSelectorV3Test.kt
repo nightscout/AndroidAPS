@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nsclientV3
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
-import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.NSClientRepository
@@ -34,7 +33,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var virtualPump: VirtualPump
-    @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var nsClient: NsClient
     @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -44,7 +42,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     @BeforeEach
     fun setUp() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientSource, virtualPump, nsClientRepository)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository)
         sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, localProfileManager, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
     }
 
@@ -54,7 +52,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         class NSClientSourcePlugin : NSClientSource, BgSource {
 
             override fun isEnabled(): Boolean = true
-            override fun detectSource(glucoseValue: GV) {}
         }
 
         val nsClientSourcePlugin = NSClientSourcePlugin()

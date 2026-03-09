@@ -2,10 +2,13 @@ package app.aaps.implementation.plugin
 
 import android.Manifest
 import android.app.AlarmManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.PowerManager
+import android.provider.Settings
+import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
@@ -46,6 +49,20 @@ class PluginStore @Inject constructor(
 
         /** Custom identifier for the AAPS directory selection requirement. */
         const val PERMISSION_SELECT_DIRECTORY = "app.aaps.permission.SELECT_DIRECTORY"
+
+        /** Custom identifier for notification listener access. */
+        const val PERMISSION_NOTIFICATION_LISTENER = "app.aaps.permission.NOTIFICATION_LISTENER"
+
+        private fun isNotificationListenerEnabled(context: Context): Boolean {
+            val flat = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+            if (!TextUtils.isEmpty(flat)) {
+                for (name in flat.split(":")) {
+                    val cn = ComponentName.unflattenFromString(name)
+                    if (cn != null && TextUtils.equals(context.packageName, cn.packageName)) return true
+                }
+            }
+            return false
+        }
     }
 
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
@@ -276,6 +293,9 @@ class PluginStore @Inject constructor(
                 val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 am.canScheduleExactAlarms().not()
             }
+
+            PERMISSION_NOTIFICATION_LISTENER                         ->
+                !isNotificationListenerEnabled(context)
 
             else                                                     ->
                 ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED

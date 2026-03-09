@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
-import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import kotlinx.coroutines.runBlocking
@@ -41,7 +40,6 @@ class StoreDataForDbImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     private val config: Config,
-    private val nsClientSource: NSClientSource,
     private val virtualPump: VirtualPump,
     private val nsClientRepository: NSClientRepository
 ) : StoreDataForDb {
@@ -106,16 +104,13 @@ class StoreDataForDbImpl @Inject constructor(
                     val result = runBlocking {
                         persistenceLayer.insertCgmSourceData(Sources.NSClient, it.toMutableList(), emptyList(), null)
                     }
-                    result.updated.forEach { gv ->
-                        nsClientSource.detectSource(gv)
+                    result.updated.forEach { _ ->
                         updated.inc(GV::class.java.simpleName)
                     }
-                    result.inserted.forEach { gv ->
-                        nsClientSource.detectSource(gv)
+                    result.inserted.forEach { _ ->
                         inserted.inc(GV::class.java.simpleName)
                     }
-                    result.updatedNsId.forEach { gv ->
-                        nsClientSource.detectSource(gv)
+                    result.updatedNsId.forEach { _ ->
                         nsIdUpdated.inc(GV::class.java.simpleName)
                     }
                     sendLog("GlucoseValue", GV::class.java.simpleName)

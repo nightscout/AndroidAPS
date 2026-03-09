@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -31,6 +32,7 @@ fun PrimeStep(
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
     val primeProgress by viewModel.medtrumPump.primeProgressFlow.collectAsStateWithLifecycle()
 
+    val isPrime = patchStep == PatchStep.PRIME
     val isPriming = patchStep == PatchStep.PRIMING
     val isPrimeComplete = patchStep == PatchStep.PRIME_COMPLETE
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
@@ -126,11 +128,7 @@ internal fun PrimeStepContent(
             }
 
             PrimeState.ERROR    -> {
-                Text(
-                    text = stringResource(R.string.priming_error).stripHtml(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.error
-                )
+                WizardErrorBanner(message = stringResource(R.string.priming_error).stripHtml())
                 Spacer(Modifier.height(8.dp))
                 Text(
                     text = stringResource(R.string.do_not_attach_to_body),
@@ -186,3 +184,5 @@ private fun PreviewComplete() {
         PrimeStepContent(state = PrimeState.COMPLETE, onStartPrime = {}, onRetry = {}, onNext = {}, onCancel = {})
     }
 }
+
+private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

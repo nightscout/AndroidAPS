@@ -22,7 +22,8 @@ class PatchedSinoAppPluginTest : TestBase() {
         patchedSinoAppPlugin = PatchedSinoAppPlugin(rh, aapsLogger, preferences, config)
     }
 
-    @Test fun advancedFilteringSupported() {
-        assertThat(patchedSinoAppPlugin.advancedFilteringSupported()).isFalse()
+    @Test
+    fun `plugin is created`() {
+        assertThat(patchedSinoAppPlugin).isNotNull()
     }
 }

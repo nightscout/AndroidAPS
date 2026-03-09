@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -94,11 +95,7 @@ internal fun ActivateStepContent(
             }
 
             ActivateState.ERROR      -> {
-                Text(
-                    text = stringResource(R.string.activating_error).stripHtml(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.error
-                )
+                WizardErrorBanner(message = stringResource(R.string.activating_error).stripHtml())
             }
 
             ActivateState.COMPLETE   -> {
@@ -145,3 +142,5 @@ private fun PreviewComplete() {
         ActivateStepContent(state = ActivateState.COMPLETE, reservoirLevel = 200.0, onRetry = {}, onComplete = {}, onCancel = {})
     }
 }
+
+private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

@@ -352,6 +352,9 @@ class ComposeMainActivity : AppCompatActivity() {
                                                 data = "package:$packageName".toUri()
                                             }
                                         )
+
+                                    effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
+                                        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                                 }
 
                             is PermissionsSideEffect.ShowError               ->
@@ -397,7 +400,7 @@ class ComposeMainActivity : AppCompatActivity() {
 
                         // Pump setup button in bottom bar
                         val pumpPlugin = activePlugin.activePumpInternal as PluginBase
-                        val showPumpSetup = !activePlugin.activePump.isInitialized() && pumpPlugin.hasComposeContent()
+                        val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) && pumpPlugin.hasComposeContent()
                         val pumpSetupClassName = if (showPumpSetup) pumpPlugin.javaClass.simpleName else null
                         val pumpSetupIcon = if (showPumpSetup) pumpPlugin.pluginDescription.icon ?: Pump else null
                         val pumpSetupLabel = if (showPumpSetup) stringResource(pumpPlugin.pluginDescription.pluginName) else null

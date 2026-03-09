@@ -203,6 +203,7 @@ data class UserEntry(
         SyaiTag,            //From Syai Tag plugin
         SiBionic,
         Sino,
+        NotificationReader,
         Stats,              //From Stat Activity
         Aaps,               // MainApp
         BgFragment,

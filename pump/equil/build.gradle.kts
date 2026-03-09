@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -28,13 +29,14 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
-    implementation(project(":core:keys"))
 
     testImplementation(project(":shared:tests"))
 
-    api(libs.androidx.fragment)
-    api(libs.androidx.navigation.fragment)
-    api(libs.com.github.bumptech.glide)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.com.github.bumptech.glide.compose)
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     api(libs.androidx.room)
     api(libs.androidx.room.runtime)

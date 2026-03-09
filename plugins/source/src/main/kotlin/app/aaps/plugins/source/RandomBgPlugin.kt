@@ -102,8 +102,6 @@ class RandomBgPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    override fun advancedFilteringSupported(): Boolean = true
-
     @SuppressLint("WakelockTimeout")
     override fun onStart() {
         super.onStart()

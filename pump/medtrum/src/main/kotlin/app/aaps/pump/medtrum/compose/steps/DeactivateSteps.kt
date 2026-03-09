@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -33,20 +34,37 @@ fun ConfirmDeactivateStep(
         viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.START_DEACTIVATION)
     }
 
+    ConfirmDeactivateStepContent(
+        showConfirmDialog = showConfirmDialog,
+        onShowDialog = { showConfirmDialog = true },
+        onConfirm = {
+            showConfirmDialog = false
+            viewModel.moveStep(PatchStep.DEACTIVATE)
+        },
+        onDismissDialog = { showConfirmDialog = false },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+private fun ConfirmDeactivateStepContent(
+    showConfirmDialog: Boolean,
+    onShowDialog: () -> Unit,
+    onConfirm: () -> Unit,
+    onDismissDialog: () -> Unit,
+    onCancel: () -> Unit
+) {
     if (showConfirmDialog) {
         OkCancelDialog(
             title = stringResource(R.string.step_deactivate),
             message = stringResource(R.string.medtrum_deactivate_pump_confirm),
-            onConfirm = {
-                showConfirmDialog = false
-                viewModel.moveStep(PatchStep.DEACTIVATE)
-            },
-            onDismiss = { showConfirmDialog = false }
+            onConfirm = onConfirm,
+            onDismiss = onDismissDialog
         )
     }
 
     ConfirmDeactivateContent(
-        onNext = { showConfirmDialog = true },
+        onNext = onShowDialog,
         onCancel = onCancel
     )
 }
@@ -125,11 +143,7 @@ internal fun DeactivatingContent(
         ) else null
     ) {
         if (isError) {
-            Text(
-                text = stringResource(R.string.deactivating_error).stripHtml(),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.error
-            )
+            WizardErrorBanner(message = stringResource(R.string.deactivating_error).stripHtml())
         } else {
             Text(
                 text = stringResource(R.string.deactivating_pump),
@@ -217,3 +231,5 @@ private fun PreviewDeactivateComplete() {
 }
 
 // endregion
+
+private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

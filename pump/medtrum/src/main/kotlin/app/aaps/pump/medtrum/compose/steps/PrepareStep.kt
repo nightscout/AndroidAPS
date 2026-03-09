@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -144,11 +145,7 @@ internal fun PrepareStepContent(
                 )
                 if (state == PrepareState.ERROR) {
                     Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(R.string.unexpected_state, pumpState),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    WizardErrorBanner(message = stringResource(R.string.unexpected_state, pumpState))
                 }
             }
         }
@@ -178,3 +175,6 @@ private fun PreviewError() {
         PrepareStepContent(state = PrepareState.ERROR, pumpState = "STOPPED", onNext = {}, onFilled = {}, onRetry = {}, onCancel = {})
     }
 }
+
+// Simple HTML tag stripper for bold-annotated resource strings
+private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

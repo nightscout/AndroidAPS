@@ -54,17 +54,14 @@ import app.aaps.pump.equil.manager.command.CmdTempBasalSet
 import app.aaps.pump.equil.manager.command.PumpEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.ISODateTimeFormat
-import java.lang.reflect.Type
 import java.util.Calendar
 import java.util.Optional
 import javax.inject.Inject
@@ -94,32 +91,11 @@ class EquilManager @Inject constructor(
 
     fun init() {
         loadPodState()
-        initEquilError()
         equilBLE.init(this)
-        //equilBLE.connect("EquilManager::init")
     }
 
-    var listEvent: MutableList<PumpEvent> = ArrayList()
-
-    private fun initEquilError() {
-        listEvent = ArrayList()
-        listEvent.add(PumpEvent(4, 2, 2, rh.gs(R.string.equil_history_item3)))
-        listEvent.add(PumpEvent(4, 3, 0, rh.gs(R.string.equil_history_item4)))
-        listEvent.add(PumpEvent(4, 3, 2, rh.gs(R.string.equil_history_item5)))
-        listEvent.add(PumpEvent(4, 6, 1, rh.gs(R.string.equil_shutdown_be)))
-        listEvent.add(PumpEvent(4, 6, 2, rh.gs(R.string.equil_shutdown)))
-        listEvent.add(PumpEvent(4, 8, 0, rh.gs(R.string.equil_shutdown)))
-        listEvent.add(PumpEvent(5, 1, 2, rh.gs(R.string.equil_history_item18)))
-    }
-
-    fun getEquilError(port: Int, type: Int, level: Int): String {
-        val pumpEvent = PumpEvent(port, type, level, "")
-        val index = listEvent.indexOf(pumpEvent)
-        if (index == -1) {
-            return ""
-        }
-        return listEvent[index].comment
-    }
+    fun getEquilError(port: Int, type: Int, level: Int): String =
+        PumpEvent.getErrorString(rh, port, type, level)
 
     fun closeBleAuto() {
         equilBLE.closeBleAuto()
@@ -263,11 +239,12 @@ class EquilManager @Inject constructor(
                 while (!bolusProfile.stop && percent < 100) {
                     rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(percent / 100.0 * detailedBolusInfo.insulin), id = detailedBolusInfo.id))
                     SystemClock.sleep(sleep.toLong())
-                    percent = percent + percent1
+                    percent += percent1
                     aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.stop)
                 }
                 // constraint percent.
                 percent = min(percent, 100.0f)
+                rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
                 result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
             } else {
                 result.success = false
@@ -606,7 +583,7 @@ class EquilManager @Inject constructor(
 
     fun getActivationProgress(): ActivationProgress {
         if (hasPodState()) {
-            return Optional.ofNullable<ActivationProgress>(equilState?.activationProgress).orElse(ActivationProgress.NONE)
+            return Optional.ofNullable(equilState?.activationProgress).orElse(ActivationProgress.NONE)
         }
         return ActivationProgress.NONE
     }
@@ -662,7 +639,7 @@ class EquilManager @Inject constructor(
 
     fun decodeHistory(data: ByteArray) {
         var year = data[6].toInt() and 0xff
-        year = year + 2000
+        year += 2000
 
         val month = data[7].toInt() and 0xff
         val day = data[8].toInt() and 0xff
@@ -709,7 +686,7 @@ class EquilManager @Inject constructor(
 
     fun decodeData(data: ByteArray, saveData: Boolean) {
         var year = data[11].toInt() and 0xFF
-        year = year + 2000
+        year += 2000
         val month = data[12].toInt() and 0xff
         val day = data[13].toInt() and 0xff
         val hour = data[14].toInt() and 0xff
@@ -766,10 +743,10 @@ class EquilManager @Inject constructor(
 
         private fun createGson(): Gson {
             val gsonBuilder = GsonBuilder()
-                .registerTypeAdapter(DateTime::class.java, JsonSerializer { dateTime: DateTime?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)) })
-                .registerTypeAdapter(DateTime::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> ISODateTimeFormat.dateTime().parseDateTime(json!!.asString) })
-                .registerTypeAdapter(DateTimeZone::class.java, JsonSerializer { timeZone: DateTimeZone?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(timeZone!!.id) })
-                .registerTypeAdapter(DateTimeZone::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> DateTimeZone.forID(json!!.asString) })
+                .registerTypeAdapter(DateTime::class.java, JsonSerializer { dateTime: DateTime?, _, _ -> JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)) })
+                .registerTypeAdapter(DateTime::class.java, JsonDeserializer { json: JsonElement?, _, _ -> ISODateTimeFormat.dateTime().parseDateTime(json!!.asString) })
+                .registerTypeAdapter(DateTimeZone::class.java, JsonSerializer { timeZone: DateTimeZone?, _, _ -> JsonPrimitive(timeZone!!.id) })
+                .registerTypeAdapter(DateTimeZone::class.java, JsonDeserializer { json: JsonElement?, _, _ -> DateTimeZone.forID(json!!.asString) })
 
             return gsonBuilder.create()
         }

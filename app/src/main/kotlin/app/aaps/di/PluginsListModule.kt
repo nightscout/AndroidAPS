@@ -36,6 +36,7 @@ import app.aaps.plugins.source.GlunovoPlugin
 import app.aaps.plugins.source.IntelligoPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
+import app.aaps.plugins.source.NotificationReaderPlugin
 import app.aaps.plugins.source.PatchedSiAppPlugin
 import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
@@ -342,6 +343,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(476)
     abstract fun bindPatchedSinoAppPlugin(plugin: PatchedSinoAppPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(477)
+    abstract fun bindNotificationReaderPlugin(plugin: NotificationReaderPlugin): PluginBase
 
     @Binds
     @AllConfigs

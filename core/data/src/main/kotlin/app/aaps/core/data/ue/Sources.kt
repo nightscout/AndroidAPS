@@ -43,6 +43,7 @@ enum class Sources {
     SyaiTag,
     SiBionic,
     Sino,
+    NotificationReader,
     LocalProfile,       //From LocalProfile plugin
     Loop,               //From Loop plugin
     Maintenance,        //From Maintenance plugin

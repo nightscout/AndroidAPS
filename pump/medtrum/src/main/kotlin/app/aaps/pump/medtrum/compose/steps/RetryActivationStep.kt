@@ -30,6 +30,7 @@ fun RetryActivationStep(
     val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
 
+    val isRetry = patchStep == PatchStep.RETRY_ACTIVATION
     val isConnecting = patchStep == PatchStep.RETRY_ACTIVATION_CONNECT
     var showDiscardDialog by remember { mutableStateOf(false) }
 
@@ -132,3 +133,5 @@ private fun PreviewRetryConnecting() {
         RetryActivationContent(isConnecting = true, onRetry = {}, onDiscard = {}, onCancel = {})
     }
 }
+
+private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
