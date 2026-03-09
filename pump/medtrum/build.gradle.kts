@@ -26,6 +26,9 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
 
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+
     ksp(libs.com.google.dagger.compiler)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
