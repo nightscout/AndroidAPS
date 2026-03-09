@@ -27,8 +27,8 @@ class EventOverviewBolusProgress(status: String, val id: Long? = null, percent: 
         this(
             ch.bolusProgressString(delivered),
             id = id,
-            percent = min((ch.fromPump(delivered) / BolusProgressData.insulin * 100).toInt(), 100),
-            wearStatus = ch.bolusProgressString(delivered, BolusProgressData.insulin)
+            percent = min((ch.fromPump(delivered, BolusProgressData.isPriming) / BolusProgressData.insulin * 100).toInt(), 100),
+            wearStatus = ch.bolusProgressString(delivered, BolusProgressData.insulin, BolusProgressData.isPriming)
         )
 
     /**
