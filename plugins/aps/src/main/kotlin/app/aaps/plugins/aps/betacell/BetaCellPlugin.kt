@@ -8,7 +8,9 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.aps.RT
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
+import javax.inject.Provider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -40,6 +42,7 @@ class BetaCellPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
+    private val apsResultProvider: Provider<APSResult>,
     private val iobCobCalculator: IobCobCalculator
 ) : PluginBase(
     PluginDescription()
@@ -130,9 +133,20 @@ class BetaCellPlugin @Inject constructor(
             bg = gs.glucose, bgDelta = gs.delta, dtMin = 5.0,
             isf = calibratedIsf, iob = iobTotal, p = p
         )
-        result.deliverAt = System.currentTimeMillis()
-        lastAPSResult    = result
-        lastAPSRun       = System.currentTimeMillis()
+        val rt = RT(
+            algorithm        = APSResult.Algorithm.SMB,
+            runningDynamicIsf = false,
+            timestamp        = System.currentTimeMillis(),
+            bg               = gs.glucose,
+            rate             = result.rate,
+            units            = result.smb,
+            duration         = result.duration,
+            deliverAt        = System.currentTimeMillis(),
+            reason           = StringBuilder(result.reason)
+        )
+        val apsResult = apsResultProvider.get().with(rt)
+        lastAPSResult = apsResult
+        lastAPSRun    = System.currentTimeMillis()
 
         if (p.openLoopOnly) {
             aapsLogger.info(LTag.APS, "[OPEN LOOP] rate=${result.rate} smb=${result.smb} zone=${result.zone}")
