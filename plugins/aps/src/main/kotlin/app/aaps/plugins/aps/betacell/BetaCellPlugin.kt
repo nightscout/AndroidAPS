@@ -54,6 +54,7 @@ class BetaCellPlugin @Inject constructor(
     override val algorithm: APSResult.Algorithm = APSResult.Algorithm.SMB
     override var lastAPSResult: APSResult? = null
     override var lastAPSRun: Long = 0L
+    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = null
     override fun isEnabled(): Boolean = isEnabled(PluginType.APS)
 
     override fun configuration(): JSONObject = JSONObject().apply {
