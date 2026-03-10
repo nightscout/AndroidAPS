@@ -120,9 +120,4 @@ enum class BooleanKey(
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false),
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false),
 
-// ── β-Cell Plugin ──────────────────────────────────────────────────────
-    BetaCellSmbEnabled("betacell_smb_enabled", true),
-    BetaCellOpenLoop("betacell_open_loop_only", true),
-    BetaCellDebug("betacell_debug_mode", false),
-
 }
