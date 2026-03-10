@@ -52,4 +52,17 @@ enum class DoubleKey(
     ApsAutoIsfSmbDeliveryRatioMax("openapsama_smb_delivery_ratio_max", 0.5, 0.5, 1.0, defaultedBySM = true),
     ApsAutoIsfSmbMaxRangeExtension("openapsama_smb_max_range_extension", 1.0, 1.0, 5.0, defaultedBySM = true),
 
+    // β-Cell Plugin
+    BetaCellTargetBg("betacell_target_bg", 110.0, 70.0, 160.0),
+    BetaCellHypo("betacell_hypo", 70.0, 55.0, 90.0),
+    BetaCellHyper("betacell_hyper", 180.0, 140.0, 300.0),
+    BetaCellBasalPhysio("betacell_basal_physio", 3.7, 0.5, 8.0),
+    BetaCellHepatic("betacell_hepatic_extraction", 0.5, 0.0, 0.8),
+    BetaCellIobTau("betacell_iob_tau", 90.0, 30.0, 240.0),
+    BetaCellIsfMin("betacell_isf_min", 25.0, 10.0, 50.0),
+    BetaCellIsfMax("betacell_isf_max", 70.0, 30.0, 120.0),
+    BetaCellSlopeBrakeT("betacell_slope_brake_threshold", -0.5, -3.0, -0.1),
+    BetaCellSlopeBrakeF("betacell_slope_brake_factor", 0.4, 0.1, 1.0),
+    BetaCellSmbMax("betacell_smb_max_units", 0.4, 0.05, 1.0),
+    BetaCellSmbOffset("betacell_smb_threshold_offset", 20.0, 5.0, 60.0),
 }

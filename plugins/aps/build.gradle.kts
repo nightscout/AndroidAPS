@@ -21,6 +21,14 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
 
+    ksp(libs.com.google.dagger.compiler)
+    implementation(libs.com.google.dagger.android)
+    implementation(libs.com.google.dagger.android.support)
+
+
+    testImplementation(libs.org.junit.jupiter)
+    testImplementation(libs.org.mockito.kotlin)
+
     testImplementation(project(":pump:virtual"))
     testImplementation(project(":shared:tests"))
 

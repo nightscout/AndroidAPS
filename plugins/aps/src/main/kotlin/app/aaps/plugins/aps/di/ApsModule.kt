@@ -1,5 +1,4 @@
 package app.aaps.plugins.aps.di
-
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.plugins.aps.OpenAPSFragment
@@ -21,6 +20,10 @@ import dagger.android.ContributesAndroidInjector
 abstract class ApsModule {
 
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
+// ── β-Cell Plugin ──────────────────────────────────────────────────────
+    // ─
+
+
 
     @Module
     interface Bindings {

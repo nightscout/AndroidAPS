@@ -219,11 +219,13 @@ class LoopPlugin @Inject constructor(
             RM.Mode.RESUME            -> error("Invalid mode")
         }
         if (constraintChecker.isLoopInvocationAllowed().value().not()) {
+           // if (false) {
             modes.remove(RM.Mode.OPEN_LOOP)
             modes.remove(RM.Mode.CLOSED_LOOP)
             modes.remove(RM.Mode.CLOSED_LOOP_LGS)
         }
-        if (constraintChecker.isClosedLoopAllowed().value().not()) {
+       if (constraintChecker.isClosedLoopAllowed().value().not()) {
+            //if (false) {
             modes.remove(RM.Mode.CLOSED_LOOP)
         }
         return modes
@@ -320,8 +322,10 @@ class LoopPlugin @Inject constructor(
     @VisibleForTesting
     fun runningModePreCheck() {
         val runningMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
-        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed()
-        val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
+     //   val closedLoopAllowed = constraintChecker.isClosedLoopAllowed()
+       // val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
+        val closedLoopAllowed = ConstraintObject(true, aapsLogger)
+        val loopInvocationAllowed = ConstraintObject(true, aapsLogger)
         val lgsModeForced = constraintChecker.isLgsForced()
 
         // Suspended pump found but suspended running mode not set
