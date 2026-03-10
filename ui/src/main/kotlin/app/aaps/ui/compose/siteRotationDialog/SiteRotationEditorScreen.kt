@@ -50,16 +50,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcSiteRotation
-import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.ui.R
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationEditorViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
@@ -77,7 +78,7 @@ fun SiteRotationEditorScreen(
     val context = LocalContext.current
     val activity = context as? AppCompatActivity
     var showConfirmation by rememberSaveable { mutableStateOf(false) }
-    var showArrowDialog by remember { mutableStateOf(false) }
+    var showArrowDialog by rememberSaveable { mutableStateOf(false) }
     if (showArrowDialog) {
         ArrowSelectionDialog(
             onDismiss = { showArrowDialog = false },
@@ -113,29 +114,46 @@ fun SiteRotationEditorScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.resetToDefaults()
         viewModel.loadEntryByTimestamp(timestamp)
+    }
+
+    val displayEntries = remember(uiState.filteredEntries) {
+        viewModel.formatDisplayEntries(uiState.filteredEntries)
     }
 
     SiteRotationEditorContent(
         uiState = uiState,
+        displayEntries = displayEntries,
+        editedTeDate = uiState.editedTe?.let { viewModel.formatDate(it.timestamp) } ?: "",
+        editedTeLocation = uiState.editedTe?.let { viewModel.formatLocation(it.location) } ?: "",
         onClose = onClose,
-        viewModel = viewModel,
         onConfirmClick = { showConfirmation = true },
         onArrowClick = { showArrowDialog = true },
+        onNoteChange = { viewModel.updateNote(it) },
+        onZoneClick = { viewModel.updateLocation(it) },
+        onEntryClick = { viewModel.updateLocation(it.location) },
+        onShowPumpSites = { viewModel.setShowPumpSites(it) },
+        onShowCgmSites = { viewModel.setShowCgmSites(it) },
         activity = activity
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SiteRotationEditorContent(
+private fun SiteRotationEditorContent(
     uiState: SiteRotationUiState,
-    viewModel: SiteRotationEditorViewModel,
+    displayEntries: List<SiteEntryDisplayData>,
+    editedTeDate: String,
+    editedTeLocation: String,
     onClose: () -> Unit,
     onConfirmClick: () -> Unit,
     onArrowClick: () -> Unit,
-    activity: AppCompatActivity?
+    onNoteChange: (String) -> Unit,
+    onZoneClick: (TE.Location) -> Unit,
+    onEntryClick: (SiteEntryDisplayData) -> Unit,
+    onShowPumpSites: (Boolean) -> Unit,
+    onShowCgmSites: (Boolean) -> Unit,
+    activity: AppCompatActivity? = null
 ) {
 
     DisposableEffect(Unit) {
@@ -162,7 +180,7 @@ fun SiteRotationEditorContent(
                             tint = AapsTheme.elementColors.tempBasal,
                             modifier = Modifier.size(24.dp)
                         )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
+                        Spacer(modifier = Modifier.width(AapsSpacing.medium))
                         Text(stringResource(CoreUiR.string.site_rotation))
                     }
                 },
@@ -198,29 +216,31 @@ fun SiteRotationEditorContent(
                 CircularProgressIndicator()
             }
         } else {
+            val focusManager = LocalFocusManager.current
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .clearFocusOnTap(focusManager)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 0.dp),
+                        .padding(horizontal = AapsSpacing.extraLarge),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SiteRotationEditorDetails(
                         te = uiState.editedTe,
+                        dateString = editedTeDate,
+                        locationString = editedTeLocation,
                         onArrowClick = onArrowClick,
-                        onNoteChange = { viewModel.updateNote(it) },
-                        dateUtil = viewModel.dateUtil,
-                        translator = viewModel.translator
+                        onNoteChange = onNoteChange
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 0.dp),
+                        .padding(horizontal = AapsSpacing.extraLarge),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     MultiChoiceSegmentedButtonRow(
@@ -229,7 +249,7 @@ fun SiteRotationEditorContent(
                         // Bouton Pump (Cannula)
                         SegmentedButton(
                             checked = uiState.showPumpSites,
-                            onCheckedChange = { viewModel.setShowPumpSites(!uiState.showPumpSites || uiState.editedTe?.type == TE.Type.CANNULA_CHANGE) },
+                            onCheckedChange = { onShowPumpSites(!uiState.showPumpSites || uiState.editedTe?.type == TE.Type.CANNULA_CHANGE) },
                             shape = SegmentedButtonDefaults.itemShape(0, 2),
                             icon = {}
                         ) {
@@ -242,7 +262,7 @@ fun SiteRotationEditorContent(
                         // Bouton CGM (Sensor)
                         SegmentedButton(
                             checked = uiState.showCgmSites,
-                            onCheckedChange = { viewModel.setShowCgmSites(!uiState.showCgmSites || uiState.editedTe?.type == TE.Type.SENSOR_CHANGE) },
+                            onCheckedChange = { onShowCgmSites(!uiState.showCgmSites || uiState.editedTe?.type == TE.Type.SENSOR_CHANGE) },
                             shape = SegmentedButtonDefaults.itemShape(1, 2),
                             icon = {}
                         ) {
@@ -279,12 +299,12 @@ fun SiteRotationEditorContent(
                     }
                 }
 
-                var isFrontView by remember { mutableStateOf(true) }
+                var isFrontView by rememberSaveable { mutableStateOf(true) }
                 SecondaryTabRow(
                     selectedTabIndex = if (isFrontView) 0 else 1,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 0.dp),
+                        .padding(horizontal = AapsSpacing.extraLarge),
                     tabs = {
                         Tab(
                             selected = isFrontView,
@@ -311,9 +331,9 @@ fun SiteRotationEditorContent(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                                .padding(horizontal = AapsSpacing.extraLarge)
                         ) {
-                            Spacer(modifier = Modifier.width(32.dp))
+                            Spacer(modifier = Modifier.width(32.dp)) // body diagram margin
                             BodyView(
                                 filteredLocationColor = uiState.filteredLocationColor,
                                 showPumpSites = uiState.showPumpSites,
@@ -321,35 +341,60 @@ fun SiteRotationEditorContent(
                                 selectedLocation = uiState.selectedLocation,
                                 bodyType = uiState.showBodyType,
                                 isFrontView = isFrontView,
-                                onZoneClick = { location ->
-                                    viewModel.selectLocation(location)
-                                    viewModel.updateLocation(location)
-                                },
+                                onZoneClick = onZoneClick,
                                 modifier = Modifier
                                     .weight(1f),
                                 editedTe = uiState.editedTe
                             )
-                            Spacer(modifier = Modifier.width(32.dp))
+                            Spacer(modifier = Modifier.width(32.dp)) // body diagram margin
                         }
                     }
                 }
 
 
                 SiteEntryList(
-                    filteredEntries = uiState.filteredEntries,
+                    entries = displayEntries,
                     showEditButton = false,
-                    dateUtil = viewModel.dateUtil,
-                    translator = viewModel.translator,
-                    onEntryClick = { te ->
-                        viewModel.selectLocation(te.location ?: TE.Location.NONE)
-                    },
-                    onEditClick = { timestamp ->
-                    },
+                    onEntryClick = onEntryClick,
+                    onEditClick = { },
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SiteRotationEditorContentPreview() {
+    MaterialTheme {
+        SiteRotationEditorContent(
+            uiState = SiteRotationUiState(
+                isLoading = false,
+                editedTe = TE(
+                    timestamp = 1741600000000L,
+                    type = TE.Type.CANNULA_CHANGE,
+                    glucoseUnit = GlucoseUnit.MGDL,
+                    location = TE.Location.FRONT_RIGHT_UPPER_ABDOMEN,
+                    arrow = TE.Arrow.UP,
+                    note = "Test note"
+                ),
+                showPumpSites = true,
+                showCgmSites = true
+            ),
+            displayEntries = emptyList(),
+            editedTeDate = "10/03/2026",
+            editedTeLocation = "Left Abdomen",
+            onClose = {},
+            onConfirmClick = {},
+            onArrowClick = {},
+            onNoteChange = {},
+            onZoneClick = {},
+            onEntryClick = {},
+            onShowPumpSites = {},
+            onShowCgmSites = {}
+        )
     }
 }

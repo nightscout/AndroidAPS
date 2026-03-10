@@ -129,6 +129,12 @@ internal fun ManageBottomSheetContent(
             onNavigate = onNavigate
         )
 
+        ManageItem(
+            elementType = ElementType.SITE_ROTATION,
+            onDismiss = onDismiss,
+            onNavigate = onNavigate
+        )
+
         // Section: Basal (only if any basal item is visible)
         if (showTempBasal || showCancelTempBasal || showExtendedBolus || showCancelExtendedBolus) {
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
@@ -210,15 +216,6 @@ internal fun ManageBottomSheetContent(
             )
         }
 
-        // Section: Tools
-        HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-        SectionHeader(stringResource(CoreUiR.string.tools))
-
-        ManageItem(
-            elementType = ElementType.SITE_ROTATION,
-            onDismiss = onDismiss,
-            onNavigate = onNavigate
-        )
         // Section: Pump actions (only if non-empty)
         if (customActions.isNotEmpty()) {
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))

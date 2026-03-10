@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,7 +35,6 @@ import androidx.compose.material3.TooltipState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -43,15 +43,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
+import app.aaps.core.objects.extensions.directionToComposeIcon
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcSiteRotation
 import app.aaps.ui.R
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
 import kotlinx.coroutines.launch
+import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,10 +68,9 @@ fun SiteRotationManagementScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val activity = context as? AppCompatActivity
-    val toolsColor = MaterialTheme.colorScheme.primary
 
-    LaunchedEffect(Unit) {
-        viewModel.resetToDefaults()
+    val displayEntries = remember(uiState.filteredEntries) {
+        viewModel.formatDisplayEntries(uiState.filteredEntries)
     }
 
     DisposableEffect(Unit) {
@@ -79,6 +82,34 @@ fun SiteRotationManagementScreen(
         }
     }
 
+    SiteRotationManagementContent(
+        uiState = uiState,
+        displayEntries = displayEntries,
+        onClose = onClose,
+        onPreferenceClick = onPreferenceClick,
+        onShowPumpSites = { viewModel.setShowPumpSites(it) },
+        onShowCgmSites = { viewModel.setShowCgmSites(it) },
+        onZoneClick = { viewModel.selectLocation(it) },
+        onEntryClick = { viewModel.selectLocation(it.location) },
+        onEditEntry = onEditEntry,
+        activity = activity
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SiteRotationManagementContent(
+    uiState: SiteRotationUiState,
+    displayEntries: List<SiteEntryDisplayData>,
+    onClose: () -> Unit,
+    onPreferenceClick: () -> Unit,
+    onShowPumpSites: (Boolean) -> Unit,
+    onShowCgmSites: (Boolean) -> Unit,
+    onZoneClick: (TE.Location) -> Unit,
+    onEntryClick: (SiteEntryDisplayData) -> Unit,
+    onEditEntry: (Long) -> Unit,
+    activity: AppCompatActivity? = null
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -87,10 +118,10 @@ fun SiteRotationManagementScreen(
                         Icon(
                             imageVector = IcSiteRotation,
                             contentDescription = null,
-                            tint = toolsColor,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
+                        Spacer(modifier = Modifier.width(AapsSpacing.medium))
                         Text(stringResource(CoreUiR.string.site_rotation))
                     }
                 },
@@ -123,7 +154,6 @@ fun SiteRotationManagementScreen(
                 CircularProgressIndicator()
             }
         } else {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -132,16 +162,15 @@ fun SiteRotationManagementScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     MultiChoiceSegmentedButtonRow(
                         modifier = Modifier.weight(1f)
                     ) {
-                        // Bouton Pump (Cannula)
                         SegmentedButton(
                             checked = uiState.showPumpSites,
-                            onCheckedChange = { viewModel.setShowPumpSites(!uiState.showPumpSites) },
+                            onCheckedChange = { onShowPumpSites(!uiState.showPumpSites) },
                             shape = SegmentedButtonDefaults.itemShape(0, 2),
                             icon = {}
                         ) {
@@ -151,10 +180,9 @@ fun SiteRotationManagementScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                         }
-                        // Bouton CGM (Sensor)
                         SegmentedButton(
                             checked = uiState.showCgmSites,
-                            onCheckedChange = { viewModel.setShowCgmSites(!uiState.showCgmSites) },
+                            onCheckedChange = { onShowCgmSites(!uiState.showCgmSites) },
                             shape = SegmentedButtonDefaults.itemShape(1, 2),
                             icon = {}
                         ) {
@@ -166,7 +194,6 @@ fun SiteRotationManagementScreen(
                         }
                     }
 
-                    // Info tooltip (optionnel)
                     val tooltipState = remember { TooltipState() }
                     val scope = rememberCoroutineScope()
                     TooltipBox(
@@ -204,7 +231,7 @@ fun SiteRotationManagementScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                                .padding(horizontal = AapsSpacing.extraLarge)
                         ) {
                             BodyView(
                                 filteredLocationColor = uiState.filteredLocationColor,
@@ -213,11 +240,8 @@ fun SiteRotationManagementScreen(
                                 selectedLocation = uiState.selectedLocation,
                                 bodyType = uiState.showBodyType,
                                 isFrontView = true,
-                                onZoneClick = { location ->
-                                    viewModel.selectLocation(location)
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
+                                onZoneClick = onZoneClick,
+                                modifier = Modifier.weight(1f)
                             )
                             BodyView(
                                 filteredLocationColor = uiState.filteredLocationColor,
@@ -226,33 +250,64 @@ fun SiteRotationManagementScreen(
                                 selectedLocation = uiState.selectedLocation,
                                 bodyType = uiState.showBodyType,
                                 isFrontView = false,
-                                onZoneClick = { location ->
-                                    viewModel.selectLocation(location)
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
+                                onZoneClick = onZoneClick,
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
                 }
 
-
                 SiteEntryList(
-                    filteredEntries = uiState.filteredEntries,
+                    entries = displayEntries,
                     showEditButton = true,
-                    dateUtil = viewModel.dateUtil,
-                    translator = viewModel.translator,
-                    onEntryClick = { te ->
-                        viewModel.selectLocation(te.location ?: TE.Location.NONE)
-                    },
-                    onEditClick = { timestamp ->
-                        onEditEntry(timestamp)
-                    },
+                    onEntryClick = onEntryClick,
+                    onEditClick = onEditEntry,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SiteRotationManagementPreview() {
+    MaterialTheme {
+        SiteRotationManagementContent(
+            uiState = SiteRotationUiState(
+                isLoading = false,
+                showPumpSites = true,
+                showCgmSites = true
+            ),
+            displayEntries = listOf(
+                SiteEntryDisplayData(
+                    typeIcon = IcCannulaChange,
+                    dateString = "10/03/2026",
+                    locationString = "Front Right Upper Abdomen",
+                    arrowIcon = TE.Arrow.UP.directionToComposeIcon(),
+                    note = "Rotated clockwise",
+                    timestamp = 1741600000000L,
+                    location = TE.Location.FRONT_RIGHT_UPPER_ABDOMEN
+                ),
+                SiteEntryDisplayData(
+                    typeIcon = IcCgmInsert,
+                    dateString = "08/03/2026",
+                    locationString = "Side Right Upper Arm",
+                    arrowIcon = TE.Arrow.NONE.directionToComposeIcon(),
+                    note = null,
+                    timestamp = 1741400000000L,
+                    location = TE.Location.SIDE_RIGHT_UPPER_ARM
+                )
+            ),
+            onClose = {},
+            onPreferenceClick = {},
+            onShowPumpSites = {},
+            onShowCgmSites = {},
+            onZoneClick = {},
+            onEntryClick = {},
+            onEditEntry = {}
+        )
     }
 }

@@ -18,66 +18,73 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.extensions.directionToComposeIcon
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.ui.R
 
 /**
- * List of site entries with optional edit button
- *
- * @param filtered list of therapy events entries to display
- * @param showEditButton Whether to show the edit button column
- * @param dateUtil DateUtil for formatting dates
- * @param translator Translator for location names
- * @param onEntryClick Callback when a row is clicked (for filtering)
- * @param onEditClick Callback when edit button is clicked (only if showEditButton is true)
- * @param modifier Modifier for the LazyColumn
+ * Pre-formatted display data for a site entry row.
+ * Decouples the UI from DateUtil/Translator for testability and previews.
+ */
+@Immutable
+data class SiteEntryDisplayData(
+    val typeIcon: ImageVector,
+    val dateString: String,
+    val locationString: String,
+    val arrowIcon: ImageVector,
+    val note: String?,
+    val timestamp: Long,
+    val location: TE.Location
+)
+
+/**
+ * List of site entries with optional edit button.
  */
 @Composable
 fun SiteEntryList(
-    filteredEntries: List<TE>,
+    entries: List<SiteEntryDisplayData>,
     showEditButton: Boolean,
-    dateUtil: app.aaps.core.interfaces.utils.DateUtil,
-    translator: app.aaps.core.interfaces.utils.Translator,
-    onEntryClick: (TE) -> Unit,
+    onEntryClick: (SiteEntryDisplayData) -> Unit,
     onEditClick: ((Long) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        items(filteredEntries) { te ->
+        items(entries) { entry ->
             SiteEntryRow(
-                te = te,
+                entry = entry,
                 showEditButton = showEditButton,
-                dateUtil = dateUtil,
-                translator = translator,
-                onEntryClick = { onEntryClick(te) },
-                onEditClick = { onEditClick?.invoke(te.timestamp) }
+                onEntryClick = { onEntryClick(entry) },
+                onEditClick = { onEditClick?.invoke(entry.timestamp) }
             )
         }
     }
 }
 
 @Composable
-fun SiteEntryRow(
-    te: TE,
+private fun SiteEntryRow(
+    entry: SiteEntryDisplayData,
     showEditButton: Boolean,
-    dateUtil: app.aaps.core.interfaces.utils.DateUtil,
-    translator: app.aaps.core.interfaces.utils.Translator,
     onEntryClick: () -> Unit,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val hasNote = !te.note.isNullOrBlank()
-    val verticalPadding = if (hasNote) 8.dp else 0.dp
+    val hasNote = !entry.note.isNullOrBlank()
+    val verticalPadding = if (hasNote) AapsSpacing.medium else 0.dp
 
     Column(
         modifier = modifier
@@ -87,16 +94,16 @@ fun SiteEntryRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = verticalPadding),
+                .padding(horizontal = AapsSpacing.large, vertical = verticalPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = if (te.type == TE.Type.CANNULA_CHANGE) IcCannulaChange else IcCgmInsert,
+                imageVector = entry.typeIcon,
                 contentDescription = null,
                 tint = AapsTheme.elementColors.tempBasal,
                 modifier = Modifier.size(24.dp)
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(AapsSpacing.medium))
 
             Column(
                 modifier = Modifier.weight(1f)
@@ -105,27 +112,27 @@ fun SiteEntryRow(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = dateUtil.dateStringShort(te.timestamp),
+                        text = entry.dateString,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(end = 8.dp)
+                        modifier = Modifier.padding(end = AapsSpacing.medium)
                     )
                     Text(
-                        text = translator.translate(te.location ?: TE.Location.NONE),
+                        text = entry.locationString,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 if (hasNote) {
                     Text(
-                        text = te.note ?: "",
+                        text = entry.note ?: "",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 2.dp)
+                        modifier = Modifier.padding(top = AapsSpacing.extraSmall)
                     )
                 }
             }
 
             Icon(
-                imageVector = te.arrow?.directionToComposeIcon() ?: TE.Arrow.NONE.directionToComposeIcon(),
+                imageVector = entry.arrowIcon,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.onSurface
@@ -136,7 +143,7 @@ fun SiteEntryRow(
                     modifier = Modifier
                         .size(32.dp)
                         .clickable { onEditClick() }
-                        .padding(4.dp),
+                        .padding(AapsSpacing.small),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -150,9 +157,55 @@ fun SiteEntryRow(
         }
 
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge),
             thickness = 0.6.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        )
+    }
+}
+
+/** Convert a TE to display data using DateUtil and Translator. */
+fun TE.toDisplayData(
+    dateUtil: DateUtil,
+    translator: Translator
+): SiteEntryDisplayData = SiteEntryDisplayData(
+    typeIcon = if (type == TE.Type.CANNULA_CHANGE) IcCannulaChange else IcCgmInsert,
+    dateString = dateUtil.dateStringShort(timestamp),
+    locationString = translator.translate(location ?: TE.Location.NONE),
+    arrowIcon = (arrow ?: TE.Arrow.NONE).directionToComposeIcon(),
+    note = note,
+    timestamp = timestamp,
+    location = location ?: TE.Location.NONE
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun SiteEntryListPreview() {
+    MaterialTheme {
+        SiteEntryList(
+            entries = listOf(
+                SiteEntryDisplayData(
+                    typeIcon = IcCannulaChange,
+                    dateString = "10/03/2026",
+                    locationString = "Left Abdomen",
+                    arrowIcon = TE.Arrow.UP.directionToComposeIcon(),
+                    note = "Rotated clockwise",
+                    timestamp = 1741600000000L,
+                    location = TE.Location.FRONT_LEFT_UPPER_ABDOMEN
+                ),
+                SiteEntryDisplayData(
+                    typeIcon = IcCgmInsert,
+                    dateString = "08/03/2026",
+                    locationString = "Right Arm",
+                    arrowIcon = TE.Arrow.NONE.directionToComposeIcon(),
+                    note = null,
+                    timestamp = 1741400000000L,
+                    location = TE.Location.SIDE_RIGHT_UPPER_ARM
+                )
+            ),
+            showEditButton = true,
+            onEntryClick = {},
+            onEditClick = {}
         )
     }
 }

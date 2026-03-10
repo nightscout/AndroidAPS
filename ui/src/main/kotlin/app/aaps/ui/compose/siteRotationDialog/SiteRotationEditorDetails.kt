@@ -21,12 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.extensions.directionToComposeIcon
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
 
@@ -34,10 +34,10 @@ import app.aaps.core.ui.R as CoreUiR
 @Composable
 fun SiteRotationEditorDetails(
     te: TE?,
+    dateString: String,
+    locationString: String,
     onArrowClick: () -> Unit,
     onNoteChange: (String) -> Unit,
-    dateUtil: DateUtil,
-    translator: Translator,
     modifier: Modifier = Modifier
 ) {
     if (te == null) return
@@ -47,7 +47,7 @@ fun SiteRotationEditorDetails(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -56,18 +56,17 @@ fun SiteRotationEditorDetails(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = dateUtil.dateStringShort(te.timestamp),
+                        text = dateString,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(end = 8.dp)
+                        modifier = Modifier.padding(end = AapsSpacing.medium)
                     )
                     Text(
-                        text = translator.translate(te.location ?: TE.Location.NONE),
+                        text = locationString,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
 
-            // Icône de flèche cliquable
             IconButton(
                 onClick = onArrowClick,
                 modifier = Modifier.size(32.dp)
@@ -87,17 +86,15 @@ fun SiteRotationEditorDetails(
                 noteText = it
                 onNoteChange(it)
             },
-            label = { stringResource(CoreUiR.string.careportal_note) },
+            label = { Text(stringResource(CoreUiR.string.careportal_note)) },
             modifier = Modifier
                 .fillMaxWidth(),
-            singleLine = false,
-            maxLines = 1,
+            singleLine = true,
             isError = false,
             shape = MaterialTheme.shapes.small
         )
     }
 }
-
 
 @Composable
 fun ArrowSelectionDialog(
@@ -109,25 +106,21 @@ fun ArrowSelectionDialog(
         title = { Text(stringResource(R.string.select_arrow)) },
         text = {
             Column {
-                // Ligne du haut
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     ArrowIcon(TE.Arrow.UP_LEFT, onArrowSelected)
                     ArrowIcon(TE.Arrow.UP, onArrowSelected)
                     ArrowIcon(TE.Arrow.UP_RIGHT, onArrowSelected)
                 }
-                // Ligne du milieu
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     ArrowIcon(TE.Arrow.LEFT, onArrowSelected)
                     ArrowIcon(TE.Arrow.CENTER, onArrowSelected)
                     ArrowIcon(TE.Arrow.RIGHT, onArrowSelected)
                 }
-                // Ligne du bas
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     ArrowIcon(TE.Arrow.DOWN_LEFT, onArrowSelected)
                     ArrowIcon(TE.Arrow.DOWN, onArrowSelected)
                     ArrowIcon(TE.Arrow.DOWN_RIGHT, onArrowSelected)
                 }
-                // Ligne pour "None"
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     ArrowIcon(TE.Arrow.NONE, onArrowSelected)
                 }
@@ -139,7 +132,7 @@ fun ArrowSelectionDialog(
 }
 
 @Composable
-fun ArrowIcon(arrow: TE.Arrow, onArrowSelected: (TE.Arrow) -> Unit) {
+private fun ArrowIcon(arrow: TE.Arrow, onArrowSelected: (TE.Arrow) -> Unit) {
     IconButton(
         onClick = { onArrowSelected(arrow) },
         modifier = Modifier.size(48.dp)
@@ -148,6 +141,38 @@ fun ArrowIcon(arrow: TE.Arrow, onArrowSelected: (TE.Arrow) -> Unit) {
             imageVector = arrow.directionToComposeIcon(),
             contentDescription = null,
             modifier = Modifier.size(32.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ArrowSelectionDialogPreview() {
+    MaterialTheme {
+        ArrowSelectionDialog(
+            onDismiss = {},
+            onArrowSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SiteRotationEditorDetailsPreview() {
+    MaterialTheme {
+        SiteRotationEditorDetails(
+            te = TE(
+                timestamp = 1741600000000L,
+                type = TE.Type.CANNULA_CHANGE,
+                glucoseUnit = GlucoseUnit.MGDL,
+                location = TE.Location.FRONT_LEFT_UPPER_ABDOMEN,
+                arrow = TE.Arrow.UP,
+                note = "Test note"
+            ),
+            dateString = "10/03/2026",
+            locationString = "Left Abdomen",
+            onArrowClick = {},
+            onNoteChange = {}
         )
     }
 }

@@ -26,20 +26,22 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.model.TE
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcSiteRotation
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.ui.R
 import app.aaps.ui.compose.siteRotationDialog.viewModels.BodyType
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
+import app.aaps.core.ui.R as CoreUiR
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SiteRotationSettingsScreen(
     viewModel: SiteRotationManagementViewModel,
@@ -47,10 +49,26 @@ fun SiteRotationSettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.resetToDefaults()
-    }
+    SiteRotationSettingsContent(
+        uiState = uiState,
+        onNavigateBack = onNavigateBack,
+        onZoneClick = { viewModel.selectLocation(it) },
+        onBodyTypeChange = { viewModel.setBodyType(it) },
+        onDefaultPumpSitesChange = { viewModel.setDefaultPumpSites(it) },
+        onDefaultCgmSitesChange = { viewModel.setDefaultCgmSites(it) }
+    )
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SiteRotationSettingsContent(
+    uiState: SiteRotationUiState,
+    onNavigateBack: () -> Unit,
+    onZoneClick: (TE.Location) -> Unit,
+    onBodyTypeChange: (BodyType) -> Unit,
+    onDefaultPumpSitesChange: (Boolean) -> Unit,
+    onDefaultCgmSitesChange: (Boolean) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,7 +80,7 @@ fun SiteRotationSettingsScreen(
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
+                        Spacer(modifier = Modifier.width(AapsSpacing.medium))
                         Text(stringResource(CoreUiR.string.settings))
                     }
                 },
@@ -95,7 +113,7 @@ fun SiteRotationSettingsScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = AapsSpacing.extraLarge)
                     ) {
                         BodyView(
                             filteredLocationColor = uiState.filteredLocationColor,
@@ -104,12 +122,10 @@ fun SiteRotationSettingsScreen(
                             selectedLocation = uiState.selectedLocation,
                             bodyType = uiState.showBodyType,
                             isFrontView = true,
-                            onZoneClick = { location ->
-                                viewModel.selectLocation(location)
-                            },
+                            onZoneClick = onZoneClick,
                             modifier = Modifier.weight(1f)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(AapsSpacing.medium))
                         BodyView(
                             filteredLocationColor = uiState.filteredLocationColor,
                             showPumpSites = uiState.showPumpSites,
@@ -117,20 +133,17 @@ fun SiteRotationSettingsScreen(
                             selectedLocation = uiState.selectedLocation,
                             bodyType = uiState.showBodyType,
                             isFrontView = false,
-                            onZoneClick = { location ->
-                                viewModel.selectLocation(location)
-                            },
+                            onZoneClick = onZoneClick,
                             modifier = Modifier.weight(1f)
                         )
                     }
                 }
             }
 
-            // Bloc User Profile
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(AapsSpacing.extraLarge)
             ) {
                 Text(
                     text = stringResource(R.string.user_profile),
@@ -141,7 +154,7 @@ fun SiteRotationSettingsScreen(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(AapsSpacing.medium))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -149,28 +162,25 @@ fun SiteRotationSettingsScreen(
                     ProfileRadioButton(
                         text = stringResource(R.string.site_man),
                         selected = uiState.showBodyType == BodyType.MAN,
-                        onClick = { viewModel.setBodyType(BodyType.MAN) }
+                        onClick = { onBodyTypeChange(BodyType.MAN) }
                     )
                     ProfileRadioButton(
                         text = stringResource(R.string.site_woman),
                         selected = uiState.showBodyType == BodyType.WOMAN,
-                        onClick = { viewModel.setBodyType(BodyType.WOMAN) }
+                        onClick = { onBodyTypeChange(BodyType.WOMAN) }
                     )
                     ProfileRadioButton(
                         text = stringResource(R.string.site_child),
                         selected = uiState.showBodyType == BodyType.CHILD,
-                        onClick = { viewModel.setBodyType(BodyType.CHILD) }
+                        onClick = { onBodyTypeChange(BodyType.CHILD) }
                     )
                 }
             }
 
-            //Spacer(modifier = Modifier.height(16.dp))
-
-            // Bloc Site Management Profile
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(AapsSpacing.extraLarge)
             ) {
                 Text(
                     text = stringResource(R.string.site_management),
@@ -181,7 +191,7 @@ fun SiteRotationSettingsScreen(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(AapsSpacing.medium))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -192,7 +202,7 @@ fun SiteRotationSettingsScreen(
                     )
                     Switch(
                         checked = uiState.showPumpSites,
-                        onCheckedChange = { viewModel.setDefaultPumpSites(it) }
+                        onCheckedChange = onDefaultPumpSitesChange
                     )
                 }
                 Row(
@@ -205,7 +215,7 @@ fun SiteRotationSettingsScreen(
                     )
                     Switch(
                         checked = uiState.showCgmSites,
-                        onCheckedChange = { viewModel.setDefaultCgmSites(it) }
+                        onCheckedChange = onDefaultCgmSitesChange
                     )
                 }
             }
@@ -214,7 +224,7 @@ fun SiteRotationSettingsScreen(
 }
 
 @Composable
-fun ProfileRadioButton(
+private fun ProfileRadioButton(
     text: String,
     selected: Boolean,
     onClick: () -> Unit
@@ -224,6 +234,25 @@ fun ProfileRadioButton(
         modifier = Modifier.clickable { onClick() }
     ) {
         RadioButton(selected = selected, onClick = null)
-        Text(text = text, modifier = Modifier.padding(start = 4.dp))
+        Text(text = text, modifier = Modifier.padding(start = AapsSpacing.small))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SiteRotationSettingsPreview() {
+    MaterialTheme {
+        SiteRotationSettingsContent(
+            uiState = SiteRotationUiState(
+                showBodyType = BodyType.MAN,
+                showPumpSites = true,
+                showCgmSites = true
+            ),
+            onNavigateBack = {},
+            onZoneClick = {},
+            onBodyTypeChange = {},
+            onDefaultPumpSitesChange = {},
+            onDefaultCgmSitesChange = {}
+        )
     }
 }

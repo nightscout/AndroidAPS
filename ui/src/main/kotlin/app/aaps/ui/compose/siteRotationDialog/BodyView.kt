@@ -13,14 +13,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.Matrix
+import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.Path as ComposePath
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import app.aaps.core.data.model.TE
 import app.aaps.ui.compose.siteRotationDialog.viewModels.BodyType
+import androidx.compose.ui.graphics.Path as ComposePath
 
 @Composable
 fun BodyView(
@@ -42,7 +42,8 @@ fun BodyView(
         computeZoneColors(filteredLocationColor, showPumpSites, showCgmSites)
     }
 
-    fun showLocation(location: TE.Location): Boolean = location.pump || (showCgmSites && editedTe?.type != TE.Type.CANNULA_CHANGE)
+    fun showLocation(location: TE.Location): Boolean =
+        (showPumpSites && location.pump) || (showCgmSites && !location.pump && editedTe?.type != TE.Type.CANNULA_CHANGE)
 
     BoxWithConstraints(modifier = modifier.aspectRatio(aspectRatio)) {
         val canvasWidth = constraints.maxWidth.toFloat()
@@ -117,7 +118,6 @@ fun Path.containsPoint(x: Float, y: Float): Boolean {
     return region.contains(x.toInt(), y.toInt())
 }
 
-
 private fun computeZoneColors(
     entries: List<TE>,
     showPumpSites: Boolean,
@@ -149,7 +149,6 @@ private fun computeZoneColors(
         .filterValues { it != null }
         .mapValues { it.value!! }
 
-
     fun getSmoothColor(fraction: Float): Color {
         val colors = listOf(
             Color.Red,
@@ -161,14 +160,17 @@ private fun computeZoneColors(
         return when {
             fraction <= 0f -> colors[0]
             fraction > 1f -> colors[4]
+
             fraction < 0.25f -> {
                 val f = fraction / 0.25f
                 interpolateColor(colors[0], colors[1], f)
             }
+
             fraction < 0.50f -> {
                 val f = (fraction - 0.25f) / 0.25f
                 interpolateColor(colors[1], colors[2], f)
             }
+
             else -> {
                 val f = (fraction - 0.50f) / 0.50f
                 interpolateColor(colors[2], colors[3], f)
@@ -190,21 +192,22 @@ private fun computeZoneColors(
 
         val color = when {
             !showPumpSites && !showCgmSites -> Color.Transparent
-            showPumpSites && showCgmSites -> {
+
+            showPumpSites && showCgmSites   -> {
                 if (cannulaFraction < sensorFraction) getSmoothColor(cannulaFraction)
                 else getSmoothColor(sensorFraction)
             }
-            showPumpSites -> getSmoothColor(cannulaFraction)
-            showCgmSites -> getSmoothColor(sensorFraction)
-            else -> Color.Transparent
+
+            showPumpSites                   -> getSmoothColor(cannulaFraction)
+            showCgmSites                    -> getSmoothColor(sensorFraction)
+            else                            -> Color.Transparent
         }
         location?.let { colors[it] = color }
     }
     return colors
 }
 
-
-fun interpolateColor(start: Color, end: Color, fraction: Float): Color {
+private fun interpolateColor(start: Color, end: Color, fraction: Float): Color {
     return Color(
         red = start.red + (end.red - start.red) * fraction,
         green = start.green + (end.green - start.green) * fraction,

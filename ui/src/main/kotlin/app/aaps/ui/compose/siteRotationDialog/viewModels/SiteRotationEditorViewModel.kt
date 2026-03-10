@@ -1,9 +1,7 @@
 package app.aaps.ui.compose.siteRotationDialog.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TE
@@ -14,34 +12,32 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.R
+import app.aaps.ui.compose.siteRotationDialog.SiteEntryDisplayData
+import app.aaps.ui.compose.siteRotationDialog.toDisplayData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 @Stable
 class SiteRotationEditorViewModel @Inject constructor(
-    var rh: ResourceHelper,
-    var uel: UserEntryLogger,
-    var rxBus: RxBus,
-    var dateUtil: DateUtil,
-    var persistenceLayer: PersistenceLayer,
-    var preferences: Preferences,
-    var translator: Translator
+    private val rh: ResourceHelper,
+    private val uel: UserEntryLogger,
+    private val dateUtil: DateUtil,
+    private val persistenceLayer: PersistenceLayer,
+    private val preferences: Preferences,
+    private val translator: Translator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -63,7 +59,7 @@ class SiteRotationEditorViewModel @Inject constructor(
         loadEntries()
     }
 
-    fun resetToDefaults() {
+    private fun resetToDefaults() {
         _uiState.value = _uiState.value.copy(
             selectedLocation = TE.Location.NONE,
             showPumpSites = preferences.get(BooleanKey.SiteRotationManagePump),
@@ -88,13 +84,14 @@ class SiteRotationEditorViewModel @Inject constructor(
                         te.type == TE.Type.CANNULA_CHANGE || te.type == TE.Type.SENSOR_CHANGE
                     }
                 _uiState.value = _uiState.value.copy(entries = entries, isLoading = false)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
     }
 
     fun loadEntryByTimestamp(timestamp: Long) {
+        resetToDefaults()
         viewModelScope.launch {
             try {
                 val editedTeList = persistenceLayer.getTherapyEventDataFromToTime(timestamp, timestamp)
@@ -102,15 +99,25 @@ class SiteRotationEditorViewModel @Inject constructor(
                         te.type == TE.Type.CANNULA_CHANGE || te.type == TE.Type.SENSOR_CHANGE
                     }
                 if (editedTeList.isNotEmpty()) {
-
-                    _uiState.value = _uiState.value.copy(editedTe = editedTeList[0])
-                    selectLocation(editedTeList[0].location ?: TE.Location.NONE)
+                    val te = editedTeList[0]
+                    loadedNote = te.note
+                    loadedLocation = te.location
+                    loadedArrow = te.arrow
+                    _uiState.value = _uiState.value.copy(editedTe = te, isEdited = false)
+                    selectLocation(te.location ?: TE.Location.NONE)
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
     }
+
+    fun formatDisplayEntries(entries: List<TE>): List<SiteEntryDisplayData> =
+        entries.map { it.toDisplayData(dateUtil, translator) }
+
+    fun formatDate(timestamp: Long): String = dateUtil.dateStringShort(timestamp)
+
+    fun formatLocation(location: TE.Location?): String = translator.translate(location ?: TE.Location.NONE)
 
     fun selectLocation(location: TE.Location) {
         _uiState.value = _uiState.value.copy(selectedLocation = location)
@@ -144,7 +151,7 @@ class SiteRotationEditorViewModel @Inject constructor(
     }
 
     fun updateNote(note: String) {
-        val recNote = if (note.isBlank()) null else note
+        val recNote = note.ifBlank { null }
         _uiState.value = _uiState.value.copy(
             editedTe = _uiState.value.editedTe?.copy(note = recNote),
             isEdited = _uiState.value.editedTe?.location != loadedLocation ||
@@ -160,10 +167,10 @@ class SiteRotationEditorViewModel @Inject constructor(
                 lines.add(rh.gs(R.string.record_site_location, translator.translate(te.location)))
             if (te.arrow != loadedArrow)
                 lines.add(rh.gs(R.string.record_site_arrow, translator.translate(te.arrow)))
-            if (te.note?.isNotEmpty() ?: false) {
-                lines.add(rh.gs(R.string.record_site_note, te.note))
-            } else {
+            if (te.note != loadedNote) {
                 if (!te.note.isNullOrEmpty())
+                    lines.add(rh.gs(R.string.record_site_note, te.note))
+                else
                     lines.add(rh.gs(R.string.delete_site_note))
             }
         }
@@ -172,8 +179,8 @@ class SiteRotationEditorViewModel @Inject constructor(
 
     fun confirmAndSave() {
         viewModelScope.launch {
-            _uiState.value.editedTe?.let { te ->
-                te.ids = IDs()  // Force Upload in NS
+            _uiState.value.editedTe?.let { original ->
+                val te = original.copy(ids = IDs())  // Force Upload in NS
                 uel.log(
                     action = when (te.type) {
                         TE.Type.CANNULA_CHANGE -> Action.SITE_LOCATION
