@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -38,6 +39,7 @@ class BetaCellPlugin @Inject constructor(
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
     private val iobCobCalculator: IobCobCalculator
 ) : PluginBase(
     PluginDescription()
@@ -54,7 +56,7 @@ class BetaCellPlugin @Inject constructor(
     override val algorithm: APSResult.Algorithm = APSResult.Algorithm.SMB
     override var lastAPSResult: APSResult? = null
     override var lastAPSRun: Long = 0L
-    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = null
+    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = glucoseStatusCalculatorSMB.getGlucoseStatusData(allowOldData)
     override fun isEnabled(): Boolean = isEnabled(PluginType.APS)
 
     override fun configuration(): JSONObject = JSONObject().apply {
@@ -111,11 +113,9 @@ class BetaCellPlugin @Inject constructor(
             aapsLogger.error(LTag.APS, "No profile — aborting"); return
         }
 
-        val bgList = iobCobCalculator.ads.getBgReadingsDataTableCopy()
-        if (bgList.isEmpty()) { aapsLogger.warn(LTag.APS, "No CGM data"); return }
-        val last  = bgList[0]
-        val delta = if (bgList.size >= 2) (last.value - bgList[1].value) / 5.0 else 0.0
-        val gs    = GlucoseStatus(glucose = last.value, delta = delta, shortAvgDelta = delta, longAvgDelta = delta, timestamp = last.timestamp)
+        val gs = glucoseStatusCalculatorSMB.getGlucoseStatusData(false) ?: run {
+            aapsLogger.warn(LTag.APS, "No CGM data"); return
+        }
 
         val windowMs = p.isfWindowH * 60 * 60 * 1000L
         val cutoff   = System.currentTimeMillis() - windowMs
