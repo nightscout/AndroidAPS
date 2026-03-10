@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ── Plugin identity ──────────────────────────────────────────────── -->
+    <string name="betacell_plugin_name">β-Cell Pancreas</string>
+    <string name="betacell_short_name">βCell</string>
+    <string name="betacell_description">Modélisation β-cellule pancréatique.\n
+Port du script PowerShell Mini-Pancréas vers Kotlin AAPS.\n\n
+• ISF calibré rolling 8h (SD borné [25–70] mg/dL/U)\n
+• IOB non-linéaire exponentiel τ=90 min\n
+• First-pass hépatique 50%\n
+• Guard hypo absolu BG &lt; seuil → 0 U\n
+• Tous paramètres configurables via Préférences\n
+• Open loop par défaut (sécurité)</string>
+
+    <!-- ── Fragment debug UI ──────────────────────────────────────────────── -->
+    <string name="betacell_zone_hypo">🔴  HYPO — ARRÊT INSULINE</string>
+    <string name="betacell_zone_target">🟢  TARGET</string>
+    <string name="betacell_zone_hyper">🟠  HYPER</string>
+    <string name="betacell_waiting">⏳ EN ATTENTE DU PREMIER CYCLE</string>
+    <string name="betacell_no_cycle">Aucun cycle APS exécuté</string>
+    <string name="betacell_last_run">Dernier cycle APS : %1$s</string>
+    <string name="betacell_open_loop_badge">[OPEN LOOP — simulation]</string>
+
+    <!-- Labels fragment -->
+    <string name="betacell_label_bg">🩸 BG actuel</string>
+    <string name="betacell_label_slope">📈 Pente (slope)</string>
+    <string name="betacell_label_isf">⚙️ ISF calibré</string>
+    <string name="betacell_label_beta">🔬 Sécrétion β brute</string>
+    <string name="betacell_label_systemic">💉 Insuline systémique</string>
+    <string name="betacell_label_hepatic">🫀 First-pass hépatique</string>
+    <string name="betacell_label_iob">⏱️ IOB β-cell</string>
+    <string name="betacell_label_tbr">⚡ TBR résultant</string>
+    <string name="betacell_label_smb">💊 SMB</string>
+    <string name="betacell_label_logs">📋 DERNIERS LOGS β-CELL</string>
+
+    <!-- Unités -->
+    <string name="betacell_unit_mg_dl">mg/dL</string>
+    <string name="betacell_unit_uh">U/h</string>
+    <string name="betacell_unit_u">U</string>
+    <string name="betacell_unit_min">min</string>
+    <string name="betacell_unit_pct">%</string>
+    <string name="betacell_unit_mg_dl_u">mg/dL/U</string>
+    <string name="betacell_unit_mg_dl_min">mg/dL/min</string>
+
+    <!-- ── Préférences — catégories ───────────────────────────────────────── -->
+    <string name="betacell_cat_targets">🎯 Cibles glycémiques (mg/dL)</string>
+    <string name="betacell_cat_model">🔬 Modèle β-cellule</string>
+    <string name="betacell_cat_isf">⚙️ Calibration ISF automatique</string>
+    <string name="betacell_cat_slope">📉 Frein pente descendante</string>
+    <string name="betacell_cat_smb">💊 Micro-bolus (SMB)</string>
+    <string name="betacell_cat_debug">🛠️ Debug</string>
+    <string name="betacell_cat_warning">⚠️ Avertissement</string>
+
+    <!-- Préférences — titres -->
+    <string name="betacell_pref_target_title">Glycémie cible</string>
+    <string name="betacell_pref_hypo_title">⚠️ Seuil hypoglycémie (GARDE ABSOLUE)</string>
+    <string name="betacell_pref_hyper_title">Seuil hyperglycémie</string>
+    <string name="betacell_pref_basal_title">Sécrétion basale physiologique</string>
+    <string name="betacell_pref_hepatic_title">Extraction hépatique (first-pass)</string>
+    <string name="betacell_pref_iob_tau_title">Constante de temps IOB (τ)</string>
+    <string name="betacell_pref_isf_min_title">ISF minimum (patient résistant)</string>
+    <string name="betacell_pref_isf_max_title">ISF maximum (patient sensible)</string>
+    <string name="betacell_pref_isf_window_title">Fenêtre rolling calibration ISF</string>
+    <string name="betacell_pref_brake_threshold_title">Seuil de déclenchement du frein</string>
+    <string name="betacell_pref_brake_factor_title">Facteur de freinage</string>
+    <string name="betacell_pref_smb_enabled_title">Activer les micro-bolus (SMB)</string>
+    <string name="betacell_pref_smb_max_title">Cap SMB maximum</string>
+    <string name="betacell_pref_smb_offset_title">Seuil SMB (offset cible)</string>
+    <string name="betacell_pref_open_loop_title">🔒 Simulation open loop uniquement</string>
+    <string name="betacell_pref_debug_title">Mode debug (logs verbeux)</string>
+
+    <!-- Préférences — résumés -->
+    <string name="betacell_pref_target_summary">Cible de la β-cellule (défaut : 110 mg/dL)</string>
+    <string name="betacell_pref_hypo_summary">GARDE ABSOLUE : insuline = 0 si BG &lt; seuil (défaut : 70 mg/dL). Plancher minimal : 55 mg/dL.</string>
+    <string name="betacell_pref_hyper_summary">Seuil de classification HYPER (défaut : 180 mg/dL)</string>
+    <string name="betacell_pref_basal_summary">Débit basal β-cellule saine (défaut : 3.7 U/h)</string>
+    <string name="betacell_pref_hepatic_summary">Fraction extraite par le foie (défaut : 0.50 = 50%)</string>
+    <string name="betacell_pref_iob_tau_summary">Demi-vie exponentielle insuline active (défaut : 90 min)</string>
+    <string name="betacell_pref_isf_min_summary">Borne inférieure ISF calibré (défaut : 25 mg/dL/U)</string>
+    <string name="betacell_pref_isf_max_summary">Borne supérieure ISF calibré (défaut : 70 mg/dL/U)</string>
+    <string name="betacell_pref_isf_window_summary">Durée historique pour le calcul SD (défaut : 8h)</string>
+    <string name="betacell_pref_brake_threshold_summary">Si pente &lt; seuil → freinage insuline (défaut : −0.5 mg/dL/min)</string>
+    <string name="betacell_pref_brake_factor_summary">Multiplicateur β si pente trop négative (défaut : 0.4 = −60%)</string>
+    <string name="betacell_pref_smb_enabled_summary">Permet des bolus immédiats si BG > cible + offset</string>
+    <string name="betacell_pref_smb_max_summary">Dose maximale par micro-bolus (défaut : 0.4 U)</string>
+    <string name="betacell_pref_smb_offset_summary">SMB déclenché si BG > cible + offset (défaut : 20 mg/dL)</string>
+    <string name="betacell_pref_open_loop_summary">RECOMMANDÉ : calcule les doses sans les appliquer à la pompe</string>
+    <string name="betacell_pref_debug_summary">Active les logs détaillés β-cell dans AAPS LogCat</string>
+
+    <!-- Warning info -->
+    <string name="betacell_warning_clinical">Ce plugin modifie la délivrance d\'insuline. Tester
+obligatoirement en open loop simulé avant activation. Le guard hypo est non
+contournable. Valider avec un professionnel de santé avant usage patient.</string>
+    <string name="betacell_version">BetaCellPlugin v1.1.0 · Port PS → KT · Dti-1</string>
+</resources>

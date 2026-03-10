@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import app.aaps.plugins.aps.betacell.BetaCellPlugin   
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin
@@ -247,6 +248,16 @@ abstract class PluginsListModule {
     @IntKey(220)
     abstract fun bindOpenAPSSMBPlugin(plugin: OpenAPSSMBPlugin): PluginBase
 
+    // ── β-Cell Plugin ──────────────────────────────────────────────────────
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(222)                                        
+    abstract fun bindBetaCellPlugin(plugin: BetaCellPlugin): PluginBase
+    // ──────────────────────────────────────────────────────────────────────
+
+
+
     @Binds
     @AllConfigs
     @IntoMap
@@ -338,7 +349,7 @@ abstract class PluginsListModule {
     abstract fun bindXdripPlugin(plugin: XdripPlugin): PluginBase
 
     @Binds
-    @NotNSClient
+    @AllConfigs
     @IntoMap
     @IntKey(366)
     abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploaderPlugin): PluginBase

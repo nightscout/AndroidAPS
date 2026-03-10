@@ -72,4 +72,6 @@ enum class IntKey(
     NsClientUrgentAlarmStaleData("ns_alarm_urgent_stale_data_value", 31, 30, 180),
 
     SiteRotationUserProfile("site_rotation_user_profile", 0, 0, 2),
+// ── β-Cell Plugin ──────────────────────────────────────────────────────
+    BetaCellIsfWindowH("betacell_isf_window_hours", 8, 2, 24),
 }

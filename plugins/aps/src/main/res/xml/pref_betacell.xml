@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  pref_betacell.xml — Préférences AndroidAPS pour BetaCellPlugin
+  ─────────────────────────────────────────────────────────────────
+  Placement : res/xml/pref_betacell.xml
+  Référencé par : PluginDescription().preferencesId(R.xml.pref_betacell)
+
+  Clés SP (mirrors BetaCellPlugin.companion object) :
+    betacell_target_bg          → Double (mg/dL)
+    betacell_hypo               → Double (mg/dL)
+    betacell_hyper              → Double (mg/dL)
+    betacell_basal_physio       → Double (U/h)
+    betacell_hepatic_extraction → Double (fraction 0.0–1.0)
+    betacell_iob_tau            → Integer (minutes)
+    betacell_smb_enabled        → Boolean
+    betacell_debug_mode         → Boolean
+  ─────────────────────────────────────────────────────────────────
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 1 : Cibles glycémiques
+         Miroir : $TargetBG / $Hypo / $Hyper du script PS
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_targets"
+        android:title="🎯 Cibles glycémiques (mg/dL)">
+
+        <!-- Cible principale — PS: $TargetBG = 110 -->
+        <EditTextPreference
+            android:key="betacell_target_bg"
+            android:title="Glycémie cible"
+            android:summary="Cible de la β-cellule (PS: \$TargetBG = 110 mg/dL)"
+            android:defaultValue="110"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Glycémie cible (mg/dL)"
+            android:dialogMessage="Valeur physiologique recommandée : 100–120 mg/dL" />
+
+        <!-- Seuil hypo — PS: $Hypo = 70 — NE PAS ABAISSER -->
+        <EditTextPreference
+            android:key="betacell_hypo"
+            android:title="⚠️ Seuil hypoglycémie"
+            android:summary="GUARD ABSOLU : insuline = 0 si BG &lt; ce seuil (PS: \$Hypo = 70)"
+            android:defaultValue="70"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Seuil hypoglycémie (mg/dL)"
+            android:dialogMessage="ATTENTION : Ne pas abaisser en dessous de 65 mg/dL. Ce seuil déclenche l'arrêt complet de l'insuline." />
+
+        <!-- Seuil hyper — PS: $Hyper = 180 -->
+        <EditTextPreference
+            android:key="betacell_hyper"
+            android:title="Seuil hyperglycémie"
+            android:summary="Seuil de classification HYPER (PS: \$Hyper = 180 mg/dL)"
+            android:defaultValue="180"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Seuil hyperglycémie (mg/dL)" />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 2 : Modèle β-cellule
+         Miroir : $BasalPhysio / $HepaticExtraction / $IOB_Tau du PS
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_model"
+        android:title="🔬 Modèle β-cellule">
+
+        <!-- Basal physiologique — PS: $BasalPhysio = 3.7 U/h -->
+        <EditTextPreference
+            android:key="betacell_basal_physio"
+            android:title="Sécrétion basale physiologique"
+            android:summary="Débit basal β-cellule saine (PS: \$BasalPhysio = 3.7 U/h)"
+            android:defaultValue="3.7"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Basal physiologique (U/h)"
+            android:dialogMessage="Valeur de référence : 3.5–4.0 U/h chez l'adulte sain.\nÀ ajuster selon votre TDD (Total Daily Dose)." />
+
+        <!-- First-pass hépatique — PS: $HepaticExtraction = 0.50 -->
+        <EditTextPreference
+            android:key="betacell_hepatic_extraction"
+            android:title="Extraction hépatique (first-pass)"
+            android:summary="Fraction d'insuline extraite par le foie (PS: \$HepaticExtraction = 0.50)"
+            android:defaultValue="0.50"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Extraction hépatique (0.0 – 1.0)"
+            android:dialogMessage="Valeur physiologique : 0.45–0.55.\n0.50 = 50% d'extraction (insuline portale).\nNe pas modifier sans avis médical." />
+
+        <!-- IOB τ — PS: $IOB_Tau = 90 min -->
+        <EditTextPreference
+            android:key="betacell_iob_tau"
+            android:title="Constante de temps IOB (τ)"
+            android:summary="Demi-vie exponentielle de l'insuline active (PS: \$IOB_Tau = 90 min)"
+            android:defaultValue="90"
+            android:inputType="number"
+            android:dialogTitle="Constante τ IOB (minutes)"
+            android:dialogMessage="τ = 90 min → demi-vie ≈ 62 min.\nAugmenter si insuline semble active plus longtemps." />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 3 : ISF — Calibration automatique
+         Miroir : $minISF / $maxISF / $defaultISF / $sdEpsilon du PS
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_isf"
+        android:title="⚙️ Calibration ISF automatique">
+
+        <!-- ISF min — PS: $minISF = 25 -->
+        <EditTextPreference
+            android:key="betacell_isf_min"
+            android:title="ISF minimum (patient résistant)"
+            android:summary="Borne inférieure de l'ISF calibré (PS: \$minISF = 25 mg/dL/U)"
+            android:defaultValue="25"
+            android:inputType="numberDecimal"
+            android:dialogTitle="ISF minimum (mg/dL/U)" />
+
+        <!-- ISF max — PS: $maxISF = 70 -->
+        <EditTextPreference
+            android:key="betacell_isf_max"
+            android:title="ISF maximum (patient sensible)"
+            android:summary="Borne supérieure de l'ISF calibré (PS: \$maxISF = 70 mg/dL/U)"
+            android:defaultValue="70"
+            android:inputType="numberDecimal"
+            android:dialogTitle="ISF maximum (mg/dL/U)" />
+
+        <!-- Fenêtre rolling (heures) -->
+        <EditTextPreference
+            android:key="betacell_isf_window_hours"
+            android:title="Fenêtre rolling calibration ISF"
+            android:summary="Durée historique pour le calcul SD (défaut : 8h = 96 lectures à 5min)"
+            android:defaultValue="8"
+            android:inputType="number"
+            android:dialogTitle="Fenêtre rolling (heures)" />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 3b : Frein sur pente descendante
+         Miroir : SLOPE_BRAKE_THRESHOLD / SLOPE_BRAKE_FACTOR du PS
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_slope"
+        android:title="📉 Frein pente descendante">
+
+        <!-- Seuil de déclenchement — PS: if ($slope -lt -0.5) -->
+        <EditTextPreference
+            android:key="betacell_slope_brake_threshold"
+            android:title="Seuil de déclenchement du frein"
+            android:summary="Si pente &lt; seuil → freinage insuline (PS: -0.5 mg/dL/min)"
+            android:defaultValue="-0.5"
+            android:inputType="numberSigned|numberDecimal"
+            android:dialogTitle="Seuil frein pente (mg/dL/min)"
+            android:dialogMessage="Valeur négative. Défaut : -0.5 mg/dL/min.\nAbaisser (ex. -1.0) pour un frein moins agressif." />
+
+        <!-- Facteur multiplicatif — PS: $beta *= 0.4 -->
+        <EditTextPreference
+            android:key="betacell_slope_brake_factor"
+            android:title="Facteur de freinage"
+            android:summary="Multiplicateur appliqué à β si pente trop négative (PS: 0.4 = -60%)"
+            android:defaultValue="0.4"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Facteur frein (0.1 – 1.0)"
+            android:dialogMessage="0.4 = β réduit à 40%.\n0.1 = très agressif. 1.0 = frein désactivé." />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 4 : SMB & Options avancées
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_smb"
+        android:title="💊 Micro-bolus (SMB)">
+
+        <!-- Activer SMB -->
+        <SwitchPreference
+            android:key="betacell_smb_enabled"
+            android:title="Activer les micro-bolus (SMB)"
+            android:summary="Permet des bolus immédiats si BG > cible + 20 mg/dL"
+            android:defaultValue="true" />
+
+        <!-- Cap SMB max -->
+        <EditTextPreference
+            android:key="betacell_smb_max_units"
+            android:title="Cap SMB maximum"
+            android:summary="Dose maximale par micro-bolus (défaut : 0.4 U)"
+            android:defaultValue="0.4"
+            android:inputType="numberDecimal"
+            android:dialogTitle="SMB maximum (U)"
+            android:dependency="betacell_smb_enabled" />
+
+        <!-- Seuil SMB (offset au-dessus de target) -->
+        <EditTextPreference
+            android:key="betacell_smb_threshold_offset"
+            android:title="Seuil SMB (offset cible)"
+            android:summary="SMB déclenché si BG > cible + offset (défaut : 20 mg/dL)"
+            android:defaultValue="20"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Offset seuil SMB (mg/dL)"
+            android:dependency="betacell_smb_enabled" />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 5 : Debug & Logs
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_debug"
+        android:title="🛠️ Debug">
+
+        <!-- Mode debug — logs verbeux -->
+        <SwitchPreference
+            android:key="betacell_debug_mode"
+            android:title="Mode debug (logs verbeux)"
+            android:summary="Active les logs détaillés β-cell dans AAPS LogCat"
+            android:defaultValue="false" />
+
+        <!-- Open loop simulation -->
+        <SwitchPreference
+            android:key="betacell_open_loop_only"
+            android:title="🔒 Simulation open loop uniquement"
+            android:summary="RECOMMANDÉ lors du développement : calcule les doses sans les appliquer à la pompe"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         INFO — Avertissement clinique (non éditable)
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_warning"
+        android:title="⚠️ Avertissement">
+
+        <Preference
+            android:key="betacell_warning_info"
+            android:title="Utilisation clinique"
+            android:summary="Ce plugin modifie la délivrance d'insuline. Tester obligatoirement en open loop simulé avant activation. Le guard hypo (BG &lt; seuil → 0 U) est non contournable. Valider avec un professionnel de santé avant usage patient." />
+
+        <Preference
+            android:key="betacell_version_info"
+            android:title="Version plugin"
+            android:summary="BetaCellPlugin v1.0.0-alpha | Port PS → KT | Dti-1" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
