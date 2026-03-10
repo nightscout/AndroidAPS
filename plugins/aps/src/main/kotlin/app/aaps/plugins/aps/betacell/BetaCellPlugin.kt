@@ -111,9 +111,11 @@ class BetaCellPlugin @Inject constructor(
             aapsLogger.error(LTag.APS, "No profile — aborting"); return
         }
 
-        val gs: GlucoseStatus = glucoseStatusProvider.getGlucoseStatusData(false) ?: run {
-            aapsLogger.warn(LTag.APS, "No CGM data"); return
-        }
+        val bgList = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        if (bgList.isEmpty()) { aapsLogger.warn(LTag.APS, "No CGM data"); return }
+        val last  = bgList[0]
+        val delta = if (bgList.size >= 2) (last.value - bgList[1].value) / 5.0 else 0.0
+        val gs    = GlucoseStatus(glucose = last.value, delta = delta, shortAvgDelta = delta, longAvgDelta = delta, timestamp = last.timestamp)
 
         val windowMs = p.isfWindowH * 60 * 60 * 1000L
         val cutoff   = System.currentTimeMillis() - windowMs
