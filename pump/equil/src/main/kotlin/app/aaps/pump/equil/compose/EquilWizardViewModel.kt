@@ -21,7 +21,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -32,6 +34,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.siteRotation.BodyType
+import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.EquilPumpPlugin
@@ -85,11 +89,12 @@ class EquilWizardViewModel @Inject constructor(
     private val equilPumpPlugin: EquilPumpPlugin,
     private val equilManager: EquilManager,
     private val pumpSync: PumpSync,
+    private val persistenceLayer: PersistenceLayer,
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val constraintsChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val rxBus: RxBus
-) : ViewModel() {
+) : ViewModel(), SiteLocationStepHost {
 
     // region State
 
@@ -136,6 +141,15 @@ class EquilWizardViewModel @Inject constructor(
     private val _unpairResultMessage = MutableStateFlow<String?>(null)
     val unpairResultMessage: StateFlow<String?> = _unpairResultMessage.asStateFlow()
 
+    // Site location state (for SITE_LOCATION step)
+    private val _siteLocation = MutableStateFlow(TE.Location.NONE)
+    override val siteLocation: StateFlow<TE.Location> = _siteLocation.asStateFlow()
+
+    private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
+    override val siteArrow: StateFlow<TE.Arrow> = _siteArrow.asStateFlow()
+
+    private var activationTimestamp: Long = 0L
+
     // Events
     private val _events = MutableSharedFlow<EquilWizardEvent>()
     val events: SharedFlow<EquilWizardEvent> = _events.asSharedFlow()
@@ -163,9 +177,13 @@ class EquilWizardViewModel @Inject constructor(
 
     // region Initialization
 
+    private var workflowSteps: List<EquilWizardStep> = emptyList()
+
     fun initializeWorkflow(workflow: EquilWorkflow) {
         _workflow.value = workflow
-        _totalSteps.value = workflow.totalSteps
+        val siteRotationEnabled = preferences.get(app.aaps.core.keys.BooleanKey.SiteRotationManagePump)
+        workflowSteps = workflow.steps(siteRotationEnabled)
+        _totalSteps.value = workflowSteps.size
         _errorMessage.value = null
         _isLoading.value = false
         _fillComplete.value = false
@@ -178,13 +196,35 @@ class EquilWizardViewModel @Inject constructor(
         fillStepCount = 0
         autoFillActive = false
 
-        val startStep = when (workflow) {
-            EquilWorkflow.PAIR           -> EquilWizardStep.ASSEMBLE
-            EquilWorkflow.CHANGE_INSULIN -> EquilWizardStep.CHANGE_INSULIN
-            EquilWorkflow.UNPAIR         -> EquilWizardStep.UNPAIR_DETACH
+        viewModelScope.launch {
+            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+                System.currentTimeMillis() - T.days(45).msecs(), false
+            ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
         }
-        moveStep(startStep)
+        // Note: cache loads async but site location step is never the first step,
+        // so the data will be available by the time the user reaches it.
+        moveStep(workflowSteps.first())
     }
+
+    /** Move to the step that follows [currentStep] in the workflow. */
+    fun moveToNextStep(currentStep: EquilWizardStep) {
+        val index = workflowSteps.indexOf(currentStep)
+        if (index >= 0 && index < workflowSteps.lastIndex) {
+            moveStep(workflowSteps[index + 1])
+        }
+    }
+
+    /** Move to the step before [currentStep] in the workflow. */
+    fun moveToPreviousStep(currentStep: EquilWizardStep) {
+        val index = workflowSteps.indexOf(currentStep)
+        if (index > 0) {
+            moveStep(workflowSteps[index - 1])
+        }
+    }
+
+    /** Whether [step] has a predecessor in the workflow it can go back to. */
+    fun hasPreviousStep(step: EquilWizardStep): Boolean =
+        workflowSteps.indexOf(step) > 0
 
     // endregion
 
@@ -198,45 +238,14 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun updateStepProgress(step: EquilWizardStep) {
-        when (_workflow.value) {
-            EquilWorkflow.PAIR           -> {
-                val (index, title) = when (step) {
-                    EquilWizardStep.ASSEMBLE      -> 0 to R.string.equil_title_assemble
-                    EquilWizardStep.SERIAL_NUMBER -> 1 to R.string.equil_title_serial
-                    EquilWizardStep.FILL          -> 2 to R.string.equil_title_fill
-                    EquilWizardStep.ATTACH        -> 3 to R.string.equil_title_attach
-                    EquilWizardStep.AIR           -> 4 to R.string.equil_title_air
-                    EquilWizardStep.CONFIRM       -> 5 to R.string.equil_title_confirm
-                    else                          -> 0 to R.string.equil_common_wizard_button_next
-                }
-                _currentStepIndex.value = index
-                _titleResId.value = title
-            }
-
-            EquilWorkflow.CHANGE_INSULIN -> {
-                val (index, title) = when (step) {
-                    EquilWizardStep.CHANGE_INSULIN -> 0 to R.string.equil_change
-                    EquilWizardStep.ASSEMBLE       -> 1 to R.string.equil_title_dressing
-                    EquilWizardStep.FILL           -> 2 to R.string.equil_title_fill
-                    EquilWizardStep.ATTACH         -> 3 to R.string.equil_title_attach
-                    EquilWizardStep.AIR            -> 4 to R.string.equil_title_air
-                    EquilWizardStep.CONFIRM        -> 5 to R.string.equil_title_confirm
-                    else                           -> 0 to R.string.equil_change
-                }
-                _currentStepIndex.value = index
-                _titleResId.value = title
-            }
-
-            EquilWorkflow.UNPAIR         -> {
-                val (index, title) = when (step) {
-                    EquilWizardStep.UNPAIR_DETACH  -> 0 to R.string.equil_title_unpair_detach
-                    EquilWizardStep.UNPAIR_CONFIRM -> 1 to R.string.equil_title_unpair_confirm
-                    else                           -> 0 to R.string.equil_title_unpair_detach
-                }
-                _currentStepIndex.value = index
-                _titleResId.value = title
-            }
-        }
+        val index = workflowSteps.indexOf(step).coerceAtLeast(0)
+        _currentStepIndex.value = index
+        // CHANGE_INSULIN workflow uses different title for ASSEMBLE step
+        val titleOverride = if (_workflow.value == EquilWorkflow.CHANGE_INSULIN && step == EquilWizardStep.ASSEMBLE)
+            R.string.equil_title_dressing
+        else
+            step.titleResId
+        _titleResId.value = titleOverride
     }
 
     fun handleCancel() {
@@ -271,12 +280,10 @@ class EquilWizardViewModel @Inject constructor(
 
     // region Assemble step
 
-    fun getAssembleNextStep(): EquilWizardStep =
-        when (_workflow.value) {
-            EquilWorkflow.PAIR           -> EquilWizardStep.SERIAL_NUMBER
-            EquilWorkflow.CHANGE_INSULIN -> EquilWizardStep.FILL
-            EquilWorkflow.UNPAIR         -> error("Assemble step is unreachable in UNPAIR workflow")
-        }
+    fun getAssembleNextStep(): EquilWizardStep {
+        val index = workflowSteps.indexOf(EquilWizardStep.ASSEMBLE)
+        return workflowSteps[index + 1]
+    }
 
     // endregion
 
@@ -627,7 +634,7 @@ class EquilWizardViewModel @Inject constructor(
                             if (_workflow.value == EquilWorkflow.PAIR) readFirmware()
                             else {
                                 _isLoading.value = false
-                                moveStep(EquilWizardStep.CONFIRM)
+                                moveToNextStep(EquilWizardStep.AIR)
                             }
                         }
                     } else {
@@ -646,7 +653,7 @@ class EquilWizardViewModel @Inject constructor(
                 override fun run() {
                     _isLoading.value = false
                     if (result.success) {
-                        moveStep(EquilWizardStep.CONFIRM)
+                        moveToNextStep(EquilWizardStep.AIR)
                     } else {
                         _errorMessage.value = rh.gs(R.string.equil_error)
                     }
@@ -722,22 +729,40 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun saveActivation() {
+        activationTimestamp = System.currentTimeMillis()
         if (_workflow.value == EquilWorkflow.PAIR) {
             pumpSync.connectNewPump()
+        }
+        val time = activationTimestamp
+        if (_workflow.value == EquilWorkflow.PAIR || _workflow.value == EquilWorkflow.CHANGE_INSULIN) {
             pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp = System.currentTimeMillis(),
+                timestamp = time,
                 type = TE.Type.CANNULA_CHANGE,
                 pumpType = PumpType.EQUIL,
                 pumpSerial = equilPumpPlugin.serialNumber()
             )
             pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp = System.currentTimeMillis(),
+                timestamp = time,
                 type = TE.Type.INSULIN_CHANGE,
                 pumpType = PumpType.EQUIL,
                 pumpSerial = equilPumpPlugin.serialNumber()
             )
         }
-        val time = System.currentTimeMillis()
+        val location = _siteLocation.value.takeIf { it != TE.Location.NONE }
+        val arrow = _siteArrow.value.takeIf { it != TE.Arrow.NONE }
+        if (location != null || arrow != null) {
+            viewModelScope.launch {
+                try {
+                    val entries = persistenceLayer.getTherapyEventDataFromToTime(time, time)
+                        .filter { it.type == TE.Type.CANNULA_CHANGE }
+                    entries.firstOrNull()?.let { te ->
+                        persistenceLayer.insertOrUpdateTherapyEvent(te.copy(location = location, arrow = arrow))
+                    }
+                } catch (_: Exception) {
+                    // location is optional
+                }
+            }
+        }
         val record = EquilHistoryRecord(
             id = time,
             type = EquilHistoryRecord.EventType.INSERT_CANNULA,
@@ -753,6 +778,31 @@ class EquilWizardViewModel @Inject constructor(
         equilManager.setActivationProgress(ActivationProgress.COMPLETED)
         viewModelScope.launch { _events.emit(EquilWizardEvent.Finish) }
     }
+
+    override fun updateSiteLocation(location: TE.Location) {
+        _siteLocation.value = location
+    }
+
+    override fun updateSiteArrow(arrow: TE.Arrow) {
+        _siteArrow.value = arrow
+    }
+
+    override fun completeSiteLocation() {
+        moveToNextStep(EquilWizardStep.SITE_LOCATION)
+    }
+
+    override fun skipSiteLocation() {
+        _siteLocation.value = TE.Location.NONE
+        _siteArrow.value = TE.Arrow.NONE
+        moveToNextStep(EquilWizardStep.SITE_LOCATION)
+    }
+
+    override fun bodyType(): BodyType =
+        BodyType.fromPref(preferences.get(app.aaps.core.keys.IntKey.SiteRotationUserProfile))
+
+    private var siteRotationEntriesCache: List<TE> = emptyList()
+
+    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
 
     // endregion
 
@@ -844,12 +894,10 @@ class EquilWizardViewModel @Inject constructor(
 
     // region Attach step
 
-    fun getAttachNextStep(): EquilWizardStep =
-        when (_workflow.value) {
-            EquilWorkflow.PAIR           -> EquilWizardStep.AIR
-            EquilWorkflow.CHANGE_INSULIN -> EquilWizardStep.AIR
-            EquilWorkflow.UNPAIR         -> error("Attach step is unreachable in UNPAIR workflow")
-        }
+    fun getAttachNextStep(): EquilWizardStep {
+        val index = workflowSteps.indexOf(EquilWizardStep.ATTACH)
+        return workflowSteps[index + 1]
+    }
 
     // endregion
 

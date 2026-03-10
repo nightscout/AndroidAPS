@@ -91,6 +91,7 @@ class EquilPumpPlugin @Inject constructor(
         .mainType(PluginType.PUMP)
         .composeContent { _ ->
             EquilComposeContent(
+                pluginName = rh.gs(R.string.equil_name),
                 protectionCheck = protectionCheck,
                 blePreCheck = blePreCheck
             )

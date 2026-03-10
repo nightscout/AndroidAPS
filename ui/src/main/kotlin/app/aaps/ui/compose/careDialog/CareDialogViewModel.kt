@@ -21,13 +21,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -50,17 +49,6 @@ class CareDialogViewModel @Inject constructor(
 
     val uiState: StateFlow<CareDialogUiState>
         field = MutableStateFlow(CareDialogUiState())
-
-    sealed class SideEffect {
-        data class ShowSiteRotationDialog(val timestamp: Long) : SideEffect()
-    }
-
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
 
     init {
         val eventType = UiInteraction.EventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
@@ -85,7 +73,50 @@ class CareDialogViewModel @Inject constructor(
                 siteRotationManageCgm = siteRotation
             )
         }
+        if (eventType == UiInteraction.EventType.SENSOR_INSERT && siteRotation) {
+            loadLastSensorLocation()
+        }
     }
+
+    private var siteRotationEntriesCache: List<TE> = emptyList()
+
+    private fun loadLastSensorLocation() {
+        viewModelScope.launch {
+            try {
+                val allEntries = persistenceLayer.getTherapyEventDataFromTime(
+                    dateUtil.now() - T.days(45).msecs(), false
+                ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+                siteRotationEntriesCache = allEntries
+                val lastEntry = allEntries
+                    .filter { it.type == TE.Type.SENSOR_CHANGE && it.location != null && it.location != TE.Location.NONE }
+                    .maxByOrNull { it.timestamp }
+                if (lastEntry != null) {
+                    uiState.update {
+                        it.copy(lastSiteLocationString = translator.translate(lastEntry.location))
+                    }
+                }
+            } catch (_: Exception) {
+                // ignore
+            }
+        }
+    }
+
+    fun updateSiteLocation(location: TE.Location) {
+        uiState.update {
+            it.copy(
+                siteLocation = location,
+                selectedSiteLocationString = if (location != TE.Location.NONE) translator.translate(location) else null
+            )
+        }
+    }
+
+    fun updateSiteArrow(arrow: TE.Arrow) {
+        uiState.update { it.copy(siteArrow = arrow) }
+    }
+
+    fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
+
+    fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
 
     fun updateMeterType(meterType: TE.MeterType) {
         uiState.update { it.copy(meterType = meterType) }
@@ -142,6 +173,10 @@ class CareDialogViewModel @Inject constructor(
             lines.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime))
         }
 
+        if (state.showSiteRotationSection && state.siteLocation != TE.Location.NONE) {
+            lines.add(rh.gs(app.aaps.core.ui.R.string.site_location) + ": " + translator.translate(state.siteLocation))
+        }
+
         return lines
     }
 
@@ -151,10 +186,16 @@ class CareDialogViewModel @Inject constructor(
 
         val eventTime = state.eventTime - (state.eventTime % 1000)
 
+        val isSensorChange = eventType == UiInteraction.EventType.SENSOR_INSERT
+        val location = if (isSensorChange) state.siteLocation.takeIf { it != TE.Location.NONE } else null
+        val arrow = if (isSensorChange) state.siteArrow.takeIf { it != TE.Arrow.NONE } else null
+
         val therapyEvent = TE(
             timestamp = eventTime,
             type = eventType.toTEType(),
-            glucoseUnit = state.glucoseUnits
+            glucoseUnit = state.glucoseUnits,
+            location = location,
+            arrow = arrow
         )
 
         val valuesWithUnit = mutableListOf<ValueWithUnit?>()
@@ -198,10 +239,6 @@ class CareDialogViewModel @Inject constructor(
             }
         }
 
-        // Special case: sensor change + site rotation management
-        if (therapyEvent.type == TE.Type.SENSOR_CHANGE && state.siteRotationManageCgm) {
-            sideEffect.tryEmit(SideEffect.ShowSiteRotationDialog(therapyEvent.timestamp))
-        }
     }
 
     private fun UiInteraction.EventType.toTEType(): TE.Type = when (this) {

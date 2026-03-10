@@ -1,7 +1,9 @@
-package app.aaps.ui.compose.siteRotationDialog
+package app.aaps.core.ui.compose.siteRotation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +31,11 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.objects.extensions.directionToComposeIcon
+import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.ui.R
 
 /**
  * Pre-formatted display data for a site entry row.
@@ -51,7 +53,10 @@ data class SiteEntryDisplayData(
 )
 
 /**
- * List of site entries with optional edit button.
+ * List of site entries with optional edit button and expandable inline editing.
+ *
+ * @param editingTimestamp when non-null, the entry with this timestamp shows [editingContent] below it
+ * @param editingContent composable slot shown below the expanded entry
  */
 @Composable
 fun SiteEntryList(
@@ -59,7 +64,9 @@ fun SiteEntryList(
     showEditButton: Boolean,
     onEntryClick: (SiteEntryDisplayData) -> Unit,
     onEditClick: ((Long) -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    editingTimestamp: Long? = null,
+    editingContent: @Composable ((SiteEntryDisplayData) -> Unit)? = null
 ) {
     LazyColumn(
         modifier = modifier
@@ -71,6 +78,15 @@ fun SiteEntryList(
                 onEntryClick = { onEntryClick(entry) },
                 onEditClick = { onEditClick?.invoke(entry.timestamp) }
             )
+            if (editingContent != null) {
+                AnimatedVisibility(
+                    visible = editingTimestamp == entry.timestamp,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    editingContent(entry)
+                }
+            }
         }
     }
 }
@@ -123,7 +139,7 @@ private fun SiteEntryRow(
                 }
                 if (hasNote) {
                     Text(
-                        text = entry.note ?: "",
+                        text = entry.note,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = AapsSpacing.extraSmall)
@@ -139,12 +155,9 @@ private fun SiteEntryRow(
             )
 
             if (showEditButton) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clickable { onEditClick() }
-                        .padding(AapsSpacing.small),
-                    contentAlignment = Alignment.Center
+                IconButton(
+                    onClick = onEditClick,
+                    modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,

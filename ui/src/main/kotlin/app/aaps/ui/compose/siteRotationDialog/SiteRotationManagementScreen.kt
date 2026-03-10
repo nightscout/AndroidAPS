@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -37,20 +38,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
-import app.aaps.core.objects.extensions.directionToComposeIcon
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcSiteRotation
+import app.aaps.core.ui.compose.siteRotation.ArrowSelectionDialog
+import app.aaps.core.ui.compose.siteRotation.SiteEntryDisplayData
+import app.aaps.core.ui.compose.siteRotation.SiteEntryList
+import app.aaps.core.ui.compose.siteRotation.ZoomableBodyDiagram
+import app.aaps.core.ui.compose.siteRotation.directionToComposeIcon
 import app.aaps.ui.R
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
@@ -62,7 +74,6 @@ import app.aaps.core.ui.R as CoreUiR
 fun SiteRotationManagementScreen(
     viewModel: SiteRotationManagementViewModel,
     onClose: () -> Unit,
-    onEditEntry: (Long) -> Unit,
     onPreferenceClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -82,6 +93,43 @@ fun SiteRotationManagementScreen(
         }
     }
 
+    // Arrow selection dialog
+    var showArrowDialog by rememberSaveable { mutableStateOf(false) }
+    if (showArrowDialog) {
+        ArrowSelectionDialog(
+            onDismiss = { showArrowDialog = false },
+            onArrowSelected = { arrow ->
+                viewModel.updateEditArrow(arrow)
+                showArrowDialog = false
+            }
+        )
+    }
+
+    // Confirmation dialog
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    if (showConfirmation) {
+        if (!uiState.isEdited || uiState.editedTe == null) {
+            showConfirmation = false
+        } else {
+            val summaryLines = viewModel.buildConfirmationSummary()
+            OkCancelDialog(
+                title = stringResource(R.string.update_site_change),
+                message = summaryLines.joinToString("<br/>"),
+                icon = when (uiState.editedTe?.type) {
+                    TE.Type.CANNULA_CHANGE -> IcCannulaChange
+                    TE.Type.SENSOR_CHANGE  -> IcCgmInsert
+                    else                   -> IcSiteRotation
+                },
+                iconTint = AapsTheme.elementColors.tempBasal,
+                onConfirm = {
+                    viewModel.confirmAndSave()
+                    showConfirmation = false
+                },
+                onDismiss = { showConfirmation = false }
+            )
+        }
+    }
+
     SiteRotationManagementContent(
         uiState = uiState,
         displayEntries = displayEntries,
@@ -89,10 +137,15 @@ fun SiteRotationManagementScreen(
         onPreferenceClick = onPreferenceClick,
         onShowPumpSites = { viewModel.setShowPumpSites(it) },
         onShowCgmSites = { viewModel.setShowCgmSites(it) },
-        onZoneClick = { viewModel.selectLocation(it) },
-        onEntryClick = { viewModel.selectLocation(it.location) },
-        onEditEntry = onEditEntry,
-        activity = activity
+        onZoneClick = { viewModel.onZoneClick(it) },
+        onEntryClick = { viewModel.onZoneClick(it.location) },
+        onEditEntry = { viewModel.startEditing(it) },
+        onCancelEdit = { viewModel.cancelEditing() },
+        onConfirmEdit = { showConfirmation = true },
+        onArrowClick = { showArrowDialog = true },
+        onNoteChange = { viewModel.updateEditNote(it) },
+        editedTeDate = uiState.editedTe?.let { viewModel.formatDate(it.timestamp) } ?: "",
+        editedTeLocation = uiState.editedTe?.let { viewModel.formatLocation(it.location) } ?: ""
     )
 }
 
@@ -108,8 +161,16 @@ private fun SiteRotationManagementContent(
     onZoneClick: (TE.Location) -> Unit,
     onEntryClick: (SiteEntryDisplayData) -> Unit,
     onEditEntry: (Long) -> Unit,
-    activity: AppCompatActivity? = null
+    onCancelEdit: () -> Unit,
+    onConfirmEdit: () -> Unit,
+    onArrowClick: () -> Unit,
+    onNoteChange: (String) -> Unit,
+    editedTeDate: String,
+    editedTeLocation: String
 ) {
+    val focusManager = LocalFocusManager.current
+    val isEditing = uiState.editedTe != null
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -122,23 +183,35 @@ private fun SiteRotationManagementContent(
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(AapsSpacing.medium))
-                        Text(stringResource(CoreUiR.string.site_rotation))
+                        Text(stringResource(if (isEditing) R.string.edit_site else CoreUiR.string.site_rotation))
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = onClose) {
+                    IconButton(onClick = {
+                        if (isEditing) onCancelEdit() else onClose()
+                    }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(CoreUiR.string.back)
+                            imageVector = if (isEditing) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = if (isEditing) stringResource(CoreUiR.string.cancel) else stringResource(CoreUiR.string.back)
                         )
                     }
                 },
                 actions = {
-                    IconButton(onClick = onPreferenceClick) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(CoreUiR.string.settings)
-                        )
+                    if (isEditing) {
+                        IconButton(onClick = onConfirmEdit) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = stringResource(CoreUiR.string.save),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = onPreferenceClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiR.string.settings)
+                            )
+                        }
                     }
                 }
             )
@@ -158,6 +231,7 @@ private fun SiteRotationManagementContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .clearFocusOnTap(focusManager)
             ) {
                 Row(
                     modifier = Modifier
@@ -223,38 +297,18 @@ private fun SiteRotationManagementContent(
                         .weight(2f * uiState.showBodyType.sizeRatio)
                         .fillMaxWidth()
                 ) {
-                    Column(
+                    ZoomableBodyDiagram(
+                        filteredLocationColor = uiState.filteredLocationColor,
+                        showPumpSites = uiState.showPumpSites,
+                        showCgmSites = uiState.showCgmSites,
+                        selectedLocation = uiState.selectedLocation,
+                        bodyType = uiState.showBodyType,
+                        onZoneClick = onZoneClick,
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = AapsSpacing.extraLarge)
-                        ) {
-                            BodyView(
-                                filteredLocationColor = uiState.filteredLocationColor,
-                                showPumpSites = uiState.showPumpSites,
-                                showCgmSites = uiState.showCgmSites,
-                                selectedLocation = uiState.selectedLocation,
-                                bodyType = uiState.showBodyType,
-                                isFrontView = true,
-                                onZoneClick = onZoneClick,
-                                modifier = Modifier.weight(1f)
-                            )
-                            BodyView(
-                                filteredLocationColor = uiState.filteredLocationColor,
-                                showPumpSites = uiState.showPumpSites,
-                                showCgmSites = uiState.showCgmSites,
-                                selectedLocation = uiState.selectedLocation,
-                                bodyType = uiState.showBodyType,
-                                isFrontView = false,
-                                onZoneClick = onZoneClick,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
+                            .padding(horizontal = AapsSpacing.extraLarge),
+                        editedTe = uiState.editedTe
+                    )
                 }
 
                 SiteEntryList(
@@ -264,10 +318,83 @@ private fun SiteRotationManagementContent(
                     onEditClick = onEditEntry,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .weight(1f),
+                    editingTimestamp = uiState.editedTe?.timestamp,
+                    editingContent = { _ ->
+                        InlineEditorContent(
+                            te = uiState.editedTe,
+                            dateString = editedTeDate,
+                            locationString = editedTeLocation,
+                            onArrowClick = onArrowClick,
+                            onNoteChange = onNoteChange
+                        )
+                    }
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun InlineEditorContent(
+    te: TE?,
+    dateString: String,
+    locationString: String,
+    onArrowClick: () -> Unit,
+    onNoteChange: (String) -> Unit
+) {
+    if (te == null) return
+
+    var noteText by remember(te.timestamp) { mutableStateOf(te.note ?: "") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = AapsSpacing.large, vertical = AapsSpacing.medium)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = dateString,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(end = AapsSpacing.medium)
+                    )
+                    Text(
+                        text = locationString,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            IconButton(
+                onClick = onArrowClick,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = (te.arrow ?: TE.Arrow.NONE).directionToComposeIcon(),
+                    contentDescription = stringResource(R.string.select_arrow),
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+
+        OutlinedTextField(
+            value = noteText,
+            onValueChange = {
+                noteText = it
+                onNoteChange(it)
+            },
+            label = { Text(stringResource(CoreUiR.string.careportal_note)) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            shape = MaterialTheme.shapes.small
+        )
     }
 }
 
@@ -307,7 +434,13 @@ private fun SiteRotationManagementPreview() {
             onShowCgmSites = {},
             onZoneClick = {},
             onEntryClick = {},
-            onEditEntry = {}
+            onEditEntry = {},
+            onCancelEdit = {},
+            onConfirmEdit = {},
+            onArrowClick = {},
+            onNoteChange = {},
+            editedTeDate = "",
+            editedTeLocation = ""
         )
     }
 }

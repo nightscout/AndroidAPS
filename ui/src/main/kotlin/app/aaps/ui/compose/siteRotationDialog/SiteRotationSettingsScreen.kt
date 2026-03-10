@@ -36,8 +36,9 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcSiteRotation
+import app.aaps.core.ui.compose.siteRotation.BodyType
+import app.aaps.core.ui.compose.siteRotation.BodyView
 import app.aaps.ui.R
-import app.aaps.ui.compose.siteRotationDialog.viewModels.BodyType
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
 import app.aaps.core.ui.R as CoreUiR

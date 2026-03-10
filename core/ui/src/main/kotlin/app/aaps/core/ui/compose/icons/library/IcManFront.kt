@@ -187,6 +187,7 @@ val ManFront: ImageVector by lazy {
  * Contains SVG path data for each zone of the male body front view.
  */
 object ManFrontPaths {
+
     val pathData: Map<Location, String> = mapOf(
         Location.FRONT_RIGHT_LOWER_THIGH to "M14.105,84.729 c0.207,0.31,1.338,0.342,1.863,0.34 c2.298,-0.007,3.185,-0.484,3.206,-1.896 c0.019,-1.294,0.159,-2.904,0.311,-4.468 c-2.323,-0.042,-4.624,-0.116,-6.9,-0.22 C13.047,81.304,13.711,84.139,14.105,84.729z",
         Location.FRONT_RIGHT_UPPER_THIGH to "M17.014,71.793 c-1.386,-0.1,-3.983,-0.288,-4.726,0.521 c-0.434,0.473,-0.172,3.314,0.296,6.171 c2.276,0.105,4.577,0.179,6.9,0.22 c0.172,-1.775,0.36,-3.491,0.404,-4.618 C19.951,72.459,19.376,71.963,17.014,71.793z",
@@ -205,10 +206,8 @@ object ManFrontPaths {
         Location.FRONT_RIGHT_UPPER_CHEST to "M22.932,25.581 a3.989,2.16 7.0 1,0 -7.978,0 a3.989,2.16 7.0 1,0 7.978,0z",
         Location.FRONT_LEFT_UPPER_CHEST to "M33.046,25.581 a3.989,2.16 -7.0 1,0 -7.978,0 a3.989,2.16 -7.0 1,0 7.978,0z",
     )
-    val zones: List<Pair<Location, Path>> by lazy {
-        pathData.map { (location, svgData) ->
-            location to PathParser.createPathFromPathData(svgData)
-        }
+    val zones: List<Pair<Location, Path>> = pathData.map { (location, svgData) ->
+        location to PathParser.createPathFromPathData(svgData)
     }
 }
 

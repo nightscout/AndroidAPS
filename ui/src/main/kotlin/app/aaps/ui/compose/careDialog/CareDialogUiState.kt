@@ -26,7 +26,13 @@ data class CareDialogUiState(
     // Config values
     val glucoseUnits: GlucoseUnit = GlucoseUnit.MGDL,
     val showNotesFromPreferences: Boolean = false,
-    val siteRotationManageCgm: Boolean = false
+    val siteRotationManageCgm: Boolean = false,
+
+    // Site rotation (visible for SENSOR_INSERT when siteRotationManageCgm enabled)
+    val siteLocation: TE.Location = TE.Location.NONE,
+    val siteArrow: TE.Arrow = TE.Arrow.NONE,
+    val lastSiteLocationString: String? = null,
+    val selectedSiteLocationString: String? = null
 )
 
 /** BG section visible for BGCHECK, QUESTION, ANNOUNCEMENT */
@@ -43,6 +49,10 @@ val CareDialogUiState.showDurationSection: Boolean
         UiInteraction.EventType.NOTE,
         UiInteraction.EventType.EXERCISE
     )
+
+/** Site rotation section visible for SENSOR_INSERT when CGM site rotation is enabled */
+val CareDialogUiState.showSiteRotationSection: Boolean
+    get() = eventType == UiInteraction.EventType.SENSOR_INSERT && siteRotationManageCgm
 
 /** Notes always visible for NOTE, QUESTION, ANNOUNCEMENT, EXERCISE (independent of prefs) */
 val CareDialogUiState.showNotesSection: Boolean

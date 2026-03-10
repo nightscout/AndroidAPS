@@ -4,6 +4,12 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -12,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
@@ -21,6 +28,7 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 
 class EquilComposeContent(
+    private val pluginName: String,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck
 ) : ComposablePluginContent {
@@ -38,6 +46,29 @@ class EquilComposeContent(
         var showHistory by remember { mutableStateOf(false) }
         var showWizardWorkflow by remember { mutableStateOf(false) }
         var startWorkflow by remember { mutableStateOf<EquilWorkflow?>(null) }
+
+        // Remove cog wheel from parent toolbar during wizard, restore when done
+        val navIcon: @Composable () -> Unit = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+            }
+        }
+        val settingsAction: @Composable RowScope.() -> Unit = {
+            onSettings?.let { action ->
+                IconButton(onClick = action) {
+                    Icon(Icons.Filled.Settings, contentDescription = stringResource(app.aaps.core.ui.R.string.settings))
+                }
+            }
+        }
+        LaunchedEffect(showWizardWorkflow) {
+            setToolbarConfig(
+                ToolbarConfig(
+                    title = pluginName,
+                    navigationIcon = navIcon,
+                    actions = if (showWizardWorkflow) ({}) else settingsAction
+                )
+            )
+        }
 
         // Handle one-time events from overview
         LaunchedEffect(overviewViewModel) {

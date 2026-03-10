@@ -32,6 +32,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -50,9 +51,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import app.aaps.compose.navigation.AppRoute
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -100,6 +104,7 @@ import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.siteRotation.SiteLocationPickerScreen
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.implementation.plugin.PluginStore
@@ -149,11 +154,9 @@ import app.aaps.ui.compose.quickWizard.QuickWizardManagementScreen
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeScreen
-import app.aaps.ui.compose.siteRotationDialog.SiteRotationEditorScreen
-import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationEditorViewModel
-import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.siteRotationDialog.SiteRotationManagementScreen
 import app.aaps.ui.compose.siteRotationDialog.SiteRotationSettingsScreen
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.stats.StatsScreen
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempBasalDialog.TempBasalDialogScreen
@@ -195,6 +198,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var xDripSource: XDripSource
     @Inject lateinit var dexcomBoyda: DexcomBoyda
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var prefFileList: FileListProvider
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var dateUtil: DateUtil
@@ -227,7 +231,6 @@ class ComposeMainActivity : AppCompatActivity() {
     private val searchViewModel: SearchViewModel by viewModels()
     private val permissionsViewModel: PermissionsViewModel by viewModels()
     private val configurationViewModel: ConfigurationViewModel by viewModels()
-    private val siteRotationEditorViewModel: SiteRotationEditorViewModel by viewModels()
     private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
     private var navController: NavHostController? = null
@@ -600,13 +603,17 @@ class ComposeMainActivity : AppCompatActivity() {
                                 type = NavType.IntType
                             }
                         )
-                    ) {
+                    ) { backStackEntry ->
+                        val siteLocation = backStackEntry.savedStateHandle.get<String>("site_location")
+                        val siteArrow = backStackEntry.savedStateHandle.get<String>("site_arrow")
+                        val siteResult = if (siteLocation != null || siteArrow != null) Pair(siteLocation, siteArrow) else null
+
                         CareDialogScreen(
                             onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = { timestamp ->
-                                // uiInteraction.runSiteRotationDialog(supportFragmentManager)
-                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
-                            }
+                            onPickSiteLocation = {
+                                navController.navigate(AppRoute.SiteLocationPicker.createRoute(TE.Type.SENSOR_CHANGE))
+                            },
+                            siteLocationResult = siteResult
                         )
                     }
 
@@ -617,17 +624,21 @@ class ComposeMainActivity : AppCompatActivity() {
                                 type = NavType.IntType
                             }
                         )
-                    ) {
+                    ) { backStackEntry ->
+                        val siteLocation = backStackEntry.savedStateHandle.get<String>("site_location")
+                        val siteArrow = backStackEntry.savedStateHandle.get<String>("site_arrow")
+                        val siteResult = if (siteLocation != null || siteArrow != null) Pair(siteLocation, siteArrow) else null
+
                         FillDialogScreen(
                             fillButtonsDef = builtInSearchables.fillButtons,
                             onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = { timestamp ->
-                                // uiInteraction.runSiteRotationDialog(supportFragmentManager)
-                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
-                            },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
+                            },
+                            onPickSiteLocation = {
+                                navController.navigate(AppRoute.SiteLocationPicker.createRoute(TE.Type.CANNULA_CHANGE))
+                            },
+                            siteLocationResult = siteResult
                         )
                     }
 
@@ -953,25 +964,41 @@ class ComposeMainActivity : AppCompatActivity() {
                         }
                     }
 
+                    composable(
+                        AppRoute.SiteLocationPicker.route,
+                        arguments = listOf(navArgument("siteTypeOrdinal") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val siteTypeOrdinal = backStackEntry.arguments?.getInt("siteTypeOrdinal") ?: 0
+                        val siteType = TE.Type.entries[siteTypeOrdinal]
+                        val entries by produceState(initialValue = emptyList<TE>()) {
+                            value = persistenceLayer.getTherapyEventDataFromTime(
+                                System.currentTimeMillis() - T.days(45).msecs(), false
+                            ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+                        }
+                        SiteLocationPickerScreen(
+                            siteType = siteType,
+                            bodyType = app.aaps.core.ui.compose.siteRotation.BodyType.fromPref(
+                                preferences.get(app.aaps.core.keys.IntKey.SiteRotationUserProfile)
+                            ),
+                            onClose = { navController.popBackStack() },
+                            onLocationConfirmed = { location, arrow ->
+                                navController.previousBackStackEntry?.savedStateHandle?.apply {
+                                    set("site_location", location.name)
+                                    set("site_arrow", arrow.name)
+                                }
+                                navController.popBackStack()
+                            },
+                            entries = entries
+                        )
+                    }
+
                     composable(AppRoute.SiteRotationManagement.route) {
                         SiteRotationManagementScreen(
                             viewModel = siteRotationManagementViewModel,
                             onClose = { navController.popBackStack() },
-                            onEditEntry = { timestamp ->
-                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
-                            },
                             onPreferenceClick = {
                                 navController.navigate(AppRoute.SiteRotationSettings.route)
                             }
-                        )
-                    }
-
-                    composable(AppRoute.SiteRotationEditor.route, arguments = listOf(navArgument("timestamp") { type = NavType.LongType })) { backStackEntry ->
-                        val timestamp = backStackEntry.arguments?.getLong("timestamp") ?: 0L
-                        SiteRotationEditorScreen(
-                            viewModel = siteRotationEditorViewModel,
-                            timestamp = timestamp,
-                            onClose = { navController.popBackStack() }
                         )
                     }
 

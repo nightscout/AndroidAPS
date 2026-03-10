@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.siteRotationDialog
+package app.aaps.core.ui.compose.siteRotation
 
 import android.graphics.Path
 import android.graphics.Region
@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import app.aaps.core.data.model.TE
-import app.aaps.ui.compose.siteRotationDialog.viewModels.BodyType
 import androidx.compose.ui.graphics.Path as ComposePath
 
 @Composable
@@ -43,14 +42,13 @@ fun BodyView(
     }
 
     fun showLocation(location: TE.Location): Boolean =
-        (showPumpSites && location.pump) || (showCgmSites && !location.pump && editedTe?.type != TE.Type.CANNULA_CHANGE)
+        location != TE.Location.NONE && ((showPumpSites && location.pump) || showCgmSites)
 
     BoxWithConstraints(modifier = modifier.aspectRatio(aspectRatio)) {
         val canvasWidth = constraints.maxWidth.toFloat()
         val canvasHeight = constraints.maxHeight.toFloat()
         val viewportWidth = background.viewportWidth
         val viewportHeight = background.viewportHeight
-
 
         Icon(
             imageVector = background,
@@ -59,7 +57,6 @@ fun BodyView(
             tint = Color.Unspecified
         )
 
-        // Manage click on each location
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -118,7 +115,7 @@ fun Path.containsPoint(x: Float, y: Float): Boolean {
     return region.contains(x.toInt(), y.toInt())
 }
 
-private fun computeZoneColors(
+internal fun computeZoneColors(
     entries: List<TE>,
     showPumpSites: Boolean,
     showCgmSites: Boolean
