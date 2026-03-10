@@ -55,8 +55,6 @@ class BetaCellPlugin @Inject constructor(
     override var lastAPSResult: APSResult? = null
     override var lastAPSRun: Long = 0L
     override fun isEnabled(): Boolean = isEnabled(PluginType.APS)
-    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? =
-        glucoseStatusProvider.getGlucoseStatusData(allowOldData)
 
     override fun configuration(): JSONObject = JSONObject().apply {
         put(BooleanKey.BetaCellOpenLoop.key,   preferences.get(BooleanKey.BetaCellOpenLoop))
