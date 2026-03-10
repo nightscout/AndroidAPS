@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.AapsSpacing
 
 @Immutable
 data class WizardButton(
@@ -38,15 +39,15 @@ fun WizardStepLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = AapsSpacing.extraLarge)
     ) {
         // Scrollable content area
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(vertical = AapsSpacing.extraLarge),
+            verticalArrangement = Arrangement.spacedBy(AapsSpacing.large),
             content = content
         )
 
@@ -55,8 +56,8 @@ fun WizardStepLayout(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(vertical = AapsSpacing.extraLarge),
+                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)
             ) {
                 secondaryButton?.let { btn ->
                     OutlinedButton(
