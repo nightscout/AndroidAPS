@@ -111,7 +111,7 @@ class BetaCellPlugin @Inject constructor(
             aapsLogger.error(LTag.APS, "No profile — aborting"); return
         }
 
-        val gs: GlucoseStatus = glucoseStatusProvider.getGlucoseStatusData() ?: run {
+        val gs: GlucoseStatus = glucoseStatusProvider.getGlucoseStatusData(false) ?: run {
             aapsLogger.warn(LTag.APS, "No CGM data"); return
         }
 
