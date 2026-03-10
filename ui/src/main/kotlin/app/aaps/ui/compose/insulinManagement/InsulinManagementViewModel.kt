@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.ScreenMode
@@ -68,7 +69,7 @@ class InsulinManagementViewModel @Inject constructor(
         uiState.update { it.copy(screenMode = mode) }
     }
 
-    fun loadData(targetIndex: Int? = null, reload: Boolean = true, autoName: Boolean = false) {
+    fun loadData(targetIndex: Int? = null, reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
         viewModelScope.launch {
             if (reload) insulinManager.loadSettings()
             val insulins = insulinManager.insulins.map { it.deepClone() }
@@ -95,7 +96,10 @@ class InsulinManagementViewModel @Inject constructor(
                 )
             }
 
-            if (autoName) autoGenerateName()
+            if (autoName) {
+                autoGenerateName()
+                if (saveAfterAutoName) saveCurrentInsulin()
+            }
             targetIndex?.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
         }
     }
@@ -225,7 +229,7 @@ class InsulinManagementViewModel @Inject constructor(
         val newICfg = source?.deepClone() ?: InsulinType.OREF_RAPID_ACTING.iCfg
         newICfg.insulinLabel = ""
         insulinManager.addNewInsulin(newICfg)
-        loadData(targetIndex = insulinManager.currentInsulinIndex, reload = false, autoName = true)
+        loadData(targetIndex = insulinManager.currentInsulinIndex, reload = false, autoName = true, saveAfterAutoName = true)
     }
 
     fun deleteCurrentInsulin(): Boolean {
@@ -338,6 +342,8 @@ class InsulinManagementViewModel @Inject constructor(
     /** Preset list for "Load peak from" chips — excludes FreePeak (not a real preset) */
     fun presetList(): List<InsulinType> = insulinManager.insulinTemplateList().filter { it != InsulinType.OREF_FREE_PEAK }
     fun concentrationList(): List<ConcentrationType> = insulinManager.concentrationList()
+    val concentrationEnabled: Boolean
+        get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
     fun diaRange(): ClosedFloatingPointRange<Double> = hardLimits.minDia()..hardLimits.maxDia()
     fun peakRange(): ClosedFloatingPointRange<Double> = hardLimits.minPeak().toDouble()..hardLimits.maxPeak().toDouble()
 }

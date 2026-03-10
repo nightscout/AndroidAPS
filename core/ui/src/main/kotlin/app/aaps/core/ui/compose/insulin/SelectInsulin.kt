@@ -65,7 +65,7 @@ fun SelectInsulin(
         }
     }
 
-
+    Column {
         // Show current insulin with a Change button
         Row(
             modifier = Modifier
@@ -94,61 +94,58 @@ fun SelectInsulin(
         // Expandable insulin selection list
         AnimatedVisibility(visible = expanded) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Spacer(modifier = Modifier.height(48.dp))
-                if (allConcentrations.isNotEmpty() && selectedConcentration != null) {
+                val showConcentrationDropdown = concentrationDropDownEnabled && allConcentrations.size > 1 && selectedConcentration != null
+                if (showConcentrationDropdown) {
                     ConcentrationDropdown(
                         selected = selectedConcentration!!,
                         concentrations = allConcentrations,
                         onSelect = { newConcentration ->
                             selectedConcentration = newConcentration
-                        },
-                        enabled = concentrationDropDownEnabled
+                        }
                     )
                 }
 
-                    filteredInsulins.forEach { iCfg ->
-                        val isSelected = iCfg.insulinLabel == selectedInsulin?.insulinLabel
-                        val isActive = iCfg.insulinLabel == activeInsulinLabel
+                filteredInsulins.forEach { iCfg ->
+                    val isSelected = iCfg.insulinLabel == selectedInsulin?.insulinLabel
+                    val isActive = iCfg.insulinLabel == activeInsulinLabel
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onInsulinSelect(iCfg)
-                                    expanded = false
-                                }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = {
-                                    onInsulinSelect(iCfg)
-                                    expanded = false
-                                }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onInsulinSelect(iCfg)
+                                expanded = false
+                            }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = {
+                                onInsulinSelect(iCfg)
+                                expanded = false
+                            }
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = iCfg.insulinLabel,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal
                             )
-                            Column(modifier = Modifier.weight(1f)) {
+                            if (isActive) {
                                 Text(
-                                    text = iCfg.insulinLabel,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal
+                                    text = stringResource(R.string.current_insulin),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                                if (isActive) {
-                                    Text(
-                                        text = stringResource(R.string.current_insulin),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
                             }
                         }
                     }
-
-
+                }
+            }
         }
     }
 }
-
 
 private val previewInsulins = listOf(
     ICfg("Fiasp U100", peak = 55, dia = 5.0, concentration = 1.0),

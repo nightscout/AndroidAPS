@@ -301,15 +301,17 @@ fun InsulinManagementScreen(
                                 modifier = Modifier.fillMaxWidth()
                             )
 
-                            Spacer(modifier = Modifier.height(12.dp))
+                            if (viewModel.concentrationEnabled) {
+                                Spacer(modifier = Modifier.height(12.dp))
 
-                            // Concentration dropdown
-                            ConcentrationDropdown(
-                                selected = uiState.editorConcentration,
-                                concentrations = viewModel.concentrationList(),
-                                onSelect = { viewModel.updateEditorConcentration(it) },
-                                enabled = editorEnabled
-                            )
+                                // Concentration dropdown
+                                ConcentrationDropdown(
+                                    selected = uiState.editorConcentration,
+                                    concentrations = viewModel.concentrationList(),
+                                    onSelect = { viewModel.updateEditorConcentration(it) },
+                                    enabled = editorEnabled
+                                )
+                            }
 
                             Spacer(modifier = Modifier.height(12.dp))
 

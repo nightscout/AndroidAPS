@@ -34,6 +34,8 @@ data class ICfg(
     */
     fun isEqual(iCfg: ICfg?): Boolean {
         iCfg?.let { iCfg ->
+            if (insulinLabel != iCfg.insulinLabel)
+                return false
             if (insulinEndTime != iCfg.insulinEndTime)
                 return false
             if (insulinPeakTime != iCfg.insulinPeakTime)
