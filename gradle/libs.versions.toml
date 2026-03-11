@@ -75,7 +75,7 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
 

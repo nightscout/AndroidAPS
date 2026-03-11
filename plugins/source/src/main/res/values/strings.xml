@@ -25,7 +25,6 @@
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>
-
     <string name="bgsource_settings">BG source settings</string>
     <string name="bgsource_log_sensor_change_title">Accept sensor start</string>
     <string name="bgsource_log_sensor_change_summary">Create event \"CGM Sensor Insert\" in Careportal automatically on received sensor start from BG source local broadcast</string>
@@ -40,4 +39,18 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
+    <!-- Eversense plugin -->
+    <string name="source_eversense">Eversense</string>
+    <string name="description_source_eversense">Eversense E3/365 driver</string>
+    <string name="eversense_information_title">Information</string>
+    <string name="eversense_information_connected">Connected</string>
+    <string name="eversense_information_battery">Battery percentage</string>
+    <string name="eversense_information_insertion_date">Insertion date</string>
+    <string name="eversense_information_last_sync">Last synchronisation</string>
+    <string name="eversense_calibration_title">Calibration</string>
+    <string name="eversense_calibration_phase">Phase</string>
+    <string name="eversense_calibration_last">Last calibration</string>
+    <string name="eversense_calibration_next">Next calibration</string>
+    <string name="eversense_calibration_action">Calibrate transmitter</string>
+    <string name="eversense_use_smoothing">Use ESEL Smoothing</string>
 </resources>
