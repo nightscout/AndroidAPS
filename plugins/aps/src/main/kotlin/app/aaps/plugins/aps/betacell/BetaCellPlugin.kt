@@ -134,8 +134,6 @@ class BetaCellPlugin @Inject constructor(
             .map    { it.value }
 
         val calibratedIsf = IsfCalibrator(aapsLogger).calibrate(bgHistory)
-        val iobTotal      = iobCobCalculator.calculateIobFromBolus().iob
-
         val result = calcBetaSecretion(
             bg = gs.glucose, bgDelta = gs.delta, dtMin = 5.0,
             isf = calibratedIsf, p = p
@@ -238,7 +236,7 @@ class BetaCellPlugin @Inject constructor(
         val smbAllowed = p.smbEnabled
             && bg > p.targetBg + p.smbOffset
             && bgIn30min > hypoAlert
-            && iobTotal >= 0.0
+            && iobTotal < p.smbMax * 3.0
         val smb = if (smbAllowed) min(0.3 * systemicInsulin, p.smbMax) else 0.0
 
         val zone = when {
