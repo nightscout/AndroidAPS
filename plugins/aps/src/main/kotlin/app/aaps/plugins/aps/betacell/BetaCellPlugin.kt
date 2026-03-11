@@ -168,6 +168,8 @@ class BetaCellPlugin @Inject constructor(
         bg: Double, bgDelta: Double, dtMin: Double,
         isf: Double, iob: Double, p: BetaCellPrefs
     ): BetaCellApsResult {
+
+        // ── Guard hypo absolu ─────────────────────────────────────────
         if (bg < p.hypoBg) {
             aapsLogger.warn(LTag.APS, "HYPO guard: BG=${bg.roundToInt()} → 0 U")
             return BetaCellApsResult().also { r ->
@@ -178,30 +180,46 @@ class BetaCellPlugin @Inject constructor(
             }
         }
 
-        val slope  = bgDelta / dtMin
-
-        // ── Guard hypo prédictif ──────────────────────────────────────────
+        val slope     = bgDelta / dtMin
         val bgIn30min = bg + slope * 30.0
         val hypoAlert = p.hypoBg + p.hypoAlertMargin
-        if (slope < p.hypoRapidSlope && bgIn30min < hypoAlert && iob > 0.0) {
-            aapsLogger.warn(LTag.APS, "PREDICTIVE HYPO: BG=${bg.roundToInt()} slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} IOB=${"%.2f".format(iob)} → 0 U")
+
+        // ── Guard hypo prédictif (amélioré) ──────────────────────────
+        val predictiveHypo = bgIn30min < hypoAlert &&
+            (iob > 0.0 || slope < p.hypoRapidSlope)
+        if (predictiveHypo) {
+            aapsLogger.warn(LTag.APS, "PREDICTIVE HYPO: BG=${bg.roundToInt()} " +
+                "slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} " +
+                "IOB=${"%.2f".format(iob)} → 0 U")
             return BetaCellApsResult().also { r ->
                 r.rate = 0.0; r.smb = 0.0
                 r.slope_used = slope; r.isf_used = isf
                 r.zone = GlucoseZone.HYPO
                 r.isTempBasalRequested = false
-                r.reason = "Predictive hypo: BG=${bg.roundToInt()} slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} < ${hypoAlert.roundToInt()} IOB=${"%.2f".format(iob)}U"
+                r.reason = "Predictive hypo: BG=${bg.roundToInt()} " +
+                    "slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} " +
+                    "< ${hypoAlert.roundToInt()} IOB=${"%.2f".format(iob)}U"
             }
         }
 
+        // ── Calcul β-cell ─────────────────────────────────────────────
         var beta   = if (bg > p.targetBg) ((bg - p.targetBg) / isf) * (dtMin / 60.0) else 0.0
         val braked = slope < p.slopeBrakeT
         if (braked) beta *= p.slopeBrakeF
-        beta += p.basalPhysio * (dtMin / 60.0)
+
+        // ── Réduction basale en pré-alerte ────────────────────────────
+        val basalFactor = if (bgIn30min < hypoAlert + 10.0) 0.5 else 1.0
+        beta += p.basalPhysio * (dtMin / 60.0) * basalFactor
+
         val systemicInsulin = beta * (1.0 - p.hepatic)
         val rate = max(0.0, systemicInsulin / (dtMin / 60.0))
-        val smb  = if (p.smbEnabled && bg > p.targetBg + p.smbOffset)
-            min(0.3 * systemicInsulin, p.smbMax) else 0.0
+
+        // ── SMB bloqué si tendance dangereuse ─────────────────────────
+        val smbAllowed = p.smbEnabled
+            && bg > p.targetBg + p.smbOffset
+            && bgIn30min > hypoAlert
+        val smb = if (smbAllowed) min(0.3 * systemicInsulin, p.smbMax) else 0.0
+
         val zone = when {
             bg < p.hypoBg  -> GlucoseZone.HYPO
             bg > p.hyperBg -> GlucoseZone.HYPER
@@ -214,17 +232,19 @@ class BetaCellPlugin @Inject constructor(
             r.duration = 30
             r.betaSecretion = beta; r.systemicInsulin = systemicInsulin
             r.isf_used = isf; r.slope_used = slope; r.zone = zone
-            r.reason = buildReason(bg, slope, isf, beta, systemicInsulin, p, braked)
+            r.reason = buildReason(bg, slope, isf, beta, systemicInsulin, p, braked, basalFactor, bgIn30min)
         }
     }
 
     private fun buildReason(
         bg: Double, slope: Double, isf: Double, beta: Double, systemic: Double,
-        p: BetaCellPrefs, braked: Boolean
+        p: BetaCellPrefs, braked: Boolean, basalFactor: Double, bgIn30min: Double
     ): String = buildString {
         append("BG=${bg.roundToInt()} tgt=${p.targetBg.roundToInt()} ")
         append("ISF=${"%.1f".format(isf)} slope=${"%.2f".format(slope)} ")
+        append("BGin30=${bgIn30min.roundToInt()} ")
         if (braked) append("[brake×${p.slopeBrakeF}] ")
+        if (basalFactor < 1.0) append("[basal×$basalFactor PRE-ALERT] ")
         append("β=${"%.3f".format(beta)}U sys=${"%.3f".format(systemic)}U ")
         if (p.openLoopOnly) append("[OPEN_LOOP]")
     }
