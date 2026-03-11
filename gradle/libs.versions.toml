@@ -18,7 +18,7 @@ annotation = "1.9.1"
 
 # Compose
 activityCompose = "1.12.2"
-composeBom = "2025.12.01"
+composeBom = "2026.02.00"
 navigationCompose = "2.9.6"
 lifecycleRuntimeKtx = "2.10.0"
 materialPullRefresh = "1.2.0"
