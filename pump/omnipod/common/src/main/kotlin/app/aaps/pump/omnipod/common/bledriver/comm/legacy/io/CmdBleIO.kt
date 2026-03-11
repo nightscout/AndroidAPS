@@ -34,9 +34,7 @@ class CmdBleIO(
         return incomingPackets.peek()
     }
 
-    override fun hello() {
-        sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
-    }
+    override fun hello() = sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
 
     override fun expectCommandType(expected: BleCommand, timeoutMs: Long): BleConfirmResult {
         return receivePacket(timeoutMs)?.let {

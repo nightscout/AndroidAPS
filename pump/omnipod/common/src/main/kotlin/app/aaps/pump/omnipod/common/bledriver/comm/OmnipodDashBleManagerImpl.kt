@@ -144,7 +144,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     throw ConnectException("Bluetooth not available")
                 }
 
-                bleDeviceManager.ensureBondedIfRequired(podAddress)
+                if (!bleDeviceManager.ensureBondedIfRequired(podAddress)) {
+                    throw ConnectException("Bluetooth not available or bonding failed")
+                }
 
                 val conn = connection
                     ?: bleConnectionFactory.createConnection(podAddress)
@@ -261,7 +263,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun removeBond() {
-        podState.bluetoothAddress?.let { bleDeviceManager.removeBond(it) }
+        val address = podState.bluetoothAddress
+        if (address == null) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "removeBond: MAC address not found")
+            return
+        }
+        bleDeviceManager.removeBond(address)
     }
 
     companion object {

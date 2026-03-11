@@ -2,6 +2,9 @@ package app.aaps.pump.omnipod.common.bledriver.comm.session
 
 import java.util.concurrent.CountDownLatch
 
+/** Interval (ms) for polling when waiting to stop connecting. Used by Connection and ServiceDiscoverer. */
+const val STOP_CONNECTING_CHECK_INTERVAL_MS = 500L
+
 sealed class ConnectionState
 
 object Connecting : ConnectionState()

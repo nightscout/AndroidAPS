@@ -23,11 +23,13 @@ class BleDiscoveredDevice(
             throw DiscoveredInvalidPodException("Expected 9 service UUIDs, got" + serviceUuids.size, serviceUuids)
         }
         if (extractUUID16(serviceUuids[0]) != MAIN_SERVICE_UUID) {
+            // this is the service that we filtered for
             throw DiscoveredInvalidPodException(
                 "The first exposed service UUID should be 4024, got " + extractUUID16(serviceUuids[0]),
                 serviceUuids
             )
         }
+        // TODO understand what is serviceUUIDs[1]. 0x2470. Alarms?
         if (extractUUID16(serviceUuids[2]) != UNKNOWN_THIRD_SERVICE_UUID) {
             throw DiscoveredInvalidPodException(
                 "The third exposed service UUID should be 000a, got " + serviceUuids[2],
@@ -70,7 +72,7 @@ class BleDiscoveredDevice(
 
     companion object {
         const val MAIN_SERVICE_UUID = "4024"
-        const val UNKNOWN_THIRD_SERVICE_UUID = "000a"
+        const val UNKNOWN_THIRD_SERVICE_UUID = "000a" // FIXME: why is this 000a?
         private fun extractUUID16(uuid: ParcelUuid): String {
             return uuid.toString().substring(4, 8)
         }

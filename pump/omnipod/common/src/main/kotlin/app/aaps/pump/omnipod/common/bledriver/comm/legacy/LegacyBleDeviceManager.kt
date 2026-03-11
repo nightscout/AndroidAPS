@@ -51,7 +51,11 @@ class LegacyBleDeviceManager @Inject constructor(
             ) {
                 return
             }
-            val adapter = bluetoothAdapter ?: return
+            val adapter = bluetoothAdapter
+            if (adapter == null) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "removeBond: Bluetooth not available, MAC address not found")
+                return
+            }
             val device = adapter.getRemoteDevice(podAddress)
             val removeBondMethod = device.javaClass.getMethod("removeBond")
             val result = removeBondMethod.invoke(device)

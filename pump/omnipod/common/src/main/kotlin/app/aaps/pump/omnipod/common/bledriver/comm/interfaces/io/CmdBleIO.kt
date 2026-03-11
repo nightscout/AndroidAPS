@@ -11,8 +11,8 @@ interface CmdBleIO : BleCharacteristicIO {
     /** Peek at the next incoming command without consuming it. */
     fun peekCommand(): ByteArray?
 
-    /** Send hello packet for connection handshake. */
-    fun hello()
+    /** Send hello packet for connection handshake. @return Result of the send */
+    fun hello(): BleSendResult
 
     /**
      * Receive a packet and verify it matches expected command type.

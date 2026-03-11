@@ -22,6 +22,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.CmdBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.DataBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.IncomingPackets
 import app.aaps.pump.omnipod.common.bledriver.comm.message.MessageIO
+import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
@@ -59,7 +60,7 @@ class Connection(
 
     @Synchronized
     override fun connect(connectionWaitCond: ConnectionWaitCondition) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting connectionWaitCond=$connectionWaitCond")
+        aapsLogger.debug("Connecting connectionWaitCond=$connectionWaitCond")
         _connectionWaitCond = connectionWaitCond
         podState.connectionAttempts++
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
@@ -68,7 +69,7 @@ class Connection(
         if (gatt == null) {
             gatt = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
             if (gatt == null) {
-                Thread.sleep(SLEEP_WHEN_FAILING_TO_CONNECT_GATT)
+                Thread.sleep(SLEEP_WHEN_FAILING_TO_CONNECT_GATT) // Do not retry too often
                 throw FailedToConnectException("connectGatt() returned null")
             }
             gattConnection = gatt
@@ -109,6 +110,8 @@ class Connection(
             bleCommCallbacks
         )
         msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
+        //  val ret = gattConnection.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+        // aapsLogger.info(LTag.PUMPBTCOMM, "requestConnectionPriority: $ret")
         cmdBleIO.hello()
         cmdBleIO.readyToRead()
         dataBleIO.readyToRead()
@@ -119,9 +122,12 @@ class Connection(
     override fun disconnect(closeGatt: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting closeGatt=$closeGatt")
         if (!closeGatt && gattConnection != null) {
+            // Disconnect first, then close gatt
             gattConnection?.disconnect()
+            // Set connection state to DISCONNECTED immediately to prevent reconnection attempts
             podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
         } else {
+            // Call with closeGatt=true only when ble is already disconnected or there is no connection
             gattConnection?.close()
             bleCommCallbacks.resetConnection()
             gattConnection = null
@@ -139,7 +145,7 @@ class Connection(
             }
             val startWaiting = System.currentTimeMillis()
             connectionWaitCond.stopConnection?.let {
-                while (!bleCommCallbacks.waitForConnection(ServiceDiscoverer.STOP_CONNECTING_CHECK_INTERVAL_MS)) {
+                while (!bleCommCallbacks.waitForConnection(STOP_CONNECTING_CHECK_INTERVAL_MS)) {
                     if (it.count == 0L) {
                         throw ConnectException("stopConnecting called")
                     }
@@ -189,13 +195,16 @@ class Connection(
         }
     }
 
+    // This will be called from a different thread !!!
     override fun onConnectionLost(status: Int) {
         aapsLogger.info(LTag.PUMPBTCOMM, "Lost connection with status: $status")
+        // Check if waiting for connection, if so, stop waiting
         _connectionWaitCond?.stopConnection?.let {
             if (it.count > 0) {
                 it.countDown()
             }
         }
+        // BLE disconnected, so need to close gatt
         disconnect(true)
     }
 
