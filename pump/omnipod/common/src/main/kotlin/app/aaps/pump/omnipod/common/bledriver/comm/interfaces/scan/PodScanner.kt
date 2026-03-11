@@ -1,7 +1,7 @@
 package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan
 
 /**
- * BLE scan for pod discovery. Implemented by Android (BluetoothLeScanner) and Blessed.
+ * BLE scan for pod discovery.
  */
 interface PodScanner {
 

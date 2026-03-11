@@ -2,7 +2,7 @@ package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session
 
 /**
  * Factory to create a BLE connection from a pod address.
- * Implemented by native Android and BLESSED.
+ * Implemented by Bluetooth library-specific adapters.
  */
 interface BleConnectionFactory {
 

@@ -10,7 +10,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.session.Session
 
 /**
  * Abstraction for BLE GATT connection lifecycle.
- * Implemented by native Android (Connection) and BLESSED (BlessedConnection).
+ * Implemented by Bluetooth library-specific adapters.
  */
 interface BleConnection : DisconnectHandler {
 

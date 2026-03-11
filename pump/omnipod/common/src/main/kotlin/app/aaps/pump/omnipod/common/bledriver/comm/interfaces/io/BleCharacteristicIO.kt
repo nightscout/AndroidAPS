@@ -2,7 +2,7 @@ package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io
 
 /**
  * Abstraction for BLE characteristic I/O: blocking read, write-with-confirmation,
- * and indication enablement. Implemented by real (Android/Blessed) and fake transports.
+ * and indication enablement. Implemented by real and fake transports.
  */
 interface BleCharacteristicIO {
 

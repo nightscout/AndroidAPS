@@ -4,7 +4,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner
 
 /**
  * Abstraction for BLE device access and bonding.
- * Implemented by native Android (and BLESSED if different).
+ * Implemented by Bluetooth library-specific adapters.
  */
 interface BleDeviceManager {
 

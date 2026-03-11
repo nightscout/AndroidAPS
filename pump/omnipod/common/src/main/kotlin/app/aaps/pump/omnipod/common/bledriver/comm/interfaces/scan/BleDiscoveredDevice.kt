@@ -2,7 +2,7 @@ package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan
 
 /**
  * Result of a successful pod scan.
- * Implementations hold platform-specific scan data (e.g. Android ScanResult).
+ * Implementations hold Bluetooth library-specific scan data (e.g. Android ScanResult).
  */
 interface BleDiscoveredDevice {
 
