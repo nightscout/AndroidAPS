@@ -90,7 +90,7 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.7.1" }
 
 
-androidx-activity = { group = "androidx.activity", name = "activity-ktx", version = "1.12.2" }
+androidx-activity = { group = "androidx.activity", name = "activity-ktx", version = "1.12.4" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.1" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.9.0" }
