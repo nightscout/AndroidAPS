@@ -109,7 +109,9 @@ class BetaCellPlugin @Inject constructor(
         smbMax       = preferences.get(DoubleKey.BetaCellSmbMax),
         smbOffset    = preferences.get(DoubleKey.BetaCellSmbOffset),
         openLoopOnly = preferences.get(BooleanKey.BetaCellOpenLoop),
-        debugMode    = preferences.get(BooleanKey.BetaCellDebug)
+        debugMode    = preferences.get(BooleanKey.BetaCellDebug),
+        hypoAlertMargin = preferences.get(DoubleKey.BetaCellHypoAlertMargin),
+        hypoRapidSlope  = preferences.get(DoubleKey.BetaCellHypoRapidSlope)
     )
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {

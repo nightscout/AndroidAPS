@@ -61,7 +61,9 @@ data class BetaCellPrefs(
 
     // ── Mode ──────────────────────────────────────────────────────────────
     val openLoopOnly: Boolean,  // betacell_open_loop_only     (true = simulation)
-    val debugMode   : Boolean   // betacell_debug_mode
+    val debugMode   : Boolean,  // betacell_debug_mode
+    val hypoAlertMargin : Double,  // betacell_hypo_alert_margin  defaut: 20.0 mg/dL
+    val hypoRapidSlope  : Double   // betacell_hypo_rapid_slope   defaut: -2.0 mg/dL/min
 
 ) {
     /** Résumé lisible pour les logs AAPS (mode debug) */

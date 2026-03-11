@@ -65,4 +65,6 @@ enum class DoubleKey(
     BetaCellSlopeBrakeF("betacell_slope_brake_factor", 0.4, 0.1, 1.0),
     BetaCellSmbMax("betacell_smb_max_units", 0.4, 0.05, 1.0),
     BetaCellSmbOffset("betacell_smb_threshold_offset", 20.0, 5.0, 60.0),
+    BetaCellHypoAlertMargin("betacell_hypo_alert_margin", 20.0, 5.0, 50.0),
+    BetaCellHypoRapidSlope("betacell_hypo_rapid_slope", -2.0, -5.0, -0.5),
 }
