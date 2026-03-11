@@ -187,7 +187,9 @@ class IobCobOref1Worker(
                         aapsLogger.debug(LTag.AUTOSENS) { ">>>>> bucketed_data.size()=${bucketedData.size} i=$i hourAgoData=null" }
                     }
                 }
-                val recentCarbTreatments = persistenceLayer.getCarbsFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true)
+                // Use exclusive start (+1ms) to avoid double-counting carbs at window boundaries
+                // when consecutive 5-min windows share a boundary timestamp (issue #4596)
+                val recentCarbTreatments = persistenceLayer.getCarbsFromTimeToTimeExpanded(bgTime - T.mins(5).msecs() + 1, bgTime, true)
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
