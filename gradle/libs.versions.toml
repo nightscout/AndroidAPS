@@ -12,7 +12,7 @@ okhttp = "5.3.2"
 retrofit = "3.0.0"
 kotlinx-serialization = "1.9.0"
 kotlinx-coroutines = "1.10.2"
-work = "2.11.0"
+work = "2.11.1"
 datastorePreferences = "1.2.0"
 annotation = "1.9.1"
 
