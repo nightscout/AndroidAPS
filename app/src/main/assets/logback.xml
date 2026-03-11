@@ -1,19 +1,13 @@
 <configuration>
     <!-- Create a file appender for a log in the application's data directory -->
-    <property name="EXT_FILES_DIR" scope="context" value="${EXT_DIR:-/sdcard}" />
+    <property name="EXT_FILES_DIR" scope="context" value="/storage/emulated/0/Documents/aapsLogs" />
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${EXT_FILES_DIR}/AndroidAPS.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover. Make sure the path matches the one in the file element or else
-             the rollover logs are placed in the working directory. -->
-            <fileNamePattern>${EXT_FILES_DIR}/AndroidAPS._%d{yyyy-MM-dd}_%d{HH-mm-ss, aux}_.%i.zip
-            </fileNamePattern>
+            <!-- hourly rollover. Log files will be placed in Documents/aapsLogs. -->
+            <fileNamePattern>${EXT_FILES_DIR}/AndroidAPS._%d{yyyy-MM-dd_HH}.zip</fileNamePattern>
 
-            <timeBasedFileNamingAndTriggeringPolicy
-                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>5MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- keep 30 days' worth of history -->
+            <!-- keep 5 days (hourly archives) worth of history -->
             <maxHistory>120</maxHistory>
         </rollingPolicy>
         <encoder>

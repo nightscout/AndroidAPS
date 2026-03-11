@@ -50,6 +50,7 @@ class FileListProviderImpl @Inject constructor(
 
     private val documentsPath get() = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "AAPS")
     override val resultPath get() = File(documentsPath, File.separator + "results")
+    override val aapsLogsPath get() = File(documentsPath, File.separator + "aapsLogs")
 
     val preferencesPath = "preferences"
     val exportsPath = "exports"
@@ -167,6 +168,13 @@ class FileListProviderImpl @Inject constructor(
     override fun ensureResultDirExists(): File {
         if (!resultPath.exists()) {
             resultPath.mkdirs()
+        }
+        return resultPath
+    }
+
+    override fun ensureAapsLogsDirExists(): File {
+        if (!aapsLogsPath.exists()) {
+            aapsLogsPath.mkdirs()
         }
         return resultPath
     }

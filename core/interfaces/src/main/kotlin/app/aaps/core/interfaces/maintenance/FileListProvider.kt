@@ -7,6 +7,7 @@ import java.io.File
 interface FileListProvider {
 
     val resultPath: File
+    val aapsLogsPath: File
     fun ensurePreferenceDirExists(): DocumentFile?
     fun ensureExportDirExists(): DocumentFile?
     fun ensureTempDirExists(): DocumentFile?
@@ -18,6 +19,7 @@ interface FileListProvider {
 
     fun ensureResultDirExists(): File
     fun newResultFile(): File
+    fun ensureAapsLogsDirExists(): File
     fun listPreferenceFiles(): MutableList<PrefsFile>
     fun listCustomWatchfaceFiles(): MutableList<CwfFile>
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata>

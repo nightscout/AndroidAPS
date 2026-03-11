@@ -136,7 +136,7 @@ class KeepAliveWorker(
         localAlertUtils.checkStaleBGAlert()
         checkPump()
         checkAPS()
-        maintenancePlugin.deleteLogs(30)
+        maintenancePlugin.deleteLogs(240)
         workerDbStatus()
         databaseCleanup()
 
