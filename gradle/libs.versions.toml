@@ -104,7 +104,7 @@ androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", vers
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.10.0" }
 androidx-media3-common = { group = "androidx.media3", name = "media3-common", version = "1.9.0" }
-androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version = "2.9.6" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version = "2.9.7" }
 androidx-preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
 androidx-room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
