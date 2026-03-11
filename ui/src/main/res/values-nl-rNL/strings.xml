@@ -38,6 +38,22 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <!-- SiteRotationDialog -->
+    <string name="site_front">Voorzijde</string>
+    <string name="site_back">Achterzijde</string>
+    <string name="site_man">Man</string>
+    <string name="site_woman">Vrouw</string>
+    <string name="site_child">Kind</string>
+    <string name="user_profile">Gebruikers profiel</string>
+    <string name="user_profile_description">Het gebruikers profiel wordt gebruikt om meest gebruikte locaties te tonen voor mannen, vrouwen of kinderen</string>
+    <string name="site_management">Management profiel voor infuus locaties</string>
+    <string name="site_management_description">Hier stellen we in of je infuus locaties voor Pomp, CGM of beide wilt beheren. Deze instelling wordt gebruikt om automatisch een nieuwe beheers dialoog te starten</string>
+    <string name="select_site">Klik hieronder om een site te selecteren</string>
+    <string name="record_site_change">Site locatie vastleggen</string>
+    <string name="edit_site">Bewerk</string>
+    <string name="record_site_location">Site locatie: %1$s</string>
+    <string name="record_site_arrow">Site pijl %1$s</string>
+    <string name="record_site_note">Notitie: %1$s</string>
+    <string name="delete_site_note">Notitie verwijderd</string>
     <!-- FillDialog -->
     <string name="fill_warning">Zorg ervoor dat de hoeveelheid overeenkomt met de specificatie van uw infusieset!</string>
     <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
@@ -136,6 +152,10 @@
     <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
     <string name="recalculate">Herberekenen</string>
     <!--    Widget-->
+    <string name="use_black_color">Gebruik zwarte kleur</string>
+    <string name="widget_configuration">Widget configuratie</string>
+    <string name="until_changed">Totdat gewijzigd</string>
+    <string name="limitations">Beperkingen</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Beide</item>
         <item>Alleen positief</item>

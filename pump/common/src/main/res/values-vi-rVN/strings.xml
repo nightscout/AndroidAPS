@@ -10,8 +10,27 @@
     <string name="pump_status_busy">Đang bận</string>
     <string name="pump_status_suspended">Bị tạm dừng</string>
     <string name="pump_status_executing_command">Đang thực hiện lệnh</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Lấy cài đặt</string>
+    <string name="pump_cmd_desc_get_firmware">Lấy firmware của bơm</string>
+    <string name="pump_cmd_desc_get_basal_profile">Lấy Hồ sơ liều nền</string>
+    <string name="pump_cmd_desc_set_basal_profile">Thiết lập Hồ sơ liều nền</string>
+    <string name="pump_cmd_desc_get_tbr">Lấy liều nền tạm thời</string>
+    <string name="pump_cmd_desc_cancel_tbr">Hủy bỏ liều nền tạm thời</string>
+    <string name="pump_cmd_desc_set_tbr">Đặt liều nền tạm thời</string>
+    <string name="pump_cmd_desc_set_bolus">Đặt liều Bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Đặt liều Bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Hủy liều bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Lấy lượng insulin còn lại</string>
+    <string name="pump_cmd_desc_get_battery_status">Lấy trạng thái pin</string>
+    <string name="pump_cmd_desc_get_time">Lấy thời gian</string>
+    <string name="pump_cmd_desc_set_time">Đặt thời gian</string>
+    <string name="pump_cmd_desc_get_pump_status">Lấy trạng thái bơm</string>
+    <string name="pump_cmd_desc_get_history">Lấy lịch sử</string>
+    <string name="pump_cmd_desc_get_history_params">Lấy lịch sử %s</string>
+    <string name="pump_cmd_desc_custom">Lệnh tùy chỉnh</string>
     <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Liều Basal</string>
+    <string name="history_group_basal">Liều nền</string>
     <string name="history_group_configuration">Cấu hình</string>
     <string name="history_group_notification">Thông báo</string>
     <string name="history_group_statistic">Thống kê</string>
@@ -31,6 +50,7 @@
     <string name="time_last_3_hours">3 giờ trước</string>
     <string name="time_last_6_hours">6 giờ trước</string>
     <string name="time_last_12_hours">12 giờ trước</string>
+    <string name="time_last_24_hours">24 giờ trước</string>
     <string name="time_last_2_days">2 ngày trước</string>
     <string name="time_last_4_days">4 ngày trước</string>
     <string name="time_last_week">Tuần trước</string>

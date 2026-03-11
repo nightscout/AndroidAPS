@@ -41,6 +41,7 @@
     <string name="data_choices">Opcions de dades</string>
     <string name="fabric_upload">Enviar a fabric.io</string>
     <string name="identification">Identificació (correu electrònic, FB, nick de Discord, etc.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Petició</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
@@ -134,4 +135,9 @@
     <string name="metadata_label_encryption">Encriptació d\'arxius</string>
     <string name="metadata_format_new">Format nou d\'encriptació</string>
     <string name="metadata_format_other">Format d\'exportació desconegut</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

@@ -114,9 +114,9 @@
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
     <string name="pump_status">Stav pumpy</string>
     <string name="loop_status">Stav uzavretého okruhu</string>
-    <string name="wizard_result">Kalkulačka: \nInzulín: %1$.2fJI\nSacharidy: %2$dg</string>
+    <string name="wizard_result">Kalkulačka: \nInzulín: %1$.2fU\nSacharidy: %2$dg</string>
     <string name="quick_wizard_not_available">Vybraný rýchly bolus už nie je k dispozícii, obnovte prosím dlaždicu</string>
-    <string name="quick_wizard_message">Rýchly bolus: %1$s\nInzulín: %2$.2fJI\nSacharidy: %3$dg</string>
+    <string name="quick_wizard_message">Rýchly bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
@@ -153,7 +153,7 @@
     <string name="cwf_infos_view_title">Zoznam polí zahrnutých do ciferníka</string>
     <string name="pump_fetching_data">pokus o načítanie dát z pumpy.</string>
     <string name="pump_old_data">CDD: Stále staré dáta! Nie je možné načítať z pumpy.</string>
-    <string name="units_short">JI</string>
+    <string name="units_short">U</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
@@ -164,7 +164,7 @@
     <string name="until">až do</string>
     <string name="default_range">ŠTANDARDNÝ ROZSAH</string>
     <string name="target">cieľ</string>
-    <string name="rate_duration">Rýchlosť: %1$.2fJI/h (%2$.2f%%) \nTrvanie %3$d min</string>
+    <string name="rate_duration">Rýchlosť: %1$.2fU/h (%2$.2f%%) \nTrvanie %3$d min</string>
     <string name="no_profile">Nie je vybraný žiadny profil</string>
     <string name="aps_only">Použiť iba v APS móde!</string>
     <string name="last_aps_result_na">Posledný výsledok nie je k dispozícii!</string>
@@ -175,7 +175,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Posledné spustenie</string>
     <string name="last_enact">Naposledy vykonané</string>
-    <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
     <string name="full_xdrip_sync_comment">Úplná synchronizácia? Môže to chvíľu trvať a kým neskončí, neuvidíte nové dáta v xDrip+.</string>

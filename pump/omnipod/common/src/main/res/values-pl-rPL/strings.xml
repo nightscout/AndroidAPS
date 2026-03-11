@@ -47,6 +47,7 @@
     <string name="omnipod_common_overview_button_silence_alerts">Wycisz alarmy</string>
     <string name="omnipod_common_overview_pod_status">Status Poda</string>
     <string name="omnipod_common_overview_total_delivered">Łącznie dostarczono</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikalny ID</string>
     <string name="omnipod_common_overview_lot_number">Numer LOT</string>
     <string name="omnipod_common_overview_pod_sequence_number">Numer sekwencji</string>
@@ -115,7 +116,9 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Dźwięki potwierdzenia</string>
     <string name="omnipod_common_preferences_category_notifications">Powiadomienia</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Dźwięk dla powiadomień o niepewnych TBR włączony</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Dźwięk dla niepewnych powiadomień SMB włączony</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Dźwięk dla powiadomień o niepewnych bolusach włączony</string>
+    <string name="omnipod_dash_use_bonding">Powiąż urządzenie BT na Androidzie 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Brak akt. Poda</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Konfiguracja w toku (oczekiwanie na aktywację Poda)</string>
@@ -161,6 +164,7 @@
     <!-- Omnipod - Other -->
     <string name="omnipod_common_yes">Tak</string>
     <string name="omnipod_common_no">Nie</string>
+    <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Anuluj</string>
     <string name="omnipod_common_warning">Ostrzeżenie</string>
     <string name="omnipod_common_disable_suspend_alerts">WYŁĄCZ OSTRZEŻENIA O ZAWIESZENIU</string>

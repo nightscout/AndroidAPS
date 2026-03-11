@@ -47,6 +47,8 @@ dependencies {
     // Actions
     api(libs.androidx.gridlayout)
 
+    api(libs.kotlinx.datetime)
+
     // Overview
     api(libs.com.google.android.flexbox)
 

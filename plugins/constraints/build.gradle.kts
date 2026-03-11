@@ -32,6 +32,8 @@ dependencies {
     testImplementation(project(":shared:impl"))
     testImplementation(project(":shared:tests"))
 
+    api(libs.kotlinx.datetime)
+
     // Phone checker
     api(libs.com.scottyab.rootbeer.lib)
 

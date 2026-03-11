@@ -11,7 +11,7 @@ object Constants {
     const val notificationID = 556677
 
     // OpenAPS algorithm
-    const val ALLOW_SMB_WITH_HIGH_TT = 100
+    const val NORMAL_TARGET_MGDL = 99 // 5.5 mmol/l = 99.1 mg/dL; use 99 to ensure consistent behavior across mg/dL and mmol/l units
 
     // SMS COMMUNICATOR
     const val remoteBolusMinDistance = 15 * 60 * 1000L

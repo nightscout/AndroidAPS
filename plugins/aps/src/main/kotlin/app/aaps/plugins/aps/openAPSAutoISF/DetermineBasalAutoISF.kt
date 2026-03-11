@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSAutoISF
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -219,7 +220,7 @@ class DetermineBasalAutoISF @Inject constructor(
         // var origin_sens = ""
         var exercise_ratio = 1.0
         val high_temptarget_raises_sensitivity = profile.exercise_mode || profile.high_temptarget_raises_sensitivity
-        val normalTarget = 100 // evaluate high/low temptarget against 100, not scheduled target (which might change)
+        val normalTarget = Constants.NORMAL_TARGET_MGDL // evaluate high/low temptarget against normal target, not scheduled target (which might change)
         // when temptarget is 160 mg/dL, run 50% basal (120 = 75%; 140 = 60%),  80 mg/dL with low_temptarget_lowers_sensitivity would give 1.5x basal, but is limited to autosens_max (1.2x by default)
         val halfBasalTarget = profile.half_basal_exercise_target
 

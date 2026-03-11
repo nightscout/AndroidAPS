@@ -67,6 +67,8 @@
     <string name="smscommunicator_suspend_reply_with_code">Para suspender el bucle durante %1$d minutos, responde con el código %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Para reanudar el bucle, responde con el código %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Para desactivar el bucle, responder con el código %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">Para reiniciar AAPS, responde con el código %1$s</string>
+    <string name="smscommunicator_restarting">AAPS se está reiniciando</string>
     <string name="smscommunicator_tempbasal_set">Basal temporal %1$.2fU/h durante %2$d minutos iniciada correctamente</string>
     <string name="smscommunicator_extended_set">Bolo extendido de %1$.2fU durante %2$d minutos se inició correctamente</string>
     <string name="smscommunicator_carbs_set">Carbohidratos %1$d g ingresados correctamente</string>

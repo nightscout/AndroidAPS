@@ -243,6 +243,7 @@
     <string name="wizard_result_bg_tt">GL (DC: %1$s)</string>
     <string name="wizard_result_trend">15min trend</string>
     <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Nové IOB: %1$sU</string>
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Sacharidy (%1$d g)</string>
     <string name="wizard_result_subtotal">Mezisoučet</string>

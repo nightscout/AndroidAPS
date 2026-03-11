@@ -10,6 +10,25 @@
     <string name="pump_status_busy">Обработка</string>
     <string name="pump_status_suspended">Помпа остановлена</string>
     <string name="pump_status_executing_command">Выполнение команды</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Получить настройки</string>
+    <string name="pump_cmd_desc_get_firmware">Получить прошивку помпы</string>
+    <string name="pump_cmd_desc_get_basal_profile">Получить базальный профиль</string>
+    <string name="pump_cmd_desc_set_basal_profile">Установить базальный профиль</string>
+    <string name="pump_cmd_desc_get_tbr">Получить временный базал</string>
+    <string name="pump_cmd_desc_cancel_tbr">Отменить временный базал</string>
+    <string name="pump_cmd_desc_set_tbr">Установить временный базал</string>
+    <string name="pump_cmd_desc_set_bolus">Задать настройки болюса</string>
+    <string name="pump_cmd_desc_get_bolus">Получить настройки болюса</string>
+    <string name="pump_cmd_desc_cancel_bolus">Отменить болюс</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Получить данные об оставшемся инсулине</string>
+    <string name="pump_cmd_desc_get_battery_status">Получить данные о состояние батареи</string>
+    <string name="pump_cmd_desc_get_time">Получить данные о времени</string>
+    <string name="pump_cmd_desc_set_time">Установить Время</string>
+    <string name="pump_cmd_desc_get_pump_status">Получить статус помпы</string>
+    <string name="pump_cmd_desc_get_history">Получить журнал</string>
+    <string name="pump_cmd_desc_get_history_params">Получить журнал %s</string>
+    <string name="pump_cmd_desc_custom">Настраиваемая команда</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Базалы</string>
     <string name="history_group_configuration">Конфигурации</string>
@@ -31,6 +50,7 @@
     <string name="time_last_3_hours">За прошедшие 3 часа</string>
     <string name="time_last_6_hours">За прошедшие 6 часов</string>
     <string name="time_last_12_hours">За прошедшие 12 часов</string>
+    <string name="time_last_24_hours">За прошедшие 24 часов</string>
     <string name="time_last_2_days">За прошедшие 2 дня</string>
     <string name="time_last_4_days">За прошедшие 4 дня</string>
     <string name="time_last_week">За прошедшую неделю</string>

@@ -10,6 +10,7 @@
     <string name="pump_status_busy">Meşgul</string>
     <string name="pump_status_suspended">Askıya Alındı</string>
     <string name="pump_status_executing_command">Komut Çalıştırılıyor</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazallar</string>
     <string name="history_group_configuration">Konfigürasyon</string>

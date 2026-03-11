@@ -38,6 +38,22 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Razem</string>
     <!-- SiteRotationDialog -->
+    <string name="site_front">Przód</string>
+    <string name="site_back">Tył</string>
+    <string name="site_man">Mężczyzna</string>
+    <string name="site_woman">Kobieta</string>
+    <string name="site_child">Dziecko</string>
+    <string name="user_profile">Profil użytkownika</string>
+    <string name="user_profile_description">Profil użytkownika pokazuje najczęstsze miejsca wkłucia sensorów, pomp i kaniul dostępne u mężczyzn, kobiet lub dzieci</string>
+    <string name="site_management">Zarządzanie miejscami</string>
+    <string name="site_management_description">Tutaj ustawisz czy chcesz odnotowywać miejsca wkłucia sensora CGM, pompy bezdrenowej lub kaniuli, czy oba te typy miejsc. To ustawienie decyduje, czy przy wykrytej zmianie sensora CGM lub miejsca wkłucia - pokazać okno dialogowe do wskazania miejsca wkłucia.</string>
+    <string name="select_site">Kliknij poniżej, aby wybrać miejsce</string>
+    <string name="record_site_change">Zapisz miejsce wkłucia</string>
+    <string name="edit_site">Edytuj</string>
+    <string name="record_site_location">Miejsce: %1$s</string>
+    <string name="record_site_arrow">Orientacja miejsca: %1$s</string>
+    <string name="record_site_note">Notatka: %1$s</string>
+    <string name="delete_site_note">Notatka usunięta</string>
     <!-- FillDialog -->
     <string name="fill_warning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
     <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
@@ -136,6 +152,10 @@
     <string name="confirm_treatment">Proszę potwierdzić leczenie</string>
     <string name="recalculate">Przelicz</string>
     <!--    Widget-->
+    <string name="use_black_color">Użyj czarnego koloru</string>
+    <string name="widget_configuration">Konfiguracja widżetu</string>
+    <string name="until_changed">Do zmiany</string>
+    <string name="limitations">Ograniczenia</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Obie</item>
         <item>Tylko pozytywne</item>

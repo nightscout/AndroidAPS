@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="executing_right_now">Lệnh đang được thực thi ngay bây giờ</string>
-    <string name="basal_value_below_minimum">Giá trị basal thấp hơn mức tối thiểu. Cấu hình chưa được thiết lập!</string>
+    <string name="executing_right_now">Đang xử lý lệch</string>
+    <string name="basal_value_below_minimum">Giá trị liều nền thấp hơn mức tối thiểu. Hồ sơ chưa được thiết lập!</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Quá thấp</string>
     <string name="low" comment="3.1-3.9">Thấp</string>
@@ -17,7 +17,7 @@
     <string name="night_tir">TIR ban đêm</string>
     <string name="carbs_short" comment="max 6 characters">Carbs</string>
     <!--    PumpStatusGenerator-->
-    <string name="short_status_last_connection">LastConn: %1$d min ago</string>
+    <string name="short_status_last_connection">Kết nối gần nhất: %1$d phút trước</string>
     <string name="short_status_alert">Cảnh báo: %1$s</string>
     <string name="short_status_last_bolus">LastBolus: %1$sU @ %2$s</string>
     <string name="short_status_temp_basal">Temp: %1$s</string>

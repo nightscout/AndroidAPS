@@ -1,5 +1,6 @@
 package app.aaps.core.objects.extensions
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
@@ -111,7 +112,7 @@ fun TB.iobCalc(
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var netBasalAmount = 0.0
     var sensitivityRatio = lastAutosensResult.ratio
-    val normalTarget = 100.0
+    val normalTarget = Constants.NORMAL_TARGET_MGDL.toDouble()
     if (exerciseMode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
         // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
         // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6

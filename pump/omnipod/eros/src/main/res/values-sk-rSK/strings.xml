@@ -17,9 +17,9 @@
     <string name="omnipod_eros_history_item_source">Zdroj</string>
     <string name="omnipod_eros_history_item_date">Dátum</string>
     <string name="omnipod_eros_history_type">Typ:</string>
-    <string name="omnipod_eros_history_bolus_value">%1$.2f JI</string>
-    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f JI, SACH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, SACH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Rýchlosť: %1$.2f U, Doba trvania: %2$d minút</string>
     <!-- Omnipod Eros - Short Status -->
     <string name="omnipod_eros_short_status_riley_link_battery">RLBat: %1$d</string>
     <!-- Omnipod Eros - Error -->
@@ -52,7 +52,7 @@
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nepodarilo sa automaticky zmeniť čas na Pode. Mali by ste ručne synchronizovať čas na záložke Omnipod.</string>
     <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operácia nie je možná.\n\nNajskôr je nutné nakonfigurovať Omnipod, kým bude možné túto funkciu použiť.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nedá sa overiť, či bol bolus úspešný. Prosím manuálne overte, či Váš Pod podáva bolus počúvaním klikania. <b>Ak ste si istý, že bolus nebol úspešný, mali by ste ručne odstrániť záznam o boluse z ošetrení, aj keď kliknete na \'Zrušiť bolus\' teraz!</b></string>
-    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nedá sa overiť, či bol bolus SMB (%1$.2f JI) úspešne podaný. <b>Pokiaľ ste si istý, že bolus nebol podaný, mali by ste ručne odstrániť položku SMB z Ošetrení.</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nedá sa overiť, či bol bolus SMB (%1$.2f U) úspešne podaný. <b>Pokiaľ ste si istý, že bolus nebol podaný, mali by ste ručne odstrániť položku SMB z Ošetrení.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Dočasný bazál na Pode prebieha, ale AAPS o tomto dočasnom bazále nevie. Prosím zrušte svoj dočasný bazál ručne.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Štatistika RileyLink</string>

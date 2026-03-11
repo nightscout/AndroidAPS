@@ -143,7 +143,7 @@ class CarbsDialogViewModel @Inject constructor(
         if (activeTT != null) {
             val activeTarget = activeTT.highTarget
             val remainingDurationMin = ((activeTT.timestamp + activeTT.duration) - now) / 60000
-            if (activeTarget > Constants.ALLOW_SMB_WITH_HIGH_TT && remainingDurationMin > hypoTTDuration) {
+            if (activeTarget > Constants.NORMAL_TARGET_MGDL && remainingDurationMin > hypoTTDuration) {
                 return false
             }
         }

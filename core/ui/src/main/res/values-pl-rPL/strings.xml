@@ -89,6 +89,7 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Eksport ustawień</string>
     <string name="disableloop">Wyłącz pętle</string>
+    <string name="disabled_loop">Pętla wyłączona</string>
     <string name="resumeloop">Wznów pętlę</string>
     <string name="suspendloop">Wstrzymaj pętle</string>
     <string name="duration_min_label">Czas trwania [min]</string>
@@ -102,6 +103,7 @@
     <string name="name_short">Nazwa:</string>
     <string name="time">Czas</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Ładowanie…</string>
     <string name="notes_label">Notatki</string>
     <string name="remove_button">Usuń</string>
     <string name="add_new">Dodaj nowy</string>
@@ -115,8 +117,10 @@
     <string name="duration_label">Czas trwania</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pompa wstrzymana</string>
+    <string name="pump_running">Pompa uruchomiona</string>
     <string name="notconfigured">Nie skonfigurowano</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
+    <string name="loop_suspended_by_dst">Pętla zawieszona przez zmianę czasu (na letni lub zimowy)</string>
     <string name="trend_arrow">Strzałka trendu</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">wym</string>
@@ -151,12 +155,17 @@
     <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="login">Zaloguj się</string>
+    <string name="logout">Wyloguj się</string>
     <string name="prime_fill">Rozpocznij/Wypełnij</string>
+    <string name="site_rotation">Zmiana miejsca</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Zatrzymaj cel tymczasowy</string>
     <string name="closedloop">Zamknięta pętla</string>
     <string name="openloop">Otwarta pętla</string>
     <string name="lowglucosesuspend">Zawieszenie przy niskiej glikemii</string>
+    <string name="pump_disconnected">Pompa odłączona</string>
+    <string name="pump_suspended">Pompa wstrzymana</string>
+    <string name="mode_reverted">Tryb przywrócony</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -215,6 +224,8 @@
     <string name="careportal_exercise_message">Ćwiczenie: %1$s</string>
     <string name="careportal_pump_site_change">Zmiana wkłucia</string>
     <string name="cgm_sensor_insert">Założenie sensora CGM</string>
+    <string name="careportal_pump_site_management">Miejsca pompy/wkłucia</string>
+    <string name="careportal_cgm_site_management">Miejsca Sensora</string>
     <string name="careportal_cgmsensorstart">Uruchomienie sensora CGM</string>
     <string name="careportal_cgm_sensor_stop">Zatrzymanie sensora CGM</string>
     <string name="careportal_dad_alert">Alarm D.A.D.</string>
@@ -230,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS Rozłączony (Offline)</string>
     <string name="pump_battery_change">Zmiana baterii pompy</string>
     <string name="temporary_target">Cel tymczasowy (TT)</string>
+    <string name="running_mode">Tryb pracy</string>
     <string name="careportal_temporarytargetvalue">Wartość celu tymczasowego</string>
     <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
     <string name="boluswizard">Kalkulator bolusa</string>
@@ -247,6 +259,39 @@
     <string name="loop">Pętla</string>
     <string name="ns">NS</string>
     <string name="record">Wpis</string>
+    <string name="location_front_right_upper_chest">Prawa strona klatki</string>
+    <string name="location_front_left_upper_chest">Lewa strona klatki</string>
+    <string name="location_side_right_upper_arm">Górny bok prawego ramienia</string>
+    <string name="location_side_left_upper_arm">Górny bok lewego ramienia</string>
+    <string name="location_back_right_upper_arm">Górny tył prawego ramienia</string>
+    <string name="location_back_left_upper_arm">Górny tył lewego ramienia</string>
+    <string name="location_side_right_upper_abdomen">Górny prawy bok brzucha</string>
+    <string name="location_side_left_upper_abdomen">Górny lewy bok brzucha</string>
+    <string name="location_side_right_lower_abdomen">Dolny prawy bok brzucha</string>
+    <string name="location_side_left_lower_abdomen">Dolny lewy bok brzucha</string>
+    <string name="location_front_right_upper_abdomen">Górny prawy przód brzucha</string>
+    <string name="location_front_left_upper_abdomen">Górny lewy przód brzucha</string>
+    <string name="location_front_right_lower_abdomen">Dolny prawy przód brzucha</string>
+    <string name="location_front_left_lower_abdomen">Dolny lewy przód brzucha</string>
+    <string name="location_back_right_buttock">Prawy pośladek</string>
+    <string name="location_back_left_buttock">Lewy pośladek</string>
+    <string name="location_side_right_upper_thigh">Górny bok prawego uda</string>
+    <string name="location_side_left_upper_thigh">Górny bok lewego uda</string>
+    <string name="location_side_right_lower_thigh">Dolny bok prawego uda</string>
+    <string name="location_side_left_lower_thigh">Dolny bok lewego uda</string>
+    <string name="location_front_right_upper_thigh">Górny przód prawego uda</string>
+    <string name="location_front_left_upper_thigh">Górny przód lewego uda</string>
+    <string name="location_front_right_lower_thigh">Dolny przód prawego uda</string>
+    <string name="location_front_left_lower_thigh">Dolny przód lewego uda</string>
+    <string name="arrow_up">Góra</string>
+    <string name="arrow_up_right">Góra - Prawo</string>
+    <string name="arrow_right">Prawo</string>
+    <string name="arrow_down_right">Dół - Prawo</string>
+    <string name="arrow_down">Dół</string>
+    <string name="arrow_down_left">Dół - Lewo</string>
+    <string name="arrow_left">Lewo</string>
+    <string name="arrow_up_left">Góra - Lewo</string>
+    <string name="arrow_center">Środek</string>
     <!--    Command-->
     <string name="connectiontimedout">Przekroczono limit czasu połączenia</string>
     <!--    PumpEnactResult-->
@@ -292,6 +337,8 @@
     <string name="uel_lgs_loop_mode">TRYB ZAWIESZENIA PRZY NISKIEJ GLIKEMI (LGS)</string>
     <string name="uel_open_loop_mode">TRYB OTWARTEJ PĘTLI</string>
     <string name="uel_loop_disabled">PĘTLA WYŁĄCZONA</string>
+    <string name="uel_loop_resumed">PĘTLA WZNOWIONA</string>
+    <string name="uel_pump_running">POMPA DZIAŁA</string>
     <string name="uel_reconnect">POŁĄCZ PONOWNIE</string>
     <string name="uel_disconnect">ROZŁĄCZ</string>
     <string name="uel_resume">WZNÓW</string>
@@ -304,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">ANULUJ ROZSZERZONY BOLUS</string>
     <string name="uel_cancel_tt">ANULUJ CEL TYMCZASOWY</string>
     <string name="uel_careportal">PORTALOPIEKI</string>
+    <string name="uel_sensor_location">MIEJSCE SENSORA</string>
     <string name="uel_site_change">ZMIANA MIEJSCA WKŁUCIA</string>
+    <string name="uel_site_location">MIEJSCE WKŁUCIA</string>
     <string name="uel_reservoir_change">ZMIANA ZBIORNIKA</string>
     <string name="uel_calibration">KALIBRACJA</string>
     <string name="uel_prime_bolus">BOLUS NA WYPEŁNIENIE</string>
@@ -367,6 +416,9 @@
     <string name="uel_loop_change">PĘTLA ZMIENIONA</string>
     <string name="uel_loop_removed">PĘTLA USUNIĘTA</string>
     <string name="uel_other">INNE</string>
+    <string name="uel_running_mode">TRYB DZIAŁANIA</string>
+    <string name="uel_running_mode_removed">USUNIĘTO TRYB DZIAŁANIA</string>
+    <string name="uel_running_mode_updarted">ZAKTUALIZOWANO TRYB DZIAŁANIA</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Dolna granica celu profilu</string>
     <string name="profile_high_target">Górna granica celu profilu</string>
@@ -407,6 +459,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Baza</string>
     <string name="basalpct">Baza %</string>
+    <string name="sensitivity">Wrażliwość</string>
+    <string name="isf_for_carbs">ISF dla Kalkulatora i Absorpcji węglowodanów: %1$.1f</string>
+    <string name="autosens_long">Wartość Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens w algorytmie: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">plik</string>
     <string name="a11y_user">użytkownik</string>
     <!-- Autotune -->
@@ -591,4 +649,5 @@
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dawka</b>: %1$.2f%% (%2$.2f U/h)<br><b>Czas</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dawka</b>: %1$.2f U/h (%2$.2f%%) <br><b>Czas</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS odtwarza dźwięk"</string>
 </resources>

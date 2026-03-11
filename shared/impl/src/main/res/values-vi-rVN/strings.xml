@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cwf_comment_background">Hình nền</string>
-    <string name="cwf_comment_chart">Biểu đồ (đường huyết, insulin nền, đường dự đoán...)</string>
+    <string name="cwf_comment_chart">Biểu đồ (đường huyết, liều nền, đường dự đoán...)</string>
     <string name="cwf_comment_cover_chart">Hình ảnh phía trước biểu đồ và phía sau các ô nhập liệu</string>
     <string name="cwf_comment_freetext1">Ghi chú 1</string>
     <string name="cwf_comment_freetext2">Ghi chú 2</string>
@@ -12,11 +12,11 @@
     <string name="cwf_comment_iob2_ext">Tổng IOB hoặc (Bolus_IOB | Basal_IOB) nếu ở chế độ chi tiết (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_cob2_ext">Giá trị COB (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Delta BG ngắn hạn (từ AAPSClient hoặc AAPSClient2)</string>
-    <string name="cwf_comment_avg_delta_ext">Delta BG trung bình (15 phút) (từ AAPSClient hoặc AAPSClient2)</string>
+    <string name="cwf_comment_avg_delta_ext">Trung bình độ lệch đường huyết (15 phút) (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_temp_target_ext">Mục tiêu tạm thời hoặc Mục tiêu tạm thời thấp – Mục tiêu tạm thời cao (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">Mức insulin trong ống chứa (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Pin vòng lặp toàn cục (%) (từ AAPSClient hoặc AAPSClient2)</string>
-    <string name="cwf_comment_basalRate_ext">Insulin nền (từ AAPSClient/AAPSClient2)</string>
+    <string name="cwf_comment_basalRate_ext">Tỷ lệ liều nền (từ AAPSClient/AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">Giá trị BGI (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_status_ext">Tổng hợp trạng thái (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Trạng thái vòng lặp &amp; thời gian (AAPSClient/AAPSClient2)</string>
@@ -28,13 +28,13 @@
     <string name="cwf_comment_iob2">Tổng IOB hoặc (Bolus IOB | Basal IOB) nếu ở chế độ chi tiết</string>
     <string name="cwf_comment_cob1">Nhãn COB</string>
     <string name="cwf_comment_cob2">Giá trị COB</string>
-    <string name="cwf_comment_delta">Chênh lệch đường huyết</string>
-    <string name="cwf_comment_avg_delta">Chênh lệch BG trung bình (15 phút)</string>
+    <string name="cwf_comment_delta">Độ lệch đường huyết</string>
+    <string name="cwf_comment_avg_delta">Trung bình độ lệch đường huyết (15 phút)</string>
     <string name="cwf_comment_temp_target">Mục tiêu tạm thời (Thấp - Cao)</string>
     <string name="cwf_comment_reservoir">Mức Insulin</string>
     <string name="cwf_comment_uploader_battery">Pin điện thoại (%)</string>
     <string name="cwf_comment_rig_battery">Global loop battery (%)</string>
-    <string name="cwf_comment_basalRate">Tỷ lệ liều Basal</string>
+    <string name="cwf_comment_basalRate">Tỷ lệ liều nền</string>
     <string name="cwf_comment_bgi">Giá trị BGI</string>
     <string name="cwf_comment_status">Tóm tắt trạng thái</string>
     <string name="cwf_comment_time">Thời gian (HH:MM or HH:MM:SS)</string>

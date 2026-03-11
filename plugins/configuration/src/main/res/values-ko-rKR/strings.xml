@@ -44,6 +44,7 @@
     <string name="data_choices">데이터선택</string>
     <string name="fabric_upload">Fabric 업로드</string>
     <string name="identification">신원 증명 (이메일, FB, 또는 Discord nick 등)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">요청</string>
     <string name="apsmode_title">APS 모드</string>
     <string name="error_asking_for_permissions">사용 권한을 묻는 중 오류가 발생했습니다</string>
@@ -153,4 +154,9 @@
     <string name="metadata_label_encryption">파일 암호화</string>
     <string name="metadata_format_new">암호화된 새로운 형식</string>
     <string name="metadata_format_other">알려지지 않은 내보내기 형식</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

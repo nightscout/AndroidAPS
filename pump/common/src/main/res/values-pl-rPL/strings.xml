@@ -10,6 +10,7 @@
     <string name="pump_status_busy">Zajęty</string>
     <string name="pump_status_suspended">Wstrzymany</string>
     <string name="pump_status_executing_command">Wykonywanie polecenia</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Dawki Bazowe</string>
     <string name="history_group_configuration">Ustawienia</string>
@@ -37,6 +38,7 @@
     <string name="time_last_month">Ostatni miesiąc</string>
     <!-- BLE Config -->
     <string name="ble_config_button_scan_start">Skanuj</string>
+    <string name="ble_config_scan_stop">Stop</string>
     <string name="ble_config_scan_selected">Wybrany</string>
     <string name="ble_config_scan_scanning">Skanowanie</string>
     <string name="ble_config_scan_finished">Skanowanie zakończono</string>
