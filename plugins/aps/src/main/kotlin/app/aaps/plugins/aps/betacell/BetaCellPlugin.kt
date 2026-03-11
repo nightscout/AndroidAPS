@@ -180,17 +180,29 @@ class BetaCellPlugin @Inject constructor(
             }
         }
 
-        val slope     = bgDelta / dtMin
+        // ── Pente lissée sur 3 points (anti-bruit CGM) ───────────────────
+        val bgList  = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        val slope   = when {
+            bgList.size >= 3 -> (bgList[0].value - bgList[2].value) / 10.0  // 10 min
+            bgList.size >= 2 -> (bgList[0].value - bgList[1].value) / 5.0   // 5 min
+            else             -> bgDelta / dtMin
+        }
+
+        // ── IOB total = bolus + basal actif ──────────────────────────────
+        val iobTotal = iobCobCalculator.calculateIobFromBolus().iob +
+                       iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().iob
+
         val bgIn30min = bg + slope * 30.0
         val hypoAlert = p.hypoBg + p.hypoAlertMargin
 
-        // ── Guard hypo prédictif (amélioré) ──────────────────────────
+        // ── Guard hypo prédictif ──────────────────────────────────────────
+        // Déclenche si projection < seuil ET (IOB actif OU descente rapide)
         val predictiveHypo = bgIn30min < hypoAlert &&
-            (iob > 0.0 || slope < p.hypoRapidSlope)
+            (iobTotal > 0.0 || slope < p.hypoRapidSlope)
         if (predictiveHypo) {
             aapsLogger.warn(LTag.APS, "PREDICTIVE HYPO: BG=${bg.roundToInt()} " +
                 "slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} " +
-                "IOB=${"%.2f".format(iob)} → 0 U")
+                "IOB=${"%.2f".format(iobTotal)} → 0 U")
             return BetaCellApsResult().also { r ->
                 r.rate = 0.0; r.smb = 0.0
                 r.slope_used = slope; r.isf_used = isf
@@ -198,26 +210,35 @@ class BetaCellPlugin @Inject constructor(
                 r.isTempBasalRequested = false
                 r.reason = "Predictive hypo: BG=${bg.roundToInt()} " +
                     "slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} " +
-                    "< ${hypoAlert.roundToInt()} IOB=${"%.2f".format(iob)}U"
+                    "< ${hypoAlert.roundToInt()} IOBtotal=${"%.2f".format(iobTotal)}U"
             }
         }
 
-        // ── Calcul β-cell ─────────────────────────────────────────────
+        // ── Calcul β-cell ─────────────────────────────────────────────────
         var beta   = if (bg > p.targetBg) ((bg - p.targetBg) / isf) * (dtMin / 60.0) else 0.0
         val braked = slope < p.slopeBrakeT
         if (braked) beta *= p.slopeBrakeF
 
-        // ── Réduction basale en pré-alerte ────────────────────────────
-        val basalFactor = if (bgIn30min < hypoAlert + 10.0) 0.5 else 1.0
+        // ── Réduction basale graduée ──────────────────────────────────────
+        // gradient linéaire : 0.0 à hypoAlert → 1.0 à hypoAlert+margin
+        val safetyMargin = p.hypoAlertMargin.coerceAtLeast(1.0)
+        val basalFactor = when {
+            bg < p.hypoBg + 5.0              -> 0.0   // très proche hypo → basal=0
+            bgIn30min < hypoAlert            -> 0.0   // projection sous seuil → basal=0
+            bgIn30min < hypoAlert + safetyMargin ->
+                ((bgIn30min - hypoAlert) / safetyMargin).coerceIn(0.0, 1.0)
+            else                             -> 1.0
+        }
         beta += p.basalPhysio * (dtMin / 60.0) * basalFactor
 
         val systemicInsulin = beta * (1.0 - p.hepatic)
         val rate = max(0.0, systemicInsulin / (dtMin / 60.0))
 
-        // ── SMB bloqué si tendance dangereuse ─────────────────────────
+        // ── SMB bloqué si tendance dangereuse ─────────────────────────────
         val smbAllowed = p.smbEnabled
             && bg > p.targetBg + p.smbOffset
             && bgIn30min > hypoAlert
+            && iobTotal >= 0.0
         val smb = if (smbAllowed) min(0.3 * systemicInsulin, p.smbMax) else 0.0
 
         val zone = when {
@@ -232,7 +253,7 @@ class BetaCellPlugin @Inject constructor(
             r.duration = 30
             r.betaSecretion = beta; r.systemicInsulin = systemicInsulin
             r.isf_used = isf; r.slope_used = slope; r.zone = zone
-            r.reason = buildReason(bg, slope, isf, beta, systemicInsulin, p, braked, basalFactor, bgIn30min)
+            r.reason = buildReason(bg, slope, isf, beta, systemicInsulin, p, braked, basalFactor, bgIn30min, iobTotal)
         }
     }
 
