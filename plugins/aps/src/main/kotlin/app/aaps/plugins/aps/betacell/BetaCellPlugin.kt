@@ -177,6 +177,21 @@ class BetaCellPlugin @Inject constructor(
         }
 
         val slope  = bgDelta / dtMin
+
+        // ── Guard hypo prédictif ──────────────────────────────────────────
+        val bgIn30min = bg + slope * 30.0
+        val hypoAlert = p.hypoBg + p.hypoAlertMargin
+        if (slope < p.hypoRapidSlope && bgIn30min < hypoAlert && iob > 0.0) {
+            aapsLogger.warn(LTag.APS, "PREDICTIVE HYPO: BG=${bg.roundToInt()} slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} IOB=${"%.2f".format(iob)} → 0 U")
+            return BetaCellApsResult().also { r ->
+                r.rate = 0.0; r.smb = 0.0
+                r.slope_used = slope; r.isf_used = isf
+                r.zone = GlucoseZone.HYPO
+                r.isTempBasalRequested = false
+                r.reason = "Predictive hypo: BG=${bg.roundToInt()} slope=${"%.2f".format(slope)} BGin30=${bgIn30min.roundToInt()} < ${hypoAlert.roundToInt()} IOB=${"%.2f".format(iob)}U"
+            }
+        }
+
         var beta   = if (bg > p.targetBg) ((bg - p.targetBg) / isf) * (dtMin / 60.0) else 0.0
         val braked = slope < p.slopeBrakeT
         if (braked) beta *= p.slopeBrakeF
