@@ -26,11 +26,13 @@ import kotlinx.coroutines.withContext
  * fallback dialog directing the user to settings.
  *
  * @param blePreCheck The BLE pre-check instance
+ * @param onReady Called once when BLE is confirmed ready
  * @param onFailed Called when BLE is not ready and the dialog is dismissed
  */
 @Composable
 fun BlePreCheckHost(
     blePreCheck: BlePreCheck,
+    onReady: (() -> Unit)? = null,
     onFailed: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -76,9 +78,12 @@ fun BlePreCheckHost(
             )
         }
 
-        BlePreCheckResult.READY,
+        BlePreCheckResult.READY -> {
+            LaunchedEffect(Unit) { onReady?.invoke() }
+        }
+
         null -> {
-            // BLE is ready or check hasn't completed yet — nothing to show
+            // Check hasn't completed yet — nothing to show
         }
     }
 }

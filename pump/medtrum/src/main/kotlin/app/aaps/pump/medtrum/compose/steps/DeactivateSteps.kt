@@ -12,10 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -32,22 +34,39 @@ fun ConfirmDeactivateStep(
         viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.START_DEACTIVATION)
     }
 
+    ConfirmDeactivateStepContent(
+        showConfirmDialog = showConfirmDialog,
+        onShowDialog = { showConfirmDialog = true },
+        onConfirm = {
+            showConfirmDialog = false
+            viewModel.moveStep(PatchStep.DEACTIVATE)
+        },
+        onDismissDialog = { showConfirmDialog = false },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+private fun ConfirmDeactivateStepContent(
+    showConfirmDialog: Boolean,
+    onShowDialog: () -> Unit,
+    onConfirm: () -> Unit,
+    onDismissDialog: () -> Unit,
+    onCancel: () -> Unit
+) {
     if (showConfirmDialog) {
         OkCancelDialog(
             title = stringResource(R.string.step_deactivate),
             message = stringResource(R.string.medtrum_deactivate_pump_confirm),
-            onConfirm = {
-                showConfirmDialog = false
-                viewModel.moveStep(PatchStep.DEACTIVATE)
-            },
-            onDismiss = { showConfirmDialog = false }
+            onConfirm = onConfirm,
+            onDismiss = onDismissDialog
         )
     }
 
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = { showConfirmDialog = true }
+            onClick = onShowDialog
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
@@ -73,7 +92,6 @@ fun DeactivatingStep(
     onCancel: () -> Unit
 ) {
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
-
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
 
     // Trigger deactivation
@@ -88,10 +106,23 @@ fun DeactivatingStep(
         }
     }
 
+    DeactivatingStepContent(
+        isError = isError,
+        onDiscard = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+private fun DeactivatingStepContent(
+    isError: Boolean,
+    onDiscard: () -> Unit,
+    onCancel: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = if (isError) WizardButton(
             text = stringResource(R.string.discard),
-            onClick = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) }
+            onClick = onDiscard
         ) else WizardButton(
             text = stringResource(R.string.next),
             onClick = {},
@@ -103,11 +134,7 @@ fun DeactivatingStep(
         ) else null
     ) {
         if (isError) {
-            Text(
-                text = stringResource(R.string.deactivating_error).stripHtml(),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.error
-            )
+            WizardErrorBanner(message = stringResource(R.string.deactivating_error).stripHtml())
         } else {
             Text(
                 text = stringResource(R.string.deactivating_pump),
@@ -121,14 +148,25 @@ fun DeactivatingStep(
 fun DeactivateCompleteStep(
     viewModel: MedtrumPatchViewModel
 ) {
+    DeactivateCompleteStepContent(
+        onNextPatch = { viewModel.moveStep(PatchStep.PREPARE_PATCH) },
+        onFinish = { viewModel.moveStep(PatchStep.COMPLETE) }
+    )
+}
+
+@Composable
+private fun DeactivateCompleteStepContent(
+    onNextPatch: () -> Unit,
+    onFinish: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = { viewModel.moveStep(PatchStep.PREPARE_PATCH) }
+            onClick = onNextPatch
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.ok),
-            onClick = { viewModel.moveStep(PatchStep.COMPLETE) }
+            onClick = onFinish
         )
     ) {
         Text(
@@ -147,6 +185,59 @@ fun DeactivateCompleteStep(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ConfirmDeactivateStepPreview() {
+    ConfirmDeactivateStepContent(
+        showConfirmDialog = false,
+        onShowDialog = {},
+        onConfirm = {},
+        onDismissDialog = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ConfirmDeactivateStepDialogPreview() {
+    ConfirmDeactivateStepContent(
+        showConfirmDialog = true,
+        onShowDialog = {},
+        onConfirm = {},
+        onDismissDialog = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeactivatingStepProgressPreview() {
+    DeactivatingStepContent(
+        isError = false,
+        onDiscard = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeactivatingStepErrorPreview() {
+    DeactivatingStepContent(
+        isError = true,
+        onDiscard = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeactivateCompleteStepPreview() {
+    DeactivateCompleteStepContent(
+        onNextPatch = {},
+        onFinish = {}
+    )
 }
 
 private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

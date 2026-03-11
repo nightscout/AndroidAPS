@@ -1,7 +1,11 @@
 package app.aaps.pump.equil.database
 
-import androidx.room.*
-import io.reactivex.rxjava3.core.Single
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 abstract class EquilHistoryRecordDao {
@@ -22,6 +26,6 @@ abstract class EquilHistoryRecordDao {
     @Query("SELECT * from $TABLE_EQUIL_HISTORY_RECORD WHERE type=:eventType ORDER BY timestamp DESC LIMIT 0,1")
     abstract fun lastRecord(eventType: EquilHistoryRecord.EventType): EquilHistoryRecord
 
-    @Query("SELECT * from $TABLE_EQUIL_HISTORY_RECORD WHERE  timestamp >= :startTime and timestamp<=:endTime ORDER BY timestamp DESC")
-    abstract fun allSince(startTime: Long, endTime: Long): Single<List<EquilHistoryRecord>>
+    @Query("SELECT * from $TABLE_EQUIL_HISTORY_RECORD WHERE timestamp >= :startTime and timestamp<=:endTime ORDER BY timestamp DESC")
+    abstract suspend fun allSince(startTime: Long, endTime: Long): List<EquilHistoryRecord>
 }

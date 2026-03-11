@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -29,6 +30,7 @@ fun RetryActivationStep(
     val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
 
+    val isRetry = patchStep == PatchStep.RETRY_ACTIVATION
     val isConnecting = patchStep == PatchStep.RETRY_ACTIVATION_CONNECT
     var showDiscardDialog by remember { mutableStateOf(false) }
 
@@ -61,49 +63,72 @@ fun RetryActivationStep(
         }
     }
 
+    RetryActivationStepContent(
+        isRetry = isRetry,
+        isConnecting = isConnecting,
+        showDiscardDialog = showDiscardDialog,
+        onShowDiscard = { showDiscardDialog = true },
+        onConfirmDiscard = {
+            showDiscardDialog = false
+            viewModel.moveStep(PatchStep.FORCE_DEACTIVATION)
+        },
+        onDismissDiscard = { showDiscardDialog = false },
+        onRetryConnect = { viewModel.moveStep(PatchStep.RETRY_ACTIVATION_CONNECT) },
+        onCancel = onCancel
+    )
+}
+
+@Composable
+private fun RetryActivationStepContent(
+    isRetry: Boolean,
+    isConnecting: Boolean,
+    showDiscardDialog: Boolean,
+    onShowDiscard: () -> Unit,
+    onConfirmDiscard: () -> Unit,
+    onDismissDiscard: () -> Unit,
+    onRetryConnect: () -> Unit,
+    onCancel: () -> Unit
+) {
     if (showDiscardDialog) {
         OkCancelDialog(
             title = stringResource(R.string.step_retry_activation),
             message = stringResource(R.string.medtrum_deactivate_pump_confirm),
-            onConfirm = {
-                showDiscardDialog = false
-                viewModel.moveStep(PatchStep.FORCE_DEACTIVATION)
-            },
-            onDismiss = { showDiscardDialog = false }
+            onConfirm = onConfirmDiscard,
+            onDismiss = onDismissDiscard
         )
     }
 
     WizardStepLayout(
         primaryButton = when {
-            patchStep == PatchStep.RETRY_ACTIVATION -> WizardButton(
+            isRetry      -> WizardButton(
                 text = stringResource(R.string.next),
-                onClick = { viewModel.moveStep(PatchStep.RETRY_ACTIVATION_CONNECT) }
+                onClick = onRetryConnect
             )
 
-            isConnecting                            -> WizardButton(
+            isConnecting -> WizardButton(
                 text = stringResource(R.string.next),
                 onClick = {},
                 loading = true
             )
 
-            else                                    -> null
+            else         -> null
         },
         secondaryButton = when {
-            patchStep == PatchStep.RETRY_ACTIVATION -> WizardButton(
+            isRetry      -> WizardButton(
                 text = stringResource(R.string.discard),
-                onClick = { showDiscardDialog = true }
+                onClick = onShowDiscard
             )
 
-            isConnecting                            -> WizardButton(
+            isConnecting -> WizardButton(
                 text = stringResource(app.aaps.core.ui.R.string.cancel),
                 onClick = onCancel
             )
 
-            else                                    -> null
+            else         -> null
         }
     ) {
-        when (patchStep) {
-            PatchStep.RETRY_ACTIVATION         -> {
+        when {
+            isRetry      -> {
                 Text(
                     text = stringResource(R.string.activation_in_progress),
                     style = MaterialTheme.typography.bodyLarge
@@ -116,16 +141,59 @@ fun RetryActivationStep(
                 )
             }
 
-            PatchStep.RETRY_ACTIVATION_CONNECT -> {
+            isConnecting -> {
                 Text(
                     text = stringResource(R.string.reading_activation_status),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
-
-            else                               -> {}
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RetryActivationStepRetryPreview() {
+    RetryActivationStepContent(
+        isRetry = true,
+        isConnecting = false,
+        showDiscardDialog = false,
+        onShowDiscard = {},
+        onConfirmDiscard = {},
+        onDismissDiscard = {},
+        onRetryConnect = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RetryActivationStepConnectingPreview() {
+    RetryActivationStepContent(
+        isRetry = false,
+        isConnecting = true,
+        showDiscardDialog = false,
+        onShowDiscard = {},
+        onConfirmDiscard = {},
+        onDismissDiscard = {},
+        onRetryConnect = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RetryActivationStepDiscardDialogPreview() {
+    RetryActivationStepContent(
+        isRetry = true,
+        isConnecting = false,
+        showDiscardDialog = true,
+        onShowDiscard = {},
+        onConfirmDiscard = {},
+        onDismissDiscard = {},
+        onRetryConnect = {},
+        onCancel = {}
+    )
 }
 
 private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

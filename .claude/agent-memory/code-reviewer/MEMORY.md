@@ -2,231 +2,73 @@
 
 ## Key Patterns Confirmed
 
-- `AapsSpacing` object holds centralized dp values: `extraSmall`(2), `small`(4), `medium`(8),
-  `large`(12), `extraLarge`(16), `xxLarge`(24).
-  Use these instead of hardcoded `.dp` literals in Compose files.
-- `clearFocusOnTap` modifier lives in `app.aaps.core.ui.compose.Modifiers.kt` — import path
-  `app.aaps.core.ui.compose.clearFocusOnTap`. Only needed for screens with text fields.
-- `ComposablePluginContent` interface is in
+- `AapsSpacing` object: `extraSmall`(2), `small`(4), `medium`(8), `large`(12), `extraLarge`(16),
+  `xxLarge`(24). Use instead of hardcoded `.dp` literals.
+- `clearFocusOnTap` in `app.aaps.core.ui.compose.Modifiers.kt`. Required for screens with text
+  fields.
+- `ComposablePluginContent` in
   `core/ui/src/main/kotlin/app/aaps/core/ui/compose/ComposablePluginContent.kt`.
-- `NSClientFragment` is still registered via `.fragmentClass()` in both `NSClientPlugin` and
-  `NSClientV3Plugin`, alongside a `.composeContent {}` block. Both code paths currently coexist.
-- ViewModels are instantiated manually (not via `viewModels<>` delegate) in both Fragment and
-  `NSClientComposeContent` due to Dagger (not Hilt) DI. The `@Inject` annotation on the ViewModel is
-  for Dagger's factory, not Hilt.
-- `NSClientViewModel` uses `viewModelScope` — but is instantiated manually via `remember {}` in a
-  Composable. This means the scope is tied to `ViewModel.viewModelScope` (an internal
-  `SupervisorJob + Main.immediate`) which won't be cancelled correctly because no
-  `ViewModelStoreOwner` is set. This is a latent lifecycle bug.
-- `NSClientLog` is a plain class (not data class) with a mutable `var date` field and an
-  auto-incrementing `id`. The `@Immutable` annotation on `NSClientUiState` containing
-  `List<NSClientLog>` is technically lying to the compiler since `NSClientLog` is mutable.
-- `rh.gs()` (ResourceHelper) is used throughout NSClientScreen composables instead of
-  `stringResource()`. This violates project rules.
-- The `urlUpdate` StateFlow on `NSClientRepository` is never collected in `NSClientViewModel` — the
-  URL is loaded once in `loadInitialData()` but never reactively updated if the URL changes at
-  runtime.
+- `PluginBase.scope` is private; plugins must declare their own `CoroutineScope`.
+- Previews MUST use `MaterialTheme` wrapper (NOT `AapsTheme` — crashes in preview tool).
+
+## DI Patterns by Module
+
+- **Medtrum + Equil**: Use Hilt (`@HiltViewModel`, `hiltViewModel()`). Build needs
+  `libs.plugins.hilt`,
+  `com.google.dagger.hilt.android`, `androidx.hilt.navigation.compose`, ksp hilt compiler.
+  App has `@HiltAndroidApp` on `MainApp`. This is the correct modern pattern.
+- **NSClient, Tidepool, Wear, SMS**: Use Dagger `ViewModelFactory` via
+  `@Binds @IntoMap @ViewModelKey`.
+  `ComposablePluginContent` receives `viewModelFactory` and calls
+  `ViewModelProvider(viewModelStoreOwner, viewModelFactory)[...]`. Instantiating via `remember {}`
+  is a latent lifecycle bug (viewModelScope never cancelled correctly).
+- **ComposeContent constructor**: Always constructed manually in the plugin, receives only
+  non-ViewModel deps (e.g., `protectionCheck`, `blePreCheck`) as constructor params.
+
+## Recurring Bugs Across Pump Compose Migrations
+
+- `BlePreCheckHost` + wizard screen render simultaneously — wizard shows before BLE check completes.
+  Need a separate `isCheckingBle` state to gate wizard rendering. (EOPatch2, Equil) — STILL OPEN in
+  Equil.
+- `SharedFlow` event branches left empty (`// handled inline`) when they are actually NOT handled.
+  (Equil: `ShowMessage` in `EquilComposeContent` swallows unpair errors)
+- Public `val rh: ResourceHelper` on ViewModels — should always be `private val`. (EOPatch2,
+  Equil) — FIXED in Equil.
+- `canGoBack` implemented as a plain Kotlin computed property reading `StateFlow.value` instead of
+  a derived `StateFlow` — not reactive in Compose. (Equil) — FIXED.
+- Step composables accessing ViewModel data via plain function calls instead of `StateFlow`. (
+  Equil) — FIXED.
+- Step count (`totalSteps`) mismatch when shared steps (AIR, CONFIRM) are reused across workflows
+  without updating the workflow's declared `totalSteps`. (Equil: CHANGE_INSULIN declares 4 but
+  runs 6 steps) — FIXED (count correct), but comment in EquilWizardStep.kt line 15 not updated.
+- Duplicate therapy event insertion in activation confirm step — check all `insertTherapyEvent`
+  calls when porting confirm logic. (Equil: double CANNULA_CHANGE event) — RESOLVED, not duplicated.
+- Air removal step: "Finish" button must be disabled until the removal command has been sent and
+  succeeded. Easy to forget when porting from XML (button was initially disabled via alpha). (
+  Equil) — FIXED.
+- Callback.run() in commandQueue executes on background HandlerThread — all MutableStateFlow.value
+  assignments from callbacks are safe (StateFlow is thread-safe), but plain `var` fields (
+  autoFillActive,
+  fillStepCount) accessed from callbacks are NOT safe without @Volatile.
+- Empty password allowed through SerialNumberStep — `isPasswordValid = password.isEmpty() || ...`
+  lets user pair with no password, which is stored and used for future unpair.
+- Resource strings with embedded stray characters: equil_install has trailing `"`,
+  equil_unbind_content
+  has full-width `！`. Always check string values not just keys.
+- `GIF_MAX_HEIGHT = 300.dp` duplicated in 4 step files — WizardGifImage.kt was planned but not
+  created.
 
 ## Architecture Notes
 
-- Both `NSClientPlugin` (V1) and `NSClientV3Plugin` use the same `NSClientComposeContent` and
-  `NSClientFragment`. The fragment path is the legacy path; compose path is the new one.
-- `NSClientRepositoryImpl` is `@Singleton` — its log list survives across screen recreations
-  correctly.
-- The `PluginBase.scope` is private; plugins must declare their own `CoroutineScope`.
-
-## Tidepool Compose Migration Patterns (2026-03-01)
-
-- `TidepoolComposeContent` constructs `TidepoolViewModel` via `remember {}` (not
-  `ViewModelProvider`) — same latent lifecycle bug as `XdripComposeContent`. The Dagger
-  `ViewModelFactory` is registered in `SyncModule` but NOT passed to `TidepoolComposeContent`.
-  `NSClientComposeContent` is the correct reference: it accepts `viewModelFactory` and calls
-  `ViewModelProvider(viewModelStoreOwner, viewModelFactory)[...]`.
-- `TidepoolFragment` manually `new`s the ViewModel in `onCreateView` without `ViewModelProvider` —
-  no ViewModel store owner so `viewModelScope` is never cancelled on fragment backstack pop (only on
-  `onDestroyView` when `viewModel = null`).
-- `TidepoolLog` has `var date` (mutable) — same issue as `NSClientLog`. `@Immutable` on
-  `TidepoolUiState` containing `List<TidepoolLog>` is technically incorrect (mutable element).
-- Both `TidepoolScreen` and `XdripScreen` use `rh.gs()` (ResourceHelper) inside Composables instead
-  of `stringResource()` — violates project convention. Pattern is widespread in this module but
-  still a violation.
-- `TidepoolScreen` and `XdripScreen` both use hardcoded `16.dp`, `4.dp`, `8.dp`, `2.dp` instead of
-  `AapsSpacing` constants.
-- `SimpleDateFormat` (line 47 of TidepoolScreen.kt) is a file-level `private val` — not thread-safe
-  if multiple threads access the preview. Safe in practice because it's only used in preview with a
-  single thread, but the pattern should still use `DateTimeFormatter` or be local.
-- `TidepoolPlugin` and `TidepoolFragment` duplicate all menu action lambdas — same 5 actions in 4
-  places (Fragment.onMenuItemSelected, Fragment.setContent lambdas, ComposeContent.Render lambdas,
-  TidepoolPlugin.composeContent lambdas).
-- Preview uses `MaterialTheme` wrapper, not `AapsTheme` — project convention requires `AapsTheme`.
-- `TidepoolRepository.addLog()` calls `aapsLogger.debug()` inside the `update {}` lambda — side
-  effect inside a state update lambda; should log before/after the update, not inside it.
-
-## Wear Compose Migration Patterns (2026-03-01)
-
-- `WearViewModel` is NOT registered in `SyncModule` via `@IntoMap @ViewModelKey` — it cannot use the
-  Dagger `ViewModelFactory`. As a result `WearComposeContent` constructs it via plain
-  `remember {}` — same latent lifecycle bug as Tidepool/Xdrip. Fix: register in SyncModule and pass
-  `viewModelFactory` to `WearComposeContent`.
-- `WearComposeContent` calls `.also { it.requestCustomWatchface() }` inside `remember {}` —
-  side-effect at composition time is fragile; should be in `LaunchedEffect(Unit)` in `WearScreen`.
-- `WearScreen` passes `rh: ResourceHelper` all the way from `WearComposeContent` down to the screen
-  composable and uses `rh.gs()` in a `LaunchedEffect` (toolbar config) — the strings are resolved
-  inside a LaunchedEffect so technically not in composition, but the `rh` reference should be
-  replaced by pre-resolved `stringResource()` strings captured in the composable scope. Three
-  specific violations: lines 88, 96, 105 of WearScreen.kt.
-- `WearScreen` has no text fields, so `clearFocusOnTap` is not needed — correct.
-- All hardcoded dp values in WearScreen: `16.dp` (lines 158, 224, 278), `8.dp` (lines 159, 194, 246,
-  279, 291), `12.dp` (lines 168, 193), `4.dp` (lines 199, 309, 333), `18.dp` (lines 252, 261),
-  `6.dp` (lines 253, 262), `20.dp` (line 324), `300.dp` (line 287) — should use `AapsSpacing` for
-  the generic ones; 300.dp and 18.dp need named domain constants.
-- Hardcoded `"On"` / `"Off"` strings used as contentDescription in CwfInfosContent (line 322) — must
-  be string resources.
-- Preview wrappers use `MaterialTheme` — this is the CORRECT pattern for Compose previews in this
-  project (AapsTheme crashes in preview). Confirmed as intentional.
-- `WearUiState`, `CwfInfosState`, `CwfPrefItem`, `CwfViewItem` are all proper `@Immutable` data
-  classes with `val` fields — correct.
-- Modifier ordering is correct in all composable signatures: `modifier: Modifier = Modifier` is
-  always the last parameter after required params, first optional.
-- `WearMainContent` and `CwfInfosContent` are `private` — correct visibility.
-- `WearScreen` is package-private (internal) — appropriate since it is called from
-  `WearComposeContent` in the same package.
-
-## SMS Communicator Compose Migration Patterns (2026-03-01)
-
-- `SmsCommunicatorViewModel` lacks `@Inject constructor` and is not registered in `SyncModule` —
-  same latent lifecycle bug as Tidepool/Xdrip/Wear. `SmsCommunicatorComposeContent` constructs it
-  via `remember {}` without a `ViewModelStoreOwner`.
-- `SmsCommunicatorRepository` is a plain `class` instantiated manually inside the `@Singleton`
-  plugin (`val repository = SmsCommunicatorRepository()`). Should be `@Singleton` and injected into
-  both the plugin and the ViewModel once DI is fixed.
-- `SmsCommunicatorOtpScreen` (Compose) is missing `FLAG_SECURE` that the legacy
-  `SmsCommunicatorOtpActivity` had. This is a security regression — the OTP QR code must be
-  protected from screenshots.
-- `SmsCommunicatorFragment` (RxJava + ViewBinding) is still the active `.fragmentClass()` in the
-  plugin; the Compose path is unreachable for the main tab until that line is removed.
-- `SmsCommunicatorOtpActivity` duplicates `SmsCommunicatorOtpScreen` — candidate for deletion once
-  FLAG_SECURE is resolved in Compose.
-- `SmsItem` and `SmsCommunicatorUiState` are correctly `@Immutable` data classes with `val` fields —
-  good model (contrast with NSClientLog/TidepoolLog which have mutable `var` fields).
-- `SmsCommunicatorOtpScreen` uses `stringResource()` throughout — no `rh.gs()` violations (unlike
-  Tidepool/Xdrip/Wear screens).
-- `SmsCommunicatorScreen` and `SmsCommunicatorScreenContent` are `public` but should be `internal`.
-- `setToolbarConfig` is received in `SmsCommunicatorComposeContent.Render()` but never called —
-  toolbar stays at host default.
-- `@Stable` on `SmsCommunicatorViewModel` is incorrect/misleading; other ViewModels in this project
-  are not annotated `@Stable`.
-- Hardcoded colors `Color.Green`, `Color.Yellow`, `Color.Red` in OTP verification feedback — should
-  use M3 semantic colors.
-- `SmsCommunicatorOtpScreen` is missing `clearFocusOnTap` despite containing an `OutlinedTextField`.
-
-## Preference System Patterns (2026-03-01)
-
-- `sharedPreferenceStates` in `PreferenceState.kt` is a process-level singleton
-  (`mutableStateMapOf` at file scope). It is never cleared between screen navigations or process
-  reuse in tests. Stale values survive navigation. It also bypasses `Preferences.simpleMode`
-  reactive
-  updates for APS/NSClient/PumpControl mode flags, which are read directly from the
-  `Preferences` object (not from the shared state map) inside `calculatePreferenceVisibility`.
-- `rememberUnitDoublePreferenceState` (PreferenceState.kt line 483) re-computes `storedValue`,
-  `displayValue`, and `formatted` on every recomposition but only has `remember(key)` for the
-  state — the `displayState` is created with plain `remember` (no key) so it will not update if the
-  stored preference changes externally.
-- `ReactiveVisibilityContext.ReactivePreferencesWrapper` only intercepts `get(IntPreferenceKey)` and
-  `get(StringPreferenceKey)` — `get(BooleanPreferenceKey)` and `get(DoublePreferenceKey)` fall
-  through to the delegate and are NOT reactive for `visibility.isVisible()` conditions.
-- `PluginPreferencesScreen` contains two hardcoded English-only strings: "No compose preferences
-  available for this plugin" and "Plugin does not support preferences". These must be string
-  resources.
-- `ClickablePreferenceCategoryHeader` uses `context.getString()` inside composition for summary
-  text (line 77) — should use `stringResource()` instead.
-- `ClickablePreferenceCategoryHeader` has hardcoded contentDescription strings "Collapse"/"Expand"
-  (line 136) — must be string resources.
-- All dialog previews in `dialogs/` use `AapsTheme` as wrapper — project rule says previews MUST
-  use `MaterialTheme` (AapsTheme crashes with InvocationTargetException in preview tool).
-- `PumpOverviewUiState.customContent` is `(@Composable () -> Unit)?` — a lambda stored in a
-  `@Immutable` data class. The Compose compiler cannot verify lambda stability, so this breaks
-  `@Immutable`'s contract and causes unnecessary recompositions of `PumpOverviewScreen`.
-- `AapsSnackbarHost` has a race condition: icon/color is resolved from `message` (the outer param)
-  not from `snackbarData` — after `onDismiss()` is called, `message` becomes null before the
-  Snackbar finishes animating out, causing it to briefly flash to the neutral (null) color.
-- `InfoSection` in PumpOverviewScreen wraps already-filtered `visibleRows` (filtered by
-  `row.visible == true`) with `AnimatedVisibility(visible = row.visible)` — the `visible` flag on
-  every row will always be `true` inside InfoSection. The outer filter makes the inner
-  `AnimatedVisibility` redundant.
-- `TileButton` in PumpOverviewScreen has hardcoded `96.dp`, `28.dp`, `2.dp`, `8.dp` values — some
-  belong in AapsSpacing, others are domain-specific and need named constants.
-
-## EOPatch2 Compose Migration Patterns (2026-03-02)
-
-- EOPatch2 DI is correct: `@Binds @IntoMap @EopatchPluginQualifier @ViewModelKey` with a scoped
-  `ViewModelProvider.Factory` provided via `@EopatchPluginQualifier`. `ViewModelProvider(owner,
-  factory)` used properly in both `EopatchComposeContent` and `EopatchActivity`.
-- `EopatchOverviewViewModel` bridges RxJava to `MutableStateFlow` correctly:
-  `observeOn(aapsSchedulers.main)` before `.value = it` assignment is safe for `StateFlow`.
-- Recurring pattern: `LaunchedEffect(Unit)` in step composables that call BLE operations (scan,
-  safety check) — risk of re-firing on re-composition and starting duplicate RxJava operations.
-  Guard with a `SetupStep` check or key on the step value.
-- Recurring bug: dispatching dialogs in `EopatchPatchScreen` by matching the `SharedFlow` event
-  type works, but `EopatchOverviewEvent.ShowToast` is collected in BOTH `EopatchComposeContent`
-  and `EopatchOverviewScreen` simultaneously, causing double-toast. Only one collector should own
-  each event type.
-- Recurring anti-pattern: label string matching to dispatch actions (`suspendLabel`/`resumeLabel`
-  comparison in `EopatchOverviewScreen`). Use a typed ID or tag on `PumpAction` instead.
-- Hardcoded Korean string `"기초1"` passed as format arg in `programEnabledMessage` — will ship
-  in production. Always verify localized format string arguments are not placeholder values.
-- `mB012UpdateDisposable` in `EopatchPatchViewModel` not added to `CompositeDisposable` and not
-  restarted after `reset()` — alarm reminder silently stops working on workflow restart.
-- `deactivatePatch()` uses an untracked `Single.timer(10, TimeUnit.SECONDS).subscribe()` — add
-  the disposable to `CompositeDisposable`.
-- `EopatchActivity.createIntentForCheckConnection()` missing `EXTRA_START_WITH_COMM_CHECK`, so
-  `PatchStep.CHECK_CONNECTION` is passed to `initializePatchStep()` but has no UI branch —
-  screen renders blank.
-- `EopatchActivity` lacks `FLAG_KEEP_SCREEN_ON` for alarm-driven flows.
-- `rh` and `patchManager` are `val` (public) on both ViewModels — should be `private val`.
-- `WizardStepLayout` and `StepProgressIndicator` are new shared components in
-  `core/ui/compose/pump/`.
-- No `@Preview` composables in any of the new EOPatch2 Compose files.
-- `EopatchOverviewScreen` and `EopatchPatchScreen` have no explicit visibility — should be
-  `internal`.
-- `_events MutableSharedFlow` with `extraBufferCapacity = 10` is not cleared in `reset()` — stale
-  events from prior workflow can replay to new collectors after workflow restart.
-
-## EOPatch2 Completeness Review Findings (2026-03-02)
-
-- `dispatchTouchEvent` B012 alarm reminder on every touch is NOT ported — only called in specific
-  ViewModel paths; during long step viewing B012 fires incorrectly.
-- Resume/Pause when patch not connected: old code launched
-  `EopatchActivity.createIntentForCheckConnection`
-  via `ActivityResultLauncher`; new code calls BLE operation directly without connectivity check.
-- `isDiscardedWithNotConn` dual-button (Finish / Activate New Patch) on RemoveStep is not ported.
-- `PatchStep.CHECK_CONNECTION` unhandled in new `EopatchPatchScreen` — falls into `else {}` branch.
-- `onCommCheckComplete()` logic is broken: on timer expiry in `deactivatePatch()`, neither success
-  listener nor error dialog is emitted when bonded+disconnected; deactivation silently does nothing.
-- `SafetyCheckStep` dismiss button calls `handleCancel()` (closes workflow) instead of
-  `moveStep(SAFETY_CHECK)` (stays on step) — regression from old behavior.
-- `updateExpirationTime()` subscription has empty body — countdown timer on SafeDeactivationStep
-  is frozen; `patchRemainedTime` is a plain `get()` not a StateFlow.
-- `WakeUpStep` missing Cancel button that existed in old fragment_eopatch_wake_up.xml.
-- `TurningOffAlarmStep` button text changed from "Next" to "Confirm" (cosmetic but visible).
-- `BasalScheduleStep` button text changed from "Finish" to "Confirm" (cosmetic but visible).
-- `SafeDeactivationStep` has new secondary "Discard" button that was not in old XML layout — adds
-  unintended shortcut to forced discard.
-- `RotateKnobStep` treats NEEDLE_SENSING_FAILED and ACTIVATION_FAILED identically (same dialog,
-  same retry) — old code showed distinct states for activation failure.
-- `_events MutableSharedFlow` not cleared in `reset()` — stale events replay to new workflow.
-- `BlePreCheckHost` and `EopatchPatchScreen` compose simultaneously; `initializePatchStep` fires
-  before BLE pre-check completes — old Activity gated step init on pre-check completion.
-- Protection check (`PREFERENCES`) applied to both activation and deactivation; old code had none.
+- `WizardGifImage.kt` / `WizardImage` in `core/ui/compose/pump/` — shared GIF/image wrapper for
+  wizards. Step composables should use this instead of copy-pasting `GlideImage` boilerplate.
+- `WizardStepLayout`, `StepProgressIndicator`, `WizardButton` in `core/ui/compose/pump/` — shared
+  wizard chrome components.
+- `BlePreCheckHost` in `core/ui/compose/pump/BlePreCheckHost.kt` — async, renders wizard at same
+  time unless guarded.
 
 ## See Also
 
-- Detailed review findings: see conversation history for NSClient Compose migration review (
-  2026-03-01)
-- Detailed review findings: see conversation history for Tidepool Compose migration review (
-  2026-03-01)
-- Detailed review findings: see conversation history for Wear Compose migration review (2026-03-01)
-- Detailed review findings: see conversation history for SMS Communicator Compose migration review (
-  2026-03-01)
-- Detailed review findings: see conversation history for Compose preference/dialog/pump review (
-  2026-03-01)
+- `equil-migration.md` — detailed Equil Compose migration review (2026-03-09)
+- Earlier migration reviews (NSClient, Tidepool, Wear, SMS, Preferences, EOPatch2): see conversation
+  history from 2026-03-01 and 2026-03-02.
