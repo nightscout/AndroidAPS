@@ -227,7 +227,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             emitter.onNext(PodEvent.BluetoothConnecting)
             val conn = bleConnectionFactory.createConnection(podAddress)
             connection = conn
-            conn.connect(ConnectionWaitCondition(timeoutMs = 3 * BleConnection.BASE_CONNECT_TIMEOUT_MS))
+            conn.connect(ConnectionWaitCondition(timeoutMs = BleConnection.DEFAULT_CONNECT_TIMEOUT_MS))
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 
             emitter.onNext(PodEvent.Pairing)

@@ -16,7 +16,7 @@ interface OmnipodDashBleManager {
     fun getStatus(): ConnectionState
 
     // used for sync connections
-    fun connect(timeoutMs: Long = BleConnection.BASE_CONNECT_TIMEOUT_MS * 3): Observable<PodEvent>
+    fun connect(timeoutMs: Long = BleConnection.DEFAULT_CONNECT_TIMEOUT_MS): Observable<PodEvent>
 
     // used for async connections
     fun connect(stopConnectionLatch: CountDownLatch): Observable<PodEvent>

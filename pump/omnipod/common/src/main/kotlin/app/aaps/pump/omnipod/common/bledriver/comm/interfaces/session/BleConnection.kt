@@ -23,6 +23,6 @@ interface BleConnection : DisconnectHandler {
     fun establishSession(ltk: ByteArray, msgSeq: Byte, ids: Ids, eapSqn: ByteArray): EapSqn?
 
     companion object {
-        const val BASE_CONNECT_TIMEOUT_MS = 10000L
+        const val DEFAULT_CONNECT_TIMEOUT_MS = 30000L
     }
 }

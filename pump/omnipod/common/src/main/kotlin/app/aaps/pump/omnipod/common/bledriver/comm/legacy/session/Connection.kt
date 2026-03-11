@@ -209,7 +209,6 @@ class Connection(
     }
 
     companion object {
-        const val BASE_CONNECT_TIMEOUT_MS = BleConnection.BASE_CONNECT_TIMEOUT_MS
         const val MIN_DISCOVERY_TIMEOUT_MS = 10000L
         const val MAX_WAIT_FOR_CONNECTION_SECONDS = Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS + 10
         const val SLEEP_WHEN_FAILING_TO_CONNECT_GATT = 10000L
