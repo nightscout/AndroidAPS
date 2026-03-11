@@ -107,6 +107,10 @@ class SafetyPlugin @Inject constructor(
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
             val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
             absoluteRate.setIfSmaller(pumpLimit, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, pumpLimit, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
+
+            // Not all pumps have dynamic TBR constraint
+            val dynamicPumpLimit = pump.pumpDescription.maxTempAbsolute
+            if (dynamicPumpLimit > 0.0) absoluteRate.setIfSmaller(dynamicPumpLimit, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, dynamicPumpLimit, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
         }
 
         // do rounding
@@ -146,6 +150,12 @@ class SafetyPlugin @Inject constructor(
         insulin.setIfSmaller(maxBolus, rh.gs(app.aaps.core.ui.R.string.limitingbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
         insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(app.aaps.core.ui.R.string.limitingbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
+        val dynamicPumpLimit = pump.pumpDescription.maxBolusSize
+        if (dynamicPumpLimit > 0.0) {
+            // Not all pumps have dynamic bolus size constraint
+            insulin.setIfSmaller(dynamicPumpLimit, rh.gs(app.aaps.core.ui.R.string.limitingbolus, dynamicPumpLimit, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
+        }
+
         val rounded = pump.pumpDescription.pumpType.determineCorrectBolusSize(insulin.value())
         insulin.setIfDifferent(rounded, rh.gs(app.aaps.core.ui.R.string.pumplimit), this)
         return insulin
