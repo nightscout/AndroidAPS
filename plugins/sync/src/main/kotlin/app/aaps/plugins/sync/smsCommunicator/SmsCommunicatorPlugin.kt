@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -116,6 +117,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val localProfileManager: LocalProfileManager,
     private val commandQueue: CommandQueue,
     private val loop: Loop,
@@ -715,6 +717,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
+                            val iCfg = insulin.iCfg          // use Current running iCfg, changing iCfg with Automation not allowed
                             if (profileFunction.createProfileSwitch(
                                     profileStore = store,
                                     profileName = list[pIndex - 1] as String,
@@ -725,7 +728,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     action = Action.PROFILE_SWITCH,
                                     source = Sources.SMS,
                                     note = rh.gs(R.string.sms_profile_switch_created),
-                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created)))
+                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))),
+                                    iCfg = iCfg
                                 )
                             ) {
                                 val replyText = rh.gs(R.string.sms_profile_switch_created)

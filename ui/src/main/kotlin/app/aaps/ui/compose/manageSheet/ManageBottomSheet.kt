@@ -114,6 +114,13 @@ internal fun ManageBottomSheetContent(
             onNavigate = onNavigate
         )
 
+        // Insulin Management
+        ManageItem(
+            elementType = ElementType.INSULIN_MANAGEMENT_EDIT,
+            onDismiss = onDismiss,
+            onNavigate = onNavigate
+        )
+
         // Temp Target
         if (showTempTarget) {
             ManageItem(

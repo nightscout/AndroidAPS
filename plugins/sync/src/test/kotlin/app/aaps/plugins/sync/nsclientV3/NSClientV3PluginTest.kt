@@ -22,7 +22,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
@@ -68,7 +67,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var insulin: Insulin
     @Mock lateinit var l: L
     @Mock lateinit var nsClientV3Service: NSClientV3Service
     @Mock lateinit var nsClientRepository: NSClientRepository
@@ -86,7 +84,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
-        whenever(activePlugin.activeInsulin).thenReturn(insulin)
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository)
         sut =
             NSClientV3Plugin(
@@ -96,7 +93,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             )
         sut.nsAndroidClient = nsAndroidClient
         sut.nsClientV3Service = nsClientV3Service
-        whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)
+        whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(effectiveProfile)
     }
 
     @Test
@@ -195,7 +192,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
                 pumpId = 11000,
                 pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
-            )
+            ),
+            iCfg = someICfg
         )
         val dataPair = DataSyncSelector.PairBolus(bolus, 1000)
         // create
@@ -294,19 +292,19 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val profileSwitch = EPS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+            iCfg = insulin.iCfg.also {
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",
@@ -332,17 +330,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val profileSwitch = PS(
             timestamp = 10000,
             isValid = true,
-            basalBlocks = validProfile.basalBlocks,
-            isfBlocks = validProfile.isfBlocks,
-            icBlocks = validProfile.icBlocks,
-            targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units,
+            basalBlocks = effectiveProfile.basalBlocks,
+            isfBlocks = effectiveProfile.isfBlocks,
+            icBlocks = effectiveProfile.icBlocks,
+            targetBlocks = effectiveProfile.targetBlocks,
+            glucoseUnit = effectiveProfile.units,
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+            iCfg = insulin.iCfg.also {
+                it.insulinEndTime = (effectiveProfile.iCfg.dia * 3600 * 1000).toLong()
             },
             ids = IDs(
                 nightscoutId = "nightscoutId",

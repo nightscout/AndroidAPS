@@ -7,6 +7,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.eopatch.core.scan.BleConnectionState
@@ -23,7 +24,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var bleConnectionState: BleConnectionState
-    @Mock lateinit var profile: Profile
+    @Mock lateinit var profile: PumpProfile
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var blePreCheck: BlePreCheck
 
@@ -51,7 +52,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck
+            protectionCheck, blePreCheck, ch
         )
     }
 
@@ -161,7 +162,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
     fun `baseBasalRate should return 0 when not activated`() {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
-        assertThat(plugin.baseBasalRate).isWithin(0.001).of(0.0)
+        assertThat(plugin.baseBasalRate.cU).isWithin(0.001).of(0.0)
     }
 
     @Test
@@ -173,14 +174,14 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         patchState.update(bytes, System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
-        assertThat(plugin.baseBasalRate).isWithin(0.001).of(0.0)
+        assertThat(plugin.baseBasalRate.cU).isWithin(0.001).of(0.0)
     }
 
     @Test
     fun `reservoirLevel should return 0 when not activated`() {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
-        assertThat(plugin.reservoirLevel).isWithin(0.001).of(0.0)
+        assertThat(plugin.reservoirLevel.cU).isWithin(0.001).of(0.0)
     }
 
     @Test
@@ -193,7 +194,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
         // Just verify it returns a value (actual implementation uses patch state)
-        assertThat(plugin.reservoirLevel).isAtLeast(0.0)
+        assertThat(plugin.reservoirLevel.cU).isAtLeast(0.0)
     }
 
     @Test

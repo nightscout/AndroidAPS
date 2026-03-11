@@ -74,6 +74,56 @@ fun ErrorDialog(
     )
 }
 
+/**
+ * Overload accepting native [AnnotatedString] — bypasses HTML entirely.
+ */
+@Composable
+fun ErrorDialog(
+    title: String,
+    message: AnnotatedString,
+    positiveButton: String? = null,
+    onPositive: () -> Unit = {},
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error
+            )
+        },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        confirmButton = {
+            positiveButton?.let {
+                TextButton(onClick = onPositive) {
+                    Text(positiveButton)
+                }
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.dismiss))
+            }
+        },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ErrorDialogPreview() {

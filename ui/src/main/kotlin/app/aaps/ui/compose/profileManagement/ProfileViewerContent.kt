@@ -22,6 +22,7 @@ import app.aaps.core.graph.BasalProfileGraphCompose
 import app.aaps.core.graph.IcProfileGraphCompose
 import app.aaps.core.graph.IsfProfileGraphCompose
 import app.aaps.core.graph.TargetBgProfileGraphCompose
+import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
@@ -54,7 +55,6 @@ data class ProfileCompareRow(
  * @param getIsfList Lambda that formats ISF values as a comma-separated string
  * @param getBasalList Lambda that formats basal values as a comma-separated string
  * @param getTargetList Lambda that formats target values as a range string
- * @param formatDia Lambda that formats DIA value with units (e.g., "5.0 h")
  * @param formatBasalSum Lambda that formats total basal sum with units (e.g., "24.5 U")
  */
 @Composable
@@ -64,14 +64,13 @@ fun ProfileSingleContent(
     getIsfList: (Profile) -> String,
     getBasalList: (Profile) -> String,
     getTargetList: (Profile) -> String,
-    formatDia: (Double) -> String,
     formatBasalSum: (Double) -> String
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Units & DIA Card (combined to save space)
+        // Units & ICfg Card if running (combined to save space)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -89,15 +88,29 @@ fun ProfileSingleContent(
                     )
                 }
             }
-            ElevatedCard(
-                modifier = Modifier.weight(1f),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    ProfileRow(
-                        label = stringResource(R.string.dia_label),
-                        value = formatDia(profile.dia)
-                    )
+            profile.iCfg?.let { iCfg ->
+                ElevatedCard(
+                    modifier = Modifier.weight(1f),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        ProfileRow(
+                            label = stringResource(R.string.insulin_label),
+                            value = iCfg.insulinLabel
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.concentration_label),
+                            value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.peak_label),
+                            value = stringResource(R.string.format_mins, iCfg.peak)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.dia_label),
+                            value = stringResource(R.string.format_hours, iCfg.dia)
+                        )
+                    }
                 }
             }
         }
@@ -220,7 +233,6 @@ fun ProfileSingleContent(
  * @param profile1 First profile to compare
  * @param profile2 Second profile to compare
  * @param unitsText Blood glucose units (mg/dL or mmol/L)
- * @param formatDia Lambda that formats DIA value (e.g., "5.00" from Double)
  * @param shortHourUnit Short form of hour unit (e.g., "h")
  * @param icsRows List of IC comparison rows with time and values for both profiles
  * @param icUnits IC units text (e.g., "g/U")
@@ -238,7 +250,6 @@ fun ProfileCompareContent(
     profile1: Profile,
     profile2: Profile,
     unitsText: String,
-    formatDia: (Double) -> String,
     shortHourUnit: String,
     icsRows: List<ProfileCompareRow>,
     icUnits: String,
@@ -296,52 +307,45 @@ fun ProfileCompareContent(
             }
         }
 
-        // Units Card
-        ElevatedCard(
+        // Units & ICfg Card if running profile (combined to save space)
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                ProfileRow(
-                    label = stringResource(R.string.units_label),
-                    value = unitsText,
-                    showColon = false
-                )
+            ElevatedCard(
+                modifier = Modifier.weight(1f),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    ProfileRow(
+                        label = stringResource(R.string.units_label),
+                        value = unitsText
+                    )
+                }
             }
-        }
-
-        // DIA Card
-        ElevatedCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = stringResource(R.string.dia_label),
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+            profile1.iCfg?.let { iCfg ->
+                ElevatedCard(
+                    modifier = Modifier.weight(1f),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        Text(
-                            text = "${formatDia(profile1.dia)} $shortHourUnit",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colors.profile1,
-                            textAlign = TextAlign.Center
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        ProfileRow(
+                            label = stringResource(R.string.insulin_label),
+                            value = iCfg.insulinLabel
                         )
-                        Text(
-                            text = "${formatDia(profile2.dia)} $shortHourUnit",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colors.profile2,
-                            textAlign = TextAlign.Center
+                        ProfileRow(
+                            label = stringResource(R.string.concentration_label),
+                            value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.peak_label),
+                            value = stringResource(R.string.format_mins, iCfg.peak)
+                        )
+                        ProfileRow(
+                            label = stringResource(R.string.dia_label),
+                            value = stringResource(R.string.format_hours, iCfg.dia)
                         )
                     }
                 }

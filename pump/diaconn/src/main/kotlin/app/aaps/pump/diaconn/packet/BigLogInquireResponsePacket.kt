@@ -8,6 +8,8 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
@@ -162,7 +164,7 @@ class BigLogInquireResponsePacket(
                         val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.injectAmount / 100.0,
+                            amount = PumpInsulin(logItem.injectAmount / 100.0),
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -197,7 +199,7 @@ class BigLogInquireResponsePacket(
                         val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.injectAmount / 100.0,
+                            amount = PumpInsulin(logItem.injectAmount / 100.0),
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -233,7 +235,7 @@ class BigLogInquireResponsePacket(
                         val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.injectAmount / 100.0,
+                            amount = PumpInsulin(logItem.injectAmount / 100.0),
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -270,7 +272,7 @@ class BigLogInquireResponsePacket(
                         val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.injectAmount / 100.0,
+                            amount = PumpInsulin(logItem.injectAmount / 100.0),
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -305,7 +307,7 @@ class BigLogInquireResponsePacket(
                         val logDateTime = logStartDate.time
                         val newRecord = pumpSync.syncExtendedBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.setAmount / 100.0,
+                            rate = PumpRate(logItem.setAmount / 100.0),
                             duration = T.mins((logItem.getInjectTime() * 10).toLong()).msecs(),
                             isEmulatingTB = false,
                             pumpId = logDateTime,
@@ -383,7 +385,7 @@ class BigLogInquireResponsePacket(
                         // dual square 처리.
                         val newRecord = pumpSync.syncExtendedBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.setSquareAmount / 100.0,
+                            rate = PumpRate(logItem.setSquareAmount / 100.0),
                             duration = T.mins((logItem.getInjectTime() * 10).toLong()).msecs(),
                             isEmulatingTB = false,
                             pumpId = logDateTime,
@@ -416,7 +418,7 @@ class BigLogInquireResponsePacket(
                         val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            amount = logItem.injectAmount / 100.0,
+                            amount = PumpInsulin(logItem.injectAmount / 100.0),
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -750,7 +752,7 @@ class BigLogInquireResponsePacket(
                         val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(logDateTime, absoluteRate)
                         val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                             timestamp = logDateTime,
-                            rate = absoluteRate,
+                            rate = PumpRate(absoluteRate),
                             duration = T.mins((logItem.tbTime * 15).toLong()).msecs(),
                             isAbsolute = true,
                             type = temporaryBasalInfo?.type,

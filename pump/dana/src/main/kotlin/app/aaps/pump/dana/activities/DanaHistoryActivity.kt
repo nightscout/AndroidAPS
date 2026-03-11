@@ -13,7 +13,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -41,7 +40,6 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin

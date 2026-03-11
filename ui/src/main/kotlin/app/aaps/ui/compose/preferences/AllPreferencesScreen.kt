@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.preferences
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.activity.compose.BackHandler
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
@@ -32,10 +32,10 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.preference.LocalNavigateToCompose
-import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.preference.LocalSnackbarHostState
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
@@ -120,12 +120,9 @@ fun AllPreferencesScreen(
         getPreferenceContentIfEnabled(activePlugin.activeSensitivity as PluginBase)?.let { add(it) }
 
         // 7. Pump plugin
-        getPreferenceContentIfEnabled(activePlugin.activePump as PluginBase)?.let { add(it) }
+        getPreferenceContentIfEnabled(activePlugin.activePumpInternal as PluginBase)?.let { add(it) }
 
-        // 8. Insulin plugin
-        getPreferenceContentIfEnabled(activePlugin.activeInsulin as PluginBase)?.let { add(it) }
-
-        // 9. SYNC type plugins
+        // 8. SYNC type plugins
         activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { plugin ->
             getPreferenceContentIfEnabled(plugin)?.let { add(it) }
         }

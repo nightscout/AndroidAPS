@@ -51,6 +51,9 @@ internal interface BolusDao : TraceableDao<Bolus> {
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND unlikely(timestamp BETWEEN :start AND :end) AND likely(referenceId IS NULL) ORDER BY id DESC")
     suspend fun getBolusesFromTime(start: Long, end: Long): List<Bolus>
 
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    suspend fun getAllBoluses(): List<Bolus>
+
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY id DESC")
     suspend fun getBolusesIncludingInvalidFromTime(timestamp: Long): List<Bolus>
 

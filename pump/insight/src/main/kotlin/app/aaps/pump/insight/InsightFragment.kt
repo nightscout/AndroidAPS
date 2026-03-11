@@ -300,7 +300,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getLastBolusItem() {
-        if (insightPlugin.lastBolusAmount.equals(0.0) || insightPlugin.lastBolusTimestamp == 0L) {
+        if (insightPlugin.lastBolusAmount.cU.equals(0.0) || insightPlugin.lastBolusTimestamp == 0L) {
             binding.lastBolusLine.visibility = View.GONE
             return
         }
@@ -313,7 +313,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         } else {
             dateUtil.hourAgo(insightPlugin.lastBolusTimestamp, rh)
         }
-        binding.lastBolus.text = rh.gs(R.string.insight_last_bolus_formater, insightPlugin.lastBolusAmount, unit, ago)
+        binding.lastBolus.text = rh.gs(R.string.insight_last_bolus_formater, insightPlugin.lastBolusAmount.cU, unit, ago) // Todo: ConcentratedUnits to be formated with IU + CU in Fragment
     }
 
     private fun getBolusItems() {

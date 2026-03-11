@@ -48,7 +48,8 @@ class EquilManagerTest : TestBaseWithProfile() {
             equilHistoryPumpDao,
             pumpEnactResultProvider,
             dateUtil,
-            notificationManager
+            notificationManager,
+            ch
         )
     }
 
@@ -88,4 +89,6 @@ class EquilManagerTest : TestBaseWithProfile() {
     fun `equilState should be null initially`() {
         assertEquals(null, equilManager.equilState)
     }
+
+
 }

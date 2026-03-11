@@ -8,6 +8,7 @@ import android.os.SystemClock
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -15,10 +16,10 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -86,7 +87,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var context: Context
     @Inject lateinit var medtrumPlugin: MedtrumPlugin
@@ -100,6 +100,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var ch: ConcentrationHelper
+
 
     companion object {
 
@@ -260,7 +262,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun startActivate(): Boolean {
-        val profile = profileFunction.getProfile()?.let { medtrumPump.buildMedtrumProfileArray(it) }
+        val profile = pumpSync.expectedPumpState().profile?.let { medtrumPump.buildMedtrumProfileArray(it) }
         val packet = profile?.let { ActivatePacket(injector, it) }
         return packet?.let { sendPacketAndGetResponse(it) } == true
     }
@@ -410,7 +412,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // Sync the initial bolus
         val newRecord = pumpSync.addBolusWithTempId(
             timestamp = detailedBolusInfo.timestamp,
-            amount = detailedBolusInfo.insulin,
+            amount = PumpInsulin(detailedBolusInfo.insulin),
             temporaryId = detailedBolusInfo.timestamp,
             type = detailedBolusInfo.bolusType,
             pumpType = medtrumPump.pumpType(),
@@ -431,7 +433,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
             val syncOk = pumpSync.syncBolusWithTempId(
                 timestamp = bolusStart,
-                amount = 0.0,
+                amount = PumpInsulin(0.0),
                 temporaryId = bolusStart,
                 type = detailedBolusInfo.bolusType,
                 pumpId = bolusStart,
@@ -501,7 +503,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             } else {
                 val currentBolusAmount = BolusProgressData.delivered
                 if (currentBolusAmount != lastSentBolusAmount) {
-                    rxBus.send(EventOverviewBolusProgress(rh, BolusProgressData.delivered))
+                    rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(BolusProgressData.delivered)))
                     lastSentBolusAmount = currentBolusAmount
                 }
             }

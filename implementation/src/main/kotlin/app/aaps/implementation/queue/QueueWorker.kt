@@ -59,7 +59,7 @@ class QueueWorker internal constructor(
                 if (isStopped) return Result.failure()
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
-                if (config.PUMPDRIVERS && pump !is VirtualPump)
+                if (config.PUMPDRIVERS && pump.selectedActivePump() !is VirtualPump)
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
                             context,
                             Manifest.permission.BLUETOOTH_SCAN

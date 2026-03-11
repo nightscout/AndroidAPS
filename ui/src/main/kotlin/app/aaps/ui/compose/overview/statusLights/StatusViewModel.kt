@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -40,6 +41,7 @@ import javax.inject.Inject
 class StatusViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val rxBus: RxBus,
@@ -74,7 +76,7 @@ class StatusViewModel @Inject constructor(
 
             // Build status items (without expensive TDD calculation)
             val sensorStatus = buildSensorStatus()
-            val insulinStatus = buildInsulinStatus(isPatchPump, pumpDescription.maxResorvoirReading.toDouble())
+            val insulinStatus = buildInsulinStatus(isPatchPump, pumpDescription.maxReservoirReading.toDouble())
             val cannulaStatus = buildCannulaStatus(isPatchPump, includeTddCalculation = false)
             val batteryStatus = if (!isPatchPump || pumpDescription.useHardwareLink) {
                 buildBatteryStatus()
@@ -134,7 +136,7 @@ class StatusViewModel @Inject constructor(
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         }
         val pump = activePlugin.activePump
-        val reservoirLevel = pump.reservoirLevel
+        val reservoirLevel = pump.reservoirLevel.iU(insulin.iCfg.concentration)
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
 
         val level: String? = if (reservoirLevel > 0) {

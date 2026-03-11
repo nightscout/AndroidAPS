@@ -38,17 +38,23 @@ fun ActivateStep(
         }
     }
 
-    // Auto-navigate on activated
+    // Auto-navigate on activated and apply insulin profile switch if changed
     LaunchedEffect(setupStep) {
         if (setupStep == MedtrumPatchViewModel.SetupStep.ACTIVATED && patchStep == PatchStep.ACTIVATE) {
+            viewModel.executeInsulinProfileSwitch()
             viewModel.moveStep(PatchStep.ACTIVATE_COMPLETE)
         }
     }
 
+    val state = when {
+        isActivating && !isError -> ActivateState.ACTIVATING
+        isError                  -> ActivateState.ERROR
+        isComplete               -> ActivateState.COMPLETE
+        else                     -> ActivateState.ACTIVATING
+    }
+
     ActivateStepContent(
-        isActivating = isActivating,
-        isComplete = isComplete,
-        isError = isError,
+        state = state,
         reservoirLevel = viewModel.medtrumPump.reservoir,
         onRetry = {
             viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
@@ -59,54 +65,40 @@ fun ActivateStep(
     )
 }
 
+internal enum class ActivateState { ACTIVATING, ERROR, COMPLETE }
+
 @Composable
-private fun ActivateStepContent(
-    isActivating: Boolean,
-    isComplete: Boolean,
-    isError: Boolean,
-    reservoirLevel: Double,
+internal fun ActivateStepContent(
+    state: ActivateState,
+    reservoirLevel: Double = 0.0,
     onRetry: () -> Unit,
     onComplete: () -> Unit,
     onCancel: () -> Unit
 ) {
     WizardStepLayout(
-        primaryButton = when {
-            isActivating && !isError -> WizardButton(
-                text = stringResource(R.string.next),
-                onClick = {},
-                loading = true
-            )
-
-            isError                  -> WizardButton(
-                text = stringResource(R.string.retry),
-                onClick = onRetry
-            )
-
-            isComplete               -> WizardButton(
-                text = stringResource(app.aaps.core.ui.R.string.ok),
-                onClick = onComplete
-            )
-
-            else                     -> null
+        primaryButton = when (state) {
+            ActivateState.ACTIVATING -> WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
+            ActivateState.ERROR      -> WizardButton(text = stringResource(R.string.retry), onClick = onRetry)
+            ActivateState.COMPLETE   -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.ok), onClick = onComplete)
         },
-        secondaryButton = if (!isComplete) WizardButton(
+        secondaryButton = if (state != ActivateState.COMPLETE) WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
             onClick = onCancel
         ) else null
     ) {
-        when {
-            isActivating && !isError -> {
+        when (state) {
+            ActivateState.ACTIVATING -> {
                 Text(
                     text = stringResource(R.string.activating_pump),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
 
-            isError                  -> {
+            ActivateState.ERROR      -> {
                 WizardErrorBanner(message = stringResource(R.string.activating_error).stripHtml())
             }
 
-            isComplete               -> {
+            ActivateState.COMPLETE   -> {
                 Text(
                     text = stringResource(R.string.activating_complete, reservoirLevel),
                     style = MaterialTheme.typography.bodyLarge
@@ -127,46 +119,26 @@ private fun ActivateStepContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Activate - Activating")
 @Composable
-private fun ActivateStepActivatingPreview() {
-    ActivateStepContent(
-        isActivating = true,
-        isComplete = false,
-        isError = false,
-        reservoirLevel = 200.0,
-        onRetry = {},
-        onComplete = {},
-        onCancel = {}
-    )
+private fun PreviewActivating() {
+    MaterialTheme {
+        ActivateStepContent(state = ActivateState.ACTIVATING, onRetry = {}, onComplete = {}, onCancel = {})
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Activate - Error")
 @Composable
-private fun ActivateStepErrorPreview() {
-    ActivateStepContent(
-        isActivating = true,
-        isComplete = false,
-        isError = true,
-        reservoirLevel = 200.0,
-        onRetry = {},
-        onComplete = {},
-        onCancel = {}
-    )
+private fun PreviewError() {
+    MaterialTheme {
+        ActivateStepContent(state = ActivateState.ERROR, onRetry = {}, onComplete = {}, onCancel = {})
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Activate - Complete")
 @Composable
-private fun ActivateStepCompletePreview() {
-    ActivateStepContent(
-        isActivating = false,
-        isComplete = true,
-        isError = false,
-        reservoirLevel = 185.0,
-        onRetry = {},
-        onComplete = {},
-        onCancel = {}
-    )
+private fun PreviewComplete() {
+    MaterialTheme {
+        ActivateStepContent(state = ActivateState.COMPLETE, reservoirLevel = 200.0, onRetry = {}, onComplete = {}, onCancel = {})
+    }
 }
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

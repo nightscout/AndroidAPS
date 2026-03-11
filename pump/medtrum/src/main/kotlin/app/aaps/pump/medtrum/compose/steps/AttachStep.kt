@@ -27,7 +27,7 @@ fun AttachStep(
 }
 
 @Composable
-private fun AttachStepContent(
+internal fun AttachStepContent(
     onNext: () -> Unit,
     onCancel: () -> Unit
 ) {
@@ -54,13 +54,10 @@ private fun AttachStepContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Attach Step")
 @Composable
-private fun AttachStepPreview() {
-    AttachStepContent(
-        onNext = {},
-        onCancel = {}
-    )
+private fun PreviewAttachStep() {
+    MaterialTheme {
+        AttachStepContent(onNext = {}, onCancel = {})
+    }
 }
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")

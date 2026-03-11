@@ -52,7 +52,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpSerial = this.pumpSerial,
                 insulin = this.insulin,
                 type = NSBolus.BolusType.fromString(this.type),
-                isBasalInsulin = isBasalInsulin == true
+                isBasalInsulin = isBasalInsulin == true,
+                iCfg = this.iCfg.toNSICfg()
             )
 
         carbs != null && carbs != 0.0                                      -> {
@@ -225,7 +226,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 originalTimeshift = this.originalTimeshift,
                 originalPercentage = this.originalPercentage,
                 originalDuration = this.originalDuration,
-                originalEnd = this.originalEnd
+                originalEnd = this.originalEnd,
+                iCfg = this.iCfg.toNSICfg()
             )
         }
 
@@ -258,6 +260,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 duration = durationInMilliseconds,
                 timeShift = this.timeshift,
                 percentage = this.percentage,
+                iCfg = this.iCfg.toNSICfg()
             )
         }
 
@@ -409,7 +412,8 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             pumpSerial = pumpSerial,
             insulin = insulin,
             type = type.name,
-            isBasalInsulin = isBasalInsulin
+            isBasalInsulin = isBasalInsulin,
+            iCfg = iCfg.toRemoteICfg()
         )
 
         is NSCarbs                  -> RemoteTreatment(
@@ -505,7 +509,8 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             originalTimeshift = originalTimeshift,
             originalPercentage = originalPercentage,
             originalDuration = originalDuration,
-            originalEnd = originalEnd
+            originalEnd = originalEnd,
+            iCfg = iCfg.toRemoteICfg()
         )
 
         is NSProfileSwitch          -> RemoteTreatment(
@@ -533,6 +538,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             durationInMilliseconds = duration,
             timeshift = timeShift,
             percentage = percentage,
+            iCfg = iCfg.toRemoteICfg()
         )
 
         is NSBolusWizard            -> RemoteTreatment(

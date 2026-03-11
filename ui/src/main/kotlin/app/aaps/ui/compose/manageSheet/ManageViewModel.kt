@@ -80,7 +80,7 @@ class ManageViewModel @Inject constructor(
             val isInitialized = pump.isInitialized()
             val isSuspended = pump.isSuspended()
             val isDisconnected = loop.runningMode == RM.Mode.DISCONNECTED_PUMP
-            val isLoopRunning = loop.runningMode.isLoopRunning()
+            loop.runningMode.isLoopRunning()
 
             // Extended bolus visibility
             val showExtendedBolus: Boolean
@@ -139,7 +139,7 @@ class ManageViewModel @Inject constructor(
 
             uiState.update { state ->
                 state.copy(
-                    showTempTarget = profile != null && isLoopRunning,
+                    showTempTarget = true,
                     showTempBasal = showTempBasal,
                     showCancelTempBasal = showCancelTempBasal,
                     showExtendedBolus = showExtendedBolus,

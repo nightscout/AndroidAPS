@@ -185,7 +185,6 @@ dependencies {
     implementation(project(":plugins:automation"))
     implementation(project(":plugins:configuration"))
     implementation(project(":plugins:constraints"))
-    implementation(project(":plugins:insulin"))
     implementation(project(":plugins:main"))
     implementation(project(":plugins:sensitivity"))
     implementation(project(":plugins:smoothing"))

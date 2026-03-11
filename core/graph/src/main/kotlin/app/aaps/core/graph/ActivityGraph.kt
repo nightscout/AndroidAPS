@@ -4,30 +4,32 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.time.T
 import app.aaps.core.graph.data.GraphViewWithCleanup
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.objects.extensions.iobCalc
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlin.math.floor
 
 class ActivityGraph @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : GraphViewWithCleanup(context, attrs, defStyle) {
 
-    fun show(insulin: Insulin, diaSample: Double? = null) {
+    fun show(iCfg: ICfg, diaSample: Double? = null) {
         removeAllSeries()
-        val dia = diaSample ?: insulin.dia
+        val dia = diaSample ?: iCfg.dia
         mSecondScale = null
         val hours = floor(dia + 1).toLong()
         val bolus = BS(
             timestamp = 0,
             amount = 1.0,
-            type = BS.Type.NORMAL
+            type = BS.Type.NORMAL,
+            iCfg = iCfg
         )
         val activityArray: MutableList<DataPoint> = ArrayList()
         val iobArray: MutableList<DataPoint> = ArrayList()
         var time: Long = 0
         while (time <= T.hours(hours).msecs()) {
-            val iob = insulin.iobCalcForTreatment(bolus, time, dia)
+            val iob = bolus.iobCalc(time)
             activityArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.activityContrib))
             iobArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.iobContrib))
             time += T.mins(5).msecs()

@@ -52,11 +52,11 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
         danaRv2ExecutionService.danaRv2Plugin = danaRv2Plugin
         danaRv2ExecutionService.commandQueue = commandQueue
         danaRv2ExecutionService.messageHashTableRv2 = messageHashTableRv2
-        danaRv2ExecutionService.profileFunction = profileFunction
+        //danaRv2ExecutionService.profileFunction = profileFunction
 
         `when`(rh.gs(anyInt())).thenReturn("test")
         `when`(rh.gs(anyInt(), any())).thenReturn("test")
-        `when`(activePlugin.activePump).thenReturn(danaRv2Plugin)
+        `when`(activePlugin.activePumpInternal).thenReturn(danaRv2Plugin)
         `when`(danaRv2Plugin.pumpDescription).thenReturn(mockPumpDescription())
     }
 
@@ -141,7 +141,7 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testUpdateBasalsInPump_notConnected() {
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
         `when`(profile.getBasal()).thenReturn(1.0)
 
         val result = danaRv2ExecutionService.updateBasalsInPump(profile)

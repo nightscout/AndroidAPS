@@ -44,6 +44,9 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp: Long): List<EffectiveProfileSwitch>
 
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp ASC")
+    suspend fun getAllEffectiveProfileSwitches(): List<EffectiveProfileSwitch>
+
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE id > :id ORDER BY id ASC limit 1")
     suspend fun getNextModifiedOrNewAfter(id: Long): EffectiveProfileSwitch?

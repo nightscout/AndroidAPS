@@ -26,8 +26,8 @@ data class NSBolus(
     override var app: String? = null,
     val insulin: Double,
     @SerialName("bolusType") val type: BolusType,
-    val isBasalInsulin: Boolean
-
+    val isBasalInsulin: Boolean,
+    val iCfg: NSICfg?
 ) : NSTreatment {
 
     enum class BolusType {

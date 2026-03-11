@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -20,7 +20,7 @@ import javax.inject.Provider
 
 class CommandSetProfile(
     injector: HasAndroidInjector,
-    private val profile: Profile,
+    private val profile: EffectiveProfile,
     private val hasNsId: Boolean,
     override val callback: Callback?,
 ) : Command {

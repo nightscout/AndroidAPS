@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.fillDialog
 
 import androidx.compose.runtime.Immutable
+import app.aaps.core.data.model.ICfg
 
 enum class FillPreselect {
     NONE,
@@ -30,8 +31,30 @@ data class FillDialogUiState(
     val insulinAfterConstraints: Double = 0.0,
     val constraintApplied: Boolean = false,
 
+    // Insulin change section
+    val availableInsulins: List<ICfg> = emptyList(),
+    val selectedInsulin: ICfg? = null,
+    val activeInsulinLabel: String? = null,
+
+    // Pump units warning (non-null when concentration != U100)
+    val pumpUnitsWarning: String? = null,
+
     // Config
     val showBolus: Boolean = true,
     val showNotesFromPreferences: Boolean = false,
-    val simpleMode: Boolean = true
-)
+    val simpleMode: Boolean = true,
+    val concentrationEnabled: Boolean = false
+) {
+
+    /** Whether any actionable item is selected */
+    val hasAction: Boolean
+        get() = insulinAfterConstraints > 0 || siteChange || insulinCartridgeChange
+
+    /** Show insulin change section when: cartridge change checked, multiple insulins, time not changed (now) */
+    val showInsulinChange: Boolean
+        get() = insulinCartridgeChange && availableInsulins.size > 1 && !eventTimeChanged
+
+    /** Whether user selected a different insulin than currently active */
+    val insulinChanged: Boolean
+        get() = selectedInsulin != null && selectedInsulin.insulinLabel != activeInsulinLabel
+}

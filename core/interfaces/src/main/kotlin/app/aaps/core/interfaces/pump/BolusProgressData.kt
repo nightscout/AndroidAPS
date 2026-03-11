@@ -12,10 +12,11 @@ object BolusProgressData {
      * @param isSMB true for SMB bolus
      * @param id ID from DetailedBolusInfo for bolus identification. Progress updates with different ID are ignored
      */
-    fun set(insulin: Double, isSMB: Boolean, id: Long) {
+    fun set(insulin: Double, isSMB: Boolean, id: Long, isPriming: Boolean = false) {
         this.insulin = insulin
         this.isSMB = isSMB
         this.id = id
+        this.isPriming = isPriming
         delivered = 0.0
         bolusEnded = false
         stopPressed = false
@@ -39,6 +40,11 @@ object BolusProgressData {
      * SMB flag
      */
     var isSMB: Boolean = false
+
+    /**
+     * PRIMING flag
+     */
+    var isPriming: Boolean = false
 
     /**
      * ID from DetailedBolusInfo

@@ -19,7 +19,8 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             BS(
                 timestamp = now,
                 amount = 0.0,
-                type = BS.Type.NORMAL
+                type = BS.Type.NORMAL,
+                iCfg = someICfg
             )
         )
         whenever(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
@@ -49,7 +50,8 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             BS(
                 timestamp = 0,
                 amount = 0.0,
-                type = BS.Type.NORMAL
+                type = BS.Type.NORMAL,
+                iCfg = someICfg
             )
         )
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)

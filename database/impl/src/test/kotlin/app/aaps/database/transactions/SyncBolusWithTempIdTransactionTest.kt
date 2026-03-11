@@ -3,6 +3,7 @@ package app.aaps.database.transactions
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.BolusDao
 import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -90,6 +91,7 @@ class SyncBolusWithTempIdTransactionTest {
             pumpId = pumpId,
             pumpType = InterfaceIDs.PumpType.DANA_I,
             pumpSerial = "ABC123"
-        )
+        ),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0)
     )
 }

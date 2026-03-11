@@ -1,0 +1,225 @@
+package app.aaps.implementation.insulin
+
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.ConcentrationType
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.insulin.InsulinType
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.fromJsonObject
+import app.aaps.core.objects.extensions.toJsonObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import javax.inject.Inject
+import javax.inject.Singleton
+
+/**
+ * Created by Philoul on 29.12.2024.
+ */
+
+@Singleton
+class InsulinImpl @Inject constructor(
+    val preferences: Preferences,
+    val rh: ResourceHelper,
+    val profileFunction: ProfileFunction,
+    val aapsLogger: AAPSLogger,
+    val config: Config,
+    val hardLimits: HardLimits,
+    val uel: UserEntryLogger
+) : Insulin, InsulinManager {
+
+    override val id = InsulinType.UNKNOWN
+    override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.insulin_plugin)
+
+    override val iCfg: ICfg
+        get() {
+            val profile = profileFunction.getProfile()
+            return profile?.iCfg ?: insulins[0]
+        }
+
+    override val comment: String
+        get() = TODO("Not yet implemented")
+
+    lateinit var currentInsulin: ICfg
+
+    override var insulins: ArrayList<ICfg> = ArrayList()
+    override var currentInsulinIndex = 0
+
+    init {
+        loadSettings()
+    }
+
+    override fun insulinList(concentration: Double?): List<CharSequence> {
+        return insulins.filter {
+            when {
+                concentration == null -> it.concentration == iCfg.concentration
+                concentration == 0.0  -> true
+                concentration > 0.0   -> it.concentration == concentration
+                else                  -> false
+            }
+        }.map {
+            it.insulinLabel
+        }
+    }
+
+    override fun getInsulin(insulinLabel: String): ICfg {
+        insulins.forEach {
+            if (it.insulinLabel == insulinLabel)
+                return it
+        }
+        return iCfg     // if no insulin found then return current running iCfg
+    }
+
+    override fun getDefaultInsulin(concentration: Double?): ICfg {
+        if (concentration == null || concentration == iCfg.concentration) return iCfg  // without null or current concentration, return current running iCfg
+        return insulins.firstOrNull { it.concentration == concentration } ?: iCfg
+    }
+
+    override fun insulinTemplateList(): List<InsulinType> = listOf(
+        InsulinType.OREF_RAPID_ACTING,
+        InsulinType.OREF_ULTRA_RAPID_ACTING,
+        InsulinType.OREF_LYUMJEV,
+        InsulinType.OREF_FREE_PEAK
+    )
+
+    override fun concentrationList(): List<ConcentrationType> = listOf(
+        ConcentrationType.U10,
+        ConcentrationType.U50,
+        ConcentrationType.U100,
+        ConcentrationType.U200
+    )
+
+    @Synchronized
+    override fun addNewInsulin(newICfg: ICfg, ue: Boolean): ICfg {
+        if (newICfg.insulinLabel == "" || insulinLabelAlreadyExists(newICfg.insulinLabel))
+            newICfg.insulinLabel = createNewInsulinLabel(newICfg)
+        val newInsulin = deepClone(newICfg)
+        insulins.add(newInsulin)
+        currentInsulinIndex = insulins.size - 1
+        if (ue)
+            uel.log(Action.NEW_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(newICfg.insulinLabel))
+        currentInsulin = deepClone(newInsulin)
+        currentInsulin.insulinTemplate = 0
+        storeSettings()
+        return newInsulin
+    }
+
+    @Synchronized
+    override fun removeCurrentInsulin() {
+        val insulinRemoved = currentInsulin().insulinLabel
+        insulins.removeAt(currentInsulinIndex)
+        uel.log(Action.INSULIN_REMOVED, Sources.Insulin, value = ValueWithUnit.SimpleString(insulinRemoved))
+        currentInsulinIndex = 0     // Current running iCfg put in first position
+        currentInsulin = deepClone(currentInsulin())
+        storeSettings()
+    }
+
+    fun createNewInsulinLabel(iCfg: ICfg, currentIndex: Int = -1, template: InsulinType? = null): String {
+        @Suppress("NAME_SHADOWING")
+        val template = template ?: InsulinType.fromPeak(iCfg.insulinPeakTime)
+        var insulinLabel = rh.gs(template.label)
+        if (insulinLabelAlreadyExists(insulinLabel, currentIndex)) {
+            for (i in 1..10000) {
+                if (!insulinLabelAlreadyExists("${insulinLabel}_$i", currentIndex)) {
+                    insulinLabel = "${insulinLabel}_$i"
+                    break
+                }
+            }
+        }
+        return insulinLabel
+    }
+
+    private fun insulinLabelAlreadyExists(insulinLabel: String, currentIndex: Int = -1): Boolean {
+        insulins.forEachIndexed { index, insulin ->
+            if (index != currentIndex) {
+                if (insulin.insulinLabel == insulinLabel) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun insulinAlreadyExists(iCfg: ICfg, currentIndex: Int = -1): Boolean {
+        insulins.forEachIndexed { index, insulin ->
+            if (index != currentIndex) {
+                if (iCfg.isEqual(insulin)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    @Synchronized
+    override fun loadSettings() {
+        val jsonString = preferences.get(StringNonKey.InsulinConfiguration)
+        val jsonObject = runCatching {
+            Json.parseToJsonElement(jsonString) as? JsonObject
+        }.getOrNull()
+        applyConfiguration(jsonObject ?: buildJsonObject {})
+    }
+
+    @Synchronized
+    override fun storeSettings() {
+        preferences.put(StringNonKey.InsulinConfiguration, configuration().toString())
+    }
+
+    @Synchronized
+    override fun configuration(): JsonObject {
+        val jsonArray = buildJsonArray {
+            insulins.forEach {
+                try {
+                    add(it.toJsonObject())
+                } catch (_: Exception) {
+                    //
+                }
+            }
+        }
+        return buildJsonObject {
+            put("insulin", jsonArray)
+        }
+    }
+
+    @Synchronized
+    override fun applyConfiguration(configuration: JsonObject) {
+        insulins.clear()
+
+        val insulinArray = configuration["insulin"] as? JsonArray
+        if (insulinArray.isNullOrEmpty()) {
+            addNewInsulin(InsulinType.OREF_RAPID_ACTING.getICfg(rh).also { it.insulinTemplate = InsulinType.OREF_RAPID_ACTING.ordinal })
+            return
+        }
+
+        insulinArray.forEach { jsonElement ->
+            try {
+                val jsonObject = jsonElement as? JsonObject ?: return@forEach
+                val newICfg = ICfg.fromJsonObject(jsonObject)
+                if (!insulinAlreadyExists(newICfg)) // No Duplicated Insulin Allowed
+                    addNewInsulin(newICfg, newICfg.insulinLabel.isEmpty())
+            } catch (_: Exception) {
+                //
+            }
+        }
+    }
+
+    fun currentInsulin(): ICfg = insulins[currentInsulinIndex]
+
+    fun deepClone(iCfg: ICfg, withoutName: Boolean = false): ICfg = iCfg.deepClone().also {
+        if (withoutName)
+            it.insulinLabel = ""
+    }
+}

@@ -271,7 +271,6 @@ enum class IntKey(
         dependency = BooleanKey.AlertPumpUnreachable,
         unitType = UnitType.MIN
     ),
-    InsulinOrefPeak(key = "insulin_oref_peak", defaultValue = 75, min = 35, max = 120, titleResId = R.string.pref_title_insulin_oref_peak, hideParentScreenIfHidden = true, unitType = UnitType.MIN),
 
     AutotuneDefaultTuneDays(key = "autotune_default_tune_days", defaultValue = 5, min = 1, max = 30, titleResId = R.string.pref_title_autotune_days, summaryResId = R.string.autotune_default_tune_days_summary, unitType = UnitType.DAYS),
 

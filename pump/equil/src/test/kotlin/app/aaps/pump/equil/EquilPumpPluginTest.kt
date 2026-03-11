@@ -25,8 +25,8 @@ import org.mockito.kotlin.whenever
 class EquilPumpPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var equilManager: EquilManager
+    @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var blePreCheck: BlePreCheck
 

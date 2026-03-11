@@ -10,9 +10,11 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
@@ -36,13 +38,15 @@ import kotlin.math.abs
 class TreatmentDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
+    private val activeInsulin: Insulin,
     private val commandQueue: CommandQueue,
     private val config: Config,
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     val decimalFormatter: DecimalFormatter,
     private val rh: ResourceHelper,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val profileFunction: ProfileFunction
 ) : ViewModel() {
 
     val uiState: StateFlow<TreatmentDialogUiState>
@@ -151,6 +155,7 @@ class TreatmentDialogViewModel @Inject constructor(
             ConstraintObject(carbs, aapsLogger)
         ).value()
         val recordOnlyChecked = state.isAapsClient
+        val iCfg = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg
 
         val action = when {
             insulinAfterConstraints == 0.0 -> Action.CARBS
@@ -172,7 +177,7 @@ class TreatmentDialogViewModel @Inject constructor(
             if (detailedBolusInfo.insulin > 0) {
                 viewModelScope.launch {
                     persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(),
+                        bolus = detailedBolusInfo.createBolus(iCfg),
                         action = action,
                         source = Sources.TreatmentDialog,
                         note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""

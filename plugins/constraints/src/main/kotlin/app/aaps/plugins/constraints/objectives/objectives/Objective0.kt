@@ -52,7 +52,7 @@ class Objective0 @Inject constructor(
             }
 
             override fun shouldBeIgnored(): Boolean {
-                return !virtualPumpPlugin.isEnabled()
+                return !(virtualPumpPlugin as PluginBase).isEnabled()
             }
         })
         tasks.add(

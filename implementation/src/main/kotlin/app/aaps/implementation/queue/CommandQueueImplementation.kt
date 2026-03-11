@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -154,7 +155,7 @@ class CommandQueueImplementation @Inject constructor(
                             originalEnd = it.end,
                             iCfg = it.iCfg
                         ).also { eps ->
-                            appScope.launch { persistenceLayer.insertEffectiveProfileSwitch(eps) }
+                            appScope.launch { persistenceLayer.insertOrUpdateEffectiveProfileSwitch(eps) }
                         }
                     }
                 }
@@ -347,7 +348,7 @@ class CommandQueueImplementation @Inject constructor(
         detailedBolusInfo.carbs =
             constraintChecker.applyCarbsConstraints(ConstraintObject(detailedBolusInfo.carbs.toInt(), aapsLogger)).value().toDouble()
         // add new command to queue
-        BolusProgressData.set(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, id = detailedBolusInfo.id)
+        BolusProgressData.set(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, id = detailedBolusInfo.id, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
         if (detailedBolusInfo.bolusType == BS.Type.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
         } else {
@@ -398,7 +399,7 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.TEMPBASAL)
         val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         // add new command to queue
-        add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
+        add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, callback))
         notifyAboutNewCommand()
         return true
     }
@@ -413,7 +414,7 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.TEMPBASAL)
         val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         // add new command to queue
-        add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
+        add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, callback))
         notifyAboutNewCommand()
         return true
     }
@@ -462,7 +463,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    fun setProfile(profile: ProfileSealed, hasNsId: Boolean, callback: Callback?): Boolean {
+    fun setProfile(profile: EffectiveProfile, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
             callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()
@@ -678,7 +679,7 @@ class CommandQueueImplementation @Inject constructor(
         return HtmlHelper.fromHtml(s)
     }
 
-    override fun isThisProfileSet(requestedProfile: Profile): Boolean {
+    override fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
         val runningProfile = profileFunction.getProfile() ?: return false
         val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
         if (!result) {

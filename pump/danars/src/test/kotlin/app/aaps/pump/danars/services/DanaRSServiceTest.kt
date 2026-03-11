@@ -56,7 +56,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
-        danaRSService.profileFunction = profileFunction
+        //danaRSService.profileFunction = profileFunction
         danaRSService.commandQueue = commandQueue
         danaRSService.context = context
         danaRSService.danaRSPlugin = danaRSPlugin
@@ -77,7 +77,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
 
         `when`(rh.gs(anyInt())).thenReturn("test string")
         `when`(rh.gs(anyInt(), any())).thenReturn("test string")
-        `when`(activePlugin.activePump).thenReturn(danaRSPlugin)
+        `when`(activePlugin.activePumpInternal).thenReturn(danaRSPlugin)
         `when`(danaRSPlugin.pumpDescription).thenReturn(mockPumpDescription())
 
         // Setup packet providers
@@ -236,7 +236,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Test
     fun testUpdateBasalsInPump_notConnected() {
         `when`(bleComm.isConnected).thenReturn(false)
-        `when`(profileFunction.getProfile()).thenReturn(validProfile)
+        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
 
         val result = danaRSService.updateBasalsInPump(validProfile)
 

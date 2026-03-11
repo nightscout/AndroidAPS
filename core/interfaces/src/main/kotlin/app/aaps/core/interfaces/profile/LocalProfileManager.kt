@@ -17,7 +17,6 @@ interface LocalProfileManager {
     class SingleProfile(
         var name: String,
         var mgdl: Boolean,
-        var dia: Double,
         var ic: JSONArray,
         var isf: JSONArray,
         var basal: JSONArray,
@@ -29,7 +28,6 @@ interface LocalProfileManager {
             SingleProfile(
                 name = name,
                 mgdl = mgdl,
-                dia = dia,
                 ic = JSONArray(ic.toString()),
                 isf = JSONArray(isf.toString()),
                 basal = JSONArray(basal.toString()),
