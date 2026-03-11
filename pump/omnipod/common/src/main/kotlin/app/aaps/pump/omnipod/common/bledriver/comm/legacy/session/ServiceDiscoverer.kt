@@ -1,15 +1,14 @@
-package app.aaps.pump.omnipod.common.bledriver.comm
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.session
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CharacteristicType
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connection
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connection.Companion.STOP_CONNECTING_CHECK_INTERVAL_MS
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import java.math.BigInteger
 import java.util.UUID
@@ -18,12 +17,9 @@ class ServiceDiscoverer(
     private val logger: AAPSLogger,
     private val gatt: BluetoothGatt,
     private val bleCallbacks: BleCommCallbacks,
-    private val connection: Connection
+    private val connection: BleConnection
 ) {
 
-    /***
-     * This is first step after connection establishment
-     */
     fun discoverServices(connectionWaitCond: ConnectionWaitCondition): Map<CharacteristicType, BluetoothGattCharacteristic> {
         logger.debug(LTag.PUMPBTCOMM, "Discovering services")
         bleCallbacks.startServiceDiscovery()
@@ -48,8 +44,8 @@ class ServiceDiscoverer(
         logger.debug(LTag.PUMPBTCOMM, "Services discovered")
         val service = gatt.getService(SERVICE_UUID.toUuid())
             ?: run {
-                for (service in gatt.services) {
-                    logger.debug(LTag.PUMPBTCOMM, "Found service: ${service.uuid}")
+                for (svc in gatt.services) {
+                    logger.debug(LTag.PUMPBTCOMM, "Found service: ${svc.uuid}")
                 }
                 throw ConnectException("Service not found: $SERVICE_UUID")
             }
@@ -69,7 +65,7 @@ class ServiceDiscoverer(
     )
 
     companion object {
-
         private const val SERVICE_UUID = "1a7e-4024-e3ed-4464-8b7e-751e03d0dc5f"
+        const val STOP_CONNECTING_CHECK_INTERVAL_MS = 500L
     }
 }

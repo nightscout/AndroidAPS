@@ -1,7 +1,6 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.interfaces
+package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io
 
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommand
-import app.aaps.pump.omnipod.common.bledriver.comm.io.BleConfirmResult
 
 /**
  * CMD characteristic I/O with protocol helpers for RTS/CTS flow control.

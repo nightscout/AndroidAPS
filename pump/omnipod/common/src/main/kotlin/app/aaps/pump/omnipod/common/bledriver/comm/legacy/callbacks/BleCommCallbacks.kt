@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.callbacks
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -8,8 +8,8 @@ import android.bluetooth.BluetoothProfile
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CharacteristicType.Companion.byValue
-import app.aaps.pump.omnipod.common.bledriver.comm.io.IncomingPackets
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType.Companion.byValue
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.IncomingPackets
 import app.aaps.pump.omnipod.common.bledriver.comm.session.DisconnectHandler
 import java.util.UUID
 import java.util.concurrent.BlockingQueue
@@ -23,9 +23,6 @@ class BleCommCallbacks(
     private val disconnectHandler: DisconnectHandler,
 ) : BluetoothGattCallback() {
 
-    // Synchronized because they can be:
-    // - read from various callbacks
-    // - written from resetConnection that is called onConnectionLost
     private var serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
         @Synchronized get
         @Synchronized set
@@ -41,7 +38,6 @@ class BleCommCallbacks(
             connected.countDown()
         }
         if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-            // If status == SUCCESS, it means that we initiated the disconnect.
             disconnectHandler.onConnectionLost(status)
         }
     }
@@ -108,9 +104,7 @@ class BleCommCallbacks(
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
-            "OnCharacteristicWrite with char/status " +
-                "${characteristic.uuid} /" +
-                "$status"
+            "OnCharacteristicWrite with char/status ${characteristic.uuid} /$status"
         )
         super.onCharacteristicWrite(gatt, characteristic, status)
 
@@ -126,9 +120,7 @@ class BleCommCallbacks(
 
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
-            "OnCharacteristicChanged with char/value " +
-                characteristicType + "/" +
-                payload.toHex()
+            "OnCharacteristicChanged with char/value $characteristicType/${payload.toHex()}"
         )
 
         val insertResult = incomingPackets.byCharacteristicType(characteristicType).add(payload)
@@ -143,9 +135,7 @@ class BleCommCallbacks(
 
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
-            "OnDescriptorWrite with descriptor/status " +
-                descriptor.uuid.toString() + "/" +
-                status + "/"
+            "OnDescriptorWrite with descriptor/status ${descriptor.uuid}/$status"
         )
 
         onWrite(status, descriptor.uuid, descriptor.value)
@@ -153,26 +143,17 @@ class BleCommCallbacks(
 
     override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
         super.onMtuChanged(gatt, mtu, status)
-        aapsLogger.debug(
-            LTag.PUMPBTCOMM,
-            "onMtuChanged with MTU/status: $mtu/$status "
-        )
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onMtuChanged with MTU/status: $mtu/$status")
     }
 
     override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
         super.onReadRemoteRssi(gatt, rssi, status)
-        aapsLogger.debug(
-            LTag.PUMPBTCOMM,
-            "onReadRemoteRssi with rssi/status: $rssi/$status "
-        )
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onReadRemoteRssi with rssi/status: $rssi/$status")
     }
 
     override fun onPhyUpdate(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
         super.onPhyUpdate(gatt, txPhy, rxPhy, status)
-        aapsLogger.debug(
-            LTag.PUMPBTCOMM,
-            "onPhyUpdate with txPhy/rxPhy/status: $txPhy/$rxPhy/$status "
-        )
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onPhyUpdate with txPhy/rxPhy/status: $txPhy/$rxPhy/$status")
     }
 
     private fun onWrite(status: Int, uuid: UUID?, value: ByteArray?) {
@@ -181,7 +162,7 @@ class BleCommCallbacks(
                 WriteConfirmationError("onWrite received Null: UUID=$uuid, value=${value?.toHex()} status=$status")
 
             status == BluetoothGatt.GATT_SUCCESS -> {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "OnWrite value " + value.toHex())
+                aapsLogger.debug(LTag.PUMPBTCOMM, "OnWrite value ${value.toHex()}")
                 WriteConfirmationSuccess(uuid.toString(), value)
             }
 
@@ -205,10 +186,7 @@ class BleCommCallbacks(
 
     fun flushConfirmationQueue() {
         if (writeQueue.isNotEmpty()) {
-            aapsLogger.warn(
-                LTag.PUMPBTCOMM,
-                "Write queue should be empty, found: ${writeQueue.size}"
-            )
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Write queue should be empty, found: ${writeQueue.size}")
             writeQueue.clear()
         }
     }
@@ -223,7 +201,6 @@ class BleCommCallbacks(
     }
 
     companion object {
-
-        private const val WRITE_CONFIRM_TIMEOUT_MS = 10 // the confirmation queue should be empty anyway
+        private const val WRITE_CONFIRM_TIMEOUT_MS = 10
     }
 }

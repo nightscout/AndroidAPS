@@ -1,6 +1,5 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.scan
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan
 
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.PodScanner as PodScannerInterface
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
@@ -9,12 +8,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanFailFoundTooManyException
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner as PodScannerInterface
 import java.util.Arrays
 
 class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) : PodScannerInterface {
 
     @Throws(InterruptedException::class, ScanException::class)
-    override fun scanForPod(serviceUUID: String?, podID: Long): BleDiscoveredDevice {
+    override fun scanForPod(serviceUUID: String?, podID: Long): app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.BleDiscoveredDevice {
         val scanner = bluetoothAdapter.bluetoothLeScanner
         val filter = ScanFilter.Builder()
             .setServiceUuid(ParcelUuid.fromString(serviceUUID))
