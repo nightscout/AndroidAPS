@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -113,6 +114,7 @@ import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.ui.compose.automationSheet.AutomationViewModel
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
+import app.aaps.ui.compose.configuration.ConfigurationScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
@@ -147,6 +149,11 @@ import app.aaps.ui.compose.quickWizard.QuickWizardManagementScreen
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeScreen
+import app.aaps.ui.compose.siteRotationDialog.SiteRotationEditorScreen
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationEditorViewModel
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
+import app.aaps.ui.compose.siteRotationDialog.SiteRotationManagementScreen
+import app.aaps.ui.compose.siteRotationDialog.SiteRotationSettingsScreen
 import app.aaps.ui.compose.stats.StatsScreen
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempBasalDialog.TempBasalDialogScreen
@@ -220,6 +227,8 @@ class ComposeMainActivity : AppCompatActivity() {
     private val searchViewModel: SearchViewModel by viewModels()
     private val permissionsViewModel: PermissionsViewModel by viewModels()
     private val configurationViewModel: ConfigurationViewModel by viewModels()
+    private val siteRotationEditorViewModel: SiteRotationEditorViewModel by viewModels()
+    private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
     private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)
@@ -594,8 +603,9 @@ class ComposeMainActivity : AppCompatActivity() {
                     ) {
                         CareDialogScreen(
                             onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                            onShowSiteRotationDialog = { timestamp ->
+                                // uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
                             }
                         )
                     }
@@ -611,8 +621,9 @@ class ComposeMainActivity : AppCompatActivity() {
                         FillDialogScreen(
                             fillButtonsDef = builtInSearchables.fillButtons,
                             onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                            onShowSiteRotationDialog = { timestamp ->
+                                // uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
                             },
                             onShowDeliveryError = { comment ->
                                 uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
@@ -885,7 +896,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     }
 
                     composable(AppRoute.QuickLaunchConfig.route) {
-                        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = hiltViewModel()
                         QuickLauchConfigScreen(
                             viewModel = quickLaunchConfigViewModel,
                             onNavigateBack = { navController.popBackStack() }
@@ -894,7 +905,7 @@ class ComposeMainActivity : AppCompatActivity() {
 
                     composable(AppRoute.Configuration.route) {
                         val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
-                        app.aaps.ui.compose.configuration.ConfigurationScreen(
+                        ConfigurationScreen(
                             categories = configState.pluginCategories,
                             isSimpleMode = configState.isSimpleMode,
                             pluginStateVersion = configState.pluginStateVersion,
@@ -940,6 +951,35 @@ class ComposeMainActivity : AppCompatActivity() {
                                 onBackClick = { navController.popBackStack() }
                             )
                         }
+                    }
+
+                    composable(AppRoute.SiteRotationManagement.route) {
+                        SiteRotationManagementScreen(
+                            viewModel = siteRotationManagementViewModel,
+                            onClose = { navController.popBackStack() },
+                            onEditEntry = { timestamp ->
+                                navController.navigate(AppRoute.SiteRotationEditor.createRoute(timestamp))
+                            },
+                            onPreferenceClick = {
+                                navController.navigate(AppRoute.SiteRotationSettings.route)
+                            }
+                        )
+                    }
+
+                    composable(AppRoute.SiteRotationEditor.route, arguments = listOf(navArgument("timestamp") { type = NavType.LongType })) { backStackEntry ->
+                        val timestamp = backStackEntry.arguments?.getLong("timestamp") ?: 0L
+                        SiteRotationEditorScreen(
+                            viewModel = siteRotationEditorViewModel,
+                            timestamp = timestamp,
+                            onClose = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable(AppRoute.SiteRotationSettings.route) {
+                        SiteRotationSettingsScreen(
+                            viewModel = siteRotationManagementViewModel,
+                            onNavigateBack = { navController.popBackStack() }
+                        )
                     }
                 }
             }
@@ -1237,7 +1277,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.EXERCISE                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
             ElementType.QUESTION                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
             ElementType.ANNOUNCEMENT                 -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
-            ElementType.SITE_ROTATION                -> uiInteraction.runSiteRotationDialog(supportFragmentManager)
+            ElementType.SITE_ROTATION                -> navController.navigate(AppRoute.SiteRotationManagement.route)
 
             // Settings
             ElementType.SETTINGS                     -> navController.navigate(AppRoute.Preferences.route)

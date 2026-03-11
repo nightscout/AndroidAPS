@@ -92,4 +92,10 @@ sealed class AppRoute(val route: String) {
 
         fun createRoute(source: String) = "import_settings/$source"
     }
+
+    object SiteRotationManagement : AppRoute("siteRotationManagement")
+    object SiteRotationEditor : AppRoute("siteRotationEditor/{timestamp}") {
+        fun createRoute(timestamp: Long) = "siteRotationEditor/$timestamp"
+    }
+    object SiteRotationSettings : AppRoute("siteRotationSettings")
 }
