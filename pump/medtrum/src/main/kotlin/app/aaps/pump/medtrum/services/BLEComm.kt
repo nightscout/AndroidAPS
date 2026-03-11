@@ -387,11 +387,14 @@ class BLEComm @Inject internal constructor(
                 // Wait a bit before retrying
                 SystemClock.sleep(2000)
             }
-            close()
-            isConnected = false
-            isConnecting = false
-            mCallback?.onBLEDisconnected()
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
+            // CLosing asynchronously to avoid deadlocks or silent failures in the Android BLE callback thread during disconnect.
+            handler.post {
+                close()
+                isConnected = false
+                isConnecting = false
+                mCallback?.onBLEDisconnected()
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
+            }
         }
     }
 
