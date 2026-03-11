@@ -417,6 +417,7 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.patchAge}"
+                            android:textColor="@{viewmodel.patchAgeColor}"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -662,6 +663,7 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.patchExpiry}"
+                            android:textColor="@{viewmodel.patchExpiryColor}"
                             android:textSize="14sp" />
 
                     </LinearLayout>

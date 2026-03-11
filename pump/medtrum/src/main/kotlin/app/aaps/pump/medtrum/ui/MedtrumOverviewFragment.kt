@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBinding>() {
 
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -77,5 +75,12 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                 }
             }
         }
+
+        // Set pump themed state colors
+        medtrumPump.setStateColors(
+            rh.gac(view.context, app.aaps.core.ui.R.attr.defaultTextColor),
+            rh.gac(view.context, app.aaps.core.ui.R.attr.highColor),
+            rh.gac(view.context, app.aaps.core.ui.R.attr.lowColor)
+        )
     }
 }

@@ -102,11 +102,11 @@
     <attr name="normalColor" format="reference|color" />
     <attr name="warnColor" format="reference|color" />
     <attr name="urgentColor" format="reference|color" />
+    <attr name="infoColor" format="reference|color" />
     <!---TextColor -->
     <attr name="defaultTextColor" format="reference|color" />
     <!---Profile viewer TempBasal -->
     <attr name="tempBasalColor" format="reference|color" />
-    <attr name="infoColor" format="reference|color" />
     <!---Bolus wizard -->
     <attr name="cobAlertColor" format="reference|color" />
     <!---Fill dialog -->

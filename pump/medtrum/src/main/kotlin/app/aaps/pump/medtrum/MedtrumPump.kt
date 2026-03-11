@@ -633,4 +633,16 @@ class MedtrumPump @Inject constructor(
     private fun newRecordInfo(newRecord: Boolean): String {
         return if (newRecord) "**NEW** " else ""
     }
+
+    var hasStateColors = false
+    var defaultTextColor: Int? = null
+    var stateWarnColor: Int? = null
+    var stateUrgentColor: Int? = null
+
+    fun setStateColors(textColor: Int, warnColor: Int, urgentColor: Int) {
+        defaultTextColor = textColor
+        stateWarnColor = warnColor
+        stateUrgentColor = urgentColor
+        hasStateColors = true
+    }
 }

@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
@@ -31,7 +33,8 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
     private val medtrumPlugin: MedtrumPlugin,
-    val medtrumPump: MedtrumPump
+    val medtrumPump: MedtrumPump,
+    private val preferences: Preferences
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
     private val scope = CoroutineScope(Dispatchers.Default)
@@ -80,9 +83,17 @@ class MedtrumOverviewViewModel @Inject constructor(
     val patchExpiry: LiveData<String>
         get() = _patchExpiry
 
+    private val _patchExpiryColor = SingleLiveEvent<Int>()
+    val patchExpiryColor: LiveData<Int>
+        get() = _patchExpiryColor
+
     private val _patchAge = SingleLiveEvent<String>()
     val patchAge: LiveData<String>
         get() = _patchAge
+
+    private val _patchAgeColor = SingleLiveEvent<Int>()
+    val patchAgeColor: LiveData<Int>
+        get() = _patchAgeColor
 
     private val _activeBolusStatus = SingleLiveEvent<String>()
     val activeBolusStatus: LiveData<String>
@@ -208,37 +219,82 @@ class MedtrumOverviewViewModel @Inject constructor(
         _fwVersion.postValue(medtrumPump.swVersion)
         _patchNo.postValue(medtrumPump.patchId.toString())
 
+        // Get status thresholds for AAPS Overview
+        val cageCriticalHours = preferences.get(IntKey.OverviewCageCritical).toLong()
+        val cageWarningHours = preferences.get(IntKey.OverviewCageWarning).toLong()
+
         // Pump age
+        setPumpAgeStatus(cageCriticalHours, cageWarningHours)
+        // Pump Expiration
+        setPumpExpirationStatus(cageCriticalHours, cageWarningHours)
+    }
+
+    // Set Pump Age related status fields in overview
+    private fun setPumpAgeStatus(criticalHours: Long, warningHours: Long) {
         if (medtrumPump.patchStartTime == 0L) {
             _patchAge.postValue("")
         } else {
+            // Get Age text string
             val age = System.currentTimeMillis() - medtrumPump.patchStartTime
-            val agoString = dateUtil.timeAgoFullString(age, rh)
-            val ageString = dateUtil.dateAndTimeString(medtrumPump.patchStartTime) + "\n" + agoString
+            val ageString = buildString {
+                append(dateUtil.dateAndTimeString(medtrumPump.patchStartTime))
+                appendLine()
+                append(dateUtil.timeAgoFullString(age, rh))
+            }
 
+            // Get Age field state color
+            val ageColor = when {
+                age > T.hours(criticalHours).msecs() -> medtrumPump.stateUrgentColor
+                age > T.hours(warningHours).msecs()  -> medtrumPump.stateWarnColor
+                else -> medtrumPump.defaultTextColor // fallback
+            }
+
+            // Update Age text string and color in view field
+            ageColor?.let { _patchAgeColor.postValue(it) }
             _patchAge.postValue(ageString)
         }
+    }
 
-        // Pump Expiration
+    // Set Pump expiration related status fields in overview
+    private fun setPumpExpirationStatus(criticalHours: Long, warningHours: Long) {
         if (medtrumPump.desiredPatchExpiration) {
             if (medtrumPump.patchStartTime == 0L) {
                 _patchExpiry.postValue("")
             } else {
+                // Show when patch is expiring
                 val expiry = medtrumPump.patchStartTime + T.hours(72).msecs()
-                val currentTime = System.currentTimeMillis()
-                val timeLeft = expiry - currentTime
+                val timeLeft = expiry - System.currentTimeMillis()
                 val daysLeft = T.msecs(timeLeft).days()
                 val hoursLeft = T.msecs(timeLeft).hours() % 24
 
-                val daysString = if (daysLeft > 0) "$daysLeft ${rh.gs(app.aaps.core.interfaces.R.string.days)} " else ""
-                val hoursString = "$hoursLeft ${rh.gs(app.aaps.core.interfaces.R.string.hours)}"
+                // Build Expiry text string
+                val expiryString = buildString {
+                    append(dateUtil.dateAndTimeString(expiry))
+                    appendLine()
+                    append("(")
+                    if (daysLeft > 0) {
+                        append("$daysLeft ${rh.gs(app.aaps.core.interfaces.R.string.days)} ")
+                    }
+                    append("$hoursLeft ${rh.gs(app.aaps.core.interfaces.R.string.hours)})")
+                }
 
-                val expiryString = dateUtil.dateAndTimeString(expiry) + "\n(" + daysString + hoursString + ")"
+                // Get Expiry field state color
+                val age = System.currentTimeMillis() - medtrumPump.patchStartTime
+                val expiryColor = when {
+                    age > T.hours(criticalHours).msecs() -> medtrumPump.stateUrgentColor
+                    age > T.hours(warningHours).msecs()  -> medtrumPump.stateWarnColor
+                    else -> medtrumPump.defaultTextColor
+                }
 
+                // Update text string and color in view field
+                expiryColor?.let { _patchExpiryColor.postValue(it) }
                 _patchExpiry.postValue(expiryString)
             }
         } else {
+            // Update text string and warning color color in view field
+            medtrumPump.stateWarnColor?.let { _patchExpiryColor.postValue(it) }
             _patchExpiry.postValue(rh.gs(R.string.expiry_not_enabled))
         }
     }
+
 }
