@@ -275,9 +275,7 @@ class BetaCellPlugin @Inject constructor(
         context: Context,
         requiredKey: String?
     ) {
-        if (requiredKey != null &&
-            requiredKey != DoubleKey.BetaCellTargetBg.key &&
-            requiredKey != BooleanKey.BetaCellOpenLoop.key) return
+        if (requiredKey != null) return
         with(parent) {
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.BetaCellTargetBg, title = R.string.betacell_pref_target_title))
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.BetaCellHypo, title = R.string.betacell_pref_hypo_title))
