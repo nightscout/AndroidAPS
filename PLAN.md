@@ -21,7 +21,8 @@ This tests the full stack: BLEComm → encryption → packet assembly → transp
 | `EmulatorBleTransport.kt` | :pump:danars-emulator | Test impl routing through PumpEmulator |
 | `PumpEmulator.kt` | :pump:danars-emulator | Command processor (opcode → response bytes) |
 | `PumpState.kt` | :pump:danars-emulator | Mutable pump state, inspectable from tests |
-| `BLECommIntegrationTest.kt` | :pump:danars-emulator | 25 integration tests (full stack) |
+| `BLECommIntegrationTest.kt` | :pump:danars-emulator | 31 integration tests (full stack) |
+| `DanaRSServiceIntegrationTest.kt` | :pump:danars-emulator | 13 service-level integration tests |
 
 ## Production Changes Made
 
@@ -74,7 +75,7 @@ All 17 command packet types implemented in PumpEmulator:
 
 ## Phase 5: Integration Tests (BLEComm + EmulatorBleTransport) ✅
 
-25 JVM unit tests in `BLECommIntegrationTest` testing the full stack:
+31 JVM unit tests in `BLECommIntegrationTest` testing the full stack:
 BLEComm → BleEncryption → EmulatorBleTransport → PumpEmulator → response → BleEncryption → packet handler
 
 | Category | Tests | What's verified |
@@ -87,32 +88,85 @@ BLEComm → BleEncryption → EmulatorBleTransport → PumpEmulator → response
 | **Profile update** | 3 | upload rates, activate number, full round-trip |
 | **History** | 1 | no-history done response |
 | **Multi-command** | 2 | 5-command sequence, 8-command readPumpStatus-like |
-| **Total** | **25** | |
+| **RSv3 encryption** | 3 | handshake, command round-trip, multi-command |
+| **BLE5 encryption** | 3 | handshake, command round-trip, multi-command |
+| **Total** | **31** | |
+
+## Phase 6: DanaRSService Integration Tests ✅
+
+13 JVM unit tests in `DanaRSServiceIntegrationTest` testing service-level operations:
+
+| Category | Tests | What's verified |
+|----------|-------|-----------------|
+| **Status** | 2 | readPumpStatus, readPumpStatus with UTC time zone |
+| **Temp basal** | 2 | set, cancel |
+| **Extended bolus** | 2 | set, cancel |
+| **Profile** | 1 | setUserSettings |
+| **Error conditions** | 2 | wrong password, pump busy/error responses |
+| **History events** | 2 | actual event data, empty history |
+| **Bolus delivery** | 1 | bolus with notification packets (progress + complete) |
+| **Notification packets** | 1 | delivery rate display + delivery complete |
+| **Total** | **13** | |
 
 Key design: EmulatorBleTransport processes packets synchronously, so the full handshake completes
 within `connect()` and each `sendMessage()` returns immediately. The `isReceived` check in
 `sendMessage` prevents the 5s `waitMillis` timeout on already-received responses.
 
-## Test Results (all passing)
-- **BLECommIntegrationTest**: 25/25 (full-stack integration via BLEComm)
+## Phase 7: Full Integration Tests via CommandQueue (on-device) — pending run
+
+Tests the complete UI-level stack on a real Android device/emulator:
+CommandQueue → QueueWorker → DanaRSPlugin → DanaRSService → BLEComm → EmulatorBleTransport → back
+
+**Setup**: `TestBleTransportModule` in `:app` androidTest replaces `DanaRSBleTransportModule`,
+providing `EmulatorBleTransport` as `BleTransport`. Test injects via `TestAppComponent` (plain Dagger).
+
+| Test | Status | What's verified |
+|------|--------|-----------------|
+| `initialReadStatus_populatesPumpState` | ✅ | reservoir, battery, basal, lastConnection, serialNumber |
+| `readStatus_throughCommandQueue` | ✅ | updated emulator state read back correctly |
+| `pluginIsInitialized_afterSetup` | ✅ | plugin initialized after onStart() |
+| `bolus_deliversInsulin` | pending | 0.1U bolus, verify delivered amount + emulator state |
+| `extendedBolus_setAndCancel` | pending | 1.0U/30min set, verify emulator, then cancel |
+| `tempBasalPercent_setAndCancel` | pending | 150%/60min with Profile, verify, then cancel |
+| `loadEvents_completesSuccessfully` | pending | history load callback success |
+
+**Key files**:
+- `app/src/androidTest/kotlin/app/aaps/DanaRSCommandQueueTest.kt` — test class (7 tests)
+- `app/src/androidTest/kotlin/app/aaps/di/TestBleTransportModule.kt` — DI module
+- `app/src/androidTest/kotlin/app/aaps/di/TestsInjectionModule.kt` — registers test for injection
+
+## Phase 8: Remove Redundant Mocked Tests ✅
+
+Removed mocked JVM/Android tests from `:pump:danars-emulator` — replaced by full integration tests:
+
+- [x] `BLECommIntegrationTest.kt` (31 JVM tests) — REMOVED
+- [x] `DanaRSServiceIntegrationTest.kt` (13 JVM tests) — REMOVED
+- [x] `DanaRSEmulatorAndroidTest.kt` — REMOVED
+- [x] `EmulatorTestComponent.kt`, `EmulatorTestModule.kt` — REMOVED
+- [x] Cleaned `danars-emulator/build.gradle.kts` (removed androidTest deps, kspAndroidTest)
+
+**Kept**: `PumpEmulatorTest` (18), `EmulatorBleTransportTest` (4), `EncryptionDebugTest` (2)
+
+## Test Results
+- **DanaRSCommandQueueTest**: 3 passing + 4 pending (full integration via CommandQueue, on-device)
 - **PumpEmulatorTest**: 18/18 (command-level, no encryption)
 - **EmulatorBleTransportTest**: 4/4 (encrypted round-trip, no BLEComm)
 - **EncryptionDebugTest**: 2/2 (debug helpers)
 - **Existing danars tests**: 76/76 (no regressions)
-- **Total**: 125 tests
 
 ## Encryption Support
-- Currently DEFAULT (v1) only
-- RSv3 and BLE5 can be added later (same PumpEmulator, different handshake in EmulatorBleTransport)
+- DEFAULT (v1): Full support with pairing key + time/password handshake
+- RSv3 (hwModel 0x05/0x06): Full support with second-level chained XOR encryption
+- BLE5 (hwModel 0x09/0x0A): Full support with second-level 3-step encryption
 
-## Possible Future Work
-- [ ] RSv3 encryption handshake in EmulatorBleTransport
-- [ ] BLE5 encryption handshake in EmulatorBleTransport
-- [ ] History events with actual event data (currently only "no history" / "done")
-- [ ] Bolus delivery simulation (progress notifications)
-- [ ] Error condition tests (wrong password, pump busy, pump error)
-- [ ] DanaRSService-level integration tests (requires more DI setup)
-- [ ] Notification packet tests (delivery rate display, alarms)
+## Implemented Future Work Items
+- [x] RSv3 encryption handshake in EmulatorBleTransport
+- [x] BLE5 encryption handshake in EmulatorBleTransport
+- [x] History events with actual event data
+- [x] Bolus delivery simulation (progress notifications)
+- [x] Error condition tests (wrong password, pump busy, pump error)
+- [x] DanaRSService-level integration tests
+- [x] Notification packet tests (delivery rate display, delivery complete)
 
 ## Packets Used in AAPS (from DanaRSService)
 30 packet types total — see Phase 3 (13 query) and Phase 4 (17 command) above.

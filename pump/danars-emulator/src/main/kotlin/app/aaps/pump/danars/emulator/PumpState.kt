@@ -10,7 +10,7 @@ class PumpState {
     var serialNumber: String = "AAA00000AA"
     var shippingCountry: String = "INT"
     var shippingDate: Triple<Int, Int, Int> = Triple(2024, 1, 1) // year, month, day
-    var hwModel: Int = 0x05  // Dana RS
+    var hwModel: Int = 0x03  // Default v1 encryption; set to 0x05/0x06 for RSv3, 0x09/0x0A for BLE5
     var protocol: Int = 5
     var productCode: Int = 0
 
@@ -95,12 +95,28 @@ class PumpState {
     var historyEvents: MutableList<HistoryEvent> = mutableListOf()
     var historyDone: Boolean = true
 
+    // Error simulation
+    var pumpCheckResponse: PumpCheckResponse = PumpCheckResponse.OK
+
     // Password (v1 encryption)
     var pumpPassword: String = "0000"
 
     // Pairing key for v1
     var pairingKey: ByteArray = byteArrayOf(0xAB.toByte(), 0xCD.toByte())
 
+    // RSv3 encryption (hwModel 0x05/0x06)
+    var rsv3PairingKey: ByteArray = ByteArray(6) { (it + 1).toByte() }
+    var rsv3RandomPairingKey: ByteArray = ByteArray(6) { (it + 0x10).toByte() }
+    var rsv3RandomSyncKey: Byte = 0x42
+
+    // BLE5 encryption (hwModel 0x09/0x0A)
+    var ble5PairingKey: String = "123456" // 6-char ASCII key
+}
+
+enum class PumpCheckResponse {
+    OK,
+    PUMP_ERROR,
+    BUSY
 }
 
 data class HistoryEvent(

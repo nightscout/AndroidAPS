@@ -15,6 +15,9 @@ import kotlinx.datetime.toLocalDateTime
  */
 class PumpEmulator(val state: PumpState = PumpState()) {
 
+    /** Queued notification packets to send after the command response */
+    val pendingNotifications: MutableList<NotifyPacket> = mutableListOf()
+
     /**
      * Process a command and return the response data bytes.
      * The response format matches what DanaRSPacket.handleMessage() expects:
@@ -67,6 +70,18 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY                -> processApsSetEventHistory(params)
 
             else                                                                      -> byteArrayOf(0x00) // OK
+        }
+    }
+
+    /**
+     * Process a command that may return multiple responses.
+     * Used by EmulatorBleTransport for commands like history events
+     * that return multiple packets with the same opcode.
+     */
+    fun processCommandMulti(opCode: Int, params: ByteArray): List<ByteArray> {
+        return when (opCode) {
+            BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS -> processApsHistoryEventsMulti(params)
+            else -> listOf(processCommand(opCode, params))
         }
     }
 
@@ -138,11 +153,24 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             state.tempBasalPercent = params[0].toInt() and 0xFF
             state.tempBasalDurationMinutes = (params[1].toInt() and 0xFF) * 60 // hours to minutes
             state.tempBasalStartTime = System.currentTimeMillis()
+            // Generate history event for loadEvents
+            state.historyEvents.add(HistoryEvent(
+                code = 1, // TEMP_START
+                timestamp = state.tempBasalStartTime,
+                param1 = state.tempBasalPercent,
+                param2 = state.tempBasalDurationMinutes
+            ))
         }
         return byteArrayOf(0x00) // OK
     }
 
     private fun processCancelTemporaryBasal(): ByteArray {
+        if (state.isTempBasalRunning) {
+            state.historyEvents.add(HistoryEvent(
+                code = 2, // TEMP_STOP
+                timestamp = System.currentTimeMillis()
+            ))
+        }
         state.isTempBasalRunning = false
         state.tempBasalPercent = 0
         state.tempBasalDurationMinutes = 0
@@ -156,6 +184,13 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             state.tempBasalPercent = percent
             state.tempBasalDurationMinutes = if (params[2].toInt() and 0xFF == 150) 15 else 30
             state.tempBasalStartTime = System.currentTimeMillis()
+            // Generate history event for loadEvents
+            state.historyEvents.add(HistoryEvent(
+                code = 1, // TEMP_START
+                timestamp = state.tempBasalStartTime,
+                param1 = state.tempBasalPercent,
+                param2 = state.tempBasalDurationMinutes
+            ))
         }
         return byteArrayOf(0x00) // OK
     }
@@ -255,6 +290,19 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             state.lastBolusTime = System.currentTimeMillis()
             state.dailyTotalUnits += amount
             state.reservoirRemainingUnits -= amount
+
+            // Queue delivery notifications (delivered amount in 0.01U, little-endian)
+            val amountInt = (amount * 100).toInt()
+            val amountBytes = byteArrayOf(
+                (amountInt and 0xFF).toByte(),
+                ((amountInt shr 8) and 0xFF).toByte()
+            )
+            pendingNotifications.add(
+                NotifyPacket(BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY, amountBytes.copyOf())
+            )
+            pendingNotifications.add(
+                NotifyPacket(BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE, amountBytes.copyOf())
+            )
         }
         return byteArrayOf(0x00) // OK
     }
@@ -268,11 +316,27 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             state.isExtendedBolusRunning = true
             state.extendedBolusAmount = amount
             state.extendedBolusDurationHalfHours = durationHalfHours
+            val durationMinutes = durationHalfHours * 30
+            // Generate history event for loadEvents (param1 = amount in 0.01U)
+            state.historyEvents.add(HistoryEvent(
+                code = 3, // EXTENDED_START
+                timestamp = System.currentTimeMillis(),
+                param1 = (amount * 100).toInt(),
+                param2 = durationMinutes
+            ))
         }
         return byteArrayOf(0x00) // OK
     }
 
     private fun processSetExtendedBolusCancel(): ByteArray {
+        if (state.isExtendedBolusRunning) {
+            state.historyEvents.add(HistoryEvent(
+                code = 4, // EXTENDED_STOP
+                timestamp = System.currentTimeMillis(),
+                param1 = (state.extendedBolusAmount * 100).toInt(),
+                param2 = 0
+            ))
+        }
         state.isExtendedBolusRunning = false
         state.extendedBolusAmount = 0.0
         state.extendedBolusDurationHalfHours = 0
@@ -392,8 +456,39 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     // --- APS ---
 
     private fun processApsHistoryEvents(params: ByteArray): ByteArray {
-        // Return "no more events" marker
-        return byteArrayOf(0xFF.toByte())
+        // Single-response path (backward compatibility for processCommand)
+        // Returns first event or done marker
+        if (state.historyEvents.isEmpty()) return byteArrayOf(0xFF.toByte())
+        return buildHistoryEventResponse(state.historyEvents[0])
+    }
+
+    private fun processApsHistoryEventsMulti(params: ByteArray): List<ByteArray> {
+        val responses = mutableListOf<ByteArray>()
+        for (event in state.historyEvents) {
+            responses.add(buildHistoryEventResponse(event))
+        }
+        // Always end with "done" marker
+        responses.add(byteArrayOf(0xFF.toByte()))
+        return responses
+    }
+
+    private fun buildHistoryEventResponse(event: HistoryEvent): ByteArray {
+        val result = ByteArray(11)
+        result[0] = event.code.toByte()
+        val ldt = Instant.fromEpochMilliseconds(event.timestamp)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+        result[1] = (ldt.year - 2000).toByte()
+        result[2] = ldt.monthNumber.toByte()
+        result[3] = ldt.dayOfMonth.toByte()
+        result[4] = ldt.hour.toByte()
+        result[5] = ldt.minute.toByte()
+        result[6] = ldt.second.toByte()
+        // param1 and param2 in MSB-LSB format (big-endian)
+        result[7] = ((event.param1 shr 8) and 0xFF).toByte()
+        result[8] = (event.param1 and 0xFF).toByte()
+        result[9] = ((event.param2 shr 8) and 0xFF).toByte()
+        result[10] = (event.param2 and 0xFF).toByte()
+        return result
     }
 
     private fun processApsSetEventHistory(params: ByteArray): ByteArray = byteArrayOf(0x00) // OK
@@ -406,4 +501,21 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             array[position + 1] = ((value shr 8) and 0xFF).toByte()
         }
     }
+}
+
+/**
+ * Notification packet queued by [PumpEmulator] for delivery after the command response.
+ * These map to TYPE_NOTIFY packets (e.g., delivery progress, alarms).
+ */
+data class NotifyPacket(
+    val opCode: Int,
+    val data: ByteArray
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is NotifyPacket) return false
+        return opCode == other.opCode && data.contentEquals(other.data)
+    }
+
+    override fun hashCode(): Int = 31 * opCode + data.contentHashCode()
 }

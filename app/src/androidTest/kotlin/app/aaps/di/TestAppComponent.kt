@@ -14,6 +14,7 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+// DanaRSBleTransportModule replaced by TestBleTransportModule (EmulatorBleTransport)
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.LoggerModule
 import app.aaps.shared.impl.di.SharedImplModule
@@ -62,6 +63,7 @@ import javax.inject.Singleton
 
         // pumps
         PumpDriversModule::class,
+        TestBleTransportModule::class, // EmulatorBleTransport replaces real BLE for testing
         VirtualPumpModule::class
     ]
 )

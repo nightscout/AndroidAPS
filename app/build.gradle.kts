@@ -224,6 +224,7 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))
+    androidTestImplementation(project(":pump:danars-emulator"))
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
     androidTestImplementation(libs.kotlinx.coroutines.test)
