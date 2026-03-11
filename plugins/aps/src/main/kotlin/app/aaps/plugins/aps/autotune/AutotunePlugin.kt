@@ -479,7 +479,8 @@ class AutotunePlugin @Inject constructor(
             key = "autotune_settings"
             title = rh.gs(R.string.autotune_settings)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AutotuneAutoSwitchProfile, summary = R.string.autotune_auto_summary, title = R.string.autotune_auto_title))
+            if (config.isEngineeringMode() && config.isDev())
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AutotuneAutoSwitchProfile, summary = R.string.autotune_auto_summary, title = R.string.autotune_auto_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AutotuneCategorizeUamAsBasal, summary = R.string.autotune_categorize_uam_as_basal_summary, title = R.string.autotune_categorize_uam_as_basal_title))
             //addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AutotuneTuneInsulinCurve, summary = R.string.autotune_tune_insulin_curve_summary, title = R.string.autotune_tune_insulin_curve_title))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AutotuneDefaultTuneDays, dialogMessage = R.string.autotune_default_tune_days_summary, title = R.string.autotune_default_tune_days_title))
