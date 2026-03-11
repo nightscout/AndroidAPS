@@ -15,6 +15,7 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
     private var scanFailed = 0
 
     override fun onScanResult(callbackType: Int, result: ScanResult) {
+        // callbackType will be ALL
         logger.debug(LTag.PUMPBTCOMM, "Scan found: $result")
         found[result.device.address] = result
     }

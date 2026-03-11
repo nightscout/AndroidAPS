@@ -67,6 +67,7 @@ class BleDiscoveredDevice(
     }
 
     override fun toString(): String {
+        // Intentional fix: original had missing ", " between podID and scanResult
         return "BleDiscoveredDevice{scanRecord=$scanRecord, podID=$podId, scanResult=$scanResult, sequenceNo=$sequenceNo, lotNo=$lotNo}"
     }
 

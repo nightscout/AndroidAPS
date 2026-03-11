@@ -21,6 +21,9 @@ class ServiceDiscoverer(
     private val connection: BleConnection
 ) {
 
+    /**
+     * This is first step after connection establishment
+     */
     fun discoverServices(connectionWaitCond: ConnectionWaitCondition): Map<CharacteristicType, BluetoothGattCharacteristic> {
         logger.debug(LTag.PUMPBTCOMM, "Discovering services")
         bleCallbacks.startServiceDiscovery()

@@ -31,6 +31,9 @@ open class BleIO(
     private val type: CharacteristicType
 ) : BleCharacteristicIO {
 
+    /**
+     * @return a byte array with the received data or error
+     */
     override fun receivePacket(timeoutMs: Long): ByteArray? {
         return try {
             val packet = incomingPackets.poll(timeoutMs, TimeUnit.MILLISECONDS)
@@ -44,6 +47,9 @@ open class BleIO(
         }
     }
 
+    /**
+     * @param payload the data to send
+     */
     @Suppress("ReturnCount", "DEPRECATION")
     override fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on $type: ${payload.toHex()}")
@@ -72,6 +78,10 @@ open class BleIO(
         }
     }
 
+    /**
+     * Called before sending a new message.
+     * The incoming queues should be empty, so we log when they are not.
+     */
     override fun flushIncomingQueue(): Boolean {
         var foundRTS = false
         do {
@@ -85,6 +95,11 @@ open class BleIO(
         return foundRTS
     }
 
+    /**
+     * Enable indications on the characteristic.
+     * This will signal the pod it can start sending back data.
+     * @return
+     */
     @Suppress("DEPRECATION")
     override fun readyToRead(): BleSendResult {
         gatt.setCharacteristicNotification(characteristic, true)
