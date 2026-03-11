@@ -16,6 +16,7 @@ interface OverviewMenus {
         SEN,
         VAR_SEN,
         ACT,
+        TIR,
         DEVSLOPE,
         HR,
         STEPS

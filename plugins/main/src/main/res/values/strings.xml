@@ -292,6 +292,7 @@
     <string name="overview_show_basals">Basals</string>
     <string name="overview_show_abs_insulin">Absolute insulin</string>
     <string name="overview_show_variable_sens">Variable sensitivity</string>
+    <string name="overview_show_tir">Time In Range</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -326,5 +327,13 @@
     <string name="overview_show_steps">Steps</string>
     <string name="steps_shortname">STEPS</string>
     <string name="simple_mode_enabled">Simple mode enabled</string>
+
+    <!-- Time in Range graph -->
+    <string name="tir_shortname">TIR</string>
+    <string name="tir_today">Time In Range (today)</string>
+    <string name="tir_shown_time">Time In Range (shown time)</string>
+    <string name="tir_till_now">till now</string>
+    <string name="tir_worst_best_case">worst and best case</string>
+    <string name="tir_not_enough_data">not enough data</string>
 
 </resources>

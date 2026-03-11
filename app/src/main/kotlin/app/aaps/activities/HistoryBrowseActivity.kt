@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
+import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -31,6 +32,7 @@ import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.databinding.ActivityHistorybrowseBinding
+import app.aaps.plugins.main.general.overview.TirHelper
 import app.aaps.plugins.main.general.overview.graphData.GraphData
 import com.google.android.material.datepicker.MaterialDatePicker
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -56,6 +58,8 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var graphDataProvider: Provider<GraphData>
+    @Inject lateinit var tirCalculator: TirCalculator
+    @Inject lateinit var tirHelper: TirHelper
 
     private val disposable = CompositeDisposable()
 
@@ -399,6 +403,38 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                     menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]
                 ).toVisibility()
             secondaryGraphsData[g].performUpdate()
+        }
+
+        updateTirChart(menuChartSettings)
+    }
+
+    private fun updateTirChart(menuChartSettings: List<Array<Boolean>>) {
+        val tirEnabled = menuChartSettings.isNotEmpty() &&
+                         menuChartSettings[0][OverviewMenus.CharType.TIR.ordinal]
+
+        aapsLogger.debug(LTag.UI, "TIR Chart (History) - enabled: $tirEnabled, fromTime: ${historyBrowserData.overviewData.fromTime}, toTime: ${historyBrowserData.overviewData.toTime}")
+
+        if (tirEnabled) {
+            try {
+                val tirData = tirHelper.calculateTirForRange(
+                    historyBrowserData.overviewData.fromTime,
+                    historyBrowserData.overviewData.toTime
+                )
+
+                // Only show chart if there's data
+                if (tirData.count > 0) {
+                    val titleText = rh.gs(app.aaps.plugins.main.R.string.tir_shown_time)
+                    binding.tirChart.tirChartLayout.visibility = android.view.View.VISIBLE
+                    binding.tirChart.tirChartView.setData(tirData, titleText)
+                } else {
+                    binding.tirChart.tirChartLayout.visibility = android.view.View.GONE
+                }
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.UI, "Error calculating TIR for history", e)
+                binding.tirChart.tirChartLayout.visibility = android.view.View.GONE
+            }
+        } else {
+            binding.tirChart.tirChartLayout.visibility = android.view.View.GONE
         }
     }
 

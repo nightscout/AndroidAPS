@@ -48,4 +48,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" />
 
+    <include
+        android:id="@+id/tir_chart"
+        layout="@layout/overview_tir_chart" />
+
 </LinearLayout>
