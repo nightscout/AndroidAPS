@@ -104,9 +104,9 @@
     <string name="xdrip_local_broadcasts_title">Enable broadcasts to xDrip+.</string>
 
     <!--    DataBroadcast-->
-    <string name="tizen">Samsung Tizen</string>
-    <string name="tizen_short">TIZ</string>
-    <string name="tizen_description">Broadcast data to Samsung\'s G-Watch Wear App (Tizen OS)</string>
+    <string name="tizen">External Companion Apps</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">Enables data broadcasting to various external companion apps</string>
 
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
