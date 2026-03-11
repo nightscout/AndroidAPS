@@ -61,7 +61,6 @@ import app.aaps.core.graph.InsulinGraphCompose
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -69,6 +68,7 @@ import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
+import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.ui.R
 import kotlin.math.absoluteValue
 import app.aaps.core.keys.R as KeysR
@@ -463,7 +463,10 @@ private fun PeakPresetChips(
         )
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),

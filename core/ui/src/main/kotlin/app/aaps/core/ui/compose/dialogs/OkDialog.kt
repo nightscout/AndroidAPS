@@ -54,6 +54,38 @@ fun OkDialog(
     )
 }
 
+/**
+ * Overload accepting native [AnnotatedString] — bypasses HTML entirely.
+ */
+@Composable
+fun OkDialog(
+    title: String,
+    message: AnnotatedString,
+    onDismiss: () -> Unit,
+    icon: ImageVector? = null
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Text(text = message)
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun OkDialogPreview() {

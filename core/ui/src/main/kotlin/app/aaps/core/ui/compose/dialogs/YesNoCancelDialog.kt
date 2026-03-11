@@ -64,6 +64,48 @@ fun YesNoCancelDialog(
     )
 }
 
+/**
+ * Overload accepting native [AnnotatedString] — bypasses HTML entirely.
+ */
+@Composable
+fun YesNoCancelDialog(
+    title: String,
+    message: AnnotatedString,
+    onYes: () -> Unit,
+    onNo: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Text(text = message)
+        },
+        confirmButton = {
+            TextButton(onClick = onYes) {
+                Text(stringResource(R.string.yes))
+            }
+        },
+        dismissButton = {
+            Row {
+                TextButton(onClick = onCancel) {
+                    Text(stringResource(R.string.cancel))
+                }
+                TextButton(onClick = onNo) {
+                    Text(stringResource(R.string.no))
+                }
+            }
+        },
+        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun YesNoCancelDialogPreview() {
