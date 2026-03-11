@@ -114,6 +114,85 @@ fun OkCancelDialog(
     )
 }
 
+/**
+ * Overload accepting native [AnnotatedString] — bypasses HTML entirely.
+ */
+@Composable
+fun OkCancelDialog(
+    title: String? = null,
+    message: AnnotatedString,
+    secondMessage: String? = null,
+    icon: ImageVector? = null,
+    iconTint: Color = MaterialTheme.colorScheme.primary,
+    @DrawableRes iconId: Int? = null,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = icon?.let {
+            {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = iconTint,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        } ?: iconId?.let {
+            {
+                Icon(
+                    painter = painterResource(id = iconId),
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        },
+        title = title?.let {
+            {
+                Text(
+                    text = title,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = message,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                secondMessage?.let {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = secondMessage,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun OkCancelDialogPreview() {

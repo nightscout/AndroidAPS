@@ -31,7 +31,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.extensions.formatColor
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -108,7 +107,7 @@ class FillDialogViewModel @Inject constructor(
                 availableInsulins = availableInsulins,
                 selectedInsulin = currentInsulin,
                 activeInsulinLabel = activeLabel,
-                pumpUnitsWarning = if (!ch.isU100()) rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()) else null,
+                pumpUnitsWarning = pumpUnitsWarningFor(currentInsulin),
                 showBolus = !config.AAPSCLIENT,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
@@ -149,7 +148,7 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun selectInsulin(iCfg: ICfg) {
-        uiState.update { it.copy(selectedInsulin = iCfg) }
+        uiState.update { it.copy(selectedInsulin = iCfg, pumpUnitsWarning = pumpUnitsWarningFor(iCfg)) }
     }
 
     fun updateNotes(value: String) {
@@ -160,56 +159,74 @@ class FillDialogViewModel @Inject constructor(
         uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
     }
 
-    fun buildConfirmationSummary(): List<String> {
+    private fun pumpUnitsWarningFor(iCfg: ICfg?): String? {
+        val concentration = iCfg?.concentration ?: return null
+        if (concentration == 1.0) return null // U100 — no warning needed
+        return rh.gs(R.string.fill_pump_units_note)
+    }
+
+    /**
+     * A line in the confirmation summary.
+     * @param text The text to display
+     * @param color Semantic color role: NORMAL (default), INSULIN (accent), WARNING (error/red)
+     */
+    data class SummaryLine(val text: String, val color: SummaryColor = SummaryColor.NORMAL)
+
+    enum class SummaryColor { NORMAL, INSULIN, WARNING }
+
+    fun buildConfirmationSummary(): List<SummaryLine> {
         val state = uiState.value
-        val lines = mutableListOf<String>()
+        val lines = mutableListOf<SummaryLine>()
         val bolusStep = state.bolusStep
 
         if (state.insulinAfterConstraints > 0) {
-            lines.add(rh.gs(R.string.fill_warning))
-            lines.add("")
-            lines.add(
-                if (state.siteChange || state.insulinCartridgeChange)    // include volume information in µl
-                    rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + ch.bolusWithVolume(state.insulinAfterConstraints).formatColor(null, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
+            lines.add(SummaryLine(rh.gs(R.string.fill_warning)))
+            lines.add(SummaryLine(""))
+            val bolusText = rh.gs(R.string.fill_prime_amount) + ": " +
+                if (state.siteChange || state.insulinCartridgeChange)
+                    ch.bolusWithVolume(state.insulinAfterConstraints)
                 else
-                    rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(state.insulinAfterConstraints, bolusStep)
-                        .formatColor(null, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
-            )
+                    decimalFormatter.toPumpSupportedBolus(state.insulinAfterConstraints, bolusStep)
+            lines.add(SummaryLine(bolusText, SummaryColor.INSULIN))
             if (state.constraintApplied) {
                 lines.add(
-                    rh.gs(
-                        app.aaps.core.ui.R.string.bolus_constraint_applied_warn,
-                        state.insulin,
-                        state.insulinAfterConstraints
+                    SummaryLine(
+                        rh.gs(
+                            app.aaps.core.ui.R.string.bolus_constraint_applied_warn,
+                            state.insulin,
+                            state.insulinAfterConstraints
+                        )
                     )
                 )
             }
-            if (!ch.isU100()) {
-                lines.add(rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()).formatColor(null, rh, app.aaps.core.ui.R.attr.warningColor))
+            pumpUnitsWarningFor(state.selectedInsulin)?.let { warning ->
+                lines.add(SummaryLine(warning, SummaryColor.WARNING))
             }
         }
 
         if (state.siteChange) {
-            lines.add(rh.gs(R.string.record_pump_site_change))
+            lines.add(SummaryLine(rh.gs(R.string.record_pump_site_change)))
         }
 
         if (state.insulinCartridgeChange) {
-            lines.add(rh.gs(R.string.record_insulin_cartridge_change))
+            lines.add(SummaryLine(rh.gs(R.string.record_insulin_cartridge_change)))
         }
 
         if (state.insulinChanged) {
             lines.add(
-                rh.gs(R.string.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: "")
-                    .formatColor(null, rh, app.aaps.core.ui.R.attr.warningColor)
+                SummaryLine(
+                    rh.gs(R.string.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: ""),
+                    SummaryColor.WARNING
+                )
             )
         }
 
         if (state.notes.isNotEmpty()) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + state.notes)
+            lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + state.notes))
         }
 
         if (state.eventTimeChanged) {
-            lines.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime))
+            lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime)))
         }
 
         return lines

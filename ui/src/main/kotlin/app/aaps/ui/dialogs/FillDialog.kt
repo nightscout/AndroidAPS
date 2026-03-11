@@ -136,7 +136,7 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
             if (!ch.isU100()) {
-                actions.add(rh.gs(R.string.fill_pump_units_note, ch.insulinConcentrationString()).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+                actions.add(rh.gs(R.string.fill_pump_units_note).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             }
         }
         if (siteChange)

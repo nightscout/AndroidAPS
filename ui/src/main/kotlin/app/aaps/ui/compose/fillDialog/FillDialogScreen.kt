@@ -43,13 +43,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -112,9 +116,21 @@ fun FillDialogScreen(
             showConfirmation = false
             showNoAction = true
         } else {
+            val insulinColor = AapsTheme.elementColors.insulin
+            val warningColor = MaterialTheme.colorScheme.error
+            val message = buildAnnotatedString {
+                summaryLines.forEachIndexed { index, line ->
+                    if (index > 0) append("\n")
+                    when (line.color) {
+                        FillDialogViewModel.SummaryColor.INSULIN -> withStyle(SpanStyle(color = insulinColor)) { append(line.text) }
+                        FillDialogViewModel.SummaryColor.WARNING -> withStyle(SpanStyle(color = warningColor)) { append(line.text) }
+                        FillDialogViewModel.SummaryColor.NORMAL  -> append(line.text)
+                    }
+                }
+            }
             OkCancelDialog(
                 title = stringResource(ElementType.FILL.labelResId()),
-                message = summaryLines.joinToString("<br/>"),
+                message = message,
                 icon = ElementType.FILL.icon(),
                 iconTint = ElementType.FILL.color(),
                 onConfirm = {
@@ -317,7 +333,7 @@ private fun FillDialogContent(
 
                 // Insulin section
                 NumberInputRow(
-                    labelResId = CoreUiR.string.bolus,
+                    labelResId = R.string.fill_prime_amount,
                     value = uiState.insulin,
                     onValueChange = onInsulinChange,
                     valueRange = 0.0..uiState.maxInsulin,

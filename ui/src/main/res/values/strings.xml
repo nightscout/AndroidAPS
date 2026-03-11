@@ -76,7 +76,8 @@
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
-    <string name="fill_pump_units_note">Prime amount is in pump units (Insulin %1$s)</string>
+    <string name="fill_prime_amount">Prime amount</string>
+    <string name="fill_pump_units_note">Prime amount is in pump units</string>
     <string name="fill_insulin_change">Switch insulin to: %1$s (profile switch will be applied)</string>
     <string name="fill_current_insulin">Current insulin</string>
     <string name="fill_change_insulin">Change insulin</string>
