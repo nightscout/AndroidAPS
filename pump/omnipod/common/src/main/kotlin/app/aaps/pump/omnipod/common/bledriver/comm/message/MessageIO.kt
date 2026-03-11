@@ -17,8 +17,8 @@ import app.aaps.pump.omnipod.common.bledriver.comm.io.BleSendErrorConfirming
 import app.aaps.pump.omnipod.common.bledriver.comm.io.BleSendErrorSending
 import app.aaps.pump.omnipod.common.bledriver.comm.io.BleSendResult
 import app.aaps.pump.omnipod.common.bledriver.comm.io.BleSendSuccess
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CmdBleIO
-import app.aaps.pump.omnipod.common.bledriver.comm.io.DataBleIO
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.CmdBleIO
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.DataBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.packet.BlePacket
 import app.aaps.pump.omnipod.common.bledriver.comm.packet.PayloadJoiner
 import app.aaps.pump.omnipod.common.bledriver.comm.packet.PayloadSplitter

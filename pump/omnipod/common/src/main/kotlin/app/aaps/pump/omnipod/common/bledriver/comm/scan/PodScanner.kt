@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.comm.scan
 
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.PodScanner as PodScannerInterface
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
@@ -10,10 +11,10 @@ import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanFailFoundTooManyException
 import java.util.Arrays
 
-class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) {
+class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) : PodScannerInterface {
 
     @Throws(InterruptedException::class, ScanException::class)
-    fun scanForPod(serviceUUID: String?, podID: Long): BleDiscoveredDevice {
+    override fun scanForPod(serviceUUID: String?, podID: Long): BleDiscoveredDevice {
         val scanner = bluetoothAdapter.bluetoothLeScanner
         val filter = ScanFilter.Builder()
             .setServiceUuid(ParcelUuid.fromString(serviceUUID))
@@ -39,9 +40,8 @@ class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: B
     }
 
     companion object {
-
-        const val SCAN_FOR_SERVICE_UUID = "00004024-0000-1000-8000-00805F9B34FB"
-        const val POD_ID_NOT_ACTIVATED = 0xFFFFFFFEL
+        const val SCAN_FOR_SERVICE_UUID = PodScannerInterface.SCAN_FOR_SERVICE_UUID
+        const val POD_ID_NOT_ACTIVATED = PodScannerInterface.POD_ID_NOT_ACTIVATED
         private const val SCAN_DURATION_MS = 5000
     }
 }

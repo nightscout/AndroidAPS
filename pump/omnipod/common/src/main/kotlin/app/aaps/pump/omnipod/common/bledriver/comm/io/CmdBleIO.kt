@@ -7,13 +7,8 @@ import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManagerImpl
 import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommand
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommandHello
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.CmdBleIO as CmdBleIOInterface
 import java.util.concurrent.BlockingQueue
-
-sealed class BleConfirmResult
-
-object BleConfirmSuccess : BleConfirmResult()
-data class BleConfirmIncorrectData(val payload: ByteArray) : BleConfirmResult()
-data class BleConfirmError(val msg: String) : BleConfirmResult()
 
 class CmdBleIO(
     logger: AAPSLogger,
@@ -28,15 +23,17 @@ class CmdBleIO(
     gatt,
     bleCommCallbacks,
     CharacteristicType.CMD
-) {
+), CmdBleIOInterface {
 
-    fun peekCommand(): ByteArray? {
+    override fun peekCommand(): ByteArray? {
         return incomingPackets.peek()
     }
 
-    fun hello() = sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
+    override fun hello() {
+        sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
+    }
 
-    fun expectCommandType(expected: BleCommand, timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleConfirmResult {
+    override fun expectCommandType(expected: BleCommand, timeoutMs: Long): BleConfirmResult {
         return receivePacket(timeoutMs)?.let {
             if (it.isNotEmpty() && it[0] == expected.data[0])
                 BleConfirmSuccess
