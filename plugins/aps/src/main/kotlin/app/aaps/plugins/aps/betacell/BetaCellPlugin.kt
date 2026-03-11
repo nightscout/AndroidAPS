@@ -9,6 +9,9 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.aps.RT
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
+import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import javax.inject.Provider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -43,6 +46,7 @@ class BetaCellPlugin @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
     private val apsResultProvider: Provider<APSResult>,
+    private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator
 ) : PluginBase(
     PluginDescription()
@@ -148,6 +152,8 @@ class BetaCellPlugin @Inject constructor(
         val apsResult = apsResultProvider.get().with(rt)
         lastAPSResult = apsResult
         lastAPSRun    = System.currentTimeMillis()
+        rxBus.send(EventAPSCalculationFinished())
+        rxBus.send(EventOpenAPSUpdateGui())
 
         if (p.openLoopOnly) {
             aapsLogger.info(LTag.APS, "[OPEN LOOP] rate=${result.rate} smb=${result.smb} zone=${result.zone}")
