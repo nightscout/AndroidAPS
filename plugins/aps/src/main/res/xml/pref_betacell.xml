@@ -136,6 +136,33 @@
     </PreferenceCategory>
 
     <!-- ═══════════════════════════════════════════════════════════════════
+         CATÉGORIE 3b : Protection hypo prédictive
+    ════════════════════════════════════════════════════════════════════ -->
+    <PreferenceCategory
+        android:key="betacell_category_predictive"
+        android:title="🛡️ Protection hypo prédictive">
+
+        <EditTextPreference
+            android:key="betacell_hypo_alert_margin"
+            android:title="Marge alerte hypo"
+            android:summary="Marge au-dessus du seuil hypo pour déclenchement prédictif (défaut : 20 mg/dL)"
+            android:defaultValue="20"
+            android:inputType="numberDecimal"
+            android:dialogTitle="Marge alerte hypo (mg/dL)"
+            android:dialogMessage="Ex: hypo=70 + marge=20 → alerte si BG prévu &lt; 90 mg/dL" />
+
+        <EditTextPreference
+            android:key="betacell_hypo_rapid_slope"
+            android:title="Seuil pente descente rapide"
+            android:summary="Pente en dessous de laquelle la descente est considérée rapide (défaut : -2.0 mg/dL/min)"
+            android:defaultValue="-2.0"
+            android:inputType="numberSigned|numberDecimal"
+            android:dialogTitle="Pente descente rapide (mg/dL/min)"
+            android:dialogMessage="Valeur négative. -2.0 = descente de 2 mg/dL par minute." />
+
+    </PreferenceCategory>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
          CATÉGORIE 3b : Frein sur pente descendante
          Miroir : SLOPE_BRAKE_THRESHOLD / SLOPE_BRAKE_FACTOR du PS
     ════════════════════════════════════════════════════════════════════ -->
