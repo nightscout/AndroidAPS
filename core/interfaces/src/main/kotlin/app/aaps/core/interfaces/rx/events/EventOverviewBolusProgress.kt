@@ -25,7 +25,7 @@ class EventOverviewBolusProgress(status: String, val id: Long? = null, percent: 
      */
     constructor(ch: ConcentrationHelper, delivered: PumpInsulin, id: Long? = null) :
         this(
-            ch.bolusProgressString(delivered),
+            ch.bolusProgressString(delivered, BolusProgressData.isPriming),
             id = id,
             percent = min((ch.fromPump(delivered, BolusProgressData.isPriming) / BolusProgressData.insulin * 100).toInt(), 100),
             wearStatus = ch.bolusProgressString(delivered, BolusProgressData.insulin, BolusProgressData.isPriming)
