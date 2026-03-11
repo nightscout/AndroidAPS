@@ -110,6 +110,7 @@ class BetaCellPlugin @Inject constructor(
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {
         val p = prefs()
+        aapsLogger.debug(LTag.APS, "BetaCell prefs: $p")
         aapsLogger.debug(LTag.APS, "BetaCellPlugin [$initiator]")
 
         profileFunction.getProfile() ?: run {
