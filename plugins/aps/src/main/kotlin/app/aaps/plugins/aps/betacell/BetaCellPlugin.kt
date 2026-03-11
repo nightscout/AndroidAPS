@@ -259,13 +259,14 @@ class BetaCellPlugin @Inject constructor(
 
     private fun buildReason(
         bg: Double, slope: Double, isf: Double, beta: Double, systemic: Double,
-        p: BetaCellPrefs, braked: Boolean, basalFactor: Double, bgIn30min: Double
+        p: BetaCellPrefs, braked: Boolean, basalFactor: Double, bgIn30min: Double,
+        iobTotal: Double
     ): String = buildString {
         append("BG=${bg.roundToInt()} tgt=${p.targetBg.roundToInt()} ")
         append("ISF=${"%.1f".format(isf)} slope=${"%.2f".format(slope)} ")
-        append("BGin30=${bgIn30min.roundToInt()} ")
+        append("BGin30=${bgIn30min.roundToInt()} IOB=${"%.2f".format(iobTotal)}U ")
         if (braked) append("[brake×${p.slopeBrakeF}] ")
-        if (basalFactor < 1.0) append("[basal×$basalFactor PRE-ALERT] ")
+        if (basalFactor < 1.0) append("[basal×${"%.2f".format(basalFactor)} PRE-ALERT] ")
         append("β=${"%.3f".format(beta)}U sys=${"%.3f".format(systemic)}U ")
         if (p.openLoopOnly) append("[OPEN_LOOP]")
     }
