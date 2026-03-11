@@ -92,4 +92,6 @@ Port du script PowerShell Mini-Pancréas vers Kotlin AAPS.\n\n
 obligatoirement en open loop simulé avant activation. Le guard hypo est non
 contournable. Valider avec un professionnel de santé avant usage patient.</string>
     <string name="betacell_version">BetaCellPlugin v1.1.0 · Port PS → KT · Dti-1</string>
+    <string name="betacell_pref_hypo_alert_margin_title">Marge alerte hypo (mg/dL)</string>
+    <string name="betacell_pref_hypo_rapid_slope_title">Pente descente rapide (mg/dL/min)</string>
 </resources>

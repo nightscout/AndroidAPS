@@ -294,6 +294,8 @@ class BetaCellPlugin @Inject constructor(
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.BetaCellSmbMax, title = R.string.betacell_pref_smb_max_title))
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.BetaCellSmbOffset, title = R.string.betacell_pref_smb_offset_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BetaCellOpenLoop, title = R.string.betacell_pref_open_loop_title))
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.BetaCellHypoAlertMargin, title = R.string.betacell_pref_hypo_alert_margin_title))
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.BetaCellHypoRapidSlope, title = R.string.betacell_pref_hypo_rapid_slope_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BetaCellDebug, title = R.string.betacell_pref_debug_title))
         }
     }
