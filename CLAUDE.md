@@ -8,7 +8,25 @@
     - ✅ `git diff HEAD -- path/to/file` (CWD is already project root)
     - ❌ `cd E:/GitHub/AndroidAPS && git diff HEAD`
     - ❌ `cd /path; git status`
+- **NEVER start a command with these — they are NOT in the allowlist and WILL trigger confirmation:**
+    - ❌ `awk`, `cut`, `tr` → use `sed` or the Grep/Read tools instead
+    - ❌ `sort`, `uniq` → wrap in `powershell.exe -Command "..."` or use tools
+    - ❌ `diff` (standalone) → use `git diff` which IS allowed
+    - ❌ `which` → use `where` instead (Windows equivalent, is allowed)
+    - ❌ `chmod`, `chown` → not needed on Windows
+    - ❌ `tar`, `gzip` → use `unzip` (allowed) or `powershell.exe -Command "..."`
+    - ❌ `pip`, `npm`, `yarn` → use `python -m pip`, `node ...`, or `powershell.exe`
+    - ❌ `gradlew.bat` without `./` prefix → always use `./gradlew.bat`
+    - ❌ Starting a command with a file path (e.g., `E:/Github/.../gradlew.bat build`) → use
+      `powershell.exe -Command "..."` wrapper instead
+    - ❌ Compound commands with `&&`, `||`, or `;` as the top-level operator between separate
+      commands → each command must start with an allowed prefix
+- **Safe patterns that ARE allowed:** `git`, `gh`, `./gradlew.bat`, `powershell.exe`,
+  `powershell`, `cmd`, `adb`, `curl`, `python`, `java`, `node`, `wsl`, `where`, `grep`, `find`,
+  `echo`, `head`, `tail`, `sed`, `rm`, `del`, `ls`, `wc`, `tee`, `xargs`, `cat`, `mkdir`, `cp`,
+  `mv`, `touch`, `unzip`, `jar`, `export`
 - When spawning agents that use Bash, ALWAYS include this rule in the agent prompt
+- See `.claude/CLAUDE_COMMANDS.md` for platform-specific working commands
 
 ## Token Usage Reduction (Delay Conversation Compaction)
 
@@ -75,13 +93,8 @@
     - Mark todos in_progress before starting, completed immediately after finishing
     - Keep exactly ONE todo in_progress at a time
     - Break down large tasks into smaller items for tracking
-- **IMPORTANT: Read `.claude/CLAUDE_COMMANDS.md` at conversation start and after compaction** -
-  Contains working commands for this local system
-- **Update `.claude/CLAUDE_COMMANDS.md` continuously** - When discovering new working commands,
-  useful patterns, or fixes for broken commands, add them to the file immediately
-- See **CRITICAL: Bash Command Rules** section at top — never use `cd &&` or `cd;` patterns.
 - On KSP error during compilation just compile again. Do not clean build.
-- On file locked error stop gradle daemons
+- On file locked error stop gradle daemons (`gradlew.bat --stop`)
 - Never install app automatically
 - **NEVER run Android instrumented tests (connectedAndroidTest) without explicit user permission** —
   they uninstall the app from the device
@@ -125,85 +138,16 @@
 
 ## Migration Procedures
 
-When performing large-scale code migrations (e.g., XML→Compose, old API→new API):
+- **For migrations**: Follow procedures in `.claude/procedures/migration.md`
 
-### Planning Phase
+## When Stuck
 
-- **Create a PLAN.md file** to track the entire migration
-    - List all phases (Phase 0: Prerequisites, Phase 1-N: Implementation, Final: Cleanup)
-    - Identify and categorize files by complexity (simple → medium → complex)
-    - Track file counts and status for each phase
-    - Update plan as you learn new information
-    - During collection of information on every new info compare compatibilty with previous. Ask if
-      it
-      conflicts or something is not clear
-- **Use grep/glob extensively** to find ALL instances before starting
-    - Search for old patterns to ensure nothing is missed
-    - Count total files/instances that need migration
-    - Re-verify counts at the end
-
-### Migration Strategy
-
-- **Migrate in phases, simple to complex:**
-    - Phase 0: Build prerequisites (base classes, shared code, utilities)
-    - Phase 1: Simple cases with clear patterns
-    - Phase 2: Medium complexity
-    - Phase 3: Complex cases, special handling
-    - Phase 4: Base classes that affect multiple files
-    - Final Phase: Cleanup and remove old code
-- **Identify base classes early:**
-    - Changes to base classes affect many subclasses
-    - Migrate base classes in dedicated phase
-    - Update all subclasses together to avoid compilation errors
-- **Maintain backward compatibility during migration:**
-    - Keep both old and new code paths working
-    - Mark old code as `@Deprecated` but don't remove yet
-    - Only remove deprecated code when migration is 100% complete
-    - Test that both paths work during transition
-
-### Execution Phase
-
-- **Migrate in batches, compile frequently:**
-    - Don't batch too many changes before compiling
-    - Compile after each phase or every 5-10 files
-    - Fix compilation errors immediately
-    - Use TodoWrite to track progress within each phase
-- **Verify completeness rigorously:**
-    - After claiming a phase is "done", search for old patterns
-    - Count migrated files vs. initial count
-    - User will verify - assume accountability
-- **Document decisions in PLAN.md:**
-    - Why certain approaches were chosen
-    - What patterns emerged during migration
-    - What issues were encountered and how solved
-- **At the end of partial migration ask yourself if it's the best possible pattern independent to
-  previous code. Discuss your findings.**
-
-### Cleanup Phase (Only After 100% Migration Complete)
-
-- **Systematic cleanup in specific order:**
-    1. Remove `@Deprecated` markers and deprecated functions
-    2. Delete unused extensions and helper functions
-    3. Remove escape hatches and fallback code paths
-    4. Delete unused parameters from interfaces/classes
-    5. Replace generic types (`Any?`) with specific types
-    6. Consolidate to single code path (remove if/else for old vs. new)
-    7. Move hardcoded values to centralized theme/config
-    8. Delete completely unused files
-- **Verify after each cleanup step:**
-    - Compile after each type of cleanup
-    - Don't batch all cleanup before compiling
-- **Update documentation:**
-    - Remove TODOs referencing old code
-    - Update comments to reflect new approach
-    - Archive or delete PLAN.md if no longer needed
-
-### Key Principles
-
-- **Never claim "done" prematurely** - user will verify
-- **Keep PLAN.md as single source of truth** for migration status
-- **Compile frequently** - catch errors early
-- **Cleanup only at the end** - don't mix migration with cleanup
+- If compilation fails twice with the same error: **stop and show the error** to the user, don't keep retrying
+- If a search finds nothing after 2 attempts: **ask the user** rather than guessing file locations
+- If unsure about architecture or where code should go: **ask before implementing**
+- If a tool call is denied: **ask why**, don't retry the same call
+- If an approach requires more than 3 workarounds: **step back and reconsider the approach**
+- If you realize you're about to repeat a mistake from memory: **stop and follow the correct pattern**
 
 ## Project Info
 
