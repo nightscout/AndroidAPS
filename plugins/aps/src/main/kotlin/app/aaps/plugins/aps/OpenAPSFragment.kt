@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import app.aaps.annotations.DisplayAsDate
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -31,6 +32,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.ClassUtils
 import javax.inject.Inject
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.findAnnotation
 
 class OpenAPSFragment : DaggerFragment(), MenuProvider {
 
@@ -132,13 +134,13 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         if (_binding == null) return
         val openAPSPlugin = activePlugin.activeAPS
         openAPSPlugin.lastAPSResult?.let { lastAPSResult ->
-            binding.result.text = lastAPSResult.rawData().dataClassToHtml()
+            binding.result.text = lastAPSResult.rawData().dataClassToHtmlDisplayAsDate(dateUtil)
             binding.request.text = lastAPSResult.resultAsSpanned()
             binding.glucosestatus.text = lastAPSResult.glucoseStatus?.dataClassToHtml(listOf("glucose", "delta", "shortAvgDelta", "longAvgDelta"))
             binding.currenttemp.text = lastAPSResult.currentTemp?.dataClassToHtml()
             binding.iobdata.text = rh.gs(R.string.array_of_elements, lastAPSResult.iobData?.size) + "\n" + lastAPSResult.iob?.dataClassToHtml()
             binding.profile.text = lastAPSResult.oapsProfile?.dataClassToHtml() ?: lastAPSResult.oapsProfileAutoIsf?.dataClassToHtml()
-            binding.mealdata.text = lastAPSResult.mealData?.dataClassToHtml()
+            binding.mealdata.text = lastAPSResult.mealData?.dataClassToHtmlDisplayAsDate(dateUtil)
             binding.scriptdebugdata.text = lastAPSResult.scriptDebug?.joinToString("\n")
             binding.constraints.text = lastAPSResult.inputConstraints?.getReasons()
             binding.autosensdata.text = lastAPSResult.autosensResult?.dataClassToHtml()
@@ -188,6 +190,54 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
                 }
             }.toString()
         )
+    private fun Any.dataClassToHtmlDisplayAsDate(dateUtil: DateUtil): Spanned {
+        return HtmlHelper.fromHtml(
+            StringBuilder().also { sb ->
+                this::class.declaredMemberProperties.forEach { property ->
+                    property.call(this)?.let { value ->
+                        // Check for @DisplayAsDate annotation
+                        if (property.findAnnotation<DisplayAsDate>() != null && value is Long) {
+                            if (value > 0) { // Good practice to check for valid (positive) timestamps
+                                val formattedDate = dateUtil.dateAndTimeString(value)
+                                sb.append(property.name.bold(), ": "/*, value.toString(), " ("*/, formattedDate/*, ")"*/, br)
+                            } else {
+                                // Handle invalid/default timestamps (e.g., -1 for dateCreated)
+                                sb.append(property.name.bold(), ": ", value.toString(), " (invalid Timestamp)", br)
+                            }
+                        } else if (ClassUtils.isPrimitiveOrWrapper(value::class.java)) {
+                            sb.append(property.name.bold(), ": ", value.toString(), br)
+                        } else if (value is StringBuilder) {
+                            sb.append(property.name.bold(), ": ", value.toString(), br)
+                        }
+                    }
+                }
+            }.toString()
+        )
+    }
+
+    private fun Any.dataClassToHtmlDisplayAsDate(properties: List<String>, dateUtil: DateUtil): Spanned {
+        return HtmlHelper.fromHtml(
+            StringBuilder().also { sb ->
+                properties.forEach { propertyName ->
+                    val property = this::class.declaredMemberProperties.firstOrNull { it.name == propertyName }
+                    property?.call(this)?.let { value ->
+                        if (property.findAnnotation<DisplayAsDate>() != null && value is Long) {
+                            if (value > 0) { // Good practice for timestamps
+                                val formattedDate = dateUtil.dateAndTimeString(value)
+                                sb.append(property.name.bold(), ": "/*, value.toString(), " ("*/, formattedDate/*, ")"*/, br)
+                            } else {
+                                sb.append(propertyName.bold(), ": ", value.toString(), " (invalid Timestamp)", br)
+                            }
+                        } else if (ClassUtils.isPrimitiveOrWrapper(value::class.java)) {
+                            sb.append(propertyName.bold(), ": ", value.toString(), br)
+                        } else if (value is StringBuilder) {
+                            sb.append(propertyName.bold(), ": ", value.toString(), br)
+                        }
+                    }
+                }
+            }.toString()
+        )
+    }
 
     private fun String.bold(): String = "<b>$this</b>"
     private val br = "<br>"

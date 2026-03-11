@@ -1,10 +1,12 @@
 package app.aaps.core.interfaces.aps
 
+import app.aaps.annotations.DisplayAsDate
 import kotlinx.serialization.Serializable
 
 @Suppress("SpellCheckingInspection")
 @Serializable
 data class IobTotal(
+    @DisplayAsDate
     val time: Long,
     var iob: Double = 0.0,
     var activity: Double = 0.0,
@@ -14,6 +16,7 @@ data class IobTotal(
     var hightempinsulin: Double = 0.0,
 
     // oref1
+    @DisplayAsDate
     var lastBolusTime: Long = 0,
     var iobWithZeroTemp: IobTotal? = null,
     var netInsulin: Double = 0.0, // for calculations from temp basals only

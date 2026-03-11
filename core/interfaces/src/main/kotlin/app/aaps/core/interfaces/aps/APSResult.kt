@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.aps
 
 import android.text.Spanned
+import app.aaps.annotations.DisplayAsDate
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.Constraint
 import org.json.JSONObject
@@ -9,6 +10,7 @@ interface APSResult {
 
     fun with(result: RT): APSResult
 
+    @DisplayAsDate
     var date: Long
     var reason: String
     var rate: Double
@@ -18,6 +20,7 @@ interface APSResult {
     var usePercent: Boolean
     var carbsReq: Int
     var carbsReqWithin: Int
+    @DisplayAsDate
     var deliverAt: Long
     var targetBG: Double
     var hasPredictions: Boolean
