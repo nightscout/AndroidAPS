@@ -138,7 +138,7 @@ class BetaCellPlugin @Inject constructor(
 
         val result = calcBetaSecretion(
             bg = gs.glucose, bgDelta = gs.delta, dtMin = 5.0,
-            isf = calibratedIsf, iob = iobTotal, p = p
+            isf = calibratedIsf, p = p
         )
         val rt = RT(
             algorithm        = APSResult.Algorithm.SMB,
@@ -166,7 +166,7 @@ class BetaCellPlugin @Inject constructor(
 
     internal fun calcBetaSecretion(
         bg: Double, bgDelta: Double, dtMin: Double,
-        isf: Double, iob: Double, p: BetaCellPrefs
+        isf: Double, p: BetaCellPrefs
     ): BetaCellApsResult {
 
         // ── Guard hypo absolu ─────────────────────────────────────────
