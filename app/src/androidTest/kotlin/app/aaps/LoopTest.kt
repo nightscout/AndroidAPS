@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.utils.DateUtil
@@ -96,6 +97,7 @@ class LoopTest @Inject constructor() {
         rxHelper.listen(EventNewHistoryData::class.java)
         rxHelper.listen(EventAutosensCalculationFinished::class.java)
         rxHelper.listen(EventAPSCalculationFinished::class.java)
+        rxHelper.listen(EventLoopUpdateGui::class.java)
         objectivesPlugin.onStart()
 
 
@@ -160,6 +162,9 @@ class LoopTest @Inject constructor() {
 
         // Let generate some BGs
         rxHelper.resetState(EventNewBG::class.java)
+        rxHelper.resetState(EventAPSCalculationFinished::class.java)
+        rxHelper.resetState(EventLoopUpdateGui::class.java)
+        val resetSequence = rxHelper.currentSequence()
         val now = dateUtil.now()
         val glucoseValues = mutableListOf<GV>()
         glucoseValues += GV(timestamp = now - 5 * 60000, value = 100.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
@@ -174,9 +179,14 @@ class LoopTest @Inject constructor() {
         assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step6").first).isTrue()
         assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step7").first).isTrue()
         // it should trigger loop, so wait for result
-        Thread.sleep(10000)
-        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step8").first).isTrue()
-        Thread.sleep(5000)
+        assertThat(rxHelper.waitForAfter(EventAPSCalculationFinished::class.java, resetSequence, comment = "step8").first).isTrue()
+        val apsSequence = rxHelper.lastSequence(EventAPSCalculationFinished::class.java)
+            ?: error("EventAPSCalculationFinished not recorded")
+        assertThat(apsSequence).isGreaterThan(resetSequence)
+        assertThat(rxHelper.waitForAfter(EventLoopUpdateGui::class.java, apsSequence, comment = "step9").first).isTrue()
+        val loopUpdateSequence = rxHelper.lastSequence(EventLoopUpdateGui::class.java)
+            ?: error("EventLoopUpdateGui not recorded")
+        assertThat(loopUpdateSequence).isGreaterThan(apsSequence)
         assertThat(loop.lastRun).isNotNull()
     }
 }

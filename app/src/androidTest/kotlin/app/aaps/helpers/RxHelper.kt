@@ -1,6 +1,5 @@
 package app.aaps.helpers
 
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -10,7 +9,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 
 /**
@@ -27,8 +30,19 @@ class RxHelper @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 
-    private val hashMap = HashMap<Class<out Event>, AtomicBoolean>()
-    private val eventHashMap = HashMap<Class<out Event>, Event>()
+    private data class QueuedEvent(
+        val sequence: Long,
+        val event: Event
+    )
+
+    private data class Watcher(
+        val triggered: AtomicBoolean,
+        val events: BlockingQueue<QueuedEvent>
+    )
+
+    private val watchers = HashMap<Class<out Event>, Watcher>()
+    private val lastSequences = HashMap<Class<out Event>, Long>()
+    private val sequence = AtomicLong(0)
     private val disposable = CompositeDisposable()
 
     /**
@@ -38,16 +52,19 @@ class RxHelper @Inject constructor(
      * @return AtomicBoolean trigger
      */
     fun listen(clazz: Class<out Event>): AtomicBoolean =
-        hashMap[clazz] ?: AtomicBoolean(false).also { ab ->
-            hashMap[clazz] = ab
+        watchers[clazz]?.triggered ?: AtomicBoolean(false).also { ab ->
+            val queue: BlockingQueue<QueuedEvent> = LinkedBlockingQueue()
+            watchers[clazz] = Watcher(ab, queue)
             // Setup RxBus tracking
             disposable += rxBus
                 .toObservable(clazz)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({
                                aapsLogger.info(LTag.EVENTS, "==>> ${clazz.simpleName} registered")
-                               ab.set(true)
-                               eventHashMap[clazz] = it
+                               watchers[clazz]?.let { watcher ->
+                                   watcher.triggered.set(true)
+                                   watcher.events.add(QueuedEvent(sequence.incrementAndGet(), it))
+                               }
                            }, fabricPrivacy::logException)
         }
 
@@ -58,19 +75,50 @@ class RxHelper @Inject constructor(
      * @param maxSeconds max waiting time in seconds
      */
     fun waitFor(clazz: Class<out Event>, maxSeconds: Long = 40, comment: String = ""): Pair<Boolean, Event?> {
-        val watcher = hashMap[clazz] ?: error("Class not registered ${clazz.simpleName}")
-        val start = dateUtil.now()
-        while (!watcher.get()) {
-            if (start + T.secs(maxSeconds).msecs() < dateUtil.now()) {
+        val watcher = watchers[clazz] ?: error("Class not registered ${clazz.simpleName}")
+        val queuedEvent = try {
+            watcher.events.poll(maxSeconds, TimeUnit.SECONDS)
+        } catch (exception: InterruptedException) {
+            Thread.currentThread().interrupt()
+            null
+        }
+        if (queuedEvent == null) {
+            aapsLogger.error("${clazz.simpleName} not received $comment")
+            return Pair(false, null)
+        }
+        lastSequences[clazz] = queuedEvent.sequence
+        aapsLogger.info(LTag.EVENTS, "Received ${clazz.simpleName} $comment ${queuedEvent.event}")
+        watcher.triggered.set(false)
+        return Pair(true, queuedEvent.event)
+    }
+
+    fun waitForAfter(
+        clazz: Class<out Event>,
+        minSequence: Long,
+        maxSeconds: Long = 40,
+        comment: String = ""
+    ): Pair<Boolean, Event?> {
+        val watcher = watchers[clazz] ?: error("Class not registered ${clazz.simpleName}")
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(maxSeconds)
+        while (true) {
+            val remaining = deadline - System.nanoTime()
+            if (remaining <= 0L) {
                 aapsLogger.error("${clazz.simpleName} not received $comment")
                 return Pair(false, null)
             }
-            Thread.sleep(100)
-            aapsLogger.debug("Waiting for ${clazz.simpleName} $comment")
+            val queuedEvent = try {
+                watcher.events.poll(remaining, TimeUnit.NANOSECONDS)
+            } catch (exception: InterruptedException) {
+                Thread.currentThread().interrupt()
+                null
+            } ?: continue
+            lastSequences[clazz] = queuedEvent.sequence
+            if (queuedEvent.sequence > minSequence) {
+                aapsLogger.info(LTag.EVENTS, "Received ${clazz.simpleName} $comment ${queuedEvent.event}")
+                watcher.triggered.set(false)
+                return Pair(true, queuedEvent.event)
+            }
         }
-        aapsLogger.info(LTag.EVENTS, "Received ${clazz.simpleName} $comment ${eventHashMap[clazz]}")
-        watcher.set(false)
-        return Pair(true, eventHashMap[clazz])
     }
 
     /**
@@ -79,11 +127,21 @@ class RxHelper @Inject constructor(
      * @param clazz Class
      */
     fun resetState(clazz: Class<out Event>) {
-        hashMap[clazz]?.set(false)
-        eventHashMap.remove(clazz)
+        watchers[clazz]?.let { watcher ->
+            watcher.triggered.set(false)
+            watcher.events.clear()
+        }
+        lastSequences.remove(clazz)
     }
 
     fun clear() {
         disposable.clear()
+        watchers.clear()
+        lastSequences.clear()
+    }
+
+    fun lastSequence(clazz: Class<out Event>): Long? = lastSequences[clazz]
+
+    fun currentSequence(): Long = sequence.get()
     }
 }
