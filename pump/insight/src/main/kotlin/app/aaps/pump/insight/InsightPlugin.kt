@@ -173,6 +173,8 @@ class InsightPlugin @Inject constructor(
         private set
     var lastBolusTimestamp = 0L
         private set
+    var lastBolusType: BS.Type? = null
+        private set
     private var alertService: InsightAlertService? = null
     var connectionService: InsightConnectionService? = null
         private set
@@ -521,6 +523,8 @@ class InsightPlugin @Inject constructor(
                         )
                     )
                     insightDbHelper.getInsightBolusID(serial, bolusID, now)?.also {
+                        lastBolusType = detailedBolusInfo.bolusType
+                        lastBolusTimestamp = it.timestamp
                         pumpSync.syncBolusWithPumpId(
                             it.timestamp,
                             PumpInsulin(detailedBolusInfo.insulin),
@@ -1310,7 +1314,7 @@ class InsightPlugin @Inject constructor(
                 pumpSync.syncBolusWithPumpId(
                     timestamp = insightBolusID.timestamp,
                     amount = PumpInsulin(event.immediateAmount),
-                    type = null,
+                    type = if (lastBolusTimestamp == insightBolusID.timestamp) lastBolusType else null,
                     pumpId = insightBolusID.id,
                     pumpType = PumpType.ACCU_CHEK_INSIGHT,
                     pumpSerial = serial
