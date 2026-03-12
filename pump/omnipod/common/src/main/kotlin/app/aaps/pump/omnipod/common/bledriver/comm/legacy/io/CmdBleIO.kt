@@ -1,19 +1,19 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.io
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.io
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManagerImpl
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommand
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommandHello
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmError
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmIncorrectData
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmResult
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmSuccess
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CmdBleIO as CmdBleIOInterface
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
 import java.util.concurrent.BlockingQueue
-
-sealed class BleConfirmResult
-
-object BleConfirmSuccess : BleConfirmResult()
-data class BleConfirmIncorrectData(val payload: ByteArray) : BleConfirmResult()
-data class BleConfirmError(val msg: String) : BleConfirmResult()
 
 class CmdBleIO(
     logger: AAPSLogger,
@@ -28,15 +28,15 @@ class CmdBleIO(
     gatt,
     bleCommCallbacks,
     CharacteristicType.CMD
-) {
+), CmdBleIOInterface {
 
-    fun peekCommand(): ByteArray? {
+    override fun peekCommand(): ByteArray? {
         return incomingPackets.peek()
     }
 
-    fun hello() = sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
+    override fun hello() = sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
 
-    fun expectCommandType(expected: BleCommand, timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleConfirmResult {
+    override fun expectCommandType(expected: BleCommand, timeoutMs: Long): BleConfirmResult {
         return receivePacket(timeoutMs)?.let {
             if (it.isNotEmpty() && it[0] == expected.data[0])
                 BleConfirmSuccess

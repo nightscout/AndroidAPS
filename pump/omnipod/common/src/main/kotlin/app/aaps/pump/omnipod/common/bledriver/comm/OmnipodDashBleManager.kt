@@ -1,6 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.comm
 
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connection
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
@@ -16,7 +16,7 @@ interface OmnipodDashBleManager {
     fun getStatus(): ConnectionState
 
     // used for sync connections
-    fun connect(timeoutMs: Long = Connection.BASE_CONNECT_TIMEOUT_MS * 3): Observable<PodEvent>
+    fun connect(timeoutMs: Long = BleConnection.DEFAULT_CONNECT_TIMEOUT_MS): Observable<PodEvent>
 
     // used for async connections
     fun connect(stopConnectionLatch: CountDownLatch): Observable<PodEvent>

@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.callbacks
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -8,8 +8,8 @@ import android.bluetooth.BluetoothProfile
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CharacteristicType.Companion.byValue
-import app.aaps.pump.omnipod.common.bledriver.comm.io.IncomingPackets
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType.Companion.byValue
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.IncomingPackets
 import app.aaps.pump.omnipod.common.bledriver.comm.session.DisconnectHandler
 import java.util.UUID
 import java.util.concurrent.BlockingQueue
@@ -108,9 +108,7 @@ class BleCommCallbacks(
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
-            "OnCharacteristicWrite with char/status " +
-                "${characteristic.uuid} /" +
-                "$status"
+            "OnCharacteristicWrite with char/status ${characteristic.uuid} /$status"
         )
         super.onCharacteristicWrite(gatt, characteristic, status)
 
@@ -126,9 +124,7 @@ class BleCommCallbacks(
 
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
-            "OnCharacteristicChanged with char/value " +
-                characteristicType + "/" +
-                payload.toHex()
+            "OnCharacteristicChanged with char/value $characteristicType/${payload.toHex()}"
         )
 
         val insertResult = incomingPackets.byCharacteristicType(characteristicType).add(payload)
@@ -205,10 +201,7 @@ class BleCommCallbacks(
 
     fun flushConfirmationQueue() {
         if (writeQueue.isNotEmpty()) {
-            aapsLogger.warn(
-                LTag.PUMPBTCOMM,
-                "Write queue should be empty, found: ${writeQueue.size}"
-            )
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Write queue should be empty, found: ${writeQueue.size}")
             writeQueue.clear()
         }
     }
@@ -223,7 +216,7 @@ class BleCommCallbacks(
     }
 
     companion object {
-
-        private const val WRITE_CONFIRM_TIMEOUT_MS = 10 // the confirmation queue should be empty anyway
+        // the confirmation queue should be empty anyway
+        private const val WRITE_CONFIRM_TIMEOUT_MS = 10
     }
 }
