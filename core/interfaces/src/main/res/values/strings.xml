@@ -12,7 +12,7 @@
     <string name="minago">%1$dm ago</string>
     <string name="secago">%1$ds ago</string>
     <string name="minago_long">%1$d minutes ago</string>
-    <string name="hoursago">%1$.1fh ago</string>
+    <string name="hoursago">%1$dh ago</string>
     <string name="days_ago">%1$.1f days ago</string>
     <string name="days_ago_round">%1$.0f days ago</string>
     <plurals name="plurals_day_hour_ago">
