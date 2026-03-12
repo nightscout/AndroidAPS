@@ -33,7 +33,7 @@ class ConcentrationHelperImpl @Inject constructor(
         if (isAbsolute.not())
             return rh.gs(app.aaps.core.ui.R.string.formatPercent, rate.iU(concentration, isAbsolute))
         if (isU100())
-            return rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate)
+            return rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate.cU)
         else {
             val iUString = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate.iU(concentration, isAbsolute))
             val cUString = rh.gs(R.string.pump_base_basal_rate_cu, rate.cU)
@@ -50,6 +50,8 @@ class ConcentrationHelperImpl @Inject constructor(
             return rh.gs(R.string.concentration_format, iUString, cUString)
         }
     }
+
+    override fun insulinAmountAgoString(amount: PumpInsulin, ago: String): String = "${insulinAmountString(amount)} $ago"
 
     override fun insulinConcentrationString(): String = rh.gs(R.string.insulin_concentration, (concentration * 100).toInt())
 

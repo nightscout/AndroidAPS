@@ -41,9 +41,5 @@
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
     <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
-    <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
-    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
-    <string name="pump_insulin_cu">%1$.2f CU</string>
-    <string name="pump_insulin_cu1">%1$.1f CU</string>
 
 </resources>
