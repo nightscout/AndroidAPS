@@ -3,6 +3,9 @@ package app.aaps.plugins.source.teljane
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
@@ -17,9 +20,11 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.R
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.source.AbstractBgSourcePlugin
 import app.aaps.plugins.source.BGSourceFragment
 import dagger.android.HasAndroidInjector
@@ -29,6 +34,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class TeljanePlugin @Inject constructor(
@@ -46,15 +52,53 @@ class TeljanePlugin @Inject constructor(
         .preferencesVisibleInSimpleMode(false)
         .description(app.aaps.plugins.source.R.string.description_source_teljane_app),
     ownPreferences = emptyList(),
-    aapsLogger, rh, preferences
+    aapsLogger = aapsLogger,
+    rh = rh,
+    preferences = preferences
 ), BgSource {
 
     private fun appContext(): Context = application.applicationContext
 
+    /**
+     * Add Teljane-only preference UI.
+     * AbstractBgSourcePlugin adds the generic BG source settings.
+     * We append a Teljane-specific switch that controls the history request timer worker.
+     */
+    override fun addPreferenceScreen(
+        preferenceManager: PreferenceManager,
+        parent: PreferenceScreen,
+        context: Context,
+        requiredKey: String?
+    ) {
+        // Keep generic BG source settings (e.g. Upload to NS)
+        super.addPreferenceScreen(preferenceManager, parent, context, requiredKey)
+
+        // AAPS convention: if requiredKey != null, do not add more settings here
+        if (requiredKey != null) return
+
+        val category = PreferenceCategory(context).apply {
+            key = "teljane_history_request_settings"
+            title = rh.gs(CoreUiR.string.teljane_history_request_settings_title)
+            initialExpandedChildrenCount = 0
+        }
+        parent.addPreference(category)
+
+        category.addPreference(
+            AdaptiveSwitchPreference(
+                ctx = context,
+                booleanKey = BooleanKey.TeljaneHistoryRequestEnabled,
+                title = CoreUiR.string.teljane_history_request_enabled_title
+            )
+        )
+    }
+
     // PluginBase calls these when enabled/disabled via setPluginEnabled()
     override fun onStart() {
         super.onStart()
-        TeljaneStaleCheckWorker.ensureScheduled(appContext(), enabled = true)
+        // Use the setting to control the timer scheduling.
+        // NOTE: "preferences" comes from PluginBaseWithPreferences (supertype), do NOT redeclare it here.
+        val enabled = this.preferences.get(BooleanKey.TeljaneHistoryRequestEnabled)
+        TeljaneStaleCheckWorker.ensureScheduled(appContext(), enabled = enabled)
     }
 
     override fun onStop() {

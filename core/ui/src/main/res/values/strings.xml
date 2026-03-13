@@ -184,6 +184,8 @@
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Export settings</string>
     <string name="location_permission_not_granted">Location permission not granted. Allow in android settings.</string>
+    <string name="teljane_history_request_settings_title">Teljane historical data request</string>
+    <string name="teljane_history_request_enabled_title">Request possible missing historical data in background</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>

@@ -12,6 +12,8 @@ import androidx.work.workDataOf
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,6 +30,7 @@ class TeljaneStaleCheckWorker(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var preferences: Preferences
 
     init {
         // WorkManager instantiates workers; inject manually.
@@ -42,17 +45,20 @@ class TeljaneStaleCheckWorker(
     }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        val enabled = inputData.getBoolean(KEY_ENABLED, true)
+        // IMPORTANT:
+        // Do NOT trust the WorkRequest inputData "enabled" because it can be stale.
+        // Always re-read the preference each run so toggling takes effect immediately.
+        val enabledNow = preferences.get(BooleanKey.TeljaneHistoryRequestEnabled)
         val now = System.currentTimeMillis()
 
         aapsLogger.debug(
             LTag.CORE,
-            "Teljane check START enabled=$enabled workId=$id attempt=$runAttemptCount now=$now"
+            "Teljane check START enabled=$enabledNow workId=$id attempt=$runAttemptCount now=$now"
         )
 
         try {
-            if (!enabled) {
-                aapsLogger.debug(LTag.CORE, "Teljane check SKIP (disabled) workId=$id")
+            if (!enabledNow) {
+                aapsLogger.debug(LTag.CORE, "Teljane check SKIP (disabled by setting) workId=$id")
                 return@withContext Result.success()
             }
 
@@ -196,7 +202,8 @@ class TeljaneStaleCheckWorker(
             aapsLogger.debug(LTag.CORE, "Teljane check failed workId=$id err=$t")
             return@withContext Result.success()
         } finally {
-            scheduleNext(applicationContext, enabled = enabled)
+            // Reschedule using CURRENT setting value, not stale inputData.
+            scheduleNext(applicationContext, enabled = enabledNow)
             aapsLogger.debug(LTag.CORE, "Teljane check END workId=$id")
         }
     }
