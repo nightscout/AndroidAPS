@@ -73,6 +73,9 @@ class MedtrumOverviewViewModel @Inject constructor(
         medtrumPump.reservoirFlow,
         medtrumPump.batteryVoltage_BFlow,
         medtrumPump.bolusAmountDeliveredFlow,
+        medtrumPump.lastBolusTimeFlow,
+        medtrumPump.lastBolusAmountFlow,
+        medtrumPump.lastConnectionFlow,
         tickerFlow(60_000L)
     ) { values ->
         @Suppress("UNCHECKED_CAST")
@@ -83,7 +86,14 @@ class MedtrumOverviewViewModel @Inject constructor(
         val reservoir = values[4] as Double
         val batteryVoltage = values[5] as Double
         val bolusDelivered = values[6] as Double
-        buildUiState(connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage, bolusDelivered)
+        val lastBolusTime = values[7] as Long
+        val lastBolusAmount = values[8] as Double
+        val lastConnectionTime = values[9] as Long
+        
+        buildUiState(
+            connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage, 
+            bolusDelivered, lastBolusTime, lastBolusAmount, lastConnectionTime
+        )
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildInitialState())
 
     override fun onCleared() {
@@ -139,7 +149,10 @@ class MedtrumOverviewViewModel @Inject constructor(
             basalRate = medtrumPump.lastBasalRate,
             reservoir = medtrumPump.reservoir,
             batteryVoltage = medtrumPump.batteryVoltage_B,
-            bolusDelivered = medtrumPump.bolusAmountDeliveredFlow.value
+            bolusDelivered = medtrumPump.bolusAmountDeliveredFlow.value,
+            lastBolusTime = medtrumPump.lastBolusTime,
+            lastBolusAmount = medtrumPump.lastBolusAmount,
+            lastConnectionTime = medtrumPump.lastConnection
         )
     }
 
@@ -150,7 +163,10 @@ class MedtrumOverviewViewModel @Inject constructor(
         basalRate: Double,
         reservoir: Double,
         batteryVoltage: Double,
-        bolusDelivered: Double
+        bolusDelivered: Double,
+        lastBolusTime: Long,
+        lastBolusAmount: Double,
+        lastConnectionTime: Long
     ): PumpOverviewUiState {
         // Status banner
         val statusBanner = buildStatusBanner(connectionState, pumpState)
@@ -161,18 +177,18 @@ class MedtrumOverviewViewModel @Inject constructor(
         val canRefresh = isDisconnected && isPumpActive
 
         // Last connection
-        val lastConnection = if (medtrumPump.lastConnection != 0L) {
-            val agoMinutes = (System.currentTimeMillis() - medtrumPump.lastConnection) / 1000 / 60
+        val lastConnection = if (lastConnectionTime != 0L) {
+            val agoMinutes = (System.currentTimeMillis() - lastConnectionTime) / 1000 / 60
             rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes)
         } else ""
 
         // Last bolus
-        val lastBolus = if (medtrumPump.lastBolusTime != 0L) {
-            val agoHours = (System.currentTimeMillis() - medtrumPump.lastBolusTime).toDouble() / 1000.0 / 60.0 / 60.0
+        val lastBolus = if (lastBolusTime != 0L) {
+            val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 1000.0 / 60.0 / 60.0
             if (agoHours < 6.0) {
                 ch.insulinAmountAgoString(
-                    PumpInsulin(medtrumPump.lastBolusAmount),
-                    dateUtil.sinceString(medtrumPump.lastBolusTime, rh)
+                    PumpInsulin(lastBolusAmount),
+                    dateUtil.sinceString(lastBolusTime, rh)
                 )
             } else null
         } else null
