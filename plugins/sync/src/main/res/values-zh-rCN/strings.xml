@@ -94,7 +94,7 @@
     <string name="last_run">上次运行</string>
     <string name="today">今天</string>
     <string name="weighted">权重</string>
-    <!-- Teljane <==> 糖简国际补丁版 -->
-    <string name="teljane_app">糖简国际补丁版</string>
-    <string name="description_source_teljane_app">从糖简国际补丁版App接收血糖值。</string>
+    <!-- Instara <==> 糖简国际版 -->
+    <string name="teljane_app">糖简国际版</string>
+    <string name="description_source_teljane_app">从糖简国际版App接收血糖值。</string>
 </resources>

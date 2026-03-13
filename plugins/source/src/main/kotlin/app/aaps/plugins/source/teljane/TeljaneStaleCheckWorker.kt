@@ -213,7 +213,7 @@ class TeljaneStaleCheckWorker(
 
     private fun sendHistoryRequestBroadcast(idStart: Long) {
         val action = "info.nightscout.androidaps.action.REQUEST_Teljane_DATA"
-        val targetPackage = "com.teljane.instara.community"
+        val targetPackage = "com.teljane.instara"
 
         val dataArray = JSONArray().apply {
             put(JSONObject().apply {

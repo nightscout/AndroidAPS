@@ -40,7 +40,7 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
-    <!-- Patched Instara App aka Patched Teljane App(International) -->
-    <string name="teljane_app">Patched Instara App</string>
-    <string name="description_source_teljane_app">Receive BG values from the Patched Instara App.</string>
+    <!-- Instara App aka Teljane(International) -->
+    <string name="teljane_app">Instara App</string>
+    <string name="description_source_teljane_app">Receive BG values from the Instara App.</string>
 </resources>
