@@ -3,9 +3,12 @@ package app.aaps.pump.medtrum.compose
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -52,7 +55,8 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
     private val medtrumPlugin: MedtrumPlugin,
-    val medtrumPump: MedtrumPump
+    val medtrumPump: MedtrumPump,
+    private val ch: ConcentrationHelper
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -69,6 +73,9 @@ class MedtrumOverviewViewModel @Inject constructor(
         medtrumPump.reservoirFlow,
         medtrumPump.batteryVoltage_BFlow,
         medtrumPump.bolusAmountDeliveredFlow,
+        medtrumPump.lastBolusTimeFlow,
+        medtrumPump.lastBolusAmountFlow,
+        medtrumPump.lastConnectionFlow,
         tickerFlow(60_000L)
     ) { values ->
         @Suppress("UNCHECKED_CAST")
@@ -79,7 +86,14 @@ class MedtrumOverviewViewModel @Inject constructor(
         val reservoir = values[4] as Double
         val batteryVoltage = values[5] as Double
         val bolusDelivered = values[6] as Double
-        buildUiState(connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage, bolusDelivered)
+        val lastBolusTime = values[7] as Long
+        val lastBolusAmount = values[8] as Double
+        val lastConnectionTime = values[9] as Long
+        
+        buildUiState(
+            connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage, 
+            bolusDelivered, lastBolusTime, lastBolusAmount, lastConnectionTime
+        )
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildInitialState())
 
     override fun onCleared() {
@@ -135,7 +149,10 @@ class MedtrumOverviewViewModel @Inject constructor(
             basalRate = medtrumPump.lastBasalRate,
             reservoir = medtrumPump.reservoir,
             batteryVoltage = medtrumPump.batteryVoltage_B,
-            bolusDelivered = medtrumPump.bolusAmountDeliveredFlow.value
+            bolusDelivered = medtrumPump.bolusAmountDeliveredFlow.value,
+            lastBolusTime = medtrumPump.lastBolusTime,
+            lastBolusAmount = medtrumPump.lastBolusAmount,
+            lastConnectionTime = medtrumPump.lastConnection
         )
     }
 
@@ -146,7 +163,10 @@ class MedtrumOverviewViewModel @Inject constructor(
         basalRate: Double,
         reservoir: Double,
         batteryVoltage: Double,
-        bolusDelivered: Double
+        bolusDelivered: Double,
+        lastBolusTime: Long,
+        lastBolusAmount: Double,
+        lastConnectionTime: Long
     ): PumpOverviewUiState {
         // Status banner
         val statusBanner = buildStatusBanner(connectionState, pumpState)
@@ -157,19 +177,18 @@ class MedtrumOverviewViewModel @Inject constructor(
         val canRefresh = isDisconnected && isPumpActive
 
         // Last connection
-        val lastConnection = if (medtrumPump.lastConnection != 0L) {
-            val agoMinutes = (System.currentTimeMillis() - medtrumPump.lastConnection) / 1000 / 60
+        val lastConnection = if (lastConnectionTime != 0L) {
+            val agoMinutes = (System.currentTimeMillis() - lastConnectionTime) / 1000 / 60
             rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes)
         } else ""
 
         // Last bolus
-        val lastBolus = if (medtrumPump.lastBolusTime != 0L) {
-            val agoHours = (System.currentTimeMillis() - medtrumPump.lastBolusTime).toDouble() / 60.0 / 60.0 / 1000.0
-            if (agoHours < 6) {
-                rh.gs(
-                    app.aaps.core.ui.R.string.last_bolus_format,
-                    medtrumPump.lastBolusAmount,
-                    dateUtil.sinceString(medtrumPump.lastBolusTime, rh)
+        val lastBolus = if (lastBolusTime != 0L) {
+            val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 1000.0 / 60.0 / 60.0
+            if (agoHours < 6.0) {
+                ch.insulinAmountAgoString(
+                    PumpInsulin(lastBolusAmount),
+                    dateUtil.sinceString(lastBolusTime, rh)
                 )
             } else null
         } else null
@@ -178,15 +197,15 @@ class MedtrumOverviewViewModel @Inject constructor(
         val activeBolusText = if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized() && bolusDelivered > 0.0) {
             dateUtil.timeString(medtrumPump.bolusStartTime) + " " +
                 dateUtil.sinceString(medtrumPump.bolusStartTime, rh) + " " +
-                rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusDelivered) + " / " +
-                rh.gs(app.aaps.core.ui.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered)
+                ch.bolusProgressString(PumpInsulin(bolusDelivered), ch.fromPump(PumpInsulin(medtrumPump.bolusAmountToBeDelivered))) +
+                " (" + rh.gs(app.aaps.core.ui.R.string.bolus_delivered_CU, bolusDelivered, medtrumPump.bolusAmountToBeDelivered) + ")"
         } else null
 
         // Battery voltage
         val batteryText = if (batteryVoltage > 0.0) String.format("%.2f V", batteryVoltage) else null
 
         // Reservoir
-        val reservoirText = if (reservoir > 0.0) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, reservoir) else null
+        val reservoirText = if (reservoir > 0.0) ch.insulinAmountString(PumpInsulin(reservoir)) else null
 
         // Common rows from builder
         val commonRows = stateBuilder.buildCommonRows(
@@ -204,7 +223,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             // Basal type
             add(PumpInfoRow(label = rh.gs(R.string.basal_type_label), value = basalType.toString()))
             // Basal rate
-            add(PumpInfoRow(label = rh.gs(R.string.basal_rate_label), value = String.format("%.2f U/h", basalRate)))
+            add(PumpInfoRow(label = rh.gs(R.string.basal_rate_label), value = ch.basalRateString(PumpRate(basalRate), basalType != BasalType.RELATIVE_TEMP)))
             // Active bolus
             activeBolusText?.let {
                 add(PumpInfoRow(label = rh.gs(R.string.active_bolus_label), value = it))

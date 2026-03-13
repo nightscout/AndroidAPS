@@ -365,6 +365,10 @@ class MedtrumPlugin @Inject constructor(
         val result = pumpEnactResultProvider.get()
         result.success = (connectionOK && abs(detailedBolusInfo.insulin - BolusProgressData.delivered) < pumpDescription.bolusStep) || medtrumPump.bolusStopped
         result.bolusDelivered = BolusProgressData.delivered
+        if (result.success && result.bolusDelivered > 0.0) {
+            medtrumPump.lastBolusAmount = result.bolusDelivered
+            medtrumPump.lastBolusTime = detailedBolusInfo.timestamp
+        }
         if (!result.success) {
             result.comment(medtrumPump.bolusErrorReason ?: rh.gs(R.string.bolus_error_reason_pump_error))
         } else {
