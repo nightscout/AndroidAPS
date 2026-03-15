@@ -95,6 +95,6 @@
     <string name="today">今天</string>
     <string name="weighted">权重</string>
     <!-- Instara <==> 糖简国际版 -->
-    <string name="teljane_app">糖简国际版</string>
-    <string name="description_source_teljane_app">从糖简国际版App接收血糖值。</string>
+    <string name="teljane_app">Instara</string>
+    <string name="description_source_teljane_app">从Instara App接收血糖值。</string>
 </resources>
