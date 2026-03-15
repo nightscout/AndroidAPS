@@ -308,6 +308,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.podHardEndDate.text = PLACEHOLDER
+            podInfoBinding.podHardEndDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
@@ -382,6 +384,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     }
                 )
             )
+
+            val hardEndAt = expiresAt?.plusHours(8)
+            podInfoBinding.podHardEndDate.text = hardEndAt?.let {
+                dateUtil.dateAndTimeString(it.toEpochSecond() * 1000)
+            } ?: PLACEHOLDER
 
             podStateManager.alarmType?.let {
                 errors.add(
