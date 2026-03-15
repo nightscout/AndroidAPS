@@ -17,6 +17,14 @@ jobs:
       tag: 2023.11.1
 
     steps:
+      - run:
+          name: Skip CircleCI on pull requests
+          command: |
+            if [ -n "${CIRCLE_PULL_REQUEST:-}" ]; then
+              echo "Pull request detected; skipping CircleCI job."
+              circleci-agent step halt
+            fi
+
       - checkout
 
       - android/change-java-version:
