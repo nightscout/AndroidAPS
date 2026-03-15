@@ -285,6 +285,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.podHardEndDate.text = PLACEHOLDER
+            podInfoBinding.podHardEndDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
@@ -311,12 +313,26 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             if (expiresAt == null) {
                 podInfoBinding.podExpiryDate.text = PLACEHOLDER
                 podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+                podInfoBinding.podHardEndDate.text = PLACEHOLDER
+                podInfoBinding.podHardEndDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
                 podInfoBinding.podExpiryDate.setTextColor(
                     rh.gac(
                         context,
                         if (DateTime.now().isAfter(expiresAt)) {
+                            app.aaps.core.ui.R.attr.warningColor
+                        } else {
+                            app.aaps.core.ui.R.attr.defaultTextColor
+                        }
+                    )
+                )
+                val hardEndAt = expiresAt.plusHours(8)
+                podInfoBinding.podHardEndDate.text = readableZonedTime(hardEndAt)
+                podInfoBinding.podHardEndDate.setTextColor(
+                    rh.gac(
+                        context,
+                        if (DateTime.now().isAfter(hardEndAt)) {
                             app.aaps.core.ui.R.attr.warningColor
                         } else {
                             app.aaps.core.ui.R.attr.defaultTextColor

@@ -308,6 +308,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.podHardEndDate.text = PLACEHOLDER
+            podInfoBinding.podHardEndDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
@@ -375,6 +377,26 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                             app.aaps.core.ui.R.attr.warningColor
 
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
+                            app.aaps.core.ui.R.attr.omniYellowColor
+
+                        else                                                                      ->
+                            app.aaps.core.ui.R.attr.defaultTextColor
+                    }
+                )
+            )
+
+            val hardEndAt = expiresAt?.plusHours(8)
+            podInfoBinding.podHardEndDate.text = hardEndAt?.let {
+                dateUtil.dateAndTimeString(it.toEpochSecond() * 1000)
+            } ?: PLACEHOLDER
+            podInfoBinding.podHardEndDate.setTextColor(
+                rh.gac(
+                    context,
+                    when {
+                        hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt)               ->
+                            app.aaps.core.ui.R.attr.warningColor
+
+                        hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt.minusHours(4)) ->
                             app.aaps.core.ui.R.attr.omniYellowColor
 
                         else                                                                      ->
