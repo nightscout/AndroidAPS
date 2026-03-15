@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -116,6 +118,9 @@ class TeljanePlugin @Inject constructor(
         @Inject lateinit var teljanePlugin: TeljanePlugin
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
+        // Minimal addition: used to request Overview refresh after successful insert/update.
+        @Inject lateinit var rxBus: RxBus
+
         private fun readDouble(json: JSONObject, vararg keys: String): Double {
             for (k in keys) if (json.has(k) && !json.isNull(k)) return json.getDouble(k)
             throw JSONException("Missing glucose value field among: ${keys.joinToString()}")
@@ -194,10 +199,17 @@ class TeljanePlugin @Inject constructor(
 
                 val glucoseValues = mutableListOf<GV>()
 
+                val nowMs = System.currentTimeMillis()
+                var hasRecentInBatch = false
+
                 for (i in 0 until jsonArray.length()) {
                     val json = jsonArray.getJSONObject(i)
 
                     val ts = json.getLong("date")
+                    if (!hasRecentInBatch && (nowMs - ts) in 0..TELJANE_RECENT_WINDOW_MS) {
+                        hasRecentInBatch = true
+                    }
+
                     val unitsField = json.optString("units", null)
 
                     // Accept either "current" or legacy "sgv" as the primary value
@@ -207,7 +219,12 @@ class TeljanePlugin @Inject constructor(
 
                     val (mgdl, rawMgdl) = normalizeToMgdl(current, raw, unitsField)
 
-                    val direction = json.optString("direction", "Flat")
+                    // Use "NONE" as fallback value
+                    val direction: String =
+                        json.optString("direction")
+                            .trim()
+                            .takeIf { it.isNotEmpty() && json.has("direction") && !json.isNull("direction") }
+                            ?: "NONE"
 
                     // Teljane extras
                     val sgvId = parseSgvId(json)      // Long?
@@ -228,11 +245,17 @@ class TeljanePlugin @Inject constructor(
                     glucoseValues += gv
                 }
 
-                persistenceLayer.insertCgmSourceData(Sources.Teljane, glucoseValues, emptyList(), null)
+                val txResult = persistenceLayer.insertCgmSourceData(Sources.Teljane, glucoseValues, emptyList(), null)
                     .doOnError { err ->
                         ret = Result.failure(workDataOf("Error" to err.toString()))
                     }
                     .blockingGet()
+
+                // Minimal Teljane-only UI refresh request after successful DB insert/update.
+                // EventRefreshOverview requires a "from" string.
+                if (hasRecentInBatch && (txResult.inserted.isNotEmpty() || txResult.updated.isNotEmpty())) {
+                    rxBus.send(EventRefreshOverview(from = "Teljane", now = true))
+                }
 
             } catch (e: JSONException) {
                 aapsLogger.error("Exception: ", e)
@@ -246,6 +269,7 @@ class TeljanePlugin @Inject constructor(
             private const val TELJANE_SGVID_DIGITS = 13
             private const val TELJANE_MARK_MAX = 99_999
             private const val TELJANE_MARK_FALLBACK = 6_048
+            private const val TELJANE_RECENT_WINDOW_MS = 3L * 60_000L
         }
     }
 }
