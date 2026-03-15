@@ -389,6 +389,21 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.podHardEndDate.text = hardEndAt?.let {
                 dateUtil.dateAndTimeString(it.toEpochSecond() * 1000)
             } ?: PLACEHOLDER
+            podInfoBinding.podHardEndDate.setTextColor(
+                rh.gac(
+                    context,
+                    when {
+                        hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt)               ->
+                            app.aaps.core.ui.R.attr.warningColor
+
+                        hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt.minusHours(4)) ->
+                            app.aaps.core.ui.R.attr.omniYellowColor
+
+                        else                                                                      ->
+                            app.aaps.core.ui.R.attr.defaultTextColor
+                    }
+                )
+            )
 
             podStateManager.alarmType?.let {
                 errors.add(

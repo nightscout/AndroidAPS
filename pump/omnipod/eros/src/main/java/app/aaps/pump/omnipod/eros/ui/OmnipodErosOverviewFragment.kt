@@ -329,6 +329,16 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 )
                 val hardEndAt = expiresAt.plusHours(8)
                 podInfoBinding.podHardEndDate.text = readableZonedTime(hardEndAt)
+                podInfoBinding.podHardEndDate.setTextColor(
+                    rh.gac(
+                        context,
+                        if (DateTime.now().isAfter(hardEndAt)) {
+                            app.aaps.core.ui.R.attr.warningColor
+                        } else {
+                            app.aaps.core.ui.R.attr.defaultTextColor
+                        }
+                    )
+                )
             }
 
             if (podStateManager.isPodFaulted) {
