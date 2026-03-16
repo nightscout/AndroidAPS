@@ -66,11 +66,13 @@
     <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
     <string name="select_site">Click below to select Site</string>
     <string name="record_site_change">Record Site Location</string>
+    <string name="update_site_change">Update Site Location</string>
     <string name="edit_site">Edit</string>
     <string name="record_site_location">Site Location: %1$s</string>
     <string name="record_site_arrow">Site Arrow: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Note deleted</string>
+    <string name="site_filter_info">Select Therapy event type you want to see: Cannula Change and/or Sensor Change</string>
 
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
@@ -291,5 +293,6 @@
     <string name="quick_launch_profile_confirm">Activate profile %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Select Arrow</string>
 
 </resources>

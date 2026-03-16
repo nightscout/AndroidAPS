@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.icons.library
 
+import android.graphics.Path
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.PathParser
 import app.aaps.core.data.model.TE.Location
 
 /**
@@ -24,9 +26,9 @@ val ChildBack: ImageVector by lazy {
     ImageVector.Builder(
         name = "ChildBack",
         defaultWidth = 48.dp,
-        defaultHeight = 128.dp,
+        defaultHeight = 90.dp,
         viewportWidth = 48f,
-        viewportHeight = 128f
+        viewportHeight = 90f
     ).apply {
         // Main body (background)
         path(
@@ -176,93 +178,25 @@ val ChildBack: ImageVector by lazy {
             close()
         }
 
-        path(
-            name = Location.BACK_LEFT_UPPER_ARM.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(15.544f, 30.688f)
-            curveToRelative(-0.175f, 1.144f, -0.537f, 1.603f, -0.905f, 1.559f)
-            curveToRelative(-0.433f, -0.051f, -0.808f, -0.149f, -1.191f, -0.212f)
-            curveToRelative(-0.557f, -0.092f, -0.941f, -0.317f, -0.719f, -1.392f)
-            curveToRelative(0.371f, -1.801f, 0.458f, -3.806f, 0.619f, -4.527f)
-            curveToRelative(0.139f, -0.624f, 0.352f, -0.758f, 0.936f, -0.704f)
-            curveToRelative(0.449f, 0.042f, 0.649f, 0.088f, 1.342f, 0.152f)
-            curveToRelative(0.599f, 0.056f, 0.798f, 0.736f, 0.631f, 1.483f)
-            curveTo(16.082f, 27.831f, 15.736f, 29.432f, 15.544f, 30.688f)
-            close()
-        }
-
-        path(
-            name = Location.BACK_RIGHT_UPPER_ARM.name,
-            fill = SolidColor(Color(0xFFEE694C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(32.553f, 30.647f)
-            curveToRelative(0.132f, 1.149f, 0.476f, 1.622f, 0.846f, 1.592f)
-            curveToRelative(0.435f, -0.035f, 0.813f, -0.118f, 1.198f, -0.167f)
-            curveToRelative(0.56f, -0.071f, 0.952f, -0.281f, 0.771f, -1.364f)
-            curveToRelative(-0.303f, -1.813f, -0.315f, -3.82f, -0.448f, -4.547f)
-            curveToRelative(-0.115f, -0.629f, -0.323f, -0.771f, -0.909f, -0.738f)
-            curveToRelative(-0.451f, 0.025f, -0.652f, 0.063f, -1.347f, 0.102f)
-            curveToRelative(-0.601f, 0.033f, -0.825f, 0.705f, -0.687f, 1.458f)
-            curveTo(32.122f, 27.772f, 32.408f, 29.385f, 32.553f, 30.647f)
-            close()
-        }
-
-        path(
-            name = Location.BACK_LEFT_BUTTOCK.name,
-            fill = SolidColor(Color(0xFFEF6A4C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(16.87f, 44.209f)
-            curveToRelative(0f, -0.697f, 0.207f, -2.048f, 0.621f, -2.664f)
-            curveToRelative(0.621f, -0.923f, 1.31f, -1.159f, 3.603f, -0.834f)
-            curveToRelative(2.303f, 0.327f, 2.3f, 2.656f, 1.917f, 4.963f)
-            curveToRelative(-0.29f, 1.744f, -3.858f, 1.96f, -5.346f, 0.74f)
-            curveTo(17.068f, 45.925f, 16.78f, 45.051f, 16.87f, 44.209f)
-            close()
-        }
-
-        path(
-            name = Location.BACK_RIGHT_BUTTOCK.name,
-            fill = SolidColor(Color(0xFFEF6A4C)),
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color.Black),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 0.2835f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 10f
-        ) {
-            moveTo(31.13f, 44.209f)
-            curveToRelative(0f, -0.697f, -0.207f, -2.048f, -0.621f, -2.664f)
-            curveToRelative(-0.621f, -0.923f, -1.31f, -1.159f, -3.603f, -0.834f)
-            curveToRelative(-2.303f, 0.327f, -2.3f, 2.656f, -1.917f, 4.963f)
-            curveToRelative(0.29f, 1.744f, 3.858f, 1.96f, 5.346f, 0.74f)
-            curveTo(30.932f, 45.925f, 31.22f, 45.051f, 31.13f, 44.209f)
-            close()
-        }
-
     }.build()
+}
+
+/**
+ * Contains SVG path data for each zone of the child body back view.
+ */
+object ChildBackPaths {
+
+    val pathData: Map<Location, String> = mapOf(
+        Location.BACK_LEFT_UPPER_ARM to "M15.544,30.688 c-0.175,1.144-0.537,1.603-0.905,1.559c-0.433-0.051-0.808-0.149-1.191-0.212c-0.557-0.092-0.941-0.317-0.719-1.392 c0.371-1.801,0.458-3.806,0.619-4.527c0.139-0.624,0.352-0.758,0.936-0.704c0.449,0.042,0.649,0.088,1.342,0.152 c0.599,0.056,0.798,0.736,0.631,1.483C16.082,27.831,15.736,29.432,15.544,30.688z",
+        Location.BACK_RIGHT_UPPER_ARM to "M32.553,30.647 c0.132,1.149,0.476,1.622,0.846,1.592c0.435-0.035,0.813-0.118,1.198-0.167c0.56-0.071,0.952-0.281,0.771-1.364 c-0.303-1.813-0.315-3.82-0.448-4.547c-0.115-0.629-0.323-0.771-0.909-0.738c-0.451,0.025-0.652,0.063-1.347,0.102 c-0.601,0.033-0.825,0.705-0.687,1.458C32.122,27.772,32.408,29.385,32.553,30.647z",
+        Location.BACK_LEFT_BUTTOCK to "M16.87,44.209 c0-0.697,0.207-2.048,0.621-2.664c0.621-0.923,1.31-1.159,3.603-0.834c2.303,0.327,2.3,2.656,1.917,4.963 c-0.29,1.744-3.858,1.96-5.346,0.74C17.068,45.925,16.78,45.051,16.87,44.209z",
+        Location.BACK_RIGHT_BUTTOCK to "M31.13,44.209 c0-0.697-0.207-2.048-0.621-2.664c-0.621-0.923-1.31-1.159-3.603-0.834c-2.303,0.327-2.3,2.656-1.917,4.963 c0.29,1.744,3.858,1.96,5.346,0.74C30.932,45.925,31.22,45.051,31.13,44.209z"
+    )
+    val zones: List<Pair<Location, Path>> by lazy {
+        pathData.map { (location, svgData) ->
+            location to PathParser.createPathFromPathData(svgData)
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -271,7 +205,7 @@ private fun ChildBackPreview() {
     Icon(
         imageVector = ChildBack,
         contentDescription = null,
-        modifier = Modifier.size(48.dp, 128.dp),
+        modifier = Modifier.size(48.dp, 90.dp),
         tint = Color.Unspecified
     )
 }

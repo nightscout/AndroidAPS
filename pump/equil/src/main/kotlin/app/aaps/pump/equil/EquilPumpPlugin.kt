@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -93,6 +92,7 @@ class EquilPumpPlugin @Inject constructor(
         .mainType(PluginType.PUMP)
         .composeContent { _ ->
             EquilComposeContent(
+                pluginName = rh.gs(R.string.equil_name),
                 protectionCheck = protectionCheck,
                 blePreCheck = blePreCheck
             )

@@ -59,6 +59,7 @@ import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcQuestion
+import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
@@ -70,17 +71,29 @@ import app.aaps.core.ui.R as CoreUiR
 fun CareDialogScreen(
     viewModel: CareDialogViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
-    onShowSiteRotationDialog: (Long) -> Unit
+    onPickSiteLocation: () -> Unit = {},
+    siteLocationResult: Pair<String?, String?>? = null
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Observe side effects
-    LaunchedEffect(Unit) {
-        viewModel.sideEffect.collect { effect ->
-            when (effect) {
-                is CareDialogViewModel.SideEffect.ShowSiteRotationDialog -> {
-                    onShowSiteRotationDialog(effect.timestamp)
+    // Process site location result from picker screen
+    LaunchedEffect(siteLocationResult) {
+        siteLocationResult?.let { (locationName, arrowName) ->
+            if (locationName != null) {
+                val location = try {
+                    TE.Location.valueOf(locationName)
+                } catch (_: Exception) {
+                    TE.Location.NONE
                 }
+                viewModel.updateSiteLocation(location)
+            }
+            if (arrowName != null) {
+                val arrow = try {
+                    TE.Arrow.valueOf(arrowName)
+                } catch (_: Exception) {
+                    TE.Arrow.NONE
+                }
+                viewModel.updateSiteArrow(arrow)
             }
         }
     }
@@ -135,7 +148,8 @@ fun CareDialogScreen(
         onNavigateBack = onNavigateBack,
         onConfirmClick = { showConfirmation = true },
         onDateClick = { showDatePicker = true },
-        onTimeClick = { showTimePicker = true }
+        onTimeClick = { showTimePicker = true },
+        onPickSiteLocation = onPickSiteLocation
     )
 }
 
@@ -152,7 +166,8 @@ private fun CareDialogContent(
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit,
     onDateClick: () -> Unit,
-    onTimeClick: () -> Unit
+    onTimeClick: () -> Unit,
+    onPickSiteLocation: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -200,6 +215,18 @@ private fun CareDialogContent(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
+            }
+
+            // Site rotation section (for SENSOR_INSERT with CGM site rotation enabled)
+            if (uiState.showSiteRotationSection) {
+                SiteLocationSummary(
+                    siteType = TE.Type.SENSOR_CHANGE,
+                    lastLocationString = uiState.lastSiteLocationString,
+                    selectedLocationString = uiState.selectedSiteLocationString,
+                    onPickSiteClick = onPickSiteLocation,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
 
             // BG Section

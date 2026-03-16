@@ -33,6 +33,7 @@ data class WizardButton(
 fun WizardStepLayout(
     primaryButton: WizardButton? = null,
     secondaryButton: WizardButton? = null,
+    scrollable: Boolean = true,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -41,11 +42,11 @@ fun WizardStepLayout(
             .fillMaxSize()
             .padding(horizontal = AapsSpacing.extraLarge)
     ) {
-        // Scrollable content area
+        // Content area (scrollable by default, non-scrollable for content using weight)
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
+                .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
                 .padding(vertical = AapsSpacing.extraLarge),
             verticalArrangement = Arrangement.spacedBy(AapsSpacing.large),
             content = content

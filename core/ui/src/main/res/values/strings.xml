@@ -30,6 +30,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Save</string>
+    <string name="skip">Skip</string>
     <string name="switch_to_edit">Edit</string>
     <string name="snooze">Snooze</string>
     <string name="snooze_15m">Snooze 15m</string>
@@ -204,6 +205,14 @@
     <string name="logout">Logout</string>
     <string name="prime_fill">Prime/Fill</string>
     <string name="site_rotation">Site Rotation</string>
+    <string name="edit_site">Edit</string>
+    <string name="select_arrow">Select Arrow</string>
+    <string name="site_filter_info">Select Therapy event type you want to see: Cannula Change and/or Sensor Change</string>
+    <string name="selected_location">Selected: %1$s</string>
+    <string name="last_site_location">Last site: %1$s</string>
+    <string name="pick_site">Pick site</string>
+    <string name="select_site_location">Select site location</string>
+    <string name="site_location">Site location</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Stop temp target</string>
     <string name="closedloop">Closed Loop</string>

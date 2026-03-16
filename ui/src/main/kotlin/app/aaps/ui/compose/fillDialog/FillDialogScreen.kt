@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
@@ -66,6 +67,7 @@ import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
+import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
@@ -77,10 +79,33 @@ fun FillDialogScreen(
     viewModel: FillDialogViewModel = hiltViewModel(),
     fillButtonsDef: PreferenceSubScreenDef,
     onNavigateBack: () -> Unit,
-    onShowSiteRotationDialog: (Long) -> Unit,
-    onShowDeliveryError: (String) -> Unit
+    onShowDeliveryError: (String) -> Unit,
+    onPickSiteLocation: () -> Unit = {},
+    siteLocationResult: Pair<String?, String?>? = null
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Process site location result from picker screen
+    LaunchedEffect(siteLocationResult) {
+        siteLocationResult?.let { (locationName, arrowName) ->
+            if (locationName != null) {
+                val location = try {
+                    TE.Location.valueOf(locationName)
+                } catch (_: Exception) {
+                    TE.Location.NONE
+                }
+                viewModel.updateSiteLocation(location)
+            }
+            if (arrowName != null) {
+                val arrow = try {
+                    TE.Arrow.valueOf(arrowName)
+                } catch (_: Exception) {
+                    TE.Arrow.NONE
+                }
+                viewModel.updateSiteArrow(arrow)
+            }
+        }
+    }
 
     // Dialog states (rememberSaveable to survive rotation)
     var showConfirmation by rememberSaveable { mutableStateOf(false) }
@@ -93,15 +118,11 @@ fun FillDialogScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
             when (effect) {
-                is FillDialogViewModel.SideEffect.ShowSiteRotationDialog -> {
-                    onShowSiteRotationDialog(effect.timestamp)
-                }
-
-                is FillDialogViewModel.SideEffect.ShowNoActionDialog     -> {
+                is FillDialogViewModel.SideEffect.ShowNoActionDialog -> {
                     showNoAction = true
                 }
 
-                is FillDialogViewModel.SideEffect.ShowDeliveryError      -> {
+                is FillDialogViewModel.SideEffect.ShowDeliveryError  -> {
                     onShowDeliveryError(effect.comment)
                 }
             }
@@ -204,7 +225,8 @@ fun FillDialogScreen(
             { showButtonSettings = true }
         },
         onNavigateBack = onNavigateBack,
-        onConfirmClick = { showConfirmation = true }
+        onConfirmClick = { showConfirmation = true },
+        onPickSiteLocation = onPickSiteLocation
     )
 }
 
@@ -223,7 +245,8 @@ private fun FillDialogContent(
     onTimeClick: () -> Unit,
     onSettingsClick: (() -> Unit)?,
     onNavigateBack: () -> Unit,
-    onConfirmClick: () -> Unit
+    onConfirmClick: () -> Unit,
+    onPickSiteLocation: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -297,6 +320,17 @@ private fun FillDialogContent(
                 Switch(
                     checked = uiState.siteChange,
                     onCheckedChange = { onSiteChangeClick() }
+                )
+            }
+
+            // Site location picker (visible when site change is checked and site rotation enabled)
+            if (uiState.siteChange && uiState.siteRotationEnabled) {
+                SiteLocationSummary(
+                    siteType = TE.Type.CANNULA_CHANGE,
+                    lastLocationString = uiState.lastSiteLocationString,
+                    selectedLocationString = uiState.selectedSiteLocationString,
+                    onPickSiteClick = onPickSiteLocation,
+                    modifier = Modifier.padding(start = 16.dp)
                 )
             }
 

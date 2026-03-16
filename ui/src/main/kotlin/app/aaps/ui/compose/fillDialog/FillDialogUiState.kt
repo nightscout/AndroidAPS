@@ -2,6 +2,7 @@ package app.aaps.ui.compose.fillDialog
 
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
 
 enum class FillPreselect {
     NONE,
@@ -38,6 +39,13 @@ data class FillDialogUiState(
 
     // Pump units warning (non-null when concentration != U100)
     val pumpUnitsWarning: String? = null,
+
+    // Site rotation
+    val siteRotationEnabled: Boolean = false,
+    val siteLocation: TE.Location = TE.Location.NONE,
+    val siteArrow: TE.Arrow = TE.Arrow.NONE,
+    val lastSiteLocationString: String? = null,
+    val selectedSiteLocationString: String? = null,
 
     // Config
     val showBolus: Boolean = true,

@@ -97,4 +97,12 @@ sealed class AppRoute(val route: String) {
 
         fun createRoute(source: String) = "import_settings/$source"
     }
+
+    data object SiteLocationPicker : AppRoute("siteLocationPicker/{siteTypeOrdinal}") {
+
+        fun createRoute(siteType: app.aaps.core.data.model.TE.Type) = "siteLocationPicker/${siteType.ordinal}"
+    }
+
+    data object SiteRotationManagement : AppRoute("siteRotationManagement")
+    data object SiteRotationSettings : AppRoute("siteRotationSettings")
 }

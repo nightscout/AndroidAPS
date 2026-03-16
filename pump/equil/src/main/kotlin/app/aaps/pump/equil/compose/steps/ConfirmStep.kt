@@ -15,6 +15,7 @@ import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
+import app.aaps.pump.equil.compose.EquilWizardStep
 import app.aaps.pump.equil.compose.EquilWizardViewModel
 
 @Composable
@@ -24,11 +25,13 @@ internal fun ConfirmStep(
 ) {
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+    val hasBack = viewModel.hasPreviousStep(EquilWizardStep.CONFIRM)
 
     ConfirmStepContent(
         isLoading = isLoading,
         errorMessage = errorMessage,
         onFinish = { viewModel.startConfirm() },
+        onBack = if (hasBack) ({ viewModel.moveToPreviousStep(EquilWizardStep.CONFIRM) }) else null,
         onCancel = onCancel
     )
 }
@@ -38,6 +41,7 @@ private fun ConfirmStepContent(
     isLoading: Boolean,
     errorMessage: String?,
     onFinish: () -> Unit,
+    onBack: (() -> Unit)?,
     onCancel: () -> Unit
 ) {
     WizardStepLayout(
@@ -47,8 +51,8 @@ private fun ConfirmStepContent(
             loading = isLoading
         ),
         secondaryButton = if (!isLoading) WizardButton(
-            text = stringResource(app.aaps.core.ui.R.string.cancel),
-            onClick = onCancel
+            text = stringResource(if (onBack != null) app.aaps.core.ui.R.string.back else app.aaps.core.ui.R.string.cancel),
+            onClick = onBack ?: onCancel
         ) else null
     ) {
         Text(
@@ -70,6 +74,7 @@ private fun ConfirmStepPreview() {
         isLoading = false,
         errorMessage = null,
         onFinish = {},
+        onBack = null,
         onCancel = {}
     )
 }
@@ -81,6 +86,7 @@ private fun ConfirmStepLoadingPreview() {
         isLoading = true,
         errorMessage = null,
         onFinish = {},
+        onBack = null,
         onCancel = {}
     )
 }
@@ -92,6 +98,7 @@ private fun ConfirmStepErrorPreview() {
         isLoading = false,
         errorMessage = "Communication error",
         onFinish = {},
+        onBack = null,
         onCancel = {}
     )
 }

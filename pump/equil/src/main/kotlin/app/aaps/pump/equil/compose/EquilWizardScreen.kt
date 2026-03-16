@@ -13,6 +13,7 @@ import app.aaps.pump.equil.compose.steps.ChangeInsulinStep
 import app.aaps.pump.equil.compose.steps.ConfirmStep
 import app.aaps.pump.equil.compose.steps.FillStep
 import app.aaps.pump.equil.compose.steps.SerialNumberStep
+import app.aaps.pump.equil.compose.steps.SiteLocationStep
 import app.aaps.pump.equil.compose.steps.UnpairConfirmStep
 import app.aaps.pump.equil.compose.steps.UnpairDetachStep
 
@@ -40,6 +41,7 @@ internal fun EquilWizardScreen(viewModel: EquilWizardViewModel) {
                 EquilWizardStep.FILL           -> FillStep(viewModel, onCancel)
                 EquilWizardStep.ATTACH         -> AttachStep(viewModel, onCancel)
                 EquilWizardStep.AIR            -> AirStep(viewModel, onCancel)
+                EquilWizardStep.SITE_LOCATION  -> SiteLocationStep(viewModel, onCancel)
                 EquilWizardStep.CONFIRM        -> ConfirmStep(viewModel, onCancel)
                 EquilWizardStep.CHANGE_INSULIN -> ChangeInsulinStep(viewModel, onCancel)
                 EquilWizardStep.UNPAIR_DETACH  -> UnpairDetachStep(viewModel, onCancel)

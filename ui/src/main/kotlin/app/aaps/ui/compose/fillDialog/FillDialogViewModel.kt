@@ -27,10 +27,13 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -58,6 +61,7 @@ class FillDialogViewModel @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
+    private val translator: Translator,
     private val aapsLogger: AAPSLogger,
     private val ch: ConcentrationHelper,
     private val insulinManager: InsulinManager,
@@ -68,7 +72,6 @@ class FillDialogViewModel @Inject constructor(
         field = MutableStateFlow(FillDialogUiState())
 
     sealed class SideEffect {
-        data class ShowSiteRotationDialog(val timestamp: Long) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
         data class ShowDeliveryError(val comment: String) : SideEffect()
     }
@@ -109,10 +112,33 @@ class FillDialogViewModel @Inject constructor(
                 activeInsulinLabel = activeLabel,
                 pumpUnitsWarning = pumpUnitsWarningFor(currentInsulin),
                 showBolus = !config.AAPSCLIENT,
+                siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump),
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
                 concentrationEnabled = preferences.get(BooleanKey.GeneralInsulinConcentration)
             )
+        }
+        loadLastSiteLocation()
+    }
+
+    private fun loadLastSiteLocation() {
+        viewModelScope.launch {
+            try {
+                val allEntries = persistenceLayer.getTherapyEventDataFromTime(
+                    dateUtil.now() - app.aaps.core.data.time.T.days(45).msecs(), false
+                ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+                siteRotationEntriesCache = allEntries
+                val lastEntry = allEntries
+                    .filter { it.type == TE.Type.CANNULA_CHANGE && it.location != null && it.location != TE.Location.NONE }
+                    .maxByOrNull { it.timestamp }
+                if (lastEntry != null) {
+                    uiState.update {
+                        it.copy(lastSiteLocationString = translator.translate(lastEntry.location))
+                    }
+                }
+            } catch (_: Exception) {
+                // ignore
+            }
         }
     }
 
@@ -164,6 +190,28 @@ class FillDialogViewModel @Inject constructor(
         if (concentration == 1.0) return null // U100 — no warning needed
         return rh.gs(R.string.fill_pump_units_note)
     }
+
+    fun updateSiteLocation(location: TE.Location) {
+        uiState.update {
+            it.copy(
+                siteLocation = location,
+                selectedSiteLocationString = if (location != TE.Location.NONE) translator.translate(location) else null
+            )
+        }
+    }
+
+    fun updateSiteArrow(arrow: TE.Arrow) {
+        uiState.update { it.copy(siteArrow = arrow) }
+    }
+
+    fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
+
+    fun siteRotationEntries(): List<TE> {
+        // Return cached entries from uiState or empty; actual data loaded async
+        return siteRotationEntriesCache
+    }
+
+    private var siteRotationEntriesCache: List<TE> = emptyList()
 
     /**
      * A line in the confirmation summary.
@@ -229,6 +277,10 @@ class FillDialogViewModel @Inject constructor(
             lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime)))
         }
 
+        if (state.siteRotationEnabled && state.siteLocation != TE.Location.NONE) {
+            lines.add(SummaryLine(rh.gs(app.aaps.core.ui.R.string.site_location) + ": " + translator.translate(state.siteLocation)))
+        }
+
         return lines
     }
 
@@ -269,18 +321,24 @@ class FillDialogViewModel @Inject constructor(
         if (state.siteChange) {
             viewModelScope.launch {
                 try {
+                    val location = state.siteLocation.takeIf { it != TE.Location.NONE }
+                    val arrow = state.siteArrow.takeIf { it != TE.Arrow.NONE }
                     persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = TE(
                             timestamp = eventTime,
                             type = TE.Type.CANNULA_CHANGE,
                             note = notes,
-                            glucoseUnit = GlucoseUnit.MGDL
+                            glucoseUnit = GlucoseUnit.MGDL,
+                            location = location,
+                            arrow = arrow
                         ),
                         action = Action.SITE_CHANGE, source = Sources.FillDialog,
                         note = notes,
                         listValues = listOfNotNull(
                             ValueWithUnit.Timestamp(eventTime).takeIf { state.eventTimeChanged },
-                            ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE)
+                            ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE),
+                            location?.let { ValueWithUnit.TELocation(it) },
+                            arrow?.let { ValueWithUnit.TEArrow(it) }
                         )
                     )
                 } catch (e: Exception) {
@@ -288,9 +346,6 @@ class FillDialogViewModel @Inject constructor(
                 }
             }
 
-            if (preferences.get(BooleanKey.SiteRotationManageCgm)) {
-                sideEffect.tryEmit(SideEffect.ShowSiteRotationDialog(eventTime))
-            }
         }
 
         // Insulin cartridge change (offset by 1 second if site change also recorded)
