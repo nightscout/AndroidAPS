@@ -1,5 +1,23 @@
 package app.aaps.core.interfaces.configuration
 
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+
+/**
+ * Represents the current initialization progress of the app.
+ * @param step Human-readable description of the current step
+ * @param current Current item being processed (for determinate progress)
+ * @param total Total items to process (for determinate progress, 0 = indeterminate)
+ * @param done True when initialization is complete
+ */
+data class InitProgress(
+    val step: String = "",
+    val current: Int = 0,
+    val total: Int = 0,
+    val done: Boolean = false,
+    val error: String? = null
+)
+
 @Suppress("PropertyName")
 interface Config {
 
@@ -24,7 +42,16 @@ interface Config {
     val currentDeviceModelString: String
     val appName: Int
 
-    var appInitialized: Boolean
+    val initProgressFlow: StateFlow<InitProgress>
+    val initSnackbarFlow: SharedFlow<String>
+
+    /** Whether the app has completed initialization. Derived from [initProgressFlow]. */
+    val appInitialized: Boolean get() = initProgressFlow.value.done
+
+    fun updateInitProgress(step: String, current: Int = 0, total: Int = 0)
+    fun initCompleted()
+    fun initFailed(error: String)
+    fun showInitSnackbar(message: String)
 
     fun isDev(): Boolean
     fun isEngineeringModeOrRelease(): Boolean

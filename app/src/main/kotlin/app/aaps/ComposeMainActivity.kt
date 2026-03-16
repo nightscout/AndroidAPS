@@ -14,16 +14,31 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -35,8 +50,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,6 +71,7 @@ import app.aaps.compose.navigation.AppRoute
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -76,6 +96,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
@@ -101,6 +122,7 @@ import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
+import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
@@ -297,670 +319,785 @@ class ComposeMainActivity : AppCompatActivity() {
             LocalVisibilityContext provides visibilityContext
         ) {
             AapsTheme {
-                // Protection dialog host - handles all protection requests
-                ProtectionHost(
-                    protectionCheck = protectionCheck,
-                    preferences = preferences,
-                    checkPassword = cryptoUtil::checkPassword,
-                    showBiometric = { activity, titleRes, onGranted, onCancelled, onDenied ->
-                        BiometricCheck.biometricPrompt(activity, titleRes, onGranted, onCancelled, onDenied, passwordCheck)
-                    }
-                )
+                val initProgress by config.initProgressFlow.collectAsStateWithLifecycle()
 
-                // Permissions bottom sheet
-                val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()
-
-                val snackbarHostState = remember { SnackbarHostState() }
-
-                LaunchedEffect(Unit) {
-                    permissionsViewModel.sideEffect.collect { effect ->
-                        when (effect) {
-                            is PermissionsSideEffect.RequestPermissions      ->
-                                requestMultiplePermissions?.launch(effect.permissions.toTypedArray())
-
-                            is PermissionsSideEffect.LaunchSpecialPermission ->
-                                when {
-                                    effect.group.permissions.contains(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) ->
-                                        try {
-                                            callForBatteryOptimization?.launch(null)
-                                        } catch (_: ActivityNotFoundException) {
-                                            snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
-                                        } catch (_: IllegalStateException) {
-                                            snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.error_asking_for_permissions))
-                                        }
-
-                                    effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
-                                        try {
-                                            accessTree?.launch(null)
-                                        } catch (_: Exception) {
-                                            snackbarHostState.showSnackbar(getString(app.aaps.ui.R.string.permission_directory_picker_error))
-                                        }
-
-                                    effect.group.permissions.contains(DexcomPlugin.PERMISSION)                                  ->
-                                        startActivity(Intent(this@ComposeMainActivity, RequestDexcomPermissionActivity::class.java))
-
-                                    effect.group.permissions.contains(Manifest.permission.POST_NOTIFICATIONS)                   ->
-                                        startActivity(
-                                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                                                putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                                            }
-                                        )
-
-                                    effect.group.permissions.contains(Manifest.permission.SCHEDULE_EXACT_ALARM)                 ->
-                                        startActivity(
-                                            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                                                data = "package:$packageName".toUri()
-                                            }
-                                        )
-
-                                    effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
-                                        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-                                }
-
-                            is PermissionsSideEffect.ShowError               ->
-                                snackbarHostState.showSnackbar(effect.message)
-
-                            is PermissionsSideEffect.PermanentlyDenied       -> {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = getString(app.aaps.ui.R.string.permission_denied_go_to_settings),
-                                    actionLabel = getString(app.aaps.ui.R.string.permission_open_settings),
-                                )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    startActivity(
-                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                            data = "package:$packageName".toUri()
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (permState.showSheet) {
-                    PermissionsSheet(
-                        items = permState.items,
-                        snackbarHostState = snackbarHostState,
-                        onRequestPermission = { permissionsViewModel.requestPermission(it) },
-                        onDismiss = { permissionsViewModel.dismissSheet() }
-                    )
-                }
-
-                val state by mainViewModel.uiState.collectAsStateWithLifecycle()
-
-                NavHost(
-                    navController = navController,
-                    startDestination = AppRoute.Main.route
+                AnimatedVisibility(
+                    visible = !initProgress.done,
+                    exit = fadeOut()
                 ) {
-                    composable(AppRoute.Main.route) {
-                        val searchState by searchViewModel.uiState.collectAsStateWithLifecycle()
-                        val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
-                        val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
-                        val quickLaunchItems by mainViewModel.quickLaunchItems.collectAsStateWithLifecycle()
-
-                        // Pump setup button in bottom bar
-                        val pumpPlugin = activePlugin.activePumpInternal as PluginBase
-                        val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) && pumpPlugin.hasComposeContent()
-                        val pumpSetupClassName = if (showPumpSetup) pumpPlugin.javaClass.simpleName else null
-                        val pumpSetupIcon = if (showPumpSetup) pumpPlugin.pluginDescription.icon ?: Pump else null
-                        val pumpSetupLabel = if (showPumpSetup) stringResource(pumpPlugin.pluginDescription.pluginName) else null
-
-                        val manageSheetState = ManageSheetHost(
-                            manageViewModel = manageViewModel,
-                            isSimpleMode = state.isSimpleMode,
-                            onNavigate = { request -> handleNavigationRequest(request, navController) },
-                            onActionsError = { comment, title ->
-                                uiInteraction.runAlarm(comment, title, app.aaps.core.ui.R.raw.boluserror)
-                            },
-                        )
-
-                        // Authorization failed dialog
-                        if (state.showAuthFailedDialog) {
-                            OkDialog(
-                                title = "",
-                                message = stringResource(R.string.authorizationfailed),
-                                onDismiss = {
-                                    mainViewModel.setShowAuthFailedDialog(false)
-                                    finish()
-                                }
-                            )
+                    val splashSnackbarHostState = remember { SnackbarHostState() }
+                    LaunchedEffect(Unit) {
+                        config.initSnackbarFlow.collect { message ->
+                            splashSnackbarHostState.showSnackbar(message)
                         }
+                    }
+                    SplashScreen(initProgress, splashSnackbarHostState)
+                }
 
+                AnimatedVisibility(
+                    visible = initProgress.done,
+                    enter = fadeIn()
+                ) {
+                    AppContent(navController)
+                }
+            }
+        }
+    }
 
-                        MainScreen(
-                            mainViewModel = mainViewModel,
-                            uiState = state,
-                            aboutDialogData = if (state.showAboutDialog) {
-                                mainViewModel.buildAboutDialogData(getString(R.string.app_name))
-                            } else null,
-                            manageSheetState = manageSheetState,
-                            manageViewModel = manageViewModel,
-                            maintenanceViewModel = maintenanceViewModel,
-                            statusViewModel = statusViewModel,
-                            treatmentViewModel = treatmentViewModel,
-                            automationViewModel = automationViewModel,
-                            // Search
-                            searchUiState = searchState,
-                            onSearchQueryChange = { searchViewModel.onQueryChanged(it) },
-                            onSearchClear = { searchViewModel.clearQuery() },
-                            onSearchActiveChange = { active ->
-                                if (active) searchViewModel.onSearchModeActivated()
-                                else searchViewModel.onSearchModeDeactivated()
-                            },
-                            onSearchResultClick = { entry ->
-                                handleSearchResultClick(entry, navController)
-                            },
-                            onMenuClick = { mainViewModel.openDrawer() },
-                            onNavigate = { request -> handleNavigationRequest(request, navController) },
-                            onDrawerClosed = { mainViewModel.closeDrawer() },
-                            onSwitchToClassicUi = { switchToClassicUi() },
-                            onAboutDialogDismiss = { mainViewModel.setShowAboutDialog(false) },
-                            onMaintenanceSheetDismiss = { mainViewModel.setShowMaintenanceSheet(false) },
-                            onDirectoryClick = {
+    @Composable
+    private fun SplashScreen(progress: InitProgress, snackbarHostState: SnackbarHostState) {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.surface),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(app.aaps.core.ui.R.drawable.splash_logo),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.dp)
+                )
+                Spacer(Modifier.height(32.dp))
+                val error = progress.error
+                if (error != null) {
+                    Text(
+                        text = stringResource(app.aaps.core.ui.R.string.initialization_failed),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = error,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Button(onClick = { finish() }) {
+                        Text(stringResource(app.aaps.core.ui.R.string.close))
+                    }
+                } else {
+                    Text(
+                        text = progress.step.ifEmpty { stringResource(app.aaps.core.ui.R.string.loading) },
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    if (progress.total > 0) {
+                        LinearProgressIndicator(
+                            progress = { progress.current.toFloat() / progress.total },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 48.dp)
+                                .height(4.dp)
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = "${progress.current} / ${progress.total}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 48.dp)
+                                .height(4.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun AppContent(navController: NavHostController) {
+        // Trigger initial refresh when app content first appears (after init completes)
+        LaunchedEffect(Unit) { refreshOnResume() }
+
+        // Auto-launch setup wizard on first run
+        LaunchedEffect(Unit) {
+            if (!preferences.get(BooleanNonKey.GeneralSetupWizardProcessed) && !isRunningRealPumpTest()) {
+                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                    if (result == ProtectionResult.GRANTED) {
+                        startActivity(Intent(this@ComposeMainActivity, SetupWizardActivity::class.java))
+                    }
+                }
+            }
+        }
+
+        // Protection dialog host - handles all protection requests
+        ProtectionHost(
+            protectionCheck = protectionCheck,
+            preferences = preferences,
+            checkPassword = cryptoUtil::checkPassword,
+            showBiometric = { activity, titleRes, onGranted, onCancelled, onDenied ->
+                BiometricCheck.biometricPrompt(activity, titleRes, onGranted, onCancelled, onDenied, passwordCheck)
+            }
+        )
+
+        // Permissions bottom sheet
+        val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()
+
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        LaunchedEffect(Unit) {
+            permissionsViewModel.sideEffect.collect { effect ->
+                when (effect) {
+                    is PermissionsSideEffect.RequestPermissions      ->
+                        requestMultiplePermissions?.launch(effect.permissions.toTypedArray())
+
+                    is PermissionsSideEffect.LaunchSpecialPermission ->
+                        when {
+                            effect.group.permissions.contains(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) ->
+                                try {
+                                    callForBatteryOptimization?.launch(null)
+                                } catch (_: ActivityNotFoundException) {
+                                    snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
+                                } catch (_: IllegalStateException) {
+                                    snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.error_asking_for_permissions))
+                                }
+
+                            effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
                                 try {
                                     accessTree?.launch(null)
                                 } catch (_: Exception) {
-                                    maintenanceViewModel.emitError("Unable to launch activity. This is an Android issue")
+                                    snackbarHostState.showSnackbar(getString(app.aaps.ui.R.string.permission_directory_picker_error))
                                 }
-                            },
-                            onLaunchBrowser = { url ->
-                                try {
-                                    val customTabsIntent = CustomTabsIntent.Builder()
-                                        .setShowTitle(true)
-                                        .build()
-                                    customTabsIntent.launchUrl(this@ComposeMainActivity, url.toUri())
-                                } catch (_: Exception) {
-                                    maintenanceViewModel.emitError("Unable to open browser")
-                                }
-                            },
-                            onBringToForeground = {
-                                val intent = Intent(this@ComposeMainActivity, ComposeMainActivity::class.java)
-                                    .addFlags(
-                                        Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                                            or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                            or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                            or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    )
-                                startActivity(intent)
-                            },
-                            onImportSettingsNavigate = { source ->
-                                navController.navigate(AppRoute.ImportSettings.createRoute(source.name))
-                            },
-                            onRecreateActivity = { recreate() },
-                            // Notifications
-                            notifications = notifications,
-                            onDismissNotification = { notification ->
-                                notificationManager.dismiss(notification.id)
-                            },
-                            onNotificationActionClick = { notification ->
-                                handleNotificationAction(notification.id, navController)
-                            },
-                            autoShowNotificationSheet = _autoShowNotifications.value,
-                            onAutoShowConsumed = { _autoShowNotifications.value = false },
-                            pumpSetupClassName = pumpSetupClassName,
-                            pumpSetupIcon = pumpSetupIcon,
-                            pumpSetupLabel = pumpSetupLabel,
-                            permissionsMissing = permState.hasAnyMissing,
-                            onPermissionsClick = {
-                                permissionsViewModel.showSheet()
-                            },
-                            // Toolbar
-                            quickLaunchItems = quickLaunchItems,
-                            onQuickLaunchActionClick = { action -> handleQuickLaunchAction(action, navController) },
-                            calcProgress = calcProgress,
-                            graphViewModel = graphViewModel,
-                            statusLightsDef = builtInSearchables.statusLights,
-                            treatmentButtonsDef = builtInSearchables.treatmentButtons
-                        )
-                    }
 
-                    composable(
-                        AppRoute.InsulinManagement.route,
-                        arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
-                    ) { backStackEntry ->
-                        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
-                        InsulinManagementScreen(
-                            viewModel = insulinManagementViewModel,
-                            initialMode = mode,
-                            onNavigateBack = { navController.popBackStack() },
-                            onRequestEditMode = {
-                                withProtection(ProtectionCheck.Protection.PREFERENCES) {
-                                    insulinManagementViewModel.setScreenMode(ScreenMode.EDIT)
-                                }
-                            }
-                        )
-                    }
+                            effect.group.permissions.contains(DexcomPlugin.PERMISSION)                                  ->
+                                startActivity(Intent(this@ComposeMainActivity, RequestDexcomPermissionActivity::class.java))
 
-                    composable(
-                        AppRoute.Profile.route,
-                        arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
-                    ) { backStackEntry ->
-                        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
-                        ProfileManagementScreen(
-                            viewModel = profileManagementViewModel,
-                            initialMode = mode,
-                            onNavigateBack = { navController.popBackStack() },
-                            onRequestEditMode = {
-                                withProtection(ProtectionCheck.Protection.PREFERENCES) {
-                                    profileManagementViewModel.setScreenMode(ScreenMode.EDIT)
-                                }
-                            },
-                            onEditProfile = { index ->
-                                profileEditorViewModel.selectProfile(index)
-                                navController.navigate(AppRoute.ProfileEditor.createRoute(index))
-                            },
-                            onActivateProfile = { index ->
-                                withProtection(ProtectionCheck.Protection.BOLUS) {
-                                    navController.navigate(AppRoute.ProfileActivation.createRoute(index))
-                                }
-                            }
-                        )
-                    }
-
-                    composable(
-                        AppRoute.TempTargetManagement.route,
-                        arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
-                    ) { backStackEntry ->
-                        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
-                        TempTargetManagementScreen(
-                            viewModel = tempTargetManagementViewModel,
-                            initialMode = mode,
-                            onNavigateBack = { navController.popBackStack() },
-                            onRequestEditMode = {
-                                withProtection(ProtectionCheck.Protection.PREFERENCES) {
-                                    tempTargetManagementViewModel.setScreenMode(ScreenMode.EDIT)
-                                }
-                            }
-                        )
-                    }
-
-                    composable(
-                        AppRoute.QuickWizardManagement.route,
-                        arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
-                    ) { backStackEntry ->
-                        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
-                        QuickWizardManagementScreen(
-                            viewModel = quickWizardManagementViewModel,
-                            initialMode = mode,
-                            onNavigateBack = { navController.popBackStack() },
-                            onRequestEditMode = {
-                                withProtection(ProtectionCheck.Protection.PREFERENCES) {
-                                    quickWizardManagementViewModel.setScreenMode(ScreenMode.EDIT)
-                                }
-                            },
-                            onExecuteClick = { guid ->
-                                withProtection(ElementType.QUICK_WIZARD.protection) {
-                                    mainViewModel.executeQuickWizard(this@ComposeMainActivity, guid)
-                                }
-                            }
-                        )
-                    }
-
-                    composable(AppRoute.RunningMode.route) {
-                        RunningModeScreen(
-                            viewModel = runningModeManagementViewModel,
-                            showOkCancel = true,
-                            onNavigateBack = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.CareDialog.route,
-                        arguments = listOf(
-                            navArgument("eventTypeOrdinal") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) {
-                        CareDialogScreen(
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
-                            }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.FillDialog.route,
-                        arguments = listOf(
-                            navArgument("preselect") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) {
-                        FillDialogScreen(
-                            fillButtonsDef = builtInSearchables.fillButtons,
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowSiteRotationDialog = {
-                                uiInteraction.runSiteRotationDialog(supportFragmentManager)
-                            },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(route = AppRoute.CarbsDialog.route) {
-                        CarbsDialogScreen(
-                            carbsButtonsDef = builtInSearchables.carbsButtons,
-                            bgInfoState = graphViewModel.bgInfoState,
-                            iobUiState = graphViewModel.iobUiState,
-                            cobUiState = graphViewModel.cobUiState,
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(route = AppRoute.InsulinDialog.route) {
-                        InsulinDialogScreen(
-                            insulinButtonsDef = builtInSearchables.insulinButtons,
-                            bgInfoState = graphViewModel.bgInfoState,
-                            iobUiState = graphViewModel.iobUiState,
-                            cobUiState = graphViewModel.cobUiState,
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(route = AppRoute.TreatmentDialog.route) {
-                        TreatmentDialogScreen(
-                            bgInfoState = graphViewModel.bgInfoState,
-                            iobUiState = graphViewModel.iobUiState,
-                            cobUiState = graphViewModel.cobUiState,
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(route = AppRoute.TempBasalDialog.route) {
-                        TempBasalDialogScreen(
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(route = AppRoute.ExtendedBolusDialog.route) {
-                        ExtendedBolusDialogScreen(
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.WizardDialog.route,
-                        arguments = listOf(
-                            navArgument("carbs") {
-                                type = NavType.StringType
-                                nullable = true
-                                defaultValue = null
-                            },
-                            navArgument("notes") {
-                                type = NavType.StringType
-                                nullable = true
-                                defaultValue = null
-                            }
-                        )
-                    ) {
-                        WizardDialogScreen(
-                            wizardSettingsDef = builtInSearchables.wizardSettings,
-                            onNavigateBack = { navController.popBackStack() },
-                            onShowDeliveryError = { comment ->
-                                uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                            }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.ImportSettings.route,
-                        arguments = listOf(
-                            navArgument("source") {
-                                type = NavType.StringType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        val source = try {
-                            ImportSource.valueOf(backStackEntry.arguments?.getString("source") ?: "LOCAL")
-                        } catch (_: IllegalArgumentException) {
-                            ImportSource.LOCAL
-                        }
-                        LaunchedEffect(source) { importViewModel.startImport(source) }
-                        ImportSettingsScreen(
-                            viewModel = importViewModel,
-                            prefFileList = prefFileList,
-                            onClose = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.ProfileActivation.route,
-                        arguments = listOf(
-                            navArgument("profileIndex") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
-                        val profileName = profileManagementViewModel.uiState.value.profileNames.getOrNull(profileIndex) ?: ""
-                        val reuseValues = profileManagementViewModel.getReuseValues()
-
-                        ProfileActivationScreen(
-                            profileName = profileName,
-                            currentPercentage = reuseValues?.first ?: 100,
-                            currentTimeshiftHours = reuseValues?.second ?: 0,
-                            hasReuseValues = reuseValues != null,
-                            showNotesField = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
-                            initialTimestamp = profileManagementViewModel.dateUtil.nowWithoutMilliseconds(),
-                            rh = rh,
-                            onNavigateBack = { navController.popBackStack() },
-                            onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
-                                val success = profileManagementViewModel.activateProfile(
-                                    profileIndex = profileIndex,
-                                    durationMinutes = duration,
-                                    percentage = percentage,
-                                    timeshiftHours = timeshift,
-                                    withTT = withTT,
-                                    notes = notes,
-                                    timestamp = timestamp,
-                                    timeChanged = timeChanged
-                                )
-                                if (success) {
-                                    navController.popBackStack(AppRoute.Profile.route, inclusive = false)
-                                }
-                            }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.ProfileEditor.route,
-                        arguments = listOf(
-                            navArgument("profileIndex") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
-                        val initialized = rememberSaveable { mutableStateOf(false) }
-                        LaunchedEffect(Unit) {
-                            if (!initialized.value) {
-                                profileEditorViewModel.selectProfile(profileIndex)
-                                initialized.value = true
-                            }
-                        }
-                        ProfileEditorScreen(
-                            viewModel = profileEditorViewModel,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(AppRoute.Treatments.route) {
-                        TreatmentsScreen(
-                            viewModel = treatmentsViewModel,
-                            onNavigateBack = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(AppRoute.Stats.route) {
-                        StatsScreen(
-                            viewModel = statsViewModel,
-                            onNavigateBack = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(AppRoute.ProfileHelper.route) {
-                        ProfileHelperScreen(
-                            viewModel = profileHelperViewModel,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(AppRoute.Preferences.route) {
-                        AllPreferencesScreen(
-                            activePlugin = activePlugin,
-                            rh = rh,
-                            builtInSearchables = builtInSearchables,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(
-                        route = AppRoute.PluginContent.route,
-                        arguments = listOf(
-                            navArgument("pluginIndex") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        val pluginIndex = backStackEntry.arguments?.getInt("pluginIndex") ?: return@composable
-                        val plugin = activePlugin.getPluginsList().getOrNull(pluginIndex) ?: return@composable
-                        val composeContent = plugin.getComposeContent()
-                        if (composeContent is ComposablePluginContent) {
-                            val navigateBack: @Composable () -> Unit = {
-                                IconButton(onClick = { navController.popBackStack() }) {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.back)
-                                    )
-                                }
-                            }
-                            val settingsAction: @Composable RowScope.() -> Unit = {
-                                IconButton(onClick = {
-                                    withProtection(ElementType.SETTINGS.protection) {
-                                        navController.navigate(
-                                            AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName)
-                                        )
+                            effect.group.permissions.contains(Manifest.permission.POST_NOTIFICATIONS)                   ->
+                                startActivity(
+                                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                        putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
                                     }
-                                }) {
-                                    Icon(
-                                        Icons.Filled.Settings,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.settings)
-                                    )
+                                )
+
+                            effect.group.permissions.contains(Manifest.permission.SCHEDULE_EXACT_ALARM)                 ->
+                                startActivity(
+                                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                        data = "package:$packageName".toUri()
+                                    }
+                                )
+
+                            effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
+                                startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                        }
+
+                    is PermissionsSideEffect.ShowError               ->
+                        snackbarHostState.showSnackbar(effect.message)
+
+                    is PermissionsSideEffect.PermanentlyDenied       -> {
+                        val result = snackbarHostState.showSnackbar(
+                            message = getString(app.aaps.ui.R.string.permission_denied_go_to_settings),
+                            actionLabel = getString(app.aaps.ui.R.string.permission_open_settings),
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            startActivity(
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = "package:$packageName".toUri()
                                 }
-                            }
-                            var toolbarConfig by remember {
-                                mutableStateOf(
-                                    ToolbarConfig(
-                                        title = plugin.name,
-                                        navigationIcon = navigateBack,
-                                        actions = settingsAction
-                                    )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        if (permState.showSheet) {
+            PermissionsSheet(
+                items = permState.items,
+                snackbarHostState = snackbarHostState,
+                onRequestPermission = { permissionsViewModel.requestPermission(it) },
+                onDismiss = { permissionsViewModel.dismissSheet() }
+            )
+        }
+
+        val state by mainViewModel.uiState.collectAsStateWithLifecycle()
+
+        NavHost(
+            navController = navController,
+            startDestination = AppRoute.Main.route
+        ) {
+            composable(AppRoute.Main.route) {
+                val searchState by searchViewModel.uiState.collectAsStateWithLifecycle()
+                val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
+                val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
+                val quickLaunchItems by mainViewModel.quickLaunchItems.collectAsStateWithLifecycle()
+
+                // Pump setup button in bottom bar
+                val pumpPlugin = activePlugin.activePumpInternal as PluginBase
+                val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) && pumpPlugin.hasComposeContent()
+                val pumpSetupClassName = if (showPumpSetup) pumpPlugin.javaClass.simpleName else null
+                val pumpSetupIcon = if (showPumpSetup) pumpPlugin.pluginDescription.icon ?: Pump else null
+                val pumpSetupLabel = if (showPumpSetup) stringResource(pumpPlugin.pluginDescription.pluginName) else null
+
+                val manageSheetState = ManageSheetHost(
+                    manageViewModel = manageViewModel,
+                    isSimpleMode = state.isSimpleMode,
+                    onNavigate = { request -> handleNavigationRequest(request, navController) },
+                    onActionsError = { comment, title ->
+                        uiInteraction.runAlarm(comment, title, app.aaps.core.ui.R.raw.boluserror)
+                    },
+                )
+
+                // Authorization failed dialog
+                if (state.showAuthFailedDialog) {
+                    OkDialog(
+                        title = "",
+                        message = stringResource(R.string.authorizationfailed),
+                        onDismiss = {
+                            mainViewModel.setShowAuthFailedDialog(false)
+                            finish()
+                        }
+                    )
+                }
+
+
+                MainScreen(
+                    mainViewModel = mainViewModel,
+                    uiState = state,
+                    aboutDialogData = if (state.showAboutDialog) {
+                        mainViewModel.buildAboutDialogData(getString(R.string.app_name))
+                    } else null,
+                    manageSheetState = manageSheetState,
+                    manageViewModel = manageViewModel,
+                    maintenanceViewModel = maintenanceViewModel,
+                    statusViewModel = statusViewModel,
+                    treatmentViewModel = treatmentViewModel,
+                    automationViewModel = automationViewModel,
+                    // Search
+                    searchUiState = searchState,
+                    onSearchQueryChange = { searchViewModel.onQueryChanged(it) },
+                    onSearchClear = { searchViewModel.clearQuery() },
+                    onSearchActiveChange = { active ->
+                        if (active) searchViewModel.onSearchModeActivated()
+                        else searchViewModel.onSearchModeDeactivated()
+                    },
+                    onSearchResultClick = { entry ->
+                        handleSearchResultClick(entry, navController)
+                    },
+                    onMenuClick = { mainViewModel.openDrawer() },
+                    onNavigate = { request -> handleNavigationRequest(request, navController) },
+                    onDrawerClosed = { mainViewModel.closeDrawer() },
+                    onSwitchToClassicUi = { switchToClassicUi() },
+                    onAboutDialogDismiss = { mainViewModel.setShowAboutDialog(false) },
+                    onMaintenanceSheetDismiss = { mainViewModel.setShowMaintenanceSheet(false) },
+                    onDirectoryClick = {
+                        try {
+                            accessTree?.launch(null)
+                        } catch (_: Exception) {
+                            maintenanceViewModel.emitError("Unable to launch activity. This is an Android issue")
+                        }
+                    },
+                    onLaunchBrowser = { url ->
+                        try {
+                            val customTabsIntent = CustomTabsIntent.Builder()
+                                .setShowTitle(true)
+                                .build()
+                            customTabsIntent.launchUrl(this@ComposeMainActivity, url.toUri())
+                        } catch (_: Exception) {
+                            maintenanceViewModel.emitError("Unable to open browser")
+                        }
+                    },
+                    onBringToForeground = {
+                        val intent = Intent(this@ComposeMainActivity, ComposeMainActivity::class.java)
+                            .addFlags(
+                                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                                    or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            )
+                        startActivity(intent)
+                    },
+                    onImportSettingsNavigate = { source ->
+                        navController.navigate(AppRoute.ImportSettings.createRoute(source.name))
+                    },
+                    onRecreateActivity = { recreate() },
+                    // Notifications
+                    notifications = notifications,
+                    onDismissNotification = { notification ->
+                        notificationManager.dismiss(notification.id)
+                    },
+                    onNotificationActionClick = { notification ->
+                        handleNotificationAction(notification.id, navController)
+                    },
+                    autoShowNotificationSheet = _autoShowNotifications.value,
+                    onAutoShowConsumed = { _autoShowNotifications.value = false },
+                    pumpSetupClassName = pumpSetupClassName,
+                    pumpSetupIcon = pumpSetupIcon,
+                    pumpSetupLabel = pumpSetupLabel,
+                    permissionsMissing = permState.hasAnyMissing,
+                    onPermissionsClick = {
+                        permissionsViewModel.showSheet()
+                    },
+                    // Toolbar
+                    quickLaunchItems = quickLaunchItems,
+                    onQuickLaunchActionClick = { action -> handleQuickLaunchAction(action, navController) },
+                    calcProgress = calcProgress,
+                    graphViewModel = graphViewModel,
+                    statusLightsDef = builtInSearchables.statusLights,
+                    treatmentButtonsDef = builtInSearchables.treatmentButtons
+                )
+            }
+
+            composable(
+                AppRoute.InsulinManagement.route,
+                arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
+            ) { backStackEntry ->
+                val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+                InsulinManagementScreen(
+                    viewModel = insulinManagementViewModel,
+                    initialMode = mode,
+                    onNavigateBack = { navController.popBackStack() },
+                    onRequestEditMode = {
+                        withProtection(ProtectionCheck.Protection.PREFERENCES) {
+                            insulinManagementViewModel.setScreenMode(ScreenMode.EDIT)
+                        }
+                    }
+                )
+            }
+
+            composable(
+                AppRoute.Profile.route,
+                arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
+            ) { backStackEntry ->
+                val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+                ProfileManagementScreen(
+                    viewModel = profileManagementViewModel,
+                    initialMode = mode,
+                    onNavigateBack = { navController.popBackStack() },
+                    onRequestEditMode = {
+                        withProtection(ProtectionCheck.Protection.PREFERENCES) {
+                            profileManagementViewModel.setScreenMode(ScreenMode.EDIT)
+                        }
+                    },
+                    onEditProfile = { index ->
+                        profileEditorViewModel.selectProfile(index)
+                        navController.navigate(AppRoute.ProfileEditor.createRoute(index))
+                    },
+                    onActivateProfile = { index ->
+                        withProtection(ProtectionCheck.Protection.BOLUS) {
+                            navController.navigate(AppRoute.ProfileActivation.createRoute(index))
+                        }
+                    }
+                )
+            }
+
+            composable(
+                AppRoute.TempTargetManagement.route,
+                arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
+            ) { backStackEntry ->
+                val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+                TempTargetManagementScreen(
+                    viewModel = tempTargetManagementViewModel,
+                    initialMode = mode,
+                    onNavigateBack = { navController.popBackStack() },
+                    onRequestEditMode = {
+                        withProtection(ProtectionCheck.Protection.PREFERENCES) {
+                            tempTargetManagementViewModel.setScreenMode(ScreenMode.EDIT)
+                        }
+                    }
+                )
+            }
+
+            composable(
+                AppRoute.QuickWizardManagement.route,
+                arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
+            ) { backStackEntry ->
+                val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+                QuickWizardManagementScreen(
+                    viewModel = quickWizardManagementViewModel,
+                    initialMode = mode,
+                    onNavigateBack = { navController.popBackStack() },
+                    onRequestEditMode = {
+                        withProtection(ProtectionCheck.Protection.PREFERENCES) {
+                            quickWizardManagementViewModel.setScreenMode(ScreenMode.EDIT)
+                        }
+                    },
+                    onExecuteClick = { guid ->
+                        withProtection(ElementType.QUICK_WIZARD.protection) {
+                            mainViewModel.executeQuickWizard(this@ComposeMainActivity, guid)
+                        }
+                    }
+                )
+            }
+
+            composable(AppRoute.RunningMode.route) {
+                RunningModeScreen(
+                    viewModel = runningModeManagementViewModel,
+                    showOkCancel = true,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = AppRoute.CareDialog.route,
+                arguments = listOf(
+                    navArgument("eventTypeOrdinal") {
+                        type = NavType.IntType
+                    }
+                )
+            ) {
+                CareDialogScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowSiteRotationDialog = {
+                        uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                    }
+                )
+            }
+
+            composable(
+                route = AppRoute.FillDialog.route,
+                arguments = listOf(
+                    navArgument("preselect") {
+                        type = NavType.IntType
+                    }
+                )
+            ) {
+                FillDialogScreen(
+                    fillButtonsDef = builtInSearchables.fillButtons,
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowSiteRotationDialog = {
+                        uiInteraction.runSiteRotationDialog(supportFragmentManager)
+                    },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(route = AppRoute.CarbsDialog.route) {
+                CarbsDialogScreen(
+                    carbsButtonsDef = builtInSearchables.carbsButtons,
+                    bgInfoState = graphViewModel.bgInfoState,
+                    iobUiState = graphViewModel.iobUiState,
+                    cobUiState = graphViewModel.cobUiState,
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(route = AppRoute.InsulinDialog.route) {
+                InsulinDialogScreen(
+                    insulinButtonsDef = builtInSearchables.insulinButtons,
+                    bgInfoState = graphViewModel.bgInfoState,
+                    iobUiState = graphViewModel.iobUiState,
+                    cobUiState = graphViewModel.cobUiState,
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(route = AppRoute.TreatmentDialog.route) {
+                TreatmentDialogScreen(
+                    bgInfoState = graphViewModel.bgInfoState,
+                    iobUiState = graphViewModel.iobUiState,
+                    cobUiState = graphViewModel.cobUiState,
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(route = AppRoute.TempBasalDialog.route) {
+                TempBasalDialogScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(route = AppRoute.ExtendedBolusDialog.route) {
+                ExtendedBolusDialogScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(
+                route = AppRoute.WizardDialog.route,
+                arguments = listOf(
+                    navArgument("carbs") {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    },
+                    navArgument("notes") {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    }
+                )
+            ) {
+                WizardDialogScreen(
+                    wizardSettingsDef = builtInSearchables.wizardSettings,
+                    onNavigateBack = { navController.popBackStack() },
+                    onShowDeliveryError = { comment ->
+                        uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                    }
+                )
+            }
+
+            composable(
+                route = AppRoute.ImportSettings.route,
+                arguments = listOf(
+                    navArgument("source") {
+                        type = NavType.StringType
+                    }
+                )
+            ) { backStackEntry ->
+                val source = try {
+                    ImportSource.valueOf(backStackEntry.arguments?.getString("source") ?: "LOCAL")
+                } catch (_: IllegalArgumentException) {
+                    ImportSource.LOCAL
+                }
+                LaunchedEffect(source) { importViewModel.startImport(source) }
+                ImportSettingsScreen(
+                    viewModel = importViewModel,
+                    prefFileList = prefFileList,
+                    onClose = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = AppRoute.ProfileActivation.route,
+                arguments = listOf(
+                    navArgument("profileIndex") {
+                        type = NavType.IntType
+                    }
+                )
+            ) { backStackEntry ->
+                val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
+                val profileName = profileManagementViewModel.uiState.value.profileNames.getOrNull(profileIndex) ?: ""
+                val reuseValues = profileManagementViewModel.getReuseValues()
+
+                ProfileActivationScreen(
+                    profileName = profileName,
+                    currentPercentage = reuseValues?.first ?: 100,
+                    currentTimeshiftHours = reuseValues?.second ?: 0,
+                    hasReuseValues = reuseValues != null,
+                    showNotesField = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
+                    initialTimestamp = profileManagementViewModel.dateUtil.nowWithoutMilliseconds(),
+                    rh = rh,
+                    onNavigateBack = { navController.popBackStack() },
+                    onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
+                        val success = profileManagementViewModel.activateProfile(
+                            profileIndex = profileIndex,
+                            durationMinutes = duration,
+                            percentage = percentage,
+                            timeshiftHours = timeshift,
+                            withTT = withTT,
+                            notes = notes,
+                            timestamp = timestamp,
+                            timeChanged = timeChanged
+                        )
+                        if (success) {
+                            navController.popBackStack(AppRoute.Profile.route, inclusive = false)
+                        }
+                    }
+                )
+            }
+
+            composable(
+                route = AppRoute.ProfileEditor.route,
+                arguments = listOf(
+                    navArgument("profileIndex") {
+                        type = NavType.IntType
+                    }
+                )
+            ) { backStackEntry ->
+                val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
+                val initialized = rememberSaveable { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    if (!initialized.value) {
+                        profileEditorViewModel.selectProfile(profileIndex)
+                        initialized.value = true
+                    }
+                }
+                ProfileEditorScreen(
+                    viewModel = profileEditorViewModel,
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable(AppRoute.Treatments.route) {
+                TreatmentsScreen(
+                    viewModel = treatmentsViewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(AppRoute.Stats.route) {
+                StatsScreen(
+                    viewModel = statsViewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(AppRoute.ProfileHelper.route) {
+                ProfileHelperScreen(
+                    viewModel = profileHelperViewModel,
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable(AppRoute.Preferences.route) {
+                AllPreferencesScreen(
+                    activePlugin = activePlugin,
+                    rh = rh,
+                    builtInSearchables = builtInSearchables,
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = AppRoute.PluginContent.route,
+                arguments = listOf(
+                    navArgument("pluginIndex") {
+                        type = NavType.IntType
+                    }
+                )
+            ) { backStackEntry ->
+                val pluginIndex = backStackEntry.arguments?.getInt("pluginIndex") ?: return@composable
+                val plugin = activePlugin.getPluginsList().getOrNull(pluginIndex) ?: return@composable
+                val composeContent = plugin.getComposeContent()
+                if (composeContent is ComposablePluginContent) {
+                    val navigateBack: @Composable () -> Unit = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            )
+                        }
+                    }
+                    val settingsAction: @Composable RowScope.() -> Unit = {
+                        IconButton(onClick = {
+                            withProtection(ElementType.SETTINGS.protection) {
+                                navController.navigate(
+                                    AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName)
                                 )
                             }
-                            Scaffold(
-                                topBar = {
-                                    AapsTopAppBar(
-                                        title = { Text(toolbarConfig.title) },
-                                        navigationIcon = { toolbarConfig.navigationIcon() },
-                                        actions = { toolbarConfig.actions(this) }
-                                    )
-                                }
-                            ) { paddingValues ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(paddingValues)
-                                ) {
-                                    composeContent.Render(
-                                        setToolbarConfig = { config -> toolbarConfig = config },
-                                        onNavigateBack = { navController.popBackStack() },
-                                        onSettings = {
-                                            handleNavigationRequest(
-                                                NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
-                                                navController
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    composable(AppRoute.QuickLaunchConfig.route) {
-                        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = androidx.hilt.navigation.compose.hiltViewModel()
-                        QuickLauchConfigScreen(
-                            viewModel = quickLaunchConfigViewModel,
-                            onNavigateBack = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable(AppRoute.Configuration.route) {
-                        val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
-                        app.aaps.ui.compose.configuration.ConfigurationScreen(
-                            categories = configState.pluginCategories,
-                            isSimpleMode = configState.isSimpleMode,
-                            pluginStateVersion = configState.pluginStateVersion,
-                            hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
-                            onNavigateBack = { navController.popBackStack() },
-                            onNavigate = { request -> handleNavigationRequest(request, navController) },
-                            onPluginEnableToggle = { plugin, type, enabled ->
-                                configurationViewModel.togglePluginEnabled(plugin, type, enabled)
-                                permissionsViewModel.refresh(this@ComposeMainActivity)
-                            },
-                            onConfirmHardwarePump = {
-                                configurationViewModel.confirmHardwarePumpSwitch()
-                                permissionsViewModel.refresh(this@ComposeMainActivity)
-                            },
-                            onDismissHardwarePump = { configurationViewModel.dismissHardwarePumpDialog() }
-                        )
-                    }
-
-                    composable(AppRoute.PluginPreferences.route) { backStackEntry ->
-                        val pluginKey = backStackEntry.arguments?.getString("pluginKey")
-                        val plugin = activePlugin.getPluginsList().find {
-                            it.javaClass.simpleName == pluginKey
-                        }
-                        if (plugin != null) {
-                            PluginPreferencesScreen(
-                                plugin = plugin,
-                                visibilityContext = visibilityContext,
-                                onBackClick = { navController.popBackStack() }
+                        }) {
+                            Icon(
+                                Icons.Filled.Settings,
+                                contentDescription = stringResource(app.aaps.core.ui.R.string.settings)
                             )
                         }
                     }
-
-                    composable(AppRoute.PreferenceScreen.route) { backStackEntry ->
-                        val screenKey = backStackEntry.arguments?.getString("screenKey")
-                        val highlightKey = backStackEntry.arguments?.getString("highlightKey")
-                        val screenDef = screenKey?.let { key ->
-                            findScreenDef(key)
+                    var toolbarConfig by remember {
+                        mutableStateOf(
+                            ToolbarConfig(
+                                title = plugin.name,
+                                navigationIcon = navigateBack,
+                                actions = settingsAction
+                            )
+                        )
+                    }
+                    Scaffold(
+                        topBar = {
+                            AapsTopAppBar(
+                                title = { Text(toolbarConfig.title) },
+                                navigationIcon = { toolbarConfig.navigationIcon() },
+                                actions = { toolbarConfig.actions(this) }
+                            )
                         }
-                        if (screenDef != null) {
-                            PreferenceScreenView(
-                                screenDef = screenDef,
-                                highlightKey = highlightKey,
-                                onBackClick = { navController.popBackStack() }
+                    ) { paddingValues ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                        ) {
+                            composeContent.Render(
+                                setToolbarConfig = { config -> toolbarConfig = config },
+                                onNavigateBack = { navController.popBackStack() },
+                                onSettings = {
+                                    handleNavigationRequest(
+                                        NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
+                                        navController
+                                    )
+                                }
                             )
                         }
                     }
+                }
+            }
+
+            composable(AppRoute.QuickLaunchConfig.route) {
+                val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                QuickLauchConfigScreen(
+                    viewModel = quickLaunchConfigViewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(AppRoute.Configuration.route) {
+                val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
+                app.aaps.ui.compose.configuration.ConfigurationScreen(
+                    categories = configState.pluginCategories,
+                    isSimpleMode = configState.isSimpleMode,
+                    pluginStateVersion = configState.pluginStateVersion,
+                    hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigate = { request -> handleNavigationRequest(request, navController) },
+                    onPluginEnableToggle = { plugin, type, enabled ->
+                        configurationViewModel.togglePluginEnabled(plugin, type, enabled)
+                        permissionsViewModel.refresh(this@ComposeMainActivity)
+                    },
+                    onConfirmHardwarePump = {
+                        configurationViewModel.confirmHardwarePumpSwitch()
+                        permissionsViewModel.refresh(this@ComposeMainActivity)
+                    },
+                    onDismissHardwarePump = { configurationViewModel.dismissHardwarePumpDialog() }
+                )
+            }
+
+            composable(AppRoute.PluginPreferences.route) { backStackEntry ->
+                val pluginKey = backStackEntry.arguments?.getString("pluginKey")
+                val plugin = activePlugin.getPluginsList().find {
+                    it.javaClass.simpleName == pluginKey
+                }
+                if (plugin != null) {
+                    PluginPreferencesScreen(
+                        plugin = plugin,
+                        visibilityContext = visibilityContext,
+                        onBackClick = { navController.popBackStack() }
+                    )
+                }
+            }
+
+            composable(AppRoute.PreferenceScreen.route) { backStackEntry ->
+                val screenKey = backStackEntry.arguments?.getString("screenKey")
+                val highlightKey = backStackEntry.arguments?.getString("highlightKey")
+                val screenDef = screenKey?.let { key ->
+                    findScreenDef(key)
+                }
+                if (screenDef != null) {
+                    PreferenceScreenView(
+                        screenDef = screenDef,
+                        highlightKey = highlightKey,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
             }
         }
@@ -1002,16 +1139,12 @@ class ComposeMainActivity : AppCompatActivity() {
 
     private var isProtectionCheckActive = false
 
-    override fun onResume() {
-        super.onResume()
-        // Profile and TempTarget state are now updated reactively via OverviewDataCache flows
+    private fun refreshOnResume() {
         manageViewModel.refreshState()
         permissionsViewModel.refresh(this)
-        // Auto-show notification sheet if urgent notifications exist
         if (notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT }) {
             _autoShowNotifications.value = true
         }
-        // APPLICATION protection — lock out unauthorized users
         if (!isProtectionCheckActive) {
             isProtectionCheckActive = true
             protectionCheck.requestProtection(ProtectionCheck.Protection.APPLICATION) { result ->
@@ -1021,6 +1154,12 @@ class ComposeMainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!config.appInitialized) return
+        refreshOnResume()
     }
 
     private fun updateButtons() {

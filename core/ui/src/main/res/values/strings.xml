@@ -144,6 +144,8 @@
     <string name="time">Time</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Loading…</string>
+    <string name="waiting_for_pump">Waiting for pump…</string>
+    <string name="initialization_failed">Initialization failed</string>
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="add_new">Add new</string>

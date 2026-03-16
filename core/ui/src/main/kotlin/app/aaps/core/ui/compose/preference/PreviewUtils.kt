@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
@@ -26,7 +27,9 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -157,7 +160,12 @@ private object PreviewConfig : Config {
     override val DEBUG: Boolean = true
     override val currentDeviceModelString: String = "Preview"
     override val appName: Int = 0
-    override var appInitialized: Boolean = true
+    override val initProgressFlow: StateFlow<InitProgress> = MutableStateFlow(InitProgress(done = true))
+    override val initSnackbarFlow: SharedFlow<String> = MutableSharedFlow()
+    override fun updateInitProgress(step: String, current: Int, total: Int) {}
+    override fun initCompleted() {}
+    override fun initFailed(error: String) {}
+    override fun showInitSnackbar(message: String) {}
 
     override fun isDev(): Boolean = false
     override fun isEngineeringModeOrRelease(): Boolean = true

@@ -4,9 +4,16 @@ import android.os.Build
 import app.aaps.BuildConfig
 import app.aaps.R
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import dagger.Lazy
 import dagger.Reusable
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @Suppress("KotlinConstantConditions")
@@ -37,7 +44,25 @@ class ConfigImpl @Inject constructor(
     override val currentDeviceModelString = Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
     override val appName: Int = R.string.app_name
 
-    override var appInitialized: Boolean = false
+    private val _initProgressFlow = MutableStateFlow(InitProgress())
+    override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()
+    override fun updateInitProgress(step: String, current: Int, total: Int) {
+        _initProgressFlow.value = _initProgressFlow.value.copy(step = step, current = current, total = total)
+    }
+
+    override fun initCompleted() {
+        _initProgressFlow.value = _initProgressFlow.value.copy(done = true)
+    }
+
+    override fun initFailed(error: String) {
+        _initProgressFlow.value = _initProgressFlow.value.copy(error = error)
+    }
+
+    private val _initSnackbarFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    override val initSnackbarFlow: SharedFlow<String> = _initSnackbarFlow.asSharedFlow()
+    override fun showInitSnackbar(message: String) {
+        _initSnackbarFlow.tryEmit(message)
+    }
 
     private var isEngineeringMode: Boolean? = null
     private var isUnfinishedMode: Boolean? = null

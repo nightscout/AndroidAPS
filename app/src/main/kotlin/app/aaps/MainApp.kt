@@ -1,6 +1,5 @@
 package app.aaps
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -24,11 +23,13 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -38,7 +39,10 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -56,6 +60,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
@@ -66,6 +71,7 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.plugins.configuration.keys.ConfigurationBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
 import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
@@ -77,6 +83,7 @@ import app.aaps.ui.widget.Widget
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
 import dagger.android.AndroidInjector
@@ -87,12 +94,14 @@ import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.reflect.KMutableProperty
@@ -125,17 +134,29 @@ class MainApp : Application(), HasAndroidInjector {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var constraintChecker: ConstraintsChecker
+    @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
+    @Inject lateinit var fileListProvider: FileListProvider
+    @Inject lateinit var cryptoUtil: CryptoUtil
+    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
     lateinit var insulinLabel: String
     var insulinPeakTime: Long = 0L
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
-    private val scope = CoroutineScope(Dispatchers.Default + Job())
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    companion object {
+
+        /** Throttle splash progress updates to avoid excessive StateFlow emissions */
+        private const val PROGRESS_UPDATE_INTERVAL = 10
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -150,21 +171,31 @@ class MainApp : Application(), HasAndroidInjector {
             fabricPrivacy = fabricPrivacy
         )
 
-        // Do necessary migrations
-        doMigrations()
+        // All initialization in background thread to avoid blocking main thread
+        // (ComposeMainActivity shows splash screen until initProgress.done)
+        scope.launch {
+            try {
+                config.updateInitProgress(getString(R.string.migrating_preferences))
+                doMigrations()
 
-        // Register and initialize plugins
-        pluginStore.plugins = plugins
-        configBuilder.initialize()
+                // Register and initialize plugins
+                config.updateInitProgress(getString(R.string.initializing_plugins))
+                pluginStore.plugins = plugins
+                configBuilder.initialize()
 
-        // Do necessary data migrations (plugins must be initialized already)
-        dataMigrations()
+                // Data migrations (DB I/O)
+                dataMigrations()
 
-        // Do initializations in another thread
-        scope.launch { doInit() }
+                config.updateInitProgress(getString(R.string.initializing))
+                doInit()
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.CORE, "Fatal initialization error", e)
+                config.initFailed(e.message ?: "Unknown error")
+            }
+        }
     }
 
-    private fun doInit() {
+    private suspend fun doInit() {
         aapsLogger.debug("doInit")
         RxDogTag.install()
         setRxErrorHandler()
@@ -220,8 +251,74 @@ class MainApp : Application(), HasAndroidInjector {
             Widget.updateWidget(this@MainApp, "ScheduleEveryMin")
         }
         handler.postDelayed(refreshWidget, 5000)
-        config.appInitialized = true
+        setUserStats()
+        passwordResetCheck()
+        exportPasswordResetCheck()
+        config.initCompleted()
+        rxBus.send(EventAppInitialized())
         aapsLogger.debug("doInit end")
+    }
+
+    private fun setUserStats() {
+        if (!fabricPrivacy.fabricEnabled()) return
+        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
+        val remote = config.REMOTE.lowercase(Locale.getDefault())
+            .replace("https://", "")
+            .replace("http://", "")
+            .replace(".git", "")
+            .replace(".com/", ":")
+            .replace(".org/", ":")
+            .replace(".net/", ":")
+        fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
+        fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
+        fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
+        fabricPrivacy.setUserProperty("HEAD", BuildConfig.HEAD)
+        fabricPrivacy.setUserProperty("Remote", remote)
+        val hashes: List<String> = signatureVerifierPlugin.shortHashes()
+        if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
+        activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
+        if (!config.AAPSCLIENT && !config.PUMPCONTROL)
+            activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
+        activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
+        activePlugin.activeSensitivity.let { fabricPrivacy.setUserProperty("Sensitivity", it::class.java.simpleName) }
+        FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
+        FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)
+        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
+        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
+        FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
+        FirebaseCrashlytics.getInstance().setCustomKey("Committed", config.COMMITTED)
+        if (hashes.isNotEmpty()) FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
+        FirebaseCrashlytics.getInstance().setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
+    }
+
+    private suspend fun passwordResetCheck() {
+        val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
+        if (fh?.exists() == true) {
+            config.updateInitProgress(getString(app.aaps.core.ui.R.string.waiting_for_pump))
+            val serialNumber = withTimeoutOrNull(30_000L) {
+                while (activePlugin.activePump.serialNumber().isEmpty()) {
+                    delay(100)
+                }
+                activePlugin.activePump.serialNumber()
+            }
+            if (serialNumber != null) {
+                preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(serialNumber))
+                fh.delete()
+                exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+                config.showInitSnackbar(getString(app.aaps.core.ui.R.string.password_set))
+            } else {
+                aapsLogger.warn(LTag.CORE, "Password reset timed out waiting for pump serial number")
+            }
+        }
+    }
+
+    private fun exportPasswordResetCheck() {
+        val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
+        if (fh?.exists() == true) {
+            exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+            fh.delete()
+            config.showInitSnackbar(getString(app.aaps.core.ui.R.string.datastore_password_cleared))
+        }
     }
 
     private fun postSetupNotifications() {
@@ -282,7 +379,7 @@ class MainApp : Application(), HasAndroidInjector {
         }
     }
 
-    private fun doMigrations() {
+    private suspend fun doMigrations() {
         // set values for different builds
         // 3.3
         if (preferences.get(IntKey.OverviewEatingSoonDuration) == 0) preferences.remove(IntKey.OverviewEatingSoonDuration)
@@ -441,19 +538,17 @@ class MainApp : Application(), HasAndroidInjector {
                 "LGS"    -> RM.Mode.CLOSED_LOOP_LGS
                 else     -> RM.Mode.CLOSED_LOOP
             }
-            runBlocking {
-                persistenceLayer.insertOrUpdateRunningMode(
-                    runningMode = RM(
-                        timestamp = dateUtil.now(),
-                        mode = mode,
-                        autoForced = false,
-                        duration = 0
-                    ),
-                    action = Action.CLOSED_LOOP_MODE,
-                    source = Sources.Aaps,
-                    listValues = listOf(ValueWithUnit.SimpleString("Migration"))
-                )
-            }
+            persistenceLayer.insertOrUpdateRunningMode(
+                runningMode = RM(
+                    timestamp = dateUtil.now(),
+                    mode = mode,
+                    autoForced = false,
+                    duration = 0
+                ),
+                action = Action.CLOSED_LOOP_MODE,
+                source = Sources.Aaps,
+                listValues = listOf(ValueWithUnit.SimpleString("Migration"))
+            )
             sp.remove("aps_mode")
         }
 
@@ -578,8 +673,7 @@ class MainApp : Application(), HasAndroidInjector {
         // Removal will be done when legacy UI is completely removed in the future
     }
 
-    @SuppressLint("CheckResult")
-    fun dataMigrations() {
+    private suspend fun dataMigrations() {
         // Migrate to database 32 (ICfg)
         // Grab default value first
         val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
@@ -588,40 +682,81 @@ class MainApp : Application(), HasAndroidInjector {
         val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
 
         val concentration = 1.0
-        runBlocking {
-            for (ps in persistenceLayer.getProfileSwitches()) {
-                if (ps.iCfg.insulinEndTime == -1L) {
-                    // record not migrated yet
-                    ps.iCfg.insulinLabel = insulinLabel
-                    ps.iCfg.insulinEndTime = insulinEndTime
-                    ps.iCfg.insulinPeakTime = insulinPeakTime
-                    ps.iCfg.concentration = concentration
-                    persistenceLayer.insertOrUpdateProfileSwitch(ps, Action.START_AAPS, Sources.Aaps, listValues = listOf())
-                    aapsLogger.debug(LTag.CORE, "Migrating to 32: $ps")
-                }
+
+        var totalMigrated = 0
+
+        config.updateInitProgress(rh.get().gs(R.string.migrating_profile_switches))
+        val profileSwitches = persistenceLayer.getProfileSwitches()
+        val unmigrated = profileSwitches.filter { it.iCfg.insulinEndTime == -1L }
+        if (unmigrated.isNotEmpty()) {
+            val total = unmigrated.size
+            val step = rh.get().gs(R.string.migrating_profile_switches)
+            config.updateInitProgress(step, 0, total)
+            unmigrated.forEachIndexed { index, ps ->
+                ps.iCfg.insulinLabel = insulinLabel
+                ps.iCfg.insulinEndTime = insulinEndTime
+                ps.iCfg.insulinPeakTime = insulinPeakTime
+                ps.iCfg.concentration = concentration
+                persistenceLayer.updateProfileSwitchNoLogging(ps)
+                if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
+                    config.updateInitProgress(step, index + 1, total)
             }
-            for (eps in persistenceLayer.getEffectiveProfileSwitches()) {
-                if (eps.iCfg.insulinEndTime == -1L) {
-                    // record not migrated yet
-                    eps.iCfg.insulinLabel = insulinLabel
-                    eps.iCfg.insulinEndTime = insulinEndTime
-                    eps.iCfg.insulinPeakTime = insulinPeakTime
-                    eps.iCfg.concentration = concentration
-                    persistenceLayer.insertOrUpdateEffectiveProfileSwitch(eps)
-                    aapsLogger.debug(LTag.CORE, "Migrating to 32: $eps")
-                }
+            totalMigrated += unmigrated.size
+        }
+
+        config.updateInitProgress(rh.get().gs(R.string.migrating_effective_profile_switches))
+        val effectiveProfileSwitches = persistenceLayer.getEffectiveProfileSwitches()
+        val unmigratedEps = effectiveProfileSwitches.filter { it.iCfg.insulinEndTime == -1L }
+        if (unmigratedEps.isNotEmpty()) {
+            val total = unmigratedEps.size
+            val step = rh.get().gs(R.string.migrating_effective_profile_switches)
+            config.updateInitProgress(step, 0, total)
+            unmigratedEps.forEachIndexed { index, eps ->
+                eps.iCfg.insulinLabel = insulinLabel
+                eps.iCfg.insulinEndTime = insulinEndTime
+                eps.iCfg.insulinPeakTime = insulinPeakTime
+                eps.iCfg.concentration = concentration
+                persistenceLayer.updateEffectiveProfileSwitchNoLogging(eps)
+                if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
+                    config.updateInitProgress(step, index + 1, total)
             }
-            for (bolus in persistenceLayer.getBoluses()) {
-                if (bolus.iCfg.insulinEndTime == -1L) {
-                    // record not migrated yet
-                    bolus.iCfg.insulinLabel = insulinLabel
-                    bolus.iCfg.insulinEndTime = insulinEndTime
-                    bolus.iCfg.insulinPeakTime = insulinPeakTime
-                    bolus.iCfg.concentration = concentration
-                    persistenceLayer.insertOrUpdateBolus(bolus, Action.START_AAPS, Sources.Aaps)
-                    aapsLogger.debug(LTag.CORE, "Migrating to 32: $bolus")
-                }
+            totalMigrated += unmigratedEps.size
+        }
+
+        config.updateInitProgress(rh.get().gs(R.string.migrating_boluses))
+        val boluses = persistenceLayer.getBoluses()
+        val unmigratedBoluses = boluses.filter { it.iCfg.insulinEndTime == -1L }
+        if (unmigratedBoluses.isNotEmpty()) {
+            val total = unmigratedBoluses.size
+            val step = rh.get().gs(R.string.migrating_boluses)
+            config.updateInitProgress(step, 0, total)
+            unmigratedBoluses.forEachIndexed { index, bolus ->
+                bolus.iCfg.insulinLabel = insulinLabel
+                bolus.iCfg.insulinEndTime = insulinEndTime
+                bolus.iCfg.insulinPeakTime = insulinPeakTime
+                bolus.iCfg.concentration = concentration
+                persistenceLayer.updateBolusNoLogging(bolus)
+                if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
+                    config.updateInitProgress(step, index + 1, total)
             }
+            totalMigrated += unmigratedBoluses.size
+        }
+
+        // Log a single user entry for the entire migration
+        if (totalMigrated > 0) {
+            aapsLogger.debug(LTag.CORE, "Migration to DB 32 complete: $totalMigrated records updated")
+            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                therapyEvent = TE(
+                    timestamp = dateUtil.now(),
+                    type = TE.Type.NOTE,
+                    note = "Database migration to v32: $totalMigrated records updated (insulin configuration)",
+                    glucoseUnit = GlucoseUnit.MGDL
+                ),
+                action = Action.START_AAPS,
+                source = Sources.Aaps,
+                note = "",
+                listValues = listOf()
+            )
         }
     }
 

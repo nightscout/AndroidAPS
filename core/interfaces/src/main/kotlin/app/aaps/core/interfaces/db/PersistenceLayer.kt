@@ -152,6 +152,11 @@ interface PersistenceLayer {
     suspend fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String? = null): TransactionResult<BS>
 
     /**
+     * Update bolus record without creating UserEntry. For data migrations only.
+     */
+    suspend fun updateBolusNoLogging(bolus: BS)
+
+    /**
      * Insert record
      *
      * @param bolus record
@@ -544,6 +549,11 @@ interface PersistenceLayer {
     suspend fun insertOrUpdateEffectiveProfileSwitch(effectiveProfileSwitch: EPS): TransactionResult<EPS>
 
     /**
+     * Update effective profile switch record without creating UserEntry. For data migrations only.
+     */
+    suspend fun updateEffectiveProfileSwitchNoLogging(effectiveProfileSwitch: EPS)
+
+    /**
      * Invalidate record with id
      *
      * @param id record id
@@ -646,6 +656,11 @@ interface PersistenceLayer {
      * @return List of inserted/updated records
      */
     suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
+
+    /**
+     * Update profile switch record without creating UserEntry. For data migrations only.
+     */
+    suspend fun updateProfileSwitchNoLogging(profileSwitch: PS)
 
     /**
      * Invalidate record with id

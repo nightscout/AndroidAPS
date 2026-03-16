@@ -26,5 +26,11 @@
     <string name="switch_to_classic_ui">Switch to classic UI</string>
     <string name="select">Select</string>
     <string name="set">Set</string>
+    <string name="migrating_preferences">Migrating preferences…</string>
+    <string name="initializing_plugins">Initializing plugins…</string>
+    <string name="initializing">Initializing…</string>
+    <string name="migrating_profile_switches">Migrating profile switches…</string>
+    <string name="migrating_effective_profile_switches">Migrating effective profile switches…</string>
+    <string name="migrating_boluses">Migrating boluses…</string>
 
 </resources>

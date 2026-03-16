@@ -33,7 +33,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -41,7 +40,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.extensions.runOnUiThreadDelayed
 import app.aaps.core.ui.extensions.scanForActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
@@ -89,8 +87,6 @@ class ConfigBuilderPlugin @Inject constructor(
     override fun initialize() {
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
-        // Wait for MainActivity start
-        runOnUiThreadDelayed(5000) { rxBus.send(EventAppInitialized()) }
     }
 
     private fun setAlwaysEnabledPluginsEnabled() {
