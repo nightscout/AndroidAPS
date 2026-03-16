@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -14,6 +15,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -66,6 +68,7 @@ class ProfileManagementViewModel @Inject constructor(
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     val profileUtil: ProfileUtil,
     val decimalFormatter: DecimalFormatter,
     private val persistenceLayer: PersistenceLayer,
@@ -163,10 +166,10 @@ class ProfileManagementViewModel @Inject constructor(
                         val tsMs = activeEps.originalTimeshift
                         val hasModifications = pct != 100 || tsMs != 0L
 
-                        // Base: current local profile (SingleProfile) without modifications
-                        val baseProfile = toPureProfile(profiles[currentIndex])?.let { ProfileSealed.Pure(it, activePlugin) }
                         // Effective: actual running profile from EPS
                         val effectiveProfile = ProfileSealed.EPS(activeEps, activePlugin)
+                        // Base: current local profile (SingleProfile) without modifications
+                        val baseProfile = toPureProfile(profiles[currentIndex])?.let { ProfileSealed.Pure(it, activePlugin) }?.also { it.iCfg = effectiveProfile.iCfg }
 
                         // Detect if underlying profile has changed since activation
                         // Apply same pct/ts to local profile so we compare apples-to-apples
@@ -269,7 +272,6 @@ class ProfileManagementViewModel @Inject constructor(
      */
     private fun toPureProfile(singleProfile: LocalProfileManager.SingleProfile): PureProfile? {
         val profile = JSONObject().apply {
-            put("dia", singleProfile.dia)
             put("carbratio", singleProfile.ic)
             put("sens", singleProfile.isf)
             put("basal", singleProfile.basal)
@@ -348,7 +350,7 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatDia(dia: Double): String = rh.gs(R.string.format_hours, dia)
+    fun formatIcfg(iCfg: ICfg): String = iCfg.insulinLabel
     fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
 
     /**
@@ -439,7 +441,8 @@ class ProfileManagementViewModel @Inject constructor(
                 ValueWithUnit.Percent(percentage),
                 ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
                 ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
-            )
+            ),
+            iCfg = insulin.iCfg
         )
 
         if (success) {

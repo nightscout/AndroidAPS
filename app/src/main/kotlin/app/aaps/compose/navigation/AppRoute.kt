@@ -23,6 +23,11 @@ sealed class AppRoute(val route: String) {
         fun createRoute(profileIndex: Int) = "profile_activation/$profileIndex"
     }
 
+    data object InsulinManagement : AppRoute("insulin_management?mode={mode}") {
+
+        fun createRoute(mode: ScreenMode = ScreenMode.EDIT) = "insulin_management?mode=${mode.name}"
+    }
+
     data object Treatments : AppRoute("treatments")
     data object TempTargetManagement : AppRoute("temp_target_management?mode={mode}") {
 

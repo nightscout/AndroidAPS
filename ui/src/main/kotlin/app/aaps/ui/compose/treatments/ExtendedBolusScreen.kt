@@ -171,7 +171,7 @@ private fun ExtendedBolusItem(
     val dateUtil = LocalDateUtil.current
     val profile = profileFunction.getProfile(extendedBolus.timestamp)
     val iob = if (profile != null) {
-        extendedBolus.iobCalc(System.currentTimeMillis(), profile, activeInsulin)
+        extendedBolus.iobCalc(System.currentTimeMillis(), profile)
     } else {
         null
     }

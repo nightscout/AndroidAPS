@@ -14,6 +14,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -49,6 +50,7 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var ch: ConcentrationHelper
 
     private var queryingProtection = false
     private var _binding: DialogFillBinding? = null
@@ -114,25 +116,31 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val insulin = SafeParse.stringToDouble(binding.fillInsulinAmount.text)
+        val siteChange = binding.fillCatheterChange.isChecked
+        val insulinChange = binding.fillCartridgeChange.isChecked
         val actions: LinkedList<String?> = LinkedList()
 
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
+        var insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.fill_warning))
             actions.add("")
             actions.add(
-                rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
-                    .formatColor(context, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
+                if (siteChange || insulinChange)    // include volume information in µl
+                    rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + ch.bolusWithVolume(insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
+                else
+                    rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
+                        .formatColor(context, rh, app.aaps.core.ui.R.attr.insulinButtonColor)
             )
             if (abs(insulinAfterConstraints - insulin) > 0.01)
                 actions.add(
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
+            if (!ch.isU100()) {
+                actions.add(rh.gs(R.string.fill_pump_units_note).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            }
         }
-        val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)
             actions.add(rh.gs(R.string.record_pump_site_change).formatColor(context, rh, app.aaps.core.ui.R.attr.actionsConfirmColor))
-        val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
             actions.add(rh.gs(R.string.record_insulin_cartridge_change).formatColor(context, rh, app.aaps.core.ui.R.attr.actionsConfirmColor))
         val notes: String = binding.notesLayout.notes.text.toString()

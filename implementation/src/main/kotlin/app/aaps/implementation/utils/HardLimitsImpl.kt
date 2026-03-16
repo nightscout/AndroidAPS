@@ -51,6 +51,8 @@ class HardLimitsImpl @Inject constructor(
     override fun maxBasal(): Double = HardLimits.MAX_BASAL[loadAge()]
     override fun minDia(): Double = HardLimits.MIN_DIA[loadAge()]
     override fun maxDia(): Double = HardLimits.MAX_DIA[loadAge()]
+    override fun minPeak(): Int = HardLimits.MIN_PEAK
+    override fun maxPeak(): Int = HardLimits.MAX_PEAK
     override fun minIC(): Double = HardLimits.MIN_IC[loadAge()]
     override fun maxIC(): Double = HardLimits.MAX_IC[loadAge()]
 

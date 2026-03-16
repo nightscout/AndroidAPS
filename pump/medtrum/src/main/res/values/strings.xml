@@ -65,6 +65,7 @@
 
     <string name="step_prepare_patch">Activate Patch</string>
     <string name="step_prepare_patch_connect">Connect and Fill</string>
+    <string name="step_select_insulin">Select Insulin</string>
     <string name="step_prime">Prime</string>
     <string name="step_priming">Priming</string>
     <string name="step_priming_complete">Priming Complete</string>

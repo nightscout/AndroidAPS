@@ -5,19 +5,15 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.elements.Comparator
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 import java.util.Optional
 
 class TriggerInsulinAgeTest : TriggerTestBase() {
-
-    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Test fun shouldRunTest() = runTest {
         val insulinChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.INSULIN_CHANGE)
@@ -50,10 +46,9 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
 
     @Test fun shouldRunPatchPump() {
         val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
-        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         val pumpDescription = PumpDescription()
         pumpDescription.isPatchPump = true
-        whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
+        whenever(pumpPluginWithConcentration.pumpDescription).thenReturn(pumpDescription)
         assertThat(t.shouldRun()).isFalse()
     }
 

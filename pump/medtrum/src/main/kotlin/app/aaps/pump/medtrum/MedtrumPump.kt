@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -167,27 +168,30 @@ class MedtrumPump @Inject constructor(
             preferences.put(MedtrumStringNonKey.ActualBasalProfile, encodedString ?: "")
         }
 
-    private var _lastBolusTime = 0L // Time in ms!
+    private var _lastBolusTime = MutableStateFlow(0L) // Time in ms!
+    val lastBolusTimeFlow: StateFlow<Long> = _lastBolusTime
     var lastBolusTime: Long
-        get() = _lastBolusTime
+        get() = _lastBolusTime.value
         set(value) {
-            _lastBolusTime = value
+            _lastBolusTime.value = value
             preferences.put(MedtrumLongNonKey.LastBolusTime, value)
         }
 
-    private var _lastBolusAmount = 0.0
+    private var _lastBolusAmount = MutableStateFlow(0.0)
+    val lastBolusAmountFlow: StateFlow<Double> = _lastBolusAmount
     var lastBolusAmount: Double
-        get() = _lastBolusAmount
+        get() = _lastBolusAmount.value
         set(value) {
-            _lastBolusAmount = value
+            _lastBolusAmount.value = value
             preferences.put(MedtrumDoubleNonKey.LastBolusAmount, value)
         }
 
-    private var _lastConnection = 0L // Time in ms!
+    private var _lastConnection = MutableStateFlow(0L) // Time in ms!
+    val lastConnectionFlow: StateFlow<Long> = _lastConnection
     var lastConnection: Long
-        get() = _lastConnection
+        get() = _lastConnection.value
         set(value) {
-            _lastConnection = value
+            _lastConnection.value = value
             preferences.put(MedtrumLongNonKey.LastConnection, value)
         }
 
@@ -311,9 +315,9 @@ class MedtrumPump @Inject constructor(
     fun loadVarsFromSP() {
         // Load stuff from preferences
         _patchSessionToken = preferences.get(MedtrumLongNonKey.SessionToken)
-        _lastConnection = preferences.get(MedtrumLongNonKey.LastConnection)
-        _lastBolusTime = preferences.get(MedtrumLongNonKey.LastBolusTime)
-        _lastBolusAmount = preferences.get(MedtrumDoubleNonKey.LastBolusAmount)
+        _lastConnection.value = preferences.get(MedtrumLongNonKey.LastConnection)
+        _lastBolusTime.value = preferences.get(MedtrumLongNonKey.LastBolusTime)
+        _lastBolusAmount.value = preferences.get(MedtrumDoubleNonKey.LastBolusAmount)
         _currentSequenceNumber = preferences.get(MedtrumIntNonKey.CurrentSequenceNumber)
         _patchId = preferences.get(MedtrumLongNonKey.PatchId)
         _syncedSequenceNumber = preferences.get(MedtrumIntNonKey.SyncedSequenceNumber)
@@ -433,7 +437,7 @@ class MedtrumPump @Inject constructor(
                 }
                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = basalStartTime,
-                    rate = adjustedBasalRate,
+                    rate = PumpRate(adjustedBasalRate),
                     duration = duration,
                     isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
                     type = temporaryBasalInfo?.type,
@@ -454,7 +458,7 @@ class MedtrumPump @Inject constructor(
                 }
                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = basalStartTime,
-                    rate = 0.0,
+                    rate = PumpRate(0.0),
                     duration = T.mins(FAKE_TBR_LENGTH).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -526,7 +530,7 @@ class MedtrumPump @Inject constructor(
     private fun setFakeTBR() {
         val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
-            rate = 0.0,
+            rate = PumpRate(0.0),
             duration = T.mins(FAKE_TBR_LENGTH).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,

@@ -182,7 +182,7 @@ private fun TempBasalItem(
     val now = dateUtil.now()
     val profile = profileFunction.getProfile(now)
     val iob = if (profile != null) {
-        tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
+        tempBasal.iobCalc(now, profile)
     } else {
         IobTotal(now)
     }

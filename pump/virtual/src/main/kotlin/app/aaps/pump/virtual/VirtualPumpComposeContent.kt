@@ -6,6 +6,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -16,7 +17,7 @@ import app.aaps.core.ui.compose.pump.PumpOverviewScreen
 class VirtualPumpComposeContent(
     private val virtualPumpPlugin: VirtualPumpPlugin,
     private val rh: ResourceHelper,
-    private val profileFunction: ProfileFunction,
+    private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences
@@ -33,7 +34,7 @@ class VirtualPumpComposeContent(
             VirtualPumpViewModel(
                 virtualPumpPlugin = virtualPumpPlugin,
                 rh = rh,
-                profileFunction = profileFunction,
+                pumpSync = pumpSync,
                 dateUtil = dateUtil,
                 persistenceLayer = persistenceLayer,
                 preferences = preferences,

@@ -3,6 +3,7 @@ package app.aaps.implementation.profile
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -15,8 +16,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.LocalProfileManager
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -51,7 +52,7 @@ class ProfileFunctionImpl @Inject constructor(
 ) : ProfileFunction {
 
     @VisibleForTesting
-    val cache = ConcurrentHashMap<Long, Profile>()
+    val cache = ConcurrentHashMap<Long, EffectiveProfile>()
 
     init {
         persistenceLayer.observeChanges(EPS::class.java)
@@ -86,10 +87,10 @@ class ProfileFunctionImpl @Inject constructor(
 
     override fun isProfileValid(from: String): Boolean = getProfile() != null
 
-    override fun getProfile(): Profile? =
+    override fun getProfile(): EffectiveProfile? =
         getProfile(dateUtil.now())
 
-    override fun getProfile(time: Long): Profile? {
+    override fun getProfile(time: Long): EffectiveProfile? {
         val rounded = time - time % 1000
         // Clear cache after longer use
         synchronized(cache) {
@@ -109,6 +110,10 @@ class ProfileFunctionImpl @Inject constructor(
             }
             return sealed
         }
+        /*
+        // Commented out because it's not possible to simply take Pure profile
+        // because we don't know Insulin configuration for it
+
         // In NSClient mode effective profile may not be received if older than 2 days
         // Try to get it from device status
         // Remove this code after switch to api v3
@@ -125,7 +130,7 @@ class ProfileFunctionImpl @Inject constructor(
 
             }
         }
-
+        */
         synchronized(cache) {
             cache.remove(rounded)
         }
@@ -144,7 +149,7 @@ class ProfileFunctionImpl @Inject constructor(
         if (preferences.get(StringKey.GeneralUnits) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
-    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): PS? {
+    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long, iCfg: ICfg): PS? {
         val pureProfile = profileStore.getSpecificProfile(profileName) ?: return null
         return PS(
             timestamp = timestamp,
@@ -157,17 +162,15 @@ class ProfileFunctionImpl @Inject constructor(
             timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
             percentage = percentage,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
-            iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (pureProfile.dia * 3600 * 1000).toLong()
-            }
+            iCfg = iCfg
         )
     }
 
     override fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, iCfg: ICfg
     ): Boolean {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp) ?: return false
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return false
         appScope.launch { persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues) }
         return true
     }
@@ -178,7 +181,7 @@ class ProfileFunctionImpl @Inject constructor(
     ): Boolean {
         val profile = runBlocking { persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) } ?: return false
         val profileStore = localProfileManager.profile ?: return false
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now()) ?: return false
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return false
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
             rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
             activePlugin.activePump,
@@ -193,5 +196,38 @@ class ProfileFunctionImpl @Inject constructor(
             return true
         }
         return false
+    }
+
+    override fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
+        val profile = getProfile()
+        val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
+        val profileStore = localProfileManager.profile ?: return false
+        val profileName = eps.originalProfileName
+        val percentage = eps.originalPercentage
+        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+        val now = dateUtil.now()
+
+        val durationMinutes = if (eps.originalDuration > 0) {
+            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
+        } else 0
+
+        return createProfileSwitch(
+            profileStore = profileStore,
+            profileName = profileName,
+            durationInMinutes = durationMinutes,
+            percentage = percentage,
+            timeShiftInHours = timeshiftHours,
+            timestamp = now,
+            action = Action.PROFILE_SWITCH,
+            source = source,
+            listValues = listOfNotNull(
+                ValueWithUnit.SimpleString(profileName),
+                ValueWithUnit.SimpleString(iCfg.insulinLabel),
+                ValueWithUnit.Percent(percentage),
+                ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
+                ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
+            ),
+            iCfg = iCfg
+        )
     }
 }

@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
 
     api(platform(libs.androidx.compose.bom))

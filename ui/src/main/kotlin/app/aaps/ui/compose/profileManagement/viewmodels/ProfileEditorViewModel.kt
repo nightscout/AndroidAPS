@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -60,8 +61,6 @@ data class ProfileUiState(
     val supportsDynamicIc: Boolean = false,
     val basalMin: Double = 0.01,
     val basalMax: Double = 10.0,
-    val diaMin: Double = 5.0,
-    val diaMax: Double = 10.0,
     val icMin: Double = 0.5,
     val icMax: Double = 100.0,
     val isfMin: Double = 2.0,
@@ -81,6 +80,7 @@ class ProfileEditorViewModel @Inject constructor(
     private val localProfileManager: LocalProfileManager,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
     private val hardLimits: HardLimits,
     val dateUtil: DateUtil,
     private val protectionCheck: ProtectionCheck
@@ -131,8 +131,6 @@ class ProfileEditorViewModel @Inject constructor(
                 supportsDynamicIc = aps.supportsDynamicIc(),
                 basalMin = pumpDescription.basalMinimumRate,
                 basalMax = pumpDescription.basalMaximumRate.coerceAtMost(10.0),
-                diaMin = hardLimits.minDia(),
-                diaMax = hardLimits.maxDia(),
                 icMin = hardLimits.minIC(),
                 icMax = hardLimits.maxIC(),
                 isfMin = if (isMgdl) HardLimits.MIN_ISF else HardLimits.MIN_ISF / 18.0,
@@ -160,11 +158,6 @@ class ProfileEditorViewModel @Inject constructor(
 
     fun updateProfileName(name: String) {
         localProfileManager.currentProfile()?.name = name
-        markEdited()
-    }
-
-    fun updateDia(dia: Double) {
-        localProfileManager.currentProfile()?.dia = dia
         markEdited()
     }
 
@@ -332,13 +325,12 @@ class ProfileEditorViewModel @Inject constructor(
 
     fun getEditedProfile() = localProfileManager.getEditedProfile()
 
-    fun getActiveInsulin() = activePlugin.activeInsulin
+    fun getActiveInsulin() = insulin
 
     private fun LocalProfileManager.SingleProfile.toState(): SingleProfileState {
         return SingleProfileState(
             name = name,
             mgdl = mgdl,
-            dia = dia,
             ic = ic.toTimeValueList(),
             isf = isf.toTimeValueList(),
             basal = basal.toTimeValueList(),

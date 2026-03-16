@@ -4,6 +4,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -166,7 +167,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = duration,
             isAbsolute = true,
             type = temporaryBasalInfo.type,
@@ -266,7 +267,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = null,
@@ -321,7 +322,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val adjustedBasalRate = (basalRate / medtrumPump.baseBasalRate) * 100
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = adjustedBasalRate,
+            rate = PumpRate(adjustedBasalRate),
             duration = duration,
             isAbsolute = false,
             type = temporaryBasalInfo.type,
@@ -370,7 +371,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -467,7 +468,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -512,7 +513,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -674,7 +675,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
-            rate = 0.0,
+            rate = PumpRate(0.0),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,

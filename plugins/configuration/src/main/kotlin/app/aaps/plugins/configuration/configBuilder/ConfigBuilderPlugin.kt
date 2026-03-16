@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -162,7 +161,6 @@ class ConfigBuilderPlugin @Inject constructor(
                     (if (p.isEnabled(PluginType.CONSTRAINTS)) " CONSTRAINTS" else "") +
                     (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
                     (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
-                    (if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else "") +
                     (if (p.isEnabled(PluginType.SYNC)) " SYNC" else "") +
                     if (p.isEnabled(PluginType.SMOOTHING)) " SMOOTHING" else ""
             )
@@ -275,7 +273,6 @@ class ConfigBuilderPlugin @Inject constructor(
     override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when {
-            type == PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
             type == PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
             type == PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)
             type == PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)

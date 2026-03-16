@@ -74,6 +74,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             it.localAlertUtils = localAlertUtils
             it.workManager = workManager
             it.rh = rh
+            it.ch = ch
         }
 
     @Test
@@ -82,7 +83,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker = createWorker()
         whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
         whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)).thenReturn(true)
         testPumpPlugin.lastData = now - T.mins(20).msecs()
 

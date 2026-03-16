@@ -49,7 +49,7 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
         danaRExecutionService.danaRKoreanPlugin = danaRKoreanPlugin
         danaRExecutionService.commandQueue = commandQueue
         danaRExecutionService.messageHashTableR = messageHashTableR
-        danaRExecutionService.profileFunction = profileFunction
+        //danaRExecutionService.profileFunction = profileFunction
 
         `when`(rh.gs(anyInt())).thenReturn("test")
         `when`(rh.gs(anyInt(), any())).thenReturn("test")
@@ -109,7 +109,7 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testUpdateBasalsInPump_notConnected() {
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
         `when`(profile.getBasal()).thenReturn(1.0)
 
         val result = danaRExecutionService.updateBasalsInPump(profile)

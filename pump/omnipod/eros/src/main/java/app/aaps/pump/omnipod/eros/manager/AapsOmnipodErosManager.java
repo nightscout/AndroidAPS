@@ -19,6 +19,7 @@ import app.aaps.core.data.model.BS;
 import app.aaps.core.data.model.TE;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.data.time.T;
+import app.aaps.core.interfaces.insulin.ConcentrationHelper;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.NotificationAction;
@@ -28,6 +29,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpInsulin;
+import app.aaps.core.interfaces.pump.PumpRate;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.defs.PumpTypeExtensionKt;
 import app.aaps.core.interfaces.resources.ResourceHelper;
@@ -109,6 +112,7 @@ public class AapsOmnipodErosManager {
     private final UiInteraction uiInteraction;
     private final NotificationManager notificationManager;
     private final Provider<PumpEnactResult> pumpEnactResultProvider;
+    private final ConcentrationHelper ch;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -139,7 +143,8 @@ public class AapsOmnipodErosManager {
                                   PumpSync pumpSync,
                                   UiInteraction uiInteraction,
                                   NotificationManager notificationManager,
-                                  Provider<PumpEnactResult> pumpEnactResultProvider
+                                  Provider<PumpEnactResult> pumpEnactResultProvider,
+                                  ConcentrationHelper ch
     ) {
 
         this.podStateManager = podStateManager;
@@ -154,6 +159,7 @@ public class AapsOmnipodErosManager {
         this.uiInteraction = uiInteraction;
         this.notificationManager = notificationManager;
         this.pumpEnactResultProvider = pumpEnactResultProvider;
+        this.ch = ch;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -399,7 +405,7 @@ public class AapsOmnipodErosManager {
         try {
             bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.insulin), beepsEnabled, beepsEnabled,
                     detailedBolusInfo.getBolusType() == BS.Type.SMB ? null :
-                            (estimatedUnitsDelivered, percentage) -> sendEvent(new EventOverviewBolusProgress(rh, estimatedUnitsDelivered, detailedBolusInfo.getId()))));
+                            (estimatedUnitsDelivered, percentage) -> sendEvent(new EventOverviewBolusProgress(ch, new PumpInsulin(estimatedUnitsDelivered), detailedBolusInfo.getId()))));
 
             bolusStarted = new Date();
         } catch (Exception ex) {
@@ -741,7 +747,7 @@ public class AapsOmnipodErosManager {
         }
         pumpSync.syncBolusWithPumpId(
                 detailedBolusInfo.timestamp,
-                detailedBolusInfo.insulin,
+                new PumpInsulin(detailedBolusInfo.insulin),
                 detailedBolusInfo.getBolusType(),
                 detailedBolusInfo.getBolusPumpId(),
                 detailedBolusInfo.getPumpType(),
@@ -757,7 +763,7 @@ public class AapsOmnipodErosManager {
 
             pumpSync.syncTemporaryBasalWithPumpId(
                     System.currentTimeMillis(),
-                    0.0,
+                    new PumpRate(0.0),
                     OmnipodConstants.SERVICE_DURATION.getMillis(),
                     true,
                     PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
@@ -832,7 +838,7 @@ public class AapsOmnipodErosManager {
 
                 pumpSync.syncTemporaryBasalWithPumpId(
                         System.currentTimeMillis(),
-                        previouslyRunningTempBasal.getRate(),
+                        new PumpRate(previouslyRunningTempBasal.getRate()),
                         minutesRemaining,
                         true,
                         PumpSync.TemporaryBasalType.NORMAL,
@@ -847,7 +853,7 @@ public class AapsOmnipodErosManager {
     private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
         pumpSync.syncTemporaryBasalWithPumpId(
                 time,
-                tempBasalPair.getInsulinRate(),
+                new PumpRate(tempBasalPair.getInsulinRate()),
                 T.Companion.mins(tempBasalPair.getDurationMinutes()).msecs(),
                 true,
                 PumpSync.TemporaryBasalType.NORMAL,

@@ -1,12 +1,11 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -15,7 +14,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -32,7 +30,6 @@ import javax.inject.Provider
 import kotlin.math.min
 
 class ATProfile @Inject constructor(
-    private val activePlugin: ActivePlugin,
     private val preferences: Preferences,
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
@@ -125,20 +122,17 @@ class ATProfile @Inject constructor(
     fun profileToOrefJSON(): String {
         var jsonString = ""
         val json = JSONObject()
-        val insulinInterface: Insulin = activePlugin.activeInsulin
+        val insulinType = InsulinType.fromPeak(localInsulin.peak * 60000L)
         try {
             json.put("name", profileName)
             json.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
             json.put("dia", dia)
-            if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
-                "curve",
-                "ultra-rapid"
-            ) else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING) json.put("curve", "rapid-acting") else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
-                json.put("curve", "ultra-rapid")
-                json.put("useCustomPeakTime", true)
-                json.put("insulinPeakTime", 45)
-            } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peakTime: Int = preferences.get(IntKey.InsulinOrefPeak)
+            if (insulinType == InsulinType.OREF_ULTRA_RAPID_ACTING)
+                json.put("curve","ultra-rapid")
+            else if (insulinType == InsulinType.OREF_RAPID_ACTING)
+                json.put("curve","rapid-acting")
+            else {
+                val peakTime: Int = localInsulin.peak
                 json.put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", peakTime)
@@ -181,7 +175,6 @@ class ATProfile @Inject constructor(
     fun data(circadian: Boolean = false): PureProfile? {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
-            json.put("dia", dia)
             if (circadian) {
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
                 json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC))

@@ -116,7 +116,7 @@ class SyncNsProfileSwitchTransactionTest {
         percentage = 100,
         duration = 0,
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId),
-        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0),
         isValid = isValid
     ).also { it.id = id }
 }

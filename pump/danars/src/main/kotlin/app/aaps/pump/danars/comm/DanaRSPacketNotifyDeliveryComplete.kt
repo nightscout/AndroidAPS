@@ -1,8 +1,10 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
@@ -12,7 +14,7 @@ import javax.inject.Inject
 
 class DanaRSPacketNotifyDeliveryComplete @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val ch: ConcentrationHelper,
     private val rxBus: RxBus,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {
@@ -27,7 +29,7 @@ class DanaRSPacketNotifyDeliveryComplete @Inject constructor(
         val deliveredInsulin = byteArrayToInt(getBytes(data, DATA_START, 2)) / 100.0
         BolusProgressData.delivered = deliveredInsulin
         danaPump.bolusDone = true
-        rxBus.send(EventOverviewBolusProgress(rh, delivered = deliveredInsulin, id = danaPump.bolusingDetailedBolusInfo?.id))
+        rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(deliveredInsulin), id = danaPump.bolusingDetailedBolusInfo?.id))
         aapsLogger.debug(LTag.PUMPCOMM, "Delivered insulin: $deliveredInsulin")
     }
 

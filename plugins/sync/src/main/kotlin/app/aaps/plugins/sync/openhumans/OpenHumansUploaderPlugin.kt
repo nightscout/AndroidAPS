@@ -1,12 +1,15 @@
 package app.aaps.plugins.sync.openhumans
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.util.DisplayMetrics
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceCategory
@@ -204,6 +207,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 val timestamp = System.currentTimeMillis()
                 val offset = openHumansState!!.uploadOffset
                 var page = 0
+                @Suppress("ControlFlowWithEmptyBody")
                 while (uploadDataPaged(offset, timestamp, page++));
                 withContext(Dispatchers.Main) {
                     openHumansState = openHumansState!!.copy(uploadOffset = timestamp)
@@ -363,8 +367,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("amount", it.amount)
                 put("type", it.type.toString())
                 put("isBasalInsulin", it.isBasalInsulin)
-                put("insulinEndTime", it.icfg?.insulinEndTime)
-                put("peak", it.icfg?.peak)
+                put("insulinEndTime", it.iCfg.insulinEndTime)
+                put("peak", it.iCfg.insulinPeakTime)
             }
             tags.add("Boluses")
         }
@@ -402,7 +406,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("originalDuration", it.originalDuration)
                 put("originalEnd", it.originalEnd)
                 put("insulinEndTime", it.iCfg.insulinEndTime)
-                put("insulinEndTime", it.iCfg.peak)
+                put("insulinEndTime", it.iCfg.insulinPeakTime)
             }
             tags.add("EffectiveProfileSwitches")
         }
@@ -487,7 +491,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("percentage", it.percentage)
                 put("duration", it.duration)
                 put("insulinEndTime", it.iCfg.insulinEndTime)
-                put("peak", it.iCfg.peak)
+                put("peak", it.iCfg.insulinPeakTime)
             }
             tags.add("ProfileSwitches")
         }
@@ -665,9 +669,18 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 )
             )
             .build()
-        NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
-        withContext(Dispatchers.Main) {
-            logout()
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
+            withContext(Dispatchers.Main) {
+                logout()
+            }
         }
     }
 
@@ -692,7 +705,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
         val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
 
-        @Suppress("PrivatePropertyName")
         private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
         const val WORK_NAME_PERIODIC = "Open Humans Periodic"
         const val WORK_NAME_MANUAL = "Open Humans Manual"

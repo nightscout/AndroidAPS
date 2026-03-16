@@ -7,7 +7,7 @@ import app.aaps.core.data.pump.defs.PumpTempBasalType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.baseBasalRange
 import app.aaps.core.interfaces.pump.defs.hasExtendedBasals
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -34,7 +34,7 @@ import kotlinx.coroutines.runBlocking
 class VirtualPumpViewModel(
     private val virtualPumpPlugin: VirtualPumpPlugin,
     private val rh: ResourceHelper,
-    private val profileFunction: ProfileFunction,
+    private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
@@ -77,7 +77,7 @@ class VirtualPumpViewModel(
 
     private fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
         virtualPumpPlugin.refreshConfiguration()
-        val profile = profileFunction.getProfile()
+        val profile = pumpSync.expectedPumpState().profile
         val now = dateUtil.now()
 
         val tempBasalText = profile?.let {

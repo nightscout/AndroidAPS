@@ -40,11 +40,11 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun setUp() {
         sut = TizenPlugin(
             aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, pumpStatusProvider
+            loop, activePlugin, insulin, receiverStatusStore, config, glucoseStatusProvider, pumpStatusProvider
         )
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         whenever(profileFunction.getProfileName()).thenReturn("TestProfile")
         whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
@@ -67,6 +67,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
             it.enacted = RT(runningDynamicIsf = false)
         })
         whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true))
+        whenever(insulin.iCfg).thenReturn(someICfg)
     }
 
     @Test

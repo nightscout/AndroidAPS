@@ -94,7 +94,7 @@ class UpdateNsIdEffectiveProfileSwitchTransactionTest {
         originalPercentage = 100,
         originalDuration = 0,
         originalEnd = 0,
-        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0),
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId)
     ).also { it.id = id }
 }

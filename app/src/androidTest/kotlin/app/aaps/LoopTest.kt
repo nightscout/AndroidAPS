@@ -3,6 +3,7 @@ package app.aaps
 import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -127,7 +128,8 @@ class LoopTest @Inject constructor() {
             listValues = listOf(
                 ValueWithUnit.SimpleString(localProfileManager.profile?.getDefaultProfileName() ?: ""),
                 ValueWithUnit.Percent(100)
-            )
+            ),
+            iCfg = ICfg("Test", insulinEndTime = 5 * 3600 * 1000L, insulinPeakTime = 75 * 60 * 1000L)
         )
         assertThat(result).isTrue()
 

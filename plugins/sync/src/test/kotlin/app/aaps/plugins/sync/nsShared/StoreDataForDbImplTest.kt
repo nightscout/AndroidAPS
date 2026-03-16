@@ -52,7 +52,7 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
     val tt = TT(timestamp = now, reason = TT.Reason.ACTIVITY, highTarget = 120.0, lowTarget = 100.0, duration = T.mins(30).msecs())
     val gv = GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now, sourceSensor = SourceSensor.IOB_PREDICTION, trendArrow = TrendArrow.NONE)
     val fd = FD(name = "Apple", carbs = 24, portion = 1.0)
-    val bs = BS(timestamp = now - 1, amount = 1.0, type = BS.Type.NORMAL)
+    val bs = BS(timestamp = now - 1, amount = 1.0, type = BS.Type.NORMAL, iCfg = someICfg)
     val ca = CA(timestamp = now, amount = 12.0, duration = 0)
     val tb = TB(timestamp = now, type = TB.Type.NORMAL, isAbsolute = true, rate = 0.7, duration = T.mins(30).msecs())
     val eb = EB(timestamp = now - 1, amount = 1.0, duration = T.hours(1).msecs())

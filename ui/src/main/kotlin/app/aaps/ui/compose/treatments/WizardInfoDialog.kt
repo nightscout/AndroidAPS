@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.BCR
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalProfileUtil
@@ -223,6 +224,7 @@ private val previewDecimalFormatter = object : DecimalFormatter {
     override fun to3Decimal(value: Double, unit: String) = "${f3.format(value)} $unit"
     override fun toPumpSupportedBolus(value: Double, bolusStep: Double) = f2.format(value)
     override fun toPumpSupportedBolusWithUnits(value: Double, bolusStep: Double) = "${f2.format(value)} U"
+    override fun toPumpSupportedBolusWithUnits(value: PumpInsulin, bolusStep: Double) = "${f2.format(value.iU(1.0))} U"
     override fun pumpSupportedBolusFormat(bolusStep: Double) = f2
 }
 

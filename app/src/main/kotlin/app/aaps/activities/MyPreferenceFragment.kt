@@ -145,9 +145,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activePlugin.getSpecificPluginsList(PluginType.LOOP).forEach { addPreferencesIfEnabled(it, rootKey, config.APS) }
             addPreferencesIfEnabled(activePlugin.activeAPS as PluginBase, rootKey, config.APS)
             addPreferencesIfEnabled(activePlugin.activeSensitivity as PluginBase, rootKey)
-            addPreferencesIfEnabled(activePlugin.activePump as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activePumpInternal as PluginBase, rootKey)
             addPumpScreen(rootKey)
-            addPreferencesIfEnabled(activePlugin.activeInsulin as PluginBase, rootKey)
             activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { addPreferencesIfEnabled(it, rootKey) }
             addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesIfEnabled(automationPlugin, rootKey)
@@ -388,6 +387,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.GeneralUnits, title = R.string.unitsnosemicolon, entries = unitsEntries, entryValues = unitsValues))
             addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.GeneralLanguage, title = R.string.language, entries = languageEntries, entryValues = languageValues))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GeneralSimpleMode, title = app.aaps.core.keys.R.string.pref_title_simple_mode))
+            // GeneralInsulinConcentration is handled in Compose preferences only (requires change guard)
             addPreference(
                 AdaptiveStringPreference(
                     ctx = context, stringKey = StringKey.GeneralPatientName, summary = app.aaps.core.keys.R.string.pref_summary_patient_name, title = app.aaps.core.keys.R.string.pref_title_patient_name,

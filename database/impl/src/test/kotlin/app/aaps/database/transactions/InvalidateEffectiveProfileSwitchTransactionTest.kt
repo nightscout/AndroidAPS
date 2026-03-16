@@ -92,6 +92,6 @@ class InvalidateEffectiveProfileSwitchTransactionTest {
         originalEnd = 0,
         isValid = isValid,
         interfaceIDs_backing = InterfaceIDs(),
-        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L)
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0)
     ).also { it.id = id }
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -167,7 +168,7 @@ class PatchManager @Inject constructor(
         if (detailedBolusInfo.insulin > 0) {
             pumpSync.syncBolusWithPumpId(
                 dateUtil.now(),  // Use real timestamp to have it different from carbs (otherwise NS sync fail)
-                detailedBolusInfo.insulin,
+                PumpInsulin(detailedBolusInfo.insulin),
                 detailedBolusInfo.bolusType,
                 dateUtil.now(),
                 PumpType.EOFLOW_EOPATCH2,

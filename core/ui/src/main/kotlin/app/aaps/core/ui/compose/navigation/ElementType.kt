@@ -34,6 +34,8 @@ enum class ElementType(
     PROFILE_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
     TEMP_TARGET_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
     TEMP_TARGET_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
+    INSULIN_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
+    INSULIN_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
     QUICK_WIZARD_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
     QUICK_WIZARD_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
 

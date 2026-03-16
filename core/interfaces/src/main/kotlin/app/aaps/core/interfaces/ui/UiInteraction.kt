@@ -6,6 +6,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
 
 /**
@@ -105,8 +106,9 @@ interface UiInteraction {
      * Shows the profile switch dialog.
      * @param fragmentManager The fragment manager to use.
      * @param profileName Optional pre-selected profile name.
+     * @param iCfg Optional iCfg to be used within EPS
      */
-    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null)
+    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null, iCfg: ICfg? = null)
 
     /**
      * Shows the temporary basal dialog.

@@ -12,7 +12,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 class TriggerProfilePercentTest : TriggerTestBase() {
 
     @BeforeEach fun mock() {
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
     }
 
     @Test fun shouldRunTest() {

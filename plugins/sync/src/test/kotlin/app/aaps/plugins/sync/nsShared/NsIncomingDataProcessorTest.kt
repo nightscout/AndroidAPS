@@ -17,6 +17,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSBolus
 import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
 import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch
 import app.aaps.core.nssdk.localmodel.treatment.NSExtendedBolus
+import app.aaps.core.nssdk.localmodel.treatment.NSICfg
 import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
@@ -45,6 +46,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var storeDataForDb: StoreDataForDb
     @Mock lateinit var nsClientRepository: NSClientRepository
+    private val nsiCfg = NSICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
     @BeforeEach
     fun setUp() {
@@ -55,13 +57,13 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         // Default NSClient to be enabled
         whenever(nsClientSource.isEnabled()).thenReturn(true)
 
-
         processor = NsIncomingDataProcessor(
             aapsLogger = aapsLogger,
             nsClientSource = nsClientSource,
             preferences = preferences,
             dateUtil = dateUtil,
             activePlugin = activePlugin,
+            insulin = insulin,
             localProfileManager = localProfileManager,
             storeDataForDb = storeDataForDb,
             config = config,
@@ -199,7 +201,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 pumpType = null,
                 pumpSerial = null,
                 type = NSBolus.BolusType.NORMAL,
-                isBasalInsulin = false
+                isBasalInsulin = false,
+                iCfg = nsiCfg
             )
         )
 
@@ -462,7 +465,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 endId = null,
                 pumpType = null,
                 pumpSerial = null,
-                profileJson = validProfile.toPureNsJson(dateUtil).toString()
+                profileJson = effectiveProfile.toPureNsJson(dateUtil).toString(),
+                iCfg = nsiCfg
             )
         )
 
@@ -494,7 +498,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 endId = null,
                 pumpType = null,
                 pumpSerial = null,
-                profileJson = validProfile.toPureNsJson(dateUtil).toString()
+                profileJson = effectiveProfile.toPureNsJson(dateUtil).toString(),
+                iCfg = nsiCfg
             )
         )
 
@@ -524,7 +529,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 endId = null,
                 pumpType = null,
                 pumpSerial = null,
-                profileJson = JSONObject().toString()
+                profileJson = JSONObject().toString(),
+                iCfg = nsiCfg
             )
         )
 
@@ -554,7 +560,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 endId = null,
                 pumpType = null,
                 pumpSerial = null,
-                profileJson = validProfile.toPureNsJson(dateUtil).toString()
+                profileJson = effectiveProfile.toPureNsJson(dateUtil).toString(),
+                iCfg = nsiCfg
             )
         )
 
@@ -586,7 +593,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 endId = null,
                 pumpType = null,
                 pumpSerial = null,
-                profileJson = validProfile.toPureNsJson(dateUtil).toString()
+                profileJson = effectiveProfile.toPureNsJson(dateUtil).toString(),
+                iCfg = nsiCfg
             )
         )
 
@@ -616,7 +624,8 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 endId = null,
                 pumpType = null,
                 pumpSerial = null,
-                profileJson = JSONObject().toString()
+                profileJson = JSONObject().toString(),
+                iCfg = nsiCfg
             )
         )
 

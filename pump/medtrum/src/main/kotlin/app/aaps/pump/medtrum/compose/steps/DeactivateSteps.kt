@@ -63,10 +63,21 @@ private fun ConfirmDeactivateStepContent(
         )
     }
 
+    ConfirmDeactivateContent(
+        onNext = onShowDialog,
+        onCancel = onCancel
+    )
+}
+
+@Composable
+internal fun ConfirmDeactivateContent(
+    onNext: () -> Unit,
+    onCancel: () -> Unit
+) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = onShowDialog
+            onClick = onNext
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
@@ -94,19 +105,17 @@ fun DeactivatingStep(
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
 
-    // Trigger deactivation
     LaunchedEffect(Unit) {
         viewModel.deactivatePatch()
     }
 
-    // Auto-navigate on stopped
     LaunchedEffect(setupStep) {
         if (setupStep == MedtrumPatchViewModel.SetupStep.STOPPED) {
             viewModel.moveStep(PatchStep.DEACTIVATION_COMPLETE)
         }
     }
 
-    DeactivatingStepContent(
+    DeactivatingContent(
         isError = isError,
         onDiscard = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) },
         onCancel = onCancel
@@ -114,7 +123,7 @@ fun DeactivatingStep(
 }
 
 @Composable
-private fun DeactivatingStepContent(
+internal fun DeactivatingContent(
     isError: Boolean,
     onDiscard: () -> Unit,
     onCancel: () -> Unit
@@ -148,25 +157,25 @@ private fun DeactivatingStepContent(
 fun DeactivateCompleteStep(
     viewModel: MedtrumPatchViewModel
 ) {
-    DeactivateCompleteStepContent(
-        onNextPatch = { viewModel.moveStep(PatchStep.PREPARE_PATCH) },
-        onFinish = { viewModel.moveStep(PatchStep.COMPLETE) }
+    DeactivateCompleteContent(
+        onNewPatch = { viewModel.moveStep(PatchStep.PREPARE_PATCH) },
+        onDone = { viewModel.moveStep(PatchStep.COMPLETE) }
     )
 }
 
 @Composable
-private fun DeactivateCompleteStepContent(
-    onNextPatch: () -> Unit,
-    onFinish: () -> Unit
+internal fun DeactivateCompleteContent(
+    onNewPatch: () -> Unit,
+    onDone: () -> Unit
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = onNextPatch
+            onClick = onNewPatch
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.ok),
-            onClick = onFinish
+            onClick = onDone
         )
     ) {
         Text(
@@ -187,57 +196,36 @@ private fun DeactivateCompleteStepContent(
     }
 }
 
-@Preview(showBackground = true)
+// region Previews
+
+@Preview(showBackground = true, name = "Confirm Deactivate")
 @Composable
-private fun ConfirmDeactivateStepPreview() {
-    ConfirmDeactivateStepContent(
-        showConfirmDialog = false,
-        onShowDialog = {},
-        onConfirm = {},
-        onDismissDialog = {},
-        onCancel = {}
-    )
+private fun PreviewConfirmDeactivate() {
+    MaterialTheme {
+        ConfirmDeactivateContent(onNext = {}, onCancel = {})
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Deactivating - In Progress")
 @Composable
-private fun ConfirmDeactivateStepDialogPreview() {
-    ConfirmDeactivateStepContent(
-        showConfirmDialog = true,
-        onShowDialog = {},
-        onConfirm = {},
-        onDismissDialog = {},
-        onCancel = {}
-    )
+private fun PreviewDeactivating() {
+    MaterialTheme {
+        DeactivatingContent(isError = false, onDiscard = {}, onCancel = {})
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Deactivating - Error")
 @Composable
-private fun DeactivatingStepProgressPreview() {
-    DeactivatingStepContent(
-        isError = false,
-        onDiscard = {},
-        onCancel = {}
-    )
+private fun PreviewDeactivatingError() {
+    MaterialTheme {
+        DeactivatingContent(isError = true, onDiscard = {}, onCancel = {})
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Deactivate Complete")
 @Composable
-private fun DeactivatingStepErrorPreview() {
-    DeactivatingStepContent(
-        isError = true,
-        onDiscard = {},
-        onCancel = {}
-    )
+private fun PreviewDeactivateComplete() {
+    MaterialTheme {
+        DeactivateCompleteContent(onNewPatch = {}, onDone = {})
+    }
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun DeactivateCompleteStepPreview() {
-    DeactivateCompleteStepContent(
-        onNextPatch = {},
-        onFinish = {}
-    )
-}
-
-private fun String.stripHtml(): String = this.replace(Regex("<[^>]*>"), "")
