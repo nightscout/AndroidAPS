@@ -1,0 +1,74 @@
+name: Pull Request CI (Untrusted)
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-ci-untrusted-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test fullDebug
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform
+        run: sdkmanager "platforms;android-36"
+
+      - name: Enable KVM access
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Compile instrumentation test sources
+        run: ./gradlew --stacktrace compileFullDebugAndroidTestSources
+
+      - name: Run unit tests
+        run: ./gradlew --stacktrace testFullDebugUnitTest
+
+      - name: Run connected tests and coverage
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          profile: pixel_6
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: ./gradlew --stacktrace connectedFullDebugAndroidTest jacocoAllDebugReport
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-ci-untrusted-artifacts
+          if-no-files-found: warn
+          path: |
+            **/build/test-results/**/*.xml
+            **/build/reports/tests/**
+            **/build/outputs/androidTest-results/**
+            build/reports/jacoco/jacocoAllDebugReport/**
