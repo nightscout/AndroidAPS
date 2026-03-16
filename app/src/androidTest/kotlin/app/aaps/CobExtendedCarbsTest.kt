@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SourceSensor
@@ -128,9 +129,12 @@ class CobExtendedCarbsTest @Inject constructor() {
             }
         }
 
+        val store = localProfileManager.profile ?: error("No profile")
+        val profileName = store.getDefaultProfileName() ?: error("No profile")
+        val iCfg = store.getSpecificProfile(profileName)?.iCfg ?: ICfg("Insulin", peak = 75, dia = 5.0, concentration = 1.0)
         val result = profileFunction.createProfileSwitch(
-            profileStore = localProfileManager.profile ?: error("No profile"),
-            profileName = localProfileManager.profile?.getDefaultProfileName() ?: error("No profile"),
+            profileStore = store,
+            profileName = profileName,
             durationInMinutes = 0,
             percentage = 100,
             timeShiftInHours = 0,
@@ -139,9 +143,10 @@ class CobExtendedCarbsTest @Inject constructor() {
             source = Sources.ProfileSwitchDialog,
             note = "Test",
             listValues = listOf(
-                ValueWithUnit.SimpleString(localProfileManager.profile?.getDefaultProfileName() ?: ""),
+                ValueWithUnit.SimpleString(profileName),
                 ValueWithUnit.Percent(100)
-            )
+            ),
+            iCfg = iCfg
         )
         assertThat(result).isTrue()
 
