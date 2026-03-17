@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.di.TestApplication
@@ -47,6 +48,7 @@ class LoopTest @Inject constructor() {
     @Inject lateinit var config: Config
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var pumpSync: PumpSync
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -136,6 +138,9 @@ class LoopTest @Inject constructor() {
         // wait until PS is processed and EPS is created in DB
         assertThat(rxHelper.waitUntil("step3: profile available") { profileFunction.getProfile() != null }).isTrue()
         assertThat(profileFunction.getProfile()).isNotNull()
+
+        // Wait until pump has received the profile (baseBasalRate > 0)
+        assertThat(rxHelper.waitUntil("step3: pump profile set") { pumpSync.expectedPumpState().profile != null }).isTrue()
 
         // Loop should fail on no result from APS plugin
         loop.invoke("test3", allowNotification = false)
