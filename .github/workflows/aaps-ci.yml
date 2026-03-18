@@ -181,7 +181,9 @@ jobs:
           # When upgrading the JDK, please update this section accordingly as well.
           java-version: 21
           distribution: 'temurin'
-          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -189,12 +191,11 @@ jobs:
       - name: Build APKs
         run: |
               ./gradlew :app:assemble${{ env.BUILD_VARIANT }} :wear:assemble${{ env.BUILD_VARIANT }} \
-              -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+              -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss4m" \
               -Dkotlin.daemon.jvm.options="-Xmx2g" \
               -Dkotlin.compiler.execution.strategy="in-process" \
               -Dorg.gradle.daemon=true \
               -Dorg.gradle.workers.max=8 \
-              -Dorg.gradle.caching=true \
               -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
               -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
