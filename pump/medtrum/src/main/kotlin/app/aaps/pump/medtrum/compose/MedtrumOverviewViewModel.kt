@@ -319,6 +319,8 @@ class MedtrumOverviewViewModel @Inject constructor(
                 level = StatusLevel.WARNING
             )
 
+            connectionState == ConnectionState.DISCONNECTED                                -> null
+
             else                                                                        -> StatusBanner(
                 text = connectionText,
                 level = StatusLevel.NORMAL
