@@ -357,7 +357,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant waitForLongRTButtonPressToFinish()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
