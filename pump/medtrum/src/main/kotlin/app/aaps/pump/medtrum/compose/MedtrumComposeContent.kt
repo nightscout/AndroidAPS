@@ -1,16 +1,18 @@
 package app.aaps.pump.medtrum.compose
 
-import android.app.Activity
-import android.content.pm.ActivityInfo
-import android.view.WindowManager
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
@@ -19,9 +21,11 @@ import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
+import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.pump.medtrum.code.PatchStep
 
 class MedtrumComposeContent(
+    private val pluginName: String,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck
 ) : ComposablePluginContent {
@@ -32,7 +36,6 @@ class MedtrumComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val context = LocalContext.current
         val overviewViewModel: MedtrumOverviewViewModel = hiltViewModel()
 
         // Patch workflow state
@@ -43,6 +46,29 @@ class MedtrumComposeContent(
         var showDialog by remember { mutableStateOf(false) }
         var dialogTitle by remember { mutableStateOf("") }
         var dialogMessage by remember { mutableStateOf("") }
+
+        // Remove cog wheel from parent toolbar during wizard, restore when done
+        val navIcon: @Composable () -> Unit = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+            }
+        }
+        val settingsAction: @Composable RowScope.() -> Unit = {
+            onSettings?.let { action ->
+                IconButton(onClick = action) {
+                    Icon(Icons.Filled.Settings, contentDescription = stringResource(app.aaps.core.ui.R.string.settings))
+                }
+            }
+        }
+        LaunchedEffect(showPatchWorkflow) {
+            setToolbarConfig(
+                ToolbarConfig(
+                    title = pluginName,
+                    navigationIcon = navIcon,
+                    actions = if (showPatchWorkflow) ({}) else settingsAction
+                )
+            )
+        }
 
         // Handle one-time events from overview
         LaunchedEffect(overviewViewModel) {
@@ -75,17 +101,7 @@ class MedtrumComposeContent(
         }
 
         if (showPatchWorkflow) {
-            // Keep screen on and lock orientation during patch workflow
-            val activity = context as? Activity
-            DisposableEffect(Unit) {
-                activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                val previousOrientation = activity?.requestedOrientation
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-                onDispose {
-                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    previousOrientation?.let { activity.requestedOrientation = it }
-                }
-            }
+            KeepScreenOnEffect()
 
             // BLE pre-check — shows dialog on failure, cancels workflow
             BlePreCheckHost(

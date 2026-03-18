@@ -136,7 +136,7 @@ class StatusViewModel @Inject constructor(
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         }
         val pump = activePlugin.activePump
-        val reservoirLevel = pump.reservoirLevel.iU(insulin.iCfg.concentration)
+        val reservoirLevel = pump.reservoirLevel.value.iU(insulin.iCfg.concentration)
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
 
         val level: String? = if (reservoirLevel > 0) {
@@ -196,7 +196,7 @@ class StatusViewModel @Inject constructor(
         val event = withContext(Dispatchers.IO) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)
         }
-        val batteryLevel = pump.batteryLevel
+        val batteryLevel = pump.batteryLevel.value
         val level = if (batteryLevel != null && pump.model().supportBatteryLevel) {
             "${batteryLevel}%"
         } else {

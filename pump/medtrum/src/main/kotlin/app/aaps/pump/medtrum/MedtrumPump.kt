@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
+
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -107,21 +108,22 @@ class MedtrumPump @Inject constructor(
     val lastBasalRate: Double
         get() = _lastBasalRate.value
 
-    private val _reservoir = MutableStateFlow(0.0)
-    val reservoirFlow: StateFlow<Double> = _reservoir
+    val reservoirFlow: StateFlow<Double>
+        field = MutableStateFlow(0.0)
     var reservoir: Double
-        get() = _reservoir.value
+        get() = reservoirFlow.value
         set(value) {
-            _reservoir.value = value
+            reservoirFlow.value = value
         }
 
     var batteryVoltage_A = 0.0 // Not used in UI
-    private val _batteryVoltage_B = MutableStateFlow(0.0)
-    val batteryVoltage_BFlow: StateFlow<Double> = _batteryVoltage_B
+    val batteryVoltage_BFlow: StateFlow<Double>
+        field = MutableStateFlow(0.0)
+    val batteryFlow: StateFlow<Int?> = MutableStateFlow(null) // Medtrum reports voltage, not percentage
     var batteryVoltage_B: Double
-        get() = _batteryVoltage_B.value
+        get() = batteryVoltage_BFlow.value
         set(value) {
-            _batteryVoltage_B.value = value
+            batteryVoltage_BFlow.value = value
         }
 
     /** Stuff stored in preferences */
@@ -168,30 +170,30 @@ class MedtrumPump @Inject constructor(
             preferences.put(MedtrumStringNonKey.ActualBasalProfile, encodedString ?: "")
         }
 
-    private var _lastBolusTime = MutableStateFlow(0L) // Time in ms!
-    val lastBolusTimeFlow: StateFlow<Long> = _lastBolusTime
-    var lastBolusTime: Long
-        get() = _lastBolusTime.value
+    val lastBolusTimeFlow: StateFlow<Long?> // Time in ms!
+        field = MutableStateFlow(null)
+    var lastBolusTime: Long?
+        get() = lastBolusTimeFlow.value
         set(value) {
-            _lastBolusTime.value = value
-            preferences.put(MedtrumLongNonKey.LastBolusTime, value)
+            lastBolusTimeFlow.value = value
+            preferences.put(MedtrumLongNonKey.LastBolusTime, value ?: 0L)
         }
 
-    private var _lastBolusAmount = MutableStateFlow(0.0)
-    val lastBolusAmountFlow: StateFlow<Double> = _lastBolusAmount
-    var lastBolusAmount: Double
-        get() = _lastBolusAmount.value
+    val lastBolusAmountFlow: StateFlow<Double?>
+        field = MutableStateFlow(null)
+    var lastBolusAmount: Double?
+        get() = lastBolusAmountFlow.value
         set(value) {
-            _lastBolusAmount.value = value
-            preferences.put(MedtrumDoubleNonKey.LastBolusAmount, value)
+            lastBolusAmountFlow.value = value
+            preferences.put(MedtrumDoubleNonKey.LastBolusAmount, value ?: 0.0)
         }
 
-    private var _lastConnection = MutableStateFlow(0L) // Time in ms!
-    val lastConnectionFlow: StateFlow<Long> = _lastConnection
+    val lastConnectionFlow: StateFlow<Long> // Time in ms!
+        field = MutableStateFlow(0L)
     var lastConnection: Long
-        get() = _lastConnection.value
+        get() = lastConnectionFlow.value
         set(value) {
-            _lastConnection.value = value
+            lastConnectionFlow.value = value
             preferences.put(MedtrumLongNonKey.LastConnection, value)
         }
 
@@ -315,9 +317,9 @@ class MedtrumPump @Inject constructor(
     fun loadVarsFromSP() {
         // Load stuff from preferences
         _patchSessionToken = preferences.get(MedtrumLongNonKey.SessionToken)
-        _lastConnection.value = preferences.get(MedtrumLongNonKey.LastConnection)
-        _lastBolusTime.value = preferences.get(MedtrumLongNonKey.LastBolusTime)
-        _lastBolusAmount.value = preferences.get(MedtrumDoubleNonKey.LastBolusAmount)
+        lastConnectionFlow.value = preferences.get(MedtrumLongNonKey.LastConnection)
+        lastBolusTimeFlow.value = preferences.get(MedtrumLongNonKey.LastBolusTime).takeIf { it != 0L }
+        lastBolusAmountFlow.value = preferences.get(MedtrumDoubleNonKey.LastBolusAmount).takeIf { it != 0.0 }
         _currentSequenceNumber = preferences.get(MedtrumIntNonKey.CurrentSequenceNumber)
         _patchId = preferences.get(MedtrumLongNonKey.PatchId)
         _syncedSequenceNumber = preferences.get(MedtrumIntNonKey.SyncedSequenceNumber)
@@ -542,11 +544,6 @@ class MedtrumPump @Inject constructor(
             LTag.PUMPCOMM,
             "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START (FAKE)"
         )
-    }
-
-    fun temporaryBasalToString(): String {
-        if (!tempBasalInProgress) return ""
-        return tempBasalAbsoluteRate.toString() + "U/h"
     }
 
     fun addAlarm(alarm: AlarmState) {

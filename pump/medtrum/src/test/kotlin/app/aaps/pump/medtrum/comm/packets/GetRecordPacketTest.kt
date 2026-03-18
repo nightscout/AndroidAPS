@@ -112,7 +112,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
         assertThat(medtrumPump.lastBolusTime).isEqualTo(timestamp)
-        assertThat(medtrumPump.lastBolusAmount).isWithin(0.01).of(amount)
+        assertThat(medtrumPump.lastBolusAmount ?: 0.0).isWithin(0.01).of(amount)
     }
 
     @Test fun handleResponseGivenBolusRecordWhenAndNoDetailedBolusInfoPresentThenExpectPumpSyncWithPumpId() {
@@ -141,7 +141,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
         assertThat(medtrumPump.lastBolusTime).isEqualTo(timestamp)
-        assertThat(medtrumPump.lastBolusAmount).isWithin(0.01).of(amount)
+        assertThat(medtrumPump.lastBolusAmount ?: 0.0).isWithin(0.01).of(amount)
     }
 
     @Test fun handleResponseGivenExtendedBolusRecordThenExpectPumpSyncWithPumpId() {

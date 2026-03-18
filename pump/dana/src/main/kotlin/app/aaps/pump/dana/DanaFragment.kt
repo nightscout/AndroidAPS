@@ -214,15 +214,16 @@ class DanaFragment : DaggerFragment() {
             binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(app.aaps.core.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
-        if (pump.lastBolusTime != 0L) {
-            val agoMilliseconds = System.currentTimeMillis() - pump.lastBolusTime
+        val lastBolusTime = pump.lastBolusTime
+        if (lastBolusTime != null) {
+            val agoMilliseconds = System.currentTimeMillis() - lastBolusTime
             val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
                 binding.lastBolus.text =
-                    dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(
+                    dateUtil.timeString(lastBolusTime) + " " + dateUtil.sinceString(lastBolusTime, rh) + " " + rh.gs(
                         app.aaps.core.ui.R.string.format_insulin_units,
-                        pump.lastBolusAmount
+                        pump.lastBolusAmount ?: 0.0
                     )
             else
                 binding.lastBolus.text = ""

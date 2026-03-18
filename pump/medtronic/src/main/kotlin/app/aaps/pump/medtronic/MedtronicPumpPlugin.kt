@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
@@ -369,7 +368,9 @@ class MedtronicPumpPlugin @Inject constructor(
         } else {
             refreshAnyStatusThatNeedsToBeRefreshed()
         }
-        if (needRefresh) rxBus.send(EventMedtronicPumpValuesChanged())
+        if (needRefresh) {
+            rxBus.send(EventMedtronicPumpValuesChanged())
+        }
     }
 
     fun resetStatusState() {
@@ -584,12 +585,6 @@ class MedtronicPumpPlugin @Inject constructor(
 
     override val baseBasalRate: PumpRate
         get() = PumpRate(medtronicPumpStatus.basalProfileForHour)
-
-    override val reservoirLevel: PumpInsulin
-        get() = PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits)
-
-    override val batteryLevel: Int?
-        get() = medtronicPumpStatus.batteryRemaining
 
     override fun triggerUIChange() {
         rxBus.send(EventMedtronicPumpValuesChanged())

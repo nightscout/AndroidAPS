@@ -67,6 +67,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -123,7 +125,11 @@ class EopatchPumpPlugin @Inject constructor(
     private var scope: CoroutineScope? = null
 
     private var mPumpType: PumpType = PumpType.EOFLOW_EOPATCH2
-    private var mLastDataTime: Long = 0
+    private var mLastDataTime: Long
+        get() = _lastDataTime.value
+        set(value) {
+            _lastDataTime.value = value
+        }
     private val mPumpDescription = PumpDescription().fillFor(mPumpType)
 
     override fun requiredPermissions(): List<PermissionGroup> = super.requiredPermissions() + listOf(
@@ -146,6 +152,13 @@ class EopatchPumpPlugin @Inject constructor(
         preferences.observe(EopatchBooleanKey.BuzzerReminder).drop(1).onEach {
             patchManager.changeBuzzerSetting()
         }.launchIn(newScope)
+
+        mDisposables += preferenceManager.patchState.observe()
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           _reservoirLevel.value = PumpInsulin(if (!patchConfig.isActivated) 0.0 else it.remainedInsulin.toDouble())
+                           _batteryLevel.value = if (patchConfig.isActivated) it.batteryLevel() else null
+                       }, fabricPrivacy::logException)
 
         mDisposables += rxBus
             .toObservable(EventAppInitialized::class.java)
@@ -290,16 +303,24 @@ class EopatchPumpPlugin @Inject constructor(
         return ret
     }
 
-    override val lastDataTime: Long get() = mLastDataTime
-    override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: PumpInsulin? get() = null
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
+
+    // EOPatch doesn't track last bolus
+    override val lastBolusTime: StateFlow<Long?> = MutableStateFlow(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = MutableStateFlow(null)
+
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
+
     override val baseBasalRate: PumpRate
         get() = PumpRate(
             if (!patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused) 0.0
             else normalBasalManager.normalBasal.getCurrentSegment()?.doseUnitPerHour?.toDouble() ?: 0.05
         )
-    override val reservoirLevel: PumpInsulin get() = PumpInsulin(if (!patchConfig.isActivated) 0.0 else preferenceManager.patchState.remainedInsulin.toDouble())
-    override val batteryLevel: Int? get() = if (patchConfig.isActivated) preferenceManager.patchState.batteryLevel() else null
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0

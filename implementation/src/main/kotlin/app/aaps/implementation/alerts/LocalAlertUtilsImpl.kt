@@ -120,7 +120,7 @@ class LocalAlertUtilsImpl @Inject constructor(
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
         if (profile != null) {
-            val lastConnection = pump.lastDataTime
+            val lastConnection = pump.lastDataTime.value
             val earliestAlarmTime = lastConnection + pumpUnreachableThreshold()
             if (preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm) < earliestAlarmTime) {
                 preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, earliestAlarmTime)

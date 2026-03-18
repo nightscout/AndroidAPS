@@ -15,6 +15,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaStringKey
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
@@ -57,7 +59,13 @@ class DanaPump @Inject constructor(
         }
     }
 
-    var lastConnection: Long = 0
+    val lastConnectionFlow: StateFlow<Long>
+        field = MutableStateFlow(0L)
+    var lastConnection: Long
+        get() = lastConnectionFlow.value
+        set(value) {
+            lastConnectionFlow.value = value
+        }
     var lastSettingsRead: Long = 0
     var readHistoryFrom: Long = 0 // start next history read from this timestamp
     var historyDoneReceived: Boolean = false // true when last history message is received
@@ -110,11 +118,39 @@ class DanaPump @Inject constructor(
     var bolusStep = 0.1
     var basalStep = 0.1
     var iob = 0.0
-    var reservoirRemainingUnits = 0.0
-    var batteryRemaining: Int? = null
+    val reservoirRemainingUnitsFlow: StateFlow<Double>
+        field = MutableStateFlow(0.0)
+    var reservoirRemainingUnits: Double
+        get() = reservoirRemainingUnitsFlow.value
+        set(value) {
+            reservoirRemainingUnitsFlow.value = value
+        }
+
+    val batteryRemainingFlow: StateFlow<Int?>
+        field = MutableStateFlow(null)
+    var batteryRemaining: Int?
+        get() = batteryRemainingFlow.value
+        set(value) {
+            batteryRemainingFlow.value = value
+        }
+
     var bolusBlocked = false
-    var lastBolusTime: Long = 0
-    var lastBolusAmount = 0.0
+
+    val lastBolusTimeFlow: StateFlow<Long?>
+        field = MutableStateFlow(null)
+    var lastBolusTime: Long?
+        get() = lastBolusTimeFlow.value
+        set(value) {
+            lastBolusTimeFlow.value = value
+        }
+
+    val lastBolusAmountFlow: StateFlow<Double?>
+        field = MutableStateFlow(null)
+    var lastBolusAmount: Double?
+        get() = lastBolusAmountFlow.value
+        set(value) {
+            lastBolusAmountFlow.value = value
+        }
     var currentBasal = 0.0
 
     /*

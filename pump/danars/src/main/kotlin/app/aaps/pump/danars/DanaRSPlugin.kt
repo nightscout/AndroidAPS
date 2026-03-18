@@ -38,6 +38,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -74,6 +75,7 @@ import app.aaps.pump.danars.events.EventDanaRSDeviceChange
 import app.aaps.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -118,6 +120,13 @@ class DanaRSPlugin @Inject constructor(
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
+
+    override val lastDataTime: StateFlow<Long> = danaPump.lastConnectionFlow
+    override val lastBolusTime: StateFlow<Long?> = danaPump.lastBolusTimeFlow
+    override val batteryLevel: StateFlow<Int?> = danaPump.batteryRemainingFlow
+
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = danaPump.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
+    override val reservoirLevel: StateFlow<PumpInsulin> = danaPump.reservoirRemainingUnitsFlow.mapState(::PumpInsulin)
 
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())
@@ -295,12 +304,7 @@ class DanaRSPlugin @Inject constructor(
         return true
     }
 
-    override val lastDataTime get() = danaPump.lastConnection
-    override val lastBolusTime get() = danaPump.lastBolusTime
-    override val lastBolusAmount get() = PumpInsulin(danaPump.lastBolusAmount)
     override val baseBasalRate get() = PumpRate(danaPump.currentBasal)
-    override val reservoirLevel get() = PumpInsulin(danaPump.reservoirRemainingUnits)
-    override val batteryLevel get() = danaPump.batteryRemaining
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {

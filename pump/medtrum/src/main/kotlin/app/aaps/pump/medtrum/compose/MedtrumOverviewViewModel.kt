@@ -86,12 +86,12 @@ class MedtrumOverviewViewModel @Inject constructor(
         val reservoir = values[4] as Double
         val batteryVoltage = values[5] as Double
         val bolusDelivered = values[6] as Double
-        val lastBolusTime = values[7] as Long
-        val lastBolusAmount = values[8] as Double
+        val lastBolusTime = values[7] as Long?
+        val lastBolusAmount = values[8] as Double?
         val lastConnectionTime = values[9] as Long
-        
+
         buildUiState(
-            connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage, 
+            connectionState, pumpState, basalType, basalRate, reservoir, batteryVoltage,
             bolusDelivered, lastBolusTime, lastBolusAmount, lastConnectionTime
         )
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildInitialState())
@@ -164,8 +164,8 @@ class MedtrumOverviewViewModel @Inject constructor(
         reservoir: Double,
         batteryVoltage: Double,
         bolusDelivered: Double,
-        lastBolusTime: Long,
-        lastBolusAmount: Double,
+        lastBolusTime: Long?,
+        lastBolusAmount: Double?,
         lastConnectionTime: Long
     ): PumpOverviewUiState {
         // Status banner
@@ -183,7 +183,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         } else ""
 
         // Last bolus
-        val lastBolus = if (lastBolusTime != 0L) {
+        val lastBolus = if (lastBolusTime != null && lastBolusAmount != null) {
             val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 1000.0 / 60.0 / 60.0
             if (agoHours < 6.0) {
                 ch.insulinAmountAgoString(

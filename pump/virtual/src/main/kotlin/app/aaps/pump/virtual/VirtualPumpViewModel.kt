@@ -89,12 +89,12 @@ class VirtualPumpViewModel(
             ?.toStringFull(dateUtil, rh) ?: ""
 
         // Format values for the shared builder
-        val lastConnection = virtualPumpPlugin.lastDataTime.takeIf { it != 0L }
+        val lastConnection = virtualPumpPlugin.lastDataTime.value.takeIf { it != 0L }
             ?.let { dateUtil.minAgo(rh, it) } ?: ""
 
-        val lastBolus = virtualPumpPlugin.lastBolusAmount?.let { amount ->
-            virtualPumpPlugin.lastBolusTime?.takeIf { it != 0L }?.let { time ->
-                rh.gs(app.aaps.core.ui.R.string.last_bolus_format, amount, dateUtil.sinceString(time, rh))
+        val lastBolus = virtualPumpPlugin.lastBolusAmount.value?.let { amount ->
+            virtualPumpPlugin.lastBolusTime.value?.takeIf { it != 0L }?.let { time ->
+                rh.gs(app.aaps.core.ui.R.string.last_bolus_format, amount.cU, dateUtil.sinceString(time, rh))
             }
         }
 
@@ -102,11 +102,11 @@ class VirtualPumpViewModel(
             rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate)
         }
 
-        val battery = virtualPumpPlugin.batteryLevel?.let { level ->
+        val battery = virtualPumpPlugin.batteryLevel.value?.let { level ->
             rh.gs(app.aaps.core.ui.R.string.format_percent, level)
         }
 
-        val reservoir = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirLevel)
+        val reservoir = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirLevel.value.cU)
 
         // Common rows from shared builder
         val commonRows = stateBuilder.buildCommonRows(

@@ -41,14 +41,14 @@ class PumpStatusProviderImpl @Inject constructor(
         else if (pump.isSuspended())
             lines += rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
         else {
-            if (pump.lastDataTime != 0L) {
-                val agoMillis: Long = System.currentTimeMillis() - pump.lastDataTime
+            if (pump.lastDataTime.value != 0L) {
+                val agoMillis: Long = System.currentTimeMillis() - pump.lastDataTime.value
                 val agoMin = (agoMillis / 60.0 / 1000.0).toInt()
                 lines += rh.gs(R.string.short_status_last_connection, agoMin)
             }
 
-            pump.lastBolusAmount?.let { lastBolusAmount ->
-                pump.lastBolusTime?.let { lastBolusTimestamp ->
+            pump.lastBolusAmount.value?.let { lastBolusAmount ->
+                pump.lastBolusTime.value?.let { lastBolusTimestamp ->
                     lines += rh.gs(
                         R.string.short_status_last_bolus,
                         decimalFormatter.to2Decimal(lastBolusAmount.iU(iCfg.concentration)),
@@ -65,7 +65,7 @@ class PumpStatusProviderImpl @Inject constructor(
                 lines += rh.gs(R.string.short_status_temp_basal, extendedBolus.toStringFull(dateUtil, rh))
             }
 
-            if (pump.batteryLevel != null && pump.batteryLevel != 0) lines += rh.gs(R.string.short_status_battery, pump.batteryLevel)
+            if (pump.batteryLevel.value != null && pump.batteryLevel.value != 0) lines += rh.gs(R.string.short_status_battery, pump.batteryLevel.value)
             val additionalStatus = pump.pumpSpecificShortStatus(veryShort)
             if (additionalStatus.isNotEmpty()) lines += additionalStatus
         }
@@ -79,7 +79,7 @@ class PumpStatusProviderImpl @Inject constructor(
     override fun generatePumpJsonStatus(): JSONObject {
         val pump = activePlugin.activePump
         // do not send data older than 60 minutes
-        if (dateUtil.isOlderThan(date = pump.lastDataTime, minutes = 60)) return JSONObject()
+        if (dateUtil.isOlderThan(date = pump.lastDataTime.value, minutes = 60)) return JSONObject()
         // Do not send any info if there is no running profile
         val profile = profileFunction.getProfile() ?: return JSONObject()
         val expectedPumpState = pumpSync.expectedPumpState()
@@ -87,16 +87,16 @@ class PumpStatusProviderImpl @Inject constructor(
         val runningMode = runBlocking { persistenceLayer.getRunningModeActiveAt(now) }
 
         val pumpJson = JSONObject()
-            .put("reservoir", pump.reservoirLevel.iU(profile.insulinConcentration()).toInt())
+            .put("reservoir", pump.reservoirLevel.value.iU(profile.insulinConcentration()).toInt())
             .put("clock", dateUtil.toISOString(now))
-        val battery = JSONObject().putIfThereIsValue("percent", pump.batteryLevel)
+        val battery = JSONObject().putIfThereIsValue("percent", pump.batteryLevel.value)
         val status = JSONObject()
             .put("status", translator.translate(runningMode.mode))
-            .put("timestamp", dateUtil.toISOString(pump.lastDataTime))
+            .put("timestamp", dateUtil.toISOString(pump.lastDataTime.value))
         val extended = JSONObject()
             .put("Version", config.VERSION_NAME + "-" + config.BUILD_VERSION)
-            .putIfThereIsValue("LastBolus", dateUtil.dateAndTimeStringNullable(pump.lastBolusTime))
-            .putIfThereIsValue("LastBolusAmount", pump.lastBolusAmount?.iU(profile.insulinConcentration()))
+            .putIfThereIsValue("LastBolus", dateUtil.dateAndTimeStringNullable(pump.lastBolusTime.value))
+            .putIfThereIsValue("LastBolusAmount", pump.lastBolusAmount.value?.iU(profile.insulinConcentration()))
             .putIfThereIsValue("TempBasalAbsoluteRate", expectedPumpState.temporaryBasal?.convertedToAbsolute(now, profile))
             .putIfThereIsValue("TempBasalStart", dateUtil.dateAndTimeStringNullable(expectedPumpState.temporaryBasal?.timestamp))
             .putIfThereIsValue("TempBasalRemaining", expectedPumpState.temporaryBasal?.plannedRemainingMinutes)

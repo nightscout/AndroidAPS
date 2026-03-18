@@ -201,7 +201,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                     LTag.PUMPCOMM,
                     "from record: ${newRecordInfo(newRecord)}EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
                 )
-                if (bolusStartTime > medtrumPump.lastBolusTime) {
+                if (bolusStartTime > (medtrumPump.lastBolusTime ?: 0L)) {
                     medtrumPump.lastBolusTime = bolusStartTime
                     medtrumPump.lastBolusAmount = bolusNormalDelivered
                 }
@@ -251,7 +251,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                     // detailedInfo can be from another similar record. Reinsert
                     detailedBolusInfoStorage.add(detailedBolusInfo)
                 }
-                if (bolusStartTime > medtrumPump.lastBolusTime) {
+                if (bolusStartTime > (medtrumPump.lastBolusTime ?: 0L)) {
                     medtrumPump.lastBolusTime = bolusStartTime
                     medtrumPump.lastBolusAmount = bolusNormalDelivered
                 }

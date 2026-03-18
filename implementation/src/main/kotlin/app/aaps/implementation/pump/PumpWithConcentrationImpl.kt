@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import kotlinx.coroutines.flow.StateFlow
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -51,11 +52,11 @@ class PumpWithConcentrationImpl @Inject constructor(
     override fun isHandshakeInProgress(): Boolean = activePumpInternal.isHandshakeInProgress()
     override fun waitForDisconnectionInSeconds(): Int = activePumpInternal.waitForDisconnectionInSeconds()
     override fun getPumpStatus(reason: String) = activePumpInternal.getPumpStatus(reason)
-    override val lastDataTime: Long get() = activePumpInternal.lastDataTime
-    override val lastBolusTime: Long? get() = activePumpInternal.lastBolusTime
-    override val lastBolusAmount: PumpInsulin? get() = activePumpInternal.lastBolusAmount
-    override val reservoirLevel: PumpInsulin get() = activePumpInternal.reservoirLevel
-    override val batteryLevel: Int? get() = activePumpInternal.batteryLevel
+    override val lastDataTime: StateFlow<Long> get() = activePumpInternal.lastDataTime
+    override val lastBolusTime: StateFlow<Long?> get() = activePumpInternal.lastBolusTime
+    override val lastBolusAmount: StateFlow<PumpInsulin?> get() = activePumpInternal.lastBolusAmount
+    override val reservoirLevel: StateFlow<PumpInsulin> get() = activePumpInternal.reservoirLevel
+    override val batteryLevel: StateFlow<Int?> get() = activePumpInternal.batteryLevel
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = activePumpInternal.cancelTempBasal(enforceNew)
     override fun cancelExtendedBolus(): PumpEnactResult = activePumpInternal.cancelExtendedBolus()
     override fun updateExtendedJsonStatus(extendedStatus: JSONObject) = activePumpInternal.updateExtendedJsonStatus(extendedStatus)

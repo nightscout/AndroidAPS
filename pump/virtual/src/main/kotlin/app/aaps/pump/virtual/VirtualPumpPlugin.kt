@@ -121,7 +121,14 @@ open class VirtualPumpPlugin @Inject constructor(
     val pumpTypeFlow: StateFlow<PumpType?>
         field = MutableStateFlow(null)
 
-    override var lastDataTime: Long = 0
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
+
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
 
     fun notifyStateChanged() {
         rxBus.send(EventVirtualPumpUpdateGui()) // TODO: Remove after fragment cleanup
@@ -157,6 +164,8 @@ open class VirtualPumpPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         preferences.observe(StringKey.VirtualPumpType).drop(1).onEach { refreshConfiguration() }.launchIn(newScope)
+        batteryPercentFlow.onEach { _batteryLevel.value = it }.launchIn(newScope)
+        reservoirInUnitsFlow.onEach { _reservoirLevel.value = PumpInsulin(it.toDouble()) }.launchIn(newScope)
         refreshConfiguration()
     }
 
@@ -182,18 +191,18 @@ open class VirtualPumpPlugin @Inject constructor(
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun connect(reason: String) {
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
     }
 
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
     override fun getPumpStatus(reason: String) {
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
     }
 
     override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
         // Do nothing here. we are using database profile
         return pumpEnactResultProvider.get().success(true).enacted(true)
@@ -201,18 +210,14 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) == true
 
-    override val lastBolusTime: Long? get() = pumpSync.expectedPumpState().bolus?.timestamp
-    override val lastBolusAmount: PumpInsulin? get() = pumpSync.expectedPumpState().bolus?.amount?.let { PumpInsulin(it) }
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
+
     override val baseBasalRate: PumpRate
         get() = PumpRate(pumpSync.expectedPumpState().profile?.getBasal() ?: 0.0)
-
-    override val reservoirLevel: PumpInsulin
-        get() = PumpInsulin(
-            if (config.AAPSCLIENT) processedDeviceStatusData.pumpData?.reservoir ?: -1.0
-            else reservoirInUnitsFlow.value.toDouble()
-        )
-
-    override val batteryLevel: Int? get() = batteryPercentFlow.value
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
@@ -240,7 +245,7 @@ open class VirtualPumpPlugin @Inject constructor(
         SystemClock.sleep(1000)
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         notifyStateChanged()
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         if (detailedBolusInfo.insulin > 0) {
             if (config.AAPSCLIENT) // do not store pump serial (record will not be marked PH)
                 appScope.launch {
@@ -259,6 +264,10 @@ open class VirtualPumpPlugin @Inject constructor(
                     pumpType = pumpTypeFlow.value ?: PumpType.GENERIC_AAPS,
                     pumpSerial = serialNumber()
                 )
+        }
+        if (detailedBolusInfo.insulin > 0) {
+            _lastBolusTime.value = detailedBolusInfo.timestamp
+            _lastBolusAmount.value = PumpInsulin(detailedBolusInfo.insulin)
         }
         return result
     }
@@ -284,7 +293,7 @@ open class VirtualPumpPlugin @Inject constructor(
         )
         aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText(rh)}")
         notifyStateChanged()
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
@@ -309,7 +318,7 @@ open class VirtualPumpPlugin @Inject constructor(
         )
         aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText(rh)}")
         notifyStateChanged()
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
@@ -333,7 +342,7 @@ open class VirtualPumpPlugin @Inject constructor(
         )
         aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText(rh)}")
         notifyStateChanged()
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
@@ -353,7 +362,7 @@ open class VirtualPumpPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText(rh)}")
             notifyStateChanged()
         }
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 
@@ -373,7 +382,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
         notifyStateChanged()
-        lastDataTime = System.currentTimeMillis()
+        _lastDataTime.value = System.currentTimeMillis()
         return result
     }
 

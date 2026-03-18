@@ -255,12 +255,13 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                     return false
                 }
                 mSerialIOThread?.sendMessage(MsgStatus(injector))
-                if (danaPump.lastBolusTime > System.currentTimeMillis() - 2 * 60 * 1000L) { // last bolus max 2 min old
-                    BolusProgressData.delivered = danaPump.lastBolusAmount
+                val lastBolusTime = danaPump.lastBolusTime
+                if (lastBolusTime != null && lastBolusTime > System.currentTimeMillis() - 2 * 60 * 1000L) { // last bolus max 2 min old
+                    BolusProgressData.delivered = danaPump.lastBolusAmount ?: 0.0
                     aapsLogger.debug(LTag.PUMP, "Used bolus amount from history: " + danaPump.lastBolusAmount)
                 } else {
                     BolusProgressData.delivered = 0.0
-                    aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeString(danaPump.lastBolusTime))
+                    aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeStringNullable(lastBolusTime))
                     return false
                 }
             } else {

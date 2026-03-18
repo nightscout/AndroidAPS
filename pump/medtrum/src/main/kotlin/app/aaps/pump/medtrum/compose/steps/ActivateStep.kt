@@ -60,7 +60,7 @@ fun ActivateStep(
             viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
             viewModel.moveStep(PatchStep.ACTIVATE)
         },
-        onComplete = { viewModel.moveStep(PatchStep.COMPLETE) },
+        onComplete = { viewModel.moveToPostActivationStep() },
         onCancel = onCancel
     )
 }

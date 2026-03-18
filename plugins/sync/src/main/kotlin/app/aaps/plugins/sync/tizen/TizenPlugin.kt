@@ -192,9 +192,9 @@ class TizenPlugin @Inject constructor(
     private fun pumpStatus(bundle: Bundle) {
         val pump = activePlugin.activePump
         val iCfg = insulin.iCfg
-        bundle.putLong("pumpTimeStamp", pump.lastDataTime)
-        pump.batteryLevel?.let { bundle.putInt("pumpBattery", it) }
-        bundle.putDouble("pumpReservoir", pump.reservoirLevel.iU(iCfg.concentration))
+        bundle.putLong("pumpTimeStamp", pump.lastDataTime.value)
+        pump.batteryLevel.value?.let { bundle.putInt("pumpBattery", it) }
+        bundle.putDouble("pumpReservoir", pump.reservoirLevel.value.iU(iCfg.concentration))
         bundle.putString("pumpStatus", pumpStatusProvider.shortStatus(false))
     }
 

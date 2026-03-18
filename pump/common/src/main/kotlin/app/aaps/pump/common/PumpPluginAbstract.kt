@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.SystemClock
-import android.text.format.DateFormat
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
@@ -24,6 +22,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -31,6 +30,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
@@ -47,8 +47,7 @@ import app.aaps.pump.common.sync.PumpDbEntryCarbs
 import app.aaps.pump.common.sync.PumpSyncEntriesCreator
 import app.aaps.pump.common.sync.PumpSyncStorage
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.json.JSONException
-import org.json.JSONObject
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Provider
 import app.aaps.core.ui.R as Rc
 
@@ -74,12 +73,14 @@ abstract class PumpPluginAbstract protected constructor(
     var decimalFormatter: DecimalFormatter,
     var dateUtil: DateUtil,
     protected val pumpEnactResultProvider: Provider<PumpEnactResult>
-) : PumpPluginBase(pluginDescription = pluginDescription,
-                   ownPreferences = ownPreferences,
-                   aapsLogger = aapsLogger,
-                   rh = rh,
-                   preferences = preferences,
-                   commandQueue = commandQueue),
+) : PumpPluginBase(
+    pluginDescription = pluginDescription,
+    ownPreferences = ownPreferences,
+    aapsLogger = aapsLogger,
+    rh = rh,
+    preferences = preferences,
+    commandQueue = commandQueue
+),
     Pump, PluginConstraints,
     PumpDriverConfigurationCapable, /*Constraints,*/ PumpSyncEntriesCreator {
 
@@ -100,7 +101,6 @@ abstract class PumpPluginAbstract protected constructor(
     protected val statusRefreshMap: MutableMap<PumpDataRefreshType?, Long?> = mutableMapOf()
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
-        get() = field
         set(value) {
             field = value
             pumpDescription.fillFor(value)
@@ -119,11 +119,11 @@ abstract class PumpPluginAbstract protected constructor(
             val intent = Intent(context, serviceClass)
             context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
             disposable.add(
-                    rxBus
-                        .toObservable(EventAppExit::class.java)
-                        .observeOn(aapsSchedulers.io)
-                        .subscribe({ context.unbindService(serviceConnection!!) }, fabricPrivacy::logException)
-                )
+                rxBus
+                    .toObservable(EventAppExit::class.java)
+                    .observeOn(aapsSchedulers.io)
+                    .subscribe({ context.unbindService(serviceConnection!!) }, fabricPrivacy::logException)
+            )
         }
         serviceRunning = true
         onStartScheduledPumpActions()
@@ -200,13 +200,15 @@ abstract class PumpPluginAbstract protected constructor(
         return true
     }
 
-    override val lastDataTime: Long get() = pumpStatusData.lastConnection
+    override val lastDataTime: StateFlow<Long> by lazy { pumpStatusData.lastConnectionFlow }
 
-    override val lastBolusAmount: PumpInsulin?
-        get() = pumpStatusData.lastBolusAmount?.let { PumpInsulin(it) }
+    override val lastBolusAmount: StateFlow<PumpInsulin?> by lazy { pumpStatusData.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) } }
 
-    override val lastBolusTime: Long?
-        get() = if (pumpStatusData.lastBolusTime==null) null else pumpStatusData.lastBolusTime!!.time
+    override val lastBolusTime: StateFlow<Long?> by lazy { pumpStatusData.lastBolusTimeFlow.mapState { it?.time } }
+
+    override val reservoirLevel: StateFlow<PumpInsulin> by lazy { pumpStatusData.reservoirRemainingUnitsFlow.mapState(::PumpInsulin) }
+
+    override val batteryLevel: StateFlow<Int?> by lazy { pumpStatusData.batteryRemainingFlow }
 
     // base basal rate, not temp basal
     override val baseBasalRate: PumpRate
@@ -246,7 +248,6 @@ abstract class PumpPluginAbstract protected constructor(
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver)
     }
 
-
     open fun deviceID(): String {
         aapsLogger.debug(LTag.PUMP, "deviceID [PumpPluginAbstract] - Not implemented.")
         return "FakeDevice"
@@ -263,7 +264,6 @@ abstract class PumpPluginAbstract protected constructor(
         aapsLogger.debug(LTag.PUMP, "loadTDDs [PumpPluginAbstract] - Not implemented.")
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver)
     }
-
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -302,7 +302,8 @@ abstract class PumpPluginAbstract protected constructor(
                 pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))
 
                 val bolusingEvent = EventOverviewBolusProgress(
-                                    rh = rh, id = detailedBolusInfo.id, percent = 100 )
+                    rh = rh, id = detailedBolusInfo.id, percent = 100
+                )
                 // bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === BS.Type.SMB, detailedBolusInfo.id)
                 // bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
@@ -340,7 +341,7 @@ abstract class PumpPluginAbstract protected constructor(
 
     }
 
-    var logPrefix : String = pumpDriverConfigurationInternal.logPrefix
+    var logPrefix: String = pumpDriverConfigurationInternal.logPrefix
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.warn(LTag.PUMP, logPrefix + "Time or TimeZone changed (type=$timeChangeType). ")
@@ -359,7 +360,6 @@ abstract class PumpPluginAbstract protected constructor(
     protected fun getTimeInMs(minutes: Int): Long {
         return minutes * 60 * 1000L
     }
-
 
     // PumpDataRefreshCapable
 
@@ -385,7 +385,6 @@ abstract class PumpPluginAbstract protected constructor(
 
     }
 
-
     @Synchronized
     protected fun workWithStatusRefresh(
         action: PumpDataRefreshAction,
@@ -394,43 +393,41 @@ abstract class PumpPluginAbstract protected constructor(
         customParameter: Any? = null
     ): HashMap<PumpDataRefreshType?, Long?>? {
         return when (action) {
-            PumpDataRefreshAction.Add     -> {
+            PumpDataRefreshAction.Add            -> {
                 statusRefreshMap[statusRefreshType] = time
                 null
             }
 
-            PumpDataRefreshAction.AddSameAsOther     -> {
+            PumpDataRefreshAction.AddSameAsOther -> {
                 val statusRefreshType2 = customParameter as PumpDataRefreshType
                 val timeFromType = statusRefreshMap[statusRefreshType2]
                 statusRefreshMap[statusRefreshType] = timeFromType
                 null
             }
 
-            PumpDataRefreshAction.GetData -> {
+            PumpDataRefreshAction.GetData        -> {
                 HashMap(statusRefreshMap)
             }
 
-            PumpDataRefreshAction.Delete -> {
+            PumpDataRefreshAction.Delete         -> {
                 statusRefreshMap.remove(statusRefreshType)
                 null
             }
         }
     }
 
-
     protected open fun doCustomScheduledActions() {
 
     }
 
-
     protected fun doWeHaveAnyStatusNeededRefereshing(statusRefresh: Map<PumpDataRefreshType?, Long?>?): Boolean {
         aapsLogger.debug(LTag.PUMP, "Do we have status needed to refresh: $statusRefresh, currentTime=${System.currentTimeMillis()}")
         for ((key, value) in statusRefresh!!) {
-            if (value==null) {
+            if (value == null) {
                 aapsLogger.error(LTag.PUMP, "We got key ($key}) with value null.")
                 continue
             }
-            if (value!! > 0 && System.currentTimeMillis() > value) {
+            if (value > 0 && System.currentTimeMillis() > value) {
                 return true
             }
         }
@@ -444,15 +441,16 @@ abstract class PumpPluginAbstract protected constructor(
     protected fun scheduleNextRefresh(refreshType: PumpDataRefreshType, additionalTimeInMinutes: Int = 0) {
         val refreshTime = getRefreshTime(refreshType)
 
-        if (refreshTime>0) {
+        if (refreshTime > 0) {
             workWithStatusRefresh(
                 PumpDataRefreshAction.Add, refreshType,
                 getTimeInFutureFromMinutes(refreshTime + additionalTimeInMinutes)
             )
-        } else if (refreshTime==-1) {
+        } else if (refreshTime == -1) {
             val statusRefresh = workWithStatusRefresh(
                 PumpDataRefreshAction.GetData, null,
-                null)!!
+                null
+            )!!
 
             if (statusRefresh.containsKey(refreshType)) {
                 workWithStatusRefresh(
@@ -479,16 +477,13 @@ abstract class PumpPluginAbstract protected constructor(
         )
     }
 
-
     // this method needs to be overwriten in your driver and implement PumpDataRefreshCapable
     open fun getRefreshTime(pumpDataRefreshType: PumpDataRefreshType): Int {
         return -1
     }
 
-
     open fun isInPreventConnectMode(): Boolean {
         return false
     }
-
 
 }

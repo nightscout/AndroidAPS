@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -49,6 +50,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -169,12 +171,13 @@ abstract class AbstractDanaRPlugin protected constructor(
         return true
     }
 
-    override val lastDataTime: Long get() = danaPump.lastConnection
-    override val lastBolusTime: Long? get() = danaPump.lastBolusTime
-    override val lastBolusAmount: PumpInsulin? get() = PumpInsulin(danaPump.lastBolusAmount)
+    override val lastDataTime: StateFlow<Long> = danaPump.lastConnectionFlow
+    override val lastBolusTime: StateFlow<Long?> = danaPump.lastBolusTimeFlow
     override val baseBasalRate: PumpRate get() = PumpRate(danaPump.currentBasal)
-    override val reservoirLevel: PumpInsulin get() = PumpInsulin(danaPump.reservoirRemainingUnits)
-    override val batteryLevel: Int? get() = danaPump.batteryRemaining
+    override val batteryLevel: StateFlow<Int?> = danaPump.batteryRemainingFlow
+
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = danaPump.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
+    override val reservoirLevel: StateFlow<PumpInsulin> = danaPump.reservoirRemainingUnitsFlow.mapState(::PumpInsulin)
 
     override fun stopBolusDelivering() {
         if (executionService == null) {

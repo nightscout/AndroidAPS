@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -93,6 +94,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -174,7 +176,8 @@ class ComboV2Plugin @Inject constructor(
 
     // States for the Pump interface and for the UI.
     private var pumpStatus: ComboCtlPump.Status? = null
-    private var lastConnectionTimestamp = 0L
+    private val _lastConnectionTimestamp = MutableStateFlow(0L)
+    private val _lastBolusUIFlow = MutableStateFlow<ComboCtlPump.LastBolus?>(null)
     private var lastComboAlert: AlertScreenContent? = null
 
     // States for when the pump reports an error. We then want isInitialized()
@@ -814,7 +817,6 @@ class ComboV2Plugin @Inject constructor(
             }
         }
 
-        // State and status are automatically updated via the associated flows.
     }
 
     override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
@@ -900,32 +902,32 @@ class ComboV2Plugin @Inject constructor(
         return (activeBasalProfile == profile.toComboCtlBasalProfile())
     }
 
-    override val lastDataTime: Long get() = lastConnectionTimestamp
+    override val lastDataTime: StateFlow<Long> = _lastConnectionTimestamp
 
     @OptIn(ExperimentalTime::class)
-    override val lastBolusTime: Long? get() = lastBolusUIFlow.value?.timestamp?.toEpochMilliseconds()
-    override val lastBolusAmount: PumpInsulin? get() = lastBolusUIFlow.value?.bolusAmount?.cctlBolusToIU()?.let { PumpInsulin(it) }
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusUIFlow.mapState { it?.timestamp?.toEpochMilliseconds() }
+
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusUIFlow.mapState { it?.bolusAmount?.cctlBolusToIU()?.let(::PumpInsulin) }
+
     override val baseBasalRate: PumpRate
         get() {
             val currentHour = DateTime().hourOfDay().get()
             return PumpRate(activeBasalProfile?.get(currentHour)?.cctlBasalToIU() ?: 0.0)
         }
 
-    // Store the levels as plain properties. That way, the last reported
+    // Store the levels as MutableStateFlows. That way, the last reported
     // levels are shown on the UI even when the driver connects to the
     // pump again and resets the current pump state.
 
-    private var _reservoirLevel: Double? = null
-    override val reservoirLevel: PumpInsulin
-        get() = PumpInsulin(_reservoirLevel ?: 0.0)
+    private val _reservoirLevelValue = MutableStateFlow<Double?>(null)
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevelValue.mapState { PumpInsulin(it ?: 0.0) }
 
-    private var _batteryLevel: Int? = null
-    override val batteryLevel: Int?
-        get() = _batteryLevel
+    private val _batteryLevelValue = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevelValue
 
     private fun updateLevels() {
         pumpStatus?.availableUnitsInReservoir?.let { newLevel ->
-            _reservoirLevel?.let { currentLevel ->
+            _reservoirLevelValue.value?.let { currentLevel ->
                 aapsLogger.debug(LTag.PUMP, "Current/new reservoir levels: $currentLevel / $newLevel")
                 if (preferences.get(ComboBooleanKey.AutomaticReservoirEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
@@ -939,7 +941,7 @@ class ComboV2Plugin @Inject constructor(
                 }
             }
 
-            _reservoirLevel = newLevel.toDouble()
+            _reservoirLevelValue.value = newLevel.toDouble()
         }
 
         pumpStatus?.batteryState?.let { newState ->
@@ -949,7 +951,7 @@ class ComboV2Plugin @Inject constructor(
                 BatteryState.FULL_BATTERY -> 100
             }
 
-            _batteryLevel?.let { currentLevel ->
+            _batteryLevelValue.value?.let { currentLevel ->
                 aapsLogger.debug(LTag.PUMP, "Current/new battery levels: $currentLevel / $newLevel")
                 if (preferences.get(ComboBooleanKey.AutomaticBatteryEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
@@ -963,7 +965,7 @@ class ComboV2Plugin @Inject constructor(
                 }
             }
 
-            _batteryLevel = newLevel
+            _batteryLevelValue.value = newLevel
         }
     }
 
@@ -1560,7 +1562,7 @@ class ComboV2Plugin @Inject constructor(
 
         // Reset these states since they are associated
         // with the now unpaired pump.
-        lastConnectionTimestamp = 0L
+        _lastConnectionTimestamp.value = 0L
         activeBasalProfile = null
         lastActiveBasalProfileNumber = null
 
@@ -1632,7 +1634,6 @@ class ComboV2Plugin @Inject constructor(
     private var _reservoirLevelUIFlow = MutableStateFlow<ReservoirLevel?>(null)
     val reservoirLevelUIFlow = _reservoirLevelUIFlow.asStateFlow()
 
-    private var _lastBolusUIFlow = MutableStateFlow<ComboCtlPump.LastBolus?>(null)
     val lastBolusUIFlow = _lastBolusUIFlow.asStateFlow()
 
     private var _currentTbrUIFlow = MutableStateFlow<ComboCtlTbr?>(null)
@@ -2149,8 +2150,8 @@ class ComboV2Plugin @Inject constructor(
     }
 
     private fun updateLastConnectionTimestamp() {
-        lastConnectionTimestamp = System.currentTimeMillis()
-        _lastConnectionTimestampUIFlow.value = lastConnectionTimestamp
+        _lastConnectionTimestamp.value = System.currentTimeMillis()
+        _lastConnectionTimestampUIFlow.value = _lastConnectionTimestamp.value
     }
 
     private fun getAlertDescription(alert: AlertScreenContent) =

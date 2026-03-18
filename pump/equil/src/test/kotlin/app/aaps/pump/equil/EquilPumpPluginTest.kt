@@ -10,6 +10,7 @@ import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,6 +37,11 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     fun prepareMocks() {
 
         whenever(rh.gs(anyInt())).thenReturn("")
+        whenever(equilManager.lastConnectionFlow).thenReturn(MutableStateFlow(0L))
+        whenever(equilManager.lastBolusTimeFlow).thenReturn(MutableStateFlow(null))
+        whenever(equilManager.lastBolusAmountFlow).thenReturn(MutableStateFlow(null))
+        whenever(equilManager.reservoirFlow).thenReturn(MutableStateFlow(0.0))
+        whenever(equilManager.batteryFlow).thenReturn(MutableStateFlow(null))
         equilPumpPlugin =
             EquilPumpPlugin(
                 aapsLogger, rh, preferences, commandQueue, rxBus, context,
@@ -166,12 +172,12 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `lastBolusTime should return null`() {
-        assertEquals(null, equilPumpPlugin.lastBolusTime)
+        assertEquals(null, equilPumpPlugin.lastBolusTime.value)
     }
 
     @Test
     fun `lastBolusAmount should return null`() {
-        assertEquals(null, equilPumpPlugin.lastBolusAmount)
+        assertEquals(null, equilPumpPlugin.lastBolusAmount.value)
     }
 
     @Test

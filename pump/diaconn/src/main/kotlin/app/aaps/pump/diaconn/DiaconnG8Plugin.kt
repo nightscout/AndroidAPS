@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -67,6 +68,7 @@ import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.service.DiaconnG8Service
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -296,12 +298,13 @@ class DiaconnG8Plugin @Inject constructor(
         return true
     }
 
-    override val lastBolusTime: Long get() = diaconnG8Pump.lastBolusTime
-    override val lastBolusAmount: PumpInsulin get() = PumpInsulin(diaconnG8Pump.lastBolusAmount)
-    override val lastDataTime: Long get() = diaconnG8Pump.lastConnection
+    override val lastDataTime: StateFlow<Long> = diaconnG8Pump.lastConnectionFlow
+    override val lastBolusTime: StateFlow<Long?> = diaconnG8Pump.lastBolusTimeFlow
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = diaconnG8Pump.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
+    override val reservoirLevel: StateFlow<PumpInsulin> = diaconnG8Pump.systemRemainInsulinFlow.mapState(::PumpInsulin)
+    override val batteryLevel: StateFlow<Int?> = diaconnG8Pump.systemRemainBatteryFlow
+
     override val baseBasalRate: PumpRate get() = PumpRate(diaconnG8Pump.baseAmount)
-    override val reservoirLevel: PumpInsulin get() = PumpInsulin(diaconnG8Pump.systemRemainInsulin)
-    override val batteryLevel: Int? get() = diaconnG8Pump.systemRemainBattery
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {

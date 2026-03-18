@@ -71,12 +71,12 @@ class StatusLightHandler @Inject constructor(
             handlePatchReservoirLevel(
                 reservoirLevel,
                 IntKey.OverviewResCritical, IntKey.OverviewResWarning,
-                pump.reservoirLevel.iU(iCfg.concentration),
+                pump.reservoirLevel.value.iU(iCfg.concentration),
                 insulinUnit,
                 pump.pumpDescription.maxReservoirReading.toDouble()
             )
         } else {
-            handleLevel(reservoirLevel, IntKey.OverviewResCritical, IntKey.OverviewResWarning, pump.reservoirLevel.iU(iCfg.concentration), insulinUnit)
+            handleLevel(reservoirLevel, IntKey.OverviewResCritical, IntKey.OverviewResWarning, pump.reservoirLevel.value.iU(iCfg.concentration), insulinUnit)
         }
         if (!config.AAPSCLIENT) {
             if (bgSource.sensorBatteryLevel != -1)
@@ -90,7 +90,7 @@ class StatusLightHandler @Inject constructor(
             // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
             // Pump instance check is needed because at startup, the pump can still be VirtualPumpPlugin and that will cause a crash
             val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
-            val batteryLevelValue = pump.batteryLevel?.toDouble()
+            val batteryLevelValue = pump.batteryLevel.value?.toDouble()
             if (batteryLevelValue != null && (pump.model().supportBatteryLevel || erosBatteryLinkAvailable)) {
                 handleLevel(batteryLevel, IntKey.OverviewBattCritical, IntKey.OverviewBattWarning, batteryLevelValue, "%")
             } else {

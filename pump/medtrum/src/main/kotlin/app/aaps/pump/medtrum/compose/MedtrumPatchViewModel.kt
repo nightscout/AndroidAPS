@@ -4,7 +4,10 @@ import android.os.SystemClock
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -12,7 +15,10 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.siteRotation.BodyType
+import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
@@ -41,7 +47,7 @@ sealed class PatchEvent {
 }
 
 enum class WizardPage {
-    PREPARE, SELECT_INSULIN, PRIME, ATTACH, ACTIVATE, COMPLETE,
+    PREPARE, SELECT_INSULIN, PRIME, ATTACH, ACTIVATE, SITE_LOCATION, COMPLETE,
     CONFIRM_DEACTIVATE, DEACTIVATING, DEACTIVATE_COMPLETE,
     RETRY_ACTIVATION
 }
@@ -55,8 +61,9 @@ class MedtrumPatchViewModel @Inject constructor(
     val medtrumPump: MedtrumPump,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val preferences: Preferences
-) : ViewModel() {
+    private val preferences: Preferences,
+    private val persistenceLayer: PersistenceLayer
+) : ViewModel(), SiteLocationStepHost {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val concentrationEnabled: Boolean
@@ -87,6 +94,13 @@ class MedtrumPatchViewModel @Inject constructor(
     private val _currentStepIndex = MutableStateFlow(0)
     val currentStepIndex: StateFlow<Int> = _currentStepIndex.asStateFlow()
 
+    /** Whether the current step allows back/cancel navigation (arrow + system back). */
+    private val _canGoBack = MutableStateFlow(true)
+    val canGoBack: StateFlow<Boolean> = _canGoBack.asStateFlow()
+
+    /** Dynamic list of wizard pages for the current workflow. Built on reset(). */
+    private var wizardPages: List<WizardPage> = emptyList()
+
     // Insulin selection state
     private val _availableInsulins = MutableStateFlow<List<ICfg>>(emptyList())
     val availableInsulins: StateFlow<List<ICfg>> = _availableInsulins.asStateFlow()
@@ -100,6 +114,19 @@ class MedtrumPatchViewModel @Inject constructor(
     /** Whether the insulin change step should be shown (multiple insulins available) */
     val showInsulinStep: Boolean
         get() = _availableInsulins.value.size > 1
+
+    /** Whether the site location step should be shown */
+    val showSiteLocationStep: Boolean
+        get() = preferences.get(BooleanKey.SiteRotationManagePump)
+
+    // Site location state (for SITE_LOCATION step)
+    private val _siteLocation = MutableStateFlow(TE.Location.NONE)
+    override val siteLocation: StateFlow<TE.Location> = _siteLocation.asStateFlow()
+
+    private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
+    override val siteArrow: StateFlow<TE.Arrow> = _siteArrow.asStateFlow()
+
+    private var siteRotationEntriesCache: List<TE> = emptyList()
 
     // One-time events
     private val _events = MutableSharedFlow<PatchEvent>(extraBufferCapacity = 5)
@@ -206,6 +233,7 @@ class MedtrumPatchViewModel @Inject constructor(
                 PatchStep.DEACTIVATION_COMPLETE,
                 PatchStep.PREPARE_PATCH,
                 PatchStep.SELECT_INSULIN,
+                PatchStep.SITE_LOCATION,
                 PatchStep.RETRY_ACTIVATION      -> {
                     // No connection required
                 }
@@ -239,6 +267,16 @@ class MedtrumPatchViewModel @Inject constructor(
         val oldStep = _patchStep.value
         prepareStep(newPatchStep)
         aapsLogger.info(LTag.PUMP, "forceMoveStep: $oldStep -> $newPatchStep")
+    }
+
+    /** Called by WizardScreen on back arrow press or cancel dialog confirmation. */
+    fun handleBack() {
+        when (_patchStep.value) {
+            PatchStep.COMPLETE,
+            PatchStep.DEACTIVATION_COMPLETE -> handleComplete()
+
+            else                            -> handleCancel()
+        }
     }
 
     fun handleCancel() {
@@ -276,15 +314,23 @@ class MedtrumPatchViewModel @Inject constructor(
         _setupStep.value = SetupStep.INITIAL
         _title.value = R.string.step_prepare_patch
         _wizardPage.value = WizardPage.PREPARE
+        wizardPages = emptyList()
         _totalSteps.value = 5
         _currentStepIndex.value = 0
+        _canGoBack.value = true
+        _siteLocation.value = TE.Location.NONE
+        _siteArrow.value = TE.Arrow.NONE
+        siteRotationEntriesCache = emptyList()
         oldPatchStep = null
         mInitPatchStep = null
         connectRetryCounter = 0
+        if (showSiteLocationStep) loadSiteRotationEntries()
     }
 
     fun initializePatchStep(step: PatchStep) {
         aapsLogger.info(LTag.PUMP, "initializePatchStep: $step")
+        loadInsulins()
+        wizardPages = buildWizardPages(step)
         mInitPatchStep = prepareStep(step)
     }
 
@@ -376,6 +422,70 @@ class MedtrumPatchViewModel @Inject constructor(
         _selectedInsulin.value = iCfg
     }
 
+    // region SiteLocationStepHost
+
+    override fun updateSiteLocation(location: TE.Location) {
+        _siteLocation.value = location
+    }
+
+    override fun updateSiteArrow(arrow: TE.Arrow) {
+        _siteArrow.value = arrow
+    }
+
+    override fun completeSiteLocation() {
+        saveSiteLocationToTherapyEvent(medtrumPump.patchStartTime)
+        moveStep(PatchStep.COMPLETE)
+    }
+
+    override fun skipSiteLocation() {
+        _siteLocation.value = TE.Location.NONE
+        _siteArrow.value = TE.Arrow.NONE
+        moveStep(PatchStep.COMPLETE)
+    }
+
+    override fun bodyType(): BodyType =
+        BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
+
+    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+
+    private fun loadSiteRotationEntries() {
+        scope.launch {
+            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+                System.currentTimeMillis() - T.days(45).msecs(), false
+            ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+        }
+    }
+
+    /** Save site location/arrow to the CANNULA_CHANGE therapy event created during activation. */
+    private fun saveSiteLocationToTherapyEvent(activationTimestamp: Long) {
+        val location = _siteLocation.value.takeIf { it != TE.Location.NONE }
+        val arrow = _siteArrow.value.takeIf { it != TE.Arrow.NONE }
+        if (location != null || arrow != null) {
+            scope.launch {
+                try {
+                    val entries = persistenceLayer.getTherapyEventDataFromToTime(activationTimestamp, activationTimestamp)
+                        .filter { it.type == TE.Type.CANNULA_CHANGE }
+                    entries.firstOrNull()?.let { te ->
+                        persistenceLayer.insertOrUpdateTherapyEvent(te.copy(location = location, arrow = arrow))
+                    }
+                } catch (_: Exception) {
+                    // location is optional
+                }
+            }
+        }
+    }
+
+    // endregion
+
+    /** Navigate to the step after activation completes (site location if enabled, otherwise complete). */
+    fun moveToPostActivationStep() {
+        if (showSiteLocationStep) {
+            moveStep(PatchStep.SITE_LOCATION)
+        } else {
+            moveStep(PatchStep.COMPLETE)
+        }
+    }
+
     /** Execute profile switch if user selected a different insulin. Called after activation completes. */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
@@ -395,6 +505,7 @@ class MedtrumPatchViewModel @Inject constructor(
             PatchStep.ATTACH_PATCH             -> R.string.step_attach
             PatchStep.ACTIVATE                 -> R.string.step_activate
             PatchStep.ACTIVATE_COMPLETE        -> R.string.step_activate_complete
+            PatchStep.SITE_LOCATION            -> app.aaps.core.ui.R.string.site_rotation
             PatchStep.START_DEACTIVATION       -> R.string.step_deactivate
             PatchStep.DEACTIVATE               -> R.string.step_deactivating
             PatchStep.DEACTIVATION_COMPLETE    -> R.string.step_deactivate_complete
@@ -412,6 +523,15 @@ class MedtrumPatchViewModel @Inject constructor(
         }
 
         _patchStep.value = newStep
+        _canGoBack.value = newStep in listOf(
+            PatchStep.PREPARE_PATCH,
+            PatchStep.SELECT_INSULIN,
+            PatchStep.SITE_LOCATION,
+            PatchStep.START_DEACTIVATION,
+            PatchStep.RETRY_ACTIVATION,
+            PatchStep.COMPLETE,
+            PatchStep.DEACTIVATION_COMPLETE
+        )
         updateWizardPage(newStep)
 
         // Handle immediate transitions (replicate MedtrumActivity behavior)
@@ -436,46 +556,62 @@ class MedtrumPatchViewModel @Inject constructor(
         _setupStep.value = newSetupStep
     }
 
-    private fun updateWizardPage(step: PatchStep) {
-        val hasInsulinStep = showInsulinStep
-        val totalActivation = if (hasInsulinStep) 6 else 5
-        val insulinOffset = if (hasInsulinStep) 1 else 0
-
-        val (page, total, current) = when (step) {
-            // Activation flow: 5 or 6 steps depending on insulin selection
-            PatchStep.PREPARE_PATCH,
-            PatchStep.PREPARE_PATCH_CONNECT    -> Triple(WizardPage.PREPARE, totalActivation, 0)
-
-            PatchStep.SELECT_INSULIN           -> Triple(WizardPage.SELECT_INSULIN, totalActivation, 1)
-
-            PatchStep.PRIME,
-            PatchStep.PRIMING,
-            PatchStep.PRIME_COMPLETE           -> Triple(WizardPage.PRIME, totalActivation, 1 + insulinOffset)
-
-            PatchStep.ATTACH_PATCH             -> Triple(WizardPage.ATTACH, totalActivation, 2 + insulinOffset)
-
-            PatchStep.ACTIVATE,
-            PatchStep.ACTIVATE_COMPLETE        -> Triple(WizardPage.ACTIVATE, totalActivation, 3 + insulinOffset)
-
-            PatchStep.COMPLETE                 -> Triple(WizardPage.COMPLETE, totalActivation, 4 + insulinOffset)
-
-            // Deactivation flow: 3 steps
-            PatchStep.START_DEACTIVATION       -> Triple(WizardPage.CONFIRM_DEACTIVATE, 3, 0)
-
-            PatchStep.DEACTIVATE,
-            PatchStep.FORCE_DEACTIVATION       -> Triple(WizardPage.DEACTIVATING, 3, 1)
-
-            PatchStep.DEACTIVATION_COMPLETE    -> Triple(WizardPage.DEACTIVATE_COMPLETE, 3, 2)
-
-            // Retry activation
-            PatchStep.RETRY_ACTIVATION,
-            PatchStep.RETRY_ACTIVATION_CONNECT -> Triple(WizardPage.RETRY_ACTIVATION, 5, 0)
-
-            PatchStep.CANCEL                   -> Triple(_wizardPage.value, _totalSteps.value, _currentStepIndex.value)
+    /** Build the dynamic wizard page list for the given start step. */
+    private fun buildWizardPages(startStep: PatchStep): List<WizardPage> = when (startStep) {
+        PatchStep.PREPARE_PATCH      -> buildList {
+            add(WizardPage.PREPARE)
+            if (showInsulinStep) add(WizardPage.SELECT_INSULIN)
+            add(WizardPage.PRIME)
+            add(WizardPage.ATTACH)
+            add(WizardPage.ACTIVATE)
+            if (showSiteLocationStep) add(WizardPage.SITE_LOCATION)
+            add(WizardPage.COMPLETE)
         }
+
+        PatchStep.START_DEACTIVATION -> listOf(
+            WizardPage.CONFIRM_DEACTIVATE,
+            WizardPage.DEACTIVATING,
+            WizardPage.DEACTIVATE_COMPLETE
+        )
+
+        PatchStep.RETRY_ACTIVATION   -> listOf(WizardPage.RETRY_ACTIVATION)
+
+        else                         -> wizardPages // keep current
+    }
+
+    /** Map a PatchStep (which may have sub-states) to its WizardPage. */
+    private fun PatchStep.toWizardPage(): WizardPage? = when (this) {
+        PatchStep.PREPARE_PATCH,
+        PatchStep.PREPARE_PATCH_CONNECT    -> WizardPage.PREPARE
+
+        PatchStep.SELECT_INSULIN           -> WizardPage.SELECT_INSULIN
+        PatchStep.PRIME,
+        PatchStep.PRIMING,
+        PatchStep.PRIME_COMPLETE           -> WizardPage.PRIME
+
+        PatchStep.ATTACH_PATCH             -> WizardPage.ATTACH
+        PatchStep.ACTIVATE,
+        PatchStep.ACTIVATE_COMPLETE        -> WizardPage.ACTIVATE
+
+        PatchStep.SITE_LOCATION            -> WizardPage.SITE_LOCATION
+        PatchStep.COMPLETE                 -> WizardPage.COMPLETE
+        PatchStep.START_DEACTIVATION       -> WizardPage.CONFIRM_DEACTIVATE
+        PatchStep.DEACTIVATE,
+        PatchStep.FORCE_DEACTIVATION       -> WizardPage.DEACTIVATING
+
+        PatchStep.DEACTIVATION_COMPLETE    -> WizardPage.DEACTIVATE_COMPLETE
+        PatchStep.RETRY_ACTIVATION,
+        PatchStep.RETRY_ACTIVATION_CONNECT -> WizardPage.RETRY_ACTIVATION
+
+        PatchStep.CANCEL                   -> null
+    }
+
+    private fun updateWizardPage(step: PatchStep) {
+        val page = step.toWizardPage() ?: return // CANCEL keeps current values
+        val index = wizardPages.indexOf(page).coerceAtLeast(0)
         _wizardPage.value = page
-        _totalSteps.value = total
-        _currentStepIndex.value = current
+        _totalSteps.value = wizardPages.size
+        _currentStepIndex.value = index
     }
 
     enum class SetupStep {

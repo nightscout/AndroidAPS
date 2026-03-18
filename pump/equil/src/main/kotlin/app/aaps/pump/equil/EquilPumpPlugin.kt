@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -63,6 +64,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -217,13 +219,14 @@ class EquilPumpPlugin @Inject constructor(
         } else equilManager.equilState?.basalSchedule == BasalSchedule.mapProfileToBasalSchedule(profile)
     }
 
-    override val lastDataTime: Long get() = equilManager.equilState?.lastDataTime ?: 0L
-    override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: PumpInsulin? get() = null
+    override val lastDataTime: StateFlow<Long> = equilManager.lastConnectionFlow
+    override val lastBolusTime: StateFlow<Long?> = equilManager.lastBolusTimeFlow
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = equilManager.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
 
     override val baseBasalRate: PumpRate get() = PumpRate(if (isSuspended()) 0.0 else equilManager.equilState?.basalSchedule?.rateAt(toDuration(DateTime.now())) ?: 0.0)
-    override val reservoirLevel: PumpInsulin get() = PumpInsulin(equilManager.equilState?.currentInsulin?.toDouble() ?: 0.0)
-    override val batteryLevel: Int? get() = equilManager.equilState?.battery
+
+    override val reservoirLevel: StateFlow<PumpInsulin> = equilManager.reservoirFlow.mapState(::PumpInsulin)
+    override val batteryLevel: StateFlow<Int?> = equilManager.batteryFlow
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0) {

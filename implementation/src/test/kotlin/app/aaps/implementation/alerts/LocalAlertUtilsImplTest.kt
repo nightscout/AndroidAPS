@@ -17,6 +17,7 @@ import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import app.aaps.shared.tests.TestBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -210,7 +211,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
-        whenever(pump.lastDataTime).thenReturn(lastDataTime)
+        whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
         whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(thresholdMinutes)
         whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(now - 1000)
 
@@ -237,7 +238,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
-        whenever(pump.lastDataTime).thenReturn(lastDataTime)
+        whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
         whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(thresholdMinutes)
         whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(futureAlarmTime)
 
@@ -304,7 +305,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
-        whenever(pump.lastDataTime).thenReturn(lastDataTime)
+        whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
         whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(thresholdMinutes)
         whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(currentAlarmTime)
 

@@ -109,6 +109,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -522,9 +524,12 @@ class OmnipodErosPumpPlugin @Inject constructor(
             true
         } else podStateManager.basalSchedule == AapsOmnipodErosManager.mapProfileToBasalSchedule(profile)
 
-    override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: PumpInsulin? get() = null
-    override val lastDataTime: Long get() = if (podStateManager.isPodInitialized) podStateManager.lastSuccessfulCommunication.millis else 0
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
 
     override val baseBasalRate: PumpRate
         get() = PumpRate(
@@ -532,16 +537,11 @@ class OmnipodErosPumpPlugin @Inject constructor(
             else podStateManager.basalSchedule?.rateAt(TimeUtil.toDuration(DateTime.now())) ?: 0.0
         )
 
-    override val reservoirLevel: PumpInsulin
-        get() = PumpInsulin(
-            if (!podStateManager.isPodRunning) 0.0
-            // Omnipod only reports reservoir level when it's 50 units or less.
-            // When it's over 50 units, we don't know, so return some default over 50 units
-            else podStateManager.reservoirLevel ?: RESERVOIR_OVER_50_UNITS_DEFAULT
-        )
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
 
-    override val batteryLevel: Int?
-        get() = if (aapsOmnipodErosManager.isShowRileyLinkBatteryLevel) rileyLinkServiceData.batteryLevel else null
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin == 0.0 || detailedBolusInfo.carbs > 0) {
@@ -860,9 +860,19 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
             return supplier.get()
         } finally {
+            syncPumpFlows()
             rxBus.send(EventRefreshOverview("Omnipod command: " + commandType.name, false))
             rxBus.send(EventOmnipodErosPumpValuesChanged())
         }
+    }
+
+    private fun syncPumpFlows() {
+        _lastDataTime.value = if (podStateManager.isPodInitialized) podStateManager.lastSuccessfulCommunication.millis else 0
+        _reservoirLevel.value = PumpInsulin(
+            if (!podStateManager.isPodRunning) 0.0
+            else podStateManager.reservoirLevel ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+        )
+        _batteryLevel.value = if (aapsOmnipodErosManager.isShowRileyLinkBatteryLevel) rileyLinkServiceData.batteryLevel else null
     }
 
     private fun verifyPodAlertConfiguration(): Boolean {

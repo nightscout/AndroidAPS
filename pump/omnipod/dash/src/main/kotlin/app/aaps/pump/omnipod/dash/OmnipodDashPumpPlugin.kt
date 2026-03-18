@@ -85,6 +85,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -329,6 +331,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", e)
         }
+        syncPumpFlows()
     }
 
     private fun getPodStatus(): Completable = Completable.concat(
@@ -525,9 +528,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return equal
     }
 
-    override val lastBolusTime: Long? get() = podStateManager.lastBolus?.startTime
-    override val lastBolusAmount: PumpInsulin? get() = podStateManager.lastBolus?.requestedUnits?.let { PumpInsulin(it) }
-    override val lastDataTime: Long get() = podStateManager.lastUpdatedSystem
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
+
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
+
     override val baseBasalRate: PumpRate
         get() {
             val date = System.currentTimeMillis()
@@ -541,22 +550,26 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
         }
 
-    override val reservoirLevel: PumpInsulin
-        get() {
-            if (podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)) {
-                return PumpInsulin(0.0)
-            }
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
 
-            // Omnipod only reports reservoir level when there's < 1023 pulses left
-            return PumpInsulin(
+    // Omnipod Dash doesn't report its battery level
+    override val batteryLevel: StateFlow<Int?> = MutableStateFlow(null)
+
+    private fun syncPumpFlows() {
+        _lastDataTime.value = podStateManager.lastUpdatedSystem
+        _lastBolusTime.value = podStateManager.lastBolus?.startTime
+        _lastBolusAmount.value = podStateManager.lastBolus?.requestedUnits?.let { PumpInsulin(it) }
+        _reservoirLevel.value = if (podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)) {
+            PumpInsulin(0.0)
+        } else {
+            PumpInsulin(
                 podStateManager.pulsesRemaining?.let {
                     it * PodConstants.POD_PULSE_BOLUS_UNITS
                 } ?: RESERVOIR_OVER_50_UNITS_DEFAULT
             )
         }
-
-    // Omnipod Dash doesn't report it's battery level. We return 0 here and hide related fields in the UI
-    override val batteryLevel: Int? = null
+    }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
@@ -567,7 +580,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
             val requestedBolusAmount = detailedBolusInfo.insulin
-            if (requestedBolusAmount > reservoirLevel.cU) {
+            if (requestedBolusAmount > reservoirLevel.value.cU) {
                 return pumpEnactResultProvider.get()
                     .success(false)
                     .enacted(false)

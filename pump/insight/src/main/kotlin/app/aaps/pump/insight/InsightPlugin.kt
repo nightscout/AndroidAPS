@@ -125,6 +125,8 @@ import app.aaps.pump.insight.keys.InsightIntentKey
 import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -169,10 +171,13 @@ class InsightPlugin @Inject constructor(
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
     private val _bolusLock: Any = arrayOfNulls<Any>(0)
-    override var lastBolusAmount = PumpInsulin(0.0)
-        private set
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(PumpInsulin(0.0))
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
     var lastBolusTimestamp = 0L
-        private set
+        private set(value) {
+            field = value
+            _lastBolusTime.value = value.takeIf { it > 0 }
+        }
     var lastBolusType: BS.Type? = null
         private set
     private var alertService: InsightAlertService? = null
@@ -206,9 +211,15 @@ class InsightPlugin @Inject constructor(
     var operatingMode: OperatingMode? = null
         private set
     var batteryStatus: BatteryStatus? = null
-        private set
+        private set(value) {
+            field = value
+            _batteryLevel.value = value?.batteryAmount
+        }
     var cartridgeStatus: CartridgeStatus? = null
-        private set
+        private set(value) {
+            field = value
+            _reservoirLevel.value = PumpInsulin(value?.remainingAmount ?: 0.0)
+        }
     var totalDailyDose: TotalDailyDose? = null
         private set
     var activeBasalRate: ActiveBasalRate? = null
@@ -227,7 +238,7 @@ class InsightPlugin @Inject constructor(
         context.bindService(Intent(context, InsightAlertService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         createNotificationChannel()
         lastBolusTimestamp = preferences.get(InsightLongNonKey.LastBolusTimestamp)
-        lastBolusAmount = PumpInsulin(preferences.get(InsightDoubleNonKey.LastBolusAmount))
+        _lastBolusAmount.value = PumpInsulin(preferences.get(InsightDoubleNonKey.LastBolusAmount))
     }
 
     private fun createNotificationChannel() {
@@ -297,6 +308,7 @@ class InsightPlugin @Inject constructor(
                 aapsLogger.error("Exception while fetching status", e)
             }
         }
+        _lastDataTime.value = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
     }
 
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
@@ -478,16 +490,22 @@ class InsightPlugin @Inject constructor(
         return true
     }
 
-    override val lastDataTime: Long get() = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
-    override val lastBolusTime: Long get() = lastBolusTimestamp
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
+
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
 
     override val baseBasalRate: PumpRate
         get() {
             if (connectionService == null || alertService == null) return PumpRate(0.0)
             return PumpRate(activeBasalRate?.activeBasalRate ?: 0.0)
         }
-    override val reservoirLevel: PumpInsulin get() = PumpInsulin(cartridgeStatus?.remainingAmount ?: 0.0)
-    override val batteryLevel: Int? get() = batteryStatus?.batteryAmount
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin.equals(0.0) || detailedBolusInfo.carbs > 0) {
@@ -1321,8 +1339,8 @@ class InsightPlugin @Inject constructor(
                 )
                 lastBolusTimestamp = insightBolusID.timestamp
                 preferences.put(InsightLongNonKey.LastBolusTimestamp, lastBolusTimestamp)
-                lastBolusAmount = PumpInsulin(event.immediateAmount)
-                preferences.put(InsightDoubleNonKey.LastBolusAmount, lastBolusAmount.cU)
+                _lastBolusAmount.value = PumpInsulin(event.immediateAmount)
+                preferences.put(InsightDoubleNonKey.LastBolusAmount, _lastBolusAmount.value?.cU ?: 0.0)
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
                 if (event.duration > 0 && pumpSync.isProfileRunning(insightBolusID.timestamp)) pumpSync.syncExtendedBolusWithPumpId(

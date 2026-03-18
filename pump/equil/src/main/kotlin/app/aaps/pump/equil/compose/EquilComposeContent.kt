@@ -1,8 +1,5 @@
 package app.aaps.pump.equil.compose
 
-import android.app.Activity
-import android.content.pm.ActivityInfo
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
@@ -11,7 +8,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +22,7 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
+import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 
 class EquilComposeContent(
     private val pluginName: String,
@@ -102,17 +99,7 @@ class EquilComposeContent(
                 onNavigateBack = { showHistory = false }
             )
         } else if (showWizardWorkflow) {
-            // Keep screen on and lock orientation during wizard workflow
-            val activity = context as? Activity
-            DisposableEffect(Unit) {
-                activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                val previousOrientation = activity?.requestedOrientation
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-                onDispose {
-                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    previousOrientation?.let { activity.requestedOrientation = it }
-                }
-            }
+            KeepScreenOnEffect()
 
             // BLE pre-check — gate wizard until BLE is confirmed ready
             var bleReady by remember { mutableStateOf(false) }

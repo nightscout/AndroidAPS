@@ -19,11 +19,14 @@ import android.text.TextUtils
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -33,6 +36,7 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
@@ -93,7 +97,8 @@ class EquilWizardViewModel @Inject constructor(
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val constraintsChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val insulinManager: InsulinManager
 ) : ViewModel(), SiteLocationStepHost {
 
     // region State
@@ -150,6 +155,23 @@ class EquilWizardViewModel @Inject constructor(
 
     private var activationTimestamp: Long = 0L
 
+    // Insulin selection state
+    private val _availableInsulins = MutableStateFlow<List<ICfg>>(emptyList())
+    val availableInsulins: StateFlow<List<ICfg>> = _availableInsulins.asStateFlow()
+
+    private val _selectedInsulin = MutableStateFlow<ICfg?>(null)
+    val selectedInsulin: StateFlow<ICfg?> = _selectedInsulin.asStateFlow()
+
+    private val _activeInsulinLabel = MutableStateFlow<String?>(null)
+    val activeInsulinLabel: StateFlow<String?> = _activeInsulinLabel.asStateFlow()
+
+    /** Whether the insulin selection step should be shown (multiple insulins available) */
+    val showInsulinStep: Boolean
+        get() = _availableInsulins.value.size > 1
+
+    val concentrationEnabled: Boolean
+        get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
+
     // Events
     private val _events = MutableSharedFlow<EquilWizardEvent>()
     val events: SharedFlow<EquilWizardEvent> = _events.asSharedFlow()
@@ -181,8 +203,9 @@ class EquilWizardViewModel @Inject constructor(
 
     fun initializeWorkflow(workflow: EquilWorkflow) {
         _workflow.value = workflow
-        val siteRotationEnabled = preferences.get(app.aaps.core.keys.BooleanKey.SiteRotationManagePump)
-        workflowSteps = workflow.steps(siteRotationEnabled)
+        loadInsulins()
+        val siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump)
+        workflowSteps = workflow.steps(siteRotationEnabled, insulinSelectionEnabled = showInsulinStep)
         _totalSteps.value = workflowSteps.size
         _errorMessage.value = null
         _isLoading.value = false
@@ -730,6 +753,7 @@ class EquilWizardViewModel @Inject constructor(
 
     private fun saveActivation() {
         activationTimestamp = System.currentTimeMillis()
+        executeInsulinProfileSwitch()
         if (_workflow.value == EquilWorkflow.PAIR) {
             pumpSync.connectNewPump()
         }
@@ -803,6 +827,32 @@ class EquilWizardViewModel @Inject constructor(
     private var siteRotationEntriesCache: List<TE> = emptyList()
 
     override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+
+    // endregion
+
+    // region Insulin selection
+
+    private fun loadInsulins() {
+        if (_availableInsulins.value.isNotEmpty()) return
+        val insulins = insulinManager.insulins.map { it.deepClone() }
+        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+        val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
+        _availableInsulins.value = insulins
+        _selectedInsulin.value = current
+        _activeInsulinLabel.value = activeLabel
+    }
+
+    fun selectInsulin(iCfg: ICfg) {
+        _selectedInsulin.value = iCfg
+    }
+
+    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    fun executeInsulinProfileSwitch() {
+        val selected = _selectedInsulin.value ?: return
+        val activeLabel = _activeInsulinLabel.value
+        if (selected.insulinLabel == activeLabel) return
+        profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Equil)
+    }
 
     // endregion
 

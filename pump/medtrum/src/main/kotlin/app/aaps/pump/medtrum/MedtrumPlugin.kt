@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -77,6 +78,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -115,6 +117,7 @@ class MedtrumPlugin @Inject constructor(
         .description(R.string.medtrum_pump_description)
         .composeContent { _ ->
             MedtrumComposeContent(
+                pluginName = rh.gs(R.string.medtrum),
                 protectionCheck = protectionCheck,
                 blePreCheck = blePreCheck
             )
@@ -344,12 +347,12 @@ class MedtrumPlugin @Inject constructor(
         return result
     }
 
-    override val lastDataTime: Long get() = medtrumPump.lastConnection
-    override val lastBolusTime: Long get() = medtrumPump.lastBolusTime
-    override val lastBolusAmount: PumpInsulin get() = PumpInsulin(medtrumPump.lastBolusAmount)
+    override val lastDataTime: StateFlow<Long> = medtrumPump.lastConnectionFlow
+    override val lastBolusTime: StateFlow<Long?> = medtrumPump.lastBolusTimeFlow
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = medtrumPump.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
     override val baseBasalRate: PumpRate get() = PumpRate(medtrumPump.baseBasalRate)
-    override val reservoirLevel: PumpInsulin get() = PumpInsulin(medtrumPump.reservoir)
-    override val batteryLevel: Int? = null // We cannot determine battery level (yet)
+    override val reservoirLevel: StateFlow<PumpInsulin> = medtrumPump.reservoirFlow.mapState(::PumpInsulin)
+    override val batteryLevel: StateFlow<Int?> = medtrumPump.batteryFlow
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {

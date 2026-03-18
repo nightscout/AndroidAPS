@@ -58,6 +58,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializer
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -88,6 +89,12 @@ class EquilManager @Inject constructor(
     private val gsonInstance: Gson = createGson()
     var equilState: EquilState? = null
         private set
+
+    val lastConnectionFlow = MutableStateFlow(0L)
+    val lastBolusTimeFlow = MutableStateFlow<Long?>(null)
+    val lastBolusAmountFlow = MutableStateFlow<Double?>(null)
+    val reservoirFlow = MutableStateFlow(0.0)
+    val batteryFlow = MutableStateFlow<Int?>(null)
 
     fun init() {
         loadPodState()
@@ -458,6 +465,16 @@ class EquilManager @Inject constructor(
                 aapsLogger.error(LTag.PUMP, "loadPodState: could not deserialize PodState: $storedPodState", ex)
             }
         }
+        syncOverviewFlows()
+    }
+
+    private fun syncOverviewFlows() {
+        val state = equilState ?: return
+        lastConnectionFlow.value = state.lastDataTime
+        reservoirFlow.value = state.currentInsulin.toDouble()
+        batteryFlow.value = state.battery
+        lastBolusTimeFlow.value = state.bolusRecord?.startTime
+        lastBolusAmountFlow.value = state.bolusRecord?.amount
     }
 
     fun hasPodState(): Boolean = equilState != null // 0x0=discarded
@@ -473,6 +490,7 @@ class EquilManager @Inject constructor(
         val podState = gsonInstance.toJson(equilState)
         aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: {}", podState)
         storePodState(podState)
+        syncOverviewFlows()
     }
 
     private fun storePodState(podState: String) {
@@ -499,6 +517,8 @@ class EquilManager @Inject constructor(
     fun setBolusRecord(bolusRecord: EquilBolusRecord?) {
         equilState?.bolusRecord = bolusRecord
         storePodState()
+        lastBolusTimeFlow.value = bolusRecord?.startTime
+        lastBolusAmountFlow.value = bolusRecord?.amount
     }
 
     fun getTempBasal(): EquilTempBasalRecord? = equilState?.tempBasal
@@ -536,11 +556,13 @@ class EquilManager @Inject constructor(
     fun setLastDataTime(lastDataTime: Long) {
         equilState?.lastDataTime = lastDataTime
         storePodState()
+        lastConnectionFlow.value = lastDataTime
     }
 
     fun setCurrentInsulin(currentInsulin: Int) {
         equilState?.currentInsulin = currentInsulin
         storePodState()
+        reservoirFlow.value = currentInsulin.toDouble()
     }
 
     fun setStartInsulin(startInsulin: Int) {
@@ -552,6 +574,7 @@ class EquilManager @Inject constructor(
     fun setBattery(battery: Int) {
         equilState?.battery = battery
         storePodState()
+        batteryFlow.value = battery
     }
 
     fun setRunMode(runMode: RunMode) {

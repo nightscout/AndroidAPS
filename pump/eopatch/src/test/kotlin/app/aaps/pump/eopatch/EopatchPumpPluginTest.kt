@@ -155,7 +155,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
 
         plugin.connect("test reason")
 
-        assertThat(plugin.lastDataTime).isAtLeast(beforeTime)
+        assertThat(plugin.lastDataTime.value).isAtLeast(beforeTime)
     }
 
     @Test
@@ -181,7 +181,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
     fun `reservoirLevel should return 0 when not activated`() {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
-        assertThat(plugin.reservoirLevel.cU).isWithin(0.001).of(0.0)
+        assertThat(plugin.reservoirLevel.value.cU).isWithin(0.001).of(0.0)
     }
 
     @Test
@@ -194,14 +194,14 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
 
         // Just verify it returns a value (actual implementation uses patch state)
-        assertThat(plugin.reservoirLevel.cU).isAtLeast(0.0)
+        assertThat(plugin.reservoirLevel.value.cU).isAtLeast(0.0)
     }
 
     @Test
     fun `batteryLevel should return null when not activated`() {
         patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
 
-        assertThat(plugin.batteryLevel).isNull()
+        assertThat(plugin.batteryLevel.value).isNull()
     }
 
     @Test

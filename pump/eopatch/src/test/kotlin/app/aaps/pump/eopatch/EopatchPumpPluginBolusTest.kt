@@ -1,6 +1,5 @@
 package app.aaps.pump.eopatch
 
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -203,7 +202,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         plugin.getPumpStatus("test")
 
         // Last data time should be updated
-        assertThat(plugin.lastDataTime).isAtLeast(beforeTime)
+        assertThat(plugin.lastDataTime.value).isAtLeast(beforeTime)
     }
 
     @Test

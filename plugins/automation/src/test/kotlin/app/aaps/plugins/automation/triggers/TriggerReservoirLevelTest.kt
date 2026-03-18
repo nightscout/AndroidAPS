@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -12,7 +13,7 @@ import java.util.Optional
 class TriggerReservoirLevelTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
-        whenever(pumpPluginWithConcentration.reservoirLevel).thenReturn(PumpInsulin(6.0))
+        whenever(pumpPluginWithConcentration.reservoirLevel).thenReturn(MutableStateFlow(PumpInsulin(6.0)))
         whenever(insulin.iCfg).thenReturn(someICfg)
 
         var t: TriggerReservoirLevel = TriggerReservoirLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)

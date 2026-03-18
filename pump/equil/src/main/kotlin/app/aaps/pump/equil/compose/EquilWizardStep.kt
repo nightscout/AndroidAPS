@@ -7,16 +7,17 @@ import app.aaps.pump.equil.R
  */
 enum class EquilWizardStep(val titleResId: Int) {
 
-    // PAIR flow: Assemble → SerialNumber → Fill → Attach → Air → [SiteLocation] → Confirm
+    // PAIR flow: Assemble → SerialNumber → Fill → Attach → Air → [SelectInsulin] → [SiteLocation] → Confirm
     ASSEMBLE(R.string.equil_title_assemble),
     SERIAL_NUMBER(R.string.equil_title_serial),
     FILL(R.string.equil_title_fill),
     ATTACH(R.string.equil_title_attach),
     AIR(R.string.equil_title_air),
+    SELECT_INSULIN(app.aaps.core.ui.R.string.select_insulin),
     SITE_LOCATION(app.aaps.core.ui.R.string.site_rotation),
     CONFIRM(R.string.equil_title_confirm),
 
-    // CHANGE_INSULIN flow: ChangeInsulin → Assemble → Fill → Attach → Air → [SiteLocation] → Confirm
+    // CHANGE_INSULIN flow: ChangeInsulin → Assemble → Fill → Attach → Air → [SelectInsulin] → [SiteLocation] → Confirm
     CHANGE_INSULIN(R.string.equil_change),
 
     // UNPAIR flow: UnpairDetach → UnpairConfirm
@@ -33,13 +34,14 @@ enum class EquilWorkflow {
     CHANGE_INSULIN,
     UNPAIR;
 
-    fun steps(siteRotationEnabled: Boolean): List<EquilWizardStep> = when (this) {
+    fun steps(siteRotationEnabled: Boolean, insulinSelectionEnabled: Boolean): List<EquilWizardStep> = when (this) {
         PAIR           -> buildList {
             add(EquilWizardStep.ASSEMBLE)
             add(EquilWizardStep.SERIAL_NUMBER)
             add(EquilWizardStep.FILL)
             add(EquilWizardStep.ATTACH)
             add(EquilWizardStep.AIR)
+            if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             if (siteRotationEnabled) add(EquilWizardStep.SITE_LOCATION)
             add(EquilWizardStep.CONFIRM)
         }
@@ -50,6 +52,7 @@ enum class EquilWorkflow {
             add(EquilWizardStep.FILL)
             add(EquilWizardStep.ATTACH)
             add(EquilWizardStep.AIR)
+            if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             if (siteRotationEnabled) add(EquilWizardStep.SITE_LOCATION)
             add(EquilWizardStep.CONFIRM)
         }

@@ -171,15 +171,17 @@ class DiaconnG8Fragment : DaggerFragment() {
             binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(app.aaps.core.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
-        if (pump.lastBolusTime != 0L) {
-            val agoMsec = System.currentTimeMillis() - pump.lastBolusTime
+        val lastBolusTime = pump.lastBolusTime
+        val lastBolusAmount = pump.lastBolusAmount
+        if (lastBolusTime != null && lastBolusAmount != null) {
+            val agoMsec = System.currentTimeMillis() - lastBolusTime
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
                 binding.lastbolus.text =
-                    dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(
+                    dateUtil.timeString(lastBolusTime) + " " + dateUtil.sinceString(lastBolusTime, rh) + " " + rh.gs(
                         R.string.format_insulin_units,
-                        pump.lastBolusAmount
+                        lastBolusAmount
                     )
             else
                 binding.lastbolus.text = ""

@@ -15,6 +15,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.implementation.pump.PumpEnactResultObject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Suppress("MemberVisibilityCanBePrivate")
 class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
@@ -26,7 +28,12 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override fun isConnected() = connected
     override fun isConnecting() = false
     override fun isHandshakeInProgress() = false
-    var lastData = 0L
+    private val _lastDataTime = MutableStateFlow(0L)
+    var lastData: Long
+        get() = _lastDataTime.value
+        set(value) {
+            _lastDataTime.value = value
+        }
 
     val baseBasal = 0.0
     override var pumpDescription = PumpDescription()
@@ -54,12 +61,16 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = PumpEnactResultObject(rh)
     override fun isThisProfileSet(profile: EffectiveProfile): Boolean = isProfileSet
     override fun isThisProfileSet(profile: PumpProfile): Boolean = isProfileSet
-    override val lastBolusTime: Long? get() = null
-    override val lastBolusAmount: PumpInsulin? get() = null
-    override val lastDataTime: Long get() = lastData
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
     override val baseBasalRate: PumpRate get() = PumpRate(baseBasal)
-    override val reservoirLevel: PumpInsulin = PumpInsulin(0.0)
-    override val batteryLevel: Int? = null
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)
     override fun stopBolusDelivering() { /* not needed */
     }

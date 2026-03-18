@@ -194,7 +194,7 @@ class KeepAliveWorker(
         val ps = profileFunction.getRequestedProfile() ?: return
         val requestedProfile = ProfileSealed.PS(ps, activePlugin)
         val runningProfile = profileFunction.getProfile()
-        val lastConnection = pump.lastDataTime
+        val lastConnection = pump.lastDataTime.value
         val now = dateUtil.now()
         val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < now
         val isBasalOutdated = abs(requestedProfile.getBasal() - ch.fromPump(pump.baseBasalRate)) > pump.pumpDescription.basalStep

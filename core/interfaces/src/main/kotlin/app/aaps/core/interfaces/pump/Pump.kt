@@ -7,6 +7,7 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
+import kotlinx.coroutines.flow.StateFlow
 import org.json.JSONObject
 
 /**
@@ -97,17 +98,17 @@ interface Pump {
     /**
      * timestamp of last connection to the pump in milliseconds
      */
-    val lastDataTime: Long
+    val lastDataTime: StateFlow<Long>
 
     /**
      * timestamp of last bolus delivered in milliseconds
      */
-    val lastBolusTime: Long?
+    val lastBolusTime: StateFlow<Long?>
 
     /**
      * amount of last bolus delivered in units of insulin
      */
-    val lastBolusAmount: PumpInsulin?
+    val lastBolusAmount: StateFlow<PumpInsulin?>
 
     /**
      * Currently running base basal rate [U/h]
@@ -120,12 +121,12 @@ interface Pump {
     /**
      * Reservoir level at time of last connection [Units of insulin]
      */
-    val reservoirLevel: PumpInsulin
+    val reservoirLevel: StateFlow<PumpInsulin>
 
     /**
      * Battery level at time of last connection [%]
      */
-    val batteryLevel: Int?
+    val batteryLevel: StateFlow<Int?>
 
     /**
      * Request a bolus to be delivered, carbs to be stored on pump or both.

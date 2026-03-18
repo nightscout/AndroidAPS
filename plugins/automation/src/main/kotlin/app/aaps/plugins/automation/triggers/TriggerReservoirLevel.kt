@@ -41,7 +41,7 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
         val iCfg = insulin.iCfg
-        val actualReservoirLevel = activePlugin.activePump.reservoirLevel.iU(iCfg.concentration)
+        val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value.iU(iCfg.concentration)
         if (comparator.value.check(actualReservoirLevel, reservoirLevel.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

@@ -14,7 +14,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     fun shouldRunTest() {
 //        System.currentTimeMillis() is always 0
 //        and so is every last connection time
-        assertThat(testPumpPlugin.lastDataTime).isEqualTo(0L)
+        assertThat(testPumpPlugin.lastDataTime.value).isEqualTo(0L)
         whenever(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerPumpLastConnection(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.minutesAgo.value).isEqualTo(110)
