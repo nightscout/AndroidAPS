@@ -15,9 +15,11 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.ui.R
@@ -59,7 +61,7 @@ fun MainNavigationBar(
                 BadgedBox(
                     badge = {
                         if (quickWizardCount > 0) {
-                            Badge(containerColor = MaterialTheme.colorScheme.tertiary) {
+                            Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
                                 Text(text = quickWizardCount.toString())
                             }
                         }
@@ -84,7 +86,7 @@ fun MainNavigationBar(
                 icon = {
                     BadgedBox(
                         badge = {
-                            Badge(containerColor = MaterialTheme.colorScheme.tertiary) {
+                            Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
                                 Text(text = automationCount.toString())
                             }
                         }

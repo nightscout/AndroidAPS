@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.ExportConfig
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,6 +133,7 @@ internal fun MaintenanceBottomSheetContent(
 
     Column(
         modifier = Modifier
+            .consumeOverscroll()
             .verticalScroll(rememberScrollState())
             .padding(bottom = 24.dp)
     ) {

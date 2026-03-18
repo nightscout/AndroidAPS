@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
@@ -48,6 +49,7 @@ fun AutomationBottomSheet(
     ) {
         Column(
             modifier = Modifier
+                .consumeOverscroll()
                 .verticalScroll(rememberScrollState())
                 .padding(bottom = 24.dp)
         ) {

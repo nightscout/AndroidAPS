@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
@@ -114,6 +115,7 @@ private fun TreatmentSelectionContent(
 ) {
     Column(
         modifier = Modifier
+            .consumeOverscroll()
             .verticalScroll(rememberScrollState())
             .padding(bottom = 24.dp)
     ) {
@@ -269,6 +271,7 @@ private fun TreatmentSettingsContent(
 ) {
     Column(
         modifier = Modifier
+            .consumeOverscroll()
             .verticalScroll(rememberScrollState())
             .padding(bottom = 24.dp)
     ) {
