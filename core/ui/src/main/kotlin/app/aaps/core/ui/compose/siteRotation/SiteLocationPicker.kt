@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import app.aaps.core.ui.compose.LocalDateUtil
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -109,15 +110,17 @@ fun SiteLocationPicker(
             }
         }
 
+        val filteredEntries = entries.filter { te ->
+            when (te.type) {
+                TE.Type.CANNULA_CHANGE -> showPumpSites
+                TE.Type.SENSOR_CHANGE  -> showCgmSites
+                else                   -> false
+            }
+        }
+
         // Body diagram (zoomable, front + back)
         ZoomableBodyDiagram(
-            filteredLocationColor = entries.filter { te ->
-                when (te.type) {
-                    TE.Type.CANNULA_CHANGE -> showPumpSites
-                    TE.Type.SENSOR_CHANGE  -> showCgmSites
-                    else                   -> false
-                }
-            },
+            filteredLocationColor = filteredEntries,
             showPumpSites = showPumpSites,
             showCgmSites = showCgmSites,
             selectedLocation = selectedLocation,
@@ -128,6 +131,36 @@ fun SiteLocationPicker(
                 .fillMaxWidth()
                 .padding(horizontal = AapsSpacing.extraLarge)
         )
+
+        // Filtered entry list
+        if (filteredEntries.isNotEmpty()) {
+            val dateUtil = LocalDateUtil.current
+            val locationFiltered = if (selectedLocation != TE.Location.NONE)
+                filteredEntries.filter { it.location == selectedLocation }
+            else
+                filteredEntries
+            val displayEntries = remember(locationFiltered, dateUtil) {
+                locationFiltered.map { te ->
+                    SiteEntryDisplayData(
+                        typeIcon = if (te.type == TE.Type.CANNULA_CHANGE) IcCannulaChange else IcCgmInsert,
+                        dateString = dateUtil.dateStringShort(te.timestamp),
+                        locationString = (te.location ?: TE.Location.NONE).text,
+                        arrowIcon = (te.arrow ?: TE.Arrow.NONE).directionToComposeIcon(),
+                        note = te.note,
+                        timestamp = te.timestamp,
+                        location = te.location ?: TE.Location.NONE
+                    )
+                }
+            }
+            SiteEntryList(
+                entries = displayEntries,
+                showEditButton = false,
+                onEntryClick = { onLocationSelected(it.location) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+        }
     }
 }
 
