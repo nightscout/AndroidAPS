@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.io
+package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io
 
 import java.math.BigInteger
 import java.util.*

@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.callbacks
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks
 
 sealed class WriteConfirmation
 
