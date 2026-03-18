@@ -18,7 +18,7 @@ class Objective3 @Inject constructor(
 ) : Objective(preferences, rh, dateUtil, "openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate) {
 
     init {
-        tasks.add(MinimumDurationTask(this, T.days(7).msecs()))
+        tasks.add(MinimumDurationTask(this, T.days(0).msecs()))
         tasks.add(
             object : Task(this, R.string.objectives_manualenacts) {
                 override fun isCompleted(): Boolean {
@@ -36,6 +36,6 @@ class Objective3 @Inject constructor(
 
     companion object {
 
-        private const val MANUAL_ENACTS_NEEDED = 20
+        private const val MANUAL_ENACTS_NEEDED = 5
     }
 }
