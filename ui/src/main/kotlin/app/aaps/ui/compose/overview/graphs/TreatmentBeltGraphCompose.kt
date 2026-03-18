@@ -158,7 +158,7 @@ fun TreatmentBeltGraphCompose(
         if (!hasRealTimeRange && lastRunningModeData.value.segments.isEmpty() && lastTreatmentData.value.therapyEvents.isEmpty()) {
             // No data at all — just populate normalizer so chart renders
             modelProducer.runTransaction {
-                lineSeries { series(x = NORMALIZER_X, y = NORMALIZER_Y) }
+                lineSeries { series(x = normalizerX(maxX), y = NORMALIZER_Y) }
             }
             modeSegmentCountState.intValue = 0
             hasMbgState.value = false
@@ -281,7 +281,7 @@ fun TreatmentBeltGraphCompose(
                 }
 
                 // 4. Normalizer (always last)
-                series(x = NORMALIZER_X, y = NORMALIZER_Y)
+                series(x = normalizerX(maxX), y = NORMALIZER_Y)
             }
             extras { store ->
                 store[therapyEventMapKey] = buildMap {

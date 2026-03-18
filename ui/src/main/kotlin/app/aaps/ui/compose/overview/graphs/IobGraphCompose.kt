@@ -167,7 +167,7 @@ fun IobGraphCompose(
     val hasNormalBolusesState = remember { mutableStateOf(false) }
     val extBolusCountState = remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(processedIob, processedTreatments) {
+    LaunchedEffect(processedIob, processedTreatments, maxX) {
         if (!hasRealTimeRange) return@LaunchedEffect
 
         var hasIob = false
@@ -210,7 +210,7 @@ fun IobGraphCompose(
                 }
 
                 // Normalizer — ensures identical maxPointSize across all charts (see GraphUtils.kt)
-                series(x = NORMALIZER_X, y = NORMALIZER_Y)
+                series(x = normalizerX(maxX), y = NORMALIZER_Y)
             }
         }
 

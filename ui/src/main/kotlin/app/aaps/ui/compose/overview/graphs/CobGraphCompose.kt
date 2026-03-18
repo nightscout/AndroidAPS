@@ -128,9 +128,8 @@ fun CobGraphCompose(
     val hasFailoverDataState = remember { mutableStateOf(false) }
     val hasCarbsDataState = remember { mutableStateOf(false) }
 
-    LaunchedEffect(processedCob, processedCarbs) {
+    LaunchedEffect(processedCob, processedCarbs, maxX) {
         val (cobFiltered, failoverFiltered) = processedCob
-        if (cobFiltered.isEmpty() && failoverFiltered.isEmpty() && processedCarbs.isEmpty()) return@LaunchedEffect
 
         var hasCobData = false
         var hasFailoverData = false
@@ -150,7 +149,7 @@ fun CobGraphCompose(
                     series(x = processedCarbs.map { it.first }, y = processedCarbs.map { it.second })
                     hasCarbsData = true
                 }
-                series(x = NORMALIZER_X, y = NORMALIZER_Y)
+                series(x = normalizerX(maxX), y = NORMALIZER_Y)
             }
         }
 

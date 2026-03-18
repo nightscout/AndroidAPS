@@ -168,7 +168,7 @@ fun BgGraphCompose(
                 }
 
                 // Normalizer series
-                series(x = NORMALIZER_X, y = NORMALIZER_Y)
+                series(x = normalizerX(maxX), y = NORMALIZER_Y)
 
                 activeSeriesState.value = activeSeries.toList()
             }

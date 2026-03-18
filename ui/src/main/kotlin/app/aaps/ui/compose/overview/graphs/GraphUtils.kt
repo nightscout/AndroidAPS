@@ -162,11 +162,18 @@ fun createNormalizerLine(): LineCartesianLayer.Line =
     )
 
 /**
- * X/Y data for the normalizer dummy series. Always add this to every chart's lineSeries block.
+ * Y data for the normalizer dummy series. Always add this to every chart's lineSeries block.
  * Two points at y=0, invisible, just to occupy a series slot for the normalizer line.
  */
-val NORMALIZER_X = listOf(0.0, 1.0)
 val NORMALIZER_Y = listOf(0.0, 0.0)
+
+/**
+ * X data for the normalizer dummy series spanning the full chart range.
+ * Must reach [maxX] so Vico computes the same scrollable content width across all charts.
+ * Without this, charts without prediction data (IOB, COB) have shorter scroll extent
+ * than the BG chart, causing them to stop following when scrolling into the forecast area.
+ */
+fun normalizerX(maxX: Double): List<Double> = listOf(0.0, maxX)
 
 /**
  * Triangle shape pointing upward (apex at top center, flat base at bottom).
