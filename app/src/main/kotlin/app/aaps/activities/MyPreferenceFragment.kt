@@ -39,7 +39,6 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
-import app.aaps.core.ui.UiMode
 import app.aaps.core.utils.extensions.safeGetSerializable
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -367,17 +366,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             skinEntries.addElement(context.getString(skin.description))
         }
 
-        val darkModeEntries = arrayOf<CharSequence>(
-            rh.gs(app.aaps.core.keys.R.string.pref_dark_theme),
-            rh.gs(app.aaps.core.keys.R.string.pref_light_theme),
-            rh.gs(app.aaps.core.keys.R.string.pref_follow_system_theme),
-        )
-        val darkModeValues = arrayOf<CharSequence>(
-            UiMode.DARK.stringValue,
-            UiMode.LIGHT.stringValue,
-            UiMode.SYSTEM.stringValue
-        )
-
         val category = PreferenceCategory(context)
         rootScreen.addPreference(category)
         category.apply {
@@ -395,16 +383,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 )
             )
             addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.GeneralSkin, title = app.aaps.plugins.main.R.string.skin, entries = skinEntries.toTypedArray(), entryValues = skinValues.toTypedArray()))
-            addPreference(
-                AdaptiveListPreference(
-                    ctx = context,
-                    stringKey = StringKey.GeneralDarkMode,
-                    entries = darkModeEntries,
-                    entryValues = darkModeValues,
-                    title = app.aaps.core.keys.R.string.pref_title_app_color_scheme,
-                    summary = app.aaps.core.keys.R.string.pref_summary_theme_switcher
-                )
-            )
         }
     }
 

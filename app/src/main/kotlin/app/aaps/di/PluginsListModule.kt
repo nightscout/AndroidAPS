@@ -21,7 +21,6 @@ import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.PersistentNotificationPlugin
-import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.plugins.main.profile.ProfilePlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
@@ -361,12 +360,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(490)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(500)
-    abstract fun bindThemeSwitcherPlugin(plugin: ThemeSwitcherPlugin): PluginBase
 
     @Binds
     @AllConfigs

@@ -62,7 +62,6 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.AppRepository
@@ -72,7 +71,6 @@ import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.plugins.configuration.keys.ConfigurationBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
 import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
@@ -126,7 +124,6 @@ class MainApp : Application(), HasAndroidInjector {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
-    @Inject lateinit var themeSwitcherPlugin: ThemeSwitcherPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var rh: Provider<ResourceHelper>
@@ -208,7 +205,6 @@ class MainApp : Application(), HasAndroidInjector {
             commitHash = null
         }
         registerActivityLifecycleCallbacks(activityMonitor)
-        runOnUiThread { themeSwitcherPlugin.setThemeMode() }
         aapsLogger.debug("Version: " + config.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + config.BUILD_VERSION)
         aapsLogger.debug("Remote: " + config.REMOTE)

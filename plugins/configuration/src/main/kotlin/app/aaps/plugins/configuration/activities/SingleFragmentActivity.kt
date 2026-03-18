@@ -34,7 +34,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
@@ -96,8 +95,6 @@ class SingleFragmentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe { recreate() })
 
         forceFragment = savedInstanceState?.getBoolean(KEY_FORCE_FRAGMENT, false) ?: false
 

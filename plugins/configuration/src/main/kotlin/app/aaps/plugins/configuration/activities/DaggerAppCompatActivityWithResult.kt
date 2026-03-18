@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -41,10 +40,6 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe {
-            recreate()
-        })
 
         accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             uri?.let {
