@@ -28,15 +28,17 @@ interface BooleanPreferenceKey : PreferenceKey, BooleanNonPreferenceKey {
  */
 class BooleanKeyWithChangeGuard(
     private val delegate: BooleanPreferenceKey,
-    val guard: () -> String?
+    val guard: (newValue: Boolean) -> String?
 ) : BooleanPreferenceKey by delegate
 
 /**
  * Creates a new BooleanPreferenceKey with a change guard attached.
- * The guard is called when the user tries to turn the preference off.
+ * The guard is called when the user tries to change the preference.
  * Return null to allow, or an error message string to block the change.
+ *
+ * @param guard Called with the proposed new value (true = turning on, false = turning off).
  */
 fun BooleanPreferenceKey.withChangeGuard(
-    guard: () -> String?
+    guard: (newValue: Boolean) -> String?
 ): BooleanKeyWithChangeGuard =
     BooleanKeyWithChangeGuard(this, guard)

@@ -64,11 +64,19 @@ class BuiltInSearchables @Inject constructor(
             items = listOf(
                 StringKey.GeneralUnits,
                 StringKey.GeneralLanguage,
-                BooleanKey.GeneralSimpleMode,
-                BooleanKey.GeneralInsulinConcentration.withChangeGuard {
-                    val hasNonU100Insulins = insulinManager.insulins.any { it.concentration != 1.0 }
-                    val runningNonU100 = insulin.iCfg.concentration != 1.0
-                    if (hasNonU100Insulins || runningNonU100) rh.gs(app.aaps.core.ui.R.string.concentration_disable_blocked) else null
+                BooleanKey.GeneralSimpleMode.withChangeGuard { newValue ->
+                    // Block turning ON simple mode when non-U100 insulin is active
+                    if (newValue && insulin.iCfg.concentration != 1.0)
+                        rh.gs(app.aaps.core.ui.R.string.simple_mode_blocked_by_concentration)
+                    else null
+                },
+                BooleanKey.GeneralInsulinConcentration.withChangeGuard { newValue ->
+                    // Block turning OFF concentration when non-U100 insulins exist
+                    if (!newValue) {
+                        val hasNonU100Insulins = insulinManager.insulins.any { it.concentration != 1.0 }
+                        val runningNonU100 = insulin.iCfg.concentration != 1.0
+                        if (hasNonU100Insulins || runningNonU100) rh.gs(app.aaps.core.ui.R.string.concentration_disable_blocked) else null
+                    } else null
                 },
                 BooleanKey.OverviewKeepScreenOn,
                 StringKey.GeneralPatientName,

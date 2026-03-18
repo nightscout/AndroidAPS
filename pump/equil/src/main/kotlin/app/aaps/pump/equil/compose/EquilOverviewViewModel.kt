@@ -5,8 +5,10 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -52,6 +54,7 @@ class EquilOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
+    private val ch: ConcentrationHelper,
     private val equilPumpPlugin: EquilPumpPlugin,
     private val equilManager: EquilManager,
     private val commandQueue: CommandQueue,
@@ -157,7 +160,7 @@ class EquilOverviewViewModel @Inject constructor(
         add(
             PumpInfoRow(
                 label = rh.gs(R.string.equil_basal_speed),
-                value = String.format(rh.gs(R.string.equil_unit_u_hours), "%.3f".format(equilPumpPlugin.baseBasalRate))
+                value = ch.basalRateString(equilPumpPlugin.baseBasalRate, isAbsolute = true, decimals = 3)
             )
         )
 
@@ -176,13 +179,11 @@ class EquilOverviewViewModel @Inject constructor(
         else rh.gs(R.string.equil_unit_u, (state.startInsulin - state.currentInsulin).toString())
         add(PumpInfoRow(label = rh.gs(R.string.equil_total_delivered), value = totalDelivered))
 
-        // Last bolus
+        // Last bolus (bolusRecord.amount is in cU from PumpWithConcentration)
         val lastBolusText = state.bolusRecord?.let {
-            rh.gs(
-                R.string.equil_common_overview_last_bolus_value,
-                it.amount,
-                rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
-                readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
+            ch.insulinAmountAgoString(
+                PumpInsulin(it.amount),
+                dateUtil.sinceString(it.startTime, rh)
             )
         } ?: "-"
         add(PumpInfoRow(label = rh.gs(R.string.equil_last_bolus), value = lastBolusText))

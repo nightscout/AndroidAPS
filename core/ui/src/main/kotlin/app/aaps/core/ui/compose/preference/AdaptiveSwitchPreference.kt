@@ -70,17 +70,11 @@ fun AdaptiveSwitchPreferenceItem(
         SwitchPreference(
             value = state.value,
             onValueChange = { newValue ->
-                if (newValue) {
-                    // Turning on — always allowed
-                    state.value = true
+                val message = changeGuard(newValue)
+                if (message == null) {
+                    state.value = newValue
                 } else {
-                    // Turning off — check guard
-                    val message = changeGuard()
-                    if (message == null) {
-                        state.value = false
-                    } else {
-                        guardMessage = message
-                    }
+                    guardMessage = message
                 }
             },
             title = { Text(stringResource(effectiveTitleResId)) },

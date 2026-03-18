@@ -7,7 +7,7 @@ import app.aaps.pump.equil.R
  */
 enum class EquilWizardStep(val titleResId: Int) {
 
-    // PAIR flow: Assemble → SerialNumber → Fill → Attach → Air → [SelectInsulin] → [SiteLocation] → Confirm
+    // PAIR flow: Assemble → SerialNumber → [SelectInsulin] → Fill → Attach → Air → [SiteLocation] → Confirm
     ASSEMBLE(R.string.equil_title_assemble),
     SERIAL_NUMBER(R.string.equil_title_serial),
     FILL(R.string.equil_title_fill),
@@ -17,7 +17,7 @@ enum class EquilWizardStep(val titleResId: Int) {
     SITE_LOCATION(app.aaps.core.ui.R.string.site_rotation),
     CONFIRM(R.string.equil_title_confirm),
 
-    // CHANGE_INSULIN flow: ChangeInsulin → Assemble → Fill → Attach → Air → [SelectInsulin] → [SiteLocation] → Confirm
+    // CHANGE_INSULIN flow: ChangeInsulin → Assemble → [SelectInsulin] → Fill → Attach → Air → [SiteLocation] → Confirm
     CHANGE_INSULIN(R.string.equil_change),
 
     // UNPAIR flow: UnpairDetach → UnpairConfirm
@@ -38,10 +38,10 @@ enum class EquilWorkflow {
         PAIR           -> buildList {
             add(EquilWizardStep.ASSEMBLE)
             add(EquilWizardStep.SERIAL_NUMBER)
+            if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             add(EquilWizardStep.FILL)
             add(EquilWizardStep.ATTACH)
             add(EquilWizardStep.AIR)
-            if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             if (siteRotationEnabled) add(EquilWizardStep.SITE_LOCATION)
             add(EquilWizardStep.CONFIRM)
         }
@@ -49,10 +49,10 @@ enum class EquilWorkflow {
         CHANGE_INSULIN -> buildList {
             add(EquilWizardStep.CHANGE_INSULIN)
             add(EquilWizardStep.ASSEMBLE)
+            if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             add(EquilWizardStep.FILL)
             add(EquilWizardStep.ATTACH)
             add(EquilWizardStep.AIR)
-            if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             if (siteRotationEnabled) add(EquilWizardStep.SITE_LOCATION)
             add(EquilWizardStep.CONFIRM)
         }

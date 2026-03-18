@@ -7,6 +7,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -22,8 +23,6 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import kotlinx.coroutines.flow.StateFlow
 import org.json.JSONObject
@@ -34,15 +33,14 @@ class PumpWithConcentrationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val constraintsChecker: ConstraintsChecker,
-    private val preferences: Preferences
+    private val insulin: Insulin
 ) : PumpWithConcentration {
 
     @VisibleForTesting val activePumpInternal
         get() = activePlugin.activePumpInternal
 
     override fun selectedActivePump(): Pump = activePumpInternal
-    private val concentrationEnabled: Boolean get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
-    private val concentration: Double get() = if (concentrationEnabled) profileFunction.getProfile()?.insulinConcentration() ?: 1.0 else 1.0
+    private val concentration: Double get() = insulin.iCfg.concentration
 
     override fun isInitialized(): Boolean = activePumpInternal.isInitialized()
     override fun isSuspended(): Boolean = activePumpInternal.isSuspended()
@@ -130,9 +128,7 @@ class PumpWithConcentrationImpl @Inject constructor(
         } ?: error("No profile running")
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
-        if (concentrationEnabled) {
-            activePumpInternal.setExtendedBolus(insulin / concentration, durationInMinutes)
-        } else activePumpInternal.setExtendedBolus(insulin, durationInMinutes)
+        activePumpInternal.setExtendedBolus(insulin / concentration, durationInMinutes)
 
     /** PumpWithConcentration.pumpDescription should be used instead of Pump.pumpDescription outside Pump Driver to have corrected values */
     override val pumpDescription: PumpDescription

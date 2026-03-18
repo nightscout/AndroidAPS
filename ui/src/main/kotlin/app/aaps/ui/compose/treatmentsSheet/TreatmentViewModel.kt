@@ -75,6 +75,7 @@ class TreatmentViewModel @Inject constructor(
             preferences.observe(BooleanKey.OverviewShowInsulinButton).drop(1).map {},
             preferences.observe(BooleanKey.OverviewShowCarbsButton).drop(1).map {},
             preferences.observe(BooleanKey.OverviewShowWizardButton).drop(1).map {},
+            preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).map {},
         ).onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventRefreshOverview::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
@@ -96,8 +97,7 @@ class TreatmentViewModel @Inject constructor(
             val showCarbs = preferences.get(BooleanKey.OverviewShowCarbsButton)
             val showCalculator = preferences.get(BooleanKey.OverviewShowWizardButton)
 
-            val simpleMode = config.AAPSCLIENT
-            val showSettingsIcon = !simpleMode
+            val showSettingsIcon = !preferences.simpleMode
 
             uiState.update { state ->
                 state.copy(

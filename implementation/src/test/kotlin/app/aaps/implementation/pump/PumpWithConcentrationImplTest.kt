@@ -2,8 +2,10 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -12,8 +14,6 @@ import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -31,7 +31,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintsChecker: ConstraintsChecker
-    @Mock lateinit var preferences: Preferences
+    @Mock lateinit var insulin: Insulin
     @Mock lateinit var pump: Pump
     @Mock lateinit var pumpEnactResult: PumpEnactResult
     @Mock lateinit var effectiveProfile: EffectiveProfile
@@ -42,17 +42,16 @@ class PumpWithConcentrationImplTest : TestBase() {
     @BeforeEach
     fun setup() {
         whenever(activePlugin.activePumpInternal).thenReturn(pump)
-        sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, preferences)
+        sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, insulin)
     }
 
     private fun setupConcentration(concentration: Double) {
-        whenever(preferences.get(BooleanKey.GeneralInsulinConcentration)).thenReturn(true)
+        whenever(insulin.iCfg).thenReturn(ICfg("Test", 0L, 0L, concentration))
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
-        whenever(effectiveProfile.insulinConcentration()).thenReturn(concentration)
     }
 
     private fun setupU100() {
-        whenever(preferences.get(BooleanKey.GeneralInsulinConcentration)).thenReturn(false)
+        whenever(insulin.iCfg).thenReturn(ICfg("Test", 0L, 0L, 1.0))
     }
 
     // --- deliverTreatment tests ---
@@ -121,7 +120,6 @@ class PumpWithConcentrationImplTest : TestBase() {
     fun `setTempBasalAbsolute with U100 passes rate unchanged`() {
         setupU100()
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
-        whenever(effectiveProfile.insulinConcentration()).thenReturn(1.0)
         val constraintResult: Constraint<Double> = mock()
         whenever(constraintResult.value()).thenReturn(1.5)
         whenever(constraintsChecker.applyBasalConstraints(any(), eq(effectiveProfile))).thenReturn(constraintResult)
@@ -145,7 +143,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     }
 
     @Test
-    fun `setExtendedBolus with concentration disabled passes insulin unchanged`() {
+    fun `setExtendedBolus with U100 passes insulin unchanged`() {
         setupU100()
         whenever(pump.setExtendedBolus(any(), any())).thenReturn(pumpEnactResult)
 
@@ -264,23 +262,6 @@ class PumpWithConcentrationImplTest : TestBase() {
     @Test
     fun `selectedActivePump returns internal pump`() {
         assertThat(sut.selectedActivePump()).isSameInstanceAs(pump)
-    }
-
-    // --- concentration disabled when preference is off ---
-
-    @Test
-    fun `concentration disabled ignores profile concentration for deliverTreatment`() {
-        // Even if profile says U200, if preference is disabled, concentration = 1.0
-        whenever(preferences.get(BooleanKey.GeneralInsulinConcentration)).thenReturn(false)
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
-        whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
-        val dbi = DetailedBolusInfo().apply { insulin = 5.0; bolusType = BS.Type.NORMAL }
-        whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
-
-        sut.deliverTreatment(dbi)
-
-        // concentration is 1.0 (disabled), so insulin/1.0 = 5.0 unchanged
-        verify(pump).deliverTreatment(argThat { insulin == 5.0 })
     }
 
     // --- no profile running ---

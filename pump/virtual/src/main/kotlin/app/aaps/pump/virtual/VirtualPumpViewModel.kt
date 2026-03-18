@@ -7,6 +7,8 @@ import app.aaps.core.data.pump.defs.PumpTempBasalType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.baseBasalRange
 import app.aaps.core.interfaces.pump.defs.hasExtendedBasals
@@ -38,6 +40,7 @@ class VirtualPumpViewModel(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
+    private val ch: ConcentrationHelper,
     scope: CoroutineScope
 ) {
 
@@ -94,19 +97,19 @@ class VirtualPumpViewModel(
 
         val lastBolus = virtualPumpPlugin.lastBolusAmount.value?.let { amount ->
             virtualPumpPlugin.lastBolusTime.value?.takeIf { it != 0L }?.let { time ->
-                rh.gs(app.aaps.core.ui.R.string.last_bolus_format, amount.cU, dateUtil.sinceString(time, rh))
+                ch.insulinAmountAgoString(amount, dateUtil.sinceString(time, rh))
             }
         }
 
         val baseBasalRate = profile?.getBasal()?.let { rate ->
-            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate)
+            ch.basalRateString(PumpRate(rate), isAbsolute = true)
         }
 
         val battery = virtualPumpPlugin.batteryLevel.value?.let { level ->
             rh.gs(app.aaps.core.ui.R.string.format_percent, level)
         }
 
-        val reservoir = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirLevel.value.cU)
+        val reservoir = ch.insulinAmountString(virtualPumpPlugin.reservoirLevel.value)
 
         // Common rows from shared builder
         val commonRows = stateBuilder.buildCommonRows(

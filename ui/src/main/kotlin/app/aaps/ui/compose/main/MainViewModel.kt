@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -99,7 +100,9 @@ class MainViewModel @Inject constructor(
     }
 
     init {
-        uiState.update { it.copy(isSimpleMode = preferences.simpleMode) }
+        preferences.observe(BooleanKey.GeneralSimpleMode)
+            .onEach { simple -> uiState.update { it.copy(isSimpleMode = simple) } }
+            .launchIn(viewModelScope)
         observeTempTargetAndProfile()
         observeQuickLaunch()
     }

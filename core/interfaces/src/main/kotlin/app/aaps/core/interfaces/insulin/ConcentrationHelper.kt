@@ -38,7 +38,7 @@ interface ConcentrationHelper {
      * @param rate PumpRate
      * @return String with units (U100) or with both units if not U100
      */
-    fun basalRateString(rate: PumpRate, isAbsolute: Boolean): String
+    fun basalRateString(rate: PumpRate, isAbsolute: Boolean, decimals: Int = 2): String
 
     /** show bolus or reservoir level with units in U if U100 (to be used within Pump driver only)
      * i.e. "4 U", and with both value if other concentration: i.e. for U200 "4 U (2 CU)"

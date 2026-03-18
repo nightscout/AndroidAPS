@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.R
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,7 +18,6 @@ class ConcentrationHelperImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
     private val rh: ResourceHelper,
-    private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter
 ) : ConcentrationHelper {
 
@@ -29,14 +27,15 @@ class ConcentrationHelperImpl @Inject constructor(
 
     override fun fromPump(rate: PumpRate): Double = rate.iU(concentration, true)
 
-    override fun basalRateString(rate: PumpRate, isAbsolute: Boolean): String {
+    override fun basalRateString(rate: PumpRate, isAbsolute: Boolean, decimals: Int): String {
         if (isAbsolute.not())
             return rh.gs(app.aaps.core.ui.R.string.formatPercent, rate.iU(concentration, isAbsolute))
+        val fmt = "%.${decimals}f"
         if (isU100())
-            return rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate.cU)
+            return rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate_dynamic, fmt.format(rate.cU))
         else {
-            val iUString = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate.iU(concentration, isAbsolute))
-            val cUString = rh.gs(R.string.pump_base_basal_rate_cu, rate.cU)
+            val iUString = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate_dynamic, fmt.format(rate.iU(concentration, isAbsolute)))
+            val cUString = rh.gs(R.string.pump_base_basal_rate_cu_dynamic, fmt.format(rate.cU))
             return rh.gs(R.string.concentration_format, iUString, cUString)
         }
     }
@@ -71,9 +70,6 @@ class ConcentrationHelperImpl @Inject constructor(
 
     override fun bolusProgressString(delivered: PumpInsulin, total: Double, isPriming: Boolean): String = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_so_far, fromPump(delivered, isPriming), total)
 
-    /**
-     * Provide current running iCfg concentration
-     */
     override val concentration: Double
         get() = insulin.iCfg.concentration
 
