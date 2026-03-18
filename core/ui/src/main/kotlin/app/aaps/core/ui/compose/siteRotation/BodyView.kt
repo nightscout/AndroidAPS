@@ -42,7 +42,10 @@ fun BodyView(
     }
 
     fun showLocation(location: TE.Location): Boolean =
-        location != TE.Location.NONE && ((showPumpSites && location.pump) || showCgmSites)
+        location != TE.Location.NONE && (
+            if (editedTe?.type == TE.Type.CANNULA_CHANGE) location.pump
+            else (showPumpSites && location.pump) || showCgmSites
+        )
 
     BoxWithConstraints(modifier = modifier.aspectRatio(aspectRatio)) {
         val canvasWidth = constraints.maxWidth.toFloat()
@@ -60,7 +63,7 @@ fun BodyView(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(zones) {
+                .pointerInput(zones, showPumpSites, showCgmSites, editedTe) {
                     detectTapGestures { offset ->
                         val x = offset.x * viewportWidth / canvasWidth
                         val y = offset.y * viewportHeight / canvasHeight

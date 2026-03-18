@@ -23,9 +23,13 @@ data class SiteRotationUiState(
                 TE.Type.SENSOR_CHANGE  -> showCgmSites
                 else                   -> false
             }
-            // location filter if selected (skip when editing)
-            val locationMatch = editedTe != null || selectedLocation == TE.Location.NONE || te.location == selectedLocation
-            typeMatch && locationMatch
+            // location filter if selected
+            val locationMatch = selectedLocation == TE.Location.NONE || te.location == selectedLocation
+
+            // Always show the entry being edited
+            val isEditedEntry = editedTe != null && te.timestamp == editedTe.timestamp
+
+            (typeMatch && locationMatch) || isEditedEntry
         }
 
     // filteredLocationColor dynamically filtered for Location Color calculation
