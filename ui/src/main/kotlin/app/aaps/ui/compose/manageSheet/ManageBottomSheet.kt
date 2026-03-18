@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
@@ -48,7 +49,8 @@ fun ManageBottomSheet(
     // Cancel text strings
     cancelTempBasalText: String,
     cancelExtendedBolusText: String,
-    // Custom actions
+    // Pump
+    pumpPlugin: PluginBase,
     customActions: List<CustomAction>,
     // Callbacks
     onNavigate: (NavigationRequest) -> Unit,
@@ -72,6 +74,7 @@ fun ManageBottomSheet(
             showCancelExtendedBolus = showCancelExtendedBolus,
             cancelTempBasalText = cancelTempBasalText,
             cancelExtendedBolusText = cancelExtendedBolusText,
+            pumpPlugin = pumpPlugin,
             customActions = customActions,
             onDismiss = onDismiss,
             onNavigate = onNavigate,
@@ -92,6 +95,7 @@ internal fun ManageBottomSheetContent(
     showCancelExtendedBolus: Boolean,
     cancelTempBasalText: String,
     cancelExtendedBolusText: String,
+    pumpPlugin: PluginBase? = null,
     customActions: List<CustomAction>,
     onDismiss: () -> Unit = {},
     onNavigate: (NavigationRequest) -> Unit = {},
@@ -141,6 +145,18 @@ internal fun ManageBottomSheetContent(
             onDismiss = onDismiss,
             onNavigate = onNavigate
         )
+
+        if (pumpPlugin != null) {
+            @Suppress("DEPRECATION")
+            ManageItem(
+                text = stringResource(CoreUiR.string.pump_management),
+                iconPainter = painterResource(pumpPlugin.menuIcon),
+                color = ElementType.PUMP.color(),
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.PUMP)) },
+                description = pumpPlugin.name
+            )
+        }
 
         // Section: Basal (only if any basal item is visible)
         if (showTempBasal || showCancelTempBasal || showExtendedBolus || showCancelExtendedBolus) {

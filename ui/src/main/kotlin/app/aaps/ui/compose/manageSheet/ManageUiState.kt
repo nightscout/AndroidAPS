@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.manageSheet
 
 import androidx.compose.runtime.Immutable
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
 
 /**
@@ -20,6 +21,7 @@ data class ManageUiState(
     val cancelTempBasalText: String = "",
     val cancelExtendedBolusText: String = "",
 
-    // Custom pump actions
+    // Pump
+    val pumpPlugin: PluginBase,
     val customActions: List<CustomAction> = emptyList()
 )

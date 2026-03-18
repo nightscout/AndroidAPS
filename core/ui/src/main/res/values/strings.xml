@@ -70,6 +70,7 @@
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
     <string name="confirm">Confirm</string>
     <string name="pump">Pump</string>
+    <string name="pump_management">Pump management</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Uploader</string>

@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.Callback
@@ -54,7 +55,7 @@ class ManageViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState: StateFlow<ManageUiState>
-        field = MutableStateFlow(ManageUiState())
+        field = MutableStateFlow(ManageUiState(pumpPlugin = activePlugin.activePumpInternal as PluginBase))
 
     init {
         setupEventListeners()
@@ -147,6 +148,7 @@ class ManageViewModel @Inject constructor(
                     showHistoryBrowser = profile != null,
                     cancelTempBasalText = cancelTempBasalText,
                     cancelExtendedBolusText = cancelExtendedBolusText,
+                    pumpPlugin = activePlugin.activePumpInternal as PluginBase,
                     customActions = customActions
                 )
             }

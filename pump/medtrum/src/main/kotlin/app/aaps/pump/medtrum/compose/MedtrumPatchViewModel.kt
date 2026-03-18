@@ -433,14 +433,14 @@ class MedtrumPatchViewModel @Inject constructor(
     }
 
     override fun completeSiteLocation() {
-        saveSiteLocationToTherapyEvent(medtrumPump.patchStartTime)
-        moveStep(PatchStep.COMPLETE)
+        // Site location is saved after activation completes (patchStartTime not available yet)
+        moveStep(PatchStep.ACTIVATE)
     }
 
     override fun skipSiteLocation() {
         _siteLocation.value = TE.Location.NONE
         _siteArrow.value = TE.Arrow.NONE
-        moveStep(PatchStep.COMPLETE)
+        moveStep(PatchStep.ACTIVATE)
     }
 
     override fun bodyType(): BodyType =
@@ -477,13 +477,12 @@ class MedtrumPatchViewModel @Inject constructor(
 
     // endregion
 
-    /** Navigate to the step after activation completes (site location if enabled, otherwise complete). */
+    /** Navigate to the step after activation completes. Save site location if selected. */
     fun moveToPostActivationStep() {
-        if (showSiteLocationStep) {
-            moveStep(PatchStep.SITE_LOCATION)
-        } else {
-            moveStep(PatchStep.COMPLETE)
+        if (showSiteLocationStep && _siteLocation.value != TE.Location.NONE) {
+            saveSiteLocationToTherapyEvent(medtrumPump.patchStartTime)
         }
+        moveStep(PatchStep.COMPLETE)
     }
 
     /** Execute profile switch if user selected a different insulin. Called after activation completes. */
@@ -563,8 +562,8 @@ class MedtrumPatchViewModel @Inject constructor(
             if (showInsulinStep) add(WizardPage.SELECT_INSULIN)
             add(WizardPage.PRIME)
             add(WizardPage.ATTACH)
-            add(WizardPage.ACTIVATE)
             if (showSiteLocationStep) add(WizardPage.SITE_LOCATION)
+            add(WizardPage.ACTIVATE)
             add(WizardPage.COMPLETE)
         }
 

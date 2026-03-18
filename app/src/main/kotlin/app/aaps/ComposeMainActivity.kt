@@ -1468,10 +1468,11 @@ class ComposeMainActivity : AppCompatActivity() {
                 configBuilder.exitApp("Menu", Sources.Aaps, false)
             }
 
+            ElementType.PUMP                         -> handlePluginClick(activePlugin.activePumpInternal as PluginBase)
+
             // Non-searchable types — listed explicitly so the compiler catches new enum values
             ElementType.QUICK_WIZARD,
             ElementType.AUTOMATION,
-            ElementType.PUMP,
             ElementType.COB,
             ElementType.SENSITIVITY,
             ElementType.USER_ENTRY,

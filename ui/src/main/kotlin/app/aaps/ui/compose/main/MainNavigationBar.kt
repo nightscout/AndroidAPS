@@ -59,7 +59,9 @@ fun MainNavigationBar(
                 BadgedBox(
                     badge = {
                         if (quickWizardCount > 0) {
-                            Badge { Text(text = quickWizardCount.toString()) }
+                            Badge(containerColor = MaterialTheme.colorScheme.tertiary) {
+                                Text(text = quickWizardCount.toString())
+                            }
                         }
                     }
                 ) {
@@ -81,7 +83,11 @@ fun MainNavigationBar(
                 onClick = onAutomationClick,
                 icon = {
                     BadgedBox(
-                        badge = { Badge { Text(text = automationCount.toString()) } }
+                        badge = {
+                            Badge(containerColor = MaterialTheme.colorScheme.tertiary) {
+                                Text(text = automationCount.toString())
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = IcAutomation,
