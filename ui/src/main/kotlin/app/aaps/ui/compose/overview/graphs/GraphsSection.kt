@@ -82,6 +82,13 @@ fun GraphsSection(
         initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
     )
 
+    // Collect time range ONCE so all graphs use the exact same values in the same frame.
+    // Without this, each graph independently collects derivedTimeRange via
+    // collectAsStateWithLifecycle(), which can recompose in different frames —
+    // causing minTimestamp divergence and scroll misalignment (pixel position
+    // maps to different time when x-axis ranges differ).
+    val derivedTimeRange by graphViewModel.derivedTimeRange.collectAsStateWithLifecycle()
+
     // Treatment belt graph - non-interactive, synced from BG
     val beltScrollState = rememberVicoScrollState(
         scrollEnabled = false,
@@ -165,6 +172,7 @@ fun GraphsSection(
             viewModel = graphViewModel,
             scrollState = beltScrollState,
             zoomState = beltZoomState,
+            derivedTimeRange = derivedTimeRange,
             modifier = Modifier.fillMaxWidth()
         )
         // BG Graph - primary interactive graph
@@ -172,6 +180,7 @@ fun GraphsSection(
             viewModel = graphViewModel,
             scrollState = bgScrollState,
             zoomState = bgZoomState,
+            derivedTimeRange = derivedTimeRange,
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y = (-16).dp)
@@ -182,6 +191,7 @@ fun GraphsSection(
                 viewModel = graphViewModel,
                 scrollState = iobScrollState,
                 zoomState = iobZoomState,
+                derivedTimeRange = derivedTimeRange,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
@@ -199,6 +209,7 @@ fun GraphsSection(
                 viewModel = graphViewModel,
                 scrollState = cobScrollState,
                 zoomState = cobZoomState,
+                derivedTimeRange = derivedTimeRange,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(

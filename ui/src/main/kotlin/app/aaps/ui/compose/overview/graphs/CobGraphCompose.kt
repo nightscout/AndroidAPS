@@ -67,12 +67,12 @@ fun CobGraphCompose(
     viewModel: GraphViewModel,
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
+    derivedTimeRange: Pair<Long, Long>?,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
     val cobGraphData by viewModel.cobGraphFlow.collectAsStateWithLifecycle()
     val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
-    val derivedTimeRange by viewModel.derivedTimeRange.collectAsStateWithLifecycle()
 
     // Use derived time range or fall back to default (last 24 hours)
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {

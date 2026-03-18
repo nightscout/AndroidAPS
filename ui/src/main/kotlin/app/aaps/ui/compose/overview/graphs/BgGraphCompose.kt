@@ -71,13 +71,13 @@ fun BgGraphCompose(
     viewModel: GraphViewModel,
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
+    derivedTimeRange: Pair<Long, Long>?,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently - each triggers recomposition only when it changes
     val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val bucketedData by viewModel.bucketedDataFlow.collectAsStateWithLifecycle()
     val predictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
-    val derivedTimeRange by viewModel.derivedTimeRange.collectAsStateWithLifecycle()
     val basalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
     val epsPoints by viewModel.epsGraphFlow.collectAsStateWithLifecycle()

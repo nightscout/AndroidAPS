@@ -54,12 +54,12 @@ fun IobGraphCompose(
     viewModel: GraphViewModel,
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
+    derivedTimeRange: Pair<Long, Long>?,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
     val iobGraphData by viewModel.iobGraphFlow.collectAsStateWithLifecycle()
     val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
-    val derivedTimeRange by viewModel.derivedTimeRange.collectAsStateWithLifecycle()
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
