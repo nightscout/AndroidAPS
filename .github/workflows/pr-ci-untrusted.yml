@@ -71,4 +71,5 @@ jobs:
             **/build/test-results/**/*.xml
             **/build/reports/tests/**
             **/build/outputs/androidTest-results/**
+            **/build/reports/androidTests/**
             build/reports/jacoco/jacocoAllDebugReport/**
