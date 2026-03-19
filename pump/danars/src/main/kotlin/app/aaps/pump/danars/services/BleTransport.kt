@@ -1,40 +1,56 @@
 package app.aaps.pump.danars.services
 
 /**
- * Abstraction layer replacing direct Android BluetoothAdapter/BluetoothGatt access.
+ * Abstraction layer replacing direct Android BluetoothAdapter/BluetoothGatt/BluetoothLeScanner access.
+ *
+ * Organized into sub-interfaces mirroring the Android Bluetooth API structure:
+ * - [BleAdapter] — adapter-level operations (device lookup, bonding, enable)
+ * - [BleScanner] — BLE scanning for device discovery
+ * - [BleGatt] — GATT connection, services, characteristics, data transfer
  *
  * Two implementations:
  * - [BleTransportImpl] wraps real Android Bluetooth stack (production)
  * - EmulatorBleTransport in :pump:danars-emulator (testing)
- *
- * This allows BLEComm to be tested end-to-end with a pump emulator.
  */
 interface BleTransport {
 
-    // Device info
+    val adapter: BleAdapter
+    val scanner: BleScanner
+    val gatt: BleGatt
+
+    fun setListener(listener: BleTransportListener?)
+}
+
+interface BleAdapter {
+
+    fun enable()
     fun getDeviceName(address: String): String?
     fun isDeviceBonded(address: String): Boolean
     fun createBond(address: String): Boolean
     fun removeBond(address: String)
+}
 
-    // Connection lifecycle
-    fun connectGatt(address: String): Boolean
-    fun disconnectGatt()
-    fun closeGatt()
+data class ScannedDevice(val name: String, val address: String)
 
-    // Service discovery & characteristics
+interface BleScanner {
+
+    fun startScan(onDeviceFound: (ScannedDevice) -> Unit)
+    fun stopScan()
+}
+
+interface BleGatt {
+
+    fun connect(address: String): Boolean
+    fun disconnect()
+    fun close()
     fun discoverServices()
     fun findCharacteristics(): Boolean
     fun enableNotifications()
-
-    // Data transfer
     fun writeCharacteristic(data: ByteArray)
-
-    // Listener
-    fun setListener(listener: BleTransportListener?)
 }
 
 interface BleTransportListener {
+
     fun onConnectionStateChanged(connected: Boolean)
     fun onServicesDiscovered(success: Boolean)
     fun onDescriptorWritten()

@@ -29,6 +29,7 @@ class EmulatorBleTransportTest {
         override fun onCharacteristicChanged(data: ByteArray) {
             responses.add(data)
         }
+
         override fun onCharacteristicWritten() {}
     }
 
@@ -49,7 +50,7 @@ class EmulatorBleTransportTest {
             deviceName
         )
 
-        transport.writeCharacteristic(pumpCheck)
+        transport.gatt.writeCharacteristic(pumpCheck)
 
         assertThat(responses).hasSize(1)
 
@@ -73,7 +74,7 @@ class EmulatorBleTransportTest {
             null,
             deviceName
         )
-        transport.writeCharacteristic(pumpCheck)
+        transport.gatt.writeCharacteristic(pumpCheck)
         assertThat(responses).hasSize(1)
         val pumpCheckResponse = appEncryption.getDecryptedPacket(responses[0])
         assertThat(pumpCheckResponse).isNotNull()
@@ -88,7 +89,7 @@ class EmulatorBleTransportTest {
             passkey,
             null
         )
-        transport.writeCharacteristic(passkeyCheck)
+        transport.gatt.writeCharacteristic(passkeyCheck)
         assertThat(responses).hasSize(1)
         val passkeyResponse = appEncryption.getDecryptedPacket(responses[0])
         assertThat(passkeyResponse).isNotNull()
@@ -102,7 +103,7 @@ class EmulatorBleTransportTest {
             null,
             null
         )
-        transport.writeCharacteristic(timeInfo)
+        transport.gatt.writeCharacteristic(timeInfo)
         assertThat(responses).hasSize(1)
         val timeResponse = appEncryption.getDecryptedPacket(responses[0])
         assertThat(timeResponse).isNotNull()
@@ -124,7 +125,7 @@ class EmulatorBleTransportTest {
             null
         )
         responses.clear()
-        transport.writeCharacteristic(encrypted)
+        transport.gatt.writeCharacteristic(encrypted)
 
         assertThat(responses).hasSize(1)
 
@@ -150,7 +151,7 @@ class EmulatorBleTransportTest {
             null
         )
         responses.clear()
-        transport.writeCharacteristic(encrypted)
+        transport.gatt.writeCharacteristic(encrypted)
 
         assertThat(responses).hasSize(1)
         val decrypted = appEncryption.getDecryptedPacket(responses[0])
@@ -168,19 +169,19 @@ class EmulatorBleTransportTest {
      */
     private fun completeHandshake() {
         // PUMP_CHECK
-        transport.writeCharacteristic(
+        transport.gatt.writeCharacteristic(
             appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
         )
         appEncryption.getDecryptedPacket(responses.last())
 
         // CHECK_PASSKEY
-        transport.writeCharacteristic(
+        transport.gatt.writeCharacteristic(
             appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY, byteArrayOf(0xAB.toByte(), 0xCD.toByte()), null)
         )
         appEncryption.getDecryptedPacket(responses.last())
 
         // TIME_INFORMATION
-        transport.writeCharacteristic(
+        transport.gatt.writeCharacteristic(
             appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, null, null)
         )
         appEncryption.getDecryptedPacket(responses.last())

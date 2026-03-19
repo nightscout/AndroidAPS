@@ -110,7 +110,6 @@ class AutomationPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val sp: app.aaps.core.interfaces.sharedPreferences.SP,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,

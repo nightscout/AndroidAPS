@@ -201,6 +201,7 @@ dependencies {
         ":pump:combov2",
         ":pump:dana",
         ":pump:danars",
+        ":pump:danars-emulator",
         ":pump:danar",
         ":pump:diaconn",
         ":pump:eopatch",

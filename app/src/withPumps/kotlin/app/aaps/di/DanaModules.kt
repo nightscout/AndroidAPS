@@ -1,0 +1,56 @@
+package app.aaps.di
+
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.pump.dana.di.DanaHistoryModule
+import app.aaps.pump.dana.di.DanaModule
+import app.aaps.pump.danar.di.DanaRModule
+import app.aaps.pump.danars.di.DanaRSModule
+import app.aaps.pump.danars.emulator.EmulatorBleTransport
+import app.aaps.pump.danars.emulator.NotificationPumpDisplay
+import app.aaps.pump.danars.encryption.EncryptionType
+import app.aaps.pump.danars.services.BleTransport
+import app.aaps.pump.danars.services.BleTransportImpl
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module(
+    includes = [
+        DanaHistoryModule::class,
+        DanaModule::class,
+        DanaRModule::class,
+        DanaRSModule::class,
+    ]
+)
+@InstallIn(SingletonComponent::class)
+class DanaModules {
+
+    @Provides
+    @Singleton
+    fun provideBleTransport(
+        config: Config,
+        bleTransportImpl: BleTransportImpl,
+        notificationManager: NotificationManager,
+        aapsLogger: AAPSLogger
+    ): BleTransport {
+        val encryptionType = when {
+            config.emulateDanaRSv1() -> EncryptionType.ENCRYPTION_DEFAULT
+            config.emulateDanaRSv3() -> EncryptionType.ENCRYPTION_RSv3
+            config.emulateDanaBLE5() -> EncryptionType.ENCRYPTION_BLE5
+            else                     -> null
+        }
+        return if (encryptionType != null) {
+            EmulatorBleTransport(
+                encryptionType = encryptionType,
+                pumpDisplay = NotificationPumpDisplay(notificationManager),
+                aapsLogger = aapsLogger
+            )
+        } else {
+            bleTransportImpl
+        }
+    }
+}

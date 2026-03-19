@@ -101,7 +101,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
                 mSerialIOThread?.sendMessage(MsgSettingBasal(injector))
-                if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                if (!danaRv2Plugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(EventProfileChangeRequested())
                 }
             }

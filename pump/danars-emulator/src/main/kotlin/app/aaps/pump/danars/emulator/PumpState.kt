@@ -101,6 +101,14 @@ class PumpState {
     // Pairing key for v1
     var pairingKey: ByteArray = byteArrayOf(0xAB.toByte(), 0xCD.toByte())
 
+    // RSv3 pairing keys
+    var v3PairingKey: ByteArray = byteArrayOf(0x11, 0x22, 0x33, 0x44, 0x55, 0x66)
+    var v3RandomPairingKey: ByteArray = byteArrayOf(0xAA.toByte(), 0xBB.toByte(), 0xCC.toByte())
+    var v3RandomSyncKey: Byte = 0x42
+
+    // BLE5 pairing key (6 ASCII digits, e.g. "474632")
+    var ble5PairingKey: String = "474632"
+
 }
 
 data class HistoryEvent(

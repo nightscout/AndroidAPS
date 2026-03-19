@@ -67,4 +67,11 @@ interface Config {
      * Disable LeakCanary (memory leaks detection). By default it's enabled in DEBUG builds.
      */
     fun disableLeakCanary(): Boolean
+
+    /**
+     * Dana BLE emulation
+     */
+    fun emulateDanaRSv1(): Boolean
+    fun emulateDanaRSv3(): Boolean
+    fun emulateDanaBLE5(): Boolean
 }

@@ -31,7 +31,7 @@ class CommandSetUserSettings(
     override val commandType: Command.CommandType = Command.CommandType.SET_USER_SETTINGS
 
     override fun execute() {
-        val pump = activePlugin.activePump
+        val pump = activePlugin.activePumpInternal
         if (pump is Dana) {
             val r = pump.setUserOptions()
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")

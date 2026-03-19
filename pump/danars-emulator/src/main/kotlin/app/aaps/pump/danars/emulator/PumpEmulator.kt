@@ -1,11 +1,12 @@
 package app.aaps.pump.danars.emulator
 
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 /**
  * Emulates Dana RS pump command processing.
@@ -14,6 +15,17 @@ import kotlinx.datetime.toLocalDateTime
  * and returns response bytes (DATA portion only, starting at DATA_START).
  */
 class PumpEmulator(val state: PumpState = PumpState()) {
+
+    /**
+     * Callback for sending spontaneous pump-to-app messages.
+     * Used for bolus delivery notifications and multi-response history events.
+     * Set by EmulatorBleTransport.
+     *
+     * @param type packet type (TYPE_NOTIFY for notifications, TYPE_RESPONSE for follow-up responses)
+     * @param opCode the opcode
+     * @param data the data bytes
+     */
+    var onSpontaneousMessage: ((type: Int, opCode: Int, data: ByteArray) -> Unit)? = null
 
     /**
      * Process a command and return the response data bytes.
@@ -27,46 +39,46 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     fun processCommand(opCode: Int, params: ByteArray): ByteArray {
         return when (opCode) {
             // General
-            BleEncryption.DANAR_PACKET__OPCODE_ETC__KEEP_CONNECTION                 -> processKeepConnection()
-            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_SHIPPING_INFORMATION      -> processGetShippingInformation()
-            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK                -> processGetPumpCheck()
-            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION    -> processInitialScreenInformation()
-            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__SET_HISTORY_UPLOAD_MODE       -> processSetHistoryUploadMode(params)
+            BleEncryption.DANAR_PACKET__OPCODE_ETC__KEEP_CONNECTION               -> processKeepConnection()
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_SHIPPING_INFORMATION   -> processGetShippingInformation()
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK             -> processGetPumpCheck()
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION -> processInitialScreenInformation()
+            BleEncryption.DANAR_PACKET__OPCODE_REVIEW__SET_HISTORY_UPLOAD_MODE    -> processSetHistoryUploadMode(params)
 
             // Basal
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_NUMBER             -> processGetProfileNumber()
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_BASAL_RATE                 -> processGetBasalRate()
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL            -> processSetTemporaryBasal(params)
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL         -> processCancelTemporaryBasal()
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL        -> processApsSetTemporaryBasal(params)
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_BASAL_RATE         -> processSetProfileBasalRate(params)
-            BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_NUMBER             -> processSetProfileNumber(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_NUMBER          -> processGetProfileNumber()
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_BASAL_RATE              -> processGetBasalRate()
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL         -> processSetTemporaryBasal(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL      -> processCancelTemporaryBasal()
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL     -> processApsSetTemporaryBasal(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_BASAL_RATE      -> processSetProfileBasalRate(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_NUMBER          -> processSetProfileNumber(params)
 
             // Bolus
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_STEP_BOLUS_INFORMATION     -> processGetStepBolusInformation()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_BOLUS_OPTION               -> processGetBolusOption()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_CALCULATION_INFORMATION    -> processGetCalculationInformation()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_CIR_CF_ARRAY              -> processGetCIRCFArray()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_24_CIR_CF_ARRAY           -> processGet24CIRCFArray()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START           -> processSetStepBolusStart(params)
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_STOP            -> processSetStepBolusStop()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS             -> processSetExtendedBolus(params)
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS_CANCEL      -> processSetExtendedBolusCancel()
-            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_24_CIR_CF_ARRAY           -> processSet24CIRCFArray(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_STEP_BOLUS_INFORMATION  -> processGetStepBolusInformation()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_BOLUS_OPTION            -> processGetBolusOption()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_CALCULATION_INFORMATION -> processGetCalculationInformation()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_CIR_CF_ARRAY            -> processGetCIRCFArray()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_24_CIR_CF_ARRAY         -> processGet24CIRCFArray()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START        -> processSetStepBolusStart(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_STOP         -> processSetStepBolusStop()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS          -> processSetExtendedBolus(params)
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS_CANCEL   -> processSetExtendedBolusCancel()
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_24_CIR_CF_ARRAY         -> processSet24CIRCFArray(params)
 
             // Options
-            BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_PUMP_TIME                 -> processGetPumpTime()
-            BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_PUMP_UTC_AND_TIME_ZONE    -> processGetPumpUTCAndTimeZone()
-            BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION               -> processGetUserOption()
-            BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME                 -> processSetPumpTime(params)
-            BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_UTC_AND_TIME_ZONE    -> processSetPumpUTCAndTimeZone(params)
-            BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_USER_OPTION               -> processSetUserOption(params)
+            BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_PUMP_TIME              -> processGetPumpTime()
+            BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_PUMP_UTC_AND_TIME_ZONE -> processGetPumpUTCAndTimeZone()
+            BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION            -> processGetUserOption()
+            BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME              -> processSetPumpTime(params)
+            BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_UTC_AND_TIME_ZONE -> processSetPumpUTCAndTimeZone(params)
+            BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_USER_OPTION            -> processSetUserOption(params)
 
             // APS
-            BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS                   -> processApsHistoryEvents(params)
-            BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY                -> processApsSetEventHistory(params)
+            BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS                -> processApsHistoryEvents(params)
+            BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY             -> processApsSetEventHistory(params)
 
-            else                                                                      -> byteArrayOf(0x00) // OK
+            else                                                                  -> byteArrayOf(0x00) // OK
         }
     }
 
@@ -134,15 +146,21 @@ class PumpEmulator(val state: PumpState = PumpState()) {
 
     private fun processSetTemporaryBasal(params: ByteArray): ByteArray {
         if (params.size >= 2) {
+            val percent = params[0].toInt() and 0xFF
+            val durationHours = params[1].toInt() and 0xFF
             state.isTempBasalRunning = true
-            state.tempBasalPercent = params[0].toInt() and 0xFF
-            state.tempBasalDurationMinutes = (params[1].toInt() and 0xFF) * 60 // hours to minutes
+            state.tempBasalPercent = percent
+            state.tempBasalDurationMinutes = durationHours * 60
             state.tempBasalStartTime = System.currentTimeMillis()
+            addHistoryEvent(DanaPump.HistoryEntry.TEMP_START.value, state.tempBasalStartTime, percent, durationHours * 60)
         }
         return byteArrayOf(0x00) // OK
     }
 
     private fun processCancelTemporaryBasal(): ByteArray {
+        if (state.isTempBasalRunning) {
+            addHistoryEvent(DanaPump.HistoryEntry.TEMP_STOP.value, System.currentTimeMillis(), 0, 0)
+        }
         state.isTempBasalRunning = false
         state.tempBasalPercent = 0
         state.tempBasalDurationMinutes = 0
@@ -152,10 +170,12 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     private fun processApsSetTemporaryBasal(params: ByteArray): ByteArray {
         if (params.size >= 3) {
             val percent = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
+            val durationMinutes = if (params[2].toInt() and 0xFF == 150) 15 else 30
             state.isTempBasalRunning = true
             state.tempBasalPercent = percent
-            state.tempBasalDurationMinutes = if (params[2].toInt() and 0xFF == 150) 15 else 30
+            state.tempBasalDurationMinutes = durationMinutes
             state.tempBasalStartTime = System.currentTimeMillis()
+            addHistoryEvent(DanaPump.HistoryEntry.TEMP_START.value, state.tempBasalStartTime, percent, durationMinutes)
         }
         return byteArrayOf(0x00) // OK
     }
@@ -187,8 +207,9 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         result[0] = 0 // error code OK
         result[1] = 0 // bolus type
         putIntToArray(result, 2, 0) // initial bolus
-        val ldt = Instant.fromEpochMilliseconds(state.lastBolusTime)
-            .toLocalDateTime(TimeZone.currentSystemDefault())
+        // Report last bolus hour:minute in UTC (for Dana-i/BLE5) or local time
+        val tz = if (state.usingUTC) TimeZone.UTC else TimeZone.currentSystemDefault()
+        val ldt = Instant.fromEpochMilliseconds(state.lastBolusTime).toLocalDateTime(tz)
         result[4] = ldt.hour.toByte()
         result[5] = ldt.minute.toByte()
         putIntToArray(result, 6, (state.lastBolusAmount * 100).toInt())
@@ -250,29 +271,61 @@ class PumpEmulator(val state: PumpState = PumpState()) {
 
     private fun processSetStepBolusStart(params: ByteArray): ByteArray {
         if (params.size >= 3) {
-            val amount = ((params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)) / 100.0
+            val amountHundredths = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
+            val amount = amountHundredths / 100.0
             state.lastBolusAmount = amount
             state.lastBolusTime = System.currentTimeMillis()
             state.dailyTotalUnits += amount
             state.reservoirRemainingUnits -= amount
+
+            // Record history event
+            addHistoryEvent(DanaPump.HistoryEntry.BOLUS.value, state.lastBolusTime, amountHundredths, 0)
+
+            // Schedule bolus delivery notifications on a separate thread
+            Thread {
+                @Suppress("SleepInsteadOfDelay")
+                // Send progress updates, then complete
+                val steps = 5
+                val stepAmount = amountHundredths / steps
+                for (i in 1..steps) {
+                    Thread.sleep(200) // Simulate delivery time
+                    val delivered = minOf(stepAmount * i, amountHundredths)
+                    // NOTIFY__DELIVERY_RATE_DISPLAY: 2 bytes delivered amount
+                    val rateData = byteArrayOf(
+                        (delivered and 0xFF).toByte(),
+                        ((delivered shr 8) and 0xFF).toByte()
+                    )
+                    onSpontaneousMessage?.invoke(BleEncryption.DANAR_PACKET__TYPE_NOTIFY, BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY, rateData)
+                }
+                // NOTIFY__DELIVERY_COMPLETE: 2 bytes total delivered
+                val completeData = byteArrayOf(
+                    (amountHundredths and 0xFF).toByte(),
+                    ((amountHundredths shr 8) and 0xFF).toByte()
+                )
+                onSpontaneousMessage?.invoke(BleEncryption.DANAR_PACKET__TYPE_NOTIFY, BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE, completeData)
+            }.start()
         }
-        return byteArrayOf(0x00) // OK
+        return byteArrayOf(0x00) // OK (error code 0 = no error)
     }
 
     private fun processSetStepBolusStop(): ByteArray = byteArrayOf(0x00) // OK
 
     private fun processSetExtendedBolus(params: ByteArray): ByteArray {
         if (params.size >= 3) {
-            val amount = ((params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)) / 100.0
+            val amountHundredths = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
             val durationHalfHours = params[2].toInt() and 0xFF
             state.isExtendedBolusRunning = true
-            state.extendedBolusAmount = amount
+            state.extendedBolusAmount = amountHundredths / 100.0
             state.extendedBolusDurationHalfHours = durationHalfHours
+            addHistoryEvent(DanaPump.HistoryEntry.EXTENDED_START.value, System.currentTimeMillis(), amountHundredths, durationHalfHours * 30)
         }
         return byteArrayOf(0x00) // OK
     }
 
     private fun processSetExtendedBolusCancel(): ByteArray {
+        if (state.isExtendedBolusRunning) {
+            addHistoryEvent(DanaPump.HistoryEntry.EXTENDED_STOP.value, System.currentTimeMillis(), 0, 0)
+        }
         state.isExtendedBolusRunning = false
         state.extendedBolusAmount = 0.0
         state.extendedBolusDurationHalfHours = 0
@@ -392,8 +445,100 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     // --- APS ---
 
     private fun processApsHistoryEvents(params: ByteArray): ByteArray {
-        // Return "no more events" marker
-        return byteArrayOf(0xFF.toByte())
+        // Parse "from" timestamp from params
+        val fromMillis = if (params.size >= 6) {
+            val year = (params[0].toInt() and 0xFF) + 2000
+            val month = params[1].toInt() and 0xFF
+            val day = params[2].toInt() and 0xFF
+            val hour = params[3].toInt() and 0xFF
+            val minute = params[4].toInt() and 0xFF
+            val second = params[5].toInt() and 0xFF
+            if (year == 2000 && month == 1 && day == 1 && hour == 0 && minute == 0 && second == 0) 0L
+            else {
+                try {
+                    LocalDateTime(year, month, day, hour, minute, second)
+                        .toInstant(TimeZone.UTC).toEpochMilliseconds()
+                } catch (_: Exception) {
+                    0L
+                }
+            }
+        } else 0L
+
+        // Filter events after "from" timestamp
+        val events = state.historyEvents.filter { it.timestamp > fromMillis }
+
+        if (events.isEmpty()) {
+            // No events — return done marker immediately
+            return byteArrayOf(0xFF.toByte())
+        }
+
+        // Return first event as the direct response, send remaining + done via spontaneous messages
+        Thread {
+            @Suppress("SleepInsteadOfDelay")
+            for (i in 1 until events.size) {
+                Thread.sleep(10)
+                val data = buildHistoryEventData(events[i], (i + 1).toShort())
+                onSpontaneousMessage?.invoke(
+                    BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
+                    BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS,
+                    data
+                )
+            }
+            Thread.sleep(10)
+            // Send done marker
+            onSpontaneousMessage?.invoke(
+                BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
+                BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS,
+                byteArrayOf(0xFF.toByte())
+            )
+        }.start()
+
+        return buildHistoryEventData(events[0], 1)
+    }
+
+    /**
+     * Build a history event data payload in the format matching the pump's time mode.
+     *
+     * UTC format (Dana-i/BLE5): [id_hi][id_lo][recordCode][epoch_4bytes_MSB][param1_MSB][param2_MSB]
+     * Non-UTC format (Dana RS/v1): [recordCode][year-2000][month][day][hour][min][sec][param1_MSB][param2_MSB]
+     */
+    private fun buildHistoryEventData(event: HistoryEvent, id: Short): ByteArray {
+        return if (state.usingUTC) {
+            val data = ByteArray(11)
+            val epochSeconds = (event.timestamp / 1000).toInt()
+            data[0] = ((id.toInt() shr 8) and 0xFF).toByte()
+            data[1] = (id.toInt() and 0xFF).toByte()
+            data[2] = event.code.toByte()
+            data[3] = ((epochSeconds shr 24) and 0xFF).toByte()
+            data[4] = ((epochSeconds shr 16) and 0xFF).toByte()
+            data[5] = ((epochSeconds shr 8) and 0xFF).toByte()
+            data[6] = (epochSeconds and 0xFF).toByte()
+            data[7] = ((event.param1 shr 8) and 0xFF).toByte()
+            data[8] = (event.param1 and 0xFF).toByte()
+            data[9] = ((event.param2 shr 8) and 0xFF).toByte()
+            data[10] = (event.param2 and 0xFF).toByte()
+            data
+        } else {
+            val data = ByteArray(11)
+            val ldt = Instant.fromEpochMilliseconds(event.timestamp)
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+            data[0] = event.code.toByte()
+            data[1] = (ldt.year - 2000).toByte()
+            data[2] = ldt.monthNumber.toByte()
+            data[3] = ldt.dayOfMonth.toByte()
+            data[4] = ldt.hour.toByte()
+            data[5] = ldt.minute.toByte()
+            data[6] = ldt.second.toByte()
+            data[7] = ((event.param1 shr 8) and 0xFF).toByte()
+            data[8] = (event.param1 and 0xFF).toByte()
+            data[9] = ((event.param2 shr 8) and 0xFF).toByte()
+            data[10] = (event.param2 and 0xFF).toByte()
+            data
+        }
+    }
+
+    private fun addHistoryEvent(code: Int, timestamp: Long, param1: Int, param2: Int) {
+        state.historyEvents.add(HistoryEvent(code, timestamp, param1, param2))
     }
 
     private fun processApsSetEventHistory(params: ByteArray): ByteArray = byteArrayOf(0x00) // OK

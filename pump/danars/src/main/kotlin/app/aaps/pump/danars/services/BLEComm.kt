@@ -61,6 +61,7 @@ class BLEComm @Inject constructor(
 ) : BleTransportListener {
 
     companion object {
+
         private const val WRITE_DELAY_MILLIS: Long = 50
         private const val UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb"
         private const val UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb"
@@ -110,14 +111,14 @@ class BLEComm @Inject constructor(
             return false
         }
 
-        val deviceName = bleTransport.getDeviceName(address)
+        val deviceName = bleTransport.adapter.getDeviceName(address)
         if (deviceName == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "Device not found.  Unable to connect from: $from")
             return false
         }
 
-        if (!bleTransport.isDeviceBonded(address)) {
-            bleTransport.createBond(address)
+        if (!bleTransport.adapter.isDeviceBonded(address)) {
+            bleTransport.adapter.createBond(address)
             SystemClock.sleep(10000)
             return false
         }
@@ -133,7 +134,7 @@ class BLEComm @Inject constructor(
         connectDeviceName = deviceName
         connectAddress = address
 
-        if (!bleTransport.connectGatt(address)) {
+        if (!bleTransport.gatt.connect(address)) {
             aapsLogger.error(LTag.PUMPBTCOMM, "connectGatt failed from: $from")
             isConnecting = false
             return false
@@ -162,7 +163,7 @@ class BLEComm @Inject constructor(
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
-                connectAddress?.let { bleTransport.removeBond(it) }
+                connectAddress?.let { bleTransport.adapter.removeBond(it) }
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys postponed")
                 preferences.put(DanaLongKey.LastClearKeyRequest, dateUtil.now())
@@ -193,7 +194,8 @@ class BLEComm @Inject constructor(
         scheduledDisconnection?.cancel(false)
         scheduledDisconnection = null
 
-        bleTransport.disconnectGatt()
+        synchronized(mSendQueue) { mSendQueue.clear() }
+        bleTransport.gatt.disconnect()
         isConnected = false
         encryptedDataRead = false
         encryptedCommandSent = false
@@ -204,7 +206,7 @@ class BLEComm @Inject constructor(
     @SuppressLint("MissingPermission")
     @Synchronized fun close() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
-        bleTransport.closeGatt()
+        bleTransport.gatt.close()
     }
 
     // BleTransportListener callbacks
@@ -231,7 +233,7 @@ class BLEComm @Inject constructor(
                 if (mSendQueue.isNotEmpty()) {
                     val bytes = mSendQueue[0]
                     mSendQueue.removeAt(0)
-                    bleTransport.writeCharacteristic(bytes)
+                    bleTransport.gatt.writeCharacteristic(bytes)
                 }
             }
         }.start()
@@ -246,7 +248,7 @@ class BLEComm @Inject constructor(
     private fun onConnectionStateChangeSynchronized(connected: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange")
         if (connected) {
-            bleTransport.discoverServices()
+            bleTransport.gatt.discoverServices()
         } else {
             close()
             isConnected = false
@@ -261,8 +263,8 @@ class BLEComm @Inject constructor(
     }
 
     private fun findCharacteristic() {
-        if (bleTransport.findCharacteristics()) {
-            bleTransport.enableNotifications()
+        if (bleTransport.gatt.findCharacteristics()) {
+            bleTransport.gatt.enableNotifications()
         }
     }
 
@@ -419,7 +421,7 @@ class BLEComm @Inject constructor(
         pumpCheckSent = true  // Mark that we've sent the PUMP_CHECK for this connection attempt
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__PUMP_CHECK (0x00)" + " " + DanaRSPacket.toHexString(bytes))
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     // 1st packet response
@@ -470,7 +472,7 @@ class BLEComm @Inject constructor(
 
             val storedPairingKey = preferences.get(DanaStringComposedKey.Ble5PairingKey, danaRSPlugin.mDeviceName)
             if (storedPairingKey.isBlank()) {
-                connectAddress?.let { bleTransport.removeBond(it) }
+                connectAddress?.let { bleTransport.adapter.removeBond(it) }
                 disconnect("Non existing pairing key")
             }
 
@@ -507,7 +509,7 @@ class BLEComm @Inject constructor(
         val encodedPairingKey = DanaRSPacket.hexToBytes(pairingKey)
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY, encodedPairingKey, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__CHECK_PASSKEY" + " " + DanaRSPacket.toHexString(bytes))
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     // 2nd packet v1 response
@@ -544,14 +546,14 @@ class BLEComm @Inject constructor(
         val params = ByteArray(4)
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, params, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__TIME_INFORMATION BLE5" + " " + DanaRSPacket.toHexString(bytes))
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     private fun sendV3PairingInformation(requestNewPairing: Int) {
         val params = byteArrayOf(requestNewPairing.toByte())
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, params, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__TIME_INFORMATION" + " " + DanaRSPacket.toHexString(bytes))
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     // 2nd packet response
@@ -605,7 +607,7 @@ class BLEComm @Inject constructor(
     private fun sendTimeInfo() {
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, null, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__TIME_INFORMATION" + " " + DanaRSPacket.toHexString(bytes))
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     //2nd or 3rd packet v1 pairing doesn't exist
@@ -615,7 +617,7 @@ class BLEComm @Inject constructor(
         context.startActivity(Intent(context, PairingHelperActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST, null, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__PASSKEY_REQUEST" + " " + DanaRSPacket.toHexString(bytes))
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     // 3rd packet v3 : only after entering PIN codes
@@ -654,7 +656,7 @@ class BLEComm @Inject constructor(
     // 3rd packet Easy menu pump
     private fun sendEasyMenuCheck() {
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASY_MENU_CHECK, null, null)
-        bleTransport.writeCharacteristic(bytes)
+        bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     // 3rd packet Easy menu response
@@ -707,7 +709,7 @@ class BLEComm @Inject constructor(
                 System.arraycopy(bytes, sendBytes.size, reBytes, 0, reBytes.size)
                 bytes = reBytes
                 // and send
-                bleTransport.writeCharacteristic(sendBytes)
+                bleTransport.gatt.writeCharacteristic(sendBytes)
                 // The rest split to parts per 20 bytes max
                 while (true) {
                     if (bytes.size > 20) {
@@ -723,7 +725,7 @@ class BLEComm @Inject constructor(
                     }
                 }
             } else {
-                bleTransport.writeCharacteristic(bytes)
+                bleTransport.gatt.writeCharacteristic(bytes)
             }
         }
         // The rest from queue is send from onCharacteristicWrite (after sending 1st part)

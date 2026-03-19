@@ -283,12 +283,12 @@ class SWDefinition @Inject constructor(
             .add( // Omnipod Eros only
                 swInfoTextProvider.get()
                     .label(R.string.setupwizard_pump_waiting_for_riley_link_connection)
-                    .visibility { activePlugin.activePump.let { it is OmnipodEros && !it.isRileyLinkReady() } }
+                    .visibility { activePlugin.activePumpInternal.let { it is OmnipodEros && !it.isRileyLinkReady() } }
             )
             .add( // Omnipod Eros only
                 swEventListenerProvider.get().with(EventSWRLStatus::class.java, this)
                     .label(R.string.setupwizard_pump_riley_link_status)
-                    .visibility { activePlugin.activePump is OmnipodEros })
+                    .visibility { activePlugin.activePumpInternal is OmnipodEros })
             .add(
                 swButtonProvider.get()
                     .text(R.string.readstatus)
@@ -300,11 +300,11 @@ class SWDefinition @Inject constructor(
                     })
             .add(
                 swEventListenerProvider.get().with(EventPumpStatusChanged::class.java, this)
-                    .visibility { activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash && activePlugin.activePump !is Medtrum })
+                    .visibility { activePlugin.activePumpInternal !is OmnipodEros && activePlugin.activePumpInternal !is OmnipodDash && activePlugin.activePumpInternal !is Medtrum })
             .validator { isPumpInitialized() }
 
     private fun isPumpInitialized(): Boolean {
-        val activePump = activePlugin.activePump
+        val activePump = activePlugin.activePumpInternal
 
         // For Omnipod and Medtrum, activating a Pod/Patch can be done after setup through the pump fragment
         // For the Eros, consider the pump initialized when a RL has been configured successfully

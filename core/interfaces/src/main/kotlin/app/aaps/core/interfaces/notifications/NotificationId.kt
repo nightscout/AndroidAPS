@@ -88,6 +88,9 @@ enum class NotificationId(
     // Pump — Dana (USER_MESSAGE=1000)
     DANA_PUMP_ALARM(1000, URGENT, PUMP),
 
+    // Pump — Dana emulator
+    PUMP_EMULATOR_DISPLAY(1001, INFO, PUMP),
+
     // CGM
     BG_READINGS_MISSED(27, URGENT, CGM),
 

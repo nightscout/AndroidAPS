@@ -176,5 +176,8 @@ private object PreviewConfig : Config {
     override fun doNotSendSmsOnProfileChange(): Boolean = false
     override fun enableAutotune(): Boolean = false
     override fun disableLeakCanary(): Boolean = true
+    override fun emulateDanaRSv1(): Boolean = false
+    override fun emulateDanaRSv3(): Boolean = false
+    override fun emulateDanaBLE5(): Boolean = false
 }
 

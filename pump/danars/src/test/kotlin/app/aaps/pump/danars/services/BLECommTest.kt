@@ -35,11 +35,18 @@ class BLECommTest : TestBase() {
     @Mock lateinit var danaRSPacket: DanaRSPacket
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var bleTransport: BleTransport
+    @Mock lateinit var bleAdapter: BleAdapter
+    @Mock lateinit var bleScanner: BleScanner
+    @Mock lateinit var bleGatt: BleGatt
 
     private lateinit var bleComm: BLEComm
 
     @BeforeEach
     fun setup() {
+        `when`(bleTransport.adapter).thenReturn(bleAdapter)
+        `when`(bleTransport.scanner).thenReturn(bleScanner)
+        `when`(bleTransport.gatt).thenReturn(bleGatt)
+
         bleComm = BLEComm(
             aapsLogger,
             rh,
@@ -76,7 +83,7 @@ class BLECommTest : TestBase() {
 
     @Test
     fun testConnect_deviceNotFound() {
-        `when`(bleTransport.getDeviceName("00:11:22:33:44:55")).thenReturn(null)
+        `when`(bleAdapter.getDeviceName("00:11:22:33:44:55")).thenReturn(null)
 
         val result = bleComm.connect("test", "00:11:22:33:44:55")
 
@@ -86,8 +93,8 @@ class BLECommTest : TestBase() {
 
     @Test
     fun testConnect_deviceNotBonded() {
-        `when`(bleTransport.getDeviceName("00:11:22:33:44:55")).thenReturn("DanaRS")
-        `when`(bleTransport.isDeviceBonded("00:11:22:33:44:55")).thenReturn(false)
+        `when`(bleAdapter.getDeviceName("00:11:22:33:44:55")).thenReturn("DanaRS")
+        `when`(bleAdapter.isDeviceBonded("00:11:22:33:44:55")).thenReturn(false)
 
         val result = bleComm.connect("test", "00:11:22:33:44:55")
 

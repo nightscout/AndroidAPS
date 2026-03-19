@@ -32,7 +32,7 @@ class CommandLoadEvents(
     override val commandType: Command.CommandType = Command.CommandType.LOAD_EVENTS
 
     override fun execute() {
-        val pump = activePlugin.activePump
+        val pump = activePlugin.activePumpInternal
         if (pump is Dana) {
             val danaPump = pump as Dana
             val r = danaPump.loadEvents()

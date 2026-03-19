@@ -9,12 +9,15 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothProfile
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.extensions.safeEnable
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +30,7 @@ class BleTransportImpl @Inject constructor(
 ) : BleTransport {
 
     companion object {
+
         private const val WRITE_DELAY_MILLIS: Long = 50
         private const val UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb"
         private const val UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb"
@@ -80,118 +84,174 @@ class BleTransportImpl @Inject constructor(
         }
     }
 
+    // --- BleTransport ---
+
+    override val adapter: BleAdapter = AdapterImpl()
+    override val scanner: BleScanner = ScannerImpl()
+    override val gatt: BleGatt = GattImpl()
+
     override fun setListener(listener: BleTransportListener?) {
         this.listener = listener
     }
 
-    @SuppressLint("MissingPermission")
-    override fun getDeviceName(address: String): String? {
-        if (!hasPermission()) return null
-        return bluetoothAdapter?.getRemoteDevice(address)?.name
-    }
+    // --- BleAdapter ---
 
-    @SuppressLint("MissingPermission")
-    override fun isDeviceBonded(address: String): Boolean {
-        if (!hasPermission()) return false
-        val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
-        return device.bondState != android.bluetooth.BluetoothDevice.BOND_NONE
-    }
+    private inner class AdapterImpl : BleAdapter {
 
-    @SuppressLint("MissingPermission")
-    override fun createBond(address: String): Boolean {
-        if (!hasPermission()) return false
-        val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
-        return device.createBond()
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun removeBond(address: String) {
-        if (!hasPermission()) return
-        val device = bluetoothAdapter?.getRemoteDevice(address) ?: return
-        try {
-            device.javaClass.getMethod("removeBond").invoke(device)
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "Removing bond has been failed. ${e.message}")
+        @SuppressLint("MissingPermission")
+        override fun enable() {
+            bluetoothAdapter?.safeEnable()
         }
-    }
 
-    @SuppressLint("MissingPermission")
-    override fun connectGatt(address: String): Boolean {
-        if (!hasPermission()) return false
-        val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
-        // Close any existing connection
-        bluetoothGatt?.let {
+        @SuppressLint("MissingPermission")
+        override fun getDeviceName(address: String): String? {
+            if (!hasPermission()) return null
+            return bluetoothAdapter?.getRemoteDevice(address)?.name
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun isDeviceBonded(address: String): Boolean {
+            if (!hasPermission()) return false
+            val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
+            return device.bondState != android.bluetooth.BluetoothDevice.BOND_NONE
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun createBond(address: String): Boolean {
+            if (!hasPermission()) return false
+            val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
+            return device.createBond()
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun removeBond(address: String) {
+            if (!hasPermission()) return
+            val device = bluetoothAdapter?.getRemoteDevice(address) ?: return
             try {
-                it.disconnect()
-                SystemClock.sleep(200)
-                it.close()
+                device.javaClass.getMethod("removeBond").invoke(device)
             } catch (e: Exception) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "Error closing existing connection: ${e.message}")
+                aapsLogger.error(LTag.PUMPBTCOMM, "Removing bond has been failed. ${e.message}")
             }
         }
-        bluetoothGatt = device.connectGatt(context, false, gattCallback)
-        return bluetoothGatt != null
     }
 
-    @SuppressLint("MissingPermission")
-    override fun disconnectGatt() {
-        if (!hasPermission()) return
-        bluetoothGatt?.disconnect()
-    }
+    // --- BleScanner ---
 
-    @SuppressLint("MissingPermission")
-    override fun closeGatt() {
-        bluetoothGatt?.close()
-        bluetoothGatt = null
-    }
+    private inner class ScannerImpl : BleScanner {
 
-    @SuppressLint("MissingPermission")
-    override fun discoverServices() {
-        bluetoothGatt?.discoverServices()
-    }
+        private var scanCallback: ScanCallback? = null
 
-    @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission")
-    override fun findCharacteristics(): Boolean {
-        val gattServices: List<BluetoothGattService> = bluetoothGatt?.services ?: return false
-        for (gattService in gattServices) {
-            for (gattCharacteristic in gattService.characteristics) {
-                val uuid = gattCharacteristic.uuid.toString()
-                if (UART_READ_UUID == uuid) {
-                    uartRead = gattCharacteristic
-                }
-                if (UART_WRITE_UUID == uuid) {
-                    uartWrite = gattCharacteristic
+        @SuppressLint("MissingPermission")
+        override fun startScan(onDeviceFound: (ScannedDevice) -> Unit) {
+            scanCallback = object : ScanCallback() {
+                override fun onScanResult(callbackType: Int, result: ScanResult) {
+                    val device = result.device ?: return
+                    val name = device.name ?: return
+                    if (name.isNotEmpty()) {
+                        onDeviceFound(ScannedDevice(name = name, address = device.address))
+                    }
                 }
             }
+            try {
+                bluetoothAdapter?.bluetoothLeScanner?.startScan(scanCallback)
+            } catch (_: IllegalStateException) {
+                // BT not on
+            }
         }
-        return uartRead != null && uartWrite != null
+
+        @SuppressLint("MissingPermission")
+        override fun stopScan() {
+            try {
+                scanCallback?.let { bluetoothAdapter?.bluetoothLeScanner?.stopScan(it) }
+            } catch (_: IllegalStateException) {
+                // BT not on
+            }
+            scanCallback = null
+        }
     }
 
-    @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission")
-    override fun enableNotifications() {
-        val characteristic = uartRead ?: uartReadBTGattChar
-        bluetoothGatt?.setCharacteristicNotification(characteristic, true)
-        // Dana-i BLE5 specific descriptor
-        characteristic.getDescriptor(UUID.fromString(UART_BLE5_UUID))?.let {
-            it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-            bluetoothGatt?.writeDescriptor(it)
-        }
-    }
+    // --- BleGatt ---
 
-    @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission")
-    override fun writeCharacteristic(data: ByteArray) {
-        Thread(Runnable {
-            SystemClock.sleep(WRITE_DELAY_MILLIS)
-            if (bluetoothGatt == null) return@Runnable
-            val characteristic = uartWrite ?: uartWriteBTGattChar
-            characteristic.value = data
-            characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-            bluetoothGatt?.writeCharacteristic(characteristic)
-        }).start()
-        SystemClock.sleep(50)
+    private inner class GattImpl : BleGatt {
+
+        @SuppressLint("MissingPermission")
+        override fun connect(address: String): Boolean {
+            if (!hasPermission()) return false
+            val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
+            // Close any existing connection
+            bluetoothGatt?.let {
+                try {
+                    it.disconnect()
+                    SystemClock.sleep(200)
+                    it.close()
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Error closing existing connection: ${e.message}")
+                }
+            }
+            bluetoothGatt = device.connectGatt(context, false, gattCallback)
+            return bluetoothGatt != null
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun disconnect() {
+            if (!hasPermission()) return
+            bluetoothGatt?.disconnect()
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun close() {
+            bluetoothGatt?.close()
+            bluetoothGatt = null
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun discoverServices() {
+            bluetoothGatt?.discoverServices()
+        }
+
+        @Suppress("DEPRECATION")
+        @SuppressLint("MissingPermission")
+        override fun findCharacteristics(): Boolean {
+            val gattServices: List<BluetoothGattService> = bluetoothGatt?.services ?: return false
+            for (gattService in gattServices) {
+                for (gattCharacteristic in gattService.characteristics) {
+                    val uuid = gattCharacteristic.uuid.toString()
+                    if (UART_READ_UUID == uuid) {
+                        uartRead = gattCharacteristic
+                    }
+                    if (UART_WRITE_UUID == uuid) {
+                        uartWrite = gattCharacteristic
+                    }
+                }
+            }
+            return uartRead != null && uartWrite != null
+        }
+
+        @Suppress("DEPRECATION")
+        @SuppressLint("MissingPermission")
+        override fun enableNotifications() {
+            val characteristic = uartRead ?: uartReadBTGattChar
+            bluetoothGatt?.setCharacteristicNotification(characteristic, true)
+            // Dana-i BLE5 specific descriptor
+            characteristic.getDescriptor(UUID.fromString(UART_BLE5_UUID))?.let {
+                it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                bluetoothGatt?.writeDescriptor(it)
+            }
+        }
+
+        @Suppress("DEPRECATION")
+        @SuppressLint("MissingPermission")
+        override fun writeCharacteristic(data: ByteArray) {
+            Thread(Runnable {
+                SystemClock.sleep(WRITE_DELAY_MILLIS)
+                if (bluetoothGatt == null) return@Runnable
+                val characteristic = uartWrite ?: uartWriteBTGattChar
+                characteristic.value = data
+                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                bluetoothGatt?.writeCharacteristic(characteristic)
+            }).start()
+            SystemClock.sleep(50)
+        }
     }
 
     private fun hasPermission(): Boolean =
