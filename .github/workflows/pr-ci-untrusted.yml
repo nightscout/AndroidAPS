@@ -16,6 +16,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  compile:
+    name: Compile
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform
+        run: sdkmanager "platforms;android-36"
+
+      - name: Compile fullDebug
+        run: ./gradlew --stacktrace assembleFullDebug compileFullDebugAndroidTestSources
+
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
