@@ -17,6 +17,6 @@ class Objective5 @Inject constructor(
 ) : Objective(preferences, rh, dateUtil, "maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate) {
 
     init {
-        tasks.add(MinimumDurationTask(this, T.days(3).msecs()).learned(Learned(R.string.objectives_maxiobzero_learned)))
+        tasks.add(MinimumDurationTask(this, T.days(1).msecs()).learned(Learned(R.string.objectives_maxiobzero_learned)))
     }
 }
