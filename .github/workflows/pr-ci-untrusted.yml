@@ -16,10 +16,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
-    name: Build and test fullDebug
+  unit-tests:
+    name: Unit tests
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform
+        run: sdkmanager "platforms;android-36"
+
+      - name: Run unit tests
+        run: ./gradlew --stacktrace testFullDebugUnitTest
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          if-no-files-found: warn
+          path: |
+            **/build/test-results/**/*.xml
+            **/build/reports/tests/**
+
+  connected-tests:
+    name: Connected tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout source code
@@ -44,12 +79,6 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Compile instrumentation test sources
-        run: ./gradlew --stacktrace compileFullDebugAndroidTestSources
-
-      - name: Run unit tests
-        run: ./gradlew --stacktrace testFullDebugUnitTest
-
       - name: Run connected tests and coverage
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
@@ -61,15 +90,13 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: ./gradlew --stacktrace connectedFullDebugAndroidTest jacocoAllDebugReport
 
-      - name: Upload test artifacts
+      - name: Upload connected test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pr-ci-untrusted-artifacts
+          name: connected-test-results
           if-no-files-found: warn
           path: |
-            **/build/test-results/**/*.xml
-            **/build/reports/tests/**
             **/build/outputs/androidTest-results/**
             **/build/reports/androidTests/**
             build/reports/jacoco/jacocoAllDebugReport/**

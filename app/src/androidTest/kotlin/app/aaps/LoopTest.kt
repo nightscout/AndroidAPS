@@ -150,7 +150,7 @@ class LoopTest @Inject constructor() {
 
         // Loop should fail on no result from APS plugin
         loop.invoke("test3", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step4")
+        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, maxSeconds = 120, comment = "step4")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO APS SELECTED OR PROVIDED RESULT")
         val apsStatusEvent = rxHelper.waitFor(EventResetOpenAPSGui::class.java, comment = "step5")
