@@ -35,6 +35,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-home-cache-cleanup: true
+          cache-read-only: false
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
