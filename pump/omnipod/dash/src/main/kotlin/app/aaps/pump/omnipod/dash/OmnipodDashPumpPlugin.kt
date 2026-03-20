@@ -232,8 +232,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
+    override fun isConfigured(): Boolean = podStateManager.isPodRunning
+
     override fun isInitialized(): Boolean {
-        return podStateManager.isPodRunning
+        return isConfigured()
     }
 
     override fun isSuspended(): Boolean {

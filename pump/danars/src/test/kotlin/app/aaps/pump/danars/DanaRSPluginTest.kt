@@ -2,6 +2,7 @@ package app.aaps.pump.danars
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -27,6 +28,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
+    @Mock lateinit var blePreCheck: BlePreCheck
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
@@ -64,7 +66,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin =
             DanaRSPlugin(
                 aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
-                fabricPrivacy, dateUtil, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider
+                fabricPrivacy, dateUtil, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck
             )
     }
 

@@ -1,5 +1,8 @@
 package app.aaps.pump.danars.services
 
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+
 /**
  * Abstraction layer replacing direct Android BluetoothAdapter/BluetoothGatt/BluetoothLeScanner access.
  *
@@ -18,6 +21,12 @@ interface BleTransport {
     val scanner: BleScanner
     val gatt: BleGatt
 
+    /** Current pairing/handshake state, updated by BLEComm during connection. */
+    val pairingState: StateFlow<PairingState>
+
+    /** Update pairing state (called by BLEComm). */
+    fun updatePairingState(state: PairingState)
+
     fun setListener(listener: BleTransportListener?)
 }
 
@@ -34,7 +43,9 @@ data class ScannedDevice(val name: String, val address: String)
 
 interface BleScanner {
 
-    fun startScan(onDeviceFound: (ScannedDevice) -> Unit)
+    /** Flow of discovered devices during scanning. */
+    val scannedDevices: SharedFlow<ScannedDevice>
+    fun startScan()
     fun stopScan()
 }
 
@@ -57,3 +68,23 @@ interface BleTransportListener {
     fun onCharacteristicChanged(data: ByteArray)
     fun onCharacteristicWritten()
 }
+
+/**
+ * Pairing/handshake progress state exposed to UI.
+ */
+enum class PairingStep {
+
+    IDLE,
+    CONNECTING,
+    HANDSHAKE_IN_PROGRESS,
+    WAITING_FOR_PAIRING_CONFIRM,  // v1: pump displaying pairing request
+    WAITING_FOR_PASSWORD,         // v1: user password doesn't match pump
+    WAITING_FOR_PIN,              // RSv3: need PIN codes from pump display
+    CONNECTED,
+    ERROR
+}
+
+data class PairingState(
+    val step: PairingStep = PairingStep.IDLE,
+    val errorMessage: String? = null
+)

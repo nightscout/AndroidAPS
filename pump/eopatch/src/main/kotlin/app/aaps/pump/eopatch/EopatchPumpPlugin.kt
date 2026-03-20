@@ -188,8 +188,10 @@ class EopatchPumpPlugin @Inject constructor(
         mDisposables.clear()
     }
 
+    override fun isConfigured(): Boolean = patchConfig.isActivated
+
     override fun isInitialized(): Boolean {
-        return isConnected() && patchConfig.isActivated
+        return isConfigured() && isConnected()
     }
 
     override fun isSuspended(): Boolean {

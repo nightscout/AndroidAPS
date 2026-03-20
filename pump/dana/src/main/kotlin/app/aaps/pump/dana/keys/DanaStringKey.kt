@@ -34,4 +34,5 @@ enum class DanaStringKey(
         isPassword = true,
         validator = StringValidator.regex("^[A-F0-9]{4}$", "Must be 4 hexadecimal digits (0-9, A-F)")
     ),
+    EmulatorDeviceName("danars_emulator_device_name", "", exportable = false),
 }

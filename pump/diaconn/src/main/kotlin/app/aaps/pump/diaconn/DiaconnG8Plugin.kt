@@ -250,8 +250,11 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     // Pump interface
+    override fun isConfigured(): Boolean =
+        mDeviceAddress.isNotEmpty() && mDeviceName.isNotEmpty()
+
     override fun isInitialized(): Boolean =
-        diaconnG8Pump.lastConnection > 0 && diaconnG8Pump.maxBasal > 0
+        isConfigured() && diaconnG8Pump.lastConnection > 0 && diaconnG8Pump.maxBasal > 0
 
     override fun isSuspended(): Boolean =
         diaconnG8Pump.basePauseStatus == 1

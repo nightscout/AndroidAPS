@@ -33,7 +33,10 @@ abstract class PumpPluginBase(
         super.onStart()
         assert(getType() == PluginType.PUMP)
         handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
-        handler?.postDelayed({ commandQueue.readStatus(rh.gs(R.string.pump_driver_changed), null) }, 6000)
+        handler?.postDelayed({
+                                 if ((this as? Pump)?.isConfigured() != false)
+                                     commandQueue.readStatus(rh.gs(R.string.pump_driver_changed), null)
+                             }, 6000)
     }
 
     override fun onStop() {

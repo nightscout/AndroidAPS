@@ -3,8 +3,10 @@ package app.aaps.di
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.di.DanaModule
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.di.DanaRModule
 import app.aaps.pump.danars.di.DanaRSModule
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
@@ -35,7 +37,8 @@ class DanaModules {
         config: Config,
         bleTransportImpl: BleTransportImpl,
         notificationManager: NotificationManager,
-        aapsLogger: AAPSLogger
+        aapsLogger: AAPSLogger,
+        preferences: Preferences
     ): BleTransport {
         val encryptionType = when {
             config.emulateDanaRSv1() -> EncryptionType.ENCRYPTION_DEFAULT
@@ -47,7 +50,15 @@ class DanaModules {
             EmulatorBleTransport(
                 encryptionType = encryptionType,
                 pumpDisplay = NotificationPumpDisplay(notificationManager),
-                aapsLogger = aapsLogger
+                aapsLogger = aapsLogger,
+                deviceNameProvider = {
+                    var name = preferences.get(DanaStringKey.EmulatorDeviceName)
+                    if (name.isEmpty()) {
+                        name = "UHH${String.format("%05d", (0..99999).random())}TI"
+                        preferences.put(DanaStringKey.EmulatorDeviceName, name)
+                    }
+                    name
+                }
             )
         } else {
             bleTransportImpl

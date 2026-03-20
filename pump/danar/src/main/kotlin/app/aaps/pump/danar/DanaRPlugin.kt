@@ -161,7 +161,7 @@ class DanaRPlugin @Inject constructor(
         get() = preferences.get(DanaBooleanKey.UseExtended)
 
     override fun isInitialized(): Boolean {
-        return danaPump.lastConnection > 0 && danaPump.isExtendedBolusEnabled && danaPump.maxBasal > 0 && danaPump.isPasswordOK
+        return isConfigured() && danaPump.lastConnection > 0 && danaPump.isExtendedBolusEnabled && danaPump.maxBasal > 0 && danaPump.isPasswordOK
     }
 
     override fun isHandshakeInProgress(): Boolean =

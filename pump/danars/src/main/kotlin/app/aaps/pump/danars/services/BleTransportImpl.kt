@@ -18,6 +18,10 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.extensions.safeEnable
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -90,6 +94,13 @@ class BleTransportImpl @Inject constructor(
     override val scanner: BleScanner = ScannerImpl()
     override val gatt: BleGatt = GattImpl()
 
+    private val _pairingState = MutableStateFlow(PairingState())
+    override val pairingState: StateFlow<PairingState> = _pairingState
+
+    override fun updatePairingState(state: PairingState) {
+        _pairingState.value = state
+    }
+
     override fun setListener(listener: BleTransportListener?) {
         this.listener = listener
     }
@@ -140,15 +151,17 @@ class BleTransportImpl @Inject constructor(
     private inner class ScannerImpl : BleScanner {
 
         private var scanCallback: ScanCallback? = null
+        private val _scannedDevices = MutableSharedFlow<ScannedDevice>(extraBufferCapacity = 50)
+        override val scannedDevices: SharedFlow<ScannedDevice> = _scannedDevices
 
         @SuppressLint("MissingPermission")
-        override fun startScan(onDeviceFound: (ScannedDevice) -> Unit) {
+        override fun startScan() {
             scanCallback = object : ScanCallback() {
                 override fun onScanResult(callbackType: Int, result: ScanResult) {
                     val device = result.device ?: return
                     val name = device.name ?: return
                     if (name.isNotEmpty()) {
-                        onDeviceFound(ScannedDevice(name = name, address = device.address))
+                        _scannedDevices.tryEmit(ScannedDevice(name = name, address = device.address))
                     }
                 }
             }

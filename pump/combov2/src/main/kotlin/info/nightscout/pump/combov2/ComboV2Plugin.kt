@@ -451,8 +451,10 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
+    override fun isConfigured(): Boolean = isPaired()
+
     override fun isInitialized(): Boolean =
-        isPaired() && (driverStateFlow.value != DriverState.NotInitialized) && !pumpErrorObserved
+        isConfigured() && (driverStateFlow.value != DriverState.NotInitialized) && !pumpErrorObserved
 
     override fun isSuspended(): Boolean = pumpIsSuspended
 

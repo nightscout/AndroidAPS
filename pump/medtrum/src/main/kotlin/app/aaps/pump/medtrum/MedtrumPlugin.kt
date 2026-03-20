@@ -254,8 +254,11 @@ class MedtrumPlugin @Inject constructor(
         }
     }
 
+    override fun isConfigured(): Boolean =
+        medtrumPump.pumpSNFromSP != 0L && medtrumPump.pumpState > MedtrumPumpState.EJECTED
+
     override fun isInitialized(): Boolean {
-        return medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED
+        return isConfigured() && medtrumPump.pumpState < MedtrumPumpState.STOPPED
     }
 
     override fun isSuspended(): Boolean {

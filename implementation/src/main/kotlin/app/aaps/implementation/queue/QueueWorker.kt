@@ -59,6 +59,12 @@ class QueueWorker internal constructor(
                 if (isStopped) return Result.failure()
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
+                if (!pump.isConfigured()) {
+                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - clearing queue")
+                    queue.clear()
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+                    return Result.success()
+                }
                 if (config.PUMPDRIVERS && pump.selectedActivePump() !is VirtualPump)
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
                             context,

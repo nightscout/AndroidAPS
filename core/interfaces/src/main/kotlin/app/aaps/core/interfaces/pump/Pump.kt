@@ -19,6 +19,23 @@ import org.json.JSONObject
 interface Pump {
 
     /**
+     * Whether the pump has been set up by the user and is ready for connection attempts.
+     *
+     * Examples: device address stored after BLE pairing, pod activated, patch attached.
+     * The command queue will not attempt to connect to an unconfigured pump.
+     *
+     * This is distinct from [isInitialized] which requires a successful first communication.
+     * State hierarchy: isConfigured → isConnected → isInitialized
+     *
+     * Contract: any action that makes isConfigured() return false (e.g. unpair, deactivate)
+     * MUST also reset pump state so that isInitialized() returns false. This ensures
+     * !isConfigured() implies !isInitialized() at all times.
+     *
+     * @return true if user setup is complete. Default is true for backward compatibility.
+     */
+    fun isConfigured(): Boolean = true
+
+    /**
      * @return true if pump status has been read and is ready to accept commands
      */
     fun isInitialized(): Boolean

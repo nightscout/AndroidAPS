@@ -160,7 +160,7 @@ class DanaRKoreanPlugin @Inject constructor(
         get() = preferences.get(DanaBooleanKey.UseExtended)
 
     override fun isInitialized(): Boolean =
-        danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && !danaPump.isConfigUD && !danaPump.isEasyModeEnabled && danaPump.isExtendedBolusEnabled && danaPump.isPasswordOK
+        isConfigured() && danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && !danaPump.isConfigUD && !danaPump.isEasyModeEnabled && danaPump.isExtendedBolusEnabled && danaPump.isPasswordOK
 
     override fun isHandshakeInProgress(): Boolean =
         executionService?.isHandshakeInProgress == true

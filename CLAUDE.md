@@ -8,7 +8,8 @@
     - ✅ `git diff HEAD -- path/to/file` (CWD is already project root)
     - ❌ `cd E:/GitHub/AndroidAPS && git diff HEAD`
     - ❌ `cd /path; git status`
-- **NEVER start a command with these — they are NOT in the allowlist and WILL trigger confirmation:**
+- **NEVER start a command with these — they are NOT in the allowlist and WILL trigger confirmation:
+  **
     - ❌ `awk`, `cut`, `tr` → use `sed` or the Grep/Read tools instead
     - ❌ `sort`, `uniq` → wrap in `powershell.exe -Command "..."` or use tools
     - ❌ `diff` (standalone) → use `git diff` which IS allowed
@@ -56,6 +57,19 @@
 
 ## User Preferences
 
+- **NEVER make code changes without user confirmation** — When the user describes a problem or
+  preference, propose the change first and wait for approval before editing code. Do NOT immediately
+  edit files based on user feedback. The only exception is when the user explicitly says "do it",
+  "fix it", "go ahead", or similar direct instruction.
+- **Think critically, don't just agree** — Before implementing, evaluate whether the agreed approach
+  is actually the best solution. Challenge assumptions, point out potential issues, suggest better
+  alternatives. The user may miss something too. Ask "Is this the best way?" before writing code.
+  Being a good collaborator means pushing back when you see a better path.
+- **Implement EVERYTHING that was agreed upon** — Before writing code, review the plan/agreement
+  and list all the steps. After user confirms, implement ALL of them completely. Do NOT implement
+  half and skip the rest. If a feature was discussed and agreed (e.g., "unpair should clear keys +
+  remove MAC + disconnect"), implement every part, not just one call. After implementing, mentally
+  diff against the agreement to verify nothing was missed.
 - **Do NOT mark anything as "fully functional" or "complete" without user confirmation:**
     - Always wait for user to test and confirm before claiming something works
     - Build success ≠ feature complete - user must verify runtime behavior
@@ -142,12 +156,14 @@
 
 ## When Stuck
 
-- If compilation fails twice with the same error: **stop and show the error** to the user, don't keep retrying
+- If compilation fails twice with the same error: **stop and show the error** to the user, don't
+  keep retrying
 - If a search finds nothing after 2 attempts: **ask the user** rather than guessing file locations
 - If unsure about architecture or where code should go: **ask before implementing**
 - If a tool call is denied: **ask why**, don't retry the same call
 - If an approach requires more than 3 workarounds: **step back and reconsider the approach**
-- If you realize you're about to repeat a mistake from memory: **stop and follow the correct pattern**
+- If you realize you're about to repeat a mistake from memory: **stop and follow the correct pattern
+  **
 
 ## Project Info
 

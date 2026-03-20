@@ -118,5 +118,15 @@
     <string name="num2pin">2: (8 digits)</string>
     <string name="basal_bolus_step">Basal/bolus step</string>
     <string name="carbs_store_error">Carbs were probably not stored correctly. Manually check and store again if needed.</string>
+    <string name="unpair">Unpair</string>
+    <string name="scanning_for_devices">Scanning for devices…</string>
+    <string name="select_your_pump">Select your pump from the list below</string>
+    <string name="connecting_to_pump">Connecting to pump…</string>
+    <string name="pairing_successful">Pairing successful!</string>
+    <string name="pairing_successful_message">Your pump is now connected and ready to use.</string>
+    <string name="cancel_pairing_title">Cancel pairing?</string>
+    <string name="cancel_pairing_message">The pairing process will be aborted.</string>
+    <string name="done">Done</string>
+    <string name="no_history_records">No records found</string>
 
 </resources>

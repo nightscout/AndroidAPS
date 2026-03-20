@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -50,15 +51,10 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.withActivity
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.DefaultEditTextValidator
-import app.aaps.core.validators.EditTextValidator
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
@@ -70,8 +66,7 @@ import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaLongKey
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringKey
-import app.aaps.pump.danars.activities.BLEScanActivity
-import app.aaps.pump.danars.events.EventDanaRSDeviceChange
+import app.aaps.pump.danars.compose.DanaRSComposeContent
 import app.aaps.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -101,11 +96,20 @@ class DanaRSPlugin @Inject constructor(
     private val notificationManager: NotificationManager,
     private val danaHistoryDatabase: DanaHistoryDatabase,
     private val decimalFormatter: DecimalFormatter,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DanaFragment::class.java.name)
+        .composeContent { _ ->
+            DanaRSComposeContent(
+                pluginName = rh.gs(app.aaps.pump.dana.R.string.danarspump),
+                context = context,
+                danaPump = danaPump,
+                blePreCheck = blePreCheck
+            )
+        }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danai_128)
         .pluginIcon2(app.aaps.core.ui.R.drawable.ic_danars_128)
         .pluginName(app.aaps.pump.dana.R.string.danarspump)
@@ -152,13 +156,6 @@ class DanaRSPlugin @Inject constructor(
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { danaPump.reset() }
-        disposable += rxBus
-            .toObservable(EventDanaRSDeviceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           pumpSync.connectNewPump()
-                           changePump()
-                       }, fabricPrivacy::logException)
         changePump() // load device name
     }
 
@@ -186,7 +183,8 @@ class DanaRSPlugin @Inject constructor(
         mDeviceName = preferences.get(DanaStringKey.RsName)
         danaPump.serialNumber = preferences.get(DanaStringKey.RsName)
         danaPump.reset()
-        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
+        if (isConfigured())
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
@@ -255,8 +253,11 @@ class DanaRSPlugin @Inject constructor(
     }
 
     // Pump interface
+    override fun isConfigured(): Boolean =
+        mDeviceAddress.isNotEmpty() && mDeviceName.isNotEmpty()
+
     override fun isInitialized(): Boolean =
-        danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && danaPump.isRSPasswordOK
+        isConfigured() && danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && danaPump.isRSPasswordOK
 
     override fun isSuspended(): Boolean =
         danaPump.pumpSuspended || danaPump.errorState != DanaPump.ErrorState.NONE
@@ -598,8 +599,6 @@ class DanaRSPlugin @Inject constructor(
         key = "danars_settings",
         titleResId = app.aaps.pump.dana.R.string.danarspump,
         items = listOf(
-            DanaIntentKey.BtSelector.withActivity(BLEScanActivity::class.java),
-            DanaStringKey.Password,
             DanaIntKey.BolusSpeed,
             DanaBooleanKey.LogInsulinChange,
             DanaBooleanKey.LogCannulaChange
@@ -620,22 +619,6 @@ class DanaRSPlugin @Inject constructor(
             key = "danars_settings"
             title = rh.gs(app.aaps.pump.dana.R.string.danarspump)
             initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = DanaIntentKey.BtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
-                    intent = Intent(context, BLEScanActivity::class.java)
-                )
-            )
-            addPreference(
-                AdaptiveStringPreference(
-                    ctx = context, stringKey = DanaStringKey.Password, title = app.aaps.pump.dana.R.string.danars_password_title,
-                    validatorParams = DefaultEditTextValidator.Parameters(
-                        testType = EditTextValidator.TEST_REGEXP,
-                        customRegexp = rh.gs(app.aaps.core.validators.R.string.fourhexanumber),
-                        testErrorString = rh.gs(app.aaps.core.validators.R.string.error_mustbe4hexadidits)
-                    )
-                )
-            )
             addPreference(
                 AdaptiveListIntPreference(
                     ctx = context,

@@ -9,7 +9,12 @@ import app.aaps.pump.danars.services.BleGatt
 import app.aaps.pump.danars.services.BleScanner
 import app.aaps.pump.danars.services.BleTransport
 import app.aaps.pump.danars.services.BleTransportListener
+import app.aaps.pump.danars.services.PairingState
 import app.aaps.pump.danars.services.ScannedDevice
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
@@ -38,18 +43,31 @@ import kotlin.time.Instant
  */
 class EmulatorBleTransport(
     val emulator: PumpEmulator = PumpEmulator(),
-    private val deviceName: String = "UHH00002TI",
+    deviceName: String = "UHH00002TI",
     private val encryptionType: EncryptionType = EncryptionType.ENCRYPTION_DEFAULT,
     private val pumpDisplay: PumpDisplay = NoOpPumpDisplay,
-    private val aapsLogger: AAPSLogger? = null
+    private val aapsLogger: AAPSLogger? = null,
+    /** Called during startScan to generate a new device name. If null, uses current name. */
+    private val deviceNameProvider: (() -> String)? = null
 ) : BleTransport {
 
+    /** Current emulated device name. Changes when [deviceNameProvider] returns a new value on scan. */
+    var currentDeviceName: String = deviceName
+        private set
+
     /** Pump-side encryption instance (mirrors the app-side BleEncryption) */
-    val pumpEncryption = BleEncryption().also { enc ->
-        // Set the device name on the pump side so SN encoding/decoding works
-        for (i in deviceName.indices) {
-            if (i < 10) enc.deviceName[i] = deviceName[i].code.toUByte()
+    val pumpEncryption = BleEncryption()
+
+    private fun syncDeviceName(name: String) {
+        currentDeviceName = name
+        for (i in name.indices) {
+            if (i < 10) pumpEncryption.deviceName[i] = name[i].code.toUByte()
         }
+        pumpState.serialNumber = name
+    }
+
+    init {
+        syncDeviceName(deviceName)
     }
 
     private var listener: BleTransportListener? = null
@@ -73,7 +91,7 @@ class EmulatorBleTransport(
         // productCode >= 2 required to avoid UNSUPPORTED_FIRMWARE notification
         pumpState.productCode = 2
         // Serial number should match device name (in real Dana RS they're the same)
-        pumpState.serialNumber = deviceName
+        pumpState.serialNumber = currentDeviceName
 
         // Wire up spontaneous message callback for notifications and multi-response history
         emulator.onSpontaneousMessage = { type, opCode, data ->
@@ -88,6 +106,13 @@ class EmulatorBleTransport(
     override val scanner: BleScanner = EmulatorScanner()
     override val gatt: BleGatt = EmulatorGatt()
 
+    private val _pairingState = MutableStateFlow(PairingState())
+    override val pairingState: StateFlow<PairingState> = _pairingState
+
+    override fun updatePairingState(state: PairingState) {
+        _pairingState.value = state
+    }
+
     override fun setListener(listener: BleTransportListener?) {
         this.listener = listener
     }
@@ -97,7 +122,7 @@ class EmulatorBleTransport(
     private inner class EmulatorAdapter : BleAdapter {
 
         override fun enable() {} // no-op
-        override fun getDeviceName(address: String): String = deviceName
+        override fun getDeviceName(address: String): String = currentDeviceName
         override fun isDeviceBonded(address: String): Boolean = true
         override fun createBond(address: String): Boolean = true
         override fun removeBond(address: String) {}
@@ -107,9 +132,16 @@ class EmulatorBleTransport(
 
     private inner class EmulatorScanner : BleScanner {
 
-        override fun startScan(onDeviceFound: (ScannedDevice) -> Unit) {
+        private val _scannedDevices = MutableSharedFlow<ScannedDevice>(replay = 1, extraBufferCapacity = 10)
+        override val scannedDevices: SharedFlow<ScannedDevice> = _scannedDevices
+
+        override fun startScan() {
+            // Generate new device name if provider is set
+            deviceNameProvider?.invoke()?.let { syncDeviceName(it) }
             // Immediately report the emulated device
-            onDeviceFound(ScannedDevice(name = deviceName, address = "00:00:00:00:00:00"))
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorScanner: startScan emitting device=$currentDeviceName")
+            val emitted = _scannedDevices.tryEmit(ScannedDevice(name = currentDeviceName, address = "00:00:00:00:00:00"))
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorScanner: tryEmit result=$emitted subscribers=${_scannedDevices.subscriptionCount.value}")
         }
 
         override fun stopScan() {} // no-op

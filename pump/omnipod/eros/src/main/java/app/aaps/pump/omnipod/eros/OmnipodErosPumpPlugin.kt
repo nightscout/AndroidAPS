@@ -441,7 +441,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
         }
     }
 
-    override fun isInitialized(): Boolean = isConnected() && podStateManager.isPodActivationCompleted
+    override fun isConfigured(): Boolean = podStateManager.isPodActivationCompleted
+    override fun isInitialized(): Boolean = isConfigured() && isConnected()
     override fun isConnected(): Boolean = rileyLinkOmnipodService?.isInitialized == true
     override fun isConnecting(): Boolean = rileyLinkOmnipodService?.isInitialized != true
 

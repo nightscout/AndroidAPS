@@ -310,9 +310,12 @@ class MedtronicPumpPlugin @Inject constructor(
         medtronicPumpStatus.setLastCommunicationToNow()
     }
 
+    override fun isConfigured(): Boolean =
+        !rileyLinkServiceData.rileyLinkAddress.isNullOrEmpty() && medtronicPumpStatus.serialNumber.isNotEmpty()
+
     override fun isInitialized(): Boolean {
         if (displayConnectionMessages) aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::isInitialized")
-        return isServiceSet && isDriverInitialized
+        return isConfigured() && isServiceSet && isDriverInitialized
     }
 
     override fun setBusy(busy: Boolean) {

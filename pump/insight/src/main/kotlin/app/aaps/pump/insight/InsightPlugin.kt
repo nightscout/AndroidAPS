@@ -253,8 +253,11 @@ class InsightPlugin @Inject constructor(
         context.unbindService(serviceConnection)
     }
 
+    override fun isConfigured(): Boolean =
+        connectionService?.isPaired == true
+
     override fun isInitialized(): Boolean {
-        return connectionService?.let { alertService != null && it.isPaired } == true
+        return isConfigured() && connectionService?.let { alertService != null && it.isPaired } == true
     }
 
     override fun isSuspended(): Boolean {

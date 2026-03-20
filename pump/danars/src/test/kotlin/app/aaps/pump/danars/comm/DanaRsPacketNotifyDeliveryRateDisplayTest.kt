@@ -1,6 +1,7 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
@@ -25,6 +26,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var blePreCheck: BlePreCheck
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
@@ -50,7 +52,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
         danaRSPlugin =
             DanaRSPlugin(
                 aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, danaPump, pumpSync,
-                detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider
+                detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck
             )
         danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
     }

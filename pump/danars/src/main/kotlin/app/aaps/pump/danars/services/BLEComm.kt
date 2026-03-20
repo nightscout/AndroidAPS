@@ -3,12 +3,9 @@ package app.aaps.pump.danars.services
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.SystemClock
 import android.util.Base64
 import androidx.core.app.ActivityCompat
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -30,14 +27,11 @@ import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaLongKey
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.danars.DanaRSPlugin
-import app.aaps.pump.danars.activities.EnterPinActivity
-import app.aaps.pump.danars.activities.PairingHelperActivity
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
-import app.aaps.pump.danars.events.EventDanaRSPairingSuccess
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -61,11 +55,6 @@ class BLEComm @Inject constructor(
 ) : BleTransportListener {
 
     companion object {
-
-        private const val WRITE_DELAY_MILLIS: Long = 50
-        private const val UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb"
-        private const val UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb"
-        private const val UART_BLE5_UUID = "00002902-0000-1000-8000-00805f9b34fb"
 
         private const val PACKET_START_BYTE = 0xA5.toByte()
         private const val PACKET_END_BYTE = 0x5A.toByte()
@@ -119,7 +108,7 @@ class BLEComm @Inject constructor(
 
         if (!bleTransport.adapter.isDeviceBonded(address)) {
             bleTransport.adapter.createBond(address)
-            SystemClock.sleep(10000)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Bond requested, will retry after bonding completes from: $from")
             return false
         }
 
@@ -130,6 +119,7 @@ class BLEComm @Inject constructor(
         pumpCheckSent = false  // Reset the guard flag for new connection
         isConnecting = true
         bufferLength = 0
+        bleTransport.updatePairingState(PairingState(step = PairingStep.CONNECTING))
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = deviceName
         connectAddress = address
@@ -139,6 +129,10 @@ class BLEComm @Inject constructor(
             isConnecting = false
             return false
         }
+        // Register for notifications early (before connection completes) to avoid
+        // race condition where fast/cached connections complete before notification
+        // registration in onServicesDiscovered path.
+        bleTransport.gatt.enableNotifications()
         return true
     }
 
@@ -200,7 +194,6 @@ class BLEComm @Inject constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset for next connection attempt
-        SystemClock.sleep(2000)
     }
 
     @SuppressLint("MissingPermission")
@@ -240,6 +233,7 @@ class BLEComm @Inject constructor(
     }
 
     override fun onDescriptorWritten() {
+        bleTransport.updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
         sendConnect()
         // 1st message sent to pump after connect
     }
@@ -258,6 +252,7 @@ class BLEComm @Inject constructor(
             encryptedCommandSent = false
             pumpCheckSent = false  // Reset for next connection attempt
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+            bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected")
         }
     }
@@ -437,7 +432,7 @@ class BLEComm @Inject constructor(
             if (pairingKey.isNotEmpty()) {
                 sendPasskeyCheck(pairingKey)
             } else {
-                // Stored pairing key does not exists, request pairing
+                // Stored pairing key does not exist, request pairing
                 sendPairingRequest()
             }
             // response OK v3
@@ -485,6 +480,7 @@ class BLEComm @Inject constructor(
             // response PUMP : error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
+            bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = rh.gs(R.string.pumperror)))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
             pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
@@ -492,11 +488,13 @@ class BLEComm @Inject constructor(
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
+            bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = rh.gs(app.aaps.core.ui.R.string.pump_busy)))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(app.aaps.core.ui.R.string.pump_busy)))
         } else {
             // ERROR in response, wrong serial number
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
+            bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = rh.gs(app.aaps.core.ui.R.string.connection_error)))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(app.aaps.core.ui.R.string.connection_error)))
             danaRSPlugin.clearPairing()
@@ -562,6 +560,7 @@ class BLEComm @Inject constructor(
         if (encryption == EncryptionType.ENCRYPTION_BLE5) {
             isConnected = true
             isConnecting = false
+            bleTransport.updatePairingState(PairingState(step = PairingStep.CONNECTED))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Connect !!")
         } else if (encryption == EncryptionType.ENCRYPTION_RSv3) {
             // decryptedBuffer[2] : 0x00 OK  0x01 Error, No pairing
@@ -572,10 +571,11 @@ class BLEComm @Inject constructor(
                     // expecting successful connect
                     isConnected = true
                     isConnecting = false
+                    bleTransport.updatePairingState(PairingState(step = PairingStep.CONNECTED))
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Connect !!")
                     // Send one message to confirm communication
                 } else {
-                    context.startActivity(Intent(context, EnterPinActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+                    bleTransport.updatePairingState(PairingState(step = PairingStep.WAITING_FOR_PIN))
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Request pairing keys !!")
                 }
             } else {
@@ -591,13 +591,14 @@ class BLEComm @Inject constructor(
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
                 notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, R.string.wrongpumppassword)
+                bleTransport.updatePairingState(PairingState(step = PairingStep.WAITING_FOR_PASSWORD))
                 disconnect("WrongPassword")
-                SystemClock.sleep(T.mins(1).msecs())
             } else {
                 notificationManager.dismiss(NotificationId.WRONG_PUMP_PASSWORD)
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 isConnected = true
                 isConnecting = false
+                bleTransport.updatePairingState(PairingState(step = PairingStep.CONNECTED))
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RS connected and status read")
             }
         }
@@ -612,9 +613,8 @@ class BLEComm @Inject constructor(
 
     //2nd or 3rd packet v1 pairing doesn't exist
     private fun sendPairingRequest() {
-        // Start activity which is waiting 20sec
-        // On pump pairing request is displayed and is waiting for conformation
-        context.startActivity(Intent(context, PairingHelperActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+        // On pump pairing request is displayed and is waiting for confirmation
+        bleTransport.updatePairingState(PairingState(step = PairingStep.WAITING_FOR_PAIRING_CONFIRM))
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST, null, null)
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__PASSKEY_REQUEST" + " " + DanaRSPacket.toHexString(bytes))
         bleTransport.gatt.writeCharacteristic(bytes)
@@ -645,7 +645,6 @@ class BLEComm @Inject constructor(
     private fun processPairingRequest2(decryptedBuffer: ByteArray) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PASSKEY_RETURN " + DanaRSPacket.toHexString(decryptedBuffer))
         // Paring is successful, sending time info
-        rxBus.send(EventDanaRSPairingSuccess())
         sendTimeInfo()
         val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
         // store pairing key to preferences

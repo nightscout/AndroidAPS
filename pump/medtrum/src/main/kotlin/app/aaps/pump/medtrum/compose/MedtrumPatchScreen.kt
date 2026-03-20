@@ -24,14 +24,12 @@ fun MedtrumPatchScreen(
     viewModel: MedtrumPatchViewModel
 ) {
     val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
-    val titleResId by viewModel.title.collectAsStateWithLifecycle()
     val totalSteps by viewModel.totalSteps.collectAsStateWithLifecycle()
     val currentStepIndex by viewModel.currentStepIndex.collectAsStateWithLifecycle()
     val canGoBack by viewModel.canGoBack.collectAsStateWithLifecycle()
 
     WizardScreen(
         currentStep = patchStep,
-        title = stringResource(titleResId),
         totalSteps = totalSteps,
         currentStepIndex = currentStepIndex,
         canGoBack = canGoBack,

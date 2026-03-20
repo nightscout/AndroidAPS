@@ -307,6 +307,9 @@ abstract class AbstractDanaRPlugin protected constructor(
         return result
     }
 
+    override fun isConfigured(): Boolean =
+        preferences.get(DanaStringKey.RName).isNotEmpty()
+
     override fun connect(reason: String) {
         executionService?.connect()
         pumpDescription.basalStep = danaPump.basalStep

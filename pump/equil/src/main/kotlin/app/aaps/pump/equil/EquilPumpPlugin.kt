@@ -178,7 +178,8 @@ class EquilPumpPlugin @Inject constructor(
         scope = null
     }
 
-    override fun isInitialized(): Boolean = equilManager.isActivationCompleted()
+    override fun isConfigured(): Boolean = equilManager.isActivationCompleted()
+    override fun isInitialized(): Boolean = isConfigured()
     override fun isConnected(): Boolean = true
     override fun isConnecting(): Boolean = false
     override fun isBusy(): Boolean = false
