@@ -314,7 +314,7 @@ class SiteRotationDialog : DialogFragmentWithDate() {
     fun editView() {
         binding.time.text = dateUtil.dateStringShort(time)
         therapyEdited = listTE.firstOrNull { it.timestamp == time }?.also {
-            binding.location.text = it.location?.let { loc -> translator.translate(loc) } ?: rh.gs(R.string.select_site)
+            binding.location.text = it.location?.let { loc -> translator.translate(loc) } ?: rh.gs(app.aaps.core.ui.R.string.select_location)
             binding.iconArrow.setImageResource(it.arrow?.directionToIcon() ?: TE.Arrow.NONE.directionToIcon())
             selectedArrow = it.arrow ?: TE.Arrow.NONE
             selectedLocation = it.location ?: TE.Location.NONE

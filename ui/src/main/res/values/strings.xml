@@ -64,7 +64,6 @@
     <string name="user_profile_description">User Profile Description is used to show most frequent sites available for a man, a woman or a child</string>
     <string name="site_management">Site Management Profile</string>
     <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
-    <string name="select_site">Click below to select Site</string>
     <string name="record_site_change">Record Site Location</string>
     <string name="update_site_change">Update Site Location</string>
     <string name="edit_site">Edit</string>

@@ -31,7 +31,7 @@ fun BodyView(
     isFrontView: Boolean,
     onZoneClick: (TE.Location) -> Unit,
     modifier: Modifier = Modifier,
-    editedTe: TE? = null
+    editedType: TE.Type? = null
 ) {
     val background = if (isFrontView) bodyType.frontImage else bodyType.backImage
     val zones = if (isFrontView) bodyType.frontZones else bodyType.backZones
@@ -43,7 +43,7 @@ fun BodyView(
 
     fun showLocation(location: TE.Location): Boolean =
         location != TE.Location.NONE && (
-            if (editedTe?.type == TE.Type.CANNULA_CHANGE) location.pump
+            if (editedType == TE.Type.CANNULA_CHANGE) location.pump
             else (showPumpSites && location.pump) || showCgmSites
         )
 
@@ -63,7 +63,7 @@ fun BodyView(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(zones, showPumpSites, showCgmSites, editedTe) {
+                .pointerInput(zones, showPumpSites, showCgmSites, editedType) {
                     detectTapGestures { offset ->
                         val x = offset.x * viewportWidth / canvasWidth
                         val y = offset.y * viewportHeight / canvasHeight

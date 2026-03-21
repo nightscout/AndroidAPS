@@ -311,7 +311,7 @@ private fun SiteRotationManagementContent(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = AapsSpacing.extraLarge),
-                        editedTe = uiState.editedTe
+                        editedType = uiState.editedTe?.type
                     )
                 }
 
