@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -652,7 +653,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // Automation buttons
                 binding.buttonsLayout.userButtonsLayout.removeAllViews()
                 val events = automation.userEvents()
-                if (!loop.runningMode.isSuspended() && pump.isInitialized() && profile != null && !config.showUserActionsOnWatchOnly())
+                if (!loop.runningMode.isSuspended() && pump.isInitialized() && profile != null && !config.isEnabled(ExternalOptions.SHOW_USER_ACTIONS_ON_WATCH_ONLY))
                     for (event in events)
                         if (event.isEnabled && runBlocking { event.canRun() }) {
                             context?.let { context ->

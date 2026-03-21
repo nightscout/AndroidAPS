@@ -2,15 +2,21 @@ package app.aaps.ui.compose.alertDialogs
 
 import android.content.Intent
 import android.os.Build
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -28,14 +34,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.ui.R
 
 data class AboutDialogData(
     val title: String,
     val message: String,
-    val icon: Int
+    val icon: Int,
+    val enabledOptions: List<ExternalOptions> = emptyList()
 )
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutAlertDialog(
     data: AboutDialogData,
@@ -62,13 +71,32 @@ fun AboutAlertDialog(
             )
         },
         text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = annotatedMessage,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
+                if (data.enabledOptions.isNotEmpty()) {
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
+                        verticalArrangement = Arrangement.spacedBy((-4).dp),
+                    ) {
+                        data.enabledOptions.forEach { option ->
+                            AssistChip(
+                                onClick = {},
+                                label = { Text(option.filename, style = MaterialTheme.typography.labelSmall) }
+                            )
+                        }
+                    }
+                }
             }
         },
         confirmButton = {
@@ -102,7 +130,8 @@ private fun AboutAlertDialogPreview() {
             data = AboutDialogData(
                 title = "AndroidAPS 3.3.0",
                 message = "Build: 3.3.0-dev\nFlavor: full\n\nhttps://androidaps.org",
-                icon = R.drawable.ic_generic_icon
+                icon = R.drawable.ic_generic_icon,
+                enabledOptions = listOf(ExternalOptions.ENGINEERING_MODE, ExternalOptions.UNFINISHED_MODE)
             ),
             onDismiss = {}
         )

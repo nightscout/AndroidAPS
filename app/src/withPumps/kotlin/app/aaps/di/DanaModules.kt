@@ -1,6 +1,7 @@
 package app.aaps.di
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.keys.interfaces.Preferences
@@ -41,9 +42,9 @@ class DanaModules {
         preferences: Preferences
     ): BleTransport {
         val encryptionType = when {
-            config.emulateDanaRSv1() -> EncryptionType.ENCRYPTION_DEFAULT
-            config.emulateDanaRSv3() -> EncryptionType.ENCRYPTION_RSv3
-            config.emulateDanaBLE5() -> EncryptionType.ENCRYPTION_BLE5
+            config.isEnabled(ExternalOptions.EMULATE_DANA_RS_V1) -> EncryptionType.ENCRYPTION_DEFAULT
+            config.isEnabled(ExternalOptions.EMULATE_DANA_RS_V3) -> EncryptionType.ENCRYPTION_RSv3
+            config.isEnabled(ExternalOptions.EMULATE_DANA_BLE5) -> EncryptionType.ENCRYPTION_BLE5
             else                     -> null
         }
         return if (encryptionType != null) {

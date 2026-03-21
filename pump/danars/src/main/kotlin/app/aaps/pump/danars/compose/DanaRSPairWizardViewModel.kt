@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
@@ -243,7 +244,7 @@ class DanaRSPairWizardViewModel @Inject constructor(
     }
 
     val isEmulating: Boolean
-        get() = config.emulateDanaRSv1() || config.emulateDanaRSv3() || config.emulateDanaBLE5()
+        get() = config.isEnabled(ExternalOptions.EMULATE_DANA_RS_V1) || config.isEnabled(ExternalOptions.EMULATE_DANA_RS_V3) || config.isEnabled(ExternalOptions.EMULATE_DANA_BLE5)
 
     override fun onCleared() {
         super.onCleared()

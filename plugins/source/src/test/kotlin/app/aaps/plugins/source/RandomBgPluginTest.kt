@@ -1,6 +1,7 @@
 package app.aaps.plugins.source
 
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.keys.IntKey
@@ -32,7 +33,7 @@ class RandomBgPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             whenever(persistenceLayer.insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(config.isUnfinishedMode()).thenReturn(true)
+        whenever(config.isEnabled(ExternalOptions.UNFINISHED_MODE)).thenReturn(true)
         whenever(preferences.get(IntKey.BgSourceRandomInterval)).thenReturn(5)
         randomBgPlugin.setPluginEnabled(PluginType.BGSOURCE, true)
         randomBgPlugin.handleNewData()

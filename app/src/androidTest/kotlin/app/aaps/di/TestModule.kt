@@ -50,7 +50,7 @@ open class TestModule {
         if (config.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (config.APS) plugins += aps.get()
         if (!config.AAPSCLIENT) plugins += notNsClient.get()
-        //if (config.isUnfinishedMode()) plugins += unfinished.get()
+        //if (config.isEnabled(ExternalOptions.UNFINISHED_MODE)) plugins += unfinished.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }
 

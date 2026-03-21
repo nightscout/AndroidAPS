@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -243,7 +244,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
             //lastDetermineBasalAdapter = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMAFromJS
             lastAPSRun = now
-            if (config.isUnfinishedMode())
+            if (config.isEnabled(ExternalOptions.UNFINISHED_MODE))
                 importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
             rxBus.send(EventAPSCalculationFinished())
         }

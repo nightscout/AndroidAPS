@@ -18,6 +18,19 @@ data class InitProgress(
     val error: String? = null
 )
 
+enum class ExternalOptions(val filename: String) {
+    ENGINEERING_MODE("engineering_mode"),
+    UNFINISHED_MODE("unfinished_mode"),
+    SHOW_USER_ACTIONS_ON_WATCH_ONLY("show_user_actions_on_watch_only"),
+    IGNORE_NS_V3_ERRORS("ignore_nightscout_v3_errors"),
+    DO_NOT_SEND_SMS_ON_PROFILE_CHANGE("do_not_send_sms_on_profile_change"),
+    ENABLE_AUTOTUNE("enable_autotune"),
+    DISABLE_LEAK_CANARY("disable_leakcanary"),
+    EMULATE_DANA_RS_V1("emulate_dana_rs_v1"),
+    EMULATE_DANA_RS_V3("emulate_dana_rs_v3"),
+    EMULATE_DANA_BLE5("emulate_dana_ble5"),
+}
+
 @Suppress("PropertyName")
 interface Config {
 
@@ -56,22 +69,5 @@ interface Config {
     fun isDev(): Boolean
     fun isEngineeringModeOrRelease(): Boolean
     fun isEngineeringMode(): Boolean
-    fun isUnfinishedMode(): Boolean
-
-    fun showUserActionsOnWatchOnly(): Boolean
-    fun ignoreNightscoutV3Errors(): Boolean
-    fun doNotSendSmsOnProfileChange(): Boolean
-    fun enableAutotune(): Boolean
-
-    /**
-     * Disable LeakCanary (memory leaks detection). By default it's enabled in DEBUG builds.
-     */
-    fun disableLeakCanary(): Boolean
-
-    /**
-     * Dana BLE emulation
-     */
-    fun emulateDanaRSv1(): Boolean
-    fun emulateDanaRSv3(): Boolean
-    fun emulateDanaBLE5(): Boolean
+    fun isEnabled(option: ExternalOptions): Boolean
 }

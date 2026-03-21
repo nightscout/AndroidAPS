@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -164,7 +165,7 @@ class MainApp : Application(), HasAndroidInjector {
         // Configure LeakCanary with Firebase reporting
         // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
         configureLeakCanary(
-            isEnabled = !config.disableLeakCanary(),
+            isEnabled = !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY),
             fabricPrivacy = fabricPrivacy
         )
 
