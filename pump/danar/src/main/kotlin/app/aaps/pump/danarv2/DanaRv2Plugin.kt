@@ -148,7 +148,7 @@ class DanaRv2Plugin @Inject constructor(
         get() = false
 
     override fun isInitialized(): Boolean {
-        return danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && danaPump.isPasswordOK
+        return isConfigured() && danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && danaPump.isPasswordOK
     }
 
     override fun isHandshakeInProgress(): Boolean =

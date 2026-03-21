@@ -1,8 +1,8 @@
 package app.aaps.implementation.pump
 
 import app.aaps.core.data.model.BS
-import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.Insulin
@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -47,7 +48,7 @@ class PumpWithConcentrationImplTest : TestBase() {
 
     private fun setupConcentration(concentration: Double) {
         whenever(insulin.iCfg).thenReturn(ICfg("Test", 0L, 0L, concentration))
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
     }
 
     private fun setupU100() {
@@ -119,7 +120,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     @Test
     fun `setTempBasalAbsolute with U100 passes rate unchanged`() {
         setupU100()
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         val constraintResult: Constraint<Double> = mock()
         whenever(constraintResult.value()).thenReturn(1.5)
         whenever(constraintsChecker.applyBasalConstraints(any(), eq(effectiveProfile))).thenReturn(constraintResult)
@@ -269,7 +270,7 @@ class PumpWithConcentrationImplTest : TestBase() {
     @Test
     fun `setTempBasalAbsolute throws when no profile running`() {
         setupConcentration(2.0)
-        whenever(profileFunction.getProfile()).thenReturn(null)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(null) }
 
         try {
             sut.setTempBasalAbsolute(1.0, 30, false, PumpSync.TemporaryBasalType.NORMAL)

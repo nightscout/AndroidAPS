@@ -12,6 +12,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
@@ -197,7 +198,7 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
+    private suspend fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
         val activeEntries = quickWizard.list().filter { it.isActive() }
         if (activeEntries.isEmpty()) return emptyList()
 
@@ -228,7 +229,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun computeSingleQuickWizardItem(
+    private suspend fun computeSingleQuickWizardItem(
         entry: QuickWizardEntry,
         profile: Profile,
         profileName: String,
@@ -260,14 +261,16 @@ class MainViewModel @Inject constructor(
      * Needs Activity context for the confirmation dialog.
      */
     fun executeQuickWizard(context: android.content.Context, guid: String) {
-        val entry = quickWizard.get(guid) ?: return
-        if (!entry.isActive()) return
-        val bg = iobCobCalculator.ads.actualBg() ?: return
-        val profile = profileFunction.getProfile() ?: return
-        val profileName = profileFunction.getProfileName()
-        val wizard = entry.doCalc(profile, profileName, bg)
-        if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
-            wizard.confirmAndExecute(context, entry)
+        viewModelScope.launch {
+            val entry = quickWizard.get(guid) ?: return@launch
+            if (!entry.isActive()) return@launch
+            val bg = iobCobCalculator.ads.actualBg() ?: return@launch
+            val profile = profileFunction.getProfile() ?: return@launch
+            val profileName = profileFunction.getProfileName()
+            val wizard = entry.doCalc(profile, profileName, bg)
+            if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
+                wizard.confirmAndExecute(context, entry)
+            }
         }
     }
 
@@ -321,15 +324,15 @@ class MainViewModel @Inject constructor(
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"
         message += "${rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.core.ui.R.string.not_available_full)}"
-        if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.core.ui.R.string.engineering_mode_enabled)}"
-        if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
+        val enabledOptions = ExternalOptions.entries.filter { config.isEnabled(it) }
         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
 
         return AboutDialogData(
             title = "$appName ${config.VERSION}",
             message = message,
-            icon = iconsProvider.getIcon()
+            icon = iconsProvider.getIcon(),
+            enabledOptions = enabledOptions
         )
     }
 
@@ -412,7 +415,7 @@ class MainViewModel @Inject constructor(
         when (action) {
             is ConfirmableAction.ExecuteAutomation        -> {
                 val event = automation.findEventById(action.automationId) ?: return
-                automation.processEvent(event)
+                viewModelScope.launch { automation.processEvent(event) }
             }
 
             is ConfirmableAction.ActivateTempTargetPreset -> {

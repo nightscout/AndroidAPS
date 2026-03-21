@@ -121,7 +121,7 @@ class DanaFragment : DaggerFragment() {
             binding.btConnectionLayout.setOnLongClickListener {
                 uiInteraction.showOkCancelDialog(context = requireActivity(), message = rh.gs(R.string.resetpairing), ok = {
                     uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
-                    (activePlugin.activePump as Dana).clearPairing()
+                    (activePlugin.activePumpInternal as Dana).clearPairing()
                 })
                 true
             }

@@ -14,12 +14,12 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -71,7 +71,6 @@ class AutotunePlugin @Inject constructor(
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
     private val localProfileManager: LocalProfileManager,
     private val autotuneFS: AutotuneFS,
@@ -91,7 +90,7 @@ class AutotunePlugin @Inject constructor(
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(R.string.autotune_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .showInList { config.isEngineeringMode() && config.isDev() || config.enableAutotune() }
+        .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
         .description(R.string.autotune_description),
     ownPreferences = listOf(AutotuneStringKey::class.java),
     aapsLogger, rh, preferences
@@ -111,7 +110,7 @@ class AutotunePlugin @Inject constructor(
     val days = WeekDay()
     val autotuneStartHour: Int = 4
 
-    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev() || config.enableAutotune()
+    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE)
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
         lastRunSuccess = false
@@ -136,7 +135,7 @@ class AutotunePlugin @Inject constructor(
         updateButtonVisibility = View.GONE
         var logResult = ""
         result = ""
-        if (profileFunction.getProfile() == null) {
+        if (runBlocking { profileFunction.getProfile() } == null) {
             result = rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
             rxBus.send(EventAutotuneUpdateGui())
             calculationRunning = false
@@ -153,8 +152,8 @@ class AutotunePlugin @Inject constructor(
             calculationRunning = false
             return
         }
-        selectedProfile = profileToTune.ifEmpty { profileFunction.getProfileName() }
-        profileFunction.getProfile()?.let { currentProfile ->
+        selectedProfile = profileToTune.ifEmpty { runBlocking { profileFunction.getProfileName() } }
+        runBlocking { profileFunction.getProfile() }?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile
         }
         val localInsulin = LocalInsulin("PumpInsulin", insulin.iCfg.peak, insulin.iCfg.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia

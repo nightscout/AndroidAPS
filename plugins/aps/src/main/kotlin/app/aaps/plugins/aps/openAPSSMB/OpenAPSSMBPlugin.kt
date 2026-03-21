@@ -164,7 +164,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override fun getIsfMgdl(profile: Profile, caller: String): Double? {
         val start = dateUtil.now()
         val multiplier = (profile as ProfileSealed.EPS).value.originalPercentage / 100.0
-        val sensitivity = calculateVariableIsf(start, multiplier)
+        val sensitivity = runBlocking { calculateVariableIsf(start, multiplier) }
         if (sensitivity.second == null)
             notificationManager.post(
                 NotificationId.DYN_ISF_FALLBACK,
@@ -234,11 +234,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     private val dynIsfCache = LongSparseArray<Double>()
 
-    @Synchronized
-    private fun calculateVariableIsf(timestamp: Long, multiplier: Double): Pair<String, Double?> {
+    private suspend fun calculateVariableIsf(timestamp: Long, multiplier: Double): Pair<String, Double?> {
         if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
 
-        val result = runBlocking { persistenceLayer.getApsResultCloseTo(timestamp) }
+        val result = persistenceLayer.getApsResultCloseTo(timestamp)
         if (result?.variableSens != null && result.variableSens != 0.0) {
             //aapsLogger.debug("calculateVariableIsf $caller DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
             return Pair("DB", result.variableSens)

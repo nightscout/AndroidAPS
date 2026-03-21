@@ -1,6 +1,7 @@
 package app.aaps.implementation.queue.commands
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -53,7 +54,7 @@ class CommandSetProfile(
         // Send SMS notification if ProfileSwitch is coming from NS
         val profileSwitch = runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) }
         if (profileSwitch != null && r.enacted && hasNsId && !config.AAPSCLIENT) {
-            if (smsCommunicator.isEnabled() && !config.doNotSendSmsOnProfileChange())
+            if (smsCommunicator.isEnabled() && !config.isEnabled(ExternalOptions.DO_NOT_SEND_SMS_ON_PROFILE_CHANGE))
                 smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.profile_set_ok))
         }
     }

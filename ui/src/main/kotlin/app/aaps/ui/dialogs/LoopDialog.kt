@@ -42,6 +42,7 @@ import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogLoopBinding
 import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class LoopDialog : DaggerDialogFragment() {
@@ -230,7 +231,7 @@ class LoopDialog : DaggerDialogFragment() {
     }
 
     private fun onClick(v: View): Boolean {
-        val profile = profileFunction.getProfile() ?: return false
+        val profile = runBlocking { profileFunction.getProfile() } ?: return false
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 loop.handleRunningModeChange(newRM = RM.Mode.CLOSED_LOOP, action = Action.CLOSED_LOOP_MODE, source = Sources.LoopDialog, profile = profile)

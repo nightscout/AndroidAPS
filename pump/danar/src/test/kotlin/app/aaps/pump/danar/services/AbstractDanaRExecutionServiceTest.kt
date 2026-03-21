@@ -14,6 +14,7 @@ import app.aaps.pump.danar.comm.MessageHashTableBase
 import app.aaps.pump.danar.comm.MsgBolusStop
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -149,7 +150,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
         // Create real PumpState for proper destructuring
         val pumpState = PumpSync.PumpState(temporaryBasal, null, null, null, "TEST123")
-        `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
+        runBlocking { `when`(pumpSync.expectedPumpState()).thenReturn(pumpState) }
 
         // Set underlying properties to make isTempBasalInProgress true
         danaPump.tempBasalPercent = 100
@@ -160,7 +161,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         `when`(activePump.model()).thenReturn(PumpType.DANA_R)
         `when`(activePump.serialNumber()).thenReturn("TEST123")
 
-        testService.doSanityCheck()
+        runBlocking { testService.doSanityCheck() }
 
         // Verify that synchronization was attempted
         assertThat(mockingDetails(notificationManager).invocations.any { it.method.name == "post" }).isTrue()
@@ -172,7 +173,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
         // Create real PumpState for proper destructuring
         val pumpState = PumpSync.PumpState(null, null, null, null, "TEST123")
-        `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
+        runBlocking { `when`(pumpSync.expectedPumpState()).thenReturn(pumpState) }
 
         // Set underlying properties to make isTempBasalInProgress true
         danaPump.tempBasalPercent = 120
@@ -183,7 +184,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         `when`(activePump.model()).thenReturn(PumpType.DANA_R)
         `when`(activePump.serialNumber()).thenReturn("TEST123")
 
-        testService.doSanityCheck()
+        runBlocking { testService.doSanityCheck() }
 
         // Verify notification was added
         assertThat(mockingDetails(notificationManager).invocations.any { it.method.name == "post" }).isTrue()
@@ -202,7 +203,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
         // Create real PumpState for proper destructuring
         val pumpState = PumpSync.PumpState(temporaryBasal, null, null, null, "TEST123")
-        `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
+        runBlocking { `when`(pumpSync.expectedPumpState()).thenReturn(pumpState) }
 
         // Ensure pump shows no temp basal (tempBasalStart = 0 by default)
         danaPump.isTempBasalInProgress = false
@@ -210,7 +211,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         `when`(activePump.model()).thenReturn(PumpType.DANA_R)
         `when`(activePump.serialNumber()).thenReturn("TEST123")
 
-        testService.doSanityCheck()
+        runBlocking { testService.doSanityCheck() }
 
         // Verify synchronization
         assertThat(mockingDetails(notificationManager).invocations.any { it.method.name == "post" }).isTrue()
@@ -229,7 +230,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
         // Create real PumpState for proper destructuring
         val pumpState = PumpSync.PumpState(null, extendedBolus, null, null, "TEST123")
-        `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
+        runBlocking { `when`(pumpSync.expectedPumpState()).thenReturn(pumpState) }
 
         // Set underlying properties to make isExtendedInProgress true
         danaPump.extendedBolusStart = 1000000L
@@ -242,7 +243,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         `when`(activePump.serialNumber()).thenReturn("TEST123")
         `when`(activePump.isFakingTempsByExtendedBoluses).thenReturn(false)
 
-        testService.doSanityCheck()
+        runBlocking { testService.doSanityCheck() }
 
         // Verify notification
         assertThat(mockingDetails(notificationManager).invocations.any { it.method.name == "post" }).isTrue()
@@ -252,13 +253,13 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
     fun testDoSanityCheck_allMatch() {
         // Create real PumpState for proper destructuring
         val pumpState = PumpSync.PumpState(null, null, null, null, "TEST123")
-        `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
+        runBlocking { `when`(pumpSync.expectedPumpState()).thenReturn(pumpState) }
 
         danaPump.isTempBasalInProgress = false
         danaPump.isExtendedInProgress = false
         `when`(dateUtil.now()).thenReturn(2000000L)
 
-        testService.doSanityCheck()
+        runBlocking { testService.doSanityCheck() }
 
         // Verify no notifications when everything matches
         assertThat(mockingDetails(notificationManager).invocations.none { it.method.name == "post" }).isTrue()

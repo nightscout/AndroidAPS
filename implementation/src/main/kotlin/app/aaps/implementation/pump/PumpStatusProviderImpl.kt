@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.extensions.putIfThereIsValue
 import app.aaps.implementation.R
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +31,7 @@ class PumpStatusProviderImpl @Inject constructor(
     private val config: Config
 ) : PumpStatusProvider {
 
-    override fun shortStatus(veryShort: Boolean): String {
+    override suspend fun shortStatus(veryShort: Boolean): String {
         val pump = activePlugin.activePump
         val iCfg = insulin.iCfg
         val lines = mutableListOf<String>()
@@ -57,11 +56,12 @@ class PumpStatusProviderImpl @Inject constructor(
                 }
             }
 
-            pumpSync.expectedPumpState().temporaryBasal?.let { temporaryBasal ->
+            val expectedState = pumpSync.expectedPumpState()
+            expectedState.temporaryBasal?.let { temporaryBasal ->
                 lines += rh.gs(R.string.short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, rh))
             }
 
-            pumpSync.expectedPumpState().extendedBolus?.let { extendedBolus ->
+            expectedState.extendedBolus?.let { extendedBolus ->
                 lines += rh.gs(R.string.short_status_temp_basal, extendedBolus.toStringFull(dateUtil, rh))
             }
 
@@ -76,7 +76,7 @@ class PumpStatusProviderImpl @Inject constructor(
     /**
      * Generate JSON status of pump sent to the NS
      */
-    override fun generatePumpJsonStatus(): JSONObject {
+    override suspend fun generatePumpJsonStatus(): JSONObject {
         val pump = activePlugin.activePump
         // do not send data older than 60 minutes
         if (dateUtil.isOlderThan(date = pump.lastDataTime.value, minutes = 60)) return JSONObject()
@@ -84,7 +84,7 @@ class PumpStatusProviderImpl @Inject constructor(
         val profile = profileFunction.getProfile() ?: return JSONObject()
         val expectedPumpState = pumpSync.expectedPumpState()
         val now = System.currentTimeMillis()
-        val runningMode = runBlocking { persistenceLayer.getRunningModeActiveAt(now) }
+        val runningMode = persistenceLayer.getRunningModeActiveAt(now)
 
         val pumpJson = JSONObject()
             .put("reservoir", pump.reservoirLevel.value.iU(profile.insulinConcentration()).toInt())

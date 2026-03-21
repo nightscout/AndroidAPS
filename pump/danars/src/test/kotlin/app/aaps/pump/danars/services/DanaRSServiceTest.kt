@@ -2,15 +2,20 @@ package app.aaps.pump.danars.services
 
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
+import app.aaps.pump.danars.comm.DanaRSPacketBasalSetCancelTemporaryBasal
+import app.aaps.pump.danars.comm.DanaRSPacketBolusSetStepBolusStop
+import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
+import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -18,11 +23,6 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
-import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
-import app.aaps.pump.danars.comm.DanaRSPacketBolusSetStepBolusStop
-import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
-import app.aaps.pump.danars.comm.DanaRSPacketBasalSetCancelTemporaryBasal
 import javax.inject.Provider
 
 class DanaRSServiceTest : TestBaseWithProfile() {
@@ -34,7 +34,6 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var bleComm: BLEComm
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var pumpEnactResult: PumpEnactResult
     @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: Provider<DanaRSPacketGeneralInitialScreenInformation>
     @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: Provider<DanaRSPacketOptionSetUserOption>
     @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: Provider<DanaRSPacketBolusSetStepBolusStop>
@@ -236,7 +235,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Test
     fun testUpdateBasalsInPump_notConnected() {
         `when`(bleComm.isConnected).thenReturn(false)
-        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
 
         val result = danaRSService.updateBasalsInPump(validProfile)
 

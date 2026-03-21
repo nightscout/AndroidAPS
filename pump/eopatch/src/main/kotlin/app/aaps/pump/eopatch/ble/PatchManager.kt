@@ -38,6 +38,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Predicate
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -95,7 +96,7 @@ class PatchManager @Inject constructor(
         )
         compositeDisposable.add(
             rxBus
-                .toObservable<EventPatchActivationNotComplete>(EventPatchActivationNotComplete::class.java)
+                .toObservable(EventPatchActivationNotComplete::class.java)
                 .observeOn(aapsSchedulers.io)
                 .subscribeOn(aapsSchedulers.main)
                 .subscribe(Consumer {
@@ -136,22 +137,24 @@ class PatchManager @Inject constructor(
                 if (success) {
                     pumpSync.connectNewPump(true)
                     Thread.sleep(1000)
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
-                        System.currentTimeMillis(),
-                        TE.Type.CANNULA_CHANGE,
-                        null,
-                        null,
-                        PumpType.EOFLOW_EOPATCH2,
-                        patchConfig.patchSerialNumber
-                    )
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
-                        System.currentTimeMillis(),
-                        TE.Type.INSULIN_CHANGE,
-                        null,
-                        null,
-                        PumpType.EOFLOW_EOPATCH2,
-                        patchConfig.patchSerialNumber
-                    )
+                    runBlocking {
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            System.currentTimeMillis(),
+                            TE.Type.CANNULA_CHANGE,
+                            null,
+                            null,
+                            PumpType.EOFLOW_EOPATCH2,
+                            patchConfig.patchSerialNumber
+                        )
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            System.currentTimeMillis(),
+                            TE.Type.INSULIN_CHANGE,
+                            null,
+                            null,
+                            PumpType.EOFLOW_EOPATCH2,
+                            patchConfig.patchSerialNumber
+                        )
+                    }
                 }
             })
     }
@@ -166,14 +169,16 @@ class PatchManager @Inject constructor(
         val detailedBolusInfo = originalDetailedBolusInfo.copy()
 
         if (detailedBolusInfo.insulin > 0) {
-            pumpSync.syncBolusWithPumpId(
-                dateUtil.now(),  // Use real timestamp to have it different from carbs (otherwise NS sync fail)
-                PumpInsulin(detailedBolusInfo.insulin),
-                detailedBolusInfo.bolusType,
-                dateUtil.now(),
-                PumpType.EOFLOW_EOPATCH2,
-                patchConfig.patchSerialNumber
-            )
+            runBlocking {
+                pumpSync.syncBolusWithPumpId(
+                    dateUtil.now(),  // Use real timestamp to have it different from carbs (otherwise NS sync fail)
+                    PumpInsulin(detailedBolusInfo.insulin),
+                    detailedBolusInfo.bolusType,
+                    dateUtil.now(),
+                    PumpType.EOFLOW_EOPATCH2,
+                    patchConfig.patchSerialNumber
+                )
+            }
         }
     }
 
@@ -207,9 +212,9 @@ class PatchManager @Inject constructor(
                         .observeOn(aapsSchedulers.main)
                         .doOnSubscribe(Consumer {
                             if (pc.patchExpireAlertTime != hours) {
-                                Maybe.just<AlarmCode>(AlarmCode.B000)
-                                    .flatMap<AlarmCode>(Function { alarmCode: AlarmCode -> alarmRegistry.remove(alarmCode) })
-                                    .flatMap<AlarmCode>(Function { alarmCode: AlarmCode -> alarmRegistry.add(alarmCode, (pc.expireTimestamp - System.currentTimeMillis() - TimeUnit.HOURS.toMillis(hours.toLong())), false) })
+                                Maybe.just(AlarmCode.B000)
+                                    .flatMap(Function { alarmCode: AlarmCode -> alarmRegistry.remove(alarmCode) })
+                                    .flatMap(Function { alarmCode: AlarmCode -> alarmRegistry.add(alarmCode, (pc.expireTimestamp - System.currentTimeMillis() - TimeUnit.HOURS.toMillis(hours.toLong())), false) })
                                     .subscribe()
                             }
                         })
@@ -232,7 +237,7 @@ class PatchManager @Inject constructor(
             && !alarms.isOccurring(AlarmCode.A005)
             && !alarms.isOccurring(AlarmCode.A020)
         ) {
-            rxAction.runOnMainThread(Runnable { rxBus.send(EventPatchActivationNotComplete()) })
+            rxAction.runOnMainThread({ rxBus.send(EventPatchActivationNotComplete()) })
         }
     }
 }

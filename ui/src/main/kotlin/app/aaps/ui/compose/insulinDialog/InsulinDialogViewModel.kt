@@ -63,7 +63,7 @@ class InsulinDialogViewModel @Inject constructor(
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     val decimalFormatter: DecimalFormatter,
-    private val loop: Loop,
+    loop: Loop,
     val preferences: Preferences,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
@@ -235,6 +235,10 @@ class InsulinDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
+        viewModelScope.launch { confirmAndSaveSuspend() }
+    }
+
+    private suspend fun confirmAndSaveSuspend() {
         val state = uiState.value
         activePlugin.activePump
         val insulin = state.insulin

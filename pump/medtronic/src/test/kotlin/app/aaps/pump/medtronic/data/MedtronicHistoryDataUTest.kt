@@ -14,6 +14,7 @@ import app.aaps.pump.medtronic.util.MedtronicUtil
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -31,6 +32,20 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
         medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, notificationManager)
         whenever(medtronicUtil.medtronicPumpModel).thenReturn(MedtronicDeviceType.Medtronic_723_Revel)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
+        // Default mock returns for suspend PumpSync methods
+        runBlocking {
+            whenever(
+                pumpSync.insertFingerBgIfNewWithTimestamp(
+                    org.mockito.kotlin.any(),
+                    org.mockito.kotlin.any(),
+                    org.mockito.kotlin.anyOrNull(),
+                    org.mockito.kotlin.anyOrNull(),
+                    org.mockito.kotlin.anyOrNull(),
+                    org.mockito.kotlin.anyOrNull(),
+                    org.mockito.kotlin.anyOrNull()
+                )
+            ).thenReturn(true)
+        }
     }
 
     @Test
@@ -123,14 +138,16 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
 
         unitToTest.processBgReceived(listOf(bgRecord))
 
-        verify(pumpSync).insertFingerBgIfNewWithTimestamp(
-            DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
-            glucoseMgdl.toDouble(),
-            GlucoseUnit.MGDL, null,
-            bgRecord.pumpId,
-            medtronicPumpStatus.pumpType,
-            medtronicPumpStatus.serialNumber
-        )
+        runBlocking {
+            verify(pumpSync).insertFingerBgIfNewWithTimestamp(
+                DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
+                glucoseMgdl.toDouble(),
+                GlucoseUnit.MGDL, null,
+                bgRecord.pumpId,
+                medtronicPumpStatus.pumpType,
+                medtronicPumpStatus.serialNumber
+            )
+        }
 
     }
 
@@ -150,14 +167,16 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
 
         unitToTest.processBgReceived(listOf(bgRecord))
 
-        verify(pumpSync).insertFingerBgIfNewWithTimestamp(
-            DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
-            glucoseMmol,
-            GlucoseUnit.MMOL, null,
-            bgRecord.pumpId,
-            medtronicPumpStatus.pumpType,
-            medtronicPumpStatus.serialNumber
-        )
+        runBlocking {
+            verify(pumpSync).insertFingerBgIfNewWithTimestamp(
+                DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
+                glucoseMmol,
+                GlucoseUnit.MMOL, null,
+                bgRecord.pumpId,
+                medtronicPumpStatus.pumpType,
+                medtronicPumpStatus.serialNumber
+            )
+        }
 
     }
 

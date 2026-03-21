@@ -190,7 +190,7 @@ class BolusCarbsViewModel @Inject constructor(
     /**
      * Get current profile
      */
-    fun getProfile() = profileFunction.getProfile()
+    suspend fun getProfile() = profileFunction.getProfile()
 
     /**
      * Prepare delete confirmation message

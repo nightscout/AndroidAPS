@@ -11,6 +11,7 @@ import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -129,9 +130,11 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
 
     @Test
     fun `cancelTempBasal should return success when TBR already false`() {
-        whenever(pumpSync.expectedPumpState()).thenReturn(
-            PumpSync.PumpState(null, null, null, profile, "")
-        )
+        runBlocking {
+            whenever(pumpSync.expectedPumpState()).thenReturn(
+                PumpSync.PumpState(null, null, null, profile, "")
+            )
+        }
 
         val result = plugin.cancelTempBasal(false)
 
@@ -144,9 +147,11 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         val patchState = PatchState()
         patchState.update(ByteArray(20), System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
-        whenever(pumpSync.expectedPumpState()).thenReturn(
-            PumpSync.PumpState(null, null, null, profile, "")
-        )
+        runBlocking {
+            whenever(pumpSync.expectedPumpState()).thenReturn(
+                PumpSync.PumpState(null, null, null, profile, "")
+            )
+        }
 
         val result = plugin.cancelExtendedBolus()
 

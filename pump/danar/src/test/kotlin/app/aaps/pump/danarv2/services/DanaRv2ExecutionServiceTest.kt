@@ -12,6 +12,7 @@ import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -141,7 +142,7 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testUpdateBasalsInPump_notConnected() {
-        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         `when`(profile.getBasal()).thenReturn(1.0)
 
         val result = danaRv2ExecutionService.updateBasalsInPump(profile)

@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
  *  - for pumps that have a reliable history that can be read and which therefore issue a bolus on the pump,
  *    read the history back and add new bolus entries on the pump, the method [syncBolusWithPumpId]
  *    are used to inform AAPS-core of a new bolus.
- *    [info.nightscout.androidaps.danars.DanaRSPlugin] is a pump driver that
+ *    [app.aaps.pump.danars.DanaRSPlugin] is a pump driver that
  *    takes this approach.
  *  - for pumps that don't support history or take rather long to complete a bolus, the methods
  *    [addBolusWithTempId] and [syncBolusWithTempId] provide a mechanism to notify AAPS-core of a started
@@ -143,7 +143,7 @@ interface PumpSync {
         data class Bolus(val timestamp: Long, val amount: Double)
     }
 
-    fun expectedPumpState(): PumpState
+    suspend fun expectedPumpState(): PumpState
 
     /*
      *   BOLUSES & CARBS
@@ -171,7 +171,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun addBolusWithTempId(timestamp: Long, amount: PumpInsulin, temporaryId: Long, type: BS.Type, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun addBolusWithTempId(timestamp: Long, amount: PumpInsulin, temporaryId: Long, type: BS.Type, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of boluses with temporary id
@@ -195,7 +195,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if record is successfully updated
      **/
-    fun syncBolusWithTempId(timestamp: Long, amount: PumpInsulin, temporaryId: Long, type: BS.Type?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun syncBolusWithTempId(timestamp: Long, amount: PumpInsulin, temporaryId: Long, type: BS.Type?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of boluses
@@ -214,7 +214,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun syncBolusWithPumpId(timestamp: Long, amount: PumpInsulin, type: BS.Type?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun syncBolusWithPumpId(timestamp: Long, amount: PumpInsulin, type: BS.Type?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of carbs
@@ -232,7 +232,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
 
     /*
      *   THERAPY EVENTS
@@ -255,7 +255,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: TE.Type, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: TE.Type, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of FINGER_STICK_BG_VALUE events
@@ -275,7 +275,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun insertFingerBgIfNewWithTimestamp(timestamp: Long, glucose: Double, glucoseUnit: GlucoseUnit, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun insertFingerBgIfNewWithTimestamp(timestamp: Long, glucose: Double, glucoseUnit: GlucoseUnit, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Create an announcement
@@ -292,7 +292,7 @@ interface PumpSync {
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
      **/
-    fun insertAnnouncement(error: String, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String)
+    suspend fun insertAnnouncement(error: String, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String)
 
     /*
      *   TEMPORARY BASALS
@@ -352,7 +352,7 @@ interface PumpSync {
      * @return true if new record is created
      **/
 
-    fun syncTemporaryBasalWithPumpId(timestamp: Long, rate: PumpRate, duration: Long, isAbsolute: Boolean, type: TemporaryBasalType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun syncTemporaryBasalWithPumpId(timestamp: Long, rate: PumpRate, duration: Long, isAbsolute: Boolean, type: TemporaryBasalType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of temporary basals end event
@@ -378,7 +378,7 @@ interface PumpSync {
      * @param ignorePumpIds if true data is not checked for valid pump
      * @return true if running record is found and ended by changing duration
      **/
-    fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String, ignorePumpIds: Boolean = false): Boolean
+    suspend fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String, ignorePumpIds: Boolean = false): Boolean
 
     /**
      * Create temporary basal with temporary id
@@ -407,7 +407,7 @@ interface PumpSync {
      * see [app.aaps.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction]
      **/
 
-    fun addTemporaryBasalWithTempId(timestamp: Long, rate: PumpRate, duration: Long, isAbsolute: Boolean, tempId: Long, type: TemporaryBasalType, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun addTemporaryBasalWithTempId(timestamp: Long, rate: PumpRate, duration: Long, isAbsolute: Boolean, tempId: Long, type: TemporaryBasalType, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of temporary basal with temporary id
@@ -433,7 +433,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if record is successfully updated
      **/
-    fun syncTemporaryBasalWithTempId(
+    suspend fun syncTemporaryBasalWithTempId(
         timestamp: Long,
         rate: PumpRate,
         duration: Long,
@@ -458,7 +458,7 @@ interface PumpSync {
      * @param timestamp caller
      * @return true if running record is found and invalidated
      **/
-    fun invalidateTemporaryBasal(id: Long, sources: Sources, timestamp: Long): Boolean
+    suspend fun invalidateTemporaryBasal(id: Long, sources: Sources, timestamp: Long): Boolean
 
     /**
      * Invalidate of temporary basals that failed to start
@@ -473,7 +473,7 @@ interface PumpSync {
      * @return true if running record is found and invalidated
      **/
 
-    fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Invalidate of temporary basals that failed to start
@@ -486,7 +486,7 @@ interface PumpSync {
      * @param temporaryId    temporary id of temporary basal
      * @return true if running record is found and invalidated
      **/
-    fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean
+    suspend fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean
 
     /**
      * Synchronization of extended bolus
@@ -509,7 +509,7 @@ interface PumpSync {
      * @return true if new record is created
      **/
 
-    fun syncExtendedBolusWithPumpId(timestamp: Long, rate: PumpRate, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun syncExtendedBolusWithPumpId(timestamp: Long, rate: PumpRate, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of extended bolus end event
@@ -534,7 +534,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if running record is found and ended by changing duration
      **/
-    fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    suspend fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /*
     *   TOTAL DAILY DOSE
@@ -563,8 +563,7 @@ interface PumpSync {
      * @return true if new record is created
      **/
 
-    fun createOrUpdateTotalDailyDose(timestamp: Long, bolusAmount: Double, basalAmount: Double, totalAmount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
-
+    suspend fun createOrUpdateTotalDailyDose(timestamp: Long, bolusAmount: Double, basalAmount: Double, totalAmount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Check if a Profile is Running at time
@@ -576,5 +575,5 @@ interface PumpSync {
      * @return true if running profile is found
      **/
 
-    fun isProfileRunning(time: Long): Boolean
+    suspend fun isProfileRunning(time: Long): Boolean
 }

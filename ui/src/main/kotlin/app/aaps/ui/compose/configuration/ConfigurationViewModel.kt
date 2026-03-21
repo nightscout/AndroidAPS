@@ -1,5 +1,9 @@
 package app.aaps.ui.compose.configuration
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -9,8 +13,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.compose.main.DrawerCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,8 +24,7 @@ import javax.inject.Inject
 
 @Immutable
 data class ConfigurationUiState(
-    val pluginCategories: List<DrawerCategory> = emptyList(),
-    val pluginStateVersion: Int = 0,
+    val categories: List<ConfigCategoryUiModel> = emptyList(),
     val isSimpleMode: Boolean = true,
     val hardwarePumpConfirmation: HardwarePumpConfirmation? = null
 )
@@ -29,7 +32,7 @@ data class ConfigurationUiState(
 @Immutable
 data class HardwarePumpConfirmation(
     val message: String,
-    val plugin: PluginBase,
+    val pluginId: String,
     val type: PluginType,
     val enabled: Boolean
 )
@@ -40,11 +43,14 @@ class ConfigurationViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,
     private val config: Config,
-    private val preferences: Preferences,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     val uiState: StateFlow<ConfigurationUiState>
         field = MutableStateFlow(ConfigurationUiState())
+
+    // Keep plugin references for toggle callbacks (UI only sees IDs)
+    private var pluginLookup: Map<String, PluginBase> = emptyMap()
 
     init {
         loadCategories()
@@ -52,24 +58,19 @@ class ConfigurationViewModel @Inject constructor(
 
     private fun loadCategories() {
         viewModelScope.launch {
-            val categories = buildPluginCategories()
-            uiState.update { state ->
-                state.copy(
-                    pluginCategories = categories,
-                    isSimpleMode = preferences.simpleMode
-                )
-            }
+            refreshCategories()
         }
     }
 
-    fun togglePluginEnabled(plugin: PluginBase, type: PluginType, enabled: Boolean) {
+    fun togglePluginEnabled(pluginId: String, type: PluginType, enabled: Boolean) {
+        val plugin = pluginLookup[pluginId] ?: return
         val confirmationMessage = configBuilder.requestPluginSwitch(plugin, enabled, type)
         if (confirmationMessage != null) {
             uiState.update { state ->
                 state.copy(
                     hardwarePumpConfirmation = HardwarePumpConfirmation(
                         message = confirmationMessage,
-                        plugin = plugin,
+                        pluginId = pluginId,
                         type = type,
                         enabled = enabled
                     )
@@ -82,7 +83,8 @@ class ConfigurationViewModel @Inject constructor(
 
     fun confirmHardwarePumpSwitch() {
         val confirmation = uiState.value.hardwarePumpConfirmation ?: return
-        configBuilder.confirmPumpPluginSwitch(confirmation.plugin, confirmation.enabled, confirmation.type)
+        val plugin = pluginLookup[confirmation.pluginId] ?: return
+        configBuilder.confirmPumpPluginSwitch(plugin, confirmation.enabled, confirmation.type)
         uiState.update { it.copy(hardwarePumpConfirmation = null) }
         refreshCategories()
     }
@@ -93,136 +95,98 @@ class ConfigurationViewModel @Inject constructor(
     }
 
     private fun refreshCategories() {
-        val categories = buildPluginCategories()
+        val isSimple = preferences.simpleMode
+        val categories = buildCategories(isSimple)
         uiState.update { state ->
             state.copy(
-                pluginCategories = categories,
-                pluginStateVersion = state.pluginStateVersion + 1
+                categories = categories,
+                isSimpleMode = isSimple
             )
         }
     }
 
-    private fun buildPluginCategories(): List<DrawerCategory> {
-        val categories = mutableListOf<DrawerCategory>()
+    private fun buildCategories(isSimpleMode: Boolean): List<ConfigCategoryUiModel> {
+        val lookup = mutableMapOf<String, PluginBase>()
+        val categories = mutableListOf<ConfigCategoryUiModel>()
 
-        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.INSULIN,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_insulin,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.INSULIN)
-                    )
+        fun addCategory(type: PluginType, titleRes: Int) {
+            val plugins = activePlugin.getSpecificPluginsVisibleInList(type)
+            if (plugins.isEmpty()) return
+            val isMultiSelect = isMultiSelect(type)
+
+            val pluginModels = plugins.map { plugin ->
+                val id = plugin.javaClass.simpleName
+                lookup[id] = plugin
+                val pluginEnabled = plugin.isEnabled(type)
+                val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
+                ConfigPluginUiModel(
+                    id = id,
+                    name = plugin.name,
+                    description = plugin.description,
+                    menuIcon = plugin.menuIcon,
+                    composeIcon = plugin.pluginDescription.icon,
+                    isEnabled = pluginEnabled,
+                    canToggle = !plugin.pluginDescription.alwaysEnabled && (isMultiSelect || !pluginEnabled),
+                    showPreferences = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode)
                 )
             }
+
+            val enabledPlugins = pluginModels.filter { it.isEnabled }
+            val subtitle = when {
+                enabledPlugins.size == 1 -> enabledPlugins.first().name
+                isMultiSelect && enabledPlugins.isNotEmpty() -> "${enabledPlugins.size}"
+                else -> "-"
+            }
+
+            val singleEnabled = enabledPlugins.singleOrNull()
+            val defaultIcon = when (type) {
+                PluginType.SYNC -> Icons.Default.Sync
+                PluginType.GENERAL -> Icons.Default.Extension
+                else -> Icons.Default.Settings
+            }
+
+            categories.add(
+                ConfigCategoryUiModel(
+                    type = type,
+                    titleRes = titleRes,
+                    plugins = pluginModels,
+                    isMultiSelect = isMultiSelect,
+                    subtitle = subtitle,
+                    categoryIcon = singleEnabled?.composeIcon ?: defaultIcon,
+                    categoryIconRes = singleEnabled?.let { if (it.menuIcon != -1) it.menuIcon else null }
+                )
+            )
         }
 
+        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {
+            addCategory(PluginType.INSULIN, app.aaps.core.ui.R.string.configbuilder_insulin)
+        }
         if (!config.AAPSCLIENT) {
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.BGSOURCE,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_bgsource,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.BGSOURCE)
-                    )
-                )
-            }
-
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.SMOOTHING).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.SMOOTHING,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_smoothing,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.SMOOTHING)
-                    )
-                )
-            }
-
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.PUMP,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_pump,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.PUMP)
-                    )
-                )
-            }
+            addCategory(PluginType.BGSOURCE, app.aaps.core.ui.R.string.configbuilder_bgsource)
+            addCategory(PluginType.SMOOTHING, app.aaps.core.ui.R.string.configbuilder_smoothing)
+            addCategory(PluginType.PUMP, app.aaps.core.ui.R.string.configbuilder_pump)
         }
-
         if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.SENSITIVITY).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.SENSITIVITY,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_sensitivity,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.SENSITIVITY)
-                    )
-                )
-            }
+            addCategory(PluginType.SENSITIVITY, app.aaps.core.ui.R.string.configbuilder_sensitivity)
         }
-
         if (config.APS) {
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.APS).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.APS,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_aps,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.APS)
-                    )
-                )
-            }
-
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.LOOP,
-                        titleRes = app.aaps.core.ui.R.string.configbuilder_loop,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.LOOP)
-                    )
-                )
-            }
-
-            activePlugin.getSpecificPluginsVisibleInList(PluginType.CONSTRAINTS).takeIf { it.isNotEmpty() }?.let { plugins ->
-                categories.add(
-                    DrawerCategory(
-                        type = PluginType.CONSTRAINTS,
-                        titleRes = app.aaps.core.ui.R.string.constraints,
-                        plugins = plugins,
-                        isMultiSelect = DrawerCategory.isMultiSelect(PluginType.CONSTRAINTS)
-                    )
-                )
-            }
+            addCategory(PluginType.APS, app.aaps.core.ui.R.string.configbuilder_aps)
+            addCategory(PluginType.LOOP, app.aaps.core.ui.R.string.configbuilder_loop)
+            addCategory(PluginType.CONSTRAINTS, app.aaps.core.ui.R.string.constraints)
         }
+        addCategory(PluginType.SYNC, app.aaps.core.ui.R.string.configbuilder_sync)
+        addCategory(PluginType.GENERAL, app.aaps.core.ui.R.string.configbuilder_general)
 
-        activePlugin.getSpecificPluginsVisibleInList(PluginType.SYNC).takeIf { it.isNotEmpty() }?.let { plugins ->
-            categories.add(
-                DrawerCategory(
-                    type = PluginType.SYNC,
-                    titleRes = app.aaps.core.ui.R.string.configbuilder_sync,
-                    plugins = plugins,
-                    isMultiSelect = DrawerCategory.isMultiSelect(PluginType.SYNC)
-                )
-            )
-        }
-
-        activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL).takeIf { it.isNotEmpty() }?.let { plugins ->
-            categories.add(
-                DrawerCategory(
-                    type = PluginType.GENERAL,
-                    titleRes = app.aaps.core.ui.R.string.configbuilder_general,
-                    plugins = plugins,
-                    isMultiSelect = DrawerCategory.isMultiSelect(PluginType.GENERAL)
-                )
-            )
-        }
-
+        pluginLookup = lookup
         return categories
+    }
+
+    companion object {
+
+        private fun isMultiSelect(type: PluginType): Boolean =
+            type == PluginType.GENERAL ||
+                type == PluginType.CONSTRAINTS ||
+                type == PluginType.LOOP ||
+                type == PluginType.SYNC
     }
 }

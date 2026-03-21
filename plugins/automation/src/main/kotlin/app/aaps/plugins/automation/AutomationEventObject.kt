@@ -37,8 +37,8 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
         injector.androidInjector().inject(this)
     }
 
-    override fun canRun(): Boolean = trigger.shouldRun()
-    override fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
+    override suspend fun canRun(): Boolean = trigger.shouldRun()
+    override suspend fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
     override fun firstActionIcon(): Int? = actions.firstOrNull()?.icon()
     override fun actionsDescription(): List<String> = actions.map { it.shortDescription() }
 

@@ -86,6 +86,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -210,11 +211,11 @@ class DiaconnG8Service : DaggerService() {
 
             diaconnG8Pump.lastConnection = System.currentTimeMillis()
 
-            val profile = pumpSync.expectedPumpState().profile
+            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
             if (profile != null && abs(diaconnG8Pump.baseAmount - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
 
-                if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                if (!diaconnG8Plugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(EventProfileChangeRequested())
                 }
             }
@@ -273,12 +274,14 @@ class DiaconnG8Service : DaggerService() {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
-                    pumpSync.insertAnnouncement(
-                        rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
-                        null,
-                        PumpType.DIACONN_G8,
-                        diaconnG8Pump.serialNo.toString()
-                    )
+                    runBlocking {
+                        pumpSync.insertAnnouncement(
+                            rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
+                            null,
+                            PumpType.DIACONN_G8,
+                            diaconnG8Pump.serialNo.toString()
+                        )
+                    }
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }

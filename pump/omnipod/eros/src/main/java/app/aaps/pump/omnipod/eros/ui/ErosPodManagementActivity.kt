@@ -36,6 +36,7 @@ import app.aaps.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardAc
 import app.aaps.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -76,7 +77,7 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.buttonActivatePod.setOnClickListener {
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { profileFunction.getProfile() }
             if (profile == null) {
                 uiInteraction.showOkDialog(
                     this,

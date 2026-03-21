@@ -19,7 +19,6 @@ import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -33,8 +32,6 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
-
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
     var cpEvent = InputCarePortalMenu(rh)
@@ -45,7 +42,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
 
     @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         val enteredBy = "AAPS"
         val eventTime = dateUtil.now()
         val therapyEvent = TE(

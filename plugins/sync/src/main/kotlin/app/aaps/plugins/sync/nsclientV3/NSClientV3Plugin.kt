@@ -20,6 +20,7 @@ import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
@@ -424,7 +425,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse}")
-                        return config.ignoreNightscoutV3Errors()
+                        return config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS)
                     }
                 }
                 slowDown()
@@ -449,7 +450,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
-                        return config.ignoreNightscoutV3Errors()
+                        return config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS)
                     }
                 }
                 result.identifier?.let {
@@ -495,7 +496,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
-                        return config.ignoreNightscoutV3Errors()
+                        return config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS)
                     }
                 }
                 result.identifier?.let {
@@ -540,7 +541,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse}")
-                        return config.ignoreNightscoutV3Errors()
+                        return config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS)
                     }
                 }
                 result.identifier?.let {
@@ -606,7 +607,7 @@ class NSClientV3Plugin @Inject constructor(
 
                         else -> {
                             nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
-                            return config.ignoreNightscoutV3Errors()
+                            return config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS)
                         }
                     }
                     result.identifier?.let {

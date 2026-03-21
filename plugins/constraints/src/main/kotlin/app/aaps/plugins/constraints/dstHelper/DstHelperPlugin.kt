@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -68,7 +69,7 @@ class DstHelperPlugin @Inject constructor(
         }
         if (wasDST(cal)) {
             if (!loop.runningMode.isSuspended()) {
-                val profile = profileFunction.getProfile() ?: return
+                val profile = runBlocking { profileFunction.getProfile() } ?: return
                 loop.handleRunningModeChange(newRM = RM.Mode.SUSPENDED_BY_DST, durationInMinutes = T.hours((-DISABLE_TIME_FRAME_HOURS).toLong()).mins().toInt(), action = Action.SUSPEND, source = Sources.Aaps, profile = profile)
                 val snoozedTo: Long = preferences.get(DstHelperLongKey.SnoozeLoopDisabled)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {

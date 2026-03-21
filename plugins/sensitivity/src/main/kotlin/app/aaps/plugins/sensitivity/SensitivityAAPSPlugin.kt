@@ -44,8 +44,7 @@ class SensitivityAAPSPlugin @Inject constructor(
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val persistenceLayer: PersistenceLayer,
-    private val config: Config
+    private val persistenceLayer: PersistenceLayer
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
@@ -60,7 +59,7 @@ class SensitivityAAPSPlugin @Inject constructor(
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         if (profile == null) {
             aapsLogger.error("No profile")
             return AutosensResult()

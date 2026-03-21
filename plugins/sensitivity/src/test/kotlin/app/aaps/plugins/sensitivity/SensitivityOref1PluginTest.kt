@@ -18,7 +18,7 @@ class SensitivityOref1PluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         preferenceManager = PreferenceManager(context)
         sensitivityOref1Plugin = SensitivityOref1Plugin(
-            aapsLogger, rh, preferences, profileFunction, dateUtil, persistenceLayer, config
+            aapsLogger, rh, preferences, profileFunction, dateUtil, persistenceLayer
         )
     }
 

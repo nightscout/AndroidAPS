@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -67,7 +68,7 @@ class AutomationViewModel @Inject constructor(
             val profile = profileFunction.getProfile()
 
             val isSuspended = loop.runningMode.isSuspended()
-            if (isSuspended || !pump.isInitialized() || profile == null || config.showUserActionsOnWatchOnly()) {
+            if (isSuspended || !pump.isInitialized() || profile == null || config.isEnabled(ExternalOptions.SHOW_USER_ACTIONS_ON_WATCH_ONLY)) {
                 uiState.update { it.copy(items = emptyList()) }
                 return@launch
             }

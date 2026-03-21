@@ -21,14 +21,12 @@ import app.aaps.pump.equil.compose.steps.UnpairDetachStep
 @Composable
 internal fun EquilWizardScreen(viewModel: EquilWizardViewModel) {
     val wizardStep by viewModel.wizardStep.collectAsStateWithLifecycle()
-    val titleResId by viewModel.titleResId.collectAsStateWithLifecycle()
     val totalSteps by viewModel.totalSteps.collectAsStateWithLifecycle()
     val currentStepIndex by viewModel.currentStepIndex.collectAsStateWithLifecycle()
     val canGoBack by viewModel.canGoBack.collectAsStateWithLifecycle()
 
     WizardScreen(
         currentStep = wizardStep,
-        title = stringResource(titleResId),
         totalSteps = totalSteps,
         currentStepIndex = currentStepIndex,
         canGoBack = canGoBack,

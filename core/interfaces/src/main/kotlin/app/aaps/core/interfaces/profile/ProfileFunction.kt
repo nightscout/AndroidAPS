@@ -12,22 +12,22 @@ interface ProfileFunction {
     /**
      * Profile name with added modifiers
      */
-    fun getProfileName(): String
+    suspend fun getProfileName(): String
 
     /**
      * Profile name without any modifiers
      */
-    fun getOriginalProfileName(): String
+    suspend fun getOriginalProfileName(): String
 
     /**
      * Profile name with added modifiers and remaining time
      */
-    fun getProfileNameWithRemainingTime(): String
+    suspend fun getProfileNameWithRemainingTime(): String
 
     /**
      * Check if there is actual profile existing
      */
-    fun isProfileValid(from: String): Boolean
+    suspend fun isProfileValid(from: String): Boolean
 
     /**
      * User preferences unit set in preferences
@@ -37,26 +37,26 @@ interface ProfileFunction {
     /**
      * Get effective (active) profile confirmed by pump for "now"
      */
-    fun getProfile(): EffectiveProfile?
+    suspend fun getProfile(): EffectiveProfile?
 
     /**
      * Get effective (active) profile confirmed by pump for time
      */
-    fun getProfile(time: Long): EffectiveProfile?
+    suspend fun getProfile(time: Long): EffectiveProfile?
 
     /**
      * Get requested profile by user (profile must not be active yet)
      *
      * @return ProfileSwitch if exists
      */
-    fun getRequestedProfile(): PS?
+    suspend fun getRequestedProfile(): PS?
 
     /**
      * Get requested profile by user (profile must not be active yet)
      *
      * @return true if ProfileSwitch != EffectiveProfileSwitch
      */
-    fun isProfileChangePending(): Boolean
+    suspend fun isProfileChangePending(): Boolean
 
     /**
      * Build a new circadian profile switch request based on provided profile
@@ -103,7 +103,7 @@ interface ProfileFunction {
      * @param listValues Values for UserEntry logging
      * @return true if profile switch is created
      */
-    fun createProfileSwitch(
+    suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
         action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
     ): Boolean
@@ -116,5 +116,5 @@ interface ProfileFunction {
      * @param source Source for UserEntry logging
      * @return true if profile switch was created
      */
-    fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
+    suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
 }

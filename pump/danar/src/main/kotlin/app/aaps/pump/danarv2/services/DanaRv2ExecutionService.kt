@@ -56,6 +56,7 @@ import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -96,12 +97,12 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingextendedbolusstatus)))
             mSerialIOThread?.sendMessage(exStatusMsg)
             danaPump.lastConnection = System.currentTimeMillis()
-            val profile = pumpSync.expectedPumpState().profile
+            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
             val pump = activePlugin.activePump
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
                 mSerialIOThread?.sendMessage(MsgSettingBasal(injector))
-                if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                if (!danaRv2Plugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(EventProfileChangeRequested())
                 }
             }
@@ -160,12 +161,14 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
-                    pumpSync.insertAnnouncement(
-                        rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
-                        null,
-                        PumpType.DANA_R_KOREAN,
-                        danaRKoreanPlugin.serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.insertAnnouncement(
+                            rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
+                            null,
+                            PumpType.DANA_R_KOREAN,
+                            danaRKoreanPlugin.serialNumber()
+                        )
+                    }
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }

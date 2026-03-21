@@ -27,6 +27,7 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTempbasalBinding
 import com.google.common.base.Joiner
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -68,7 +69,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val profile = profileFunction.getProfile() ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
@@ -113,7 +114,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         var percent = 0
         var absolute = 0.0
         val durationInMinutes = binding.duration.value.toInt()
-        val profile = profileFunction.getProfile() ?: return false
+        val profile = runBlocking { profileFunction.getProfile() } ?: return false
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(binding.basalPercentInput.text)

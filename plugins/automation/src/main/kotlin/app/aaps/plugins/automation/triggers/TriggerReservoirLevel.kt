@@ -39,7 +39,7 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val iCfg = insulin.iCfg
         val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value.iU(iCfg.concentration)
         if (comparator.value.check(actualReservoirLevel, reservoirLevel.value)) {

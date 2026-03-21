@@ -144,11 +144,11 @@ class LoopTest @Inject constructor() {
         assertThat(result).isTrue()
 
         // wait until PS is processed and EPS is created in DB
-        assertThat(rxHelper.waitUntil("step3: profile available") { profileFunction.getProfile() != null }).isTrue()
+        assertThat(rxHelper.waitUntil("step3: profile available") { runBlocking { profileFunction.getProfile() } != null }).isTrue()
         assertThat(profileFunction.getProfile()).isNotNull()
 
         // Wait until pump has received the profile (baseBasalRate > 0)
-        assertThat(rxHelper.waitUntil("step3: pump profile set") { pumpSync.expectedPumpState().profile != null }).isTrue()
+        assertThat(rxHelper.waitUntil("step3: pump profile set") { runBlocking { pumpSync.expectedPumpState() }.profile != null }).isTrue()
 
         // Loop should run — may get "NO APS SELECTED" (no glucose) or a real result (stale glucose cache)
         rxHelper.listen(EventLoopUpdateGui::class.java)

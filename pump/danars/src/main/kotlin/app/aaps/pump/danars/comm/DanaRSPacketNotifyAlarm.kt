@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class DanaRSPacketNotifyAlarm @Inject constructor(
@@ -74,7 +75,7 @@ class DanaRSPacketNotifyAlarm @Inject constructor(
             return
         }
         notificationManager.post(NotificationId.DANA_PUMP_ALARM, errorString)
-        pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber)
+        runBlocking { pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber) }
     }
 
     override val friendlyName: String = "NOTIFY__ALARM"

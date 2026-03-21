@@ -3,6 +3,7 @@ package app.aaps.pump.danar.comm
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 
 class MsgError(
     injector: HasAndroidInjector
@@ -33,6 +34,6 @@ class MsgError(
             failed = false
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
-        pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber)
+        runBlocking { pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber) }
     }
 }

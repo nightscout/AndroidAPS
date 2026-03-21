@@ -17,6 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -74,7 +75,7 @@ class QueueWorkerTest : TestBaseWithProfile() {
         pumpDescription.basalMinimumRate = 0.1
 
         whenever(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
 
         val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)

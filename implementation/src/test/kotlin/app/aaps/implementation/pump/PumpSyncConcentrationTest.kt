@@ -22,7 +22,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -73,8 +73,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
         sut = PumpSyncImplementation(
             aapsLogger, dateUtil, preferences, notificationManager,
-            profileFunction, persistenceLayer, activePlugin,
-            kotlinx.coroutines.CoroutineScope(UnconfinedTestDispatcher())
+            profileFunction, persistenceLayer, activePlugin
         )
     }
 
@@ -124,7 +123,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `addBolusWithTempId converts U200 pump insulin to IU`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -139,7 +138,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `addBolusWithTempId priming uses raw cU value`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -154,7 +153,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `addBolusWithTempId with U100 stores cU value unchanged`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(1.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg100)
@@ -171,7 +170,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `syncBolusWithPumpId converts U200 pump insulin to IU`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -185,7 +184,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `syncBolusWithPumpId priming uses raw cU`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -201,7 +200,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `syncBolusWithTempId converts U50 pump insulin to IU`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(0.5)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg50)
@@ -218,7 +217,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `syncTemporaryBasalWithPumpId converts absolute rate with U200`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -234,7 +233,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `syncTemporaryBasalWithPumpId does not convert percent rate`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -252,7 +251,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `addTemporaryBasalWithTempId converts absolute rate with U200`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -268,7 +267,7 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `syncExtendedBolusWithPumpId converts rate with U200`() {
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
             whenever(profileFunction.getProfile(now)).thenReturn(effectiveProfile)
             whenever(effectiveProfile.insulinConcentration()).thenReturn(2.0)
             whenever(effectiveProfile.iCfg).thenReturn(iCfg200)
@@ -285,27 +284,27 @@ class PumpSyncConcentrationTest : TestBase() {
 
     @Test
     fun `addBolusWithTempId returns false when no profile running`() {
-        whenever(profileFunction.getProfile(now)).thenReturn(null)
+        runBlocking { whenever(profileFunction.getProfile(now)).thenReturn(null) }
 
-        val result = sut.addBolusWithTempId(now, PumpInsulin(3.0), 100L, BS.Type.NORMAL, pumpType, pumpSerial)
+        val result = runBlocking { sut.addBolusWithTempId(now, PumpInsulin(3.0), 100L, BS.Type.NORMAL, pumpType, pumpSerial) }
 
         assertThat(result).isFalse()
     }
 
     @Test
     fun `syncTemporaryBasalWithPumpId returns false when no profile running`() {
-        whenever(profileFunction.getProfile(now)).thenReturn(null)
+        runBlocking { whenever(profileFunction.getProfile(now)).thenReturn(null) }
 
-        val result = sut.syncTemporaryBasalWithPumpId(now, PumpRate(2.0), 1800000L, true, PumpSync.TemporaryBasalType.NORMAL, 300L, pumpType, pumpSerial)
+        val result = runBlocking { sut.syncTemporaryBasalWithPumpId(now, PumpRate(2.0), 1800000L, true, PumpSync.TemporaryBasalType.NORMAL, 300L, pumpType, pumpSerial) }
 
         assertThat(result).isFalse()
     }
 
     @Test
     fun `syncExtendedBolusWithPumpId returns false when no profile running`() {
-        whenever(profileFunction.getProfile(now)).thenReturn(null)
+        runBlocking { whenever(profileFunction.getProfile(now)).thenReturn(null) }
 
-        val result = sut.syncExtendedBolusWithPumpId(now, PumpRate(2.0), 3600000L, false, 500L, pumpType, pumpSerial)
+        val result = runBlocking { sut.syncExtendedBolusWithPumpId(now, PumpRate(2.0), 3600000L, false, 500L, pumpType, pumpSerial) }
 
         assertThat(result).isFalse()
     }

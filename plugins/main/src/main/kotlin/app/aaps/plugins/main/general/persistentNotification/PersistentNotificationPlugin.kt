@@ -34,6 +34,7 @@ import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.plugins.main.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -105,11 +106,11 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun triggerNotificationUpdate() {
-        updateNotification()
+        runBlocking { updateNotification() }
         dummyServiceHelper.startService(context)
     }
 
-    private fun updateNotification() {
+    private suspend fun updateNotification() {
         if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
@@ -145,24 +146,22 @@ class PersistentNotificationPlugin @Inject constructor(
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+            val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
             line2 =
                 rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + " " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
-                ) + ": " + iobCobCalculator.getCobInfo(
-                    "PersistentNotificationPlugin"
-                ).generateCOBString(decimalFormatter)
+                ) + ": " + cobInfo.generateCOBString(decimalFormatter)
             val line2aa =
                 rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + ". " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
-                ) + ": " + iobCobCalculator.getCobInfo(
-                    "PersistentNotificationPlugin"
-                ).generateCOBString(decimalFormatter) + "."
+                ) + ": " + cobInfo.generateCOBString(decimalFormatter) + "."
             line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate))
             var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + "."
-            line3 += " - " + profileFunction.getProfileName()
-            line3aa += " - " + profileFunction.getProfileName() + "."
+            val profileName = profileFunction.getProfileName()
+            line3 += " - $profileName"
+            line3aa += " - $profileName."
             /// For Android Auto
             val msgReadIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)

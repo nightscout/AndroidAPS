@@ -43,7 +43,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
     }
 
     @Test
-    fun shouldRunNotAvailable() {
+    fun shouldRunNotAvailable() = runTest {
         val t = TriggerStepsCount(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(persistenceLayer)

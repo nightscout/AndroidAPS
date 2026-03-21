@@ -61,6 +61,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import java.util.Vector
 import javax.inject.Inject
 import javax.inject.Provider
@@ -160,7 +161,7 @@ class DanaRKoreanPlugin @Inject constructor(
         get() = preferences.get(DanaBooleanKey.UseExtended)
 
     override fun isInitialized(): Boolean =
-        danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && !danaPump.isConfigUD && !danaPump.isEasyModeEnabled && danaPump.isExtendedBolusEnabled && danaPump.isPasswordOK
+        isConfigured() && danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && !danaPump.isConfigUD && !danaPump.isEasyModeEnabled && danaPump.isExtendedBolusEnabled && danaPump.isPasswordOK
 
     override fun isHandshakeInProgress(): Boolean =
         executionService?.isHandshakeInProgress == true
@@ -190,14 +191,16 @@ class DanaRKoreanPlugin @Inject constructor(
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-        if (detailedBolusInfo.insulin > 0) pumpSync.syncBolusWithPumpId(
-            dateUtil.now(),
-            PumpInsulin(BolusProgressData.delivered),
-            detailedBolusInfo.bolusType,
-            dateUtil.now(),
-            PumpType.DANA_R_KOREAN,
-            serialNumber()
-        )
+        if (detailedBolusInfo.insulin > 0) runBlocking {
+            pumpSync.syncBolusWithPumpId(
+                dateUtil.now(),
+                PumpInsulin(BolusProgressData.delivered),
+                detailedBolusInfo.bolusType,
+                dateUtil.now(),
+                PumpType.DANA_R_KOREAN,
+                serialNumber()
+            )
+        }
         return result
     }
 
@@ -296,7 +299,7 @@ class DanaRKoreanPlugin @Inject constructor(
                     .isTempCancel(false)
             }
 
-            // Now set new extended, no need to to stop previous (if running) because it's replaced
+            // Now set new extended, no need to stop previous (if running) because it's replaced
             val extendedAmount = extendedRateToSet / 2 * durationInHalfHours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  half hours: " + durationInHalfHours)
             val result = setExtendedBolus(extendedAmount, durationInMinutes)
@@ -330,12 +333,14 @@ class DanaRKoreanPlugin @Inject constructor(
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    dateUtil.now(),
-                    dateUtil.now(),
-                    pumpDescription.pumpType,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        dateUtil.now(),
+                        dateUtil.now(),
+                        pumpDescription.pumpType,
+                        serialNumber()
+                    )
+                }
                 result.success(true).enacted(true).isTempCancel(true)
             } else result.success(false).enacted(false).isTempCancel(true)
         } else {

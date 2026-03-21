@@ -127,6 +127,7 @@ import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -253,8 +254,11 @@ class InsightPlugin @Inject constructor(
         context.unbindService(serviceConnection)
     }
 
+    override fun isConfigured(): Boolean =
+        connectionService?.isPaired == true
+
     override fun isInitialized(): Boolean {
-        return connectionService?.let { alertService != null && it.isPaired } == true
+        return isConfigured() && connectionService?.let { alertService != null && it.isPaired } == true
     }
 
     override fun isSuspended(): Boolean {
@@ -433,7 +437,7 @@ class InsightPlugin @Inject constructor(
             if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
             val profileBlock = BasalProfileBlock()
             profileBlock.basalAmount = if (basalValue.value > 5) (basalValue.value / 0.1).roundToLong() * 0.1 else (basalValue.value / 0.01).roundToLong() * 0.01
-            profileBlock.duration = ((nextValue?.timeAsSeconds ?: 24 * 60 * 60) - basalValue.timeAsSeconds) / 60
+            profileBlock.duration = ((nextValue?.timeAsSeconds ?: (24 * 60 * 60)) - basalValue.timeAsSeconds) / 60
             profileBlocks.add(profileBlock)
         }
         connectionService?.let { service ->
@@ -482,7 +486,7 @@ class InsightPlugin @Inject constructor(
                 val basalValue = profile.getBasalValues()[i]
                 var nextValue: Profile.ProfileValue? = null
                 if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
-                if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds ?: 24 * 60 * 60) - basalValue.timeAsSeconds
+                if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds ?: (24 * 60 * 60)) - basalValue.timeAsSeconds
                 ) return false
                 if (abs(profileBlock.basalAmount - basalValue.value) > (if (basalValue.value > 5) 0.051 else 0.0051)) return false
             }
@@ -543,14 +547,16 @@ class InsightPlugin @Inject constructor(
                     insightDbHelper.getInsightBolusID(serial, bolusID, now)?.also {
                         lastBolusType = detailedBolusInfo.bolusType
                         lastBolusTimestamp = it.timestamp
-                        pumpSync.syncBolusWithPumpId(
-                            it.timestamp,
-                            PumpInsulin(detailedBolusInfo.insulin),
-                            detailedBolusInfo.bolusType,
-                            it.id,
-                            PumpType.ACCU_CHEK_INSIGHT,
-                            serialNumber()
-                        )
+                        runBlocking {
+                            pumpSync.syncBolusWithPumpId(
+                                it.timestamp,
+                                PumpInsulin(detailedBolusInfo.insulin),
+                                detailedBolusInfo.bolusType,
+                                it.id,
+                                PumpType.ACCU_CHEK_INSIGHT,
+                                serialNumber()
+                            )
+                        }
                     }
                     while (!bolusCancelled) {
                         val operatingMode = service.requestMessage(GetOperatingModeMessage()).await().operatingMode
@@ -1069,24 +1075,28 @@ class InsightPlugin @Inject constructor(
         for (temporaryBasal in temporaryBasals) {
             temporaryBasal.pumpId?.let { pumpId ->
                 if (temporaryBasal.duration == 0L) {                    // for Stop TBR event duration = 0L
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = temporaryBasal.timestamp,
-                        endPumpId = pumpId,
-                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                        pumpSerial = serial
-                    )
+                    runBlocking {
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = temporaryBasal.timestamp,
+                            endPumpId = pumpId,
+                            pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                            pumpSerial = serial
+                        )
+                    }
                 }
                 if (temporaryBasal.rate != 100.0) {
-                    pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = temporaryBasal.timestamp,
-                        rate = PumpRate(temporaryBasal.rate),
-                        duration = temporaryBasal.duration,
-                        isAbsolute = temporaryBasal.isAbsolute,
-                        type = temporaryBasal.type,
-                        pumpId = pumpId,
-                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                        pumpSerial = serial
-                    )
+                    runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = temporaryBasal.timestamp,
+                            rate = PumpRate(temporaryBasal.rate),
+                            duration = temporaryBasal.duration,
+                            isAbsolute = temporaryBasal.isAbsolute,
+                            type = temporaryBasal.type,
+                            pumpId = pumpId,
+                            pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                            pumpSerial = serial
+                        )
+                    }
                 }
             }
         }
@@ -1133,15 +1143,17 @@ class InsightPlugin @Inject constructor(
         calendar[Calendar.YEAR] = event.totalYear
         calendar[Calendar.MONTH] = event.totalMonth - 1
         calendar[Calendar.DAY_OF_MONTH] = event.totalDay
-        pumpSync.createOrUpdateTotalDailyDose(
-            timestamp = dateUtil.now(),
-            bolusAmount = event.bolusTotal,
-            basalAmount = event.basalTotal,
-            totalAmount = 0.0,  // will be calculated automatically
-            pumpId = event.eventPosition,
-            pumpType = PumpType.ACCU_CHEK_INSIGHT,
-            pumpSerial = serial
-        )
+        runBlocking {
+            pumpSync.createOrUpdateTotalDailyDose(
+                timestamp = dateUtil.now(),
+                bolusAmount = event.bolusTotal,
+                basalAmount = event.basalTotal,
+                totalAmount = 0.0,  // will be calculated automatically
+                pumpId = event.eventPosition,
+                pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                pumpSerial = serial
+            )
+        }
     }
 
     private fun processTubeFilledEvent(event: TubeFilledEvent) {
@@ -1283,25 +1295,29 @@ class InsightPlugin @Inject constructor(
             insightBolusID.startID = event.eventPosition
             insightDbHelper.createOrUpdate(insightBolusID)
             if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
-                pumpSync.syncBolusWithPumpId(
-                    timestamp = timestamp,
-                    amount = PumpInsulin(event.immediateAmount),
-                    type = null,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp = timestamp,
+                        amount = PumpInsulin(event.immediateAmount),
+                        type = null,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
-                if (pumpSync.isProfileRunning(insightBolusID.timestamp)) pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = timestamp,
-                    rate = PumpRate(event.extendedAmount),
-                    duration = T.mins(event.duration.toLong()).msecs(),
-                    isEmulatingTB = isFakingTempsByExtendedBoluses,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                if (runBlocking { pumpSync.isProfileRunning(insightBolusID.timestamp) }) runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp = timestamp,
+                        rate = PumpRate(event.extendedAmount),
+                        duration = T.mins(event.duration.toLong()).msecs(),
+                        isEmulatingTB = isFakingTempsByExtendedBoluses,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
             }
         }
     }
@@ -1329,29 +1345,33 @@ class InsightPlugin @Inject constructor(
         insightDbHelper.createOrUpdate(bolusID)
         insightDbHelper.getInsightBolusID(serial, event.bolusID, startTimestamp)?.also { insightBolusID ->
             if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
-                pumpSync.syncBolusWithPumpId(
-                    timestamp = insightBolusID.timestamp,
-                    amount = PumpInsulin(event.immediateAmount),
-                    type = if (lastBolusTimestamp == insightBolusID.timestamp) lastBolusType else null,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp = insightBolusID.timestamp,
+                        amount = PumpInsulin(event.immediateAmount),
+                        type = if (lastBolusTimestamp == insightBolusID.timestamp) lastBolusType else null,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
                 lastBolusTimestamp = insightBolusID.timestamp
                 preferences.put(InsightLongNonKey.LastBolusTimestamp, lastBolusTimestamp)
                 _lastBolusAmount.value = PumpInsulin(event.immediateAmount)
                 preferences.put(InsightDoubleNonKey.LastBolusAmount, _lastBolusAmount.value?.cU ?: 0.0)
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
-                if (event.duration > 0 && pumpSync.isProfileRunning(insightBolusID.timestamp)) pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = insightBolusID.timestamp,
-                    rate = PumpRate(event.extendedAmount),
-                    duration = timestamp - startTimestamp,
-                    isEmulatingTB = isFakingTempsByExtendedBoluses,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                if (event.duration > 0 && runBlocking { pumpSync.isProfileRunning(insightBolusID.timestamp) }) runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp = insightBolusID.timestamp,
+                        rate = PumpRate(event.extendedAmount),
+                        duration = timestamp - startTimestamp,
+                        isEmulatingTB = isFakingTempsByExtendedBoluses,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
             }
         }
     }
@@ -1477,7 +1497,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun logNote(date: Long, note: String) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, TE.Type.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber())
+        runBlocking { pumpSync.insertTherapyEventIfNewWithTimestamp(date, TE.Type.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber()) }
     }
 
     private fun parseRelativeDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, relativeHour: Int, relativeMinute: Int, relativeSecond: Int): Long {
@@ -1492,7 +1512,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun uploadCareportalEvent(date: Long, event: TE.Type) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber())
+        runBlocking { pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber()) }
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {

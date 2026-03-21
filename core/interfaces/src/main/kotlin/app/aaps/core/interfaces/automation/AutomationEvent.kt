@@ -7,8 +7,8 @@ interface AutomationEvent {
     val id: String
     var isEnabled: Boolean
     var title: String
-    fun canRun(): Boolean
-    fun preconditionCanRun(): Boolean
+    suspend fun canRun(): Boolean
+    suspend fun preconditionCanRun(): Boolean
     @DrawableRes fun firstActionIcon(): Int?
 
     /** Human-readable descriptions of each action (e.g. "Start temp target: 5.5 mmol 45 min") */

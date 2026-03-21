@@ -9,7 +9,6 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -42,7 +41,6 @@ import javax.inject.Inject
 @Stable
 class ProfileHelperViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
-    private val activePlugin: ActivePlugin,
     private val localProfileManager: LocalProfileManager,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
@@ -58,6 +56,8 @@ class ProfileHelperViewModel @Inject constructor(
     val uiState: StateFlow<ProfileHelperUiState>
         field = MutableStateFlow(ProfileHelperUiState())
 
+    private var cachedCurrentProfile: PureProfile? = null
+
     init {
         loadInitialData()
     }
@@ -65,6 +65,8 @@ class ProfileHelperViewModel @Inject constructor(
     private fun loadInitialData() {
         viewModelScope.launch {
             val currentProfileName = profileFunction.getProfileName()
+            val currentProfile = profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
+            cachedCurrentProfile = currentProfile
             val availableProfiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
             val profileSwitches = withContext(Dispatchers.IO) {
                 persistenceLayer.getEffectiveProfileSwitchesFromTime(
@@ -121,7 +123,7 @@ class ProfileHelperViewModel @Inject constructor(
             when (profileType) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
-                ProfileType.CURRENT           -> profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
+                ProfileType.CURRENT           -> cachedCurrentProfile
 
                 ProfileType.AVAILABLE_PROFILE -> {
                     val list = localProfileManager.profile?.getProfileList()
@@ -163,7 +165,7 @@ class ProfileHelperViewModel @Inject constructor(
             else rh.gs(R.string.format_with_weight, age, weight)
 
             ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalPct * 100).toInt())
-            ProfileType.CURRENT           -> profileFunction.getProfileName()
+            ProfileType.CURRENT           -> uiState.value.currentProfileName
 
             ProfileType.AVAILABLE_PROFILE -> {
                 val list = localProfileManager.profile?.getProfileList()

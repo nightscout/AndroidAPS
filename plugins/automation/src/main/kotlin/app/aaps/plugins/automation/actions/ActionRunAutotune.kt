@@ -21,6 +21,7 @@ import app.aaps.plugins.automation.elements.InputWeekDay
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -42,7 +43,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)
         val profileName = if (inputProfileName.value == rh.gs(app.aaps.core.ui.R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
@@ -102,5 +103,5 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = profileFunction.getProfile() != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).first().isEnabled()
+    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).first().isEnabled()
 }

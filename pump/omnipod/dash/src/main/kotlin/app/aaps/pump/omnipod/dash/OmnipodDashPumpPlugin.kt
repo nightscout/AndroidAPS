@@ -91,6 +91,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.concurrent.CountDownLatch
@@ -171,22 +172,24 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun createFakeTBRWhenNoActivePod(): Completable = Completable.defer {
         if (!podStateManager.isPodRunning) {
-            val expectedState = pumpSync.expectedPumpState()
+            val expectedState = runBlocking { pumpSync.expectedPumpState() }
             val tbr = expectedState.temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
                 aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
-                pumpSync.syncTemporaryBasalWithPumpId(
-                    timestamp = System.currentTimeMillis(),
-                    rate = PumpRate(0.0),
-                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
-                    isAbsolute = true,
-                    type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                    pumpId = System.currentTimeMillis(), // we don't use this, just make sure it's unique
-                    pumpType = PumpType.OMNIPOD_DASH,
-                    pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // switching the serialNumber here would need a
-                    // call to connectNewPump. If we do that, then we will have a TBR started by the "n/a" pump and
-                    // cancelled by "4241". This did not work ok.
-                )
+                runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        timestamp = System.currentTimeMillis(),
+                        rate = PumpRate(0.0),
+                        duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
+                        isAbsolute = true,
+                        type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        pumpId = System.currentTimeMillis(), // we don't use this, just make sure it's unique
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // switching the serialNumber here would need a
+                        // call to connectNewPump. If we do that, then we will have a TBR started by the "n/a" pump and
+                        // cancelled by "4241". This did not work ok.
+                    )
+                }
             }
         }
         Completable.complete()
@@ -232,8 +235,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
+    override fun isConfigured(): Boolean = podStateManager.isPodRunning
+
     override fun isInitialized(): Boolean {
-        return podStateManager.isPodRunning
+        return isConfigured()
     }
 
     override fun isSuspended(): Boolean {
@@ -348,32 +353,36 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun checkPodKaput(): Completable = Completable.defer {
         if (podStateManager.isPodKaput) {
-            val tbr = pumpSync.expectedPumpState().temporaryBasal
+            val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
-                pumpSync.syncTemporaryBasalWithPumpId(
-                    timestamp = System.currentTimeMillis(),
-                    rate = PumpRate(0.0),
-                    duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
-                    isAbsolute = true,
-                    type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                    pumpId = System.currentTimeMillis(), // we don't use this, just make sure it's unique
-                    pumpType = PumpType.OMNIPOD_DASH,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        timestamp = System.currentTimeMillis(),
+                        rate = PumpRate(0.0),
+                        duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
+                        isAbsolute = true,
+                        type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        pumpId = System.currentTimeMillis(), // we don't use this, just make sure it's unique
+                        pumpType = PumpType.OMNIPOD_DASH,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
             podStateManager.lastBolus?.run {
                 if (!deliveryComplete) {
                     val deliveredUnits = markComplete()
                     deliveryComplete = true
                     val bolusHistoryEntry = history.getById(historyId)
-                    val sync = pumpSync.syncBolusWithPumpId(
-                        timestamp = bolusHistoryEntry.createdAt,
-                        amount = PumpInsulin(deliveredUnits),
-                        pumpId = bolusHistoryEntry.pumpId(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = serialNumber(),
-                        type = bolusType
-                    )
+                    val sync = runBlocking {
+                        pumpSync.syncBolusWithPumpId(
+                            timestamp = bolusHistoryEntry.createdAt,
+                            amount = PumpInsulin(deliveredUnits),
+                            pumpId = bolusHistoryEntry.pumpId(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = serialNumber(),
+                            type = bolusType
+                        )
+                    }
                     aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
                 }
             }
@@ -386,12 +395,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             app.aaps.core.ui.R.raw.boluserror
                         )
                     }
-                    pumpSync.insertAnnouncement(
-                        error = it.toString(),
-                        pumpId = System.currentTimeMillis(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.insertAnnouncement(
+                            error = it.toString(),
+                            pumpId = System.currentTimeMillis(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                     podStateManager.alarmSynced = true
                 }
             }
@@ -783,14 +794,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
         }
         val historyEntry = history.getById(activeCommand.historyId)
-        val ret = pumpSync.syncBolusWithPumpId(
-            timestamp = historyEntry.createdAt,
-            amount = PumpInsulin(requestedBolusAmount),
-            type = bolusType,
-            pumpId = historyEntry.pumpId(),
-            pumpType = PumpType.OMNIPOD_DASH,
-            pumpSerial = serialNumber()
-        )
+        val ret = runBlocking {
+            pumpSync.syncBolusWithPumpId(
+                timestamp = historyEntry.createdAt,
+                amount = PumpInsulin(requestedBolusAmount),
+                type = bolusType,
+                pumpId = historyEntry.pumpId(),
+                pumpType = PumpType.OMNIPOD_DASH,
+                pumpSerial = serialNumber()
+            )
+        }
         aapsLogger.debug(LTag.PUMP, "pumpSyncBolusStart: $ret")
         return ret
     }
@@ -874,16 +887,18 @@ class OmnipodDashPumpPlugin @Inject constructor(
             LTag.PUMP,
             "pumpSyncTempBasal: absoluteRate=$absoluteRate, durationInMinutes=$durationInMinutes pumpId=${historyEntry.pumpId()}"
         )
-        val ret = pumpSync.syncTemporaryBasalWithPumpId(
-            timestamp = historyEntry.createdAt,
-            rate = PumpRate(absoluteRate),
-            duration = T.mins(durationInMinutes).msecs(),
-            isAbsolute = true,
-            type = tbrType,
-            pumpId = historyEntry.pumpId(),
-            pumpType = PumpType.OMNIPOD_DASH,
-            pumpSerial = serialNumber()
-        )
+        val ret = runBlocking {
+            pumpSync.syncTemporaryBasalWithPumpId(
+                timestamp = historyEntry.createdAt,
+                rate = PumpRate(absoluteRate),
+                duration = T.mins(durationInMinutes).msecs(),
+                isAbsolute = true,
+                type = tbrType,
+                pumpId = historyEntry.pumpId(),
+                pumpType = PumpType.OMNIPOD_DASH,
+                pumpSerial = serialNumber()
+            )
+        }
         aapsLogger.debug(LTag.PUMP, "pumpSyncTempBasal: $ret")
         return ret
     }
@@ -931,7 +946,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (!podStateManager.tempBasalActive &&
-            pumpSync.expectedPumpState().temporaryBasal == null
+            runBlocking { pumpSync.expectedPumpState() }.temporaryBasal == null
         ) {
             // nothing to cancel
             return pumpEnactResultProvider.get().success(true).enacted(false)
@@ -1052,7 +1067,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun resumeDelivery(): PumpEnactResult {
-        return pumpSync.expectedPumpState().profile?.let {
+        return runBlocking { pumpSync.expectedPumpState() }.profile?.let {
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
                 historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY, basalProfileRecord = BasalValuesRecord(it.getBasalValues().toList())),
@@ -1090,7 +1105,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun handleTimeChange(): PumpEnactResult {
-        return pumpSync.expectedPumpState().profile?.let {
+        return runBlocking { pumpSync.expectedPumpState() }.profile?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
         } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment("No profile active")
     }
@@ -1269,12 +1284,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL -> {
                 if (confirmation.success) {
-                    val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
-                        historyEntry.createdAt,
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
+                    val ret = runBlocking {
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            historyEntry.createdAt,
+                            historyEntry.pumpId(),
+                            PumpType.OMNIPOD_DASH,
+                            serialNumber()
+                        )
+                    }
                     aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret pumpId=${historyEntry.pumpId()}")
                     podStateManager.tempBasal = null
                 }
@@ -1285,12 +1302,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 // We can't invalidate this command,
                 // and this is why it is pumpSync-ed at this point
                 if (confirmation.success) {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        historyEntry.createdAt,
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            historyEntry.createdAt,
+                            historyEntry.pumpId(),
+                            PumpType.OMNIPOD_DASH,
+                            serialNumber()
+                        )
+                    }
                     podStateManager.tempBasal = null
                     notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
                     notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
@@ -1310,12 +1329,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         // we are late-confirming this command. before that, we answered with success:false
                         rxBus.send(EventProfileChangeRequested())
                     }
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        historyEntry.createdAt,
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            historyEntry.createdAt,
+                            historyEntry.pumpId(),
+                            PumpType.OMNIPOD_DASH,
+                            serialNumber()
+                        )
+                    }
                     notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
                     notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
                     notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
@@ -1328,11 +1349,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 // This treatment was synced before sending the command
                 if (!confirmation.success) {
                     aapsLogger.info(LTag.PUMPCOMM, "temporary basal denied. PumpId: ${historyEntry.pumpId()}")
-                    pumpSync.invalidateTemporaryBasalWithPumpId(
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.invalidateTemporaryBasalWithPumpId(
+                            historyEntry.pumpId(),
+                            PumpType.OMNIPOD_DASH,
+                            serialNumber()
+                        )
+                    }
                 } else {
                     podStateManager.tempBasal = command.tempBasal
                 }
@@ -1341,11 +1364,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
             OmnipodCommandType.SUSPEND_DELIVERY       -> {
                 if (!confirmation.success) {
-                    pumpSync.invalidateTemporaryBasalWithPumpId(
-                        historyEntry.pumpId(),
-                        PumpType.OMNIPOD_DASH,
-                        serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.invalidateTemporaryBasalWithPumpId(
+                            historyEntry.pumpId(),
+                            PumpType.OMNIPOD_DASH,
+                            serialNumber()
+                        )
+                    }
                 } else {
                     podStateManager.tempBasal = null
                 }
@@ -1372,14 +1397,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         record.bolusType.toBolusInfoBolusType()
                     )
                 } else {
-                    pumpSync.syncBolusWithPumpId(
-                        timestamp = historyEntry.createdAt,
-                        amount = PumpInsulin(0.0),
-                        pumpId = historyEntry.pumpId(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = serialNumber(),
-                        type = null
-                    )
+                    runBlocking {
+                        pumpSync.syncBolusWithPumpId(
+                            timestamp = historyEntry.createdAt,
+                            amount = PumpInsulin(0.0),
+                            pumpId = historyEntry.pumpId(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = serialNumber(),
+                            type = null
+                        )
+                    }
                 }
                 notificationManager.dismiss(NotificationId.OMNIPOD_UNCERTAIN_SMB)
             }
@@ -1393,14 +1420,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             return
                         }
                         val bolusHistoryEntry = history.getById(historyId)
-                        val sync = pumpSync.syncBolusWithPumpId(
-                            timestamp = bolusHistoryEntry.createdAt,
-                            amount = PumpInsulin(deliveredUnits),
-                            pumpId = bolusHistoryEntry.pumpId(),
-                            pumpType = PumpType.OMNIPOD_DASH,
-                            pumpSerial = serialNumber(),
-                            type = bolusType
-                        )
+                        val sync = runBlocking {
+                            pumpSync.syncBolusWithPumpId(
+                                timestamp = bolusHistoryEntry.createdAt,
+                                amount = PumpInsulin(deliveredUnits),
+                                pumpId = bolusHistoryEntry.pumpId(),
+                                pumpType = PumpType.OMNIPOD_DASH,
+                                pumpSerial = serialNumber(),
+                                type = bolusType
+                            )
+                        }
                         aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
                     } ?: aapsLogger.error(LTag.PUMP, "Cancelled bolus that does not exist")
                 }
@@ -1416,24 +1445,27 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun verifyPumpState(): Completable = Completable.defer {
-        aapsLogger.debug(LTag.PUMP, "verifyPumpState, AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val expectedState = runBlocking { pumpSync.expectedPumpState() }
+        aapsLogger.debug(LTag.PUMP, "verifyPumpState, AAPS: ${expectedState.temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+        val tbr = expectedState.temporaryBasal
         if (tbr != null && podStateManager.deliveryStatus?.basalActive() == true) {
-            aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+            aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${expectedState.temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
             val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // Sync stopped basal with AAPS
-            val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
-                System.currentTimeMillis(), // Note: It would be nice if TBR end could be estimated, but this will add a lot of complexity
-                tbr.id,
-                PumpType.OMNIPOD_DASH,
-                serialNumber()
-            )
+            val ret = runBlocking {
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                    System.currentTimeMillis(), // Note: It would be nice if TBR end could be estimated, but this will add a lot of complexity
+                    tbr.id,
+                    PumpType.OMNIPOD_DASH,
+                    serialNumber()
+                )
+            }
             aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret pumpId=${tbr.id}")
             podStateManager.tempBasal = null
         } else if (tbr == null && podStateManager.deliveryStatus?.tempBasalActive() == true) {
-            aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+            aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${expectedState.temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
             val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)

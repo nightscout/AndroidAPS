@@ -2,7 +2,6 @@ package app.aaps.pump.virtual
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.StringKey
@@ -19,7 +18,6 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
     private lateinit var virtualPumpPlugin: VirtualPumpPlugin
@@ -29,7 +27,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     fun prepareMocks() {
         virtualPumpPlugin = VirtualPumpPlugin(
             aapsLogger, rxBus, rh, preferences,
-            commandQueue, pumpSync, config, dateUtil, processedDeviceStatusData, persistenceLayer, pumpEnactResultProvider, notificationManager, ch, insulin, testScope
+            commandQueue, pumpSync, config, dateUtil, persistenceLayer, pumpEnactResultProvider, notificationManager, ch, insulin, testScope
         )
     }
 

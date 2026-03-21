@@ -44,6 +44,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.BeforeEach
@@ -93,7 +94,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             )
         sut.nsAndroidClient = nsAndroidClient
         sut.nsClientV3Service = nsClientV3Service
-        whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(effectiveProfile)
+        runBlocking { whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(effectiveProfile) }
     }
 
     @Test

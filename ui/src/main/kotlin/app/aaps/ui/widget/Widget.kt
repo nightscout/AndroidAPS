@@ -134,16 +134,18 @@ class Widget : AppWidgetProvider() {
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0x4C, 0xAF, 0x50))
 
         handler.post {
-            if (config.appInitialized) {
-                updateBg(views)
-                updateTemporaryBasal(views)
-                updateExtendedBolus(views)
-                updateIobCob(views)
-                updateTemporaryTarget(views)
-                updateProfile(views)
-                updateSensitivity(views)
-                // Instruct the widget manager to update the widget
-                appWidgetManager.updateAppWidget(appWidgetId, views)
+            runBlocking {
+                if (config.appInitialized) {
+                    updateBg(views)
+                    updateTemporaryBasal(views)
+                    updateExtendedBolus(views)
+                    updateIobCob(views)
+                    updateTemporaryTarget(views)
+                    updateProfile(views)
+                    updateSensitivity(views)
+                    // Instruct the widget manager to update the widget
+                    appWidgetManager.updateAppWidget(appWidgetId, views)
+                }
             }
         }
     }
@@ -203,15 +205,15 @@ class Widget : AppWidgetProvider() {
         views.setViewVisibility(R.id.extended_layout, (runBlocking { persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) } != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
     }
 
-    private fun bolusIob(): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
-    private fun basalIob(): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    private fun bolusIob(): IobTotal = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+    private fun basalIob(): IobTotal = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
     private fun iobText(): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
 
     private fun updateIobCob(views: RemoteViews) {
         views.setTextViewText(R.id.iob, iobText())
         // cob
-        var cobText = iobCobCalculator.getCobInfo("Overview COB").displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+        var cobText = runBlocking { iobCobCalculator.getCobInfo("Overview COB") }.displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
@@ -227,9 +229,9 @@ class Widget : AppWidgetProvider() {
         views.setTextViewText(R.id.cob, cobText)
     }
 
-    private fun updateTemporaryTarget(views: RemoteViews) {
+    private suspend fun updateTemporaryTarget(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tempTarget != null) {
             // this is crashing, use background as text for now
             //views.setTextColor(R.id.temp_target, rh.gc(R.color.ribbonTextWarning))
@@ -262,7 +264,7 @@ class Widget : AppWidgetProvider() {
         }
     }
 
-    private fun updateProfile(views: RemoteViews) {
+    private suspend fun updateProfile(views: RemoteViews) {
         val profileTextColor =
             profileFunction.getProfile()?.let {
                 if (it is ProfileSealed.EPS) {
@@ -283,7 +285,7 @@ class Widget : AppWidgetProvider() {
         views.setTextColor(R.id.active_profile, profileTextColor)
     }
 
-    private fun updateSensitivity(views: RemoteViews) {
+    private suspend fun updateSensitivity(views: RemoteViews) {
         val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Widget", aapsLogger, dateUtil)
         val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
         if (constraintChecker.isAutosensModeEnabled().value())

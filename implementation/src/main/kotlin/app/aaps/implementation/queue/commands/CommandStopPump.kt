@@ -29,7 +29,7 @@ class CommandStopPump(
     override val commandType: Command.CommandType = Command.CommandType.STOP_PUMP
 
     override fun execute() {
-        val pump = activePlugin.activePump
+        val pump = activePlugin.activePumpInternal
         if (pump is Insight) {
             val result = pump.stopPump()
             callback?.result(result)?.run()

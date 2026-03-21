@@ -41,6 +41,7 @@ import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -137,14 +138,14 @@ class TizenPlugin @Inject constructor(
     }
 
     private fun iobCob(bundle: Bundle) {
-        profileFunction.getProfile() ?: return
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        runBlocking { profileFunction.getProfile() } ?: return
+        val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+        val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
         bundle.putDouble("bolusIob", bolusIob.iob)
         bundle.putDouble("basalIob", basalIob.basaliob)
         bundle.putDouble("iob", bolusIob.iob + basalIob.basaliob) // total IOB
 
-        val cob = iobCobCalculator.getCobInfo("broadcast")
+        val cob = runBlocking { iobCobCalculator.getCobInfo("broadcast") }
         bundle.putDouble("cob", cob.displayCob ?: -1.0) // COB [g] or -1 if N/A
         bundle.putDouble("futureCarbs", cob.futureCarbs) // future scheduled carbs
     }
@@ -176,10 +177,10 @@ class TizenPlugin @Inject constructor(
 
     private fun basalStatus(bundle: Bundle) {
         val now = System.currentTimeMillis()
-        val profile = profileFunction.getProfile() ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
         bundle.putLong("basalTimeStamp", now)
         bundle.putDouble("baseBasal", profile.getBasal())
-        bundle.putString("profile", profileFunction.getProfileName())
+        bundle.putString("profile", runBlocking { profileFunction.getProfileName() })
         processedTbrEbData.getTempBasalIncludingConvertedExtended(now)?.let {
             bundle.putLong("tempBasalStart", it.timestamp)
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
@@ -195,7 +196,7 @@ class TizenPlugin @Inject constructor(
         bundle.putLong("pumpTimeStamp", pump.lastDataTime.value)
         pump.batteryLevel.value?.let { bundle.putInt("pumpBattery", it) }
         bundle.putDouble("pumpReservoir", pump.reservoirLevel.value.iU(iCfg.concentration))
-        bundle.putString("pumpStatus", pumpStatusProvider.shortStatus(false))
+        bundle.putString("pumpStatus", runBlocking { pumpStatusProvider.shortStatus(false) })
     }
 
     private fun sendBroadcast(intent: Intent) {

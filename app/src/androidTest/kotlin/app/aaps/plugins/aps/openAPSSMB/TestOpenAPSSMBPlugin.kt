@@ -312,7 +312,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                 //lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMBFromJS
                 lastAPSRun = now
-                // if (config.isUnfinishedMode())
+                // if (config.isEnabled(ExternalOptions.UNFINISHED_MODE))
                 // importExportPrefs.exportApsResult(
                 //     when (determineBasalAdapterSMBJS) {
                 //         is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName

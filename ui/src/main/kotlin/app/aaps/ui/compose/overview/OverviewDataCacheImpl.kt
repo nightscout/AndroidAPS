@@ -81,6 +81,7 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -107,6 +108,7 @@ import kotlin.math.max
  * MIGRATION NOTE: This coexists with OverviewDataImpl during migration.
  * Workers populate graph data. After migration complete, OverviewDataImpl will be deleted.
  */
+@OptIn(FlowPreview::class)
 @Singleton
 class OverviewDataCacheImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -446,7 +448,7 @@ class OverviewDataCacheImpl @Inject constructor(
     // Profile computation
     // =========================================================================
 
-    private fun updateProfileFromDatabase() {
+    private suspend fun updateProfileFromDatabase() {
         val profile = profileFunction.getProfile()
         var isModified = false
         var timestamp = 0L
@@ -795,13 +797,13 @@ class OverviewDataCacheImpl @Inject constructor(
                 processedDeviceStatusData.openAPSData.enacted?.let {
                     if (processedDeviceStatusData.openAPSData.clockEnacted != clockSuggested) {
                         append("Enacted: ${dateUtil.minAgo(rh, processedDeviceStatusData.openAPSData.clockEnacted)}")
-                        it.reason?.let { reason -> append(" $reason") }
+                        append(" ${it.reason}")
                         append("\n")
                     }
                 }
                 processedDeviceStatusData.openAPSData.suggested?.let {
                     append("Suggested: ${dateUtil.minAgo(rh, clockSuggested)}")
-                    it.reason?.let { reason -> append(" $reason") }
+                    append(" ${it.reason}")
                 }
             }
             AapsClientStatusItem(

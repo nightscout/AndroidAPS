@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -44,9 +45,17 @@ class EquilComposeContent(
         var showWizardWorkflow by remember { mutableStateOf(false) }
         var startWorkflow by remember { mutableStateOf<EquilWorkflow?>(null) }
 
-        // Remove cog wheel from parent toolbar during wizard, restore when done
-        val navIcon: @Composable () -> Unit = {
+        // Toolbar configuration
+        val overviewNavIcon: @Composable () -> Unit = {
             IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+            }
+        }
+        val wizardNavIcon: @Composable () -> Unit = {
+            IconButton(onClick = {
+                showWizardWorkflow = false
+                startWorkflow = null
+            }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
             }
         }
@@ -57,14 +66,17 @@ class EquilComposeContent(
                 }
             }
         }
+        // Restore overview toolbar when not in wizard
         LaunchedEffect(showWizardWorkflow) {
-            setToolbarConfig(
-                ToolbarConfig(
-                    title = pluginName,
-                    navigationIcon = navIcon,
-                    actions = if (showWizardWorkflow) ({}) else settingsAction
+            if (!showWizardWorkflow) {
+                setToolbarConfig(
+                    ToolbarConfig(
+                        title = pluginName,
+                        navigationIcon = overviewNavIcon,
+                        actions = settingsAction
+                    )
                 )
-            )
+            }
         }
 
         // Handle one-time events from overview
@@ -115,6 +127,19 @@ class EquilComposeContent(
             if (bleReady) {
                 // Create WizardViewModel scoped to the workflow
                 val wizardViewModel: EquilWizardViewModel = hiltViewModel()
+                val wizardTitleResId by wizardViewModel.titleResId.collectAsStateWithLifecycle()
+                val wizardTitle = stringResource(wizardTitleResId)
+
+                // Update parent toolbar with wizard title
+                LaunchedEffect(wizardTitle) {
+                    setToolbarConfig(
+                        ToolbarConfig(
+                            title = wizardTitle,
+                            navigationIcon = wizardNavIcon,
+                            actions = {}
+                        )
+                    )
+                }
 
                 // Initialize with the start workflow
                 LaunchedEffect(startWorkflow) {

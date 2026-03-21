@@ -451,8 +451,10 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
+    override fun isConfigured(): Boolean = isPaired()
+
     override fun isInitialized(): Boolean =
-        isPaired() && (driverStateFlow.value != DriverState.NotInitialized) && !pumpErrorObserved
+        isConfigured() && (driverStateFlow.value != DriverState.NotInitialized) && !pumpErrorObserved
 
     override fun isSuspended(): Boolean = pumpIsSuspended
 
@@ -931,13 +933,15 @@ class ComboV2Plugin @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "Current/new reservoir levels: $currentLevel / $newLevel")
                 if (preferences.get(ComboBooleanKey.AutomaticReservoirEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
-                        timestamp = System.currentTimeMillis(),
-                        type = TE.Type.INSULIN_CHANGE,
-                        pumpId = null,
-                        pumpType = PumpType.ACCU_CHEK_COMBO,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            timestamp = System.currentTimeMillis(),
+                            type = TE.Type.INSULIN_CHANGE,
+                            pumpId = null,
+                            pumpType = PumpType.ACCU_CHEK_COMBO,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                 }
             }
 
@@ -955,13 +959,15 @@ class ComboV2Plugin @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "Current/new battery levels: $currentLevel / $newLevel")
                 if (preferences.get(ComboBooleanKey.AutomaticBatteryEntry) && (newLevel > currentLevel)) {
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
-                        timestamp = System.currentTimeMillis(),
-                        type = TE.Type.PUMP_BATTERY_CHANGE,
-                        pumpId = null,
-                        pumpType = PumpType.ACCU_CHEK_COMBO,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            timestamp = System.currentTimeMillis(),
+                            type = TE.Type.PUMP_BATTERY_CHANGE,
+                            pumpId = null,
+                            pumpType = PumpType.ACCU_CHEK_COMBO,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                 }
             }
 
@@ -1827,14 +1833,16 @@ class ComboV2Plugin @Inject constructor(
             }
 
             is ComboCtlPump.Event.QuickBolusInfused    -> {
-                pumpSync.syncBolusWithPumpId(
-                    event.timestamp.toEpochMilliseconds(),
-                    PumpInsulin(event.bolusAmount.cctlBolusToIU()),
-                    BS.Type.NORMAL,
-                    event.bolusId,
-                    PumpType.ACCU_CHEK_COMBO,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        event.timestamp.toEpochMilliseconds(),
+                        PumpInsulin(event.bolusAmount.cctlBolusToIU()),
+                        BS.Type.NORMAL,
+                        event.bolusId,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                    )
+                }
             }
 
             is ComboCtlPump.Event.StandardBolusInfused -> {
@@ -1843,39 +1851,45 @@ class ComboV2Plugin @Inject constructor(
                     ComboCtlPump.StandardBolusReason.SUPERBOLUS           -> BS.Type.SMB
                     ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET -> BS.Type.PRIMING
                 }
-                pumpSync.syncBolusWithPumpId(
-                    event.timestamp.toEpochMilliseconds(),
-                    PumpInsulin(event.bolusAmount.cctlBolusToIU()),
-                    bolusType,
-                    event.bolusId,
-                    PumpType.ACCU_CHEK_COMBO,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        event.timestamp.toEpochMilliseconds(),
+                        PumpInsulin(event.bolusAmount.cctlBolusToIU()),
+                        bolusType,
+                        event.bolusId,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                    )
+                }
             }
 
             is ComboCtlPump.Event.ExtendedBolusStarted -> {
-                pumpSync.syncExtendedBolusWithPumpId(
-                    event.timestamp.toEpochMilliseconds(),
-                    PumpRate(event.totalBolusAmount.cctlBolusToIU()),
-                    event.totalDurationMinutes.toLong() * 60 * 1000,
-                    false,
-                    event.bolusId,
-                    PumpType.ACCU_CHEK_COMBO,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        event.timestamp.toEpochMilliseconds(),
+                        PumpRate(event.totalBolusAmount.cctlBolusToIU()),
+                        event.totalDurationMinutes.toLong() * 60 * 1000,
+                        false,
+                        event.bolusId,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                    )
+                }
             }
 
             is ComboCtlPump.Event.ExtendedBolusEnded   -> {
-                pumpSync.syncStopExtendedBolusWithPumpId(
-                    event.timestamp.toEpochMilliseconds(),
-                    event.bolusId,
-                    PumpType.ACCU_CHEK_COMBO,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                        event.timestamp.toEpochMilliseconds(),
+                        event.bolusId,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                    )
+                }
             }
 
             is ComboCtlPump.Event.TbrStarted           -> {
-                aapsLogger.debug(LTag.PUMP, "Pump reports TBR started; expected state according to AAPS: ${pumpSync.expectedPumpState()}")
+                aapsLogger.debug(LTag.PUMP, "Pump reports TBR started; expected state according to AAPS: ${runBlocking { pumpSync.expectedPumpState() }}")
                 val tbrStartTimestampInMs = event.tbr.timestamp.toEpochMilliseconds()
                 val tbrType = when (event.tbr.type) {
                     ComboCtlTbr.Type.NORMAL               -> PumpSync.TemporaryBasalType.NORMAL
@@ -1884,27 +1898,31 @@ class ComboV2Plugin @Inject constructor(
                     ComboCtlTbr.Type.EMULATED_COMBO_STOP  -> PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND
                     ComboCtlTbr.Type.COMBO_STOPPED        -> PumpSync.TemporaryBasalType.PUMP_SUSPEND
                 }
-                pumpSync.syncTemporaryBasalWithPumpId(
-                    timestamp = tbrStartTimestampInMs,
-                    rate = PumpRate(event.tbr.percentage.toDouble()),
-                    duration = event.tbr.durationInMinutes.toLong() * 60 * 1000,
-                    isAbsolute = false,
-                    type = tbrType,
-                    pumpId = tbrStartTimestampInMs,
-                    pumpType = PumpType.ACCU_CHEK_COMBO,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        timestamp = tbrStartTimestampInMs,
+                        rate = PumpRate(event.tbr.percentage.toDouble()),
+                        duration = event.tbr.durationInMinutes.toLong() * 60 * 1000,
+                        isAbsolute = false,
+                        type = tbrType,
+                        pumpId = tbrStartTimestampInMs,
+                        pumpType = PumpType.ACCU_CHEK_COMBO,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
 
             is ComboCtlPump.Event.TbrEnded             -> {
-                aapsLogger.debug(LTag.PUMP, "Pump reports TBR ended; expected state according to AAPS: ${pumpSync.expectedPumpState()}")
+                aapsLogger.debug(LTag.PUMP, "Pump reports TBR ended; expected state according to AAPS: ${runBlocking { pumpSync.expectedPumpState() }}")
                 val tbrEndTimestampInMs = event.timestampWhenTbrEnded.toEpochMilliseconds()
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = tbrEndTimestampInMs,
-                    endPumpId = tbrEndTimestampInMs,
-                    pumpType = PumpType.ACCU_CHEK_COMBO,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        timestamp = tbrEndTimestampInMs,
+                        endPumpId = tbrEndTimestampInMs,
+                        pumpType = PumpType.ACCU_CHEK_COMBO,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
 
             is ComboCtlPump.Event.UnknownTbrDetected   -> {

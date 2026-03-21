@@ -18,6 +18,7 @@ import app.aaps.shared.tests.TestBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -210,7 +211,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val thresholdMinutes = 30
         val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
         whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(thresholdMinutes)
         whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(now - 1000)
@@ -223,7 +224,7 @@ class LocalAlertUtilsImplTest : TestBase() {
 
     @Test
     fun `reportPumpStatusRead does not update alarm when profile is null`() {
-        whenever(profileFunction.getProfile()).thenReturn(null)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(null) }
 
         localAlertUtils.reportPumpStatusRead()
 
@@ -237,7 +238,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val futureAlarmTime = now + T.hours(2).msecs()
         val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
         whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(thresholdMinutes)
         whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(futureAlarmTime)
@@ -304,7 +305,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val currentAlarmTime = now + T.mins(5).msecs()
         val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
 
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
         whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(thresholdMinutes)
         whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(currentAlarmTime)

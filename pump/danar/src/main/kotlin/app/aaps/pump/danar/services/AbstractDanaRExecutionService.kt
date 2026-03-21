@@ -261,7 +261,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         }
     }
 
-    fun doSanityCheck() {
+    suspend fun doSanityCheck() {
         val (temporaryBasal, extendedBolus) = pumpSync.expectedPumpState()
 
         // Temporary basal

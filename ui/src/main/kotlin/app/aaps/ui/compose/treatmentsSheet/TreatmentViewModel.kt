@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -46,7 +45,6 @@ import kotlin.math.abs
 class TreatmentViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val preferences: Preferences,
-    private val config: Config,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val loop: Loop,
@@ -115,7 +113,7 @@ class TreatmentViewModel @Inject constructor(
         }
     }
 
-    private fun buildQuickWizardItems(): List<QuickWizardItem> {
+    private suspend fun buildQuickWizardItems(): List<QuickWizardItem> {
         val activeEntries = quickWizard.list().filter { it.isActive() }
         if (activeEntries.isEmpty()) return emptyList()
 
@@ -147,7 +145,7 @@ class TreatmentViewModel @Inject constructor(
         }
     }
 
-    private fun computeSingleQuickWizardItem(
+    private suspend fun computeSingleQuickWizardItem(
         entry: QuickWizardEntry,
         profile: Profile,
         profileName: String,

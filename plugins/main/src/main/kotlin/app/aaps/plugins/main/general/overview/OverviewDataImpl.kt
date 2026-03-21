@@ -139,7 +139,7 @@ class OverviewDataImpl @Inject constructor(
     */
 
     override fun temporaryBasalText(): String =
-        profileFunction.getProfile()?.let { profile ->
+        runBlocking { profileFunction.getProfile() }?.let { profile ->
             var temporaryBasal = processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
             temporaryBasal?.let { rh.gs(app.aaps.plugins.main.R.string.temp_basal_overview_short_name) + " " + it.toStringShort(rh) }
@@ -147,7 +147,7 @@ class OverviewDataImpl @Inject constructor(
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
     override fun temporaryBasalDialogText(): String =
-        profileFunction.getProfile()?.let { profile ->
+        runBlocking { profileFunction.getProfile() }?.let { profile ->
             processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 "${rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label)}: ${rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())}" +
                     "\n" + rh.gs(app.aaps.core.ui.R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil, rh)
@@ -156,7 +156,7 @@ class OverviewDataImpl @Inject constructor(
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
     @DrawableRes override fun temporaryBasalIcon(): Int =
-        profileFunction.getProfile()?.let { profile ->
+        runBlocking { profileFunction.getProfile() }?.let { profile ->
             processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 val percentRate = temporaryBasal.convertedToPercent(dateUtil.now(), profile)
                 when {

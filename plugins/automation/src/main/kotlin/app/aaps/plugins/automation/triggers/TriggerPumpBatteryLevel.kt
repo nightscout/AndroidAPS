@@ -36,7 +36,7 @@ class TriggerPumpBatteryLevel(injector: HasAndroidInjector) : Trigger(injector) 
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val pump = activePlugin.activePump
         val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
         val currentLevel = pump.batteryLevel.value?.toDouble()

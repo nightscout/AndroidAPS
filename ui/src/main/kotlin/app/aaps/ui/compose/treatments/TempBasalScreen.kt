@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +41,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
@@ -55,6 +55,7 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempBasalViewModel
+import kotlinx.coroutines.launch
 
 /**
  * Composable screen displaying temporary basals and extended boluses with delete and show hidden functionality.
@@ -75,6 +76,7 @@ fun TempBasalScreen(
     onNavigateBack: () -> Unit = { }
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
 
     // Dialog state
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -87,8 +89,10 @@ fun TempBasalScreen(
                 onNavigateBack = onNavigateBack,
                 onDeleteClick = {
                     if (uiState.selectedItems.isNotEmpty()) {
-                        deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
-                        showDeleteDialog = true
+                        scope.launch {
+                            deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
+                            showDeleteDialog = true
+                        }
                     }
                 }
             )
@@ -144,10 +148,7 @@ fun TempBasalScreen(
                                     viewModel.enterSelectionMode(tb)
                                 }
                             },
-                            profileFunction = profileFunction,
-                            activePlugin = activePlugin,
-                            rh = viewModel.rh,
-                            decimalFormatter = viewModel.decimalFormatter
+                            profileFunction = profileFunction
                         )
                     }
                 )
@@ -173,16 +174,15 @@ private fun TempBasalItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
-    profileFunction: ProfileFunction,
-    activePlugin: ActivePlugin,
-    rh: ResourceHelper,
-    decimalFormatter: DecimalFormatter
+    profileFunction: ProfileFunction
 ) {
     val dateUtil = LocalDateUtil.current
     val now = dateUtil.now()
-    val profile = profileFunction.getProfile(now)
+    val profile by produceState<app.aaps.core.interfaces.profile.EffectiveProfile?>(null, now) {
+        value = profileFunction.getProfile(now)
+    }
     val iob = if (profile != null) {
-        tempBasal.iobCalc(now, profile)
+        tempBasal.iobCalc(now, profile!!)
     } else {
         IobTotal(now)
     }

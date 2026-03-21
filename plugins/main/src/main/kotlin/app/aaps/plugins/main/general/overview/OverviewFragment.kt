@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -542,22 +543,24 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun onClickQuickWizard() {
-        val actualBg = iobCobCalculator.ads.actualBg()
-        val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
-        val pump = activePlugin.activePump
-        val quickWizardEntry = quickWizard.getActive()
-        if (quickWizardEntry != null && actualBg != null && profile != null) {
-            binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
-            if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
-                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
-                activity?.let {
-                    if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                        uiInteraction.showOkDialog(context = it, title = rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), message = rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
-                        return
+        viewLifecycleOwner.lifecycleScope.launch {
+            val actualBg = iobCobCalculator.ads.actualBg()
+            val profile = profileFunction.getProfile()
+            val profileName = profileFunction.getProfileName()
+            val pump = activePlugin.activePump
+            val quickWizardEntry = quickWizard.getActive()
+            if (quickWizardEntry != null && actualBg != null && profile != null) {
+                binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
+                val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
+                if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
+                    val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
+                    activity?.let {
+                        if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
+                            uiInteraction.showOkDialog(context = it, title = rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), message = rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
+                            return@launch
+                        }
+                        wizard.confirmAndExecute(it, quickWizardEntry)
                     }
-                    wizard.confirmAndExecute(it, quickWizardEntry)
                 }
             }
         }
@@ -565,127 +568,129 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
-        val lastBG = iobCobCalculator.ads.lastBg()
-        val pump = activePlugin.activePump
-        val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
-        val actualBG = iobCobCalculator.ads.actualBg()
-        var list = ""
+        viewLifecycleOwner.lifecycleScope.launch {
+            val lastBG = iobCobCalculator.ads.lastBg()
+            val pump = activePlugin.activePump
+            val profile = profileFunction.getProfile()
+            val profileName = profileFunction.getProfileName()
+            val actualBG = iobCobCalculator.ads.actualBg()
+            var list = ""
 
-        // QuickWizard button
-        val quickWizardEntry = quickWizard.getActive()
-        runOnUiThread {
-            _binding ?: return@runOnUiThread
-            if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended()) {
-                binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
-                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(app.aaps.core.objects.R.string.format_carbs, quickWizardEntry.carbs()) +
-                    " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
-                if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
-            } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
-        }
-
-        // **** Temp button ****
-        val lastRun = loop.lastRun
-        val resultAvailable =
-            lastRun != null &&
-                (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&// never accepted or before last result
-                lastRun.constraintsProcessed?.isChangeRequested == true // change is requested
-
-        runOnUiThread {
-            _binding ?: return@runOnUiThread
-            if (resultAvailable && pump.isInitialized() && loop.runningMode == RM.Mode.OPEN_LOOP && (loop as PluginBase).isEnabled()) {
-                binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
-                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun.constraintsProcessed?.resultAsString()}"
-            } else {
-                binding.buttonsLayout.acceptTempButton.visibility = View.GONE
+            // QuickWizard button
+            val quickWizardEntry = quickWizard.getActive()
+            runOnUiThread {
+                _binding ?: return@runOnUiThread
+                if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended()) {
+                    binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
+                    val wizard = runBlocking { quickWizardEntry.doCalc(profile, profileName, lastBG) }
+                    binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(app.aaps.core.objects.R.string.format_carbs, quickWizardEntry.carbs()) +
+                        " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+                    if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
+                } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
             }
 
-            // **** Various treatment buttons ****
-            binding.buttonsLayout.carbsButton.visibility =
-                (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
-            binding.buttonsLayout.treatmentButton.visibility = (loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended() && pump.isInitialized() && profile != null
-                && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
-            binding.buttonsLayout.wizardButton.visibility = (loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended() && pump.isInitialized() && profile != null
-                && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
-            binding.buttonsLayout.insulinButton.visibility = (profile != null && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
-            if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP || pump.isSuspended() || !pump.isInitialized()) {
-                setRibbon(
-                    binding.buttonsLayout.insulinButton,
-                    app.aaps.core.ui.R.attr.ribbonTextWarningColor,
-                    app.aaps.core.ui.R.attr.ribbonWarningColor,
-                    rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
-                )
-            } else {
-                setRibbon(
-                    binding.buttonsLayout.insulinButton,
-                    app.aaps.core.ui.R.attr.icBolusColor,
-                    app.aaps.core.ui.R.attr.ribbonDefaultColor,
-                    rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
-                )
-            }
+            // **** Temp button ****
+            val lastRun = loop.lastRun
+            val resultAvailable =
+                lastRun != null &&
+                    (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&// never accepted or before last result
+                    lastRun.constraintsProcessed?.isChangeRequested == true // change is requested
 
-            // **** Calibration & CGM buttons ****
-            val xDripIsBgSource = xDripSource.isEnabled()
-            val dexcomIsSource = dexcomBoyda.isEnabled()
-            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && preferences.get(BooleanKey.OverviewShowCalibrationButton)).toVisibility()
-            if (dexcomIsSource) {
-                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
-                for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
-                    drawable?.mutate()
-                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
+            runOnUiThread {
+                _binding ?: return@runOnUiThread
+                if (resultAvailable && pump.isInitialized() && loop.runningMode == RM.Mode.OPEN_LOOP && (loop as PluginBase).isEnabled()) {
+                    binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
+                    binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun.constraintsProcessed?.resultAsString()}"
+                } else {
+                    binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                 }
-                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmDexColor))
-            } else if (xDripIsBgSource) {
-                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.objects.R.drawable.ic_xdrip), null, null)
-                for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
-                    drawable?.mutate()
-                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
-                }
-                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor))
-            }
-            binding.buttonsLayout.cgmButton.visibility = (preferences.get(BooleanKey.OverviewShowCgmButton) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
-            // Automation buttons
-            binding.buttonsLayout.userButtonsLayout.removeAllViews()
-            val events = automation.userEvents()
-            if (!loop.runningMode.isSuspended() && pump.isInitialized() && profile != null && !config.showUserActionsOnWatchOnly())
-                for (event in events)
-                    if (event.isEnabled && event.canRun()) {
-                        context?.let { context ->
-                            SingleClickButton(context, null, app.aaps.core.ui.R.attr.customBtnStyle).also {
-                                it.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor))
-                                it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
-                                it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
-                                    l.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), 0)
-                                }
-                                it.setPadding(rh.dpToPx(1), it.paddingTop, rh.dpToPx(1), it.paddingBottom)
-                                it.compoundDrawablePadding = rh.dpToPx(-4)
-                                it.setCompoundDrawablesWithIntrinsicBounds(
-                                    null,
-                                    rh.gd(event.firstActionIcon() ?: app.aaps.core.ui.R.drawable.ic_user_options_24dp).also { icon ->
-                                        icon?.setBounds(rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20))
-                                    }, null, null
-                                )
-                                it.text = event.title
-                                it.setOnClickListener {
-                                    uiInteraction.showOkCancelDialog(context = context, message = rh.gs(R.string.run_question, event.title), ok = { handler.post { automation.processEvent(event) } })
-                                }
-                                binding.buttonsLayout.userButtonsLayout.addView(it)
-                                for (drawable in it.compoundDrawables) {
-                                    drawable?.mutate()
-                                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor), PorterDuff.Mode.SRC_IN)
+                // **** Various treatment buttons ****
+                binding.buttonsLayout.carbsButton.visibility =
+                    (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
+                binding.buttonsLayout.treatmentButton.visibility = (loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended() && pump.isInitialized() && profile != null
+                    && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
+                binding.buttonsLayout.wizardButton.visibility = (loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended() && pump.isInitialized() && profile != null
+                    && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
+                binding.buttonsLayout.insulinButton.visibility = (profile != null && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
+                if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP || pump.isSuspended() || !pump.isInitialized()) {
+                    setRibbon(
+                        binding.buttonsLayout.insulinButton,
+                        app.aaps.core.ui.R.attr.ribbonTextWarningColor,
+                        app.aaps.core.ui.R.attr.ribbonWarningColor,
+                        rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
+                    )
+                } else {
+                    setRibbon(
+                        binding.buttonsLayout.insulinButton,
+                        app.aaps.core.ui.R.attr.icBolusColor,
+                        app.aaps.core.ui.R.attr.ribbonDefaultColor,
+                        rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
+                    )
+                }
+
+                // **** Calibration & CGM buttons ****
+                val xDripIsBgSource = xDripSource.isEnabled()
+                val dexcomIsSource = dexcomBoyda.isEnabled()
+                binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && preferences.get(BooleanKey.OverviewShowCalibrationButton)).toVisibility()
+                if (dexcomIsSource) {
+                    binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
+                    for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
+                        drawable?.mutate()
+                        drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
+                    }
+                    binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmDexColor))
+                } else if (xDripIsBgSource) {
+                    binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.objects.R.drawable.ic_xdrip), null, null)
+                    for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
+                        drawable?.mutate()
+                        drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
+                    }
+                    binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor))
+                }
+                binding.buttonsLayout.cgmButton.visibility = (preferences.get(BooleanKey.OverviewShowCgmButton) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
+
+                // Automation buttons
+                binding.buttonsLayout.userButtonsLayout.removeAllViews()
+                val events = automation.userEvents()
+                if (!loop.runningMode.isSuspended() && pump.isInitialized() && profile != null && !config.isEnabled(ExternalOptions.SHOW_USER_ACTIONS_ON_WATCH_ONLY))
+                    for (event in events)
+                        if (event.isEnabled && runBlocking { event.canRun() }) {
+                            context?.let { context ->
+                                SingleClickButton(context, null, app.aaps.core.ui.R.attr.customBtnStyle).also {
+                                    it.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor))
+                                    it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+                                    it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
+                                        l.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), 0)
+                                    }
+                                    it.setPadding(rh.dpToPx(1), it.paddingTop, rh.dpToPx(1), it.paddingBottom)
+                                    it.compoundDrawablePadding = rh.dpToPx(-4)
+                                    it.setCompoundDrawablesWithIntrinsicBounds(
+                                        null,
+                                        rh.gd(event.firstActionIcon() ?: app.aaps.core.ui.R.drawable.ic_user_options_24dp).also { icon ->
+                                            icon?.setBounds(rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20))
+                                        }, null, null
+                                    )
+                                    it.text = event.title
+                                    it.setOnClickListener {
+                                        uiInteraction.showOkCancelDialog(context = context, message = rh.gs(R.string.run_question, event.title), ok = { scope?.launch { automation.processEvent(event) } })
+                                    }
+                                    binding.buttonsLayout.userButtonsLayout.addView(it)
+                                    for (drawable in it.compoundDrawables) {
+                                        drawable?.mutate()
+                                        drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor), PorterDuff.Mode.SRC_IN)
+                                    }
                                 }
                             }
+                            list += event.hashCode()
                         }
-                        list += event.hashCode()
-                    }
-            binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
-        }
-        if (list != lastUserAction) {
-            // Synchronize Watch Tiles with overview
-            lastUserAction = list
-            rxBus.send(EventWearUpdateTiles())
+                binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
+            }
+            if (list != lastUserAction) {
+                // Synchronize Watch Tiles with overview
+                lastUserAction = list
+                rxBus.send(EventWearUpdateTiles())
+            }
         }
     }
 
@@ -894,25 +899,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateProfile() {
-        val profile = profileFunction.getProfile()
-        runOnUiThread {
-            _binding ?: return@runOnUiThread
-            val profileBackgroundColor = profile?.let {
-                if (it is ProfileSealed.EPS) {
-                    if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        app.aaps.core.ui.R.attr.ribbonWarningColor
-                    else app.aaps.core.ui.R.attr.ribbonDefaultColor
-                } else app.aaps.core.ui.R.attr.ribbonDefaultColor
-            } ?: app.aaps.core.ui.R.attr.ribbonCriticalColor
+        viewLifecycleOwner.lifecycleScope.launch {
+            val profile = profileFunction.getProfile()
+            val profileNameWithTime = profileFunction.getProfileNameWithRemainingTime()
+            runOnUiThread {
+                _binding ?: return@runOnUiThread
+                val profileBackgroundColor = profile?.let {
+                    if (it is ProfileSealed.EPS) {
+                        if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+                            app.aaps.core.ui.R.attr.ribbonWarningColor
+                        else app.aaps.core.ui.R.attr.ribbonDefaultColor
+                    } else app.aaps.core.ui.R.attr.ribbonDefaultColor
+                } ?: app.aaps.core.ui.R.attr.ribbonCriticalColor
 
-            val profileTextColor = profile?.let {
-                if (it is ProfileSealed.EPS) {
-                    if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        app.aaps.core.ui.R.attr.ribbonTextWarningColor
-                    else app.aaps.core.ui.R.attr.ribbonTextDefaultColor
-                } else app.aaps.core.ui.R.attr.ribbonTextDefaultColor
-            } ?: app.aaps.core.ui.R.attr.ribbonTextDefaultColor
-            setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileFunction.getProfileNameWithRemainingTime())
+                val profileTextColor = profile?.let {
+                    if (it is ProfileSealed.EPS) {
+                        if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+                            app.aaps.core.ui.R.attr.ribbonTextWarningColor
+                        else app.aaps.core.ui.R.attr.ribbonTextDefaultColor
+                    } else app.aaps.core.ui.R.attr.ribbonTextDefaultColor
+                } ?: app.aaps.core.ui.R.attr.ribbonTextDefaultColor
+                setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileNameWithTime)
+            }
         }
     }
 
@@ -972,8 +980,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         )
     }
 
-    private fun bolusIob(): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
-    private fun basalIob(): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    private fun bolusIob(): IobTotal = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+    private fun basalIob(): IobTotal = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
     private fun iobText(): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
 
@@ -985,7 +993,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateIobCob() {
         val iobText = iobText()
         val iobDialogText = iobDialogText()
-        val displayText = iobCobCalculator.getCobInfo("Overview COB").displayText(rh, decimalFormatter)
+        val displayText = runBlocking { iobCobCalculator.getCobInfo("Overview COB") }.displayText(rh, decimalFormatter)
         val lastCarbsTime = runBlocking { persistenceLayer.getNewestCarbs() }?.timestamp ?: 0L
         runOnUiThread {
             _binding ?: return@runOnUiThread
@@ -1173,84 +1181,86 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateSensitivity() {
         _binding ?: return
-        val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
-        val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
-        if (config.AAPSCLIENT && preferences.get(BooleanNonKey.AutosensUsedOnMainPhone) ||
-            !config.AAPSCLIENT && constraintChecker.isAutosensModeEnabled().value()
-        ) {
-            binding.infoLayout.sensitivityIcon.setImageResource(
-                lastAutosensRatio?.let {
-                    when {
-                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_as_above
-                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_as_below
-                        else       -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+        viewLifecycleOwner.lifecycleScope.launch {
+            val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
+            val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
+            if (config.AAPSCLIENT && preferences.get(BooleanNonKey.AutosensUsedOnMainPhone) ||
+                !config.AAPSCLIENT && constraintChecker.isAutosensModeEnabled().value()
+            ) {
+                binding.infoLayout.sensitivityIcon.setImageResource(
+                    lastAutosensRatio?.let {
+                        when {
+                            it > 100.0 -> app.aaps.core.objects.R.drawable.ic_as_above
+                            it < 100.0 -> app.aaps.core.objects.R.drawable.ic_as_below
+                            else       -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+                        }
                     }
-                }
-                    ?: app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
-            )
-        } else {
-            binding.infoLayout.sensitivityIcon.setImageResource(
-                lastAutosensRatio?.let {
-                    when {
-                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_above
-                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_below
-                        else       -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
-                    }
-                }
-                    ?: app.aaps.core.objects.R.drawable.ic_x_swap_vert
-            )
-        }
-
-        // Show variable sensitivity
-        val profile = profileFunction.getProfile()
-        val request = loop.lastRun?.request
-        val isfMgdl = profile?.getProfileIsfMgdl()
-        val isfForCarbs = profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
-        val variableSens =
-            if (config.APS) request?.variableSens ?: 0.0
-            else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
-            else 0.0
-        val ratioUsed = request?.autosensResult?.ratio ?: 1.0
-
-        if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
-            val okDialogText: ArrayList<String> = ArrayList()
-            val overViewText: ArrayList<String> = ArrayList()
-            val autoSensHiddenRange = 0.0             //Hide Autosens value if equals 100%
-            val autoSensMax = 100.0 + (preferences.get(DoubleKey.AutosensMax) - 1.0) * autoSensHiddenRange * 100.0
-            val autoSensMin = 100.0 + (preferences.get(DoubleKey.AutosensMin) - 1.0) * autoSensHiddenRange * 100.0
-            lastAutosensRatio?.let {
-                if (it !in autoSensMin..autoSensMax)
-                    overViewText.add(rh.gs(app.aaps.core.ui.R.string.autosens_short, it))
-                okDialogText.add(rh.gs(app.aaps.core.ui.R.string.autosens_long, it))
-            }
-            overViewText.add(
-                String.format(
-                    Locale.getDefault(), "%1$.1f→%2$.1f",
-                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
-                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+                        ?: app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
                 )
-            )
-            binding.infoLayout.sensitivity.text = overViewText.joinToString("\n")
-            binding.infoLayout.sensitivity.visibility = View.VISIBLE
-            binding.infoLayout.variableSensitivity.visibility = View.GONE
-            if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio)
-                okDialogText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_long, ratioUsed * 100))
-            okDialogText.add(rh.gs(app.aaps.core.ui.R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits())))
-            if (config.APS) {
-                val aps = activePlugin.activeAPS
-                aps.getSensitivityOverviewString()?.let {
-                    okDialogText.add(it)
-                }
+            } else {
+                binding.infoLayout.sensitivityIcon.setImageResource(
+                    lastAutosensRatio?.let {
+                        when {
+                            it > 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_above
+                            it < 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_below
+                            else       -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
+                        }
+                    }
+                        ?: app.aaps.core.objects.R.drawable.ic_x_swap_vert
+                )
             }
-            binding.infoLayout.asLayout.setOnClickListener { activity?.let { uiInteraction.showOkDialog(context = it, title = rh.gs(app.aaps.core.ui.R.string.sensitivity), message = okDialogText.joinToString("\n")) } }
 
-        } else {
-            binding.infoLayout.sensitivity.text =
-                lastAutosensData?.let {
-                    rh.gs(app.aaps.core.ui.R.string.autosens_short, it.autosensResult.ratio * 100)
-                } ?: ""
-            binding.infoLayout.variableSensitivity.visibility = View.GONE
-            binding.infoLayout.sensitivity.visibility = View.VISIBLE
+            // Show variable sensitivity
+            val profile = profileFunction.getProfile()
+            val request = loop.lastRun?.request
+            val isfMgdl = profile?.getProfileIsfMgdl()
+            val isfForCarbs = profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
+            val variableSens =
+                if (config.APS) request?.variableSens ?: 0.0
+                else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
+                else 0.0
+            val ratioUsed = request?.autosensResult?.ratio ?: 1.0
+
+            if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
+                val okDialogText: ArrayList<String> = ArrayList()
+                val overViewText: ArrayList<String> = ArrayList()
+                val autoSensHiddenRange = 0.0             //Hide Autosens value if equals 100%
+                val autoSensMax = 100.0 + (preferences.get(DoubleKey.AutosensMax) - 1.0) * autoSensHiddenRange * 100.0
+                val autoSensMin = 100.0 + (preferences.get(DoubleKey.AutosensMin) - 1.0) * autoSensHiddenRange * 100.0
+                lastAutosensRatio?.let {
+                    if (it !in autoSensMin..autoSensMax)
+                        overViewText.add(rh.gs(app.aaps.core.ui.R.string.autosens_short, it))
+                    okDialogText.add(rh.gs(app.aaps.core.ui.R.string.autosens_long, it))
+                }
+                overViewText.add(
+                    String.format(
+                        Locale.getDefault(), "%1$.1f→%2$.1f",
+                        profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                        profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+                    )
+                )
+                binding.infoLayout.sensitivity.text = overViewText.joinToString("\n")
+                binding.infoLayout.sensitivity.visibility = View.VISIBLE
+                binding.infoLayout.variableSensitivity.visibility = View.GONE
+                if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio)
+                    okDialogText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_long, ratioUsed * 100))
+                okDialogText.add(rh.gs(app.aaps.core.ui.R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits())))
+                if (config.APS) {
+                    val aps = activePlugin.activeAPS
+                    aps.getSensitivityOverviewString()?.let {
+                        okDialogText.add(it)
+                    }
+                }
+                binding.infoLayout.asLayout.setOnClickListener { activity?.let { uiInteraction.showOkDialog(context = it, title = rh.gs(app.aaps.core.ui.R.string.sensitivity), message = okDialogText.joinToString("\n")) } }
+
+            } else {
+                binding.infoLayout.sensitivity.text =
+                    lastAutosensData?.let {
+                        rh.gs(app.aaps.core.ui.R.string.autosens_short, it.autosensResult.ratio * 100)
+                    } ?: ""
+                binding.infoLayout.variableSensitivity.visibility = View.GONE
+                binding.infoLayout.sensitivity.visibility = View.VISIBLE
+            }
         }
     }
 

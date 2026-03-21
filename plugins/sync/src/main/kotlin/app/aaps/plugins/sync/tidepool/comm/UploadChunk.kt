@@ -22,6 +22,7 @@ import app.aaps.plugins.sync.tidepool.elements.WizardElement
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
+import kotlinx.coroutines.runBlocking
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -133,7 +134,7 @@ class UploadChunk @Inject constructor(
         val results = LinkedList<BasalElement>()
         for (tbr in tbrList) {
             if (tbr.timestamp in start..end)
-                profileFunction.getProfile(tbr.timestamp)?.let {
+                runBlocking { profileFunction.getProfile(tbr.timestamp) }?.let {
                     results.add(BasalElement(tbr, it, dateUtil))
                 }
         }

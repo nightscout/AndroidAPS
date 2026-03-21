@@ -14,16 +14,17 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
 import app.aaps.pump.omnipod.dash.databinding.OmnipodDashPodManagementBinding
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
-import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import app.aaps.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
@@ -53,7 +54,7 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.buttonActivatePod.setOnClickListener {
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { profileFunction.getProfile() }
             if (profile == null) {
                 uiInteraction.showOkDialog(
                     this,

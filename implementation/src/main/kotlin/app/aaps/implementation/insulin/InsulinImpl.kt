@@ -1,10 +1,14 @@
 package app.aaps.implementation.insulin
 
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
@@ -18,6 +22,10 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromJsonObject
 import app.aaps.core.objects.extensions.toJsonObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -35,20 +43,21 @@ class InsulinImpl @Inject constructor(
     val preferences: Preferences,
     val rh: ResourceHelper,
     val profileFunction: ProfileFunction,
+    val persistenceLayer: PersistenceLayer,
     val aapsLogger: AAPSLogger,
     val config: Config,
     val hardLimits: HardLimits,
-    val uel: UserEntryLogger
+    val uel: UserEntryLogger,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : Insulin, InsulinManager {
 
     override val id = InsulinType.UNKNOWN
     override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.insulin_plugin)
 
+    @Volatile private var cachedICfg: ICfg? = null
+
     override val iCfg: ICfg
-        get() {
-            val profile = profileFunction.getProfile()
-            return profile?.iCfg ?: insulins[0]
-        }
+        get() = cachedICfg ?: insulins[0]
 
     override val comment: String
         get() = TODO("Not yet implemented")
@@ -60,6 +69,19 @@ class InsulinImpl @Inject constructor(
 
     init {
         loadSettings()
+        persistenceLayer.observeChanges<EPS>()
+            .onEach { updateCachedICfg() }
+            .launchIn(appScope)
+        appScope.launch { updateCachedICfg() }
+    }
+
+    private suspend fun updateCachedICfg() {
+        try {
+            cachedICfg = profileFunction.getProfile()?.iCfg
+        } catch (_: Exception) {
+            // May fail during early init (e.g. no APS selected yet).
+            // Will be updated on first EPS change after init completes.
+        }
     }
 
     override fun insulinList(concentration: Double?): List<CharSequence> {

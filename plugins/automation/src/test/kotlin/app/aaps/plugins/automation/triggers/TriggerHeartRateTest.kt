@@ -41,7 +41,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
     }
 
     @Test
-    fun shouldRunNotAvailable() {
+    fun shouldRunNotAvailable() = runTest {
         val t = TriggerHeartRate(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(persistenceLayer)

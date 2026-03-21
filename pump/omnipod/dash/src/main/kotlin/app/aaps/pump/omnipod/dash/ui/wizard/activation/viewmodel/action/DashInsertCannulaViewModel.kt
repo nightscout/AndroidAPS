@@ -14,12 +14,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
 import app.aaps.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
-import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
 import app.aaps.pump.omnipod.dash.history.data.InitialResult
@@ -30,6 +30,7 @@ import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -55,7 +56,7 @@ class DashInsertCannulaViewModel @Inject constructor(
     override fun isPodDeactivatable(): Boolean = true // TODO
 
     override fun doExecuteAction(): Single<PumpEnactResult> = Single.create { source ->
-        val profile = pumpSync.expectedPumpState().profile
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
         if (profile == null) {
             source.onError(IllegalStateException("No profile set"))
         } else {
@@ -103,28 +104,32 @@ class DashInsertCannulaViewModel @Inject constructor(
                         logger.debug("Pod activation part 2 completed")
                         podStateManager.basalProgram = basalProgram
 
-                        pumpSync.syncStopTemporaryBasalWithPumpId(
-                            timestamp = System.currentTimeMillis(),
-                            endPumpId = System.currentTimeMillis(),
-                            pumpType = PumpType.OMNIPOD_DASH,
-                            pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // cancel the fake TBR with the same pump
-                            // serial that it was created with
-                        )
+                        runBlocking {
+                            pumpSync.syncStopTemporaryBasalWithPumpId(
+                                timestamp = System.currentTimeMillis(),
+                                endPumpId = System.currentTimeMillis(),
+                                pumpType = PumpType.OMNIPOD_DASH,
+                                pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // cancel the fake TBR with the same pump
+                                // serial that it was created with
+                            )
+                        }
 
                         pumpSync.connectNewPump()
 
-                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                            timestamp = System.currentTimeMillis(),
-                            type = TE.Type.CANNULA_CHANGE,
-                            pumpType = PumpType.OMNIPOD_DASH,
-                            pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                        )
-                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                            timestamp = System.currentTimeMillis(),
-                            type = TE.Type.INSULIN_CHANGE,
-                            pumpType = PumpType.OMNIPOD_DASH,
-                            pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
-                        )
+                        runBlocking {
+                            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                timestamp = System.currentTimeMillis(),
+                                type = TE.Type.CANNULA_CHANGE,
+                                pumpType = PumpType.OMNIPOD_DASH,
+                                pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                            )
+                            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                timestamp = System.currentTimeMillis(),
+                                type = TE.Type.INSULIN_CHANGE,
+                                pumpType = PumpType.OMNIPOD_DASH,
+                                pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                            )
+                        }
                         notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
                         fabricPrivacy.logCustom("OmnipodDashPodActivated")
                         source.onSuccess(pumpEnactResultProvider.get().success(true))

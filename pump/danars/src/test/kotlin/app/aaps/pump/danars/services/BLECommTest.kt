@@ -1,9 +1,5 @@
 package app.aaps.pump.danars.services
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothManager
 import android.content.Context
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -21,10 +17,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
 
 class BLECommTest : TestBase() {
 
@@ -38,17 +32,21 @@ class BLECommTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var bluetoothManager: BluetoothManager
-    @Mock lateinit var bluetoothAdapter: BluetoothAdapter
-    @Mock lateinit var bluetoothDevice: BluetoothDevice
-    @Mock lateinit var bluetoothGatt: BluetoothGatt
     @Mock lateinit var danaRSPacket: DanaRSPacket
     @Mock lateinit var configBuilder: ConfigBuilder
+    @Mock lateinit var bleTransport: BleTransport
+    @Mock lateinit var bleAdapter: BleAdapter
+    @Mock lateinit var bleScanner: BleScanner
+    @Mock lateinit var bleGatt: BleGatt
 
     private lateinit var bleComm: BLEComm
 
     @BeforeEach
     fun setup() {
+        `when`(bleTransport.adapter).thenReturn(bleAdapter)
+        `when`(bleTransport.scanner).thenReturn(bleScanner)
+        `when`(bleTransport.gatt).thenReturn(bleGatt)
+
         bleComm = BLEComm(
             aapsLogger,
             rh,
@@ -62,30 +60,16 @@ class BLECommTest : TestBase() {
             dateUtil,
             preferences,
             configBuilder,
-            notificationManager
+            notificationManager,
+            bleTransport
         )
 
         `when`(rh.gs(anyInt())).thenReturn("test")
-        `when`(context.getSystemService(Context.BLUETOOTH_SERVICE)).thenReturn(bluetoothManager)
-        `when`(bluetoothManager.adapter).thenReturn(bluetoothAdapter)
-        `when`(bluetoothAdapter.getRemoteDevice(anyString())).thenReturn(bluetoothDevice)
-        `when`(bluetoothDevice.name).thenReturn("DanaRS")
-        `when`(bluetoothDevice.bondState).thenReturn(BluetoothDevice.BOND_BONDED)
     }
 
     @Test
     fun testInitialState() {
         assertThat(bleComm.isConnected).isFalse()
-        assertThat(bleComm.isConnecting).isFalse()
-    }
-
-    @Test
-    fun testConnect_noBluetoothAdapter() {
-        `when`(bluetoothManager.adapter).thenReturn(null)
-
-        val result = bleComm.connect("test", "00:11:22:33:44:55")
-
-        assertThat(result).isFalse()
         assertThat(bleComm.isConnecting).isFalse()
     }
 
@@ -99,7 +83,7 @@ class BLECommTest : TestBase() {
 
     @Test
     fun testConnect_deviceNotFound() {
-        `when`(bluetoothAdapter.getRemoteDevice(anyString())).thenReturn(null)
+        `when`(bleAdapter.getDeviceName("00:11:22:33:44:55")).thenReturn(null)
 
         val result = bleComm.connect("test", "00:11:22:33:44:55")
 
@@ -109,21 +93,12 @@ class BLECommTest : TestBase() {
 
     @Test
     fun testConnect_deviceNotBonded() {
-        `when`(bluetoothDevice.bondState).thenReturn(BluetoothDevice.BOND_NONE)
+        `when`(bleAdapter.getDeviceName("00:11:22:33:44:55")).thenReturn("DanaRS")
+        `when`(bleAdapter.isDeviceBonded("00:11:22:33:44:55")).thenReturn(false)
 
         val result = bleComm.connect("test", "00:11:22:33:44:55")
 
         assertThat(result).isFalse()
-    }
-
-    @Test
-    fun testConnect_success() {
-        `when`(bluetoothDevice.connectGatt(any(), any(), any())).thenReturn(bluetoothGatt)
-
-        val result = bleComm.connect("test", "00:11:22:33:44:55")
-
-        // Result depends on BLE permissions which may not be granted in test
-        // Just verify no crash occurs
     }
 
     @Test
@@ -139,18 +114,8 @@ class BLECommTest : TestBase() {
     }
 
     @Test
-    fun testDisconnect_whenConnecting() {
-        // Simulate connecting state
-        bleComm.connect("test", "00:11:22:33:44:55")
-        bleComm.disconnect("test")
-
-        // Should handle gracefully
-    }
-
-    @Test
     fun testSendMessage_notConnected() {
         `when`(danaRSPacket.friendlyName).thenReturn("TestPacket")
-        //`when`(danaRSPacket.requestParams).thenReturn(ByteArray(0))
 
         bleComm.sendMessage(danaRSPacket)
 

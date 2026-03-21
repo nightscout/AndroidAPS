@@ -48,6 +48,7 @@ import app.aaps.ui.dialogs.EditQuickWizardDialog
 import app.aaps.ui.events.EventQuickWizardChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -131,13 +132,13 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.root.setOnLongClickListener {
                 if (actionHelper.isNoAction) {
                     val actualBg = iobCobCalculator.ads.actualBg()
-                    val profile = profileFunction.getProfile()
-                    val profileName = profileFunction.getProfileName()
+                    val profile = runBlocking { profileFunction.getProfile() }
+                    val profileName = runBlocking { profileFunction.getProfileName() }
                     val pump = activePlugin.activePump
                     val quickWizardEntry = quickWizard[position]
 
                     if (actualBg != null && profile != null) {
-                        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
+                        val wizard = runBlocking { quickWizardEntry.doCalc(profile, profileName, actualBg) }
 
                         if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
@@ -149,7 +150,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
                                     )
                                 )
                             }
-                            wizard.confirmAndExecute(this@QuickWizardListActivity, quickWizardEntry)
+                            runBlocking { wizard.confirmAndExecute(this@QuickWizardListActivity, quickWizardEntry) }
                         }
                     }
                     return@setOnLongClickListener true

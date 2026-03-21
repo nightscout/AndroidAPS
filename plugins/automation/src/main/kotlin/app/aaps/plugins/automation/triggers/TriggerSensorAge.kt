@@ -12,7 +12,6 @@ import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.Optional
@@ -37,8 +36,8 @@ class TriggerSensorAge(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
-        val therapyEvent = runBlocking { persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE) }
+    override suspend fun shouldRun(): Boolean {
+        val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
         } ?: 0.0

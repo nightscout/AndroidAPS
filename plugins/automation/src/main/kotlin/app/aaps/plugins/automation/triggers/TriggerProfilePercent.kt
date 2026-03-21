@@ -40,7 +40,7 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile()
         if (profileFunction.isProfileChangePending()) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + "Profile change is already pending: " + friendlyDescription())

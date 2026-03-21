@@ -3,6 +3,7 @@ package app.aaps.implementation.insulin
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -13,20 +14,27 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.test.TestScope
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class InsulinImplTest : TestBase() {
 
     private lateinit var sut: InsulinImpl
     private lateinit var insulinConfiguration: String
+    private val testScope = TestScope()
 
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var config: Config
     @Mock lateinit var hardLimits: HardLimits
     @Mock lateinit var uel: UserEntryLogger
@@ -36,7 +44,8 @@ class InsulinImplTest : TestBase() {
         // dia 5.0 h, Peak 30 min
         insulinConfiguration = "{\"insulin\":[{\"insulinLabel\":\"test\",\"insulinEndTime\":18000000,\"insulinPeakTime\":1800000,\"concentration\":1.0}]}"
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn(insulinConfiguration)
-        sut = InsulinImpl(preferences, rh, profileFunction, aapsLogger, config, hardLimits, uel)
+        whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(emptyFlow())
+        sut = InsulinImpl(preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel, testScope)
     }
 
     @Test

@@ -81,7 +81,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
         name = triggerLocation.name
     }
 
-    @Synchronized override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val location: Location = locationDataContainer.lastLocation ?: return false
         val a = Location("Trigger")
         a.latitude = latitude.value

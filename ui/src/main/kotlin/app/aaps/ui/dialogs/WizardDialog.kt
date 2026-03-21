@@ -226,7 +226,7 @@ class WizardDialog : DaggerDialogFragment() {
                 okClicked = true
                 calculateInsulin()
                 context?.let { context ->
-                    wizard?.confirmAndExecute(context)
+                    runBlocking { wizard?.confirmAndExecute(context) }
                 }
                 aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.simpleName}")
             }
@@ -382,7 +382,7 @@ class WizardDialog : DaggerDialogFragment() {
         else decimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         val profileStore = localProfileManager.profile
         val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
 
@@ -393,8 +393,8 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         // IOB calculation
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+        val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
 
         runOnUiThread {
             _binding ?: return@runOnUiThread
@@ -433,8 +433,8 @@ class WizardDialog : DaggerDialogFragment() {
         var profileName = binding.profileList.text.toString()
         val specificProfile: Profile?
         if (profileName == rh.gs(app.aaps.core.ui.R.string.active)) {
-            specificProfile = profileFunction.getProfile()
-            profileName = profileFunction.getProfileName()
+            specificProfile = runBlocking { profileFunction.getProfile() }
+            profileName = runBlocking { profileFunction.getProfileName() }
         } else
             specificProfile = profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it, activePlugin) }
 
@@ -471,27 +471,29 @@ class WizardDialog : DaggerDialogFragment() {
         // COB
         var cob = 0.0
         if (binding.cobCheckbox.isChecked) {
-            val cobInfo = iobCobCalculator.getCobInfo("Wizard COB")
+            val cobInfo = runBlocking { iobCobCalculator.getCobInfo("Wizard COB") }
             cobInfo.displayCob?.let { cob = it }
         }
 
         val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
-        wizard = bolusWizardProvider.get().doCalc(
-            specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, preferences.get(IntKey.OverviewBolusPercentage),
-            binding.bgCheckbox.isChecked,
-            binding.cobCheckbox.isChecked,
-            binding.iobCheckbox.isChecked,
-            binding.iobCheckbox.isChecked,
-            binding.sbCheckbox.isChecked,
-            binding.ttCheckbox.isChecked,
-            binding.bgTrendCheckbox.isChecked,
-            binding.alarm.isChecked,
-            binding.notesLayout.notes.text.toString(),
-            carbTime,
-            usePercentage = usePercentage,
-            totalPercentage = percentageCorrection.toDouble()
-        )
+        wizard = runBlocking {
+            bolusWizardProvider.get().doCalc(
+                specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, preferences.get(IntKey.OverviewBolusPercentage),
+                binding.bgCheckbox.isChecked,
+                binding.cobCheckbox.isChecked,
+                binding.iobCheckbox.isChecked,
+                binding.iobCheckbox.isChecked,
+                binding.sbCheckbox.isChecked,
+                binding.ttCheckbox.isChecked,
+                binding.bgTrendCheckbox.isChecked,
+                binding.alarm.isChecked,
+                binding.notesLayout.notes.text.toString(),
+                carbTime,
+                usePercentage = usePercentage,
+                totalPercentage = percentageCorrection.toDouble()
+            )
+        }
 
         wizard?.let { wizard ->
             binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(profileUtil.convertToMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)

@@ -74,6 +74,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -188,8 +189,10 @@ class EopatchPumpPlugin @Inject constructor(
         mDisposables.clear()
     }
 
+    override fun isConfigured(): Boolean = patchConfig.isActivated
+
     override fun isInitialized(): Boolean {
-        return isConnected() && patchConfig.isActivated
+        return isConfigured() && isConnected()
     }
 
     override fun isSuspended(): Boolean {
@@ -382,16 +385,18 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .doOnSuccess {
-                    pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = dateUtil.now(),
-                        rate = PumpRate(absoluteRate),
-                        duration = T.mins(durationInMinutes.toLong()).msecs(),
-                        isAbsolute = true,
-                        type = tbrType,
-                        pumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = dateUtil.now(),
+                            rate = PumpRate(absoluteRate),
+                            duration = T.mins(durationInMinutes.toLong()).msecs(),
+                            isAbsolute = true,
+                            type = tbrType,
+                            pumpId = dateUtil.now(),
+                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                     aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - tbrCurrent:${readTBR()}")
                 }
                 .map { pumpEnactResultProvider.get().success(true).enacted(true).duration(durationInMinutes).absolute(absoluteRate).isPercent(false).isTempCancel(false) }
@@ -415,16 +420,18 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .doOnSuccess {
-                    pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = dateUtil.now(),
-                        rate = PumpRate(percent.toDouble()),
-                        duration = T.mins(durationInMinutes.toLong()).msecs(),
-                        isAbsolute = false,
-                        type = tbrType,
-                        pumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = dateUtil.now(),
+                            rate = PumpRate(percent.toDouble()),
+                            duration = T.mins(durationInMinutes.toLong()).msecs(),
+                            isAbsolute = false,
+                            type = tbrType,
+                            pumpId = dateUtil.now(),
+                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                     aapsLogger.info(LTag.PUMP, "setTempBasalPercent - tbrCurrent:${readTBR()}")
                 }
                 .map { pumpEnactResultProvider.get().success(true).enacted(true).duration(durationInMinutes).percent(percent).isPercent(true).isTempCancel(false) }
@@ -445,15 +452,17 @@ class EopatchPumpPlugin @Inject constructor(
         return patchManagerExecutor.startQuickBolus(0f, insulin.toFloat(), BolusExDuration.ofRaw(durationInMinutes))
             .doOnSuccess {
                 mLastDataTime = System.currentTimeMillis()
-                pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = dateUtil.now(),
-                    rate = PumpRate(insulin),
-                    duration = T.mins(durationInMinutes.toLong()).msecs(),
-                    isEmulatingTB = false,
-                    pumpId = dateUtil.now(),
-                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp = dateUtil.now(),
+                        rate = PumpRate(insulin),
+                        duration = T.mins(durationInMinutes.toLong()).msecs(),
+                        isEmulatingTB = false,
+                        pumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
             .map { pumpEnactResultProvider.get().success(true).enacted(true) }
             .onErrorReturnItem(
@@ -472,7 +481,7 @@ class EopatchPumpPlugin @Inject constructor(
         }
 
         if (!preferenceManager.patchState.isTempBasalActive) {
-            return if (pumpSync.expectedPumpState().temporaryBasal != null) {
+            return if (runBlocking { pumpSync.expectedPumpState() }.temporaryBasal != null) {
                 pumpEnactResultProvider.get().success(true).enacted(true).isTempCancel(true)
             } else
                 pumpEnactResultProvider.get().success(true).isTempCancel(true)
@@ -482,12 +491,14 @@ class EopatchPumpPlugin @Inject constructor(
             .doOnSuccess {
                 mLastDataTime = System.currentTimeMillis()
                 aapsLogger.debug(LTag.PUMP, "cancelTempBasal - $it")
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = dateUtil.now(),
-                    endPumpId = dateUtil.now(),
-                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                    pumpSerial = serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        timestamp = dateUtil.now(),
+                        endPumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = serialNumber()
+                    )
+                }
             }
             .doOnError {
                 aapsLogger.error(LTag.PUMP, "cancelTempBasal() - $it")
@@ -506,12 +517,14 @@ class EopatchPumpPlugin @Inject constructor(
                 .doOnSuccess {
                     aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus - success")
                     mLastDataTime = System.currentTimeMillis()
-                    pumpSync.syncStopExtendedBolusWithPumpId(
-                        timestamp = dateUtil.now(),
-                        endPumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = serialNumber()
-                    )
+                    runBlocking {
+                        pumpSync.syncStopExtendedBolusWithPumpId(
+                            timestamp = dateUtil.now(),
+                            endPumpId = dateUtil.now(),
+                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                            pumpSerial = serialNumber()
+                        )
+                    }
                 }
                 .map { pumpEnactResultProvider.get().success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
@@ -521,13 +534,15 @@ class EopatchPumpPlugin @Inject constructor(
                 .blockingGet()
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus - nothing stops")
-            return if (pumpSync.expectedPumpState().extendedBolus != null) {
-                pumpSync.syncStopExtendedBolusWithPumpId(
-                    timestamp = dateUtil.now(),
-                    endPumpId = dateUtil.now(),
-                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                    pumpSerial = serialNumber()
-                )
+            return if (runBlocking { pumpSync.expectedPumpState() }.extendedBolus != null) {
+                runBlocking {
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                        timestamp = dateUtil.now(),
+                        endPumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = serialNumber()
+                    )
+                }
                 pumpEnactResultProvider.get().success(true).enacted(true).isTempCancel(true)
             } else
                 pumpEnactResultProvider.get()
@@ -565,7 +580,7 @@ class EopatchPumpPlugin @Inject constructor(
     }
 
     private fun readTBR(): PumpSync.PumpState.TemporaryBasal? {
-        return pumpSync.expectedPumpState().temporaryBasal
+        return runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

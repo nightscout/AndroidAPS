@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -80,6 +79,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,7 +88,6 @@ class EquilWizardViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val blePreCheck: BlePreCheck,
     private val commandQueue: CommandQueue,
     private val equilPumpPlugin: EquilPumpPlugin,
     private val equilManager: EquilManager,
@@ -278,10 +277,6 @@ class EquilWizardViewModel @Inject constructor(
         viewModelScope.launch { _events.emit(EquilWizardEvent.Finish) }
     }
 
-    fun handleComplete() {
-        viewModelScope.launch { _events.emit(EquilWizardEvent.Finish) }
-    }
-
     val canGoBack: StateFlow<Boolean> = _wizardStep.mapState { step ->
         step in listOf(
             EquilWizardStep.ASSEMBLE,
@@ -445,7 +440,7 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun pumpSettings(address: String, serial: String) {
-        val profile = pumpSync.expectedPumpState().profile ?: return
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile ?: return
         commandQueue.customCommand(
             CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
             object : Callback() {
@@ -617,33 +612,35 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun setProfile() {
-        val profile = profileFunction.getProfile()
-        if (profile == null) {
-            setTime()
-            return
-        }
-        val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
-        if (basalSchedule.getEntries().size < 24) {
-            setTime()
-            return
-        }
-        commandQueue.customCommand(
-            CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        equilManager.setBasalSchedule(basalSchedule)
-                        viewModelScope.launch {
-                            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            setTime()
+        viewModelScope.launch {
+            val profile = profileFunction.getProfile()
+            if (profile == null) {
+                setTime()
+                return@launch
+            }
+            val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
+            if (basalSchedule.getEntries().size < 24) {
+                setTime()
+                return@launch
+            }
+            commandQueue.customCommand(
+                CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager),
+                object : Callback() {
+                    override fun run() {
+                        if (result.success) {
+                            equilManager.setBasalSchedule(basalSchedule)
+                            viewModelScope.launch {
+                                delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+                                setTime()
+                            }
+                        } else {
+                            _isLoading.value = false
+                            _errorMessage.value = rh.gs(R.string.equil_error)
                         }
-                    } else {
-                        _isLoading.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
                     }
                 }
-            }
-        )
+            )
+        }
     }
 
     private fun setTime() {
@@ -734,7 +731,7 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun setLimits() {
-        val profile = pumpSync.expectedPumpState().profile ?: return
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile ?: return
         commandQueue.customCommand(
             CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
             object : Callback() {
@@ -759,18 +756,20 @@ class EquilWizardViewModel @Inject constructor(
         }
         val time = activationTimestamp
         if (_workflow.value == EquilWorkflow.PAIR || _workflow.value == EquilWorkflow.CHANGE_INSULIN) {
-            pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp = time,
-                type = TE.Type.CANNULA_CHANGE,
-                pumpType = PumpType.EQUIL,
-                pumpSerial = equilPumpPlugin.serialNumber()
-            )
-            pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp = time,
-                type = TE.Type.INSULIN_CHANGE,
-                pumpType = PumpType.EQUIL,
-                pumpSerial = equilPumpPlugin.serialNumber()
-            )
+            runBlocking {
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    timestamp = time,
+                    type = TE.Type.CANNULA_CHANGE,
+                    pumpType = PumpType.EQUIL,
+                    pumpSerial = equilPumpPlugin.serialNumber()
+                )
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    timestamp = time,
+                    type = TE.Type.INSULIN_CHANGE,
+                    pumpType = PumpType.EQUIL,
+                    pumpSerial = equilPumpPlugin.serialNumber()
+                )
+            }
         }
         val location = _siteLocation.value.takeIf { it != TE.Location.NONE }
         val arrow = _siteArrow.value.takeIf { it != TE.Arrow.NONE }
@@ -834,12 +833,14 @@ class EquilWizardViewModel @Inject constructor(
 
     private fun loadInsulins() {
         if (_availableInsulins.value.isNotEmpty()) return
-        val insulins = insulinManager.insulins.map { it.deepClone() }
-        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
-        val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
-        _availableInsulins.value = insulins
-        _selectedInsulin.value = current
-        _activeInsulinLabel.value = activeLabel
+        viewModelScope.launch {
+            val insulins = insulinManager.insulins.map { it.deepClone() }
+            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
+            _availableInsulins.value = insulins
+            _selectedInsulin.value = current
+            _activeInsulinLabel.value = activeLabel
+        }
     }
 
     fun selectInsulin(iCfg: ICfg) {
@@ -851,7 +852,9 @@ class EquilWizardViewModel @Inject constructor(
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
-        profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Equil)
+        viewModelScope.launch {
+            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Equil)
+        }
     }
 
     // endregion
@@ -937,8 +940,6 @@ class EquilWizardViewModel @Inject constructor(
 
     private val _serialNumberDisplay = MutableStateFlow(equilManager.equilState?.serialNumber ?: "")
     val serialNumberDisplay: StateFlow<String> = _serialNumberDisplay.asStateFlow()
-
-    fun getSerialNumber(): String = equilManager.equilState?.serialNumber ?: ""
 
     // endregion
 

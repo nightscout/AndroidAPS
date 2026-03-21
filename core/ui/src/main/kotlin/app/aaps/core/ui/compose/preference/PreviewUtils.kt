@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
@@ -170,11 +171,6 @@ private object PreviewConfig : Config {
     override fun isDev(): Boolean = false
     override fun isEngineeringModeOrRelease(): Boolean = true
     override fun isEngineeringMode(): Boolean = false
-    override fun isUnfinishedMode(): Boolean = false
-    override fun showUserActionsOnWatchOnly(): Boolean = false
-    override fun ignoreNightscoutV3Errors(): Boolean = false
-    override fun doNotSendSmsOnProfileChange(): Boolean = false
-    override fun enableAutotune(): Boolean = false
-    override fun disableLeakCanary(): Boolean = true
+    override fun isEnabled(option: ExternalOptions): Boolean = false
 }
 

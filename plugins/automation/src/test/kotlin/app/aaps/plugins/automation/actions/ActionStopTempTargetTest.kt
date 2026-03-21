@@ -37,7 +37,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
         assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
     }
 
-    @Test fun doActionTest() {
+    @Test fun doActionTest() = runTest {
         val inserted = mutableListOf<TT>().apply {
             // insert all inserted TTs
         }
@@ -45,22 +45,18 @@ class ActionStopTempTargetTest : ActionsTestBase() {
             // add(TemporaryTarget(id = 0, version = 0, dateCreated = 0, isValid = false, referenceId = null, interfaceIDs_backing = null, timestamp = 0, utcOffset = 0, reason =, highTarget = 0.0, lowTarget = 0.0, duration = 0))
             // insert all updated TTs
         }
-        runTest {
-            whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult<TT>().apply {
-                    inserted.addAll(inserted)
-                    updated.addAll(updated)
-                })
-        }
+        whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any()))
+            .thenReturn(PersistenceLayer.TransactionResult<TT>().apply {
+                inserted.addAll(inserted)
+                updated.addAll(updated)
+            })
 
         sut.doAction(object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()
             }
         })
-        runTest {
-            verify(persistenceLayer, times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
-        }
+        verify(persistenceLayer, times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
     }
 
     @Test fun hasDialogTest() {

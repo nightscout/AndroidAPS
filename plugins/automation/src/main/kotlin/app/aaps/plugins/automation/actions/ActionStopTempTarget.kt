@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.automation.R
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,13 +17,11 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var dateUtil: DateUtil
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
-
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.stoptemptarget
     override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.stoptemptarget)
     override fun icon(): Int = R.drawable.ic_stop_24dp
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         appScope.launch {
             persistenceLayer.cancelCurrentTemporaryTargetIfAny(dateUtil.now(), app.aaps.core.data.ue.Action.CANCEL_TT, Sources.Automation, title, listOf())
         }

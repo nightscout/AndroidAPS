@@ -19,6 +19,7 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -69,8 +70,8 @@ class BolusWizardTest : TestBaseWithProfile() {
 
         val bolusIobTotal = IobTotal(System.currentTimeMillis()).also { it.iob = bolusIob }
         val basalIobTotal = IobTotal(System.currentTimeMillis()).also { it.basaliob = basalIob }
-        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(bolusIobTotal)
-        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(basalIobTotal)
+        runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(bolusIobTotal) }
+        runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(basalIobTotal) }
 
         testPumpPlugin.pumpDescription = PumpDescription().also {
             it.bolusStep = pumpBolusStep
@@ -97,8 +98,8 @@ class BolusWizardTest : TestBaseWithProfile() {
     // ==========================================
 
     @Test
-    /** Should calculate the same bolus when different blood glucose but both in target range */
-    fun shouldCalculateTheSameBolusWhenBGsInRange() {
+        /** Should calculate the same bolus when different blood glucose but both in target range */
+    fun shouldCalculateTheSameBolusWhenBGsInRange() = runBlocking {
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         var bw = createWizard().doCalc(
             profile, "", null, 20, 0.0, 4.2, 0.0, 100,
@@ -116,7 +117,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun shouldCalculateHigherBolusWhenHighBG() {
+    fun shouldCalculateHigherBolusWhenHighBG() = runBlocking {
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         var bw = createWizard().doCalc(
             profile, "", null, 20, 0.0, 9.8, 0.0, 100,
@@ -134,7 +135,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun shouldCalculateLowerBolusWhenLowBG() {
+    fun shouldCalculateLowerBolusWhenLowBG() = runBlocking {
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         var bw = createWizard().doCalc(
             profile, "", null, 20, 0.0, 3.6, 0.0, 100,
@@ -156,7 +157,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     // ==========================================
 
     @Test
-    fun carbsOnlyNoCorrection() {
+    fun carbsOnlyNoCorrection() = runBlocking {
         // carbs=60, bg=0, IOB=0 → insulinFromCarbs=60/12=5.0
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(
@@ -169,7 +170,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun bgCorrectionHighOnly() {
+    fun bgCorrectionHighOnly() = runBlocking {
         // bg=9.8, bgDiff=9.8-8.0=1.8, insulinFromBG=1.8/20=0.09, rounded to 0.1
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(
@@ -182,7 +183,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun bgCorrectionLowOnly() {
+    fun bgCorrectionLowOnly() = runBlocking {
         // bg=3.0, bgDiff=3.0-4.0=-1.0, insulinFromBG=-1.0/20=-0.05
         // total<0 → clamped to 0, carbsEquivalent=0.05*12=0.6
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
@@ -197,7 +198,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun iobSubtractsFromTotal() {
+    fun iobSubtractsFromTotal() = runBlocking {
         // carbs=60 → 5.0U, IOB bolus=2.0 → -2.0, total=3.0
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0, bolusIob = 2.0)
         val bw = createWizard().doCalc(
@@ -211,7 +212,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun directCorrectionAddsToTotal() {
+    fun directCorrectionAddsToTotal() = runBlocking {
         // carbs=60 → 5.0U, correction=0.5, total=5.5
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(
@@ -225,7 +226,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun cobAddsToTotal() {
+    fun cobAddsToTotal() = runBlocking {
         // cob=24, useCob=true → insulinFromCOB=24/12=2.0
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(
@@ -243,7 +244,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     // ==========================================
 
     @Test
-    fun percentageScalesSuggestionsOnly() {
+    fun percentageScalesSuggestionsOnly() = runBlocking {
         // carbs=60 → 5.0, bg=9.8 → 0.09, IOB=1.0 → -1.0
         // NEW: scaled = (5.0 + 0.09) * 0.5 = 2.545, unscaled = -1.0
         // total = 2.545 - 1.0 = 1.545 → rounded to 1.5
@@ -259,7 +260,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun percentageDoesNotScaleIOB() {
+    fun percentageDoesNotScaleIOB() = runBlocking {
         // carbs=60 → 5.0, IOB=2.0 → -2.0
         // NEW: scaled = 5.0 * 0.5 = 2.5, unscaled = -2.0
         // total = 2.5 - 2.0 = 0.5
@@ -275,7 +276,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun directCorrectionNotScaledByPercentage() {
+    fun directCorrectionNotScaledByPercentage() = runBlocking {
         // carbs=60 → 5.0, correction=1.0, pct=80
         // NEW: scaled = 5.0 * 0.8 = 4.0, unscaled = 1.0
         // total = 4.0 + 1.0 = 5.0
@@ -291,7 +292,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun usePercentageModeScalesTotal() {
+    fun usePercentageModeScalesTotal() = runBlocking {
         // usePercentage=true, totalPercentage=70, carbs=60 → 5.0
         // total_before = 5.0
         // pct=70 → 5.0 * 0.7 = 3.5
@@ -311,7 +312,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     // ==========================================
 
     @Test
-    fun negativeTotalSetsCarbsEquivalent() {
+    fun negativeTotalSetsCarbsEquivalent() = runBlocking {
         // bg=3.0 (low), IOB=0 → insulinFromBG=-0.05, total<0, carbsEquivalent>0
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(
@@ -324,7 +325,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun roundingToBolusStep() {
+    fun roundingToBolusStep() = runBlocking {
         // carbs=25 → 25/12 = 2.0833, rounded to 0.1 step → 2.1
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(
@@ -336,7 +337,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun percentage100NoChange() {
+    fun percentage100NoChange() = runBlocking {
         // carbs=60, pct=100 → same result as without percentage
         val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
         val bw = createWizard().doCalc(

@@ -33,7 +33,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile() ?: return false
         val iob = iobCobCalculator.calculateFromTreatmentsAndTemps(dateUtil.now(), profile)
         if (comparator.value.check(iob.iob, insulin.value)) {

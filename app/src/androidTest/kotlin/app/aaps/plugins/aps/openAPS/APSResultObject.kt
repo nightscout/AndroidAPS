@@ -32,6 +32,7 @@ import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.math.abs
@@ -289,7 +290,7 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
             val now = System.currentTimeMillis()
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
             val pump = activePlugin.activePump
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { profileFunction.getProfile() }
             if (profile == null) {
                 aapsLogger.error("FALSE: No Profile")
                 return false
