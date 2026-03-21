@@ -12,6 +12,7 @@ on:
 
 jobs:
   claude-review:
+    continue-on-error: true
     if: ${{ false }}
     # Optional: Filter by PR author
     # if: |

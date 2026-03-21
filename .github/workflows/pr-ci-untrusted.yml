@@ -16,10 +16,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
-    name: Build and test fullDebug
+  compile:
+    name: Compile
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
 
     steps:
       - name: Checkout source code
@@ -30,7 +30,88 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform
+        run: sdkmanager "platforms;android-36"
+
+      - name: Compile fullDebug
+        run: |
+          ./gradlew --stacktrace assembleFullDebug compileFullDebugAndroidTestSources \
+            -Dorg.gradle.workers.max=4 \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: compile
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: true
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # Unit tests are JVM-only — no need to download the platform SDK here.
+      # Compilation already ran in the compile job; we just execute cached test tasks.
+
+      - name: Run unit tests
+        run: |
+          ./gradlew --stacktrace testFullDebugUnitTest \
+            -Dorg.gradle.workers.max=4 \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          if-no-files-found: warn
+          path: |
+            **/build/test-results/**/*.xml
+            **/build/reports/tests/**
+
+  connected-tests:
+    name: Connected tests
+    runs-on: ubuntu-latest
+    needs: compile
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: true
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
@@ -44,12 +125,6 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Compile instrumentation test sources
-        run: ./gradlew --stacktrace compileFullDebugAndroidTestSources
-
-      - name: Run unit tests
-        run: ./gradlew --stacktrace testFullDebugUnitTest
-
       - name: Run connected tests and coverage
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
@@ -59,16 +134,18 @@ jobs:
           target: google_apis
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: ./gradlew --stacktrace connectedFullDebugAndroidTest jacocoAllDebugReport
+          script: >-
+            ./gradlew --stacktrace connectedFullDebugAndroidTest jacocoAllDebugReport
+            -Dorg.gradle.workers.max=4
+            -Dorg.gradle.jvmargs="-Xmx5g -XX:+UseParallelGC -Xss4m"
 
-      - name: Upload test artifacts
+      - name: Upload connected test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pr-ci-untrusted-artifacts
+          name: connected-test-results
           if-no-files-found: warn
           path: |
-            **/build/test-results/**/*.xml
-            **/build/reports/tests/**
             **/build/outputs/androidTest-results/**
+            **/build/reports/androidTests/**
             build/reports/jacoco/jacocoAllDebugReport/**

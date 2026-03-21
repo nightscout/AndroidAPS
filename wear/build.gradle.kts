@@ -16,24 +16,14 @@ repositories {
     google()
 }
 
-fun generateGitBuild(): String {
-    try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always")
-        val output = File.createTempFile("git-build", "")
-        processBuilder.redirectOutput(output)
-        val process = processBuilder.start()
-        process.waitFor()
-        return output.readText().trim()
-    } catch (_: Exception) {
-        return "NoGitSystemAvailable"
-    }
-}
+val gitBuild: Provider<String> = providers.exec {
+    commandLine("git", "describe", "--always")
+    isIgnoreExitValue = true
+}.standardOutput.asText.map { it.trim() }.orElse("NoGitSystemAvailable")
 
 fun generateDate(): String {
-    val stringBuilder: StringBuilder = StringBuilder()
     // showing only date prevents app to rebuild everytime
-    stringBuilder.append(SimpleDateFormat("yyyy.MM.dd").format(Date()))
-    return stringBuilder.toString()
+    return SimpleDateFormat("yyyy.MM.dd").format(Date())
 }
 
 
@@ -44,7 +34,7 @@ android {
         minSdk = Versions.wearMinSdk
         targetSdk = Versions.wearTargetSdk
 
-        buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
+        buildConfigField("String", "BUILDVERSION", "\"${gitBuild.get()}-${generateDate()}\"")
     }
 
     android {
