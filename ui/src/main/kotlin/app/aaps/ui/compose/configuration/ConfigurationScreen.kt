@@ -16,15 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -51,21 +47,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.ui.compose.main.DrawerCategory
 
 @Composable
 fun ConfigurationScreen(
-    categories: List<DrawerCategory>,
-    isSimpleMode: Boolean,
-    pluginStateVersion: Int,
+    categories: List<ConfigCategoryUiModel>,
     hardwarePumpConfirmation: HardwarePumpConfirmation?,
     onNavigateBack: () -> Unit,
     onNavigate: (NavigationRequest) -> Unit,
-    onPluginEnableToggle: (PluginBase, PluginType, Boolean) -> Unit,
+    onPluginEnableToggle: (pluginId: String, PluginType, Boolean) -> Unit,
     onConfirmHardwarePump: () -> Unit,
     onDismissHardwarePump: () -> Unit,
 ) {
@@ -104,63 +95,52 @@ fun ConfigurationScreen(
             )
         }
     ) { paddingValues ->
-        key(pluginStateVersion) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                categories.forEach { category ->
-                    val isExpanded = expandedTypeOrdinal == category.type.ordinal
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            categories.forEach { category ->
+                val isExpanded = expandedTypeOrdinal == category.type.ordinal
 
-                    item(key = "cat_${category.type}") {
-                        val singleEnabled = category.enabledPlugins.singleOrNull()
+                item(key = "cat_${category.type}") {
+                    val singleEnabled = category.plugins.singleOrNull { it.isEnabled }
 
-                        CategoryRow(
-                            category = category,
-                            isExpanded = isExpanded,
-                            onRowClick = if (singleEnabled != null) {
-                                { onNavigate(NavigationRequest.Plugin(singleEnabled.javaClass.simpleName)) }
-                            } else {
-                                { expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal }
-                            },
-                            onExpandClick = {
-                                expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal
-                            }
-                        )
-                    }
+                    CategoryRow(
+                        category = category,
+                        isExpanded = isExpanded,
+                        onRowClick = if (singleEnabled != null) {
+                            { onNavigate(NavigationRequest.Plugin(singleEnabled.id)) }
+                        } else {
+                            { expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal }
+                        },
+                        onExpandClick = {
+                            expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal
+                        }
+                    )
+                }
 
-                    item(key = "detail_${category.type}") {
-                        AnimatedVisibility(
-                            visible = isExpanded,
-                            enter = expandVertically(),
-                            exit = shrinkVertically()
+                item(key = "detail_${category.type}") {
+                    AnimatedVisibility(
+                        visible = isExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 8.dp)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                                    .padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 8.dp)
-                            ) {
-                                category.plugins.forEach { plugin ->
-                                    val pluginEnabled = plugin.isEnabled(category.type)
-                                    val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
-                                    val showPrefs = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode)
-                                    val canToggle = !plugin.pluginDescription.alwaysEnabled &&
-                                        (category.isMultiSelect || !pluginEnabled)
-
-                                    ConfigPluginItem(
-                                        plugin = plugin,
-                                        isEnabled = pluginEnabled,
-                                        canToggle = canToggle,
-                                        showPreferences = showPrefs,
-                                        onPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.javaClass.simpleName)) },
-                                        onEnableToggle = { enabled ->
-                                            onPluginEnableToggle(plugin, category.type, enabled)
-                                        },
-                                        onPreferencesClick = { onNavigate(NavigationRequest.PluginPreferences(plugin.javaClass.simpleName)) }
-                                    )
-                                }
+                            category.plugins.forEach { plugin ->
+                                ConfigPluginItem(
+                                    plugin = plugin,
+                                    onPluginClick = { onNavigate(NavigationRequest.Plugin(plugin.id)) },
+                                    onEnableToggle = { enabled ->
+                                        onPluginEnableToggle(plugin.id, category.type, enabled)
+                                    },
+                                    onPreferencesClick = { onNavigate(NavigationRequest.PluginPreferences(plugin.id)) }
+                                )
                             }
                         }
                     }
@@ -172,32 +152,18 @@ fun ConfigurationScreen(
 
 @Composable
 private fun CategoryRow(
-    category: DrawerCategory,
+    category: ConfigCategoryUiModel,
     isExpanded: Boolean,
     onRowClick: () -> Unit,
     onExpandClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val categoryName = stringResource(category.titleRes)
-    val subtitle = if (category.enabledCount == 1) {
-        category.enabledPlugins.firstOrNull()?.name ?: "-"
-    } else if (category.isMultiSelect) {
-        if (category.enabledCount > 0) "${category.enabledCount}" else "-"
-    } else {
-        category.activePluginName ?: "-"
-    }
 
-    val plugin = if (category.enabledCount == 1) category.enabledPlugins.firstOrNull() else null
-    val composeIcon = plugin?.pluginDescription?.icon
-    val defaultCategoryIcon = when (category.type) {
-        PluginType.SYNC    -> Icons.Default.Sync
-        PluginType.GENERAL -> Icons.Default.Extension
-        else               -> Icons.Default.Settings
-    }
-    val iconPainter =
-        if (composeIcon != null) rememberVectorPainter(composeIcon)
-        else if (plugin?.menuIcon != null && plugin.menuIcon != -1) painterResource(plugin.menuIcon)
-        else rememberVectorPainter(defaultCategoryIcon)
+    val iconPainter = if (category.categoryIconRes != null)
+        painterResource(category.categoryIconRes)
+    else
+        rememberVectorPainter(category.categoryIcon ?: Icons.Default.Settings)
 
     val chevronRotation by animateFloatAsState(
         targetValue = if (isExpanded) 90f else 0f,
@@ -227,7 +193,7 @@ private fun CategoryRow(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = subtitle,
+                text = category.subtitle,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
@@ -248,10 +214,7 @@ private fun CategoryRow(
 
 @Composable
 private fun ConfigPluginItem(
-    plugin: PluginBase,
-    isEnabled: Boolean,
-    canToggle: Boolean,
-    showPreferences: Boolean,
+    plugin: ConfigPluginUiModel,
     onPluginClick: () -> Unit,
     onEnableToggle: (Boolean) -> Unit,
     onPreferencesClick: () -> Unit,
@@ -260,15 +223,14 @@ private fun ConfigPluginItem(
     val iconColor = MaterialTheme.colorScheme.primary
     val disabledAlpha = 0.38f
 
-    val composeIcon = plugin.pluginDescription.icon
-    val iconPainter = if (composeIcon != null) {
-        rememberVectorPainter(composeIcon)
+    val iconPainter = if (plugin.composeIcon != null) {
+        rememberVectorPainter(plugin.composeIcon)
     } else {
         val iconRes = if (plugin.menuIcon != -1) plugin.menuIcon else app.aaps.core.ui.R.drawable.ic_settings
         painterResource(id = iconRes)
     }
 
-    val containerColor = if (isEnabled) MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
+    val containerColor = if (plugin.isEnabled) MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
     else MaterialTheme.colorScheme.surface
 
     ListItem(
@@ -298,7 +260,7 @@ private fun ConfigPluginItem(
                 modifier = Modifier
                     .size(40.dp)
                     .background(
-                        color = if (isEnabled) iconColor.copy(alpha = 0.12f)
+                        color = if (plugin.isEnabled) iconColor.copy(alpha = 0.12f)
                         else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
                         shape = CircleShape
                     )
@@ -306,7 +268,7 @@ private fun ConfigPluginItem(
                 Icon(
                     painter = iconPainter,
                     contentDescription = null,
-                    tint = if (isEnabled) iconColor
+                    tint = if (plugin.isEnabled) iconColor
                     else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
                     modifier = Modifier.size(24.dp)
                 )
@@ -314,7 +276,7 @@ private fun ConfigPluginItem(
         },
         trailingContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (showPreferences) {
+                if (plugin.showPreferences) {
                     IconButton(onClick = onPreferencesClick) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
@@ -325,8 +287,8 @@ private fun ConfigPluginItem(
                     Spacer(modifier = Modifier.width(4.dp))
                 }
                 Switch(
-                    checked = isEnabled,
-                    onCheckedChange = if (canToggle) {
+                    checked = plugin.isEnabled,
+                    onCheckedChange = if (plugin.canToggle) {
                         { onEnableToggle(it) }
                     } else null,
                 )
@@ -336,6 +298,6 @@ private fun ConfigPluginItem(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable(enabled = isEnabled, onClick = onPluginClick)
+            .clickable(enabled = plugin.isEnabled, onClick = onPluginClick)
     )
 }

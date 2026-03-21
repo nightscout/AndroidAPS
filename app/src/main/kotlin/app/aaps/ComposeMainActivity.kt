@@ -1068,14 +1068,12 @@ class ComposeMainActivity : AppCompatActivity() {
             composable(AppRoute.Configuration.route) {
                 val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
                 app.aaps.ui.compose.configuration.ConfigurationScreen(
-                    categories = configState.pluginCategories,
-                    isSimpleMode = configState.isSimpleMode,
-                    pluginStateVersion = configState.pluginStateVersion,
+                    categories = configState.categories,
                     hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
                     onNavigateBack = { navController.popBackStack() },
                     onNavigate = { request -> handleNavigationRequest(request, navController) },
-                    onPluginEnableToggle = { plugin, type, enabled ->
-                        configurationViewModel.togglePluginEnabled(plugin, type, enabled)
+                    onPluginEnableToggle = { pluginId, type, enabled ->
+                        configurationViewModel.togglePluginEnabled(pluginId, type, enabled)
                         permissionsViewModel.refresh(this@ComposeMainActivity)
                     },
                     onConfirmHardwarePump = {

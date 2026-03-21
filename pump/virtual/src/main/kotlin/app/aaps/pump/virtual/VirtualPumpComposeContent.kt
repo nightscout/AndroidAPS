@@ -7,7 +7,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -21,7 +23,9 @@ class VirtualPumpComposeContent(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val rxBus: RxBus,
+    private val commandQueue: CommandQueue
 ) : ComposablePluginContent {
 
     @Composable
@@ -31,6 +35,7 @@ class VirtualPumpComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
+        val context = androidx.compose.ui.platform.LocalContext.current
         val viewModel = remember {
             VirtualPumpViewModel(
                 virtualPumpPlugin = virtualPumpPlugin,
@@ -40,6 +45,9 @@ class VirtualPumpComposeContent(
                 persistenceLayer = persistenceLayer,
                 preferences = preferences,
                 ch = ch,
+                rxBus = rxBus,
+                commandQueue = commandQueue,
+                context = context,
                 scope = scope
             )
         }

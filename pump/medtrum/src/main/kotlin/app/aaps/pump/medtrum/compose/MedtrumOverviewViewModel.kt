@@ -12,12 +12,14 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
@@ -29,7 +31,9 @@ import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
+import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -56,13 +60,16 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val commandQueue: CommandQueue,
+    private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val medtrumPlugin: MedtrumPlugin,
     val medtrumPump: MedtrumPump,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
     private val stateBuilder = PumpOverviewStateBuilder(rh)
 
     private val _events = MutableSharedFlow<MedtrumOverviewEvent>(extraBufferCapacity = 5)
@@ -79,6 +86,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         medtrumPump.lastBolusTimeFlow,
         medtrumPump.lastBolusAmountFlow,
         medtrumPump.lastConnectionFlow,
+        communicationStatus.refreshTrigger,
         tickerFlow(60_000L)
     ) { values ->
         @Suppress("UNCHECKED_CAST")
@@ -166,8 +174,9 @@ class MedtrumOverviewViewModel @Inject constructor(
         lastBolusAmount: Double?,
         lastConnectionTime: Long
     ): PumpOverviewUiState {
-        // Status banner
-        val statusBanner = buildStatusBanner(connectionState, pumpState)
+        // Status banner: communication status from shared helper, or pump-specific warning
+        val statusBanner = buildStatusBanner(pumpState) ?: communicationStatus.statusBanner()
+        val queueStatus = communicationStatus.queueStatus()
 
         // Connection state for action button enablement
         val isDisconnected = connectionState == ConnectionState.DISCONNECTED
@@ -285,44 +294,31 @@ class MedtrumOverviewViewModel @Inject constructor(
 
         return PumpOverviewUiState(
             statusBanner = statusBanner,
+            queueStatus = queueStatus,
             infoRows = commonRows + specificRows,
             primaryActions = primaryActions,
             managementActions = managementActions
         )
     }
 
-    private fun buildStatusBanner(connectionState: ConnectionState, pumpState: MedtrumPumpState): StatusBanner? {
-        // Connection status
-        val connectionText = when (connectionState) {
-            ConnectionState.CONNECTING    -> rh.gs(app.aaps.core.ui.R.string.connecting)
-            ConnectionState.CONNECTED     -> rh.gs(app.aaps.core.interfaces.R.string.connected)
-            ConnectionState.DISCONNECTING -> rh.gs(app.aaps.core.interfaces.R.string.disconnecting)
-            ConnectionState.DISCONNECTED  -> rh.gs(app.aaps.core.ui.R.string.disconnected)
-        }
-
-        // Pump state warning
+    private fun buildStatusBanner(pumpState: MedtrumPumpState): StatusBanner? {
         return when {
             pumpState >= MedtrumPumpState.OCCLUSION                                     -> StatusBanner(
-                text = "$connectionText - ${pumpState}",
+                text = pumpState.toString(),
                 level = StatusLevel.CRITICAL
             )
 
             pumpState.isSuspendedByPump()                                               -> StatusBanner(
-                text = "$connectionText - ${rh.gs(R.string.pump_is_suspended)}",
+                text = rh.gs(R.string.pump_is_suspended),
                 level = StatusLevel.WARNING
             )
 
             pumpState == MedtrumPumpState.STOPPED || pumpState == MedtrumPumpState.NONE -> StatusBanner(
-                text = "$connectionText - ${rh.gs(R.string.patch_not_active)}",
+                text = rh.gs(R.string.patch_not_active),
                 level = StatusLevel.WARNING
             )
 
-            connectionState == ConnectionState.DISCONNECTED                             -> null
-
-            else                                                                        -> StatusBanner(
-                text = connectionText,
-                level = StatusLevel.NORMAL
-            )
+            else                                                                        -> null
         }
     }
 

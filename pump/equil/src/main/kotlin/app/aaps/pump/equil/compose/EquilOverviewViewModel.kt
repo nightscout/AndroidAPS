@@ -13,13 +13,13 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
@@ -30,7 +30,9 @@ import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
+import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -59,7 +61,8 @@ class EquilOverviewViewModel @Inject constructor(
     private val equilManager: EquilManager,
     private val commandQueue: CommandQueue,
     private val preferences: Preferences,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<EquilOverviewEvent>(extraBufferCapacity = 5)
@@ -69,13 +72,12 @@ class EquilOverviewViewModel @Inject constructor(
     private val _isModeChanging = MutableStateFlow(false)
     val isModeChanging: StateFlow<Boolean> = _isModeChanging
 
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+
     // Trigger re-composition on RxBus events and periodic ticks
     private val _refreshTrigger = MutableStateFlow(0L)
 
     init {
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
-            .onEach { _refreshTrigger.value = System.currentTimeMillis() }
-            .launchIn(viewModelScope)
         rxBus.toFlow(EventEquilDataChanged::class.java)
             .onEach { _refreshTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
@@ -86,8 +88,9 @@ class EquilOverviewViewModel @Inject constructor(
 
     val uiState: StateFlow<PumpOverviewUiState> = combine(
         _refreshTrigger,
+        communicationStatus.refreshTrigger,
         tickerFlow(T.mins(1).msecs())
-    ) { _, _ ->
+    ) { _, _, _ ->
         buildUiState()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), buildUiState())
 
@@ -99,8 +102,10 @@ class EquilOverviewViewModel @Inject constructor(
         val primaryActions = buildPrimaryActions(isPaired)
         val managementActions = buildManagementActions(isPaired)
 
+        val pumpWarning = if (isPaired) buildStatusBanner() else null
         return PumpOverviewUiState(
-            statusBanner = if (isPaired) buildStatusBanner() else null,
+            statusBanner = pumpWarning ?: communicationStatus.statusBanner(),
+            queueStatus = communicationStatus.queueStatus(),
             infoRows = infoRows,
             primaryActions = primaryActions,
             managementActions = managementActions

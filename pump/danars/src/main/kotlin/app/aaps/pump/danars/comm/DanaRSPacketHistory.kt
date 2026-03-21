@@ -34,7 +34,7 @@ abstract class DanaRSPacketHistory internal constructor(
     protected var min = 0
     protected var sec = 0
 
-    var done = false
+    @Volatile var done = false
     var totalCount = 0
     val danaRHistoryRecord = DanaHistoryRecord(0)
 

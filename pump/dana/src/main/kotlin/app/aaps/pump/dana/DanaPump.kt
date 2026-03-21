@@ -68,7 +68,7 @@ class DanaPump @Inject constructor(
         }
     var lastSettingsRead: Long = 0
     var readHistoryFrom: Long = 0 // start next history read from this timestamp
-    var historyDoneReceived: Boolean = false // true when last history message is received
+    @Volatile var historyDoneReceived: Boolean = false // true when last history message is received
 
     // Info
     var serialNumber = ""

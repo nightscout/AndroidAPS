@@ -7,12 +7,15 @@ import app.aaps.core.data.pump.defs.PumpTempBasalType
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
+import android.content.Context
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.baseBasalRange
 import app.aaps.core.interfaces.pump.defs.hasExtendedBasals
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toStringFull
@@ -20,6 +23,7 @@ import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
@@ -41,10 +45,14 @@ class VirtualPumpViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     private val ch: ConcentrationHelper,
+    rxBus: RxBus,
+    commandQueue: CommandQueue,
+    context: Context,
     scope: CoroutineScope
 ) {
 
     private val stateBuilder = PumpOverviewStateBuilder(rh)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
 
     // VirtualPump has no hardware — it relies on DB to know active TB/EB
     private val dbChanged = merge(
@@ -59,6 +67,7 @@ class VirtualPumpViewModel(
         virtualPumpPlugin.batteryPercentFlow,
         virtualPumpPlugin.reservoirInUnitsFlow,
         dbChanged,
+        communicationStatus.refreshTrigger,
         tickerFlow()
     ) { values ->
         val isSuspended = values[0] as Boolean
@@ -159,6 +168,8 @@ class VirtualPumpViewModel(
         )
 
         return PumpOverviewUiState(
+            statusBanner = communicationStatus.statusBanner(),
+            queueStatus = communicationStatus.queueStatus(),
             infoRows = commonRows + specificRows,
             managementActions = managementActions
         )

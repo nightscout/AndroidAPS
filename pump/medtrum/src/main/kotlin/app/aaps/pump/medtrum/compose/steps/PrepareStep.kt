@@ -189,7 +189,7 @@ private fun SerialNumberSection(
     snValidationErrorResId: Int?,
     isSnValid: Boolean,
     onSnTextChange: (String) -> Unit,
-    initialEditing: Boolean = snText.isEmpty()
+    initialEditing: Boolean = false
 ) {
     var isEditing by rememberSaveable { mutableStateOf(initialEditing) }
     var textBeforeEdit by rememberSaveable { mutableStateOf(snText) }

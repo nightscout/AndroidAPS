@@ -77,7 +77,7 @@ class BLEComm @Inject constructor(
     private var isEasyMode: Boolean = false
     private var isUnitUD: Boolean = false
 
-    var isConnected = false
+    @Volatile var isConnected = false
     var isConnecting = false
     private var encryptedDataRead = false
     private var encryptedCommandSent = false

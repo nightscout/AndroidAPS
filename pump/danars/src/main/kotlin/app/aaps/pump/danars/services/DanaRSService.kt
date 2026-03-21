@@ -310,7 +310,12 @@ class DanaRSService : DaggerService() {
         val msg = danaRSPacketAPSHistoryEvents.get().with(danaPump.readHistoryFrom)
         aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom))
         sendMessage(msg)
+        val startWait = System.currentTimeMillis()
         while (!danaPump.historyDoneReceived && bleComm.isConnected) {
+            if (System.currentTimeMillis() - startWait > T.mins(5).msecs()) {
+                aapsLogger.error(LTag.PUMPCOMM, "Timeout waiting for history events")
+                break
+            }
             SystemClock.sleep(100)
         }
         danaPump.readHistoryFrom = if (danaPump.lastEventTimeLoaded != 0L) danaPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
@@ -541,7 +546,12 @@ class DanaRSService : DaggerService() {
             sendMessage(danaRSPacketGeneralSetHistoryUploadMode.get().with(1))
             SystemClock.sleep(200)
             sendMessage(msg)
+            val startWait = System.currentTimeMillis()
             while (!msg.done && isConnected) {
+                if (System.currentTimeMillis() - startWait > T.mins(5).msecs()) {
+                    aapsLogger.error(LTag.PUMPCOMM, "Timeout waiting for history done")
+                    break
+                }
                 SystemClock.sleep(100)
             }
             SystemClock.sleep(200)

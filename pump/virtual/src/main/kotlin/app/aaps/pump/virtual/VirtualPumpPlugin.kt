@@ -95,7 +95,9 @@ open class VirtualPumpPlugin @Inject constructor(
                 dateUtil = dateUtil,
                 persistenceLayer = persistenceLayer,
                 preferences = preferences,
-                ch = ch
+                ch = ch,
+                rxBus = rxBus,
+                commandQueue = commandQueue
             )
         }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_virtual_pump)

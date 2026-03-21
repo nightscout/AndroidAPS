@@ -20,16 +20,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
-import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
@@ -85,6 +83,8 @@ class DanaRSOverviewViewModel @Inject constructor(
     private val _events = MutableSharedFlow<DanaRSOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DanaRSOverviewEvent> = _events
 
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+
     // RxBus events converted to a flow trigger for recomposition
     private val rxTrigger = MutableStateFlow(0L)
 
@@ -97,26 +97,7 @@ class DanaRSOverviewViewModel @Inject constructor(
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ rxTrigger.value = System.currentTimeMillis() }, { aapsLogger.error(LTag.PUMP, "Error", it) })
-        disposable += rxBus
-            .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           pumpStatusText = it.getStatus(context)
-                           pumpStatusLevel = when (it.status) {
-                               EventPumpStatusChanged.Status.CONNECTING -> StatusLevel.UNSPECIFIED
-                               EventPumpStatusChanged.Status.CONNECTED  -> StatusLevel.UNSPECIFIED
-                               else                                     -> StatusLevel.UNSPECIFIED
-                           }
-                           rxTrigger.value = System.currentTimeMillis()
-                       }, { aapsLogger.error(LTag.PUMP, "Error", it) })
-        disposable += rxBus
-            .toObservable(EventQueueChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ rxTrigger.value = System.currentTimeMillis() }, { aapsLogger.error(LTag.PUMP, "Error", it) })
     }
-
-    private var pumpStatusText: String = ""
-    private var pumpStatusLevel: StatusLevel = StatusLevel.UNSPECIFIED
 
     val uiState: StateFlow<PumpOverviewUiState> = combine(
         danaPump.lastConnectionFlow,
@@ -125,6 +106,7 @@ class DanaRSOverviewViewModel @Inject constructor(
         danaPump.lastBolusTimeFlow,
         danaPump.lastBolusAmountFlow,
         rxTrigger,
+        communicationStatus.refreshTrigger,
         tickerFlow(60_000L)
     ) { values ->
         @Suppress("UNCHECKED_CAST")
@@ -198,9 +180,9 @@ class DanaRSOverviewViewModel @Inject constructor(
     ): PumpOverviewUiState {
         val pump = danaPump
 
-        // Status banner (merged: line 1 = connection status, line 2 = queue status)
-        val queueText = commandQueue.spannedStatus().toString().takeIf { it.isNotEmpty() }
-        val statusBanner = buildStatusBanner(queueText)
+        // Communication status (shared: pump status + queue)
+        val statusBanner = communicationStatus.statusBanner()
+        val queueStatus = communicationStatus.queueStatus()
 
         // Last connection
         val lastConnection = if (lastConnectionTime != 0L) {
@@ -380,23 +362,10 @@ class DanaRSOverviewViewModel @Inject constructor(
 
         return PumpOverviewUiState(
             statusBanner = statusBanner,
+            queueStatus = queueStatus,
             infoRows = infoRows,
             primaryActions = primaryActions,
             managementActions = managementActions
         )
-    }
-
-    private fun buildStatusBanner(queueText: String?): StatusBanner? {
-        val hasStatus = pumpStatusText.isNotEmpty()
-        val hasQueue = !queueText.isNullOrEmpty()
-        if (!hasStatus && !hasQueue) return null
-
-        val text = when {
-            hasStatus && hasQueue -> "$pumpStatusText\n$queueText"
-            hasStatus             -> pumpStatusText
-            else                  -> queueText!!
-        }
-        val level = if (hasStatus) pumpStatusLevel else StatusLevel.UNSPECIFIED
-        return StatusBanner(text = text, level = level)
     }
 }

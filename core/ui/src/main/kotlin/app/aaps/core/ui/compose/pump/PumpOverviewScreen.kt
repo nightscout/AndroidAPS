@@ -57,11 +57,8 @@ fun PumpOverviewScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // 1. Status banner
-        state.statusBanner?.let { StatusBannerRow(it) }
-
-        // 2. Queue status
-        state.queueStatus?.let { QueueStatusRow(it) }
+        // 1. Status banner + queue status (combined card)
+        CommunicationStatusCard(state.statusBanner, state.queueStatus)
 
         // 3. Info rows
         if (state.infoRows.isNotEmpty()) {
@@ -76,15 +73,18 @@ fun PumpOverviewScreen(
     }
 }
 
-// ── Status banner ──────────────────────────────────────────────────────────
+// ── Communication status card (banner + queue in one card) ────────────────
 
 @Composable
-private fun StatusBannerRow(banner: StatusBanner) {
-    val (bgColor, fgColor) = when (banner.level) {
+private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: String?) {
+    if (banner == null && queueStatus == null) return
+
+    val (bgColor, fgColor) = when (banner?.level) {
         StatusLevel.CRITICAL    -> MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
         StatusLevel.WARNING     -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
         StatusLevel.NORMAL      -> MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
-        StatusLevel.UNSPECIFIED -> MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
+        StatusLevel.UNSPECIFIED,
+        null                    -> MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
     }
 
     Surface(
@@ -92,31 +92,23 @@ private fun StatusBannerRow(banner: StatusBanner) {
         shape = MaterialTheme.shapes.medium,
         color = bgColor
     ) {
-        Text(
-            text = banner.text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = fgColor
-        )
-    }
-}
-
-// ── Queue status ───────────────────────────────────────────────────────────
-
-@Composable
-private fun QueueStatusRow(queue: String) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.surfaceContainerHigh
-    ) {
-        Text(
-            text = queue,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
+            banner?.let {
+                Text(
+                    text = it.text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = fgColor
+                )
+            }
+            queueStatus?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = fgColor.copy(alpha = 0.7f)
+                )
+            }
+        }
     }
 }
 
