@@ -123,13 +123,6 @@ class MedtrumOverviewViewModel @Inject constructor(
                         message = rh.gs(R.string.no_profile_selected)
                     )
                 )
-            } else if (medtrumPump.pumpSN == 0L) {
-                _events.tryEmit(
-                    MedtrumOverviewEvent.ShowDialog(
-                        title = rh.gs(app.aaps.core.ui.R.string.message),
-                        message = rh.gs(R.string.no_sn_in_settings)
-                    )
-                )
             } else {
                 val nextStep = when {
                     medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED ->

@@ -63,6 +63,7 @@ import app.aaps.pump.medtrum.comm.packets.SynchronizePacket
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.util.MedtrumSnUtil
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
@@ -134,7 +135,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        preferences.observe(MedtrumStringKey.MedtrumSnInput).drop(1).onEach {
+        preferences.observe(MedtrumStringNonKey.SnInput).drop(1).onEach {
             aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
             medtrumPump.loadUserSettingsFromSP()
             medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN).value

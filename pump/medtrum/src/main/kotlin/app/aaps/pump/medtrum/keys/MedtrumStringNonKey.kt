@@ -8,6 +8,7 @@ enum class MedtrumStringNonKey(
     override val exportable: Boolean = true
 ) : StringNonPreferenceKey {
 
+    SnInput("sn_input", "0"),
     ActualBasalProfile("actual_basal_profile", "0"),
     ActiveAlarms("active_alarms", ""),
     SwVersion("sw_version", ""),

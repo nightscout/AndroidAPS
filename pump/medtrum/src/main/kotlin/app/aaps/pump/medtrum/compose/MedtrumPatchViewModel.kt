@@ -26,8 +26,11 @@ import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.ConnectionState
 import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
+import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.encryption.Crypt
+import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
+import app.aaps.pump.medtrum.util.MedtrumSnUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -111,6 +114,21 @@ class MedtrumPatchViewModel @Inject constructor(
 
     private val _activeInsulinLabel = MutableStateFlow<String?>(null)
     val activeInsulinLabel: StateFlow<String?> = _activeInsulinLabel.asStateFlow()
+
+    // Serial number editing state
+    private val _snText = MutableStateFlow("")
+    val snText: StateFlow<String> = _snText.asStateFlow()
+
+    private val _snValidationErrorResId = MutableStateFlow<Int?>(null)
+    val snValidationErrorResId: StateFlow<Int?> = _snValidationErrorResId.asStateFlow()
+
+    val isSnValid: Boolean
+        get() {
+            val text = _snText.value
+            if (text.isEmpty()) return false
+            val serial = text.toLongOrNull(radix = 16) ?: return false
+            return MedtrumSnUtil().getDeviceTypeFromSerial(serial) != ModelType.INVALID
+        }
 
     /** Whether the insulin change step should be shown (multiple insulins available) */
     val showInsulinStep: Boolean
@@ -423,6 +441,33 @@ class MedtrumPatchViewModel @Inject constructor(
 
     fun selectInsulin(iCfg: ICfg) {
         _selectedInsulin.value = iCfg
+    }
+
+    fun initSnText() {
+        val currentSn = medtrumPump.pumpSN
+        _snText.value = if (currentSn != 0L) currentSn.toString(radix = 16).uppercase() else ""
+        _snValidationErrorResId.value = null
+    }
+
+    fun updateSnText(newText: String) {
+        // Filter to hex chars only and uppercase
+        val filtered = newText.filter { it in '0'..'9' || it in 'A'..'F' || it in 'a'..'f' }.uppercase()
+        _snText.value = filtered
+        _snValidationErrorResId.value = validateSn(filtered)
+    }
+
+    fun saveSn() {
+        val text = _snText.value
+        if (!isSnValid) return
+        preferences.put(MedtrumStringNonKey.SnInput, text)
+        medtrumPump.loadUserSettingsFromSP()
+    }
+
+    private fun validateSn(text: String): Int? {
+        if (text.isEmpty()) return null
+        val serial = text.toLongOrNull(radix = 16) ?: return R.string.sn_input_invalid
+        val deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(serial)
+        return if (deviceType == ModelType.INVALID) R.string.sn_input_invalid else null
     }
 
     // region SiteLocationStepHost

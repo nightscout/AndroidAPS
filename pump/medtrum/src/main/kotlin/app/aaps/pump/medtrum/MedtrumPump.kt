@@ -236,7 +236,7 @@ class MedtrumPump @Inject constructor(
     val pumpSNFromSP: Long
         get() =
             try {
-                preferences.get(MedtrumStringKey.MedtrumSnInput).toLong(radix = 16)
+                preferences.get(MedtrumStringNonKey.SnInput).toLong(radix = 16)
             } catch (_: NumberFormatException) {
                 aapsLogger.debug(LTag.PUMP, "pumpSNFromSP: Invalid input!")
                 0L

@@ -6,8 +6,6 @@ import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 import app.aaps.pump.medtrum.R
-import app.aaps.pump.medtrum.comm.enums.ModelType
-import app.aaps.pump.medtrum.util.MedtrumSnUtil
 
 enum class MedtrumStringKey(
     override val key: String,
@@ -30,26 +28,6 @@ enum class MedtrumStringKey(
     override val validator: StringValidator = StringValidator.NONE
 ) : StringPreferenceKey {
 
-    // Serial number input disabled when pump is already initialized
-    // Validates hexadecimal format AND valid device type via MedtrumSnUtil
-    MedtrumSnInput(
-        key = "sn_input",
-        defaultValue = "0",
-        titleResId = R.string.sn_input_title,
-        summaryResId = R.string.sn_input_summary,
-        enabledCondition = PreferenceEnabledCondition { !it.isPumpInitialized },
-        validator = StringValidator { value ->
-            if (value.isEmpty()) return@StringValidator StringValidator.ValidationResult.VALID
-            // Check hexadecimal format
-            val serial = value.toLongOrNull(radix = 16) ?: return@StringValidator StringValidator.ValidationResult.invalid("Invalid hexadecimal format")
-            // Check valid device type
-            val deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(serial)
-            if (deviceType == ModelType.INVALID) {
-                return@StringValidator StringValidator.ValidationResult.invalid("Unknown device type")
-            }
-            StringValidator.ValidationResult.VALID
-        }
-    ),
     MedtrumAlarmSettings(
         key = "alarm_setting",
         defaultValue = "6",

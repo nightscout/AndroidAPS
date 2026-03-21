@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -58,10 +56,8 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveListPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
-import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.compose.MedtrumComposeContent
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
 import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
@@ -71,7 +67,6 @@ import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import app.aaps.pump.medtrum.util.MedtrumSnUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -145,7 +140,7 @@ class MedtrumPlugin @Inject constructor(
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        preferences.observe(MedtrumStringKey.MedtrumSnInput).drop(1).onEach {
+        preferences.observe(MedtrumStringNonKey.SnInput).drop(1).onEach {
             updateMaxInsulinLimitsForPumpType()
         }.launchIn(newScope)
 
@@ -179,64 +174,10 @@ class MedtrumPlugin @Inject constructor(
         return medtrumService
     }
 
-    // MIGRATED TO COMPOSE: MedtrumPreferencesCompose handles serial number enabled state
-    // via enabledCondition on MedtrumStringKey.MedtrumSnInput using isPumpInitialized from visibilityContext.
-    // Note: Serial validation and connection alert custom summaries remain in legacy code (UI-specific).
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        preprocessSerialSettings(preferenceFragment)
         preprocessConnectionAlertSettings(preferenceFragment)
-    }
-
-    private fun preprocessSerialSettings(preferenceFragment: PreferenceFragmentCompat) {
-        val serialSetting = preferenceFragment.findPreference<AdaptiveStringPreference>(MedtrumStringKey.MedtrumSnInput.key)
-        serialSetting?.apply {
-            isEnabled = !isInitialized()
-            setOnBindEditTextListener { editText ->
-                editText.addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(newValue: Editable?) {
-                        val newSN = newValue?.toString()?.toLongOrNull(radix = 16) ?: 0
-                        val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
-                        editText.error = if (newDeviceType == ModelType.INVALID) rh.gs(R.string.sn_input_invalid) else null
-                    }
-
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                        // Nothing to do here
-                    }
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        // Nothing to do here
-                    }
-                })
-            }
-            setOnPreferenceChangeListener { _, newValue ->
-                val newSN = (newValue as? String)?.toLongOrNull(radix = 16) ?: 0
-                val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
-
-                when {
-                    newDeviceType == ModelType.INVALID -> {
-                        uiInteraction.showOkDialog(
-                            context = preferenceFragment.requireActivity(),
-                            title = rh.gs(R.string.sn_input_title),
-                            message = rh.gs(R.string.sn_input_invalid)
-                        )
-                        false
-                    }
-
-                    medtrumPump.pumpType(newDeviceType) == PumpType.MEDTRUM_UNTESTED -> {
-                        uiInteraction.showOkDialog(
-                            context = preferenceFragment.requireActivity(),
-                            title = rh.gs(R.string.sn_input_title),
-                            message = rh.gs(R.string.pump_unsupported, newDeviceType.toString())
-                        )
-                        false
-                    }
-
-                    else -> true
-                }
-            }
-        }
     }
 
     private fun preprocessConnectionAlertSettings(preferenceFragment: PreferenceFragmentCompat) {
@@ -505,7 +446,6 @@ class MedtrumPlugin @Inject constructor(
             key = "medtrum_settings",
             titleResId = R.string.medtrum_pump_setting,
             items = listOf(
-                MedtrumStringKey.MedtrumSnInput,
                 MedtrumStringKey.MedtrumAlarmSettings.withEntriesProvider(
                     provider = { context -> getAlarmEntriesForPumpType(context) }
                 ),
@@ -608,7 +548,6 @@ class MedtrumPlugin @Inject constructor(
             key = "medtrum_settings"
             title = rh.gs(R.string.medtrum_pump_setting)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveStringPreference(ctx = context, stringKey = MedtrumStringKey.MedtrumSnInput, title = R.string.sn_input_title, dialogMessage = R.string.sn_input_summary))
             addPreference(AdaptiveListPreference(ctx = context, stringKey = MedtrumStringKey.MedtrumAlarmSettings, title = R.string.alarm_setting_title, dialogTitle = R.string.alarm_setting_summary, entries = alarmEntries, entryValues = alarmValues))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = MedtrumBooleanKey.MedtrumWarningNotification, title = R.string.pump_warning_notification_title, summary = R.string.pump_warning_notification_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = MedtrumBooleanKey.MedtrumPatchExpiration, title = R.string.patch_expiration_title, summary = R.string.patch_expiration_summary))
