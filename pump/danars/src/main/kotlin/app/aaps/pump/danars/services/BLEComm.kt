@@ -469,6 +469,7 @@ class BLEComm @Inject constructor(
             if (storedPairingKey.isBlank()) {
                 connectAddress?.let { bleTransport.adapter.removeBond(it) }
                 disconnect("Non existing pairing key")
+                return
             }
 
             if (danaPump.hwModel == 0x09 || danaPump.hwModel == 0x0A) {

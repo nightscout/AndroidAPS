@@ -167,16 +167,18 @@ class DanaRSOverviewViewModel @Inject constructor(
 
     fun performUnpair() {
         uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
+        val address = preferences.get(DanaStringKey.MacAddress)
         danaRSPlugin.clearPairing()
         preferences.remove(DanaStringKey.MacAddress)
         preferences.remove(DanaStringKey.RsName)
         preferences.remove(DanaStringKey.EmulatorDeviceName)
+        if (address.isNotBlank()) bleTransport.adapter.removeBond(address)
         bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
         viewModelScope.launch(Dispatchers.IO) {
             danaRSPlugin.disconnect("Unpaired")
             danaRSPlugin.changePump()
+            rxTrigger.value = System.currentTimeMillis() // refresh overview UI after reset completes
         }
-        rxTrigger.value = System.currentTimeMillis() // refresh overview UI
     }
 
     private fun buildInitialState(): PumpOverviewUiState = buildUiState(

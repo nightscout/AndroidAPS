@@ -433,6 +433,27 @@ class DanaPump @Inject constructor(
         lastConnection = 0
         lastSettingsRead = 0
         readHistoryFrom = 0
+        serialNumber = ""
+        hwModel = 0
+        protocol = 0
+        productCode = 0
+        dailyTotalUnits = 0.0
+        maxDailyTotalUnits = 0
+        bolusStep = 0.1
+        basalStep = 0.1
+        activeProfile = 0
+        reservoirRemainingUnits = 0.0
+        batteryRemaining = null
+        lastBolusTime = null
+        lastBolusAmount = null
+        currentBasal = 0.0
+        iob = 0.0
+        tempBasalStart = 0
+        tempBasalDuration = 0
+        tempBasalPercent = 0
+        extendedBolusStart = 0
+        extendedBolusDuration = 0
+        extendedBolusAmount = 0.0
     }
 
     fun modelFriendlyName(): String =
