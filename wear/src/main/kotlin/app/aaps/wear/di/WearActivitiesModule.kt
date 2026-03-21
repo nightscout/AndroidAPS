@@ -17,9 +17,7 @@ import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.ViewSelectorActivity
 import app.aaps.wear.interaction.actions.WizardActivity
-import app.aaps.wear.interaction.actions.WizardConfirmFragment
 import app.aaps.wear.interaction.actions.WizardResultActivity
-import app.aaps.wear.interaction.actions.WizardResultFragment
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.menus.FillMenuActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
@@ -51,8 +49,6 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentActivity(): TreatmentActivity
     @ContributesAndroidInjector abstract fun contributesWizardActivity(): WizardActivity
     @ContributesAndroidInjector abstract fun wizardResultActivity(): WizardResultActivity
-    @ContributesAndroidInjector abstract fun contributesWizardResultFragment(): WizardResultFragment
-    @ContributesAndroidInjector abstract fun contributesWizardConfirmFragment(): WizardConfirmFragment
 
     @ContributesAndroidInjector abstract fun contributesMenuListActivity(): MenuListActivity
     @ContributesAndroidInjector abstract fun contributesFillMenuActivity(): FillMenuActivity
