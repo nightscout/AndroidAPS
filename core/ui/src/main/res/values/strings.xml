@@ -898,6 +898,9 @@
     <string name="cannula">Cannula</string>
     <string name="patch_pump">Patch pump</string>
 
+    <!-- Site Rotation -->
+    <string name="select_location">Click below to select Site</string>
+
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>

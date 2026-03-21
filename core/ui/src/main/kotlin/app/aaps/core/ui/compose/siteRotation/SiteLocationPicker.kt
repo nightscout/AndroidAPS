@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.siteRotation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -65,8 +66,15 @@ fun SiteLocationPicker(
     modifier: Modifier = Modifier,
     selectedLocationString: String? = null
 ) {
-    val showPumpSites = siteType == TE.Type.CANNULA_CHANGE
-    val showCgmSites = siteType == TE.Type.SENSOR_CHANGE
+    var showPumpSites by rememberSaveable { mutableStateOf(siteType == TE.Type.CANNULA_CHANGE) }
+    var showCgmSites by rememberSaveable { mutableStateOf(siteType == TE.Type.SENSOR_CHANGE) }
+
+    val isPumpType = siteType == TE.Type.CANNULA_CHANGE
+    val isCgmType = siteType == TE.Type.SENSOR_CHANGE
+
+    val effectiveShowPumpSites = isPumpType || showPumpSites
+    val effectiveShowCgmSites = isCgmType || showCgmSites
+
     var showArrowDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showArrowDialog) {
@@ -93,7 +101,7 @@ fun SiteLocationPicker(
                 text = if (selectedLocation != TE.Location.NONE)
                     stringResource(R.string.selected_location, selectedLocationString ?: selectedLocation.text)
                 else
-                    "",
+                    stringResource(R.string.select_location),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
@@ -110,27 +118,92 @@ fun SiteLocationPicker(
             }
         }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MultiChoiceSegmentedButtonRow(modifier = Modifier.weight(1f)) {
+                SegmentedButton(
+                    checked = effectiveShowPumpSites,
+                    onCheckedChange = { if (!isPumpType) showPumpSites = it },
+                    enabled = !isPumpType,
+                    shape = SegmentedButtonDefaults.itemShape(0, 2),
+                    icon = {}
+                ) {
+                    Icon(
+                        imageVector = IcCannulaChange,
+                        contentDescription = stringResource(R.string.careportal_pump_site_management),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                SegmentedButton(
+                    checked = effectiveShowCgmSites,
+                    onCheckedChange = { if (!isCgmType) showCgmSites = it },
+                    enabled = !isCgmType,
+                    shape = SegmentedButtonDefaults.itemShape(1, 2),
+                    icon = {}
+                ) {
+                    Icon(
+                        imageVector = IcCgmInsert,
+                        contentDescription = stringResource(R.string.careportal_cgm_site_management),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+            val tooltipState = remember { TooltipState() }
+            val scope = rememberCoroutineScope()
+            TooltipBox(
+                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                tooltip = {
+                    PlainTooltip {
+                        Text(stringResource(R.string.site_filter_info))
+                    }
+                },
+                state = tooltipState
+            ) {
+                IconButton(
+                    onClick = { scope.launch { tooltipState.show() } },
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+
         val filteredEntries = entries.filter { te ->
             when (te.type) {
-                TE.Type.CANNULA_CHANGE -> showPumpSites
-                TE.Type.SENSOR_CHANGE  -> showCgmSites
-                else                   -> false
+                TE.Type.CANNULA_CHANGE -> effectiveShowPumpSites
+                TE.Type.SENSOR_CHANGE -> effectiveShowCgmSites
+                else -> false
             }
         }
 
         // Body diagram (zoomable, front + back)
-        ZoomableBodyDiagram(
-            filteredLocationColor = filteredEntries,
-            showPumpSites = showPumpSites,
-            showCgmSites = showCgmSites,
-            selectedLocation = selectedLocation,
-            bodyType = bodyType,
-            onZoneClick = onLocationSelected,
+        Box(
             modifier = Modifier
-                .weight(1f)
+                .weight(2f)
                 .fillMaxWidth()
-                .padding(horizontal = AapsSpacing.extraLarge)
-        )
+        ) {
+            ZoomableBodyDiagram(
+                filteredLocationColor = filteredEntries,
+                showPumpSites = effectiveShowPumpSites,
+                showCgmSites = effectiveShowCgmSites,
+                selectedLocation = selectedLocation,
+                bodyType = bodyType,
+                onZoneClick = onLocationSelected,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = AapsSpacing.extraLarge),
+                editedType = siteType
+            )
+        }
 
         // Filtered entry list
         if (filteredEntries.isNotEmpty()) {
@@ -180,7 +253,7 @@ fun SiteLocationPickerWithFilters(
     onShowPumpSites: (Boolean) -> Unit,
     onShowCgmSites: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    editedTe: TE? = null
+    editedType: TE.Type? = null
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -263,7 +336,7 @@ fun SiteLocationPickerWithFilters(
                 .weight(1f)
                 .fillMaxWidth()
                 .padding(horizontal = AapsSpacing.extraLarge),
-            editedTe = editedTe
+            editedType = editedType
         )
     }
 }

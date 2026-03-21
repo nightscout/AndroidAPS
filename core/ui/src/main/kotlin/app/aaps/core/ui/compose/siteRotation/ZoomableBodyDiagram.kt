@@ -36,7 +36,7 @@ fun ZoomableBodyDiagram(
     bodyType: BodyType,
     onZoneClick: (TE.Location) -> Unit,
     modifier: Modifier = Modifier,
-    editedTe: TE? = null
+    editedType: TE.Type? = null
 ) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offsetX by remember { mutableFloatStateOf(0f) }
@@ -90,7 +90,7 @@ fun ZoomableBodyDiagram(
                 isFrontView = true,
                 onZoneClick = onZoneClick,
                 modifier = Modifier.weight(1f),
-                editedTe = editedTe
+                editedType = editedType
             )
             BodyView(
                 filteredLocationColor = filteredLocationColor,
@@ -101,7 +101,7 @@ fun ZoomableBodyDiagram(
                 isFrontView = false,
                 onZoneClick = onZoneClick,
                 modifier = Modifier.weight(1f),
-                editedTe = editedTe
+                editedType = editedType
             )
         }
     }
