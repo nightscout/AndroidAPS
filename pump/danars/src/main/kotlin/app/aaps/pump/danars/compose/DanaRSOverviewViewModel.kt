@@ -65,8 +65,8 @@ sealed class DanaRSOverviewEvent {
 class DanaRSOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
+    rxBus: RxBus,
+    aapsSchedulers: AapsSchedulers,
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
     private val danaPump: DanaPump,
@@ -127,7 +127,6 @@ class DanaRSOverviewViewModel @Inject constructor(
 
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
-        danaPump.reset()
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.clicked_connect_to_pump), null)
     }
 
@@ -156,11 +155,8 @@ class DanaRSOverviewViewModel @Inject constructor(
         preferences.remove(DanaStringKey.EmulatorDeviceName)
         if (address.isNotBlank()) bleTransport.adapter.removeBond(address)
         bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
-        viewModelScope.launch(Dispatchers.IO) {
-            danaRSPlugin.disconnect("Unpaired")
-            danaRSPlugin.changePump()
-            rxTrigger.value = System.currentTimeMillis() // refresh overview UI after reset completes
-        }
+        danaRSPlugin.changePump() // resets mDeviceAddress/mDeviceName — makes isConfigured() return false
+        rxTrigger.value = System.currentTimeMillis()
     }
 
     private fun buildInitialState(): PumpOverviewUiState = buildUiState(
@@ -245,7 +241,7 @@ class DanaRSOverviewViewModel @Inject constructor(
         }
 
         // Info rows matching XML fragment order (BT status row → status banner)
-        val infoRows = buildList {
+        val infoRows = if (!danaRSPlugin.isConfigured()) emptyList() else buildList {
             // 1. Serial number
             pump.serialNumber.takeIf { it.isNotEmpty() }?.let {
                 add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.serial_number), value = it))
@@ -309,18 +305,21 @@ class DanaRSOverviewViewModel @Inject constructor(
 
         // Actions
         val isPaired = danaRSPlugin.isConfigured()
+        val isInitialized = danaRSPlugin.isInitialized()
 
         val primaryActions = listOf(
             PumpAction(
                 label = rh.gs(app.aaps.core.ui.R.string.refresh),
                 iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
                 category = ActionCategory.PRIMARY,
+                visible = isInitialized,
                 onClick = { onRefreshClick() }
             ),
             PumpAction(
                 label = rh.gs(app.aaps.core.ui.R.string.pump_history),
                 icon = Icons.AutoMirrored.Filled.List,
                 category = ActionCategory.PRIMARY,
+                visible = isInitialized,
                 onClick = { onHistoryClick() }
             )
         )
@@ -333,6 +332,7 @@ class DanaRSOverviewViewModel @Inject constructor(
                         label = rh.gs(R.string.danar_user_options),
                         icon = Icons.Filled.Settings,
                         category = ActionCategory.MANAGEMENT,
+                        visible = isInitialized,
                         onClick = { onUserSettingsClick() }
                     )
                 )

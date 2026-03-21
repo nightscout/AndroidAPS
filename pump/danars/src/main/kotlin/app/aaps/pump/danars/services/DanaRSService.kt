@@ -207,7 +207,9 @@ class DanaRSService : DaggerService() {
             else sendMessage(danaRSPacketBolusGetCIRCFArray.get())
             sendMessage(danaRSPacketOptionGetUserOption.get()) // Getting user options
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
+            aapsLogger.debug(LTag.PUMPCOMM, "sending InitialScreenInformation on thread " + Thread.currentThread().name)
             sendMessage(danaRSPacketGeneralInitialScreenInformation.get())
+            aapsLogger.debug(LTag.PUMPCOMM, "InitialScreenInformation done, sending StepBolusInformation")
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
             sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus, bolusStep, maxBolus
             danaPump.lastConnection = System.currentTimeMillis()

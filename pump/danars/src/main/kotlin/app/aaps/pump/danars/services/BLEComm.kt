@@ -234,6 +234,7 @@ class BLEComm @Inject constructor(
     }
 
     override fun onDescriptorWritten() {
+        if (isConnected) return // Already connected, ignore duplicate notification enable
         bleTransport.updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
         sendConnect()
         // 1st message sent to pump after connect
@@ -732,11 +733,15 @@ class BLEComm @Inject constructor(
         // The rest from queue is send from onCharacteristicWrite (after sending 1st part)
         synchronized(message) {
             if (!message.isReceived) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "waiting for reply " + message.friendlyName + " on thread " + Thread.currentThread().name)
                 try {
                     message.waitMillis(5000)
                 } catch (e: InterruptedException) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage InterruptedException", e)
                 }
+                aapsLogger.debug(LTag.PUMPBTCOMM, "wait finished " + message.friendlyName + " isReceived=" + message.isReceived + " on thread " + Thread.currentThread().name)
+            } else {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "already received " + message.friendlyName + " (no wait needed)")
             }
         }
 
@@ -766,8 +771,10 @@ class BLEComm @Inject constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + message.friendlyName + " " + DanaRSPacket.toHexString(decryptedBuffer))
             // process received data
             message.handleMessage(decryptedBuffer)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "handleMessage done " + message.friendlyName + " setting received on thread " + Thread.currentThread().name)
             message.setReceived()
             synchronized(message) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "notifyAll " + message.friendlyName + " processedMessage===message: " + (processedMessage === message))
                 // notify to sendMessage
                 message.notifyAll()
             }

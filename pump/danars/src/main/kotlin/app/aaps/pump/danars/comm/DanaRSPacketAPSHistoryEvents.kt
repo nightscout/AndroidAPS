@@ -86,7 +86,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
         if (recordCode == 0xFF.toByte()) {
             aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
 
-            val array: Array<ByteArray> = messageBuffer.toTypedArray()
+            val array: Array<ByteArray> = messageBuffer.filter { dateTime(it) > 0L }.toTypedArray()
             val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> dateTime(s1).compareTo(dateTime(s2)) }
             for (index in sorted.indices) {
                 val message = sorted[index]

@@ -43,6 +43,7 @@ class PumpWithConcentrationImpl @Inject constructor(
     override fun selectedActivePump(): Pump = activePumpInternal
     private val concentration: Double get() = insulin.iCfg.concentration
 
+    override fun isConfigured(): Boolean = activePumpInternal.isConfigured()
     override fun isInitialized(): Boolean = activePumpInternal.isInitialized()
     override fun isSuspended(): Boolean = activePumpInternal.isSuspended()
     override fun isBusy(): Boolean = activePumpInternal.isBusy()

@@ -47,6 +47,7 @@ import app.aaps.core.objects.extensions.highValueToUnitsToString
 import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.utils.JsonHelper
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.LinkedList
 import javax.inject.Inject
@@ -478,7 +479,7 @@ class BolusWizard @Inject constructor(
 
     @SuppressLint("CheckResult")
     private fun commonProcessing(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
-        val profile = kotlinx.coroutines.runBlocking { profileFunction.getProfile() } ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
         val pump = activePlugin.activePump
         val now = dateUtil.now()
 

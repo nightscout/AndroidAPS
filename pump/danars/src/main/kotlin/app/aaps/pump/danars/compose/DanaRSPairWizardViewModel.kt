@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.hexStringToByteArray
@@ -67,7 +68,8 @@ class DanaRSPairWizardViewModel @Inject constructor(
     private val danaRSPlugin: DanaRSPlugin,
     private val preferences: Preferences,
     private val config: Config,
-    private val pumpSync: PumpSync
+    private val pumpSync: PumpSync,
+    private val commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PairWizardUiState())
@@ -131,6 +133,9 @@ class DanaRSPairWizardViewModel @Inject constructor(
         // Store name for encryption key derivation (needed during handshake)
         // but do NOT store MAC to preferences yet (prevents queue interference)
         danaRSPlugin.mDeviceName = device.name
+
+        // Ensure no stale connection/queue interferes with pairing
+        commandQueue.clear()
 
         // Connect directly via BLEComm, bypassing the command queue.
         // connect() is non-blocking; if bonding is needed it returns false
@@ -254,7 +259,12 @@ class DanaRSPairWizardViewModel @Inject constructor(
 
     private fun onPairingStateChanged(state: PairingState) {
         when (state.step) {
-            PairingStep.IDLE                        -> { /* no-op, wizard handles its own exit */
+            PairingStep.IDLE                        -> {
+                // If we were in pairing progress, treat IDLE as a disconnect/failure
+                if (_uiState.value.step == WizardStep.PAIRING_PROGRESS) {
+                    cancelPairingTimeout()
+                    _uiState.update { it.copy(step = WizardStep.ERROR, errorMessage = rh.gs(app.aaps.core.ui.R.string.connection_error)) }
+                }
             }
 
             PairingStep.CONNECTING                  -> {
