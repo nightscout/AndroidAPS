@@ -30,10 +30,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -53,7 +51,7 @@ class FillDialogViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val constraintChecker: ConstraintsChecker,
     private val commandQueue: CommandQueue,
-    private val activePlugin: ActivePlugin,
+    activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     val preferences: Preferences,
@@ -64,7 +62,7 @@ class FillDialogViewModel @Inject constructor(
     private val translator: Translator,
     private val aapsLogger: AAPSLogger,
     private val ch: ConcentrationHelper,
-    private val insulinManager: InsulinManager,
+    insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction
 ) : ViewModel() {
 
@@ -89,8 +87,6 @@ class FillDialogViewModel @Inject constructor(
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 
         val availableInsulins = insulinManager.insulins.map { it.deepClone() }
-        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
-        val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
 
         uiState.update {
             FillDialogUiState(
@@ -108,15 +104,26 @@ class FillDialogViewModel @Inject constructor(
                 insulinAfterConstraints = 0.0,
                 constraintApplied = false,
                 availableInsulins = availableInsulins,
-                selectedInsulin = currentInsulin,
-                activeInsulinLabel = activeLabel,
-                pumpUnitsWarning = pumpUnitsWarningFor(currentInsulin),
+                selectedInsulin = availableInsulins.firstOrNull(),
+                activeInsulinLabel = null,
+                pumpUnitsWarning = pumpUnitsWarningFor(availableInsulins.firstOrNull()),
                 showBolus = !config.AAPSCLIENT,
                 siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump),
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
                 concentrationEnabled = preferences.get(BooleanKey.GeneralInsulinConcentration)
             )
+        }
+        viewModelScope.launch {
+            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
+            uiState.update {
+                it.copy(
+                    selectedInsulin = currentInsulin,
+                    activeInsulinLabel = activeLabel,
+                    pumpUnitsWarning = pumpUnitsWarningFor(currentInsulin)
+                )
+            }
         }
         loadLastSiteLocation()
     }
@@ -202,13 +209,6 @@ class FillDialogViewModel @Inject constructor(
 
     fun updateSiteArrow(arrow: TE.Arrow) {
         uiState.update { it.copy(siteArrow = arrow) }
-    }
-
-    fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
-
-    fun siteRotationEntries(): List<TE> {
-        // Return cached entries from uiState or empty; actual data loaded async
-        return siteRotationEntriesCache
     }
 
     private var siteRotationEntriesCache: List<TE> = emptyList()
@@ -307,13 +307,17 @@ class FillDialogViewModel @Inject constructor(
             requestPrimeBolus(state.insulinAfterConstraints, notes) {
                 // After successful prime, do profile switch if insulin changed
                 if (doProfileSwitch) {
-                    profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                    viewModelScope.launch {
+                        profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                    }
                 }
             }
         } else {
             // No prime — do profile switch immediately if insulin changed
             if (doProfileSwitch) {
-                profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                viewModelScope.launch {
+                    profileFunction.createProfileSwitchWithNewInsulin(state.selectedInsulin!!, Sources.FillDialog)
+                }
             }
         }
 

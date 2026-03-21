@@ -39,6 +39,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -87,7 +88,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val bgList: MutableList<GV> = ArrayList()
         bgList.add(reading)
 
-        whenever(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
+        runBlocking { whenever(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0)) }
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromGv(reading))
 
@@ -152,12 +153,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             null
         }.whenever(commandQueue).extendedBolus(anyDouble(), anyInt(), any(Callback::class.java))
 
-        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
-        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
+        runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0)) }
+        runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0)) }
 
         whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
-        whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true))
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        runBlocking { whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true)) }
         whenever(otp.name()).thenReturn("User")
         whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
 
@@ -277,7 +278,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.isAllowedNumber("56")).isFalse()
     }
 
-    @Test fun processSmsTest() {
+    @Test fun processSmsTest() = runBlocking {
 
         // SMS from not allowed number should be ignored
         smsCommunicatorPlugin.messages = ArrayList()
@@ -574,7 +575,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong duration")
 
         //PUMP DISCONNECT 30
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 30")
         smsCommunicatorPlugin.processSms(sms)
@@ -689,7 +690,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp Target canceled successfully")
     }
 
-    @Test fun processProfileTest() {
+    @Test fun processProfileTest() = runBlocking {
 
         //PROFILE
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
@@ -716,7 +717,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Not configured")
 
         whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
-        whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
+        runBlocking { whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME) }
 
         //PROFILE STATUS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -761,21 +762,23 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("To switch profile to someProfile 100% reply with code")
 
         //PROFILE 1 90(OK)
-        whenever(
-            profileFunction.createProfileSwitch(
-                anyOrNull(),
-                anyString(),
-                anyInt(),
-                anyInt(),
-                anyInt(),
-                anyLong(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull()
-            )
-        ).thenReturn(true)
+        runBlocking {
+            whenever(
+                profileFunction.createProfileSwitch(
+                    anyOrNull(),
+                    anyString(),
+                    anyInt(),
+                    anyInt(),
+                    anyInt(),
+                    anyLong(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull()
+                )
+            ).thenReturn(true)
+        }
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 90")
         smsCommunicatorPlugin.processSms(sms)
@@ -787,7 +790,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Profile switch created")
     }
 
-    @Test fun processBasalTest() {
+    @Test fun processBasalTest() = runBlocking {
 
         //BASAL
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
@@ -816,7 +819,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp basal canceled")
 
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         //BASAL a%
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL a%")
@@ -885,7 +888,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal 1.00U/h for 30 min started successfully\nVirtual Pump")
     }
 
-    @Test fun processExtendedTest() {
+    @Test fun processExtendedTest() = runBlocking {
 
         //EXTENDED
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
@@ -941,7 +944,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump")
     }
 
-    @Test fun processBolusTest() {
+    @Test fun processBolusTest() = runBlocking {
 
         //BOLUS
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
@@ -1015,7 +1018,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1 a")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         whenever(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)).thenReturn(5.0)
         whenever(preferences.get(IntKey.OverviewEatingSoonDuration)).thenReturn(45)
         //BOLUS 1 MEAL
@@ -1030,7 +1033,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Meal Bolus 1.00U delivered successfully\nVirtual Pump\nTarget 5.0 for 45 minutes")
     }
 
-    @Test fun processCalTest() {
+    @Test fun processCalTest() = runBlocking {
 
         //CAL
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
@@ -1067,7 +1070,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Calibration sent. Receiving must be enabled in xDrip.")
     }
 
-    @Test fun processCarbsTest() {
+    @Test fun processCarbsTest() = runBlocking {
         whenever(dateUtilMocked.now()).thenReturn(1000000L)
         whenever(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
@@ -1145,7 +1148,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
     }
 
-    @Test fun sendNotificationToAllNumbers() {
+    @Test fun sendNotificationToAllNumbers() = runBlocking {
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.sendNotificationToAllNumbers("abc")
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("abc")

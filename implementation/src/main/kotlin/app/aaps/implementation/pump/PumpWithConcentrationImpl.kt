@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.objects.constraints.ConstraintObject
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -109,7 +110,7 @@ class PumpWithConcentrationImpl @Inject constructor(
     )
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        profileFunction.getProfile()?.let { profile ->
+        runBlocking { profileFunction.getProfile() }?.let { profile ->
             constraintsChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value().let { absoluteAfterConstrains ->
                 activePumpInternal.setTempBasalAbsolute(absoluteAfterConstrains / concentration, durationInMinutes, enforceNew, tbrType)
             }
@@ -121,7 +122,7 @@ class PumpWithConcentrationImpl @Inject constructor(
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult =
-        profileFunction.getProfile()?.let { profile ->
+        runBlocking { profileFunction.getProfile() }?.let { profile ->
             constraintsChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value().let { percentAfterConstraint ->
                 activePumpInternal.setTempBasalPercent(percentAfterConstraint, durationInMinutes, enforceNew, tbrType)
             }

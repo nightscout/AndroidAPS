@@ -46,6 +46,7 @@ import app.aaps.ui.databinding.DialogInsulinBinding
 import app.aaps.ui.extensions.toSignedString
 import com.google.common.base.Joiner
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
@@ -190,7 +191,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
-        val profile = profileFunction.getProfile() ?: error("Profile not defined")
+        val profile = runBlocking { profileFunction.getProfile() } ?: error("Profile not defined")
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked

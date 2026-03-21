@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -39,7 +40,6 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective7
 import app.aaps.plugins.constraints.objectives.objectives.Objective8
 import app.aaps.plugins.constraints.objectives.objectives.Objective9
 import app.aaps.plugins.constraints.safety.SafetyPlugin
-import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringKey
@@ -68,7 +68,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
-    @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
@@ -82,6 +81,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var passwordCheck: PasswordCheck
     @Mock lateinit var pumpWithConcentration: PumpWithConcentrationImpl
+    @Mock lateinit var blePreCheck: BlePreCheck
 
     private lateinit var danaPump: DanaPump
     private lateinit var insightDbHelper: InsightDbHelper
@@ -162,7 +162,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             DanaRSPlugin(
                 aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker,
                 danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
-                fabricPrivacy, dateUtil, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider
+                fabricPrivacy, dateUtil, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck
             )
         insightPlugin = InsightPlugin(
             aapsLogger, rh, preferences, commandQueue, rxBus,

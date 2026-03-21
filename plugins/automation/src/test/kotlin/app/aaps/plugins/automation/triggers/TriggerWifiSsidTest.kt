@@ -5,6 +5,7 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -13,7 +14,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerWifiSsidTest : TriggerTestBase() {
 
-    @Test fun shouldRunTest() {
+    @Test fun shouldRunTest() = runTest {
         val networkFlow = MutableStateFlow<NetworkStatus?>(NetworkStatus())
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(networkFlow)
         var t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_EQUAL)
@@ -32,7 +33,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
     }
 
-    @Test fun copyConstructorTest() {
+    @Test fun copyConstructorTest() = runTest {
         val t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerWifiSsid
         assertThat(t1.ssid.value).isEqualTo("aSSID")
@@ -40,7 +41,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     }
 
     var json = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"ssid\":\"aSSID\"},\"type\":\"TriggerWifiSsid\"}"
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         val t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(json, t.toJSON(), true)
     }
@@ -52,15 +53,15 @@ class TriggerWifiSsidTest : TriggerTestBase() {
         assertThat(t2.ssid.value).isEqualTo("aSSID")
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(TriggerWifiSsid(injector).icon().get()).isEqualTo(R.drawable.ic_network_wifi)
     }
 
-    @Test fun friendlyNameTest() {
+    @Test fun friendlyNameTest() = runTest {
         assertThat(TriggerWifiSsid(injector).friendlyName()).isEqualTo(app.aaps.core.ui.R.string.ns_wifi_ssids)
     }
 
-    @Test fun friendlyDescriptionTest() {
+    @Test fun friendlyDescriptionTest() = runTest {
         assertThat(TriggerWifiSsid(injector).friendlyDescription()).isNull() //not mocked
     }
 }

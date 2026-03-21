@@ -255,7 +255,7 @@ class GraphViewModel @Inject constructor(
         initialValue = SensitivityUiState()
     )
 
-    private fun buildSensitivityUiState(): SensitivityUiState {
+    private suspend fun buildSensitivityUiState(): SensitivityUiState {
         val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
         val lastAutosensRatio = lastAutosensData?.autosensResult?.ratio
         val lastAutosensPercent = lastAutosensRatio?.let { it * 100 }

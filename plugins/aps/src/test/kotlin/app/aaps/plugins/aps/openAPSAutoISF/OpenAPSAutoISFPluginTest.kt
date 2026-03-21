@@ -193,9 +193,9 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun autoISFTest() {
+    fun autoISFTest() = kotlinx.coroutines.runBlocking {
         // TODO get profile
-        val profile = profileFunction.getProfile(now) ?: return
+        val profile = profileFunction.getProfile(now) ?: return@runBlocking
 
         val oapsProfile = OapsProfileAutoIsf(
             dia = 0.0, // not used

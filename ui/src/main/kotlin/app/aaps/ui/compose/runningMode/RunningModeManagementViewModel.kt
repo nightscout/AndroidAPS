@@ -110,36 +110,36 @@ class RunningModeManagementViewModel @Inject constructor(
         targetMode: RM.Mode,
         action: Action,
         durationMinutes: Int = 0
-    ): Boolean {
-        val profile = profileFunction.getProfile() ?: return false
+    ) {
+        viewModelScope.launch {
+            val profile = profileFunction.getProfile() ?: return@launch
 
-        val success = loop.handleRunningModeChange(
-            newRM = targetMode,
-            action = action,
-            source = Sources.LoopDialog,
-            profile = profile,
-            durationInMinutes = durationMinutes
-        )
+            val success = loop.handleRunningModeChange(
+                newRM = targetMode,
+                action = action,
+                source = Sources.LoopDialog,
+                profile = profile,
+                durationInMinutes = durationMinutes
+            )
 
-        // Track objectives usage for specific actions
-        if (success) {
-            when (action) {
-                Action.RESUME, Action.RECONNECT -> {
-                    preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
-                }
-
-                Action.DISCONNECT               -> {
-                    if (durationMinutes >= 60) {
-                        preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
+            // Track objectives usage for specific actions
+            if (success) {
+                when (action) {
+                    Action.RESUME, Action.RECONNECT -> {
+                        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
                     }
-                }
 
-                else                            -> { /* no tracking needed */
+                    Action.DISCONNECT               -> {
+                        if (durationMinutes >= 60) {
+                            preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
+                        }
+                    }
+
+                    else                            -> { /* no tracking needed */
+                    }
                 }
             }
         }
-
-        return success
     }
 
     /**

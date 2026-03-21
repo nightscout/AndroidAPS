@@ -185,7 +185,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     override fun getIsfMgdl(profile: Profile, caller: String): Double? {
         val start = dateUtil.now()
         val multiplier = (profile as ProfileSealed.EPS).value.originalPercentage / 100.0
-        val sensitivity = calculateVariableIsf(start)
+        val sensitivity = runBlocking { calculateVariableIsf(start) }
         if (sensitivity.second == null && caller == "OpenAPSSMBPlugin")
             notificationManager.post(
                 NotificationId.DYN_ISF_FALLBACK,
@@ -245,8 +245,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     private val autoIsfCache = LongSparseArray<Double>()
 
-    @Synchronized
-    private fun calculateVariableIsf(timestamp: Long): Pair<String, Double?> {
+    private suspend fun calculateVariableIsf(timestamp: Long): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
         if (profile == null) return Pair("OFF", null)
         val glucose = glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
@@ -571,14 +570,14 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     fun convert_bg_to_units(value: Double, profile: OapsProfileAutoIsf): Double =
         if (profile.out_units == "mmol/L") value * Constants.MGDL_TO_MMOLL else value
 
-    fun autoISF(profile: Profile): Double {
+    suspend fun autoISF(profile: Profile): Double {
         val sens = profile.getProfileIsfMgdl()
         val glucose_status = glucoseStatusProvider.glucoseStatusData as GlucoseStatusAutoIsf?
 
         val high_temptarget_raises_sensitivity = exerciseMode || highTemptargetRaisesSensitivity
         var target_bg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
         var isTempTarget = false
-        runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }?.let { tempTarget ->
+        persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tempTarget ->
             isTempTarget = true
             target_bg = hardLimits.verifyHardLimits(tempTarget.target(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG[0], HardLimits.LIMIT_TEMP_TARGET_BG[1])
         }

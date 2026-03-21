@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
@@ -56,6 +57,8 @@ import app.aaps.plugins.aps.databinding.AutotuneFragmentBinding
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.Locale
@@ -113,8 +116,10 @@ class AutotuneFragment : DaggerFragment() {
         val defaultValue = preferences.get(IntKey.AutotuneDefaultTuneDays).toDouble()
         profileStore = localProfileManager.profile ?: profileStoreProvider.get().with(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
-        profileFunction.getProfile()?.let { currentProfile ->
-            profile = atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""))
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileFunction.getProfile()?.let { currentProfile ->
+                profile = atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""))
+            }
         }
         days.addToLayout(binding.selectWeekDays)
         days.view?.setOnWeekdaysChangeListener { i: Int, selected: Boolean ->
@@ -145,16 +150,18 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
-            if (!autotunePlugin.calculationRunning) {
-                profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
-                profileFunction.getProfile()?.let { currentProfile ->
-                    profile = atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""))
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (!autotunePlugin.calculationRunning) {
+                    profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
+                    profileFunction.getProfile()?.let { currentProfile ->
+                        profile = atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""))
+                    }
+                    autotunePlugin.selectedProfile = profileName
+                    resetParam(true)
+                    binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
                 }
-                autotunePlugin.selectedProfile = profileName
-                resetParam(true)
-                binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
+                updateGui()
             }
-            updateGui()
         }
 
         binding.autotuneCopyLocal.setOnClickListener {
@@ -220,24 +227,26 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneCheckInputProfile.setOnClickListener {
-            val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
-                profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
-                    atProfileProvider.get().with(ProfileSealed.Pure(specificProfile, null), LocalInsulin("")).also {
-                        it.profileName = profileName
+            viewLifecycleOwner.lifecycleScope.launch {
+                val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
+                    profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
+                        atProfileProvider.get().with(ProfileSealed.Pure(specificProfile, null), LocalInsulin("")).also {
+                            it.profileName = profileName
+                        }
                     }
+                        ?: atProfileProvider.get().with(currentProfile, LocalInsulin("")).also {
+                            it.profileName = profileFunction.getProfileName()
+                        }
                 }
-                    ?: atProfileProvider.get().with(currentProfile, LocalInsulin("")).also {
-                        it.profileName = profileFunction.getProfileName()
-                    }
-            }
-            pumpProfile?.let {
-                uiInteraction.runProfileViewerActivity(
-                    context = requireContext(),
-                    time = dateUtil.now(),
-                    mode = UiInteraction.Mode.CUSTOM_PROFILE,
-                    customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
-                    customProfileName = pumpProfile.profileName
-                )
+                pumpProfile?.let {
+                    uiInteraction.runProfileViewerActivity(
+                        context = requireContext(),
+                        time = dateUtil.now(),
+                        mode = UiInteraction.Mode.CUSTOM_PROFILE,
+                        customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
+                        customProfileName = pumpProfile.profileName
+                    )
+                }
             }
         }
 
@@ -333,54 +342,56 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         _binding ?: return
-        profileStore = localProfileManager.profile ?: profileStoreProvider.get().with(JSONObject())
-        profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
-        profileFunction.getProfile()?.let { currentProfile ->
-            profile = atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""))
-        }
-        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-        profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
-        context?.let { context ->
-            binding.profileList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, profileList))
-        } ?: return
-        // set selected to actual profile
-        if (autotunePlugin.selectedProfile.isNotEmpty())
-            binding.profileList.setText(autotunePlugin.selectedProfile, false)
-        else {
-            binding.profileList.setText(profileList[0], false)
-        }
-        days.view?.setSelectedDays(days.getSelectedDays())
-        binding.autotuneRun.visibility = View.GONE
-        binding.autotuneCheckInputProfile.visibility = View.GONE
-        binding.autotuneCopyLocal.visibility = View.GONE
-        binding.autotuneUpdateProfile.visibility = View.GONE
-        binding.autotuneRevertProfile.visibility = View.GONE
-        binding.autotuneProfileswitch.visibility = View.GONE
-        binding.autotuneCompare.visibility = View.GONE
-        when {
-            autotunePlugin.calculationRunning -> {
-                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileStore = localProfileManager.profile ?: profileStoreProvider.get().with(JSONObject())
+            profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
+            profileFunction.getProfile()?.let { currentProfile ->
+                profile = atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""))
             }
+            val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
+            profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
+            context?.let { context ->
+                binding.profileList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, profileList))
+            } ?: return@launch
+            // set selected to actual profile
+            if (autotunePlugin.selectedProfile.isNotEmpty())
+                binding.profileList.setText(autotunePlugin.selectedProfile, false)
+            else {
+                binding.profileList.setText(profileList[0], false)
+            }
+            days.view?.setSelectedDays(days.getSelectedDays())
+            binding.autotuneRun.visibility = View.GONE
+            binding.autotuneCheckInputProfile.visibility = View.GONE
+            binding.autotuneCopyLocal.visibility = View.GONE
+            binding.autotuneUpdateProfile.visibility = View.GONE
+            binding.autotuneRevertProfile.visibility = View.GONE
+            binding.autotuneProfileswitch.visibility = View.GONE
+            binding.autotuneCompare.visibility = View.GONE
+            when {
+                autotunePlugin.calculationRunning -> {
+                    binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
+                }
 
-            autotunePlugin.lastRunSuccess     -> {
-                binding.autotuneCopyLocal.visibility = View.VISIBLE
-                binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
-                binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
-                binding.autotuneProfileswitch.visibility = View.VISIBLE
-                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-                binding.autotuneCompare.visibility = View.VISIBLE
-            }
+                autotunePlugin.lastRunSuccess     -> {
+                    binding.autotuneCopyLocal.visibility = View.VISIBLE
+                    binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
+                    binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
+                    binding.autotuneProfileswitch.visibility = View.VISIBLE
+                    binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
+                    binding.autotuneCompare.visibility = View.VISIBLE
+                }
 
-            else                              -> {
-                if (profile?.isValid == true && calcDays > 0)
-                    binding.autotuneRun.visibility = View.VISIBLE
-                binding.autotuneCheckInputProfile.visibility = View.VISIBLE
+                else                              -> {
+                    if (profile?.isValid == true && calcDays > 0)
+                        binding.autotuneRun.visibility = View.VISIBLE
+                    binding.autotuneCheckInputProfile.visibility = View.VISIBLE
+                }
             }
+            binding.calcDays.text = calcDays.toString()
+            binding.calcDays.visibility = if (daysBack == calcDays) View.INVISIBLE else View.VISIBLE
+            binding.tuneLastRun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+            showResults()
         }
-        binding.calcDays.text = calcDays.toString()
-        binding.calcDays.visibility = if (daysBack == calcDays) View.INVISIBLE else View.VISIBLE
-        binding.tuneLastRun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
-        showResults()
     }
 
     private fun checkNewDay() {
@@ -394,11 +405,12 @@ class AutotuneFragment : DaggerFragment() {
     private fun addWarnings(): String {
         var warning = ""
         var nl = ""
-        if (profileFunction.getProfile() == null) {
+        val currentProfileResult = runBlocking { profileFunction.getProfile() }
+        if (currentProfileResult == null) {
             warning = rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
             return warning
         }
-        profileFunction.getProfile()?.let { currentProfile ->
+        currentProfileResult.let { currentProfile ->
             profile =
                 atProfileProvider.get().with(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin("")).also { profile ->
                     if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)

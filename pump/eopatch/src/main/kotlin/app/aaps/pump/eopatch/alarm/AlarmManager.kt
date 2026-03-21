@@ -36,6 +36,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -176,12 +177,14 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                             when (ret) {
                                 IAlarmProcess.ALARM_HANDLED -> {
                                     if (alarmCode == B001) {
-                                        pumpSync.syncStopTemporaryBasalWithPumpId(
-                                            timestamp = dateUtil.now(),
-                                            endPumpId = dateUtil.now(),
-                                            pumpType = PumpType.EOFLOW_EOPATCH2,
-                                            pumpSerial = patchConfig.patchSerialNumber
-                                        )
+                                        runBlocking {
+                                            pumpSync.syncStopTemporaryBasalWithPumpId(
+                                                timestamp = dateUtil.now(),
+                                                endPumpId = dateUtil.now(),
+                                                pumpType = PumpType.EOFLOW_EOPATCH2,
+                                                pumpSerial = patchConfig.patchSerialNumber
+                                            )
+                                        }
                                     }
                                     updateState(alarmCode, AlarmState.HANDLE)
                                 }

@@ -83,7 +83,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         binding.totalBaseBasal2.isFocusable = false
         binding.totalBaseBasal2.inputType = 0
         tbb = preferences.get(StringNonKey.TotalBaseBasal)
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         if (profile != null) {
             val cppTBB = profile.baseBasalSum()
             tbb = decimalFormat.format(cppTBB)

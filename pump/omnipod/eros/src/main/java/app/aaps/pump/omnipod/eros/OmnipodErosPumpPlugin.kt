@@ -116,6 +116,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.joda.time.Instant
@@ -333,14 +334,14 @@ class OmnipodErosPumpPlugin @Inject constructor(
     override fun isRileyLinkReady(): Boolean = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
     private fun handleCancelledTbr() {
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val tbr = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
         if (!podStateManager.isTempBasalRunning && tbr != null && !aapsOmnipodErosManager.hasSuspendedFakeTbr()) {
             aapsOmnipodErosManager.reportCancelledTbr()
         }
     }
 
     private fun handleUncertainTbrRecovery() {
-        val tempBasal = pumpSync.expectedPumpState().temporaryBasal
+        val tempBasal = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
 
         if (podStateManager.isTempBasalRunning && tempBasal == null) {
             if (podStateManager.hasTempBasal()) {
@@ -350,16 +351,18 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     TempBasalPair(podStateManager.tempBasalAmount, false, podStateManager.tempBasalDuration.standardMinutes.toInt())
                 )
 
-                pumpSync.syncTemporaryBasalWithPumpId(
-                    podStateManager.tempBasalStartTime.millis,
-                    PumpRate(podStateManager.tempBasalAmount),
-                    podStateManager.tempBasalDuration.millis,
-                    true,
-                    TemporaryBasalType.NORMAL,
-                    pumpId,
-                    PumpType.OMNIPOD_EROS,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        podStateManager.tempBasalStartTime.millis,
+                        PumpRate(podStateManager.tempBasalAmount),
+                        podStateManager.tempBasalDuration.millis,
+                        true,
+                        TemporaryBasalType.NORMAL,
+                        pumpId,
+                        PumpType.OMNIPOD_EROS,
+                        serialNumber()
+                    )
+                }
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS")
@@ -367,7 +370,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             }
         } else if (!podStateManager.isTempBasalRunning && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded")
-            pumpSync.invalidateTemporaryBasal(tempBasal.id, Sources.OmnipodEros, tempBasal.timestamp)
+            runBlocking { pumpSync.invalidateTemporaryBasal(tempBasal.id, Sources.OmnipodEros, tempBasal.timestamp) }
         }
 
         notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
@@ -380,7 +383,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 val alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager))
                 val notificationText = rh.gq(app.aaps.pump.omnipod.common.R.plurals.omnipod_common_pod_alerts, activeAlerts.size(), alerts)
                 notificationManager.post(NotificationId.OMNIPOD_POD_ALERTS, notificationText)
-                pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber())
+                runBlocking { pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber()) }
 
                 if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)) {
                     queueAcknowledgeAlertsCommand()
@@ -392,7 +395,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private fun handlePodFaultEvent() {
         if (podStateManager.isPodFaulted) {
             val notificationText = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_status_pod_fault_description, podStateManager.faultEventCode.value, podStateManager.faultEventCode.name)
-            pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber())
+            runBlocking { pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber()) }
         }
     }
 
@@ -627,7 +630,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.SUSPEND_DELIVERY) { aapsOmnipodErosManager.suspendDelivery() }
         }
         if (customCommand is CommandResumeDelivery) {
-            return executeCommand<PumpEnactResult?>(OmnipodCommandType.RESUME_DELIVERY) { aapsOmnipodErosManager.setBasalProfile(pumpSync.expectedPumpState().profile, false) }
+            return executeCommand<PumpEnactResult?>(OmnipodCommandType.RESUME_DELIVERY) { aapsOmnipodErosManager.setBasalProfile(runBlocking { pumpSync.expectedPumpState() }.profile, false) }
         }
         if (customCommand is CommandDeactivatePod) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.DEACTIVATE_POD) { aapsOmnipodErosManager.deactivatePod() }
@@ -894,7 +897,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     }
 
     private fun readTBR(): PumpState.TemporaryBasal? {
-        return pumpSync.expectedPumpState().temporaryBasal
+        return runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
     }
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult {

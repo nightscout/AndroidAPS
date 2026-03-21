@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
@@ -216,16 +217,18 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .percent(danaPump.tempBasalPercent)
                 .isPercent(true)
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK")
-            pumpSync.syncTemporaryBasalWithPumpId(
-                danaPump.tempBasalStart,
-                PumpRate(danaPump.tempBasalPercent.toDouble()),
-                danaPump.tempBasalDuration,
-                false,
-                tbrType,
-                danaPump.tempBasalStart,
-                pumpDescription.pumpType,
-                serialNumber()
-            )
+            runBlocking {
+                pumpSync.syncTemporaryBasalWithPumpId(
+                    danaPump.tempBasalStart,
+                    PumpRate(danaPump.tempBasalPercent.toDouble()),
+                    danaPump.tempBasalDuration,
+                    false,
+                    tbrType,
+                    danaPump.tempBasalStart,
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
+            }
             return result
         }
         result.enacted(false).success(false).comment(app.aaps.core.ui.R.string.temp_basal_delivery_error)
@@ -269,15 +272,17 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .absolute(danaPump.extendedBolusAbsoluteRate)
                 .isPercent(false)
             if (!preferences.get(DanaBooleanKey.UseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
-            pumpSync.syncExtendedBolusWithPumpId(
-                danaPump.extendedBolusStart,
-                PumpRate(danaPump.extendedBolusAmount),
-                danaPump.extendedBolusDuration,
-                preferences.get(DanaBooleanKey.UseExtended),
-                danaPump.extendedBolusStart,
-                pumpDescription.pumpType,
-                serialNumber()
-            )
+            runBlocking {
+                pumpSync.syncExtendedBolusWithPumpId(
+                    danaPump.extendedBolusStart,
+                    PumpRate(danaPump.extendedBolusAmount),
+                    danaPump.extendedBolusDuration,
+                    preferences.get(DanaBooleanKey.UseExtended),
+                    danaPump.extendedBolusStart,
+                    pumpDescription.pumpType,
+                    serialNumber()
+                )
+            }
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
             return result
         }
@@ -293,12 +298,14 @@ abstract class AbstractDanaRPlugin protected constructor(
             executionService?.extendedBolusStop()
             if (!danaPump.isExtendedInProgress) {
                 result.success(true).enacted(true).isTempCancel(true)
-                pumpSync.syncStopExtendedBolusWithPumpId(
-                    dateUtil.now(),
-                    dateUtil.now(),
-                    pumpDescription.pumpType,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                        dateUtil.now(),
+                        dateUtil.now(),
+                        pumpDescription.pumpType,
+                        serialNumber()
+                    )
+                }
             } else result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             result.success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true)

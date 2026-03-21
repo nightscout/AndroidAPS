@@ -126,41 +126,43 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         )
 
         // profile
-        context?.let { context ->
-            val profileStore = localProfileManager.profile ?: return
-            val profileListToCheck = profileStore.getProfileList()
-            val profileList = ArrayList<CharSequence>()
-            for (profileName in profileListToCheck) {
-                val profileToCheck = localProfileManager.profile?.getSpecificProfile(profileName.toString())
-                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck, activePlugin).isValid("ProfileSwitch", activePlugin.activePump, config, rh, notificationManager, hardLimits, false).isValid)
-                    profileList.add(profileName)
-            }
-            if (profileList.isEmpty()) {
-                dismiss()
-                return
-            }
-            binding.profileList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, profileList))
-            // set selected to actual profile
-            if (profileName != null)
-                binding.profileList.setText(profileName, false)
-            else {
-                binding.profileList.setText(profileList[0], false)
-                for (p in profileList.indices)
-                    if (profileList[p] == profileFunction.getOriginalProfileName())
-                        binding.profileList.setText(profileList[p], false)
-            }
-        }
-
-        profileFunction.getProfile()?.let { profile ->
-            if (profile is ProfileSealed.EPS)
-                if (profile.value.originalPercentage != 100 || profile.value.originalTimeshift != 0L) {
-                    binding.reuselayout.visibility = View.VISIBLE
-                    binding.reusebutton.text = rh.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
-                    binding.reusebutton.setOnClickListener {
-                        binding.percentage.value = profile.value.originalPercentage.toDouble()
-                        binding.timeshift.value = T.msecs(profile.value.originalTimeshift).hours().toDouble()
-                    }
+        lifecycleScope.launch {
+            context?.let { context ->
+                val profileStore = localProfileManager.profile ?: return@launch
+                val profileListToCheck = profileStore.getProfileList()
+                val profileList = ArrayList<CharSequence>()
+                for (profileName in profileListToCheck) {
+                    val profileToCheck = localProfileManager.profile?.getSpecificProfile(profileName.toString())
+                    if (profileToCheck != null && ProfileSealed.Pure(profileToCheck, activePlugin).isValid("ProfileSwitch", activePlugin.activePump, config, rh, notificationManager, hardLimits, false).isValid)
+                        profileList.add(profileName)
                 }
+                if (profileList.isEmpty()) {
+                    dismiss()
+                    return@launch
+                }
+                binding.profileList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, profileList))
+                // set selected to actual profile
+                if (profileName != null)
+                    binding.profileList.setText(profileName, false)
+                else {
+                    binding.profileList.setText(profileList[0], false)
+                    for (p in profileList.indices)
+                        if (profileList[p] == profileFunction.getOriginalProfileName())
+                            binding.profileList.setText(profileList[p], false)
+                }
+            }
+
+            profileFunction.getProfile()?.let { profile ->
+                if (profile is ProfileSealed.EPS)
+                    if (profile.value.originalPercentage != 100 || profile.value.originalTimeshift != 0L) {
+                        binding.reuselayout.visibility = View.VISIBLE
+                        binding.reusebutton.text = rh.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
+                        binding.reusebutton.setOnClickListener {
+                            binding.percentage.value = profile.value.originalPercentage.toDouble()
+                            binding.timeshift.value = T.msecs(profile.value.originalTimeshift).hours().toDouble()
+                        }
+                    }
+            }
         }
         binding.ttLayout.visibility = View.GONE
         binding.durationLabel.labelFor = binding.duration.editTextId
@@ -228,7 +230,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Percent(percent),
                                 ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
                                 ValueWithUnit.Minute(duration).takeIf { duration != 0 }
-                            ).filterNotNull(),
+                            ),
                             iCfg = newICfg
                         )
                     ) {

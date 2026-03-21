@@ -12,6 +12,7 @@ import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
@@ -99,15 +100,17 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncBolusWithTempId(
-            timestamp = timestamp,
-            amount = PumpInsulin(amount),
-            temporaryId = timestamp,
-            type = bolusType,
-            pumpId = timestamp,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncBolusWithTempId(
+                timestamp = timestamp,
+                amount = PumpInsulin(amount),
+                temporaryId = timestamp,
+                type = bolusType,
+                pumpId = timestamp,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -129,14 +132,16 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncBolusWithPumpId(
-            timestamp = timestamp,
-            amount = PumpInsulin(amount),
-            type = null,
-            pumpId = timestamp,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncBolusWithPumpId(
+                timestamp = timestamp,
+                amount = PumpInsulin(amount),
+                type = null,
+                pumpId = timestamp,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -156,15 +161,17 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncExtendedBolusWithPumpId(
-            timestamp = timestamp,
-            rate = PumpRate(amount),
-            duration = duration,
-            isEmulatingTB = false,
-            pumpId = timestamp,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncExtendedBolusWithPumpId(
+                timestamp = timestamp,
+                rate = PumpRate(amount),
+                duration = duration,
+                isEmulatingTB = false,
+                pumpId = timestamp,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -186,23 +193,25 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncBolusWithPumpId(
-            timestamp = timestamp,
-            amount = PumpInsulin(amountDirect),
-            type = null,
-            pumpId = timestamp,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
-        verify(pumpSync).syncExtendedBolusWithPumpId(
-            timestamp = timestamp,
-            rate = PumpRate(amountExtended),
-            duration = duration,
-            isEmulatingTB = false,
-            pumpId = timestamp,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncBolusWithPumpId(
+                timestamp = timestamp,
+                amount = PumpInsulin(amountDirect),
+                type = null,
+                pumpId = timestamp,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+            verify(pumpSync).syncExtendedBolusWithPumpId(
+                timestamp = timestamp,
+                rate = PumpRate(amountExtended),
+                duration = duration,
+                isEmulatingTB = false,
+                pumpId = timestamp,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -221,16 +230,18 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncTemporaryBasalWithPumpId(
-            timestamp = startTime,
-            rate = PumpRate(rate),
-            duration = duration,
-            isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.NORMAL,
-            pumpId = startTime,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncTemporaryBasalWithPumpId(
+                timestamp = startTime,
+                rate = PumpRate(rate),
+                duration = duration,
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.NORMAL,
+                pumpId = startTime,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -249,23 +260,25 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncTemporaryBasalWithPumpId(
-            timestamp = startTime,
-            rate = PumpRate(rate),
-            duration = duration,
-            isAbsolute = false,
-            type = PumpSync.TemporaryBasalType.NORMAL,
-            pumpId = startTime,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncTemporaryBasalWithPumpId(
+                timestamp = startTime,
+                rate = PumpRate(rate),
+                duration = duration,
+                isAbsolute = false,
+                type = PumpSync.TemporaryBasalType.NORMAL,
+                pumpId = startTime,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenSuspendThenExpectPumpSync() {
-        // Note: This is not a real response as I was unable to get this response from any of my pumpbases, but it can theoretically happen
+        // Note: This is not a real response as I was unable to get this response from any of my pump bases, but it can theoretically happen
         val data = byteArrayOf(35, 99, 7, 1, 0, 0, -86, 28, 2, -1, -39, -7, 118, -86, -85, 1, 8, 0, -4, 116, -16, 17, 21, 125, -16, 17, 18, 0, 0, 0, 0, 0, 0, 0, 125)
         val startTime = 1689505660000
         val endTime = 1689507733000
@@ -277,16 +290,18 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).syncTemporaryBasalWithPumpId(
-            timestamp = startTime,
-            rate = PumpRate(rate),
-            duration = duration,
-            isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-            pumpId = startTime,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncTemporaryBasalWithPumpId(
+                timestamp = startTime,
+                rate = PumpRate(rate),
+                duration = duration,
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = startTime,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -297,15 +312,17 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val endTime = 1689505417000
 
         // Mocks
-        whenever(pumpSync.expectedPumpState()).thenReturn(
-            PumpSync.PumpState(
-                temporaryBasal = null,
-                extendedBolus = null,
-                bolus = null,
-                profile = null,
-                serialNumber = "someSerialNumber"
+        runBlocking {
+            whenever(pumpSync.expectedPumpState()).thenReturn(
+                PumpSync.PumpState(
+                    temporaryBasal = null,
+                    extendedBolus = null,
+                    bolus = null,
+                    profile = null,
+                    serialNumber = "someSerialNumber"
+                )
             )
-        )
+        }
 
         // Call
         val packet = GetRecordPacket(packetInjector, 0)
@@ -313,16 +330,18 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Just check the pumpSync here, rest of the behaviour of medtrumPump is tested in MedtrumPumpTest
         // Expected values
-        verify(pumpSync).syncTemporaryBasalWithPumpId(
-            timestamp = endTime,
-            rate = PumpRate(0.0),
-            duration = T.mins(4800L).msecs(),
-            isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-            pumpId = endTime,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncTemporaryBasalWithPumpId(
+                timestamp = endTime,
+                rate = PumpRate(0.0),
+                duration = T.mins(4800L).msecs(),
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = endTime,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -333,15 +352,17 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val endTime = 1689613740000
 
         // Mocks
-        whenever(pumpSync.expectedPumpState()).thenReturn(
-            PumpSync.PumpState(
-                temporaryBasal = null,
-                extendedBolus = null,
-                bolus = null,
-                profile = null,
-                serialNumber = "someSerialNumber"
+        runBlocking {
+            whenever(pumpSync.expectedPumpState()).thenReturn(
+                PumpSync.PumpState(
+                    temporaryBasal = null,
+                    extendedBolus = null,
+                    bolus = null,
+                    profile = null,
+                    serialNumber = "someSerialNumber"
+                )
             )
-        )
+        }
 
         // Call
         val packet = GetRecordPacket(packetInjector, 0)
@@ -349,16 +370,18 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Just check the pumpSync here, rest of the behaviour of medtrumPump is tested in MedtrumPumpTest
         // Expected values
-        verify(pumpSync).syncTemporaryBasalWithPumpId(
-            timestamp = endTime,
-            rate = PumpRate(0.0),
-            duration = T.mins(4800L).msecs(),
-            isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-            pumpId = endTime,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).syncTemporaryBasalWithPumpId(
+                timestamp = endTime,
+                rate = PumpRate(0.0),
+                duration = T.mins(4800L).msecs(),
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = endTime,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -373,15 +396,17 @@ class GetRecordPacketTest : MedtrumTestBase() {
         whenever(expectedTemporaryBasal.timestamp).thenReturn(endTime + T.mins(1).msecs()) // Existing temp basal is newer
         whenever(expectedTemporaryBasal.duration).thenReturn(endTime + T.mins(30).msecs()) // Normal TBR
 
-        whenever(pumpSync.expectedPumpState()).thenReturn(
-            PumpSync.PumpState(
-                temporaryBasal = expectedTemporaryBasal,
-                extendedBolus = null,
-                bolus = null,
-                profile = null,
-                serialNumber = "someSerialNumber"
+        runBlocking {
+            whenever(pumpSync.expectedPumpState()).thenReturn(
+                PumpSync.PumpState(
+                    temporaryBasal = expectedTemporaryBasal,
+                    extendedBolus = null,
+                    bolus = null,
+                    profile = null,
+                    serialNumber = "someSerialNumber"
+                )
             )
-        )
+        }
 
         // Call
         val packet = GetRecordPacket(packetInjector, 0)
@@ -389,16 +414,18 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Just check the pumpSync here, rest of the behaviour of medtrumPump is tested in MedtrumPumpTest
         // Expected values
-        verify(pumpSync, never()).syncTemporaryBasalWithPumpId(
-            timestamp = endTime,
-            rate = PumpRate(0.0),
-            duration = T.mins(4800L).msecs(),
-            isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-            pumpId = endTime,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync, never()).syncTemporaryBasalWithPumpId(
+                timestamp = endTime,
+                rate = PumpRate(0.0),
+                duration = T.mins(4800L).msecs(),
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = endTime,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()
@@ -420,15 +447,17 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        verify(pumpSync).createOrUpdateTotalDailyDose(
-            timestamp = timestamp,
-            bolusAmount = bolusTdd,
-            basalAmount = basalTdd,
-            totalAmount = tdd,
-            pumpId = timestamp,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            verify(pumpSync).createOrUpdateTotalDailyDose(
+                timestamp = timestamp,
+                bolusAmount = bolusTdd,
+                basalAmount = basalTdd,
+                totalAmount = tdd,
+                pumpId = timestamp,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
 
         assertThat(result).isTrue()
         assertThat(packet.failed).isFalse()

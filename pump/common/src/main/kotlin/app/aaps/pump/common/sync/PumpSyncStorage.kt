@@ -10,6 +10,7 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -93,14 +94,16 @@ class PumpSyncStorage @Inject constructor(
 
     fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
-        val result = pumpSync.addBolusWithTempId(
-            detailedBolusInfo.timestamp,
-            amount = PumpInsulin(detailedBolusInfo.insulin),
-            temporaryId,
-            detailedBolusInfo.bolusType,
-            creator.model(),
-            creator.serialNumber()
-        )
+        val result = runBlocking {
+            pumpSync.addBolusWithTempId(
+                detailedBolusInfo.timestamp,
+                amount = PumpInsulin(detailedBolusInfo.insulin),
+                temporaryId,
+                detailedBolusInfo.bolusType,
+                creator.model(),
+                creator.serialNumber()
+            )
+        }
 
         aapsLogger.debug(
             LTag.PUMP, "addBolusWithTempId [date=${detailedBolusInfo.timestamp}, temporaryId=$temporaryId, " +
@@ -130,13 +133,15 @@ class PumpSyncStorage @Inject constructor(
     }
 
     fun addCarbs(carbsDto: PumpDbEntryCarbs) {
-        val result = pumpSync.syncCarbsWithTimestamp(
-            carbsDto.date,
-            carbsDto.carbs,
-            null,
-            carbsDto.pumpType,
-            carbsDto.serialNumber
-        )
+        val result = runBlocking {
+            pumpSync.syncCarbsWithTimestamp(
+                carbsDto.date,
+                carbsDto.carbs,
+                null,
+                carbsDto.pumpType,
+                carbsDto.serialNumber
+            )
+        }
 
         aapsLogger.debug(
             LTag.PUMP, "syncCarbsWithTimestamp [date=${carbsDto.date}, " +
@@ -148,16 +153,18 @@ class PumpSyncStorage @Inject constructor(
         val timeNow: Long = System.currentTimeMillis()
         val temporaryId = creator.generateTempId(timeNow)
 
-        val response = pumpSync.addTemporaryBasalWithTempId(
-            timeNow,
-            PumpRate(temporaryBasal.rate),
-            (temporaryBasal.durationInSeconds * 1000L),
-            temporaryBasal.isAbsolute,
-            temporaryId,
-            temporaryBasal.tbrType,
-            creator.model(),
-            creator.serialNumber()
-        )
+        val response = runBlocking {
+            pumpSync.addTemporaryBasalWithTempId(
+                timeNow,
+                PumpRate(temporaryBasal.rate),
+                (temporaryBasal.durationInSeconds * 1000L),
+                temporaryBasal.isAbsolute,
+                temporaryId,
+                temporaryBasal.tbrType,
+                creator.model(),
+                creator.serialNumber()
+            )
+        }
 
         if (response && writeToInternalHistory) {
             val dbEntry = PumpDbEntryTBR(

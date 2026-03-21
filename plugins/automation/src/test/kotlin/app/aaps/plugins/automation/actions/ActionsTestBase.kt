@@ -9,6 +9,7 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
@@ -83,7 +84,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @BeforeEach
     fun mock() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         whenever(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         whenever(loop.handleRunningModeChange(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyInt(), anyOrNull())).thenReturn(true)
 

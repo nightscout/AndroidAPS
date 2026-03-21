@@ -61,11 +61,11 @@ class LoopHubImpl @Inject constructor(
     var clock: Clock = Clock.systemUTC()
 
     /** Returns the active insulin profile. */
-    override val currentProfile: Profile? get() = profileFunction.getProfile()
+    override val currentProfile: Profile? get() = runBlocking { profileFunction.getProfile() }
 
     /** Returns the name of the active insulin profile. */
     override val currentProfileName: String
-        get() = profileFunction.getProfileName()
+        get() = runBlocking { profileFunction.getProfileName() }
 
     /** Returns the glucose unit (mg/dl or mmol/l) as selected by the user. */
     override val glucoseUnit: GlucoseUnit
@@ -73,15 +73,15 @@ class LoopHubImpl @Inject constructor(
 
     /** Returns the remaining bolus insulin on board. */
     override val insulinOnboard: Double
-        get() = iobCobCalculator.calculateIobFromBolus().iob
+        get() = runBlocking { iobCobCalculator.calculateIobFromBolus() }.iob
 
     /** Returns the remaining bolus and basal insulin on board. */
     override val insulinBasalOnboard: Double
-        get() = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().basaliob
+        get() = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.basaliob
 
     /** Returns the remaining carbs on board. */
     override val carbsOnboard: Double?
-        get() = iobCobCalculator.getCobInfo("LoopHubImpl").displayCob
+        get() = runBlocking { iobCobCalculator.getCobInfo("LoopHubImpl") }.displayCob
 
     /** Returns true if the pump is connected. */
     override val isConnected: Boolean get() = loop.runningMode != RM.Mode.DISCONNECTED_PUMP

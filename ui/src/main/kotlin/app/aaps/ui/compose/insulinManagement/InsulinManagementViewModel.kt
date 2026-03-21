@@ -8,11 +8,9 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.insulin.ConcentrationType
-import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -36,11 +34,9 @@ import app.aaps.core.ui.R as CoreUiR
 
 @HiltViewModel
 class InsulinManagementViewModel @Inject constructor(
-    private val insulin: Insulin,
     private val insulinManager: InsulinManager,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
-    private val localProfileManager: LocalProfileManager,
     private val dateUtil: DateUtil,
     private val hardLimits: HardLimits,
     private val uel: UserEntryLogger,
@@ -168,7 +164,7 @@ class InsulinManagementViewModel @Inject constructor(
         val templateName = rh.gs(template.label)
         val concLabel = rh.gs(state.editorConcentration.label)
         val diaLabel = if (state.editorDiaHours % 1.0 == 0.0) "${state.editorDiaHours.toInt()}h" else "${state.editorDiaHours}h"
-        val baseName = "$templateName ${state.editorPeakMinutes}m ${diaLabel} $concLabel"
+        val baseName = "$templateName ${state.editorPeakMinutes}m $diaLabel $concLabel"
         var name = baseName
         val existingNames = state.insulins.mapIndexed { i, it -> if (i == state.currentCardIndex) null else it.insulinLabel }.filterNotNull()
         if (name in existingNames) {
@@ -251,34 +247,36 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun prepareActivation() {
-        val state = uiState.value
-        val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return
-        val profile = profileFunction.getProfile()
-        if (profile == null) {
-            showSnackbar(rh.gs(R.string.activate_insulin_no_profile))
-            return
+        viewModelScope.launch {
+            val state = uiState.value
+            val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return@launch
+            val profile = profileFunction.getProfile()
+            if (profile == null) {
+                showSnackbar(rh.gs(R.string.activate_insulin_no_profile))
+                return@launch
+            }
+
+            val eps = (profile as? ProfileSealed.EPS)?.value
+            val profileName = eps?.originalProfileName ?: return@launch
+            val percentage = eps.originalPercentage
+            val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+            val durationMs = eps.originalDuration
+
+            val details = mutableListOf<String>()
+            details.add(profileName)
+            if (percentage != 100) details.add(rh.gs(CoreUiR.string.format_percent, percentage))
+            if (timeshiftHours != 0) details.add(rh.gs(CoreUiR.string.format_hours, timeshiftHours.toDouble()))
+            if (durationMs > 0) {
+                val remaining = ((durationMs - (dateUtil.now() - eps.timestamp)) / 60_000L).coerceAtLeast(0)
+                if (remaining > 0)
+                    details.add(rh.gs(R.string.activate_insulin_remaining, remaining.toInt()))
+            }
+
+            val message = rh.gs(R.string.activate_insulin_new_insulin, iCfg.insulinLabel) +
+                "\n\n" + rh.gs(R.string.activate_insulin_profile_switch, details.joinToString(", "))
+
+            uiState.update { it.copy(activationMessage = message) }
         }
-
-        val eps = (profile as? ProfileSealed.EPS)?.value
-        val profileName = eps?.originalProfileName ?: return
-        val percentage = eps.originalPercentage
-        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
-        val durationMs = eps.originalDuration
-
-        val details = mutableListOf<String>()
-        details.add(profileName)
-        if (percentage != 100) details.add(rh.gs(CoreUiR.string.format_percent, percentage))
-        if (timeshiftHours != 0) details.add(rh.gs(CoreUiR.string.format_hours, timeshiftHours.toDouble()))
-        if (durationMs > 0) {
-            val remaining = ((durationMs - (dateUtil.now() - eps.timestamp)) / 60_000L).coerceAtLeast(0)
-            if (remaining > 0)
-                details.add(rh.gs(R.string.activate_insulin_remaining, remaining.toInt()))
-        }
-
-        val message = rh.gs(R.string.activate_insulin_new_insulin, iCfg.insulinLabel) +
-            "\n\n" + rh.gs(R.string.activate_insulin_profile_switch, details.joinToString(", "))
-
-        uiState.update { it.copy(activationMessage = message) }
     }
 
     fun dismissActivation() {
@@ -287,35 +285,15 @@ class InsulinManagementViewModel @Inject constructor(
 
     fun executeActivation() {
         uiState.update { it.copy(activationMessage = null) }
-        val state = uiState.value
-        val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return
-        profileFunction.createProfileSwitchWithNewInsulin(iCfg, Sources.Insulin)
-        refreshData()
+        viewModelScope.launch {
+            val state = uiState.value
+            val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return@launch
+            profileFunction.createProfileSwitchWithNewInsulin(iCfg, Sources.Insulin)
+            refreshData()
+        }
     }
 
     // Helpers
-
-    fun hasUnsavedChanges(): Boolean {
-        val state = uiState.value
-        val stored = state.insulins.getOrNull(state.currentCardIndex) ?: return state.editorName.isNotEmpty()
-        return state.editorName != stored.insulinLabel ||
-            state.editorPeakMinutes != stored.peak ||
-            state.editorDiaHours != stored.dia ||
-            state.editorConcentration.value != stored.concentration
-    }
-
-    fun isActiveInsulin(): Boolean {
-        val state = uiState.value
-        val current = state.insulins.getOrNull(state.currentCardIndex) ?: return false
-        return current.insulinLabel == state.activeInsulinLabel
-    }
-
-    fun canDelete(): Boolean {
-        val state = uiState.value
-        if (state.insulins.size <= 1) return false
-        val current = state.insulins.getOrNull(state.currentCardIndex) ?: return false
-        return current.insulinLabel != state.activeInsulinLabel
-    }
 
     /** Build an ICfg from current editor state */
     fun buildEditorICfg(): ICfg {
@@ -344,6 +322,7 @@ class InsulinManagementViewModel @Inject constructor(
     fun concentrationList(): List<ConcentrationType> = insulinManager.concentrationList()
     val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
+
     fun diaRange(): ClosedFloatingPointRange<Double> = hardLimits.minDia()..hardLimits.maxDia()
     fun peakRange(): ClosedFloatingPointRange<Double> = hardLimits.minPeak().toDouble()..hardLimits.maxPeak().toDouble()
 }

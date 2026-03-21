@@ -32,6 +32,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -275,7 +276,7 @@ class DetermineBasalResult @Inject constructor(
             val now = System.currentTimeMillis()
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
             val pump = activePlugin.activePump
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { profileFunction.getProfile() }
             if (profile == null) {
                 aapsLogger.error("FALSE: No Profile")
                 return false
@@ -309,7 +310,7 @@ class DetermineBasalResult @Inject constructor(
                 val highThreshold = 1 + percentMinChangeChange
                 var change = percent / 100.0
                 if (activeTemp != null) change = percent / activeTemp.convertedToPercent(now, profile).toDouble()
-                if (change < lowThreshold || change > highThreshold) {
+                if (change !in lowThreshold..highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
                     true
                 } else {
@@ -345,7 +346,7 @@ class DetermineBasalResult @Inject constructor(
                 val highThreshold = 1 + percentMinChangeChange
                 var change = rate / profile.getBasal()
                 if (activeTemp != null) change = rate / activeTemp.convertedToAbsolute(now, profile)
-                if (change < lowThreshold || change > highThreshold) {
+                if (change !in lowThreshold..highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
                     true
                 } else {

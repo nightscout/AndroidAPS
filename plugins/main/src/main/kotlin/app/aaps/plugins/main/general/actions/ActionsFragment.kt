@@ -53,6 +53,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -228,77 +229,79 @@ class ActionsFragment : DaggerFragment() {
 
     @Synchronized
     fun updateGui() {
+        viewLifecycleOwner.lifecycleScope.launch {
 
-        val profile = profileFunction.getProfile()
-        val pump = activePlugin.activePump
+            val profile = profileFunction.getProfile()
+            val pump = activePlugin.activePump
 
-        binding.profileSwitch.visibility = (
-            localProfileManager.profile != null &&
-                pump.pumpDescription.isSetBasalProfileCapable &&
-                pump.isInitialized() &&
-                loop.runningMode != RM.Mode.DISCONNECTED_PUMP &&
-                !pump.isSuspended()).toVisibility()
+            binding.profileSwitch.visibility = (
+                localProfileManager.profile != null &&
+                    pump.pumpDescription.isSetBasalProfileCapable &&
+                    pump.isInitialized() &&
+                    loop.runningMode != RM.Mode.DISCONNECTED_PUMP &&
+                    !pump.isSuspended()).toVisibility()
 
-        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || loop.runningMode == RM.Mode.DISCONNECTED_PUMP || pump.isFakingTempsByExtendedBoluses || config.AAPSCLIENT) {
-            binding.extendedBolus.visibility = View.GONE
-            binding.extendedBolusCancel.visibility = View.GONE
-        } else {
-            val activeExtendedBolus = runBlocking { persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) }
-            if (activeExtendedBolus != null) {
+            if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || loop.runningMode == RM.Mode.DISCONNECTED_PUMP || pump.isFakingTempsByExtendedBoluses || config.AAPSCLIENT) {
                 binding.extendedBolus.visibility = View.GONE
-                binding.extendedBolusCancel.visibility = View.VISIBLE
-                @Suppress("SetTextI18n")
-                binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.toStringMedium(dateUtil, rh)
-            } else {
-                binding.extendedBolus.visibility = View.VISIBLE
                 binding.extendedBolusCancel.visibility = View.GONE
+            } else {
+                val activeExtendedBolus = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
+                if (activeExtendedBolus != null) {
+                    binding.extendedBolus.visibility = View.GONE
+                    binding.extendedBolusCancel.visibility = View.VISIBLE
+                    @Suppress("SetTextI18n")
+                    binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.toStringMedium(dateUtil, rh)
+                } else {
+                    binding.extendedBolus.visibility = View.VISIBLE
+                    binding.extendedBolusCancel.visibility = View.GONE
+                }
             }
-        }
 
-        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || loop.runningMode == RM.Mode.DISCONNECTED_PUMP || config.AAPSCLIENT) {
-            binding.setTempBasal.visibility = View.GONE
-            binding.cancelTempBasal.visibility = View.GONE
-        } else {
-            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
-            if (activeTemp != null) {
+            if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || loop.runningMode == RM.Mode.DISCONNECTED_PUMP || config.AAPSCLIENT) {
                 binding.setTempBasal.visibility = View.GONE
-                binding.cancelTempBasal.visibility = View.VISIBLE
-                @Suppress("SetTextI18n")
-                binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(rh)
-            } else {
-                binding.setTempBasal.visibility = View.VISIBLE
                 binding.cancelTempBasal.visibility = View.GONE
-            }
-        }
-        val activeBgSource = activePlugin.activeBgSource
-        binding.historyBrowser.visibility = (profile != null).toVisibility()
-        binding.fill.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized()).toVisibility()
-        binding.pumpBatteryChange.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
-        binding.tempTarget.visibility = (profile != null && loop.runningMode.isLoopRunning()).toVisibility()
-        binding.tddStats.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-        val isPatchPump = pump.pumpDescription.isPatchPump
-        binding.status.apply {
-            cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-            val imageResource = if (isPatchPump) app.aaps.core.objects.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
-            cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
-            batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
-
-            if (!config.AAPSCLIENT) {
-                statusLightHandler.updateStatusLights(
-                    cannulaAge, cannulaUsage, insulinAge,
-                    reservoirLevel, sensorAge, sensorLevel,
-                    pbAge, pbLevel
-                )
-                sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.level_label)
             } else {
-                statusLightHandler.updateStatusLights(cannulaAge, cannulaUsage, insulinAge, null, sensorAge, null, pbAge, null)
-                sensorLevelLabel.text = ""
-                insulinLevelLabel.text = ""
-                pbLevelLabel.text = ""
+                val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+                if (activeTemp != null) {
+                    binding.setTempBasal.visibility = View.GONE
+                    binding.cancelTempBasal.visibility = View.VISIBLE
+                    @Suppress("SetTextI18n")
+                    binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(rh)
+                } else {
+                    binding.setTempBasal.visibility = View.VISIBLE
+                    binding.cancelTempBasal.visibility = View.GONE
+                }
             }
-        }
-        checkPumpCustomActions()
+            val activeBgSource = activePlugin.activeBgSource
+            binding.historyBrowser.visibility = (profile != null).toVisibility()
+            binding.fill.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized()).toVisibility()
+            binding.pumpBatteryChange.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
+            binding.tempTarget.visibility = (profile != null && loop.runningMode.isLoopRunning()).toVisibility()
+            binding.tddStats.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+            val isPatchPump = pump.pumpDescription.isPatchPump
+            binding.status.apply {
+                cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
+                val imageResource = if (isPatchPump) app.aaps.core.objects.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+                cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
+                batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
 
+                if (!config.AAPSCLIENT) {
+                    statusLightHandler.updateStatusLights(
+                        cannulaAge, cannulaUsage, insulinAge,
+                        reservoirLevel, sensorAge, sensorLevel,
+                        pbAge, pbLevel
+                    )
+                    sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.level_label)
+                } else {
+                    statusLightHandler.updateStatusLights(cannulaAge, cannulaUsage, insulinAge, null, sensorAge, null, pbAge, null)
+                    sensorLevelLabel.text = ""
+                    insulinLevelLabel.text = ""
+                    pbLevelLabel.text = ""
+                }
+            }
+            checkPumpCustomActions()
+
+        }
     }
 
     private fun checkPumpCustomActions() {

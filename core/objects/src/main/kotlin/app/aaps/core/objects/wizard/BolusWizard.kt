@@ -47,7 +47,6 @@ import app.aaps.core.objects.extensions.highValueToUnitsToString
 import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.utils.JsonHelper
-import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.LinkedList
 import javax.inject.Inject
@@ -149,7 +148,7 @@ class BolusWizard @Inject constructor(
     var usePercentage: Boolean = false
     var positiveIOBOnly: Boolean = false
 
-    fun doCalc(
+    suspend fun doCalc(
         profile: Profile,
         profileName: String,
         tempTarget: TT?,
@@ -392,7 +391,7 @@ class BolusWizard @Inject constructor(
         return actions.joinToString("<br/>")
     }
 
-    fun confirmAndExecute(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
+    suspend fun confirmAndExecute(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             if (accepted) {
                 aapsLogger.debug(LTag.UI, "guarding: already accepted")
@@ -479,7 +478,7 @@ class BolusWizard @Inject constructor(
 
     @SuppressLint("CheckResult")
     private fun commonProcessing(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
-        val profile = profileFunction.getProfile() ?: return
+        val profile = kotlinx.coroutines.runBlocking { profileFunction.getProfile() } ?: return
         val pump = activePlugin.activePump
         val now = dateUtil.now()
 
@@ -554,7 +553,7 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     }
-                    bolusCalculatorResult?.let { runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
+                    bolusCalculatorResult?.let { kotlinx.coroutines.runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
                 }
             }
             if (quickWizardEntry != null) {
@@ -697,7 +696,7 @@ class BolusWizard @Inject constructor(
      * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
      * No UI dependency — errors reported via [onError] callback.
      */
-    fun executeNormal(onError: (String) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
+    suspend fun executeNormal(onError: (String) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
@@ -780,7 +779,7 @@ class BolusWizard @Inject constructor(
                         }
                     })
                 }
-                bolusCalculatorResult?.let { runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
+                bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
             }
         }
         if (quickWizardEntry != null) {

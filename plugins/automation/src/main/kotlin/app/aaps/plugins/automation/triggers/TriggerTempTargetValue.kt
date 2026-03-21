@@ -11,7 +11,6 @@ import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.util.Optional
 import kotlin.math.roundToInt
@@ -46,8 +45,8 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
-        val tt = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
+    override suspend fun shouldRun(): Boolean {
+        val tt = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tt == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

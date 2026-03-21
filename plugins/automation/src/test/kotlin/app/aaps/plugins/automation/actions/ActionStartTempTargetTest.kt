@@ -45,7 +45,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_temptarget_high_24dp)
     }
 
-    @Test fun doActionTest() {
+    @Test fun doActionTest() = runTest {
 
         val expectedTarget = TT(
             id = 0,
@@ -69,26 +69,22 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         val updated = mutableListOf<TT>().apply {
         }
 
-        runTest {
-            whenever(
-                persistenceLayer.insertAndCancelCurrentTemporaryTarget(argThat {
-                    copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
-                        .contentEqualsTo(expectedTarget)
-                }, anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
-            ).thenReturn(PersistenceLayer.TransactionResult<TT>().apply {
-                inserted.addAll(inserted)
-                updated.addAll(updated)
-            })
-        }
+        whenever(
+            persistenceLayer.insertAndCancelCurrentTemporaryTarget(argThat {
+                copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
+                    .contentEqualsTo(expectedTarget)
+            }, anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+        ).thenReturn(PersistenceLayer.TransactionResult<TT>().apply {
+            inserted.addAll(inserted)
+            updated.addAll(updated)
+        })
 
         sut.doAction(object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()
             }
         })
-        runTest {
-            verify(persistenceLayer, times(1)).insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
-        }
+        verify(persistenceLayer, times(1)).insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 
     @Test fun hasDialogTest() {

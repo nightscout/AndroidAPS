@@ -18,6 +18,7 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromJsonObject
 import app.aaps.core.objects.extensions.toJsonObject
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -46,7 +47,7 @@ class InsulinImpl @Inject constructor(
 
     override val iCfg: ICfg
         get() {
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { profileFunction.getProfile() }
             return profile?.iCfg ?: insulins[0]
         }
 

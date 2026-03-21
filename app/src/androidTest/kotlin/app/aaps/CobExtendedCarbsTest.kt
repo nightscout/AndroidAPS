@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EPS
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -34,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.json.JSONObject
@@ -156,7 +157,7 @@ class CobExtendedCarbsTest @Inject constructor() {
         assertThat(epsList).isNotEmpty()
 
         // Also wait until profile is available
-        assertThat(rxHelper.waitUntil("profile available") { profileFunction.getProfile() != null }).isTrue()
+        assertThat(rxHelper.waitUntil("profile available") { runBlocking { profileFunction.getProfile() } != null }).isTrue()
     }
 
     private suspend fun insertBgData(now: Long, durationMinutes: Int, bgValueProvider: (minutesAgo: Int) -> Double, trendArrow: TrendArrow = TrendArrow.FLAT) {
@@ -212,7 +213,7 @@ class CobExtendedCarbsTest @Inject constructor() {
 
         // Wait for autosens calculation triggered by BG insertion
         assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "initial calc").first).isTrue()
-        Thread.sleep(2000)
+        delay(2000)
     }
 
     /**
@@ -259,7 +260,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     /** Assert COB never exceeds totalCarbs across all data sources */
-    private fun assertCobBounded(totalCarbs: Double) {
+    private suspend fun assertCobBounded(totalCarbs: Double) {
         val timeline = collectCobTimeline()
         logCobTimeline(timeline)
 
@@ -292,7 +293,7 @@ class CobExtendedCarbsTest @Inject constructor() {
     }
 
     /** Assert current COB is zero (carbs fully absorbed) */
-    private fun assertCobReachedZero() {
+    private suspend fun assertCobReachedZero() {
         val cobInfo = iobCobCalculator.getCobInfo("test")
         val currentCob = cobInfo.displayCob ?: 0.0
         aapsLogger.info(LTag.CORE, "Current COB (expecting zero): $currentCob")

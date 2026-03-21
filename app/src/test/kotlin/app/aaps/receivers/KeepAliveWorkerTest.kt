@@ -92,7 +92,6 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(commandQueue).readStatus(anyOrNull(), anyOrNull())
-        Unit
     }
 
     @Test
@@ -150,6 +149,5 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(persistenceLayer, never()).cleanupDatabase(any(), any())
-        Unit
     }
 }

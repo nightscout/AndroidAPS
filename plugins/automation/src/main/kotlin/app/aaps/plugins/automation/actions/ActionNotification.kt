@@ -38,7 +38,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = rh.gs(R.string.notification_message, text.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_notifications
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         notificationManager.post(NotificationId.AUTOMATION_MESSAGE, text.value)
         appScope.launch {
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(

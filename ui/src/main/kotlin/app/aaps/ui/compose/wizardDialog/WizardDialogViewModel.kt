@@ -3,6 +3,7 @@ package app.aaps.ui.compose.wizardDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -33,6 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
@@ -89,7 +91,7 @@ class WizardDialogViewModel @Inject constructor(
             val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
 
             // Build profile names list: "Active" + profile store names
-            val profileList = mutableListOf<String>(rh.gs(app.aaps.core.ui.R.string.active))
+            val profileList = mutableListOf(rh.gs(app.aaps.core.ui.R.string.active))
             profileList.addAll(profileStore.getProfileList().map { it.toString() })
 
             // Load saved preferences
@@ -115,8 +117,8 @@ class WizardDialogViewModel @Inject constructor(
             val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
 
             // IOB for display
-            val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-            val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+            val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+            val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
             val totalIOB = bolusIob.iob + basalIob.basaliob
 
             uiState.update {
@@ -296,6 +298,10 @@ class WizardDialogViewModel @Inject constructor(
     // --- Calculation ---
 
     private fun recalculate() {
+        viewModelScope.launch { recalculateSuspend() }
+    }
+
+    private suspend fun recalculateSuspend() {
         val state = uiState.value
         val profileStore = localProfileManager.profile ?: return
 
@@ -313,7 +319,7 @@ class WizardDialogViewModel @Inject constructor(
 
         if (specificProfile == null) return
 
-        val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         // BG input: only pass if BG toggle is checked
         val bgInput = if (state.useBg) state.bg else 0.0
@@ -438,14 +444,16 @@ class WizardDialogViewModel @Inject constructor(
 
     fun executeNormal() {
         val state = uiState.value
-        wizard?.executeNormal(
-            onError = { comment ->
-                sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
-            },
-            eCarbsGrams = state.eCarbs,
-            eCarbsDelayMinutes = state.eCarbsDelayMinutes,
-            eCarbsDurationHours = state.eCarbsDurationHours
-        )
+        viewModelScope.launch {
+            wizard?.executeNormal(
+                onError = { comment ->
+                    sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
+                },
+                eCarbsGrams = state.eCarbs,
+                eCarbsDelayMinutes = state.eCarbsDelayMinutes,
+                eCarbsDurationHours = state.eCarbsDurationHours
+            )
+        }
     }
 
     fun executeBolusAdvisor() {

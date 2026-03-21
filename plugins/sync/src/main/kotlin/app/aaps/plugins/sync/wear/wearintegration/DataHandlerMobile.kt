@@ -84,7 +84,6 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.sync.R
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -106,7 +105,7 @@ import kotlin.math.min
 
 @Singleton
 class DataHandlerMobile @Inject constructor(
-    private val aapsSchedulers: AapsSchedulers,
+    aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
@@ -186,7 +185,7 @@ class DataHandlerMobile @Inject constructor(
                                EventMobileToWear(
                                    EventData.ConfirmAction(
                                        rh.gs(R.string.pump_status).uppercase(),
-                                       pumpStatusProvider.shortStatus(false),
+                                       runBlocking { pumpStatusProvider.shortStatus(false) },
                                        returnCommand = null
                                    )
                                )
@@ -448,7 +447,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun buildLoopStatusData(): LoopStatusData {
         val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         val usedAPS = activePlugin.activeAPS
 
         // Get data based on app type
@@ -675,8 +674,8 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         val percentage = command.percentage
-        val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
+        val profile = runBlocking { profileFunction.getProfile() }
+        val profileName = runBlocking { profileFunction.getProfileName() }
         if (profile == null) {
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_active_profile))
             return
@@ -686,7 +685,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg))
             return
         }
-        val cobInfo = iobCobCalculator.getCobInfo("Wizard wear")
+        val cobInfo = runBlocking { iobCobCalculator.getCobInfo("Wizard wear") }
         if (cobInfo.displayCob == null) {
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_cob))
             return
@@ -700,24 +699,26 @@ class DataHandlerMobile @Inject constructor(
         val useTTPref = preferences.get(BooleanKey.WearWizardTt)
         val useTrendPref = preferences.get(BooleanKey.WearWizardTrend)
 
-        val bolusWizard = bolusWizardProvider.get().doCalc(
-            profile = profile,
-            profileName = profileName,
-            tempTarget = tempTarget,
-            carbs = carbsAfterConstraints,
-            cob = cobInfo.displayCob!!,
-            bg = bgReading.valueToUnits(profileFunction.getUnits()),
-            correction = 0.0,
-            percentageCorrection = percentage,
-            useBg = useBgPref,
-            useCob = useCobPref,
-            includeBolusIOB = useIobPref,
-            includeBasalIOB = useIobPref,
-            useSuperBolus = false,
-            useTT = useTTPref,
-            useTrend = useTrendPref,
-            useAlarm = false
-        )
+        val bolusWizard = runBlocking {
+            bolusWizardProvider.get().doCalc(
+                profile = profile,
+                profileName = profileName,
+                tempTarget = tempTarget,
+                carbs = carbsAfterConstraints,
+                cob = cobInfo.displayCob!!,
+                bg = bgReading.valueToUnits(profileFunction.getUnits()),
+                correction = 0.0,
+                percentageCorrection = percentage,
+                useBg = useBgPref,
+                useCob = useCobPref,
+                includeBolusIOB = useIobPref,
+                includeBasalIOB = useIobPref,
+                useSuperBolus = false,
+                useTT = useTTPref,
+                useTrend = useTrendPref,
+                useAlarm = false
+            )
+        }
         val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
         if (abs(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= minStep) {
@@ -760,41 +761,43 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleUserActionPreCheck(command: EventData.ActionUserActionPreCheck) {
-        val pump = activePlugin.activePump
-        val profile = profileFunction.getProfile()
-        if (loop.runningMode.isLoopRunning() && pump.isInitialized() && profile != null) {
-            val events = automation.userEvents()
-            events.find { it.hashCode() == command.id }?.let { event ->
-                if (event.isEnabled && event.canRun()) {
-                    rxBus.send(
-                        EventMobileToWear(
-                            EventData.ConfirmAction(
-                                rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), command.title,
-                                returnCommand = EventData.ActionUserActionConfirmed(command.id, command.title)
+        appScope.launch {
+            val pump = activePlugin.activePump
+            val profile = profileFunction.getProfile()
+            if (loop.runningMode.isLoopRunning() && pump.isInitialized() && profile != null) {
+                val events = automation.userEvents()
+                events.find { it.hashCode() == command.id }?.let { event ->
+                    if (event.isEnabled && event.canRun()) {
+                        rxBus.send(
+                            EventMobileToWear(
+                                EventData.ConfirmAction(
+                                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), command.title,
+                                    returnCommand = EventData.ActionUserActionConfirmed(command.id, command.title)
+                                )
                             )
                         )
-                    )
-                } else {
+                    } else {
+                        sendError(rh.gs(R.string.user_action_not_available, command.title))
+                    }
+                } ?: apply {
                     sendError(rh.gs(R.string.user_action_not_available, command.title))
                 }
-            } ?: apply {
-                sendError(rh.gs(R.string.user_action_not_available, command.title))
+            } else {
+                sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             }
-        } else {
-            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
         }
     }
 
     private fun handleUserActionConfirmed(command: EventData.ActionUserActionConfirmed) {
-        val pump = activePlugin.activePump
-        val profile = profileFunction.getProfile()
-        if (loop.runningMode.isLoopRunning() && pump.isInitialized() && profile != null) {
-            val events = automation.userEvents()
-            events.find { it.hashCode() == command.id }?.let { event ->
-                if (event.isEnabled && event.canRun()) {
-                    disposable += Completable.fromAction { automation.processEvent(event) }
-                        .subscribeOn(aapsSchedulers.io)
-                        .subscribe()
+        appScope.launch {
+            val pump = activePlugin.activePump
+            val profile = profileFunction.getProfile()
+            if (loop.runningMode.isLoopRunning() && pump.isInitialized() && profile != null) {
+                val events = automation.userEvents()
+                events.find { it.hashCode() == command.id }?.let { event ->
+                    if (event.isEnabled && event.canRun()) {
+                        automation.processEvent(event)
+                    }
                 }
             }
         }
@@ -802,8 +805,8 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleQuickWizardPreCheck(command: EventData.ActionQuickWizardPreCheck) {
         val actualBg = iobCobCalculator.ads.actualBg()
-        val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
+        val profile = runBlocking { profileFunction.getProfile() }
+        val profileName = runBlocking { profileFunction.getProfileName() }
         val quickWizardEntry = quickWizard.get(command.guid)
         if (quickWizardEntry == null) {
             sendError(rh.gs(R.string.quick_wizard_not_available))
@@ -817,7 +820,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_active_profile))
             return
         }
-        val cobInfo = iobCobCalculator.getCobInfo("QuickWizard wear")
+        val cobInfo = runBlocking { iobCobCalculator.getCobInfo("QuickWizard wear") }
         if (cobInfo.displayCob == null) {
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_cob))
             return
@@ -828,7 +831,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
 
-        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
+        val wizard = runBlocking { quickWizardEntry.doCalc(profile, profileName, actualBg) }
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != quickWizardEntry.carbs()) {
@@ -997,7 +1000,7 @@ class DataHandlerMobile @Inject constructor(
         if (command.duration < 0 || command.duration > Constants.MAX_PROFILE_SWITCH_DURATION) {
             sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Duration"))
         }
-        val profileName = profileFunction.getOriginalProfileName()
+        val profileName = runBlocking { profileFunction.getOriginalProfileName() }
         val message = rh.gs(R.string.profile_message, profileName, command.timeShift, command.percentage, command.duration)
         rxBus.send(
             EventMobileToWear(
@@ -1143,7 +1146,7 @@ class DataHandlerMobile @Inject constructor(
         val pump = activePlugin.activePump
         val pumpDescription = pump.pumpDescription
         if (loop.runningMode.isSuspended()) return
-        if (!profileFunction.isProfileValid("WearDataHandler_LoopChangeState")) return
+        if (!runBlocking { profileFunction.isProfileValid("WearDataHandler_LoopChangeState") }) return
 
         val disconnectDurs = arrayListOf<Int>()
         if (pumpDescription.tempDurationStep15mAllowed) disconnectDurs.add(15)
@@ -1201,7 +1204,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleLoopStateConfirmed(action: EventData.LoopStateConfirmed) {
-        val profile = profileFunction.getProfile() ?: return sendError(rh.gs(R.string.no_active_profile))
+        val profile = runBlocking { profileFunction.getProfile() } ?: return sendError(rh.gs(R.string.no_active_profile))
         if (action.timeStamp != lastAuthorizedLoopStateChangeTS) return sendError(rh.gs(R.string.wear_action_loop_state_unauthorized))
         lastAuthorizedLoopStateChangeTS = null
         val newState = lastLoopStates?.elementAtOrNull(action.index) ?: return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
@@ -1314,15 +1317,21 @@ class DataHandlerMobile @Inject constructor(
         )
 
     fun sendUserActions() {
-        val now = System.currentTimeMillis()
-        val events = automation.userEvents()
-        rxBus.send(
-            EventMobileToWear(
-                EventData.UserAction(
-                    ArrayList(events.filter { it.isEnabled && it.canRun() }.map { it.toWear(now) })
+        appScope.launch {
+            val now = System.currentTimeMillis()
+            val events = automation.userEvents()
+            val filtered = mutableListOf<AutomationEvent>()
+            for (event in events) {
+                if (event.isEnabled && event.canRun()) filtered.add(event)
+            }
+            rxBus.send(
+                EventMobileToWear(
+                    EventData.UserAction(
+                        ArrayList(filtered.map { it.toWear(now) })
+                    )
                 )
             )
-        )
+        }
     }
 
     private fun sendTreatments() {
@@ -1332,7 +1341,7 @@ class DataHandlerMobile @Inject constructor(
         val temps = arrayListOf<EventData.TreatmentData.TempBasal>()
         val boluses = arrayListOf<EventData.TreatmentData.Treatment>()
         val predictions = arrayListOf<EventData.SingleBg>()
-        val profile = profileFunction.getProfile() ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
         var beginBasalSegmentTime = startTimeWindow
         var runningTime = startTimeWindow
         var beginBasalValue = profile.getBasal(beginBasalSegmentTime)
@@ -1343,14 +1352,14 @@ class DataHandlerMobile @Inject constructor(
         var tbAmount = beginBasalValue
         var tbStart = runningTime
         if (tb1 != null) {
-            val profileTB = profileFunction.getProfile(runningTime)
+            val profileTB = runBlocking { profileFunction.getProfile(runningTime) }
             if (profileTB != null) {
                 tbAmount = tb1.convertedToAbsolute(runningTime, profileTB)
                 tbStart = runningTime
             }
         }
         while (runningTime < now) {
-            val profileTB = profileFunction.getProfile(runningTime) ?: return
+            val profileTB = runBlocking { profileFunction.getProfile(runningTime) } ?: return
             //basal rate
             endBasalValue = profile.getBasal(runningTime)
             if (endBasalValue != beginBasalValue) {
@@ -1407,7 +1416,7 @@ class DataHandlerMobile @Inject constructor(
                 temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, now - 60 * 1000, endBasalValue, tbAmount))
             } else {
                 //express currently running temp by painting it a bit into the future
-                val profileNow = profileFunction.getProfile(now)
+                val profileNow = runBlocking { profileFunction.getProfile(now) }
                 val currentAmount = tb2.convertedToAbsolute(now, profileNow!!)
                 if (currentAmount != tbAmount) {
                     temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, now, tbAmount, tbAmount))
@@ -1420,7 +1429,7 @@ class DataHandlerMobile @Inject constructor(
             tb2 = processedTbrEbData.getTempBasalIncludingConvertedExtended(now) //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
-                val profileTB = profileFunction.getProfile(runningTime)
+                val profileTB = runBlocking { profileFunction.getProfile(runningTime) }
                 val currentAmount = tb2.convertedToAbsolute(runningTime, profileTB!!)
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
@@ -1473,7 +1482,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun sendStatus(caller: String) {
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         var status = rh.gs(app.aaps.core.ui.R.string.noprofile)
         var iobSum = ""
         var iobDetail = ""
@@ -1481,11 +1490,11 @@ class DataHandlerMobile @Inject constructor(
         var currentBasal = ""
         var bgiString = ""
         if (config.appInitialized && profile != null) {
-            val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-            val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+            val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+            val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
             iobSum = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${decimalFormatter.to2Decimal(bolusIob.iob)}|${decimalFormatter.to2Decimal(basalIob.basaliob)})"
-            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
+            cobString = runBlocking { iobCobCalculator.getCobInfo("WatcherUpdaterService") }.generateCOBString(decimalFormatter)
             currentBasal =
                 processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
@@ -1512,7 +1521,7 @@ class DataHandlerMobile @Inject constructor(
         val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }?.let { tempTarget ->
             tempTargetLevel = 2     // Yellow
             profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units)
-        } ?: profileFunction.getProfile()?.let { profile ->
+        } ?: runBlocking { profileFunction.getProfile() }?.let { profile ->
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed =
                 if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
@@ -1619,7 +1628,7 @@ class DataHandlerMobile @Inject constructor(
             if (!config.APS) {
                 return rh.gs(R.string.target_only_aps_mode)
             }
-            val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
+            val profile = runBlocking { profileFunction.getProfile() } ?: return rh.gs(R.string.no_profile)
             //Check for Temp-Target:
             val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
             if (tempTarget != null) {
@@ -1712,7 +1721,7 @@ class DataHandlerMobile @Inject constructor(
         get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
     private fun generateTDDMessage(historyList: MutableList<TDD>, dummies: List<TDD>): String {
-        val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
+        val profile = runBlocking { profileFunction.getProfile() } ?: return rh.gs(R.string.no_profile)
         if (historyList.isEmpty()) {
             return rh.gs(R.string.no_history)
         }
@@ -1831,7 +1840,7 @@ class DataHandlerMobile @Inject constructor(
             bolusCalculatorResult?.let { runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
             lastQuickWizardEntry?.let { lastQuickWizardEntry ->
                 if (lastQuickWizardEntry.useSuperBolus() == QuickWizardEntry.YES) {
-                    val profile = profileFunction.getProfile() ?: return
+                    val profile = runBlocking { profileFunction.getProfile() } ?: return
                     loop.handleRunningModeChange(
                         newRM = RM.Mode.SUPER_BOLUS,
                         action = Action.SUPERBOLUS_TBR,
@@ -1882,20 +1891,22 @@ class DataHandlerMobile @Inject constructor(
             return
         if (command.duration < 0 || command.duration > Constants.MAX_PROFILE_SWITCH_DURATION)
             return
-        profileFunction.getProfile() ?: return
+        runBlocking { profileFunction.getProfile() } ?: return
         //send profile to pump
-        profileFunction.createProfileSwitch(
-            durationInMinutes = command.duration,
-            percentage = command.percentage,
-            timeShiftInHours = command.timeShift,
-            action = Action.PROFILE_SWITCH,
-            source = Sources.Wear,
-            listValues = listOfNotNull(
-                ValueWithUnit.Percent(command.percentage),
-                ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 },
-                ValueWithUnit.Minute(command.duration)
+        runBlocking {
+            profileFunction.createProfileSwitch(
+                durationInMinutes = command.duration,
+                percentage = command.percentage,
+                timeShiftInHours = command.timeShift,
+                action = Action.PROFILE_SWITCH,
+                source = Sources.Wear,
+                listValues = listOfNotNull(
+                    ValueWithUnit.Percent(command.percentage),
+                    ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 },
+                    ValueWithUnit.Minute(command.duration)
+                )
             )
-        )
+        }
     }
 
     @Synchronized private fun sendError(errorMessage: String) {

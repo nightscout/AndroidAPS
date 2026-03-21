@@ -63,6 +63,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import java.util.Vector
 import javax.inject.Inject
 import javax.inject.Provider
@@ -192,21 +193,25 @@ class DanaRPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         detailedBolusInfo.insulin = BolusProgressData.delivered
         detailedBolusInfo.timestamp = System.currentTimeMillis()
-        if (detailedBolusInfo.insulin > 0) pumpSync.syncBolusWithPumpId(
-            detailedBolusInfo.timestamp,
-            PumpInsulin(detailedBolusInfo.insulin),
-            detailedBolusInfo.bolusType,
-            dateUtil.now(),
-            PumpType.DANA_R,
-            serialNumber()
-        )
-        if (detailedBolusInfo.carbs > 0) pumpSync.syncCarbsWithTimestamp(
-            detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
-            detailedBolusInfo.carbs,
-            null,
-            PumpType.DANA_R,
-            serialNumber()
-        )
+        if (detailedBolusInfo.insulin > 0) runBlocking {
+            pumpSync.syncBolusWithPumpId(
+                detailedBolusInfo.timestamp,
+                PumpInsulin(detailedBolusInfo.insulin),
+                detailedBolusInfo.bolusType,
+                dateUtil.now(),
+                PumpType.DANA_R,
+                serialNumber()
+            )
+        }
+        if (detailedBolusInfo.carbs > 0) runBlocking {
+            pumpSync.syncCarbsWithTimestamp(
+                detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
+                detailedBolusInfo.carbs,
+                null,
+                PumpType.DANA_R,
+                serialNumber()
+            )
+        }
         return result
     }
 
@@ -343,12 +348,14 @@ class DanaRPlugin @Inject constructor(
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    dateUtil.now(),
-                    dateUtil.now(),
-                    pumpDescription.pumpType,
-                    serialNumber()
-                )
+                runBlocking {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        dateUtil.now(),
+                        dateUtil.now(),
+                        pumpDescription.pumpType,
+                        serialNumber()
+                    )
+                }
                 result.success(true).enacted(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok)
             } else result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {

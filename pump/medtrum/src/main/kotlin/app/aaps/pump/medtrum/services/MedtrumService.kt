@@ -76,6 +76,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -101,7 +102,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var ch: ConcentrationHelper
-
 
     companion object {
 
@@ -262,7 +262,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun startActivate(): Boolean {
-        val profile = pumpSync.expectedPumpState().profile?.let { medtrumPump.buildMedtrumProfileArray(it) }
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile?.let { medtrumPump.buildMedtrumProfileArray(it) }
         val packet = profile?.let { ActivatePacket(injector, it) }
         return packet?.let { sendPacketAndGetResponse(it) } == true
     }
@@ -410,14 +410,16 @@ class MedtrumService : DaggerService(), BLECommCallback {
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         // Sync the initial bolus
-        val newRecord = pumpSync.addBolusWithTempId(
-            timestamp = detailedBolusInfo.timestamp,
-            amount = PumpInsulin(detailedBolusInfo.insulin),
-            temporaryId = detailedBolusInfo.timestamp,
-            type = detailedBolusInfo.bolusType,
-            pumpType = medtrumPump.pumpType(),
-            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-        )
+        val newRecord = runBlocking {
+            pumpSync.addBolusWithTempId(
+                timestamp = detailedBolusInfo.timestamp,
+                amount = PumpInsulin(detailedBolusInfo.insulin),
+                temporaryId = detailedBolusInfo.timestamp,
+                type = detailedBolusInfo.bolusType,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
         if (newRecord) {
             aapsLogger.debug(
                 LTag.PUMPCOMM,
@@ -431,15 +433,17 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         if (medtrumPump.bolusStopped && BolusProgressData.delivered == 0.0) {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
-            val syncOk = pumpSync.syncBolusWithTempId(
-                timestamp = bolusStart,
-                amount = PumpInsulin(0.0),
-                temporaryId = bolusStart,
-                type = detailedBolusInfo.bolusType,
-                pumpId = bolusStart,
-                pumpType = medtrumPump.pumpType(),
-                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-            )
+            val syncOk = runBlocking {
+                pumpSync.syncBolusWithTempId(
+                    timestamp = bolusStart,
+                    amount = PumpInsulin(0.0),
+                    temporaryId = bolusStart,
+                    type = detailedBolusInfo.bolusType,
+                    pumpId = bolusStart,
+                    pumpType = medtrumPump.pumpType(),
+                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                )
+            }
             aapsLogger.debug(
                 LTag.PUMPCOMM,
                 "set bolus: **SYNC** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${bolusStart}) Bolus: ${0.0}U SyncOK: $syncOk"
@@ -648,12 +652,14 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
         if (alarmState != null && alarmState != AlarmState.NONE) {
             medtrumPump.addAlarm(alarmState)
-            pumpSync.insertAnnouncement(
-                medtrumPump.alarmStateToString(alarmState),
-                null,
-                medtrumPump.pumpType(),
-                medtrumPump.pumpSN.toString(radix = 16)
-            )
+            runBlocking {
+                pumpSync.insertAnnouncement(
+                    medtrumPump.alarmStateToString(alarmState),
+                    null,
+                    medtrumPump.pumpType(),
+                    medtrumPump.pumpSN.toString(radix = 16)
+                )
+            }
         }
 
         // Map the pump state to a notification
@@ -774,12 +780,14 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 R.string.pump_warning, medtrumPump.alarmStateToString(alarmState),
                 level = NotificationLevel.ANNOUNCEMENT,
             )
-            pumpSync.insertAnnouncement(
-                medtrumPump.alarmStateToString(alarmState),
-                null,
-                medtrumPump.pumpType(),
-                medtrumPump.pumpSN.toString(radix = 16)
-            )
+            runBlocking {
+                pumpSync.insertAnnouncement(
+                    medtrumPump.alarmStateToString(alarmState),
+                    null,
+                    medtrumPump.pumpType(),
+                    medtrumPump.pumpSN.toString(radix = 16)
+                )
+            }
         }
     }
 
@@ -792,12 +800,14 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     R.string.alarm_pump_expires_soon,
                     level = NotificationLevel.ANNOUNCEMENT,
                 )
-                pumpSync.insertAnnouncement(
-                    rh.gs(R.string.alarm_pump_expires_soon),
-                    null,
-                    medtrumPump.pumpType(),
-                    medtrumPump.pumpSN.toString(radix = 16)
-                )
+                runBlocking {
+                    pumpSync.insertAnnouncement(
+                        rh.gs(R.string.alarm_pump_expires_soon),
+                        null,
+                        medtrumPump.pumpType(),
+                        medtrumPump.pumpSN.toString(radix = 16)
+                    )
+                }
             }
         }
     }

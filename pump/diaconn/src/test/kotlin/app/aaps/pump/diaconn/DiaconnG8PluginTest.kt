@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
@@ -98,6 +99,9 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
 
     @Test
     fun isInitializedShouldReturnTrueWhenPumpIsConnected() {
+        whenever(preferences.get(DiaconnStringNonKey.Address)).thenReturn("AA:BB:CC:DD:EE:FF")
+        whenever(preferences.get(DiaconnStringNonKey.Name)).thenReturn("TestPump")
+        diaconnG8Plugin.changePump()
         diaconnG8Pump.lastConnection = System.currentTimeMillis()
         diaconnG8Pump.maxBasal = 1.0
         assertThat(diaconnG8Plugin.isInitialized()).isTrue()

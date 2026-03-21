@@ -132,7 +132,7 @@ class CommandQueueImplementation @Inject constructor(
     private fun onProfileChanged() {
         if (config.AAPSCLIENT) return // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged")
-        profileFunction.getRequestedProfile()?.let {
+        runBlocking { profileFunction.getRequestedProfile() }?.let {
             setProfile(ProfileSealed.PS(it, activePlugin), it.ids.nightscoutId != null, object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -680,10 +680,10 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     override fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
-        val runningProfile = profileFunction.getProfile() ?: return false
+        val runningProfile = runBlocking { profileFunction.getProfile() } ?: return false
         val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
         if (!result) {
-            aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
+            aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${runBlocking { profileFunction.getProfile() }}")
             aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")
         }
         return result

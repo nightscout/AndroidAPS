@@ -2,8 +2,6 @@ package app.aaps.plugins.automation
 
 import android.Manifest
 import android.content.Context
-import android.os.Handler
-import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
@@ -92,10 +90,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -145,20 +146,10 @@ class AutomationPlugin @Inject constructor(
     var executionLog: MutableList<String> = ArrayList()
     var btConnects: MutableList<EventBTChange> = ArrayList()
 
-    private var handler: Handler? = null
-    private var refreshLoop: Runnable
-
     companion object {
 
         const val EMPTY_EVENT =
             "{\"title\":\"Low\",\"enabled\":true,\"trigger\":\"{\\\"type\\\":\\\"TriggerConnector\\\",\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"TriggerBg\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"bg\\\\\\\":4,\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\"}}\\\",\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"TriggerDelta\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"value\\\\\\\":-0.1,\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\",\\\\\\\"deltaType\\\\\\\":\\\\\\\"DELTA\\\\\\\",\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\"}}\\\"]}}\",\"actions\":[\"{\\\"type\\\":\\\"ActionStartTempTarget\\\",\\\"data\\\":{\\\"value\\\":8,\\\"units\\\":\\\"mmol\\\",\\\"durationInMinutes\\\":60}}\"]}"
-    }
-
-    init {
-        refreshLoop = Runnable {
-            processActions()
-            handler?.postDelayed(refreshLoop, T.secs(150).msecs())
-        }
     }
 
     override fun specialEnableCondition(): Boolean = !config.AAPSCLIENT
@@ -177,15 +168,21 @@ class AutomationPlugin @Inject constructor(
     )
 
     override fun onStart() {
-        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         locationServiceHelper.startService(context)
 
         super.onStart()
         loadFromSP()
-        handler?.postDelayed(refreshLoop, T.mins(1).msecs())
 
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+
+        newScope.launch {
+            delay(T.mins(1).msecs())
+            while (isActive) {
+                processActions()
+                delay(T.secs(150).msecs())
+            }
+        }
 
         receiverStatusStore.chargingStatusFlow
             .filterNotNull()
@@ -209,7 +206,7 @@ class AutomationPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
-                           processActions()
+                           scope?.launch { processActions() }
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventBTChange::class.java)
@@ -217,7 +214,7 @@ class AutomationPlugin @Inject constructor(
             .subscribe({
                            aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
                            btConnects.add(it)
-                           processActions()
+                           scope?.launch { processActions() }
                        }, fabricPrivacy::logException)
     }
 
@@ -225,9 +222,6 @@ class AutomationPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         disposable.clear()
-        handler?.removeCallbacksAndMessages(null)
-        handler?.looper?.quit()
-        handler = null
         locationServiceHelper.stopService(context)
         super.onStop()
     }
@@ -271,7 +265,7 @@ class AutomationPlugin @Inject constructor(
         if (needsResave) storeToSP()
     }
 
-    internal fun processActions() {
+    internal suspend fun processActions() {
         if (!config.appInitialized) return
         /**
          * Changed to false if some condition prevents automation from running.
@@ -329,7 +323,7 @@ class AutomationPlugin @Inject constructor(
         storeToSP() // save last run time
     }
 
-    override fun processEvent(someEvent: AutomationEvent) {
+    override suspend fun processEvent(someEvent: AutomationEvent) {
         val event = someEvent as AutomationEventObject
         if (event.canRun() && event.preconditionCanRun()) {
             val actions = event.actions

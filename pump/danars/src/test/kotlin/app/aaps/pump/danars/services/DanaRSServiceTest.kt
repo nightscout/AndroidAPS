@@ -15,6 +15,7 @@ import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -234,7 +235,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Test
     fun testUpdateBasalsInPump_notConnected() {
         `when`(bleComm.isConnected).thenReturn(false)
-        `when`(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
 
         val result = danaRSService.updateBasalsInPump(validProfile)
 

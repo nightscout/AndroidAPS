@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -36,15 +37,15 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut = ActionProfileSwitch(injector)
     }
 
-    @Test fun friendlyName() {
+    @Test fun friendlyName() = runTest {
         assertThat(sut.friendlyName()).isEqualTo(R.string.profilename)
     }
 
-    @Test fun shortDescriptionTest() {
+    @Test fun shortDescriptionTest() = runTest {
         assertThat(sut.shortDescription()).isEqualTo("Change profile to ")
     }
 
-    @Test fun doAction() {
+    @Test fun doAction() = runTest {
         //Empty input
         whenever(profileFunction.getProfileName()).thenReturn("Test")
         sut.inputProfileName = InputProfileName(rh, localProfileManager, "")
@@ -97,21 +98,21 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         verify(profileFunction, times(1)).createProfileSwitch(anyOrNull(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any(), any())
     }
 
-    @Test fun hasDialogTest() {
+    @Test fun hasDialogTest() = runTest {
         assertThat(sut.hasDialog()).isTrue()
     }
 
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         sut.inputProfileName = InputProfileName(rh, localProfileManager, "Test")
         JSONAssert.assertEquals(STRING_JSON, sut.toJSON(), true)
     }
 
-    @Test fun fromJSONTest() {
+    @Test fun fromJSONTest() = runTest {
         sut.fromJSON("""{"profileToSwitchTo":"Test"}""")
         assertThat(sut.inputProfileName.value).isEqualTo("Test")
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp)
     }
 }

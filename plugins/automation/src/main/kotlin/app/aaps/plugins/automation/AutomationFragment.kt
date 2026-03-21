@@ -48,6 +48,9 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
@@ -108,7 +111,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         if (actionHelper.onOptionsItemSelected(item)) true
         else when (item.itemId) {
             ID_MENU_RUN -> {
-                Thread { automationPlugin.processActions() }.start()
+                CoroutineScope(Dispatchers.IO).launch { automationPlugin.processActions() }
                 true
             }
 

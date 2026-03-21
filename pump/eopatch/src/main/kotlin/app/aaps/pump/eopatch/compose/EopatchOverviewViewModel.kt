@@ -2,9 +2,9 @@ package app.aaps.pump.eopatch.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
@@ -43,6 +43,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.max
@@ -70,7 +72,6 @@ class EopatchOverviewViewModel @Inject constructor(
     val preferenceManager: PreferenceManager,
     private val profileFunction: ProfileFunction,
     private val aapsSchedulers: AapsSchedulers,
-    private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync
 ) : ViewModel() {
@@ -87,9 +88,6 @@ class EopatchOverviewViewModel @Inject constructor(
     private val _bleConnectionState = MutableStateFlow(patchManagerExecutor.patchConnectionState)
     private val _isNormalBasalPaused = MutableStateFlow(preferenceManager.patchState.isNormalBasalPaused)
     private val _remainedInsulin = MutableStateFlow(preferenceManager.patchState.remainedInsulin)
-
-    val isPatchConnected: Boolean
-        get() = patchManagerExecutor.patchConnectionState.isConnected
 
     val uiState: StateFlow<PumpOverviewUiState> = combine(
         _patchConfig,
@@ -141,21 +139,23 @@ class EopatchOverviewViewModel @Inject constructor(
     }
 
     fun onClickActivation() {
-        val profile = profileFunction.getProfile()
-        if (profile == null) {
-            _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.no_profile_selected))
-            return
-        }
-        val basalValues = profile.getBasalValues()
-        for (basalRate in basalValues) {
-            if (basalRate.value < 0.049999) {
-                _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.invalid_basal_rate))
-                return
+        viewModelScope.launch {
+            val profile = profileFunction.getProfile()
+            if (profile == null) {
+                _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.no_profile_selected))
+                return@launch
             }
+            val basalValues = profile.getBasalValues()
+            for (basalRate in basalValues) {
+                if (basalRate.value < 0.049999) {
+                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.invalid_basal_rate))
+                    return@launch
+                }
+            }
+            normalBasalManager.setNormalBasal(profile)
+            preferenceManager.flushNormalBasalManager()
+            _events.tryEmit(EopatchOverviewEvent.StartPatchWorkflow(PatchStep.WAKE_UP))
         }
-        normalBasalManager.setNormalBasal(profile)
-        preferenceManager.flushNormalBasalManager()
-        _events.tryEmit(EopatchOverviewEvent.StartPatchWorkflow(PatchStep.WAKE_UP))
     }
 
     fun onClickDeactivation() {
@@ -169,16 +169,18 @@ class EopatchOverviewViewModel @Inject constructor(
                 .observeOn(aapsSchedulers.main)
                 .subscribe({ response ->
                                if (response.isSuccess) {
-                                   pumpSync.syncTemporaryBasalWithPumpId(
-                                       timestamp = dateUtil.now(),
-                                       rate = PumpRate(0.0),
-                                       duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
-                                       isAbsolute = true,
-                                       type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                                       pumpId = dateUtil.now(),
-                                       pumpType = PumpType.EOFLOW_EOPATCH2,
-                                       pumpSerial = patchConfigData.patchSerialNumber
-                                   )
+                                   runBlocking {
+                                       pumpSync.syncTemporaryBasalWithPumpId(
+                                           timestamp = dateUtil.now(),
+                                           rate = PumpRate(0.0),
+                                           duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
+                                           isAbsolute = true,
+                                           type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                                           pumpId = dateUtil.now(),
+                                           pumpType = PumpType.EOFLOW_EOPATCH2,
+                                           pumpSerial = patchConfigData.patchSerialNumber
+                                       )
+                                   }
                                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_suspended_insulin_delivery_message))
                                } else {
                                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_pause_failed, isError = true))
@@ -196,12 +198,14 @@ class EopatchOverviewViewModel @Inject constructor(
                 .observeOn(aapsSchedulers.main)
                 .subscribe({
                                if (it.isSuccess) {
-                                   pumpSync.syncStopTemporaryBasalWithPumpId(
-                                       timestamp = dateUtil.now(),
-                                       endPumpId = dateUtil.now(),
-                                       pumpType = PumpType.EOFLOW_EOPATCH2,
-                                       pumpSerial = patchConfigData.patchSerialNumber
-                                   )
+                                   runBlocking {
+                                       pumpSync.syncStopTemporaryBasalWithPumpId(
+                                           timestamp = dateUtil.now(),
+                                           endPumpId = dateUtil.now(),
+                                           pumpType = PumpType.EOFLOW_EOPATCH2,
+                                           pumpSerial = patchConfigData.patchSerialNumber
+                                       )
+                                   }
                                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_resumed_insulin_delivery_message))
                                } else {
                                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_resume_failed, isError = true))

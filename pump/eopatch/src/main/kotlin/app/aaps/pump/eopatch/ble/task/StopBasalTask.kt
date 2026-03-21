@@ -3,7 +3,6 @@ package app.aaps.pump.eopatch.ble.task
 import android.os.SystemClock
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.PumpSync
@@ -19,6 +18,7 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,14 +51,14 @@ class StopBasalTask @Inject constructor(
 
     fun stop(): Single<BasalStopResponse> {
         if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
-            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
+            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", ArrayList())
             commandQueue.cancelAllBoluses(null)
             SystemClock.sleep(650)
         }
         bolusCheckSubject.onNext(true)
 
-        if (pumpSync.expectedPumpState().extendedBolus != null) {
-            uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
+        if (runBlocking { pumpSync.expectedPumpState() }.extendedBolus != null) {
+            uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList())
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     extBolusCheckSubject.onNext(true)
@@ -68,8 +68,8 @@ class StopBasalTask @Inject constructor(
             extBolusCheckSubject.onNext(true)
         }
 
-        if (pumpSync.expectedPumpState().temporaryBasal != null) {
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
+        if (runBlocking { pumpSync.expectedPumpState() }.temporaryBasal != null) {
+            uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList())
             commandQueue.cancelTempBasal(true, callback = object : Callback() {
                 override fun run() {
                     basalCheckSubject.onNext(true)
@@ -79,14 +79,14 @@ class StopBasalTask @Inject constructor(
             basalCheckSubject.onNext(true)
         }
 
-        return Observable.zip<Boolean, Boolean, Boolean, Boolean>(
+        return Observable.zip(
             getBolusSubject(),
             getExtBolusSubject(),
             getBasalSubject(),
             Function3 { bolusReady: Boolean, extBolusReady: Boolean, basalReady: Boolean -> (bolusReady && extBolusReady && basalReady) })
             .filter(Predicate { ready: Boolean -> ready })
-            .flatMap<TaskFunc>(Function { isReady() })
-            .concatMapSingle<BasalStopResponse>(Function { BASAL_STOP.stop() })
+            .flatMap(Function { isReady() })
+            .concatMapSingle(Function { BASAL_STOP.stop() })
             .doOnNext(Consumer { response: BasalStopResponse -> this.checkResponse(response) })
             .doOnNext(Consumer { updateConnectionTask.enqueue() })
             .firstOrError()

@@ -118,7 +118,7 @@ class LocalAlertUtilsImpl @Inject constructor(
 
     override fun reportPumpStatusRead() {
         val pump = activePlugin.activePump
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         if (profile != null) {
             val lastConnection = pump.lastDataTime.value
             val earliestAlarmTime = lastConnection + pumpUnreachableThreshold()

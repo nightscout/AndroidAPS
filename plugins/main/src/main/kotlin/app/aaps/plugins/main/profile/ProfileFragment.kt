@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
@@ -30,7 +31,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.extensions.toVisibility
@@ -41,6 +41,7 @@ import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -122,13 +123,15 @@ class ProfileFragment : DaggerFragment() {
         })
         binding.unlock.setOnClickListener { queryProtection() }
 
-        val profiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
-        val activeProfile = profileFunction.getProfileName()
-        val profileIndex = profiles.indexOf(activeProfile)
-        localProfileManager.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
         val aps = activePlugin.activeAPS
         binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
         binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val profiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
+            val activeProfile = profileFunction.getProfileName()
+            val profileIndex = profiles.indexOf(activeProfile)
+            localProfileManager.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
+        }
     }
 
     fun build() {

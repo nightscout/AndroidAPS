@@ -39,13 +39,12 @@ import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 
 class KeepAliveWorker(
-    private val context: Context,
+    context: Context,
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
@@ -123,7 +122,7 @@ class KeepAliveWorker(
             )
         } else {
             // Sometimes schedule +5min, +10min gets broken
-            // If this happen do nothing
+            // If this happens do nothing
             // It's causing false Pump unreachable alerts
             if (lastRun + T.mins(4).msecs() > dateUtil.now()) return Result.success(workDataOf("Error" to "Schedule broken. Ignoring"))
         }
@@ -148,10 +147,10 @@ class KeepAliveWorker(
 
     // Perform history data cleanup every day
     // Keep 6 months
-    private fun databaseCleanup() {
+    private suspend fun databaseCleanup() {
         val lastRun = preferences.get(LongNonKey.LastCleanupRun)
         if (lastRun < dateUtil.now() - T.days(1).msecs()) {
-            val result = runBlocking { persistenceLayer.cleanupDatabase(6 * 31, deleteTrackedChanges = false) }
+            val result = persistenceLayer.cleanupDatabase(6 * 31, deleteTrackedChanges = false)
             aapsLogger.debug(LTag.CORE, "Cleanup result: $result")
             preferences.put(LongNonKey.LastCleanupRun, dateUtil.now())
         }
@@ -189,7 +188,7 @@ class KeepAliveWorker(
     }
 
     @VisibleForTesting
-    fun checkPump() {
+    suspend fun checkPump() {
         val pump = activePlugin.activePump
         val ps = profileFunction.getRequestedProfile() ?: return
         val requestedProfile = ProfileSealed.PS(ps, activePlugin)

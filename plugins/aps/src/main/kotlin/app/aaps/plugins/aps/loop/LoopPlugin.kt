@@ -59,8 +59,6 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -70,6 +68,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -92,6 +91,7 @@ import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -107,7 +107,6 @@ import android.app.NotificationManager as AndroidNotificationManager
 @Singleton
 class LoopPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val preferences: Preferences,
     private val config: Config,
@@ -167,6 +166,7 @@ class LoopPlugin @Inject constructor(
 
     private var handler: Handler? = null
 
+    @OptIn(FlowPreview::class)
     override fun onStart() {
         createNotificationChannel()
         super.onStart()
@@ -226,7 +226,7 @@ class LoopPlugin @Inject constructor(
         }
 
     override fun allowedNextModes(): List<RM.Mode> {
-        if (profileFunction.isProfileValid("allowedNextModes").not()) return emptyList()
+        if (runBlocking { profileFunction.isProfileValid("allowedNextModes") }.not()) return emptyList()
         val modes = when (runningMode) {
             RM.Mode.DISABLED_LOOP     ->
                 mutableListOf(RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.CLOSED_LOOP_LGS, RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUPER_BOLUS)
@@ -771,7 +771,7 @@ class LoopPlugin @Inject constructor(
     }
 
     override fun acceptChangeRequest() {
-        val profile = profileFunction.getProfile() ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
                 applyTBRRequest(constraintsProcessed, profile, object : Callback() {
@@ -1011,7 +1011,7 @@ class LoopPlugin @Inject constructor(
         class UpdateRunnable : Runnable {
 
             override fun run() {
-                buildAndStoreDeviceStatus(reason)
+                runBlocking { buildAndStoreDeviceStatus(reason) }
                 task = null
             }
         }
@@ -1020,7 +1020,7 @@ class LoopPlugin @Inject constructor(
         task?.let { handler?.postDelayed(it, 5000) }
     }
 
-    fun buildAndStoreDeviceStatus(reason: String) {
+    suspend fun buildAndStoreDeviceStatus(reason: String) {
         aapsLogger.debug(LTag.NSCLIENT, "Building DeviceStatus for $reason")
         val profile = profileFunction.getProfile() ?: return
 
@@ -1053,7 +1053,7 @@ class LoopPlugin @Inject constructor(
                 }
             }
         } ?: {
-            val calcIob = iobCobCalculator.calculateIobArrayInDia(profile)
+            val calcIob = runBlocking { iobCobCalculator.calculateIobArrayInDia(profile) }
             if (calcIob.isNotEmpty()) {
                 iob = calcIob[0].json(dateUtil)
                 iob.put("time", dateUtil.toISOString(dateUtil.now()))

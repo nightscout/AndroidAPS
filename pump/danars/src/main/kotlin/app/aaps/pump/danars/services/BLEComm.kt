@@ -32,6 +32,7 @@ import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -484,7 +485,7 @@ class BLEComm @Inject constructor(
             bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = rh.gs(R.string.pumperror)))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
-            pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
+            runBlocking { pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber) }
             notificationManager.post(NotificationId.PUMP_ERROR, R.string.pumperror)
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {

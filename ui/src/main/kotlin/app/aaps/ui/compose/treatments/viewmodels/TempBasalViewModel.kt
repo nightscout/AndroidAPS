@@ -186,7 +186,7 @@ class TempBasalViewModel @Inject constructor(
     /**
      * Prepare delete confirmation message
      */
-    fun getDeleteConfirmationMessage(): String {
+    suspend fun getDeleteConfirmationMessage(): String {
         val selected = uiState.value.selectedItems
         if (selected.isEmpty()) return ""
 

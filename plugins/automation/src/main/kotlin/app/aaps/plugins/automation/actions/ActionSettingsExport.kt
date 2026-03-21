@@ -54,7 +54,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
 
     override fun isValid(): Boolean = true
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
 
         // Feedback on result
         var exportResultMessage: String

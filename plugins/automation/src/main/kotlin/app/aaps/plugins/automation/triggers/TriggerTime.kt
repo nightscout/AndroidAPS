@@ -30,7 +30,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val now = dateUtil.now()
         if (now >= time.value && now - time.value < T.mins(5).msecs()) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

@@ -65,7 +65,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val profile = profileFunction.getProfile()
+        val profile = runBlocking { profileFunction.getProfile() }
         if (profile == null) {
             aapsLogger.debug(LTag.AUTOSENS, "No profile available")
             return AutosensResult()

@@ -11,7 +11,6 @@ import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.Optional
@@ -24,7 +23,7 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
         value = Comparator.Compare.IS_EQUAL_OR_GREATER
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.info(LTag.AUTOMATION, "Steps count ready, no limit set ${friendlyDescription()}")
             return true
@@ -33,7 +32,7 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
         // Steps count entries update every 1-1.5 minutes on my watch,
         // so we must get some entries from the last 5 minutes.
         val start = dateUtil.now() - 5 * 60 * 1000L
-        val measurements = runBlocking { persistenceLayer.getStepsCountFromTime(start) }
+        val measurements = persistenceLayer.getStepsCountFromTime(start)
         val lastSC = measurements.lastOrNull { it.duration == measurementDuration.value.toInt() * 60 * 1000L }
         if (lastSC == null) {
             aapsLogger.info(LTag.AUTOMATION, "No steps count measurements available - ${friendlyDescription()}")

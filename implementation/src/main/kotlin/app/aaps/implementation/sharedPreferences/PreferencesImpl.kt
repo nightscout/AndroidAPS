@@ -418,9 +418,9 @@ class PreferencesImpl @Inject constructor(
     private fun calculatePreference(key: DoublePreferenceKey): Double =
         limit(
             key, when (key) {
-                DoubleKey.ApsMaxBasal  -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
-                DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
-                DoubleKey.ApsAmaMaxIob -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+                DoubleKey.ApsMaxBasal  -> runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+                DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
+                DoubleKey.ApsAmaMaxIob -> runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
                 else                   -> error("Unsupported key calculation")
             })
 

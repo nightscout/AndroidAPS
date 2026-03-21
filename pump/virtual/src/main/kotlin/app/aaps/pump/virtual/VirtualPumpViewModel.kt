@@ -63,8 +63,8 @@ class VirtualPumpViewModel(
     ) { values ->
         val isSuspended = values[0] as Boolean
         val pumpType = values[1] as PumpType?
-        @Suppress("UNUSED_VARIABLE") val battery = values[2] as Int
-        @Suppress("UNUSED_VARIABLE") val reservoir = values[3] as Int
+        // @Suppress("UNUSED_VARIABLE") val battery = values[2] as Int
+        // @Suppress("UNUSED_VARIABLE") val reservoir = values[3] as Int
         // values[4] = dbChanged (Unit), values[5] = ticker (Unit)
         buildUiState(isSuspended, pumpType)
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildInitialState())
@@ -80,7 +80,7 @@ class VirtualPumpViewModel(
 
     private fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
         virtualPumpPlugin.refreshConfiguration()
-        val profile = pumpSync.expectedPumpState().profile
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
         val now = dateUtil.now()
 
         val tempBasalText = profile?.let {

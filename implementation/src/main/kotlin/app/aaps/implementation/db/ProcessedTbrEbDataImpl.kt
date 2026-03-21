@@ -20,7 +20,7 @@ class ProcessedTbrEbDataImpl @Inject constructor(
     private fun getConvertedExtended(timestamp: Long): TB? {
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             val eb = runBlocking { persistenceLayer.getExtendedBolusActiveAt(timestamp) }
-            val profile = profileFunction.getProfile(timestamp) ?: return null
+            val profile = runBlocking { profileFunction.getProfile(timestamp) } ?: return null
             return eb?.toTemporaryBasal(profile)
         }
         return null

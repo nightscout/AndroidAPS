@@ -62,7 +62,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
 
     fun size(): Int = list.size
 
-    @Synchronized override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         var result = true
         // check first trigger
         if (list.isNotEmpty()) result = list[0].shouldRun()

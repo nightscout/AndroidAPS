@@ -150,7 +150,7 @@ class TddCalculatorImpl @Inject constructor(
             }
         runBlocking { persistenceLayer.getCarbsFromTimeToTimeExpanded(startTime, endTime, true) }.forEach { t ->
             tdd.carbs += t.amount
-            val profile = profileFunction.getProfile(t.timestamp)
+            val profile = runBlocking { profileFunction.getProfile(t.timestamp) }
             if (profile != null) {
                 val ic = profile.getIc(t.timestamp)
                 if (ic > 0) tdd.carbInsulin += t.amount / ic
@@ -159,7 +159,7 @@ class TddCalculatorImpl @Inject constructor(
         val calculationStep = T.mins(5).msecs()
         for (t in startTimeAligned until endTimeAligned step calculationStep) {
 
-            val profile = profileFunction.getProfile(t) ?: if (allowMissingData) continue else return null
+            val profile = runBlocking { profileFunction.getProfile(t) } ?: if (allowMissingData) continue else return null
             val tbr = iobCobCalculator.getBasalData(profile, t)
             if (tbr.isTempBasalRunning) tbrFound = true
             val absoluteRate = tbr.tempBasalAbsolute

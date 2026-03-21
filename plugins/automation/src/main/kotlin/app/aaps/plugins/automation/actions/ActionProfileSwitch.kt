@@ -35,7 +35,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         val activeProfileName = profileFunction.getProfileName()
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {

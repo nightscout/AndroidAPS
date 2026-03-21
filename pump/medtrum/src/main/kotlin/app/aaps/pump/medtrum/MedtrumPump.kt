@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
-
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -32,6 +31,7 @@ import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
 import java.util.EnumSet
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -424,7 +424,7 @@ class MedtrumPump @Inject constructor(
             "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime receivedTime: $receivedTime"
         )
         @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to return null
-        val expectedTemporaryBasal = pumpSync.expectedPumpState()?.temporaryBasal
+        val expectedTemporaryBasal = runBlocking { pumpSync.expectedPumpState() }?.temporaryBasal
         when {
             basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime                                                                     -> {
                 // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call
@@ -437,16 +437,18 @@ class MedtrumPump @Inject constructor(
                 } else {
                     (basalRate / baseBasalRate) * 100 // calculate the percentage of the original basal rate
                 }
-                val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-                    timestamp = basalStartTime,
-                    rate = PumpRate(adjustedBasalRate),
-                    duration = duration,
-                    isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
-                    type = temporaryBasalInfo?.type,
-                    pumpId = basalStartTime,
-                    pumpType = pumpType(),
-                    pumpSerial = pumpSN.toString(radix = 16)
-                )
+                val newRecord = runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        timestamp = basalStartTime,
+                        rate = PumpRate(adjustedBasalRate),
+                        duration = duration,
+                        isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
+                        type = temporaryBasalInfo?.type,
+                        pumpId = basalStartTime,
+                        pumpType = pumpType(),
+                        pumpSerial = pumpSN.toString(radix = 16)
+                    )
+                }
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: $duration temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
@@ -456,18 +458,20 @@ class MedtrumPump @Inject constructor(
             basalType.isSuspendedByPump() && expectedTemporaryBasal?.pumpId != basalStartTime                                                               -> {
                 if (expectedTemporaryBasal != null && expectedTemporaryBasal.timestamp > basalStartTime && expectedTemporaryBasal.duration == T.mins(FAKE_TBR_LENGTH).msecs()) {
                     aapsLogger.debug(LTag.PUMPCOMM, "handleBasalStatusUpdate: invalidateTemporaryBasal: ${expectedTemporaryBasal.timestamp}")
-                    pumpSync.invalidateTemporaryBasalWithPumpId(expectedTemporaryBasal.pumpId ?: 0L, expectedTemporaryBasal.pumpType, expectedTemporaryBasal.pumpSerial)
+                    runBlocking { pumpSync.invalidateTemporaryBasalWithPumpId(expectedTemporaryBasal.pumpId ?: 0L, expectedTemporaryBasal.pumpType, expectedTemporaryBasal.pumpSerial) }
                 }
-                val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-                    timestamp = basalStartTime,
-                    rate = PumpRate(0.0),
-                    duration = T.mins(FAKE_TBR_LENGTH).msecs(),
-                    isAbsolute = true,
-                    type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                    pumpId = basalStartTime,
-                    pumpType = pumpType(),
-                    pumpSerial = pumpSN.toString(radix = 16)
-                )
+                val newRecord = runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        timestamp = basalStartTime,
+                        rate = PumpRate(0.0),
+                        duration = T.mins(FAKE_TBR_LENGTH).msecs(),
+                        isAbsolute = true,
+                        type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        pumpId = basalStartTime,
+                        pumpType = pumpType(),
+                        pumpSerial = pumpSN.toString(radix = 16)
+                    )
+                }
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
@@ -483,12 +487,14 @@ class MedtrumPump @Inject constructor(
             basalType == BasalType.STANDARD                                                                                                                 -> {
                 if (expectedTemporaryBasal != null) {
                     // Pump resumed, sync end
-                    val success = pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = basalStartTime + 250, // Time of normal basal start = time of tbr end
-                        endPumpId = basalStartTime + 250, // +250ms Make sure there is time between start and stop of TBR
-                        pumpType = pumpType(),
-                        pumpSerial = pumpSN.toString(radix = 16)
-                    )
+                    val success = runBlocking {
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = basalStartTime + 250, // Time of normal basal start = time of tbr end
+                            endPumpId = basalStartTime + 250, // +250ms Make sure there is time between start and stop of TBR
+                            pumpType = pumpType(),
+                            pumpSerial = pumpSN.toString(radix = 16)
+                        )
+                    }
                     aapsLogger.debug(LTag.PUMPCOMM, "handleBasalStatusUpdate: EVENT TEMP_END ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) success: $success")
                 }
             }
@@ -521,7 +527,7 @@ class MedtrumPump @Inject constructor(
     }
 
     fun setFakeTBRIfNotSet() {
-        val expectedTemporaryBasal = pumpSync.expectedPumpState().temporaryBasal
+        val expectedTemporaryBasal = runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
         if (expectedTemporaryBasal?.duration != T.mins(FAKE_TBR_LENGTH).msecs()) {
             setFakeTBR()
             _lastBasalType.value = BasalType.NONE
@@ -530,16 +536,18 @@ class MedtrumPump @Inject constructor(
     }
 
     private fun setFakeTBR() {
-        val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-            timestamp = dateUtil.now(),
-            rate = PumpRate(0.0),
-            duration = T.mins(FAKE_TBR_LENGTH).msecs(),
-            isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-            pumpId = dateUtil.now(),
-            pumpType = pumpType(),
-            pumpSerial = pumpSN.toString(radix = 16)
-        )
+        val newRecord = runBlocking {
+            pumpSync.syncTemporaryBasalWithPumpId(
+                timestamp = dateUtil.now(),
+                rate = PumpRate(0.0),
+                duration = T.mins(FAKE_TBR_LENGTH).msecs(),
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = dateUtil.now(),
+                pumpType = pumpType(),
+                pumpSerial = pumpSN.toString(radix = 16)
+            )
+        }
         aapsLogger.debug(
             LTag.PUMPCOMM,
             "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START (FAKE)"
@@ -601,18 +609,20 @@ class MedtrumPump @Inject constructor(
         currentSequenceNumber = sequenceNumber // We are activated, set the new seq nr
         syncedSequenceNumber = 1 // Always start with 1
         // Sync cannula change
-        pumpSync.insertTherapyEventIfNewWithTimestamp(
-            timestamp = newStartTime,
-            type = TE.Type.CANNULA_CHANGE,
-            pumpType = pumpType(),
-            pumpSerial = pumpSN.toString(radix = 16)
-        )
-        pumpSync.insertTherapyEventIfNewWithTimestamp(
-            timestamp = newStartTime,
-            type = TE.Type.INSULIN_CHANGE,
-            pumpType = pumpType(),
-            pumpSerial = pumpSN.toString(radix = 16)
-        )
+        runBlocking {
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = newStartTime,
+                type = TE.Type.CANNULA_CHANGE,
+                pumpType = pumpType(),
+                pumpSerial = pumpSN.toString(radix = 16)
+            )
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = newStartTime,
+                type = TE.Type.INSULIN_CHANGE,
+                pumpType = pumpType(),
+                pumpSerial = pumpSN.toString(radix = 16)
+            )
+        }
     }
 
     private fun saveActiveAlarms() {

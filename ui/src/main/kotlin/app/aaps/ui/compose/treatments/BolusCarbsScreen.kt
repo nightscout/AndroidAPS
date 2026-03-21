@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -84,7 +85,7 @@ fun BolusCarbsScreen(
     var deleteDialogMessage by remember { mutableStateOf("") }
     var showInfoBcr by remember { mutableStateOf<BCR?>(null) }
 
-    val profile = remember(uiState.mealLinks) { viewModel.getProfile() }
+    val profile by produceState<Profile?>(null, uiState.mealLinks) { value = viewModel.getProfile() }
 
     // Update toolbar configuration whenever state changes
     LaunchedEffect(uiState.isRemovingMode, uiState.selectedItems.size, uiState.showInvalidated) {

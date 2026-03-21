@@ -2,6 +2,7 @@ package app.aaps.pump.medtrum.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -39,6 +40,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 sealed class MedtrumOverviewEvent {
@@ -111,33 +114,35 @@ class MedtrumOverviewViewModel @Inject constructor(
 
     fun onClickChangePatch() {
         aapsLogger.debug(LTag.PUMP, "ChangePatch clicked!")
-        val profile = profileFunction.getProfile()
-        if (profile == null) {
-            _events.tryEmit(
-                MedtrumOverviewEvent.ShowDialog(
-                    title = rh.gs(app.aaps.core.ui.R.string.message),
-                    message = rh.gs(R.string.no_profile_selected)
+        viewModelScope.launch {
+            val profile = profileFunction.getProfile()
+            if (profile == null) {
+                _events.tryEmit(
+                    MedtrumOverviewEvent.ShowDialog(
+                        title = rh.gs(app.aaps.core.ui.R.string.message),
+                        message = rh.gs(R.string.no_profile_selected)
+                    )
                 )
-            )
-        } else if (medtrumPump.pumpSN == 0L) {
-            _events.tryEmit(
-                MedtrumOverviewEvent.ShowDialog(
-                    title = rh.gs(app.aaps.core.ui.R.string.message),
-                    message = rh.gs(R.string.no_sn_in_settings)
+            } else if (medtrumPump.pumpSN == 0L) {
+                _events.tryEmit(
+                    MedtrumOverviewEvent.ShowDialog(
+                        title = rh.gs(app.aaps.core.ui.R.string.message),
+                        message = rh.gs(R.string.no_sn_in_settings)
+                    )
                 )
-            )
-        } else {
-            val nextStep = when {
-                medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED ->
-                    PatchStep.START_DEACTIVATION
+            } else {
+                val nextStep = when {
+                    medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED ->
+                        PatchStep.START_DEACTIVATION
 
-                medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                     ->
-                    PatchStep.PREPARE_PATCH
+                    medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                     ->
+                        PatchStep.PREPARE_PATCH
 
-                else                                                                                                 ->
-                    PatchStep.RETRY_ACTIVATION
+                    else                                                                                                 ->
+                        PatchStep.RETRY_ACTIVATION
+                }
+                _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
             }
-            _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
         }
     }
 
@@ -202,7 +207,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         } else null
 
         // Battery voltage
-        val batteryText = if (batteryVoltage > 0.0) String.format("%.2f V", batteryVoltage) else null
+        val batteryText = if (batteryVoltage > 0.0) String.format(Locale.getDefault(), "%.2f V", batteryVoltage) else null
 
         // Reservoir
         val reservoirText = if (reservoir > 0.0) ch.insulinAmountString(PumpInsulin(reservoir)) else null
@@ -319,7 +324,7 @@ class MedtrumOverviewViewModel @Inject constructor(
                 level = StatusLevel.WARNING
             )
 
-            connectionState == ConnectionState.DISCONNECTED                                -> null
+            connectionState == ConnectionState.DISCONNECTED                             -> null
 
             else                                                                        -> StatusBanner(
                 text = connectionText,

@@ -12,7 +12,6 @@ import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.util.Optional
 
@@ -36,8 +35,8 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
-        val lastBolus = runBlocking { persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL) }
+    override suspend fun shouldRun(): Boolean {
+        val lastBolus = persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)
         val lastBolusTime = lastBolus?.timestamp ?: 0L
         if (lastBolusTime == 0L)
             return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {

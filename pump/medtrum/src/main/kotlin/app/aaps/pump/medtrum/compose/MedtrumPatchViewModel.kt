@@ -3,6 +3,7 @@ package app.aaps.pump.medtrum.compose
 import android.os.SystemClock
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
@@ -410,12 +411,14 @@ class MedtrumPatchViewModel @Inject constructor(
 
     fun loadInsulins() {
         if (_availableInsulins.value.isNotEmpty()) return
-        val insulins = insulinManager.insulins.map { it.deepClone() }
-        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
-        val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
-        _availableInsulins.value = insulins
-        _selectedInsulin.value = current
-        _activeInsulinLabel.value = activeLabel
+        viewModelScope.launch {
+            val insulins = insulinManager.insulins.map { it.deepClone() }
+            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
+            _availableInsulins.value = insulins
+            _selectedInsulin.value = current
+            _activeInsulinLabel.value = activeLabel
+        }
     }
 
     fun selectInsulin(iCfg: ICfg) {
@@ -490,7 +493,9 @@ class MedtrumPatchViewModel @Inject constructor(
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
-        profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
+        viewModelScope.launch {
+            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
+        }
     }
 
     private fun prepareStep(newStep: PatchStep): PatchStep {

@@ -357,13 +357,11 @@ class ProfileManagementViewModel @Inject constructor(
      * Get reuse values from current active profile if it has custom percentage/timeshift
      */
     fun getReuseValues(): Pair<Int, Int>? {
-        val profile = profileFunction.getProfile()
-        if (profile is ProfileSealed.EPS) {
-            val percentage = profile.value.originalPercentage
-            val timeshiftHours = T.msecs(profile.value.originalTimeshift).hours().toInt()
-            if (percentage != 100 || timeshiftHours != 0) {
-                return Pair(percentage, timeshiftHours)
-            }
+        val eps = uiState.value.activeProfileSwitch ?: return null
+        val percentage = eps.originalPercentage
+        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+        if (percentage != 100 || timeshiftHours != 0) {
+            return Pair(percentage, timeshiftHours)
         }
         return null
     }

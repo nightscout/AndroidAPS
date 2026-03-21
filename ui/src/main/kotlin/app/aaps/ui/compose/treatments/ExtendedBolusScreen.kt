@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -169,9 +170,11 @@ private fun ExtendedBolusItem(
     rh: ResourceHelper
 ) {
     val dateUtil = LocalDateUtil.current
-    val profile = profileFunction.getProfile(extendedBolus.timestamp)
+    val profile by produceState<app.aaps.core.interfaces.profile.EffectiveProfile?>(null, extendedBolus.timestamp) {
+        value = profileFunction.getProfile(extendedBolus.timestamp)
+    }
     val iob = if (profile != null) {
-        extendedBolus.iobCalc(System.currentTimeMillis(), profile)
+        extendedBolus.iobCalc(System.currentTimeMillis(), profile!!)
     } else {
         null
     }

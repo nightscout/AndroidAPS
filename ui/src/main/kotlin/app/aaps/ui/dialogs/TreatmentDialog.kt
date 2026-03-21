@@ -35,6 +35,7 @@ import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTreatmentBinding
 import com.google.common.base.Joiner
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -141,7 +142,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String?> = LinkedList()
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
-        val profile = profileFunction.getProfile() ?: error("Profile not defined")
+        val profile = runBlocking { profileFunction.getProfile() } ?: error("Profile not defined")
 
         if (insulinAfterConstraints > 0) {
             actions.add(

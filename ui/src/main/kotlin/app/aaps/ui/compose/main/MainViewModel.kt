@@ -197,7 +197,7 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
+    private suspend fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
         val activeEntries = quickWizard.list().filter { it.isActive() }
         if (activeEntries.isEmpty()) return emptyList()
 
@@ -228,7 +228,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun computeSingleQuickWizardItem(
+    private suspend fun computeSingleQuickWizardItem(
         entry: QuickWizardEntry,
         profile: Profile,
         profileName: String,
@@ -260,14 +260,16 @@ class MainViewModel @Inject constructor(
      * Needs Activity context for the confirmation dialog.
      */
     fun executeQuickWizard(context: android.content.Context, guid: String) {
-        val entry = quickWizard.get(guid) ?: return
-        if (!entry.isActive()) return
-        val bg = iobCobCalculator.ads.actualBg() ?: return
-        val profile = profileFunction.getProfile() ?: return
-        val profileName = profileFunction.getProfileName()
-        val wizard = entry.doCalc(profile, profileName, bg)
-        if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
-            wizard.confirmAndExecute(context, entry)
+        viewModelScope.launch {
+            val entry = quickWizard.get(guid) ?: return@launch
+            if (!entry.isActive()) return@launch
+            val bg = iobCobCalculator.ads.actualBg() ?: return@launch
+            val profile = profileFunction.getProfile() ?: return@launch
+            val profileName = profileFunction.getProfileName()
+            val wizard = entry.doCalc(profile, profileName, bg)
+            if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
+                wizard.confirmAndExecute(context, entry)
+            }
         }
     }
 
@@ -412,7 +414,7 @@ class MainViewModel @Inject constructor(
         when (action) {
             is ConfirmableAction.ExecuteAutomation        -> {
                 val event = automation.findEventById(action.automationId) ?: return
-                automation.processEvent(event)
+                viewModelScope.launch { automation.processEvent(event) }
             }
 
             is ConfirmableAction.ActivateTempTargetPreset -> {

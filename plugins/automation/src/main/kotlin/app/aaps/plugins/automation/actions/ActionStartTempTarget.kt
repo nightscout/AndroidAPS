@@ -25,7 +25,6 @@ import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -41,8 +40,6 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
-
     var value = InputTempTarget(profileFunction)
     var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
@@ -54,7 +51,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
     @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_temptarget_high_24dp
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         appScope.launch {
             try {
                 persistenceLayer.insertAndCancelCurrentTemporaryTarget(
@@ -69,7 +66,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                     )
                 )
                 callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error)).run()
             }
         }

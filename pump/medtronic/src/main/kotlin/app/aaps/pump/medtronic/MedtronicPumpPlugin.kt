@@ -112,6 +112,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -580,12 +581,6 @@ class MedtronicPumpPlugin @Inject constructor(
         return !invalid
     }
 
-    fun lastDataTime(): Long {
-        return if (medtronicPumpStatus.lastConnection > 0) {
-            medtronicPumpStatus.lastConnection
-        } else System.currentTimeMillis()
-    }
-
     override val baseBasalRate: PumpRate
         get() = PumpRate(medtronicPumpStatus.basalProfileForHour)
 
@@ -863,17 +858,19 @@ class MedtronicPumpPlugin @Inject constructor(
                         "pumpSerial=${medtronicPumpStatus.serialNumber}]"
                 )
 
-                val result = pumpSync.syncTemporaryBasalWithTempId(
-                    timestamp = item.date,
-                    rate = PumpRate(item.rate),
-                    duration = differenceS * 1000L,
-                    isAbsolute = item.isAbsolute,
-                    temporaryId = item.temporaryId,
-                    type = item.tbrType,
-                    pumpId = null,
-                    pumpType = medtronicPumpStatus.pumpType,
-                    pumpSerial = medtronicPumpStatus.serialNumber
-                )
+                val result = runBlocking {
+                    pumpSync.syncTemporaryBasalWithTempId(
+                        timestamp = item.date,
+                        rate = PumpRate(item.rate),
+                        duration = differenceS * 1000L,
+                        isAbsolute = item.isAbsolute,
+                        temporaryId = item.temporaryId,
+                        type = item.tbrType,
+                        pumpId = null,
+                        pumpType = medtronicPumpStatus.pumpType,
+                        pumpSerial = medtronicPumpStatus.serialNumber
+                    )
+                }
 
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
             }
@@ -1096,16 +1093,18 @@ class MedtronicPumpPlugin @Inject constructor(
                     val differenceTime = System.currentTimeMillis() - runningTBR.date
                     //val tbrData = runningTBR
 
-                    val result = pumpSync.syncTemporaryBasalWithPumpId(
-                        runningTBR.date,
-                        PumpRate(runningTBR.rate),
-                        differenceTime,
-                        runningTBR.isAbsolute,
-                        runningTBR.tbrType,
-                        runningTBR.pumpId!!,
-                        runningTBR.pumpType,
-                        runningTBR.serialNumber
-                    )
+                    val result = runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            runningTBR.date,
+                            PumpRate(runningTBR.rate),
+                            differenceTime,
+                            runningTBR.isAbsolute,
+                            runningTBR.tbrType,
+                            runningTBR.pumpId!!,
+                            runningTBR.pumpType,
+                            runningTBR.serialNumber
+                        )
+                    }
 
                     val differenceTimeMin = floor(differenceTime / (60.0 * 1000.0))
 

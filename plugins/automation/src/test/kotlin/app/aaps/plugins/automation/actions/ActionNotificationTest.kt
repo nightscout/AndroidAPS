@@ -63,7 +63,7 @@ class ActionNotificationTest : TestBaseWithProfile() {
         assertThat(sut.icon()).isEqualTo(R.drawable.ic_notifications)
     }
 
-    @Test fun doActionTest() {
+    @Test fun doActionTest() = runTest {
         sut.doAction(object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()

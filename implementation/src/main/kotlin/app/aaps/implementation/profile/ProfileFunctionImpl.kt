@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -30,7 +29,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -47,7 +45,6 @@ class ProfileFunctionImpl @Inject constructor(
     private val config: Config,
     private val hardLimits: HardLimits,
     private val notificationManager: NotificationManager,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ProfileFunction {
 
@@ -63,19 +60,19 @@ class ProfileFunctionImpl @Inject constructor(
             }.launchIn(appScope)
     }
 
-    override fun getProfileName(): String =
+    override suspend fun getProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = false)
 
-    override fun getOriginalProfileName(): String =
+    override suspend fun getOriginalProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = false, showRemainingTime = false)
 
-    override fun getProfileNameWithRemainingTime(): String =
+    override suspend fun getProfileNameWithRemainingTime(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
 
-    private fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
+    private suspend fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
         var profileName = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
 
-        val profileSwitch = runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(time) }
+        val profileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
         if (profileSwitch != null) {
             profileName = if (customized) profileSwitch.originalCustomizedName else profileSwitch.originalProfileName
             if (showRemainingTime && profileSwitch.originalDuration != 0L) {
@@ -85,12 +82,12 @@ class ProfileFunctionImpl @Inject constructor(
         return profileName
     }
 
-    override fun isProfileValid(from: String): Boolean = getProfile() != null
+    override suspend fun isProfileValid(from: String): Boolean = getProfile() != null
 
-    override fun getProfile(): EffectiveProfile? =
+    override suspend fun getProfile(): EffectiveProfile? =
         getProfile(dateUtil.now())
 
-    override fun getProfile(time: Long): EffectiveProfile? {
+    override suspend fun getProfile(time: Long): EffectiveProfile? {
         val rounded = time - time % 1000
         // Clear cache after longer use
         synchronized(cache) {
@@ -102,7 +99,7 @@ class ProfileFunctionImpl @Inject constructor(
                 return cache[rounded]
             }
         }
-        val ps = runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(time) }
+        val ps = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
         if (ps != null) {
             val sealed = ProfileSealed.EPS(ps, activePlugin)
             synchronized(cache) {
@@ -137,9 +134,9 @@ class ProfileFunctionImpl @Inject constructor(
         return null
     }
 
-    override fun getRequestedProfile(): PS? = runBlocking { persistenceLayer.getProfileSwitchActiveAt(dateUtil.now()) }
+    override suspend fun getRequestedProfile(): PS? = persistenceLayer.getProfileSwitchActiveAt(dateUtil.now())
 
-    override fun isProfileChangePending(): Boolean {
+    override suspend fun isProfileChangePending(): Boolean {
         val requested = getRequestedProfile() ?: return false
         val running = getProfile() ?: return true
         return !ProfileSealed.PS(requested, activePlugin).isEqual(running)
@@ -175,11 +172,11 @@ class ProfileFunctionImpl @Inject constructor(
         return true
     }
 
-    override fun createProfileSwitch(
+    override suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
     ): Boolean {
-        val profile = runBlocking { persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) } ?: return false
+        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return false
         val profileStore = localProfileManager.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return false
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
@@ -198,7 +195,7 @@ class ProfileFunctionImpl @Inject constructor(
         return false
     }
 
-    override fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
+    override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
         val profile = getProfile()
         val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
         val profileStore = localProfileManager.profile ?: return false

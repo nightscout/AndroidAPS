@@ -40,7 +40,7 @@ class TreatmentDialogViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val activeInsulin: Insulin,
     private val commandQueue: CommandQueue,
-    private val config: Config,
+    config: Config,
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     val decimalFormatter: DecimalFormatter,
@@ -145,6 +145,10 @@ class TreatmentDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
+        viewModelScope.launch { confirmAndSaveSuspend() }
+    }
+
+    private suspend fun confirmAndSaveSuspend() {
         val state = uiState.value
         val insulin = state.insulin
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(

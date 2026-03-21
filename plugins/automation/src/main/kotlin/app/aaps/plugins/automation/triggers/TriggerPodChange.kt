@@ -15,9 +15,9 @@ import java.util.Optional
 
 class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
 
-    override fun shouldRun(): Boolean {
-        val eventLastSettingsExport = runBlocking { persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT) }
-        val eventLastPodChange = runBlocking { persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE) }
+    override suspend fun shouldRun(): Boolean {
+        val eventLastSettingsExport = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)
+        val eventLastPodChange = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
         if (eventLastPodChange == null || eventLastSettingsExport == null) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution (no events): " + friendlyDescription())
             return false

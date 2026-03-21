@@ -40,7 +40,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val lastConnection = activePlugin.activePump.lastDataTime.value
         if (lastConnection == 0L && comparator.value === Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

@@ -43,7 +43,7 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val eventNetworkChange = receiverStatusStore.networkStatusFlow.value ?: return false
         if (!eventNetworkChange.wifiConnected && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

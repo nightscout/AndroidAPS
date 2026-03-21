@@ -11,6 +11,7 @@ import app.aaps.pump.omnipod.eros.driver.definition.ActivationProgress
 import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -30,7 +31,7 @@ class ErosInsertCannulaViewModel @Inject constructor(
 
     override fun isPodDeactivatable(): Boolean = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 
-    override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.insertCannula(pumpSync.expectedPumpState().profile) }
+    override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.insertCannula(runBlocking { pumpSync.expectedPumpState() }.profile) }
 
     @StringRes
     override fun getTitleId(): Int = app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_insert_cannula_title

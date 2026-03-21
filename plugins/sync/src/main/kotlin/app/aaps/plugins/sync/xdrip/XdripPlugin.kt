@@ -68,6 +68,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -167,7 +168,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendStatusLine() {
         if (preferences.get(BooleanKey.XdripSendStatus)) {
-            val status = profileFunction.getProfile()?.let { buildStatusLine(it) } ?: ""
+            val status = runBlocking { profileFunction.getProfile() }?.let { buildStatusLine(it) } ?: ""
             context.sendBroadcast(
                 Intent(Intents.ACTION_NEW_EXTERNAL_STATUSLINE).also {
                     it.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -226,8 +227,8 @@ class XdripPlugin @Inject constructor(
             status.append(it.toStringShort(rh)).append(" ")
         }
         //IOB
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+        val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
         status.append(decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))
         if (preferences.get(BooleanKey.XdripSendDetailedIob))
             status.append("(")
@@ -242,7 +243,7 @@ class XdripPlugin @Inject constructor(
                 .append(decimalFormatter.to2Decimal(bgi))
         }
         // COB
-        status.append(" ").append(iobCobCalculator.getCobInfo("StatusLinePlugin").generateCOBString(decimalFormatter))
+        status.append(" ").append(runBlocking { iobCobCalculator.getCobInfo("StatusLinePlugin") }.generateCOBString(decimalFormatter))
         return status.toString()
     }
 
@@ -345,12 +346,12 @@ class XdripPlugin @Inject constructor(
                 is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(true, dateUtil)
 
                 is DataSyncSelector.PairTemporaryBasal         -> {
-                    val profile = profileFunction.getProfile(dataPair.value.timestamp) ?: return
+                    val profile = runBlocking { profileFunction.getProfile(dataPair.value.timestamp) } ?: return
                     dataPair.value.toJson(true, profile, dateUtil)
                 }
 
                 is DataSyncSelector.PairExtendedBolus          -> {
-                    val profile = profileFunction.getProfile(dataPair.value.timestamp) ?: return
+                    val profile = runBlocking { profileFunction.getProfile(dataPair.value.timestamp) } ?: return
                     dataPair.value.toJson(true, profile, dateUtil)
                 }
 
