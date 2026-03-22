@@ -43,7 +43,7 @@ class PrimingTask @Inject constructor() : TaskBase(TaskFunc.PRIMING) {
 
             Observable.interval(3, TimeUnit.SECONDS)
                 .concatMapSingle<UpdateConnectionResponse>(Function { UPDATE_CONNECTION.get() })
-                .map<PatchState>(Function { response: UpdateConnectionResponse -> create(response.getPatchState(), System.currentTimeMillis()) })
+                .map<PatchState>(Function { response: UpdateConnectionResponse -> create(response.patchState, System.currentTimeMillis()) })
                 .filter(PatchState::isPrimingSuccess)
                 .map<Long>(Function { count })
         )

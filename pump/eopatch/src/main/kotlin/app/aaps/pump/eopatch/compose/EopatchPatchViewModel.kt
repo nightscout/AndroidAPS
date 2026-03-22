@@ -581,8 +581,9 @@ class EopatchPatchViewModel @Inject constructor(
         disposables.add(
             patchManager.scan(5000)
                 .flatMap {
-                    if (it.nearestDevice == null) Single.error(Resources.NotFoundException())
-                    else Single.just(it.nearestDevice)
+                    val nearest = it.nearestDevice
+                    if (nearest == null) Single.error(Resources.NotFoundException())
+                    else Single.just(nearest)
                 }
                 .onErrorReturnItem("")
                 .doOnSubscribe { updateSetupStep(SetupStep.SCAN_STARTED) }

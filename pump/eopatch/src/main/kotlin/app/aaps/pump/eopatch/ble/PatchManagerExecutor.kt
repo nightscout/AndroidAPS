@@ -170,7 +170,7 @@ class PatchManagerExecutor @Inject constructor(
         compositeDisposable.add(
             patchConfig.observe().doOnNext(Consumer { config: PatchConfig ->
                 val newKey = config.sharedKey
-                patch.updateEncryptionParam(newKey)
+                newKey?.let { patch.updateEncryptionParam(it) }
             }).subscribe()
         )
 
@@ -540,7 +540,7 @@ class PatchManagerExecutor @Inject constructor(
     @Throws(Throwable::class) private fun onInfoNotification(notification: InfoNotification) {
         readBolusStatusFromNotification(notification)
         updateInjected(notification, false)
-        if (notification.isBolusDone) {
+        if (notification.isBolusDone()) {
             fetchPatchState()
         }
     }
@@ -559,7 +559,7 @@ class PatchManagerExecutor @Inject constructor(
             ECPublicToRawBytes(keyPair)
                 .flatMap<Boolean>(Function { bytes: ByteArray ->
                     PUBLIC_KEY_SET.send(bytes)
-                        .map<ByteArray>(Function { obj: KeyResponse -> obj.getPublicKey() })
+                        .map<ByteArray>(Function { obj: KeyResponse -> obj.publicKey!! })
                         .map<ECPublicKey>(Function { bytes2: ByteArray -> rawToEncodedECPublicKey(SECP256R1, bytes2) })
                         .map<ByteArray>(Function { publicKey: ECPublicKey -> generateSharedSecret(keyPair.private, publicKey) })
                         .doOnSuccess(Consumer { v: ByteArray -> this.saveShared(v) })

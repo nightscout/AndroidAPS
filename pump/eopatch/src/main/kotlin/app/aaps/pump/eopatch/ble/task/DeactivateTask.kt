@@ -66,7 +66,7 @@ class DeactivateTask @Inject constructor(
 
     private fun onDeactivated() {
         synchronized(lock) {
-            patch.updateMacAddress(null, false)
+            patch.updateMacAddress("", false)
             if (patchConfig.lifecycleEvent.isShutdown) {
                 return
             }

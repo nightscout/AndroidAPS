@@ -35,7 +35,7 @@ class StartNormalBasalTask @Inject constructor(
     }
 
     private fun onStartNormalBasalResponse(response: BasalScheduleSetResponse, basal: NormalBasal) {
-        val timeStamp = response.getTimestamp()
+        val timeStamp = response.timestamp
         patchStateManager.onBasalStarted(basal, timeStamp + 1000)
 
         normalBasalManager.normalBasal = basal

@@ -30,7 +30,7 @@ class NeedleSensingTask @Inject constructor(
             .doOnNext(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
             .concatMapSingle<UpdateConnectionResponse>(Function { UPDATE_CONNECTION.get() })
             .doOnNext(Consumer { response: UpdateConnectionResponse -> this.checkResponse(response) })
-            .map<PatchState>(Function { updateConnectionResponse: UpdateConnectionResponse -> create(updateConnectionResponse.getPatchState(), System.currentTimeMillis()) })
+            .map<PatchState>(Function { updateConnectionResponse: UpdateConnectionResponse -> create(updateConnectionResponse.patchState, System.currentTimeMillis()) })
             .doOnNext(Consumer { v: PatchState -> this.onResponse(v) })
             .map<Boolean>(Function { patchState: PatchState -> !patchState.isNeedNeedleSensing })
             .firstOrError()

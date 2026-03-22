@@ -38,7 +38,7 @@ class ResumeBasalTask @Inject constructor(
 
     private fun onResumeResponse(v: PatchBooleanResponse) {
         if (v.isSuccess) {
-            patchStateManager.onBasalResumed(v.getTimestamp() + 1000)
+            patchStateManager.onBasalResumed(v.timestamp + 1000)
             alarmRegistry.remove(AlarmCode.B001).subscribe()
         }
         enqueue(TaskFunc.UPDATE_CONNECTION)

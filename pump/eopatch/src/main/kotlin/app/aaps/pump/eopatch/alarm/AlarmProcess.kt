@@ -138,7 +138,7 @@ class AlarmProcess(val patchManager: IPatchManager, val patchManagerExecutor: Pa
     private fun inappropriateTemperatureAction(context: Context): Single<Int> {
         return actionWithPatchCheckConnection(context) {
             patchManagerExecutor.temperature
-                .map(TemperatureResponse::getTemperature)
+                .map { it.temperature }
                 .map { temp -> (temp >= EopatchActivity.NORMAL_TEMPERATURE_MIN && temp <= EopatchActivity.NORMAL_TEMPERATURE_MAX) }
                 .filter { ok -> ok }
                 .flatMap { patchManagerExecutor.resumeBasal().map { it.isSuccess.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED) }.toMaybe() }
