@@ -1,8 +1,9 @@
 package app.aaps.pump.eopatch.core.noti
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.eopatch.core.code.BolusType
 
-class InfoNotification(bytes: ByteArray) : BaseNotification(bytes) {
+class InfoNotification(bytes: ByteArray, aapsLogger: AAPSLogger) : BaseNotification(bytes, aapsLogger) {
 
     val act = ByteArray(IDX_COUNT)
     val `in` = IntArray(IDX_COUNT)

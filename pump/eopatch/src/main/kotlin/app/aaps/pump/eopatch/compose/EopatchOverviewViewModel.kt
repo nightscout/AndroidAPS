@@ -218,9 +218,10 @@ class EopatchOverviewViewModel @Inject constructor(
 
     fun getSuspendDialogText(): String {
         val isBolusActive = preferenceManager.patchState.isBolusActive
-        val isTempBasalActive = preferenceManager.patchState.isTempBasalActive
-        val tempRate = tempBasalManager.startedBasal?.doseUnitText ?: ""
-        val tempRemainTime = tempBasalManager.startedBasal?.remainTimeText ?: ""
+        val tempBasal = tempBasalManager.startedBasal
+        val isTempBasalActive = preferenceManager.patchState.isTempBasalActive && tempBasal != null
+        val tempRate = tempBasal?.doseUnitText ?: ""
+        val tempRemainTime = tempBasal?.remainTimeText ?: ""
         var remainBolus = preferenceManager.patchState.isNowBolusActive.takeOne(preferenceManager.bolusCurrent.remain(BolusType.NOW), 0f)
         remainBolus += preferenceManager.patchState.isExtBolusActive.takeOne(preferenceManager.bolusCurrent.remain(BolusType.EXT), 0f)
 
@@ -259,7 +260,7 @@ class EopatchOverviewViewModel @Inject constructor(
                     val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
                     val h = TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
                     val m = TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
-                    "${rh.gs(R.string.string_suspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    "${rh.gs(app.aaps.core.ui.R.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 } else {
                     rh.gs(R.string.string_running)
                 }
@@ -267,13 +268,14 @@ class EopatchOverviewViewModel @Inject constructor(
 
                 // Basal rate
                 if (preferenceManager.patchState.isNormalBasalRunning) {
-                    val basalRate = "${normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour} U/hr"
+                    val basalRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_base_basal_rate), value = basalRate))
                 }
 
                 // Temp basal
-                if (preferenceManager.patchState.isTempBasalActive) {
-                    val tempRate = "${tempBasalManager.startedBasal?.doseUnitPerHour} U/hr"
+                val tempBasal = tempBasalManager.startedBasal
+                if (preferenceManager.patchState.isTempBasalActive && tempBasal != null) {
+                    val tempRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, tempBasal.doseUnitPerHour)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_temp_basal_rate), value = tempRate))
                 }
             }
@@ -310,7 +312,7 @@ class EopatchOverviewViewModel @Inject constructor(
             if (isActivated) {
                 add(
                     PumpAction(
-                        label = if (isPaused) rh.gs(R.string.string_resume) else rh.gs(R.string.string_suspend),
+                        label = if (isPaused) rh.gs(app.aaps.core.ui.R.string.pump_resume) else rh.gs(app.aaps.core.ui.R.string.pump_suspend),
                         iconRes = if (isPaused) app.aaps.core.ui.R.drawable.ic_loop_resume else app.aaps.core.ui.R.drawable.ic_loop_paused,
                         category = ActionCategory.PRIMARY,
                         onClick = { } // Click handled in screen composable (needs dialog)
@@ -348,7 +350,7 @@ class EopatchOverviewViewModel @Inject constructor(
         }
         return when {
             !isActivated -> StatusBanner(text = "$connText - ${rh.gs(R.string.eopatch_not_activated)}", level = StatusLevel.WARNING)
-            isPaused     -> StatusBanner(text = "$connText - ${rh.gs(R.string.string_suspended)}", level = StatusLevel.WARNING)
+            isPaused     -> StatusBanner(text = "$connText - ${rh.gs(app.aaps.core.ui.R.string.pumpsuspended)}", level = StatusLevel.WARNING)
             else         -> StatusBanner(text = connText, level = StatusLevel.NORMAL)
         }
     }

@@ -106,11 +106,8 @@
     <string name="string_change_patch">Discard/Change Patch</string>
     <string name="string_activate_patch">Activate Patch</string>
     <string name="string_discard_patch">Discard Patch</string>
-    <string name="string_resume">Resume</string>
     <string name="discard">Discard</string>
     <string name="string_communication_check">Communication check</string>
-    <string name="string_suspend">Suspend</string>
-    <string name="string_suspended">Suspended</string>
     <string name="string_running">Running</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>

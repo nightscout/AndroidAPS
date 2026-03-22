@@ -1,12 +1,13 @@
 package app.aaps.pump.eopatch.core.ble
 
-import android.util.Log
-import app.aaps.pump.eopatch.core.Patch
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.eopatch.core.ble.IPatchPacketConstant.Companion.BIG_API
 import app.aaps.pump.eopatch.core.ble.IPatchPacketConstant.Companion.CIPHER
 import app.aaps.pump.eopatch.core.ble.IPatchPacketConstant.Companion.LEGACY
 import app.aaps.pump.eopatch.core.define.IPatchConstant
 import app.aaps.pump.eopatch.core.response.BaseResponse
+import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -15,13 +16,14 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.nio.ByteBuffer
 
 abstract class BaseAPI<T : BaseResponse>(
-    protected var func: PatchFunc
+    protected var func: PatchFunc,
+    private val patch: IBleDevice,
+    private val aapsLogger: AAPSLogger
 ) : IPatchConstant {
 
     private val responseSubject: PublishSubject<T> = PublishSubject.create()
     @Volatile private var retryCount = API_RETRY
     protected var queue: IAPIQueue = APIQueue()
-    private val patch: Patch = Patch.getInstance()
 
     fun observeResponse(): Observable<T> = responseSubject.hide()
 
@@ -61,7 +63,7 @@ abstract class BaseAPI<T : BaseResponse>(
         val bytes = getBytes(func)
         bytes.indices.all { i -> bytes[i] == input[i + 2] }
     } catch (e: Exception) {
-        Log.e("EOPATCH_CORE", "API does not match")
+        aapsLogger.error(LTag.PUMPCOMM, "API does not match")
         false
     }
 

@@ -64,8 +64,8 @@ fun EopatchOverviewScreen(
     }
 
     // Patch the suspend/resume action onClick to open dialog instead
-    val suspendLabel = stringResource(R.string.string_suspend)
-    val resumeLabel = stringResource(R.string.string_resume)
+    val suspendLabel = stringResource(app.aaps.core.ui.R.string.pump_suspend)
+    val resumeLabel = stringResource(app.aaps.core.ui.R.string.pump_resume)
     val patchedState = baseState.copy(
         primaryActions = baseState.primaryActions.map { action ->
             when (action.label) {
@@ -81,7 +81,7 @@ fun EopatchOverviewScreen(
         val suspendMessage = remember { viewModel.getSuspendDialogText() }
         AlertDialog(
             onDismissRequest = { showSuspendConfirmDialog = false },
-            title = { Text(stringResource(R.string.string_suspend)) },
+            title = { Text(stringResource(app.aaps.core.ui.R.string.pump_suspend)) },
             text = { Text(suspendMessage) },
             confirmButton = {
                 TextButton(onClick = {

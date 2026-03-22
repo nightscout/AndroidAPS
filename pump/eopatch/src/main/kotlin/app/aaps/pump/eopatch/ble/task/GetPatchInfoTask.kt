@@ -23,30 +23,29 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class GetPatchInfoTask @Inject constructor(
     val updateConnectionTask: UpdateConnectionTask
 ) : TaskBase(TaskFunc.GET_PATCH_INFO) {
 
-    private val SET_GLOBAL_TIME: SetGlobalTime = SetGlobalTime()
-    private val SERIAL_NUMBER_GET: GetSerialNumber = GetSerialNumber()
-    private val LOT_NUMBER_GET: GetLOT = GetLOT()
-    private val FIRMWARE_VERSION_GET: GetFirmwareVersion = GetFirmwareVersion()
-    private val WAKE_UP_TIME_GET: GetWakeUpTime = GetWakeUpTime()
-    private val PUMP_DURATION_GET: GetPumpDuration = GetPumpDuration()
-    private val GET_MODEL_NAME: GetModelName = GetModelName()
+    @Inject lateinit var setGlobalTime: SetGlobalTime
+    @Inject lateinit var serialNumberGet: GetSerialNumber
+    @Inject lateinit var lotNumberGet: GetLOT
+    @Inject lateinit var firmwareVersionGet: GetFirmwareVersion
+    @Inject lateinit var wakeUpTimeGet: GetWakeUpTime
+    @Inject lateinit var pumpDurationGet: GetPumpDuration
+    @Inject lateinit var getModelName: GetModelName
 
     fun get(): Single<Boolean> {
         val tasks: Single<Boolean> = Single.concat<BaseResponse>(
             listOf<Single<out BaseResponse>>(
-                SET_GLOBAL_TIME.set(),
-                SERIAL_NUMBER_GET.get().doOnSuccess(Consumer { v: SerialNumberResponse -> this.onSerialNumberResponse(v) }),
-                LOT_NUMBER_GET.get().doOnSuccess(Consumer { v: LotNumberResponse -> this.onLotNumberResponse(v) }),
-                FIRMWARE_VERSION_GET.get().doOnSuccess(Consumer { v: FirmwareVersionResponse -> this.onFirmwareResponse(v) }),
-                WAKE_UP_TIME_GET.get().doOnSuccess(Consumer { v: WakeUpTimeResponse -> this.onWakeupTimeResponse(v) }),
-                PUMP_DURATION_GET.get().doOnSuccess(Consumer { v: PumpDurationResponse -> this.onPumpDurationResponse(v) }),
-                GET_MODEL_NAME.get().doOnSuccess(Consumer { modelNameResponse: ModelNameResponse -> this.onModelNameResponse(modelNameResponse) })
+                setGlobalTime.set(),
+                serialNumberGet.get().doOnSuccess(Consumer { v: SerialNumberResponse -> this.onSerialNumberResponse(v) }),
+                lotNumberGet.get().doOnSuccess(Consumer { v: LotNumberResponse -> this.onLotNumberResponse(v) }),
+                firmwareVersionGet.get().doOnSuccess(Consumer { v: FirmwareVersionResponse -> this.onFirmwareResponse(v) }),
+                wakeUpTimeGet.get().doOnSuccess(Consumer { v: WakeUpTimeResponse -> this.onWakeupTimeResponse(v) }),
+                pumpDurationGet.get().doOnSuccess(Consumer { v: PumpDurationResponse -> this.onPumpDurationResponse(v) }),
+                getModelName.get().doOnSuccess(Consumer { modelNameResponse: ModelNameResponse -> this.onModelNameResponse(modelNameResponse) })
             )
         )
             .map<Boolean>(Function { obj: BaseResponse -> obj.isSuccess })

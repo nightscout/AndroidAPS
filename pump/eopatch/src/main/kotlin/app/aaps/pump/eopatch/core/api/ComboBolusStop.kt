@@ -1,13 +1,18 @@
 package app.aaps.pump.eopatch.core.api
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.eopatch.core.ble.BaseAPI
+import app.aaps.pump.eopatch.core.scan.IBleDevice
+import javax.inject.Inject
+import javax.inject.Singleton
 import app.aaps.pump.eopatch.core.ble.BytesConverter
 import app.aaps.pump.eopatch.core.ble.PatchFunc
 import app.aaps.pump.eopatch.core.code.PatchBleResultCode
 import app.aaps.pump.eopatch.core.response.ComboBolusStopResponse
 import io.reactivex.rxjava3.core.Single
 
-class ComboBolusStop : BaseAPI<ComboBolusStopResponse>(PatchFunc.STOP_COMBO_BOLUS) {
+@Singleton
+class ComboBolusStop @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStopResponse>(PatchFunc.STOP_COMBO_BOLUS, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): ComboBolusStopResponse {
         val ret = bytes[DATA0].toInt()
         var idNow = BytesConverter.toUInt(bytes[DATA1], bytes[DATA2])

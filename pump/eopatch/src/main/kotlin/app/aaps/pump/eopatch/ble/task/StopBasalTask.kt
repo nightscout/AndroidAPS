@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class StopBasalTask @Inject constructor(
     private val commandQueue: CommandQueue,
@@ -32,7 +31,7 @@ class StopBasalTask @Inject constructor(
     private val updateConnectionTask: UpdateConnectionTask
 ) : TaskBase(TaskFunc.STOP_BASAL) {
 
-    private val BASAL_STOP: BasalStop = BasalStop()
+    @Inject lateinit var basalStop: BasalStop
     private val bolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val extBolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val basalCheckSubject = BehaviorSubject.create<Boolean>()
@@ -86,7 +85,7 @@ class StopBasalTask @Inject constructor(
             Function3 { bolusReady: Boolean, extBolusReady: Boolean, basalReady: Boolean -> (bolusReady && extBolusReady && basalReady) })
             .filter(Predicate { ready: Boolean -> ready })
             .flatMap(Function { isReady() })
-            .concatMapSingle(Function { BASAL_STOP.stop() })
+            .concatMapSingle(Function { basalStop.stop() })
             .doOnNext(Consumer { response: BasalStopResponse -> this.checkResponse(response) })
             .doOnNext(Consumer { updateConnectionTask.enqueue() })
             .firstOrError()

@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class PauseBasalTask @Inject constructor(
     private val alarmRegistry: IAlarmRegistry,
@@ -34,7 +33,7 @@ class PauseBasalTask @Inject constructor(
     private val uel: UserEntryLogger
 ) : BolusTask(TaskFunc.PAUSE_BASAL) {
 
-    private val BASAL_PAUSE: BasalPause = BasalPause()
+    @Inject lateinit var basalPause: BasalPause
 
     private val bolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val extendedBolusCheckSubject = BehaviorSubject.create<Boolean>()
@@ -105,7 +104,7 @@ class PauseBasalTask @Inject constructor(
 
     private fun pauseBasal(pauseDurationHour: Float, alarmCode: AlarmCode?): Single<PatchBooleanResponse> {
         if (alarmCode == null) {
-            return BASAL_PAUSE.pause(pauseDurationHour)
+            return basalPause.pause(pauseDurationHour)
                 .doOnSuccess(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
                 .doOnSuccess(Consumer { onBasalPaused(pauseDurationHour, null) })
         }

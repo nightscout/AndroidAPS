@@ -165,7 +165,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             text = alarmMsg,
             date = alarms.getOccuredAlarmTimestamp(alarmCode),
             soundRes = app.aaps.core.ui.R.raw.error,
-            actions = listOf(NotificationAction((alarmCode == B001).takeOne(R.string.string_resume, R.string.confirm)) {
+            actions = listOf(NotificationAction((alarmCode == B001).takeOne(app.aaps.core.ui.R.string.pump_resume, R.string.confirm)) {
                 compositeDisposable.add(
                     Single.just(isValid(alarmCode))
                         .observeOn(aapsSchedulers.main)  //don't remove

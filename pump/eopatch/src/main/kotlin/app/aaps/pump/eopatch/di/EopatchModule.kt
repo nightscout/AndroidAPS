@@ -9,6 +9,8 @@ import app.aaps.pump.eopatch.alarm.AlarmRegistry
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.alarm.IAlarmRegistry
 import app.aaps.pump.eopatch.ble.IPatchManager
+import app.aaps.pump.eopatch.core.Patch
+import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.ble.PatchManager
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.ble.PreferenceManagerImpl
@@ -30,6 +32,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class EopatchModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindBleDevice(patch: Patch): IBleDevice
 
     @Binds
     @Singleton

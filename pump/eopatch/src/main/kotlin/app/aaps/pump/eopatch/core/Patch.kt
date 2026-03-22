@@ -5,7 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.util.Log
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.eopatch.core.ble.Cipher
 import app.aaps.pump.eopatch.core.ble.ICipher
 import app.aaps.pump.eopatch.core.ble.IPatchPacketConstant.Companion.ALARM_UUID
@@ -39,8 +40,13 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Patch private constructor() : IBleDevice {
+@Singleton
+class Patch @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : IBleDevice {
 
     private lateinit var rxBleClient: RxBleClient
     private lateinit var bondStateObservable: Observable<Intent>
@@ -70,7 +76,7 @@ class Patch private constructor() : IBleDevice {
             compositeDisposable.add(
                 bondStateObservable.subscribe(
                     { updateBondState(it) },
-                    { e -> Log.e(TAG, "Error monitoring bond state: ${e.message}") }
+                    { e -> aapsLogger.error(LTag.PUMPCOMM, "Error monitoring bond state: ${e.message}") }
                 )
             )
             setupRxAndroidBle()
@@ -85,11 +91,11 @@ class Patch private constructor() : IBleDevice {
             when {
                 throwable is UndeliverableException && throwable.cause is BleException -> return@setErrorHandler
                 throwable is UndeliverableException                                    -> {
-                    Log.e(TAG, "rx UndeliverableException Error Handler"); return@setErrorHandler
+                    aapsLogger.error(LTag.PUMPCOMM, "rx UndeliverableException Error Handler"); return@setErrorHandler
                 }
 
                 throwable is OnErrorNotImplementedException                            -> {
-                    Log.e(TAG, "rx exception Error Handler"); return@setErrorHandler
+                    aapsLogger.error(LTag.PUMPCOMM, "rx exception Error Handler"); return@setErrorHandler
                 }
 
                 else                                                                   -> throw RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable)
@@ -117,7 +123,7 @@ class Patch private constructor() : IBleDevice {
                     setConnectionObservable(setupConnection(true, TIMEOUT_PATCH))
                     keepConnect = connectionObservable.subscribe(
                         Functions.emptyConsumer(),
-                        { Log.e(TAG, "Keep Connection Error") }
+                        { aapsLogger.error(LTag.PUMPCOMM, "Keep Connection Error") }
                     )
                 } ?: setConnectionObservable(Observable.empty())
             } else {
@@ -138,7 +144,7 @@ class Patch private constructor() : IBleDevice {
                         .flatMap { read -> cipher.decrypt(read, func) }
                 }
                 .flatMap { dec -> getSeqNumOnCryptoError(conn, dec) }
-                .doOnError { e -> Log.e(TAG, "Error: ${e.message}") }
+                .doOnError { e -> aapsLogger.error(LTag.PUMPCOMM, "Error: ${e.message}") }
         }.firstOrError()
 
     private fun updateBondState(intent: Intent) {
@@ -177,13 +183,13 @@ class Patch private constructor() : IBleDevice {
     private fun removeBond() {
         val bluetoothDevice = device?.bluetoothDevice
         if (bluetoothDevice == null) {
-            Log.e(TAG, "Error bluetoothDevice is null")
+            aapsLogger.error(LTag.PUMPCOMM, "Error bluetoothDevice is null")
             return
         }
         try {
             bluetoothDevice.javaClass.getMethod("removeBond").invoke(bluetoothDevice)
         } catch (e: Exception) {
-            Log.e(TAG, "removeBond error")
+            aapsLogger.error(LTag.PUMPCOMM, "removeBond error")
         }
     }
 
@@ -197,7 +203,7 @@ class Patch private constructor() : IBleDevice {
             .takeUntil(disconnectTriggerSubject)
             .compose(ReplayingShare.instance())
             .retryWhen { it.delay(5, TimeUnit.SECONDS) }
-            .doOnError { e -> Log.e(TAG, "connection error: ${e.message}") }
+            .doOnError { e -> aapsLogger.error(LTag.PUMPCOMM, "connection error: ${e.message}") }
     }
 
     @Synchronized private fun setConnectionObservable(observable: Observable<RxBleConnection>) {
@@ -242,10 +248,10 @@ class Patch private constructor() : IBleDevice {
     @Synchronized private fun setupNotification(conn: RxBleConnection) {
         notificationDisposable.addAll(
             conn.setupNotification(ALARM_UUID).flatMap { it }
-                .map { AlarmNotification(it) }
+                .map { AlarmNotification(it, aapsLogger) }
                 .subscribe { alarmNotificationSubject.onNext(it) },
             conn.setupNotification(INFO_UUID).flatMap { it }
-                .map { InfoNotification(it) }
+                .map { InfoNotification(it, aapsLogger) }
                 .subscribe { infoNotificationSubject.onNext(it) }
         )
     }
@@ -253,7 +259,7 @@ class Patch private constructor() : IBleDevice {
     @Synchronized private fun getSeqNumOnCryptoError(conn: RxBleConnection, dec: ByteArray): Single<ByteArray> {
         if ((dec[2].toInt() and 0xFF) == 0xE0 && dec[3].toInt() == 0x00) {
             val errCode = dec[4].toInt()
-            Log.e(TAG, "Crypto error received: $errCode")
+            aapsLogger.error(LTag.PUMPCOMM, "Crypto error received: $errCode")
             return when (errCode) {
                 0x01 -> {
                     val sendPacket = byteArrayOf(0x00, 0x00, 0x20, 0xA2.toByte())
@@ -268,7 +274,7 @@ class Patch private constructor() : IBleDevice {
                                 setSeq(seq15)
                             }
                         }
-                        .doOnError { Log.e(TAG, "getSeqNum Error") }
+                        .doOnError { aapsLogger.error(LTag.PUMPCOMM, "getSeqNum Error") }
                         .flatMap { Single.just(dec) }
                 }
 
@@ -308,13 +314,6 @@ class Patch private constructor() : IBleDevice {
 
     companion object {
 
-        private const val TAG = "EOPATCH_CORE"
         private val TIMEOUT_PATCH = Timeout(4, TimeUnit.DAYS)
-
-        fun getInstance(): Patch = LazyHolder.uniqueInstance
-    }
-
-    private object LazyHolder {
-        val uniqueInstance = Patch()
     }
 }

@@ -1,7 +1,8 @@
 package app.aaps.pump.eopatch.core.scan
 
 import android.content.Context
-import android.util.Log
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.eopatch.core.ble.IPatchPacketConstant.Companion.SERVICE_UUID
 import com.polidea.rxandroidble3.RxBleClient
 import com.polidea.rxandroidble3.scan.ScanFilter
@@ -9,7 +10,7 @@ import com.polidea.rxandroidble3.scan.ScanSettings
 import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.TimeUnit
 
-class PatchScanner(context: Context) : IPatchScanner {
+class PatchScanner(context: Context, private val aapsLogger: AAPSLogger) : IPatchScanner {
 
     private val scanList = ScanList()
     private val rxBleClient: RxBleClient = RxBleClient.create(context)
@@ -25,7 +26,7 @@ class PatchScanner(context: Context) : IPatchScanner {
 
     override fun scan(timeout: Long): Single<ScanList> =
         rxBleClient.scanBleDevices(scanSettings, scanFilter)
-            .doOnError { e -> Log.e("EOPATCH_CORE", "Error: ${e.message}") }
+            .doOnError { e -> aapsLogger.error(LTag.PUMPCOMM, "Scan error: ${e.message}") }
             .take(timeout, TimeUnit.MILLISECONDS)
             .toList()
             .map { list -> scanList.update(list) }

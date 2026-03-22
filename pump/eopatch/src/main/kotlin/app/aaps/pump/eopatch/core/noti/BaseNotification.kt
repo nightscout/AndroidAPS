@@ -1,9 +1,10 @@
 package app.aaps.pump.eopatch.core.noti
 
-import android.util.Log
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import java.nio.ByteBuffer
 
-abstract class BaseNotification(bytes: ByteArray) {
+abstract class BaseNotification(bytes: ByteArray, private val aapsLogger: AAPSLogger) {
 
     protected val buffer: ByteBuffer = ByteBuffer.wrap(bytes)
 
@@ -16,8 +17,8 @@ abstract class BaseNotification(bytes: ByteArray) {
         sB_CNT = buffer.short.toInt() and 0xFFFF
         eB_CNT = buffer.short.toInt() and 0xFFFF
         basal_CNT = buffer.short.toInt() and 0xFFFF
-        Log.i(
-            "EOPATCH_CORE",
+        aapsLogger.debug(
+            LTag.PUMPCOMM,
             "updateInjected $totalInjected (SB:$sB_CNT, EB:$eB_CNT, Basal:$basal_CNT clazz:${javaClass.simpleName})"
         )
         buffer.rewind()

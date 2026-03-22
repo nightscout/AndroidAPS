@@ -1,11 +1,15 @@
 package app.aaps.pump.eopatch.core.noti
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.eopatch.core.code.BolusType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import java.nio.ByteBuffer
 
 class NotificationTest {
+
+    private val aapsLogger = mock(AAPSLogger::class.java)
 
     private fun createInfoBytes(): ByteArray {
         val buf = ByteBuffer.allocate(32)
@@ -32,7 +36,7 @@ class NotificationTest {
     @Test
     fun `InfoNotification should parse counters from BaseNotification`() {
         val bytes = createInfoBytes()
-        val noti = InfoNotification(bytes)
+        val noti = InfoNotification(bytes, aapsLogger)
         assertThat(noti.sB_CNT).isEqualTo(10)
         assertThat(noti.eB_CNT).isEqualTo(20)
         assertThat(noti.basal_CNT).isEqualTo(30)
@@ -42,7 +46,7 @@ class NotificationTest {
     @Test
     fun `InfoNotification getInjected should return correct values`() {
         val bytes = createInfoBytes()
-        val noti = InfoNotification(bytes)
+        val noti = InfoNotification(bytes, aapsLogger)
         assertThat(noti.getInjected(BolusType.NOW)).isEqualTo(100)
         assertThat(noti.getInjected(BolusType.EXT)).isEqualTo(50)
         assertThat(noti.getInjected(BolusType.COMBO)).isEqualTo(150) // 100 + 50
@@ -51,7 +55,7 @@ class NotificationTest {
     @Test
     fun `InfoNotification getRemain should return target minus injected`() {
         val bytes = createInfoBytes()
-        val noti = InfoNotification(bytes)
+        val noti = InfoNotification(bytes, aapsLogger)
         assertThat(noti.getRemain(BolusType.NOW)).isEqualTo(100) // 200 - 100
         assertThat(noti.getRemain(BolusType.EXT)).isEqualTo(100) // 150 - 50
         assertThat(noti.getRemain(BolusType.COMBO)).isEqualTo(200) // (200+150) - (100+50)
@@ -60,7 +64,7 @@ class NotificationTest {
     @Test
     fun `InfoNotification isBolusRegAct should detect active bolus`() {
         val bytes = createInfoBytes()
-        val noti = InfoNotification(bytes)
+        val noti = InfoNotification(bytes, aapsLogger)
         assertThat(noti.isBolusRegAct).isTrue()
         assertThat(noti.isBolusRegAct(BolusType.NOW)).isTrue()
         assertThat(noti.isBolusRegAct(BolusType.EXT)).isTrue()
@@ -69,7 +73,7 @@ class NotificationTest {
     @Test
     fun `InfoNotification isBolusDone should detect finished bolus`() {
         val bytes = createInfoBytes()
-        val noti = InfoNotification(bytes)
+        val noti = InfoNotification(bytes, aapsLogger)
         // NOW act=1 (running), EXT act=2 (finished)
         assertThat(noti.isBolusDone(BolusType.NOW)).isFalse()
         assertThat(noti.isBolusDone(BolusType.EXT)).isTrue()
@@ -88,7 +92,7 @@ class NotificationTest {
             putShort(2)
             putShort(3)
         }
-        val alarm = AlarmNotification(bytes)
+        val alarm = AlarmNotification(bytes, aapsLogger)
         assertThat(alarm.curIndex).isEqualTo(5)
         assertThat(alarm.lastFinishedIndex).isEqualTo(4)
     }
@@ -101,7 +105,7 @@ class NotificationTest {
             putShort(0)
             putShort(0)
         }
-        val alarm = AlarmNotification(bytes)
+        val alarm = AlarmNotification(bytes, aapsLogger)
         assertThat(alarm.lastFinishedIndex).isEqualTo(-1)
     }
 }

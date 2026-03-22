@@ -1,6 +1,8 @@
 package app.aaps.pump.eopatch.core.noti
 
-class AlarmNotification(bytes: ByteArray) : BaseNotification(bytes) {
+import app.aaps.core.interfaces.logging.AAPSLogger
+
+class AlarmNotification(bytes: ByteArray, aapsLogger: AAPSLogger) : BaseNotification(bytes, aapsLogger) {
 
     val curIndex: Int
     val lastFinishedIndex: Int

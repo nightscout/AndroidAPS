@@ -1,6 +1,10 @@
 package app.aaps.pump.eopatch.core.api
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.eopatch.core.ble.BaseAPI
+import app.aaps.pump.eopatch.core.scan.IBleDevice
+import javax.inject.Inject
+import javax.inject.Singleton
 import app.aaps.pump.eopatch.core.ble.PatchFunc
 import app.aaps.pump.eopatch.core.ble.PumpCounter
 import app.aaps.pump.eopatch.core.code.PatchBleResultCode
@@ -8,7 +12,8 @@ import app.aaps.pump.eopatch.core.response.TempBasalScheduleSetResponse
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
 import io.reactivex.rxjava3.core.Single
 
-class TempBasalScheduleStart : BaseAPI<TempBasalScheduleSetResponse>(PatchFunc.START_TEMP_BASAL) {
+@Singleton
+class TempBasalScheduleStart @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TempBasalScheduleSetResponse>(PatchFunc.START_TEMP_BASAL, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): TempBasalScheduleSetResponse {
         val ret = bytes[DATA0].toInt() and 0xFF
         val result = when (ret) {

@@ -1,6 +1,7 @@
 package app.aaps.pump.eopatch.ble
 
 import android.content.Context
+import app.aaps.core.interfaces.logging.AAPSLogger
 import android.content.Intent
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -57,12 +58,13 @@ class PatchManager @Inject constructor(
     private val dateUtil: DateUtil,
     private val rxAction: RxAction,
     private val aapsSchedulers: AapsSchedulers,
-    private val alarmRegistry: IAlarmRegistry
+    private val alarmRegistry: IAlarmRegistry,
+    private val aapsLogger: AAPSLogger
 ) : IPatchManager {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var patchScanner: IPatchScanner = PatchScanner(context)
+    private var patchScanner: IPatchScanner = PatchScanner(context, aapsLogger)
     private var mConnectingDisposable: Disposable? = null
 
     @Inject
