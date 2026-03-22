@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -54,7 +53,7 @@ class MedtrumComposeContent(
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
             }
         }
-        val wizardNavIcon: @Composable () -> Unit = {
+        {
             IconButton(onClick = {
                 showPatchWorkflow = false
                 startPatchStep = null
@@ -126,19 +125,6 @@ class MedtrumComposeContent(
 
             // Create PatchViewModel scoped to the workflow
             val patchViewModel: MedtrumPatchViewModel = hiltViewModel()
-            val patchTitleResId by patchViewModel.title.collectAsStateWithLifecycle()
-            val patchTitle = stringResource(patchTitleResId)
-
-            // Update parent toolbar with patch workflow title
-            LaunchedEffect(patchTitle) {
-                setToolbarConfig(
-                    ToolbarConfig(
-                        title = patchTitle,
-                        navigationIcon = wizardNavIcon,
-                        actions = {}
-                    )
-                )
-            }
 
             // Reset and initialize with the start step
             LaunchedEffect(startPatchStep) {
@@ -163,7 +149,7 @@ class MedtrumComposeContent(
                 }
             }
 
-            MedtrumPatchScreen(viewModel = patchViewModel)
+            MedtrumPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
         } else {
             MedtrumOverviewScreen(viewModel = overviewViewModel)
         }

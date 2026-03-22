@@ -3,11 +3,23 @@ package app.aaps.pump.eopatch.compose
 import android.content.res.Resources
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.siteRotation.BodyType
+import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.eopatch.CommonUtils
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.RxAction
@@ -40,6 +52,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -59,8 +73,11 @@ class EopatchPatchViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxAction: RxAction,
-    private val preferences: Preferences
-) : ViewModel() {
+    private val preferences: Preferences,
+    private val insulinManager: InsulinManager,
+    private val profileFunction: ProfileFunction,
+    private val persistenceLayer: PersistenceLayer
+) : ViewModel(), SiteLocationStepHost {
 
     companion object {
 
@@ -91,9 +108,30 @@ class EopatchPatchViewModel @Inject constructor(
     private val _isActivated = MutableStateFlow(patchConfig.isActivated)
     val isActivated: StateFlow<Boolean> = _isActivated
 
+    // Insulin selection
+    private val _availableInsulins = MutableStateFlow<List<ICfg>>(emptyList())
+    val availableInsulins: StateFlow<List<ICfg>> = _availableInsulins.asStateFlow()
+    private val _selectedInsulin = MutableStateFlow<ICfg?>(null)
+    val selectedInsulin: StateFlow<ICfg?> = _selectedInsulin.asStateFlow()
+    private val _activeInsulinLabel = MutableStateFlow<String?>(null)
+    val activeInsulinLabel: StateFlow<String?> = _activeInsulinLabel.asStateFlow()
+
+    // Site location
+    private val _siteLocation = MutableStateFlow(TE.Location.NONE)
+    override val siteLocation: StateFlow<TE.Location> = _siteLocation.asStateFlow()
+    private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
+    override val siteArrow: StateFlow<TE.Arrow> = _siteArrow.asStateFlow()
+    private var siteRotationEntriesCache: List<TE> = emptyList()
+
+    val showSiteLocationStep: Boolean
+        get() = preferences.get(BooleanKey.SiteRotationManagePump)
+
     // Ticks every second to drive recomposition of time-dependent properties
     private val _expirationTick = MutableStateFlow(0L)
     val expirationTick: StateFlow<Long> = _expirationTick
+
+    private val _isCommChecking = MutableStateFlow(false)
+    val isCommChecking: StateFlow<Boolean> = _isCommChecking
 
     private val _events = MutableSharedFlow<PatchEvent>(extraBufferCapacity = 10)
     val events: SharedFlow<PatchEvent> = _events
@@ -157,20 +195,22 @@ class EopatchPatchViewModel @Inject constructor(
             PatchStep.MANUALLY_TURNING_OFF_ALARM,
             PatchStep.DISCARDED, PatchStep.DISCARDED_FOR_CHANGE, PatchStep.DISCARDED_FROM_ALARM -> 3
 
-            else                                                                                -> 7
+            else                                                                                -> 9
         }
 
     val currentStepIndex: Int
         get() = when (_patchStep.value) {
             PatchStep.WAKE_UP                            -> 0
             PatchStep.CONNECT_NEW                        -> 1
-            PatchStep.REMOVE_NEEDLE_CAP                  -> 2
-            PatchStep.REMOVE_PROTECTION_TAPE             -> 3
-            PatchStep.SAFETY_CHECK                       -> 4
+            PatchStep.SELECT_INSULIN                     -> 2
+            PatchStep.REMOVE_NEEDLE_CAP                  -> 3
+            PatchStep.SITE_LOCATION                      -> 4
+            PatchStep.REMOVE_PROTECTION_TAPE             -> 5
+            PatchStep.SAFETY_CHECK                       -> 6
             PatchStep.ROTATE_KNOB,
-            PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR -> 5
+            PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR -> 7
 
-            PatchStep.BASAL_SCHEDULE                     -> 6
+            PatchStep.BASAL_SCHEDULE                     -> 8
             PatchStep.SAFE_DEACTIVATION                  -> 0
             PatchStep.MANUALLY_TURNING_OFF_ALARM         -> 1
             PatchStep.DISCARDED, PatchStep.DISCARDED_FOR_CHANGE,
@@ -181,6 +221,7 @@ class EopatchPatchViewModel @Inject constructor(
 
     init {
         startB012UpdateSubscription()
+        loadSiteRotationEntries()
 
         disposables.add(
             preferenceManager.observePatchLifeCycle()
@@ -275,7 +316,9 @@ class EopatchPatchViewModel @Inject constructor(
                 PatchStep.MANUALLY_TURNING_OFF_ALARM -> R.string.patch_manually_turning_off_alarm_title
                 PatchStep.WAKE_UP,
                 PatchStep.CONNECT_NEW,
+                PatchStep.SELECT_INSULIN,
                 PatchStep.REMOVE_NEEDLE_CAP,
+                PatchStep.SITE_LOCATION,
                 PatchStep.REMOVE_PROTECTION_TAPE,
                 PatchStep.SAFETY_CHECK,
                 PatchStep.ROTATE_KNOB,
@@ -439,12 +482,12 @@ class EopatchPatchViewModel @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .onErrorReturnItem(false)
-            .doOnSubscribe { _events.tryEmit(PatchEvent.ShowCommProgress(R.string.string_connecting)) }
+            .doOnSubscribe { _isCommChecking.value = true }
             .doFinally { onCommCheckComplete() }
             .doOnError { aapsLogger.error(LTag.PUMP, it.message ?: "Error") }
             .subscribeDefault(aapsLogger) { success ->
                 if (!success) {
-                    _events.tryEmit(PatchEvent.DismissCommProgress)
+                    _isCommChecking.value = false
                     _events.tryEmit(
                         PatchEvent.ShowCommError(
                             isForcedDiscard = _patchStep.value?.isSafeDeactivation == true || connectionTryCnt >= 2
@@ -457,7 +500,7 @@ class EopatchPatchViewModel @Inject constructor(
     private fun onCommCheckComplete() {
         if (patchManagerExecutor.patchConnectionState.isConnected) {
             if (isBonded) {
-                _events.tryEmit(PatchEvent.DismissCommProgress)
+                _isCommChecking.value = false
                 _events.tryEmit(PatchEvent.ShowBondedDialog())
             } else {
                 dismissPatchCommCheckDialogInternal(true)
@@ -467,7 +510,7 @@ class EopatchPatchViewModel @Inject constructor(
     }
 
     fun dismissPatchCommCheckDialogInternal(doOnSuccessOrCancel: Boolean? = null) {
-        _events.tryEmit(PatchEvent.DismissCommProgress)
+        _isCommChecking.value = false
         doOnSuccessOrCancel?.let {
             if (it) mOnCommCheckSuccessListener?.invoke()
             else mOnCommCheckCancelListener?.invoke()
@@ -506,7 +549,7 @@ class EopatchPatchViewModel @Inject constructor(
             mOnCommCheckSuccessListener = {
                 deactivate(true) { moveStep(PatchStep.DISCARDED_FOR_CHANGE) }
             }
-            _events.tryEmit(PatchEvent.ShowCommProgress(R.string.string_connecting))
+            _isCommChecking.value = true
             disposables.add(
                 Single.timer(10, TimeUnit.SECONDS)
                     .doFinally { onCommCheckComplete() }
@@ -539,10 +582,10 @@ class EopatchPatchViewModel @Inject constructor(
         disposables.add(
             patchManagerExecutor.deactivate(6000, force)
                 .doOnSubscribe {
-                    _events.tryEmit(PatchEvent.ShowCommProgress(force.takeOne(R.string.string_in_progress, R.string.string_changing)))
+                    _isCommChecking.value = true
                 }
                 .doFinally {
-                    _events.tryEmit(PatchEvent.DismissCommProgress)
+                    _isCommChecking.value = false
                 }
                 .subscribeDefault(aapsLogger) { status ->
                     if (status.isDeactivated) {
@@ -637,7 +680,7 @@ class EopatchPatchViewModel @Inject constructor(
                                              .map { it == TEST_SUCCESS }
                                              .onErrorReturnItem(false)
                                              .subscribeDefault(aapsLogger) {
-                                                 if (it) moveStep(PatchStep.REMOVE_NEEDLE_CAP)
+                                                 if (it) moveStep(PatchStep.SELECT_INSULIN)
                                                  else if (!patchManagerExecutor.patchConnectionState.isConnected) updateSetupStep(SetupStep.SELF_TEST_FAILED)
                                              }
                                      )
@@ -649,7 +692,7 @@ class EopatchPatchViewModel @Inject constructor(
         if (mRetryCount <= mMaxRetryCount) {
             startSafetyCheckInternal()
         } else {
-            moveStep(PatchStep.REMOVE_NEEDLE_CAP)
+            moveStep(PatchStep.SELECT_INSULIN)
         }
     }
 
@@ -680,7 +723,7 @@ class EopatchPatchViewModel @Inject constructor(
                 .toObservable()
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .doOnSubscribe {
-                    _events.tryEmit(PatchEvent.ShowCommProgress(R.string.string_connecting))
+                    _isCommChecking.value = true
                     updateSetupStep(SetupStep.NEEDLE_SENSING_STARTED)
                 }
                 .onErrorReturnItem(false)
@@ -691,7 +734,7 @@ class EopatchPatchViewModel @Inject constructor(
                         if (!patchManagerExecutor.patchConnectionState.isConnected) {
                             updateSetupStep(SetupStep.NEEDLE_SENSING_FAILED)
                         }
-                        _events.tryEmit(PatchEvent.DismissCommProgress)
+                        _isCommChecking.value = false
                     }
                 }
         )
@@ -702,10 +745,10 @@ class EopatchPatchViewModel @Inject constructor(
         disposables.add(
             patchManager.patchActivation(20000)
                 .doOnSubscribe {
-                    _events.tryEmit(PatchEvent.ShowCommProgress(R.string.string_connecting))
+                    _isCommChecking.value = true
                     updateSetupStep(SetupStep.ACTIVATION_STARTED)
                 }
-                .doFinally { _events.tryEmit(PatchEvent.DismissCommProgress) }
+                .doFinally { _isCommChecking.value = false }
                 .onErrorReturnItem(false)
                 .subscribeDefault(aapsLogger) {
                     if (it) moveStep(PatchStep.COMPLETE)
@@ -756,12 +799,7 @@ class EopatchPatchViewModel @Inject constructor(
 
     // Back handler logic
     fun handleBack() {
-        when (_patchStep.value) {
-            PatchStep.WAKE_UP,
-            PatchStep.SAFE_DEACTIVATION -> _events.tryEmit(PatchEvent.Finish)
-
-            else                        -> Unit // Block back during critical operations
-        }
+        _events.tryEmit(PatchEvent.Finish)
     }
 
     fun handleComplete() {
@@ -771,4 +809,98 @@ class EopatchPatchViewModel @Inject constructor(
     fun handleCancel() {
         moveStep(PatchStep.CANCEL)
     }
+
+    fun forceResetPatchState() {
+        _events.tryEmit(PatchEvent.ShowForceResetDialog)
+    }
+
+    fun executeForceReset() {
+        // Remove BT bond first (while mac is still known), then clear state
+        patchManagerExecutor.updateMacAddress("", false)
+        patchConfig.updateDeactivated()
+        preferenceManager.flushPatchConfig()
+        _events.tryEmit(PatchEvent.Finish)
+    }
+
+    // region Insulin selection
+
+    fun loadInsulins() {
+        if (_availableInsulins.value.isNotEmpty()) return
+        viewModelScope.launch {
+            val insulins = insulinManager.insulins.map { it.deepClone() }
+            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
+            _availableInsulins.value = insulins
+            _selectedInsulin.value = current
+            _activeInsulinLabel.value = activeLabel
+        }
+    }
+
+    fun selectInsulin(iCfg: ICfg) {
+        _selectedInsulin.value = iCfg
+    }
+
+    fun executeInsulinProfileSwitch() {
+        val selected = _selectedInsulin.value ?: return
+        val activeLabel = _activeInsulinLabel.value
+        if (selected.insulinLabel == activeLabel) return
+        viewModelScope.launch {
+            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.EOPatch2)
+        }
+    }
+
+    // endregion
+
+    // region SiteLocationStepHost
+
+    override fun updateSiteLocation(location: TE.Location) {
+        _siteLocation.value = location
+    }
+
+    override fun updateSiteArrow(arrow: TE.Arrow) {
+        _siteArrow.value = arrow
+    }
+
+    override fun completeSiteLocation() {
+        moveStep(PatchStep.REMOVE_PROTECTION_TAPE)
+    }
+
+    override fun skipSiteLocation() {
+        _siteLocation.value = TE.Location.NONE
+        _siteArrow.value = TE.Arrow.NONE
+        moveStep(PatchStep.REMOVE_PROTECTION_TAPE)
+    }
+
+    override fun bodyType(): BodyType =
+        BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
+
+    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+
+    private fun loadSiteRotationEntries() {
+        viewModelScope.launch {
+            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+                System.currentTimeMillis() - T.days(45).msecs(), false
+            ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+        }
+    }
+
+    fun saveSiteLocationToTherapyEvent(activationTimestamp: Long) {
+        val location = _siteLocation.value.takeIf { it != TE.Location.NONE }
+        val arrow = _siteArrow.value.takeIf { it != TE.Arrow.NONE }
+        if (location != null || arrow != null) {
+            viewModelScope.launch {
+                try {
+                    val entries = persistenceLayer.getTherapyEventDataFromToTime(activationTimestamp, activationTimestamp)
+                        .filter { it.type == TE.Type.CANNULA_CHANGE }
+                    entries.firstOrNull()?.let { te ->
+                        persistenceLayer.insertOrUpdateTherapyEvent(te.copy(location = location, arrow = arrow))
+                    }
+                } catch (_: Exception) {
+                    // location is optional
+                }
+            }
+        }
+    }
+
+    // endregion
 }

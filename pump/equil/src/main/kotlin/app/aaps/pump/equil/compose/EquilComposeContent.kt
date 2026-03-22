@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -51,7 +50,7 @@ class EquilComposeContent(
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
             }
         }
-        val wizardNavIcon: @Composable () -> Unit = {
+        {
             IconButton(onClick = {
                 showWizardWorkflow = false
                 startWorkflow = null
@@ -127,20 +126,6 @@ class EquilComposeContent(
             if (bleReady) {
                 // Create WizardViewModel scoped to the workflow
                 val wizardViewModel: EquilWizardViewModel = hiltViewModel()
-                val wizardTitleResId by wizardViewModel.titleResId.collectAsStateWithLifecycle()
-                val wizardTitle = stringResource(wizardTitleResId)
-
-                // Update parent toolbar with wizard title
-                LaunchedEffect(wizardTitle) {
-                    setToolbarConfig(
-                        ToolbarConfig(
-                            title = wizardTitle,
-                            navigationIcon = wizardNavIcon,
-                            actions = {}
-                        )
-                    )
-                }
-
                 // Initialize with the start workflow
                 LaunchedEffect(startWorkflow) {
                     startWorkflow?.let { workflow ->
@@ -164,7 +149,7 @@ class EquilComposeContent(
                     }
                 }
 
-                EquilWizardScreen(viewModel = wizardViewModel)
+                EquilWizardScreen(viewModel = wizardViewModel, setToolbarConfig = setToolbarConfig)
             }
         } else {
             EquilOverviewScreen(viewModel = overviewViewModel)

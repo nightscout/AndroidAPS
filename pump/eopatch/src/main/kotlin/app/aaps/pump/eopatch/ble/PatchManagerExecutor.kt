@@ -96,6 +96,17 @@ import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.Any
+import kotlin.Boolean
+import kotlin.ByteArray
+import kotlin.Float
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.Throwable
+import kotlin.Throws
+import kotlin.check
+import kotlin.synchronized
 
 @Singleton
 class PatchManagerExecutor @Inject constructor(
@@ -130,11 +141,12 @@ class PatchManagerExecutor @Inject constructor(
         filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
 
-        val dateTimeChanged: Observable<Intent> = RxBroadcastReceiver.Companion.create(context, filter)
+        val dateTimeChanged: Observable<Intent> = RxBroadcastReceiver.create(context, filter)
 
         compositeDisposable.add(
-            Observable.combineLatest<Boolean, PatchLifecycle, Boolean>(patch.observeConnected(), pm.observePatchLifeCycle(),
-                                                                       BiFunction { connected: Boolean, lifeCycle: PatchLifecycle -> (connected && lifeCycle.isActivated) })
+            Observable.combineLatest<Boolean, PatchLifecycle, Boolean>(
+                patch.observeConnected(), pm.observePatchLifeCycle(),
+                BiFunction { connected: Boolean, lifeCycle: PatchLifecycle -> (connected && lifeCycle.isActivated) })
                 .subscribeOn(aapsSchedulers.io)
                 .filter(Predicate { ok: Boolean -> ok })
                 .observeOn(aapsSchedulers.io)
@@ -144,10 +156,11 @@ class PatchManagerExecutor @Inject constructor(
         )
 
         compositeDisposable.add(
-            Observable.combineLatest<Boolean, PatchLifecycle, Intent, Boolean>(patch.observeConnected(),
-                                                                               pm.observePatchLifeCycle().distinctUntilChanged(),
-                                                                               dateTimeChanged.startWith(Observable.just<Intent>(Intent())),
-                                                                               Function3 { connected: Boolean, lifeCycle: PatchLifecycle, value: Intent -> (connected && lifeCycle.isActivated) })
+            Observable.combineLatest<Boolean, PatchLifecycle, Intent, Boolean>(
+                patch.observeConnected(),
+                pm.observePatchLifeCycle().distinctUntilChanged(),
+                dateTimeChanged.startWith(Observable.just<Intent>(Intent())),
+                Function3 { connected: Boolean, lifeCycle: PatchLifecycle, value: Intent -> (connected && lifeCycle.isActivated) })
                 .subscribeOn(aapsSchedulers.io)
                 .doOnNext(Consumer { v: Boolean -> aapsLogger.debug(LTag.PUMP, "Has the date or time changed $v") })
                 .filter(Predicate { ok: Boolean -> ok })
@@ -165,8 +178,8 @@ class PatchManagerExecutor @Inject constructor(
 
         compositeDisposable.add(
             patchConfig.observe().doOnNext(Consumer { config: PatchConfig ->
-                val newKey = config.sharedKey
-                newKey?.let { patch.updateEncryptionParam(it) }
+                patch.updateEncryptionParam(config.sharedKey ?: ByteArray(0))
+                patch.setSeq(config.seq15)
             }).subscribe()
         )
 

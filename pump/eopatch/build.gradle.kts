@@ -24,6 +24,8 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
 
+    implementation(libs.androidx.compose.ui.tooling.preview)
+
     api(libs.com.google.guava)
 
     //RxAndroidBle
