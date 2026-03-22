@@ -97,14 +97,16 @@ class EopatchOverviewViewModel @Inject constructor(
     private val _bleConnectionState = MutableStateFlow(patchManagerExecutor.patchConnectionState)
     private val _isNormalBasalPaused = MutableStateFlow(preferenceManager.patchState.isNormalBasalPaused)
     private val _remainedInsulin = MutableStateFlow(preferenceManager.patchState.remainedInsulin)
+    private val _stateUpdatedTimestamp = MutableStateFlow(preferenceManager.patchState.updatedTimestamp)
 
     val uiState: StateFlow<PumpOverviewUiState> = combine(
-        combine(_patchConfig, _bleConnectionState, _isNormalBasalPaused, _remainedInsulin, ::UiInputs),
+        combine(_patchConfig, _bleConnectionState, _isNormalBasalPaused, _remainedInsulin) { config, conn, paused, insulin -> UiInputs(config, conn, paused, insulin) },
+        _stateUpdatedTimestamp,
         tickerFlow(30_000L),
         communicationStatus.refreshTrigger
-    ) { inputs, _, _ ->
-        buildUiState(inputs.config, inputs.connState, inputs.isPaused, inputs.insulin)
-    }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildUiState(patchConfigData, patchManagerExecutor.patchConnectionState, preferenceManager.patchState.isNormalBasalPaused, preferenceManager.patchState.remainedInsulin))
+    ) { inputs, stateTs, _, _ ->
+        buildUiState(inputs.config, inputs.connState, inputs.isPaused, inputs.insulin, stateTs)
+    }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildUiState(patchConfigData, patchManagerExecutor.patchConnectionState, preferenceManager.patchState.isNormalBasalPaused, preferenceManager.patchState.remainedInsulin, preferenceManager.patchState.updatedTimestamp))
 
     private data class UiInputs(val config: PatchConfig, val connState: BleConnectionState, val isPaused: Boolean, val insulin: Float)
 
@@ -122,6 +124,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 .subscribe {
                     _remainedInsulin.value = it.remainedInsulin
                     _isNormalBasalPaused.value = it.isNormalBasalPaused
+                    _stateUpdatedTimestamp.value = it.updatedTimestamp
                 }
         )
 
@@ -246,7 +249,8 @@ class EopatchOverviewViewModel @Inject constructor(
         config: PatchConfig,
         connState: BleConnectionState,
         isPaused: Boolean,
-        insulin: Float
+        insulin: Float,
+        stateUpdatedTimestamp: Long
     ): PumpOverviewUiState {
         // Status banner
         val statusBanner = buildStatusBanner(connState, config.isActivated, isPaused)
@@ -303,6 +307,11 @@ class EopatchOverviewViewModel @Inject constructor(
             // Serial number
             if (config.patchSerialNumber.isNotEmpty()) {
                 add(PumpInfoRow(label = rh.gs(R.string.eopatch_serial_number), value = config.patchSerialNumber))
+            }
+
+            // Last state update
+            if (config.isActivated && stateUpdatedTimestamp > 0L) {
+                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.minAgo(rh, stateUpdatedTimestamp)))
             }
         }
 
