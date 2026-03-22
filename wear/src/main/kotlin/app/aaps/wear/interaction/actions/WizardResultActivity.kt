@@ -92,7 +92,6 @@ class WizardResultActivity : DaggerAppCompatActivity() {
     private var insulinTrend: Double? = null
     private var tempTarget: String? = null
     private var percentage: Int = 100
-    private var totalBeforePercentage: Double? = null
     private var cob: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,7 +111,6 @@ class WizardResultActivity : DaggerAppCompatActivity() {
         insulinTrend         = intent.getDoubleExtra("insulin_trend", Double.NaN).takeUnless { it.isNaN() }
         tempTarget           = intent.getStringExtra("temp_target")
         percentage           = intent.getIntExtra("percentage", 100)
-        totalBeforePercentage = intent.getDoubleExtra("total_before_percentage", Double.NaN).takeUnless { it.isNaN() }
         cob                  = intent.getDoubleExtra("cob", 0.0)
 
         setContent {
@@ -134,7 +132,6 @@ class WizardResultActivity : DaggerAppCompatActivity() {
                                 insulinTrend          = insulinTrend,
                                 tempTarget            = tempTarget,
                                 percentage            = percentage,
-                                totalBeforePercentage = totalBeforePercentage,
                                 cob                   = cob
                             )
                             1 -> WizardConfirmScreen(
@@ -203,7 +200,6 @@ private fun WizardResultScreen(
     insulinTrend: Double?,
     tempTarget: String?,
     percentage: Int,
-    totalBeforePercentage: Double?,
     cob: Double
 ) {
     val fmt2 = remember { DecimalFormat("0.00") }
@@ -227,9 +223,6 @@ private fun WizardResultScreen(
         }
         if (insulinTrend != null && insulinTrend != 0.0) {
             add(WizardCalculationRow(stringResource(R.string.wizard_result_trend), insulinTrend))
-        }
-        if (totalIob != null && totalIob != 0.0) {
-            add(WizardCalculationRow(stringResource(R.string.wizard_result_iob), totalIob))
         }
         if (insulinCob != null && insulinCob != 0.0) {
             add(WizardCalculationRow(stringResource(R.string.wizard_result_cob, cob), insulinCob))
@@ -352,26 +345,35 @@ private fun WizardResultScreen(
 
                         rows.forEach { row -> CalculationRow(row = row) }
 
-                        // Percentage breakdown
-                        if (percentage != 100 && totalBeforePercentage != null && totalBeforePercentage > 0) {
-                            if (rows.size > 1) {
-                                HorizontalDivider()
-                                CalculationRow(
-                                    row = WizardCalculationRow(
-                                        label = stringResource(R.string.wizard_result_subtotal),
-                                        value = totalBeforePercentage
-                                    )
-                                )
-                            }
-                            val adjustment = totalInsulin - totalBeforePercentage
+                        // Subtotal = sum of scaled components (always shown)
+                        val subtotalValue = (insulinBg ?: 0.0) + (insulinTrend ?: 0.0) + (insulinCob ?: 0.0) + insulinCarbs
+                        HorizontalDivider()
+                        CalculationRow(
+                            row = WizardCalculationRow(
+                                label = stringResource(R.string.wizard_result_subtotal),
+                                value = subtotalValue
+                            )
+                        )
+                        // X% row only when percentage != 100
+                        if (percentage != 100) {
+                            val afterPercentage = subtotalValue * percentage / 100.0
                             CalculationRow(
                                 row = WizardCalculationRow(
                                     label = stringResource(R.string.wizard_result_correction_percentage, percentage),
-                                    value = adjustment
+                                    value = afterPercentage
                                 )
                             )
                         }
 
+                        HorizontalDivider()
+                        if (totalIob != null && totalIob != 0.0) {
+                            CalculationRow(
+                                row = WizardCalculationRow(
+                                    label = stringResource(R.string.wizard_result_iob),
+                                    value = totalIob
+                                )
+                            )
+                        }
                         HorizontalDivider()
                         CalculationRow(
                             row = WizardCalculationRow(
