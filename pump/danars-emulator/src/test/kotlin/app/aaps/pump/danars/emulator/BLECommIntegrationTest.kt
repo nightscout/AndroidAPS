@@ -35,8 +35,15 @@ import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralGetPumpCheck
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralGetShippingInformation
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGet24CIRCFArray
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGetBolusOption
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGetCIRCFArray
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGetCalculationInformation
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpTime
+import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetUserOption
+import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
+import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.services.BLEComm
 import app.aaps.shared.tests.TestBase
@@ -603,4 +610,131 @@ class BLECommIntegrationTest : TestBase() {
         assertThat(pumpTime.isReceived).isTrue()
         assertThat(danaPump.pumpTime).isGreaterThan(0)
     }
+
+    // ========== 0% Coverage Packets ==========
+
+    @Test
+    fun `get24CIRCFArray reads 24-hour CIR and CF from emulator`() {
+        connectAndHandshake()
+
+        // Set emulator CIR/CF values (IntArray — pump stores integers)
+        val state = emulatorTransport.pumpState
+        state.units = DanaPump.UNITS_MGDL
+        for (i in 0..23) {
+            state.cir24Values[i] = 10 + i
+            state.cf24Values[i] = 30 + i * 2
+        }
+
+        val packet = DanaRSPacketBolusGet24CIRCFArray(aapsLogger)
+        packet.danaPump = danaPump  // field injection
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(danaPump.units).isEqualTo(DanaPump.UNITS_MGDL)
+        assertThat(danaPump.cir24[0]).isWithin(0.01).of(10.0)
+        assertThat(danaPump.cir24[23]).isWithin(0.01).of(33.0)
+        assertThat(danaPump.cf24[0]).isWithin(0.01).of(30.0)
+        assertThat(danaPump.cf24[23]).isWithin(0.01).of(76.0)
+    }
+
+    @Test
+    fun `getBolusOption reads extended bolus enabled flag`() {
+        connectAndHandshake()
+
+        emulatorTransport.pumpState.isExtendedEnabled = true
+
+        val packet = DanaRSPacketBolusGetBolusOption(aapsLogger, notificationManager, danaPump)
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(danaPump.isExtendedBolusEnabled).isTrue()
+    }
+
+    @Test
+    fun `getCalculationInformation reads target values`() {
+        connectAndHandshake()
+
+        val state = emulatorTransport.pumpState
+        state.units = DanaPump.UNITS_MGDL
+        state.currentTarget = 120
+
+        val packet = DanaRSPacketBolusGetCalculationInformation(aapsLogger, danaPump)
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+    }
+
+    @Test
+    fun `getCIRCFArray reads non-24h CIR and CF`() {
+        connectAndHandshake()
+
+        val state = emulatorTransport.pumpState
+        state.units = DanaPump.UNITS_MGDL
+
+        val packet = DanaRSPacketBolusGetCIRCFArray(aapsLogger, danaPump)
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+    }
+
+    @Test
+    fun `getPumpUTCAndTimeZone reads UTC time and zone offset`() {
+        // hwModel >= 7 enables UTC mode on DanaPump
+        emulatorTransport.pumpState.hwModel = 7
+        emulatorTransport.pumpState.zoneOffset = 3
+        connectAndHandshake()
+
+        // Read pump check to set hwModel on danaPump
+        val pumpCheck = DanaRSPacketGeneralGetPumpCheck(aapsLogger, danaPump, notificationManager)
+        bleComm.sendMessage(pumpCheck)
+        assertThat(danaPump.hwModel).isEqualTo(7)
+        assertThat(danaPump.usingUTC).isTrue()
+
+        val packet = DanaRSPacketOptionGetPumpUTCAndTimeZone(aapsLogger, dateUtil)
+        packet.danaPump = danaPump  // field injection
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(danaPump.pumpTime).isGreaterThan(0)
+        assertThat(danaPump.zoneOffset).isEqualTo(3)
+    }
+
+    @Test
+    fun `setPumpUTCAndTimeZone sets time on emulator`() {
+        connectAndHandshake()
+
+        val now = System.currentTimeMillis()
+        val packet = DanaRSPacketOptionSetPumpUTCAndTimeZone(aapsLogger, dateUtil).with(now, 2)
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(emulatorTransport.pumpState.zoneOffset).isEqualTo(2)
+    }
+
+    @Test
+    fun `setUserOption writes user settings to emulator`() {
+        connectAndHandshake()
+
+        danaPump.lcdOnTimeSec = 15
+        danaPump.backlightOnTimeSec = 10
+        danaPump.cannulaVolume = 20
+        danaPump.lowReservoirRate = 10
+        danaPump.selectedLanguage = 1
+
+        val packet = DanaRSPacketOptionSetUserOption(aapsLogger, danaPump)
+        bleComm.sendMessage(packet)
+
+        assertThat(packet.isReceived).isTrue()
+        assertThat(packet.failed).isFalse()
+        // Verify emulator received the settings
+        assertThat(emulatorTransport.pumpState.lcdOnTimeSec).isEqualTo(15)
+        assertThat(emulatorTransport.pumpState.backlightOnTimeSec).isEqualTo(10)
+    }
+
 }
