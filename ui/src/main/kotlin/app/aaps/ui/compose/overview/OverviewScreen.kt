@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.TT
+import app.aaps.ui.compose.scenes.ActiveSceneBanner
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.pump.BolusProgressState
@@ -58,6 +60,11 @@ fun OverviewScreen(
     onNotificationActionClick: (AapsNotification) -> Unit,
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
+    activeSceneState: ActiveSceneState? = null,
+    sceneExpired: Boolean = false,
+    onEndScene: () -> Unit = {},
+    onDismissScene: () -> Unit = {},
+    formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
     paddingValues: PaddingValues,
     fabBottomOffset: Dp = 0.dp,
     bolusState: BolusProgressState? = null,
@@ -104,7 +111,12 @@ fun OverviewScreen(
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,
                     onNavigate = onNavigate,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    activeSceneState = activeSceneState,
+                    sceneExpired = sceneExpired,
+                    onEndScene = onEndScene,
+                    onDismissScene = onDismissScene,
+                    formatDuration = formatDuration
                 )
             } else {
                 OverviewScreenStacked(
@@ -126,7 +138,12 @@ fun OverviewScreen(
                     statusViewModel = statusViewModel,
                     statusLightsDef = statusLightsDef,
                     onNavigate = onNavigate,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    activeSceneState = activeSceneState,
+                    sceneExpired = sceneExpired,
+                    onEndScene = onEndScene,
+                    onDismissScene = onDismissScene,
+                    formatDuration = formatDuration
                 )
             }
         }

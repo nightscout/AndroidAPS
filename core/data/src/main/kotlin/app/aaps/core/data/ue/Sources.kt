@@ -80,6 +80,7 @@ enum class Sources {
     Aaps,               // MainApp
     BgFragment,
     Garmin,
+    Scene,              //From Scene activation
     Database,           // for PersistenceLayer
     Unknown             //if necessary
     ;

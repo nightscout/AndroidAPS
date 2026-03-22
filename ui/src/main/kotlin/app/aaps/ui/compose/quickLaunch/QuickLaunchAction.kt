@@ -60,6 +60,13 @@ sealed class QuickLaunchAction {
         override val elementType = ElementType.PROFILE_MANAGEMENT
     }
 
+    data class SceneAction(val sceneId: String) : QuickLaunchAction() {
+
+        override val typeId = "scene"
+        override val dynamicId = sceneId
+        override val elementType = ElementType.SCENE
+    }
+
     data class PluginAction(val className: String) : QuickLaunchAction() {
 
         override val typeId = "plugin"

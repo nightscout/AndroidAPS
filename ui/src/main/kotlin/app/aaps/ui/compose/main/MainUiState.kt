@@ -81,4 +81,7 @@ sealed class ConfirmableAction {
         val percentage: Int,
         val durationMinutes: Int
     ) : ConfirmableAction()
+
+    data class ActivateScene(val sceneId: String, val durationMinutes: Int) : ConfirmableAction()
+    data object DeactivateScene : ConfirmableAction()
 }

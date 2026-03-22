@@ -104,6 +104,8 @@ fun ElementType.color(): Color = when (this) {
 
     ElementType.COB                     -> AapsTheme.elementColors.cob
     ElementType.SENSITIVITY             -> AapsTheme.elementColors.sensitivity
+    ElementType.SCENE,
+    ElementType.SCENE_MANAGEMENT        -> AapsTheme.elementColors.scene
     ElementType.RUNNING_MODE            -> AapsTheme.elementColors.runningMode
     ElementType.USER_ENTRY              -> AapsTheme.elementColors.userEntry
     ElementType.LOOP                    -> AapsTheme.elementColors.loop
@@ -157,6 +159,8 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.ABOUT                   -> Icons.Default.Info
     ElementType.COB                     -> IcCarbs
     ElementType.SENSITIVITY             -> IcAs
+    ElementType.SCENE,
+    ElementType.SCENE_MANAGEMENT        -> IcAutomation  // TODO: create dedicated scene icon
     ElementType.RUNNING_MODE            -> IcLoopClosed
     ElementType.USER_ENTRY              -> IcUserOptions
     ElementType.LOOP                    -> IcLoopClosed
@@ -205,6 +209,8 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.ABOUT                   -> R.string.nav_about
     ElementType.COB                     -> R.string.cob
     ElementType.SENSITIVITY             -> R.string.sensitivity
+    ElementType.SCENE                   -> 0 // dynamic label
+    ElementType.SCENE_MANAGEMENT        -> R.string.scene_management
     ElementType.RUNNING_MODE            -> R.string.running_mode
     ElementType.USER_ENTRY              -> R.string.user_entry
     ElementType.LOOP                    -> R.string.loop
@@ -249,6 +255,8 @@ fun ElementType.descriptionResId(): Int = when (this) {
     ElementType.CONFIGURATION           -> R.string.nav_configuration_desc
     ElementType.ABOUT                   -> R.string.nav_about_desc
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure_desc
+    ElementType.SCENE                   -> R.string.scene_desc
+    ElementType.SCENE_MANAGEMENT        -> R.string.scene_management_desc
     ElementType.QUICK_WIZARD,
     ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,

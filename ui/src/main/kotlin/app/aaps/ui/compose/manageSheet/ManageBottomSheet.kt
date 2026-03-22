@@ -177,6 +177,14 @@ internal fun ManageBottomSheetContent(
             }
             add { modifier ->
                 ManageGridItem(
+                    elementType = ElementType.SCENE_MANAGEMENT,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate,
+                    modifier = modifier
+                )
+            }
+            add { modifier ->
+                ManageGridItem(
                     elementType = ElementType.FOOD_MANAGEMENT,
                     onDismiss = onDismiss,
                     onNavigate = onNavigate,

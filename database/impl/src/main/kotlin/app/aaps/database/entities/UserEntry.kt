@@ -124,6 +124,8 @@ data class UserEntry(
         RUNNING_MODE,
         RUNNING_MODE_REMOVED,
         RUNNING_MODE_UPDATED,
+        SCENE_ACTIVATED,
+        SCENE_DEACTIVATED,
         UNKNOWN
         ;
     }
@@ -204,6 +206,7 @@ data class UserEntry(
         SiBionic,
         Sino,
         NotificationReader,
+        Scene,              //From Scene activation
         Stats,              //From Stat Activity
         Aaps,               // MainApp
         BgFragment,

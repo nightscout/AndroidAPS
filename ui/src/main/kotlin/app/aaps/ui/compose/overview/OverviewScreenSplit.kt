@@ -21,8 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
+import app.aaps.ui.compose.scenes.ActiveSceneBanner
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
@@ -56,6 +58,11 @@ fun OverviewScreenSplit(
     statusLightsDef: PreferenceSubScreenDef,
     onNavigate: (NavigationRequest) -> Unit,
     paddingValues: PaddingValues,
+    activeSceneState: ActiveSceneState? = null,
+    sceneExpired: Boolean = false,
+    onEndScene: () -> Unit = {},
+    onDismissScene: () -> Unit = {},
+    formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -80,6 +87,13 @@ fun OverviewScreenSplit(
                     .height(4.dp),
             )
         }
+        ActiveSceneBanner(
+            activeState = activeSceneState,
+            expired = sceneExpired,
+            onEndClick = onEndScene,
+            onDismiss = onDismissScene,
+            formatDuration = formatDuration
+        )
 
         Row(
             modifier = Modifier

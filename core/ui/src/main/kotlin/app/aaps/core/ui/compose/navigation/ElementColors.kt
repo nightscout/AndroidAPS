@@ -41,6 +41,7 @@ data class ElementColors(
     // Navigation screens
     val treatments: Color,
     val statistics: Color,
+    val scene: Color,               // scenes / situation presets
     val navigation: Color,          // history browser, setup wizard, maintenance, configuration
     // Graph overlay colors (no ElementType)
     val activity: Color,
@@ -87,6 +88,7 @@ val LightElementColors = ElementColors(
     deviceMaintenance = Color(0xFF78909C), // blue-grey — sensor/battery/cannula
     siteRotation = Color(0xFF5C6BC0),    // indigo
     settings = Color(0xFF546E7A),         // blue-grey 600 — distinct from pump grey
+    scene = Color(0xFF7B1FA2),             // purple 700 — distinct from all other element colors
     // Navigation screens
     treatments = Color(0xFF00897B),       // teal 600
     statistics = Color(0xFF5C6BC0),       // indigo 400
@@ -136,6 +138,7 @@ val DarkElementColors = ElementColors(
     deviceMaintenance = Color(0xFF90A4AE), // blue-grey (night)
     siteRotation = Color(0xFF7986CB),    // indigo (night)
     settings = Color(0xFF78909C),         // blue-grey 400 (night)
+    scene = Color(0xFFCE93D8),             // purple 200 (night) — distinct from all other element colors
     // Navigation screens
     treatments = Color(0xFF26A69A),       // teal 400 (night)
     statistics = Color(0xFF7986CB),       // indigo 300 (night)

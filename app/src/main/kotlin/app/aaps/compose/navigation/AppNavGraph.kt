@@ -91,6 +91,8 @@ import app.aaps.ui.compose.quickWizard.QuickWizardManagementScreen
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeScreen
+import app.aaps.ui.compose.scenes.SceneListScreen
+import app.aaps.ui.compose.scenes.wizard.SceneWizardScreen
 import app.aaps.ui.compose.siteRotationDialog.SiteRotationManagementScreen
 import app.aaps.ui.compose.siteRotationDialog.SiteRotationSettingsScreen
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
@@ -500,6 +502,25 @@ fun NavGraphBuilder.appNavGraph(
         QuickLauchConfigScreen(
             viewModel = quickLaunchConfigViewModel,
             onNavigateBack = { navController.safePopBackStack() }
+        )
+    }
+
+    composable(AppRoute.SceneList.route) {
+        SceneListScreen(
+            onNavigateToWizard = {
+                navController.navigate(AppRoute.SceneWizard.createRoute())
+            },
+            onNavigateToEditor = { sceneId ->
+                navController.navigate(AppRoute.SceneWizard.createRoute(sceneId))
+            },
+            onNavigateBack = { navController.popBackStack() }
+        )
+    }
+
+    composable(AppRoute.SceneWizard.route) {
+        SceneWizardScreen(
+            onFinished = { navController.popBackStack() },
+            onCancel = { navController.popBackStack() }
         )
     }
 

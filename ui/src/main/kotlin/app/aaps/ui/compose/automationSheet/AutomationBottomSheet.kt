@@ -29,6 +29,8 @@ import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import androidx.compose.material3.HorizontalDivider
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +38,9 @@ import app.aaps.core.ui.R as CoreUiR
 fun AutomationBottomSheet(
     onDismiss: () -> Unit,
     automationItems: List<AutomationActionItem>,
-    onItemClick: (AutomationActionItem) -> Unit
+    onItemClick: (AutomationActionItem) -> Unit,
+    sceneItems: List<SceneSheetItem> = emptyList(),
+    onSceneClick: (String) -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -130,6 +134,54 @@ fun AutomationBottomSheet(
                         onItemClick(item)
                     }
                 )
+            }
+
+            // Scenes section
+            if (sceneItems.isNotEmpty()) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(CoreUiR.string.scenes),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                val sceneColor = ElementType.SCENE.color()
+                val sceneIcon = ElementType.SCENE.icon()
+                sceneItems.forEach { item ->
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = item.name,
+                                color = sceneColor
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(CoreUiR.string.scene_action_count, item.actionCount)
+                            )
+                        },
+                        leadingContent = {
+                            TonalIcon(
+                                painter = rememberVectorPainter(sceneIcon),
+                                color = sceneColor
+                            )
+                        },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
+                        modifier = Modifier.clickable {
+                            onDismiss()
+                            onSceneClick(item.id)
+                        }
+                    )
+                }
             }
         }
     }

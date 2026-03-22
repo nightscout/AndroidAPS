@@ -208,6 +208,19 @@ fun QuickLauchConfigScreen(
                 }
             }
 
+            // ── Dynamic: Scenes ──
+            if (state.availableSceneItems.isNotEmpty()) {
+                item(key = "divider_scenes") {
+                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                }
+                item(key = "header_scenes") {
+                    SectionHeader(stringResource(app.aaps.core.ui.R.string.scenes))
+                }
+                items(state.availableSceneItems, key = { "avail_scene_${it.action.dynamicId}" }) { item ->
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
+                }
+            }
+
             // ── Dynamic: Automation ──
             item(key = "divider_auto") {
                 HorizontalDivider()

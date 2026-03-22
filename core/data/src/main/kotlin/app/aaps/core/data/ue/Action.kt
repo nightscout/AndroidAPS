@@ -99,6 +99,8 @@ enum class Action(val colorGroup: ColorGroup) {
     RUNNING_MODE(ColorGroup.RunningMode),
     RUNNING_MODE_REMOVED(ColorGroup.RunningMode),
     RUNNING_MODE_UPDATED(ColorGroup.RunningMode),
+    SCENE_ACTIVATED(ColorGroup.Aaps),
+    SCENE_DEACTIVATED(ColorGroup.Aaps),
     UNKNOWN(ColorGroup.Aaps)
     ;
 
