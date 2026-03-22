@@ -53,14 +53,6 @@ class MedtrumComposeContent(
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
             }
         }
-        {
-            IconButton(onClick = {
-                showPatchWorkflow = false
-                startPatchStep = null
-            }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
-            }
-        }
         val settingsAction: @Composable RowScope.() -> Unit = {
             onSettings?.let { action ->
                 IconButton(onClick = action) {

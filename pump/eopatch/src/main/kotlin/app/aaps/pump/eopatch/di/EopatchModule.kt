@@ -14,11 +14,6 @@ import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.ble.PatchManager
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.ble.PreferenceManagerImpl
-import app.aaps.pump.eopatch.ui.AlarmHelperActivity
-import app.aaps.pump.eopatch.ui.DialogHelperActivity
-import app.aaps.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
-import app.aaps.pump.eopatch.ui.dialogs.AlarmDialog
-import app.aaps.pump.eopatch.ui.dialogs.CommonDialog
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -52,27 +47,6 @@ abstract class EopatchModule {
     @Binds
     @Singleton
     abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
-
-    // #### DIALOGS (still needed for alarm/dialog helper activities) ################################
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesAlarmDialog(): AlarmDialog
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesActivationNotCompleteDialog(): ActivationNotCompleteDialog
-
-    // #### ACTIVITIES (alarm-driven entry points + helpers) ###########################################
-    // EopatchActivity is now @AndroidEntryPoint (Hilt-injected)
-
-    @ContributesAndroidInjector
-    abstract fun contributesAlarmHelperActivity(): AlarmHelperActivity
-
-    @ContributesAndroidInjector
-    abstract fun contributesDialogHelperActivity(): DialogHelperActivity
-
-    @ContributesAndroidInjector
-    abstract fun contributesEoDialog(): CommonDialog
 
     @ContributesAndroidInjector
     abstract fun contributesOsAlarmReceiver(): OsAlarmReceiver

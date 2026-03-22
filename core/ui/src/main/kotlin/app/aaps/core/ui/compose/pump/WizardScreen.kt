@@ -77,7 +77,10 @@ fun <S> WizardScreen(
                     actions = {}
                 )
             )
-            onDispose { }
+            onDispose {
+                // Clear toolbar when wizard leaves composition
+                setToolbarConfig(ToolbarConfig(title = "", navigationIcon = {}, actions = {}))
+            }
         }
     }
 
