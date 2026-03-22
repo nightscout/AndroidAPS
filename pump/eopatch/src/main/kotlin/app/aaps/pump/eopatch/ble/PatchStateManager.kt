@@ -21,7 +21,6 @@ import java.util.stream.Stream
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class PatchStateManager @Inject constructor(
     private val pm: PreferenceManager,
@@ -31,7 +30,7 @@ class PatchStateManager @Inject constructor(
     private val readBolusFinishTimeTask: ReadBolusFinishTimeTask,
     private val readTempBasalFinishTimeTask: ReadTempBasalFinishTimeTask,
     private val internalSuspendedTask: InternalSuspendedTask,
-    private val FETCH_ALARM: FetchAlarmTask,
+    private val fetchAlarmTask: FetchAlarmTask,
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers
 ) {
@@ -62,7 +61,7 @@ class PatchStateManager @Inject constructor(
         newState.updatedTimestamp = System.currentTimeMillis()
 
         if (newState.isNewAlertAlarm) {
-            FETCH_ALARM.enqueue()
+            fetchAlarmTask.enqueue()
         }
 
         if (newState.isPatchInternalSuspended) {

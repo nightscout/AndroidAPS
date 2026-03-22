@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.eopatch.R
@@ -15,7 +16,10 @@ fun RemoveNeedleCapStep(viewModel: EopatchPatchViewModel) {
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(R.string.next),
-            onClick = { viewModel.moveStep(PatchStep.REMOVE_PROTECTION_TAPE) }
+            onClick = {
+                if (viewModel.showSiteLocationStep) viewModel.moveStep(PatchStep.SITE_LOCATION)
+                else viewModel.moveStep(PatchStep.REMOVE_PROTECTION_TAPE)
+            }
         ),
         secondaryButton = WizardButton(
             text = stringResource(R.string.discard),
@@ -40,5 +44,26 @@ fun RemoveNeedleCapStep(viewModel: EopatchPatchViewModel) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.error
         )
+    }
+}
+
+@Preview(showBackground = true, name = "Remove Needle Cap")
+@Composable
+private fun RemoveNeedleCapStepPreview() {
+    MaterialTheme {
+        RemoveNeedleCapStep_Content()
+    }
+}
+
+@Composable
+private fun RemoveNeedleCapStep_Content() {
+    WizardStepLayout(
+        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = {}),
+        secondaryButton = WizardButton(text = stringResource(R.string.discard), onClick = {})
+    ) {
+        Text(text = stringResource(R.string.patch_remove_needle_cap), style = MaterialTheme.typography.titleLarge)
+        Text(text = stringResource(R.string.patch_remove_needle_cap_desc_1), style = MaterialTheme.typography.bodyMedium)
+        Text(text = stringResource(R.string.patch_remove_needle_cap_desc_2), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(text = stringResource(R.string.patch_remove_needle_cap_desc_3), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
     }
 }

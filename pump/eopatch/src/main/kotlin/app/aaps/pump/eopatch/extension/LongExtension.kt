@@ -1,10 +1,6 @@
 package app.aaps.pump.eopatch.extension
 
-import java.util.*
 import java.util.concurrent.TimeUnit
-
-internal val Long.date: Date
-    get() = Calendar.getInstance().also { it.timeInMillis = this }.time
 
 fun Long.getDiffDays(isRelative: Boolean = false): Long {
     val inputTimeMillis = this

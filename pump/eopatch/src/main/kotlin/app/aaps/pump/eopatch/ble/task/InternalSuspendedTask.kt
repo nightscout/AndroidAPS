@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class InternalSuspendedTask @Inject constructor(
     private val commandQueue: CommandQueue,
@@ -31,7 +30,7 @@ class InternalSuspendedTask @Inject constructor(
     private val uel: UserEntryLogger
 ) : BolusTask(TaskFunc.INTERNAL_SUSPEND) {
 
-    private val INTERNAL_SUSPEND_TIME_GET: GetInternalSuspendTime = GetInternalSuspendTime()
+    @Inject lateinit var internalSuspendTimeGet: GetInternalSuspendTime
     private val bolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val extendedBolusCheckSubject = BehaviorSubject.create<Boolean>()
     private val basalCheckSubject = BehaviorSubject.create<Boolean>()
@@ -97,7 +96,7 @@ class InternalSuspendedTask @Inject constructor(
     }
 
     private fun getInternalSuspendTime(): Single<Long> {
-        return INTERNAL_SUSPEND_TIME_GET.get()
+        return internalSuspendTimeGet.get()
             .doOnSuccess(Consumer { response: PatchInternalSuspendTimeResponse -> this.checkResponse(response) })
             .map(Function { obj: PatchInternalSuspendTimeResponse -> obj.totalSeconds })
     }
