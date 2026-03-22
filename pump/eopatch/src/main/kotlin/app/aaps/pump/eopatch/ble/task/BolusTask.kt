@@ -61,7 +61,7 @@ abstract class BolusTask(func: TaskFunc) : TaskBase(func) {
         val nowID = bolusCurrent.historyId(BolusType.NOW)
         if (nowID > 0 && !bolusCurrent.endTimeSynced(BolusType.NOW)) {
             val stopTime = if ((suspendedTimestamp > 0)) suspendedTimestamp else System.currentTimeMillis()
-            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS.apply(injected * AppConstant.INSULIN_UNIT_P)
+            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS(injected * AppConstant.INSULIN_UNIT_P)
             bolusCurrent.nowBolus.injected = injectedDoseU
             bolusCurrent.nowBolus.endTimestamp = stopTime
             bolusCurrent.setEndTimeSynced(BolusType.NOW, true)
@@ -74,7 +74,7 @@ abstract class BolusTask(func: TaskFunc) : TaskBase(func) {
         val extID = bolusCurrent.historyId(BolusType.EXT)
         if (extID > 0 && !bolusCurrent.endTimeSynced(BolusType.EXT)) {
             val stopTime = if ((suspendedTimestamp > 0)) suspendedTimestamp else System.currentTimeMillis()
-            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS.apply(injected * AppConstant.INSULIN_UNIT_P)
+            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS(injected * AppConstant.INSULIN_UNIT_P)
             bolusCurrent.extBolus.injected = injectedDoseU
             bolusCurrent.extBolus.endTimestamp = stopTime
             bolusCurrent.setEndTimeSynced(BolusType.EXT, true)

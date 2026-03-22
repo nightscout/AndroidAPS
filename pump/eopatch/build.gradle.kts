@@ -19,11 +19,12 @@ dependencies {
     implementation(project(":core:libraries"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":pump:eopatch:core"))
     implementation(project(":core:validators"))
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
+
+    implementation(libs.androidx.compose.ui.tooling.preview)
 
     api(libs.com.google.guava)
 

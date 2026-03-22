@@ -15,11 +15,10 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class StopComboBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_COMBO_BOLUS) {
 
-    private val BOLUS_STOP: BolusStop = BolusStop()
+    @Inject lateinit var bolusStop: BolusStop
 
     fun stop(): Single<ComboBolusStopResponse> {
         return isReady()
@@ -32,8 +31,8 @@ class StopComboBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_COMBO_B
 
     fun stopJob(): Single<ComboBolusStopResponse> {
         return Single.zip<BolusStopResponse, BolusStopResponse, ComboBolusStopResponse>(
-            BOLUS_STOP.stop(IPatchConstant.EXT_BOLUS_ID.toInt()),
-            BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID.toInt()),
+            bolusStop.stop(IPatchConstant.EXT_BOLUS_ID.toInt()),
+            bolusStop.stop(IPatchConstant.NOW_BOLUS_ID.toInt()),
             BiFunction { ext: BolusStopResponse, now: BolusStopResponse -> createStopComboBolusResponse(now, ext) })
     }
 

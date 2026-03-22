@@ -21,12 +21,15 @@ import app.aaps.pump.medtrum.compose.steps.SiteLocationStep
 
 @Composable
 fun MedtrumPatchScreen(
-    viewModel: MedtrumPatchViewModel
+    viewModel: MedtrumPatchViewModel,
+    setToolbarConfig: ((app.aaps.core.ui.compose.ToolbarConfig) -> Unit)? = null
 ) {
     val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
     val totalSteps by viewModel.totalSteps.collectAsStateWithLifecycle()
     val currentStepIndex by viewModel.currentStepIndex.collectAsStateWithLifecycle()
     val canGoBack by viewModel.canGoBack.collectAsStateWithLifecycle()
+
+    val titleResId by viewModel.title.collectAsStateWithLifecycle()
 
     WizardScreen(
         currentStep = patchStep,
@@ -36,6 +39,8 @@ fun MedtrumPatchScreen(
         onBack = { viewModel.handleBack() },
         cancelDialogTitle = stringResource(R.string.change_patch_label),
         cancelDialogText = stringResource(R.string.cancel_sure),
+        title = stringResource(titleResId),
+        setToolbarConfig = setToolbarConfig,
         stepContent = { step, onCancel ->
             when (step) {
                 PatchStep.PREPARE_PATCH,

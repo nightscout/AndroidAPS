@@ -1,6 +1,10 @@
 package app.aaps.pump.eopatch.ble
 
 import android.content.Context
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import android.content.Intent
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -26,7 +30,6 @@ import app.aaps.pump.eopatch.core.scan.ScanList
 import app.aaps.pump.eopatch.event.EventPatchActivationNotComplete
 import app.aaps.pump.eopatch.keys.EopatchBooleanKey
 import app.aaps.pump.eopatch.keys.EopatchIntKey
-import app.aaps.pump.eopatch.ui.DialogHelperActivity
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchState
@@ -57,12 +60,14 @@ class PatchManager @Inject constructor(
     private val dateUtil: DateUtil,
     private val rxAction: RxAction,
     private val aapsSchedulers: AapsSchedulers,
-    private val alarmRegistry: IAlarmRegistry
+    private val alarmRegistry: IAlarmRegistry,
+    private val aapsLogger: AAPSLogger,
+    private val notificationManager: NotificationManager
 ) : IPatchManager {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var patchScanner: IPatchScanner = PatchScanner(context)
+    private var patchScanner: IPatchScanner = PatchScanner(context, aapsLogger)
     private var mConnectingDisposable: Disposable? = null
 
     @Inject
@@ -100,11 +105,12 @@ class PatchManager @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribeOn(aapsSchedulers.main)
                 .subscribe(Consumer {
-                    val i = Intent(context, DialogHelperActivity::class.java)
-                    i.putExtra("title", rh.gs(R.string.patch_activate_reminder_title))
-                    i.putExtra("message", rh.gs(R.string.patch_activate_reminder_desc))
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(i)
+                    notificationManager.post(
+                        id = NotificationId.EOFLOW_PATCH_ALERT,
+                        text = rh.gs(R.string.patch_activate_reminder_desc),
+                        level = NotificationLevel.URGENT,
+                        soundRes = app.aaps.core.ui.R.raw.alarm
+                    )
                 })
         )
     }

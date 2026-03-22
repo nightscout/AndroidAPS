@@ -10,15 +10,14 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class ReadTempBasalFinishTimeTask @Inject constructor() : TaskBase(TaskFunc.READ_TEMP_BASAL_FINISH_TIME) {
 
-    private val TEMP_BASAL_FINISH_TIME_GET: TempBasalFinishTimeGet = TempBasalFinishTimeGet()
+    @Inject lateinit var tempBasalFinishTimeGet: TempBasalFinishTimeGet
 
     fun read(): Single<TempBasalFinishTimeResponse> {
         return isReady()
-            .concatMapSingle<TempBasalFinishTimeResponse>(Function { TEMP_BASAL_FINISH_TIME_GET.get() })
+            .concatMapSingle<TempBasalFinishTimeResponse>(Function { tempBasalFinishTimeGet.get() })
             .firstOrError()
             .doOnSuccess(Consumer { response: TempBasalFinishTimeResponse -> this.checkResponse(response) })
             .doOnSuccess(Consumer { this.onResponse() })

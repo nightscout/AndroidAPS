@@ -3,6 +3,11 @@ package app.aaps.pump.eopatch.compose
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.WindowManager
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -11,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
@@ -18,6 +24,7 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
+import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.code.PatchStep
 
 class EopatchComposeContent(
@@ -39,6 +46,28 @@ class EopatchComposeContent(
         var startPatchStep by remember { mutableStateOf<PatchStep?>(null) }
         var forceDiscard by remember { mutableStateOf(false) }
         var isAlarmHandling by remember { mutableStateOf(false) }
+
+        // Toolbar configuration
+        val pluginName = stringResource(R.string.eopatch)
+        val overviewNavIcon: @Composable () -> Unit = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+            }
+        }
+        val settingsAction: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit = {
+            onSettings?.let { action ->
+                IconButton(onClick = action) {
+                    Icon(Icons.Filled.Settings, contentDescription = stringResource(app.aaps.core.ui.R.string.settings))
+                }
+            }
+        }
+
+        // Restore overview toolbar when not in workflow
+        LaunchedEffect(showPatchWorkflow) {
+            if (!showPatchWorkflow) {
+                setToolbarConfig(ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction))
+            }
+        }
 
         // Handle one-time events from overview
         LaunchedEffect(overviewViewModel) {
@@ -112,7 +141,7 @@ class EopatchComposeContent(
                 }
             }
 
-            EopatchPatchScreen(viewModel = patchViewModel)
+            EopatchPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
         } else {
             EopatchOverviewScreen(viewModel = overviewViewModel)
         }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -36,6 +37,10 @@ fun SafeDeactivationStep(viewModel: EopatchPatchViewModel) {
         primaryButton = WizardButton(
             text = stringResource(R.string.string_discard_patch),
             onClick = { viewModel.changePatch() }
+        ),
+        secondaryButton = WizardButton(
+            text = stringResource(R.string.patch_force_reset),
+            onClick = { viewModel.forceResetPatchState() }
         )
     ) {
         Text(
@@ -66,5 +71,21 @@ fun SafeDeactivationStep(viewModel: EopatchPatchViewModel) {
             text = stringResource(app.aaps.core.ui.R.string.reservoir_label) + ": $insulinValue${stringResource(R.string.all_dose_unit)}$insulinSymbol",
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Preview(showBackground = true, name = "Safe Deactivation")
+@Composable
+private fun SafeDeactivationStepPreview() {
+    MaterialTheme {
+        WizardStepLayout(
+            primaryButton = WizardButton(text = "Discard Patch", onClick = {}),
+            secondaryButton = WizardButton(text = "Force Reset", onClick = {})
+        ) {
+            Text(text = "Discard Patch", style = MaterialTheme.typography.titleLarge)
+            Text(text = "To change to new Patch, the current Patch must be discarded.", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Expiration time: 48:00:00 (3 day)", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Reservoir: 50U+", style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }

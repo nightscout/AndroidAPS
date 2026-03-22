@@ -19,11 +19,16 @@ import app.aaps.pump.equil.compose.steps.UnpairConfirmStep
 import app.aaps.pump.equil.compose.steps.UnpairDetachStep
 
 @Composable
-internal fun EquilWizardScreen(viewModel: EquilWizardViewModel) {
+internal fun EquilWizardScreen(
+    viewModel: EquilWizardViewModel,
+    setToolbarConfig: ((app.aaps.core.ui.compose.ToolbarConfig) -> Unit)? = null
+) {
     val wizardStep by viewModel.wizardStep.collectAsStateWithLifecycle()
     val totalSteps by viewModel.totalSteps.collectAsStateWithLifecycle()
     val currentStepIndex by viewModel.currentStepIndex.collectAsStateWithLifecycle()
     val canGoBack by viewModel.canGoBack.collectAsStateWithLifecycle()
+
+    val titleResId by viewModel.titleResId.collectAsStateWithLifecycle()
 
     WizardScreen(
         currentStep = wizardStep,
@@ -33,6 +38,8 @@ internal fun EquilWizardScreen(viewModel: EquilWizardViewModel) {
         onBack = { viewModel.handleCancel() },
         cancelDialogTitle = stringResource(R.string.equil_common_wizard_exit_confirmation_title),
         cancelDialogText = stringResource(R.string.equil_common_wizard_exit_confirmation_text),
+        title = stringResource(titleResId),
+        setToolbarConfig = setToolbarConfig,
         stepContent = { step, onCancel ->
             when (step) {
                 EquilWizardStep.ASSEMBLE       -> AssembleStep(viewModel, onCancel)

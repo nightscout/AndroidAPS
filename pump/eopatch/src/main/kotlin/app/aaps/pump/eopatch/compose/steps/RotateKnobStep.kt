@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -88,5 +89,33 @@ fun RotateKnobStep(viewModel: EopatchPatchViewModel) {
                 stringResource(R.string.patch_rotate_knob_desc_2),
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Preview(showBackground = true, name = "Rotate Knob")
+@Composable
+private fun RotateKnobStepPreview() {
+    MaterialTheme {
+        WizardStepLayout(
+            primaryButton = WizardButton(text = "Next", onClick = {})
+        ) {
+            Text(text = stringResource(R.string.patch_rotate_knob), style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(R.string.patch_rotate_knob_desc_1), style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(R.string.patch_rotate_knob_desc_2), style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Rotate Knob - Needle Error")
+@Composable
+private fun RotateKnobNeedleErrorPreview() {
+    MaterialTheme {
+        WizardStepLayout(
+            primaryButton = WizardButton(text = "Retry", onClick = {})
+        ) {
+            Text(text = stringResource(R.string.patch_rotate_knob), style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(R.string.patch_rotate_knob_desc_1), style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(R.string.patch_rotate_knob_desc_2_needle_insertion_error), style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }
