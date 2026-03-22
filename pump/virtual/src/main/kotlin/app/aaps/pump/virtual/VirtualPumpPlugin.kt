@@ -49,7 +49,6 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.fabric.InstanceId
 import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
 import kotlinx.coroutines.CoroutineScope
@@ -86,7 +85,6 @@ open class VirtualPumpPlugin @Inject constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(VirtualPumpFragment::class.java.name)
         .composeContent { plugin ->
             VirtualPumpComposeContent(
                 virtualPumpPlugin = plugin as VirtualPumpPlugin,
@@ -131,10 +129,6 @@ open class VirtualPumpPlugin @Inject constructor(
 
     private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
     override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
-
-    fun notifyStateChanged() {
-        rxBus.send(EventVirtualPumpUpdateGui()) // TODO: Remove after fragment cleanup
-    }
 
     override val pumpDescription = PumpDescription().also {
         it.isBolusCapable = true
@@ -246,7 +240,6 @@ open class VirtualPumpPlugin @Inject constructor(
         rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
         SystemClock.sleep(1000)
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
-        notifyStateChanged()
         _lastDataTime.value = System.currentTimeMillis()
         if (detailedBolusInfo.insulin > 0) {
             if (config.AAPSCLIENT) // do not store pump serial (record will not be marked PH)
@@ -298,7 +291,6 @@ open class VirtualPumpPlugin @Inject constructor(
             )
         }
         aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText(rh)}")
-        notifyStateChanged()
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
@@ -325,7 +317,6 @@ open class VirtualPumpPlugin @Inject constructor(
             )
         }
         aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText(rh)}")
-        notifyStateChanged()
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
@@ -351,7 +342,6 @@ open class VirtualPumpPlugin @Inject constructor(
             )
         }
         aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText(rh)}")
-        notifyStateChanged()
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
@@ -372,7 +362,6 @@ open class VirtualPumpPlugin @Inject constructor(
                 )
             }
             aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText(rh)}")
-            notifyStateChanged()
         }
         _lastDataTime.value = System.currentTimeMillis()
         return result
@@ -395,7 +384,6 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = true
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
-        notifyStateChanged()
         _lastDataTime.value = System.currentTimeMillis()
         return result
     }
@@ -413,7 +401,6 @@ open class VirtualPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "New pump configuration found ($pumpTypeNew), changing from previous (${pumpTypeFlow.value})")
         pumpDescription.fillFor(pumpTypeNew)
         pumpTypeFlow.value = pumpTypeNew
-        notifyStateChanged() // TODO: Remove after fragment cleanup
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}

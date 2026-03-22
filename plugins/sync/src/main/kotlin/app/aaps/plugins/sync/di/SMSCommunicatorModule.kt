@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.di
 
 import app.aaps.plugins.sync.smsCommunicator.AuthRequest
-import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorFragment
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import dagger.Module
@@ -16,6 +15,5 @@ abstract class SMSCommunicatorModule {
 
     @ContributesAndroidInjector abstract fun authRequestInjector(): AuthRequest
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpActivity(): SmsCommunicatorOtpActivity
-    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorWorker(): SmsCommunicatorPlugin.SmsCommunicatorWorker
 }

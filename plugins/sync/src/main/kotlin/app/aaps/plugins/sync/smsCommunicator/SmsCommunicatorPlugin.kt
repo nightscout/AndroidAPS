@@ -83,7 +83,6 @@ import app.aaps.plugins.sync.smsCommunicator.activities.SmsCommunicatorOtpActivi
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorComposeContent
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorOtpScreen
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
-import app.aaps.plugins.sync.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import kotlinx.coroutines.CoroutineScope
@@ -140,7 +139,6 @@ class SmsCommunicatorPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .fragmentClass(SmsCommunicatorFragment::class.java.name)
         .composeContent { SmsCommunicatorComposeContent() }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)
         .icon(IcPluginSms)
@@ -162,7 +160,6 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun notifyMessagesChanged() {
         repository.updateMessages(messages)
-        rxBus.send(EventSmsCommunicatorUpdateGui())
     }
 
     private val commands = mapOf(
