@@ -133,10 +133,8 @@ fun MainScreen(
                 versionName = mainViewModel.versionName,
                 appIcon = mainViewModel.appIcon,
                 onNavigate = { request ->
-                    scope.launch {
-                        drawerState.close()
-                        onDrawerClosed()
-                    }
+                    scope.launch { drawerState.close() }
+                    onDrawerClosed()
                     onNavigate(request)
                 },
                 isTreatmentsEnabled = uiState.isProfileLoaded

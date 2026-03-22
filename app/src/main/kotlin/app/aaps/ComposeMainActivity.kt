@@ -1253,7 +1253,7 @@ class ComposeMainActivity : AppCompatActivity() {
         }
         // Language change requires full restart to reload resources
         lifecycleScope.launch {
-            preferences.observe(StringKey.GeneralLanguage).drop(1).collect { finish() }
+            preferences.observe(StringKey.GeneralLanguage).drop(1).collect { recreate() }
         }
     }
 
