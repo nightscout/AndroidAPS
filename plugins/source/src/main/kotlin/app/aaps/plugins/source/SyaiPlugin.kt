@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.ui.compose.icons.IcPluginSyai
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
@@ -40,6 +41,7 @@ class SyaiPlugin @Inject constructor(
             )
         }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_syai_tag)
+        .icon(IcPluginSyai)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.syai_tag_app)
         .preferencesVisibleInSimpleMode(false)

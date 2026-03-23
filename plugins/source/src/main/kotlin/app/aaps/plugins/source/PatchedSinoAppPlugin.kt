@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
@@ -40,6 +41,7 @@ class PatchedSinoAppPlugin @Inject constructor(
             )
         }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
+        .icon(IcGenericCgm)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.patched_sino_app)
         .preferencesVisibleInSimpleMode(false)
