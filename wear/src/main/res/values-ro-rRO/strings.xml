@@ -8,6 +8,7 @@
     <string name="label_actions_tile">AAPS(Acțiuni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistent Rapid)</string>
+    <string name="label_user_action_tile">AAPS(Acțiune Utilizator)</string>
     <string name="label_warning_sync">Nu există date!</string>
     <string name="label_warning_old">Date vechi!</string>
     <string name="label_warning_since">De acum %1$s</string>
@@ -31,6 +32,8 @@
     <string name="pref_show_phone_battery">Arată baterie telefon</string>
     <string name="pref_show_rig_battery">Arată Baterie Rig</string>
     <string name="pref_show_basal_rate">Arată rata bazală</string>
+    <string name="pref_show_temp_target">Afișați Ținta Temporară</string>
+    <string name="pref_show_reservoir_level">Afișați Nivelul Rezervorului</string>
     <string name="pref_show_loop_status">Arată stare buclă închisă</string>
     <string name="pref_show_bg">Arată glicemia</string>
     <string name="pref_show_bgi">Arată BGI</string>
@@ -49,6 +52,7 @@
     <string name="pref_3_hours">3 ore</string>
     <string name="pref_4_hours">4 ore</string>
     <string name="pref_5_hours">5 ore</string>
+    <string name="pref_1_min">dezactivat</string>
     <string name="pref_input_design">Design de intrare</string>
     <string name="pref_default">Implicit</string>
     <string name="pref_quick_righty">Drepta rapid</string>
@@ -91,9 +95,16 @@
     <string name="action_fill_confirmation">Completare solicitată</string>
     <string name="action_ecarb_confirmation">Carbohidrați solicitați</string>
     <string name="action_profile_switch_confirmation">Schimbare profil solicitată</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Țintă\n[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Scăzut\n[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Ridicat\n[%s]</string>
     <string name="action_carbs">Carbohidrați</string>
+    <string name="action_carbs_gram">Carbohidrați [g]</string>
     <string name="action_ecarbs">eCarbs</string>
+    <string name="action_percentage">Procentaj\n[%]</string>
+    <string name="action_start_minutes">Start\n[minute]</string>
     <string name="action_duration_h">Durată [h]</string>
+    <string name="action_duration_hours">Durată\n[ore]</string>
     <string name="action_insulin">Insulină</string>
     <string name="action_preset_1">Presetare 1</string>
     <string name="action_preset_2">Presetare 2</string>
