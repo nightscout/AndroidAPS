@@ -365,8 +365,8 @@ private fun WizardResultScreen(
                             )
                         }
 
-                        HorizontalDivider()
                         if (totalIob != null && totalIob != 0.0) {
+                            HorizontalDivider()
                             CalculationRow(
                                 row = WizardCalculationRow(
                                     label = stringResource(R.string.wizard_result_iob),
