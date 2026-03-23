@@ -11,6 +11,7 @@
     <string name="pump_status_suspended">Suspendat</string>
     <string name="pump_status_executing_command">Executare comandă</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Obține setările</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazale</string>
     <string name="history_group_configuration">Configurații</string>
