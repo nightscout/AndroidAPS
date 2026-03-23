@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_pump_description">Pompă plasture Equil 5.3 sau mai nouă </string>
     <!--  start  -->
     <!-- equil - Commands -->
     <!--    推杆回退-->
