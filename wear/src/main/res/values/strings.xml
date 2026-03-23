@@ -296,7 +296,6 @@
     <string name="wizard_calculation">Calculation</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Swipe left to confirm</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">15\' trend</string>
@@ -308,7 +307,7 @@
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Click to expand calculation details</string>
     <string name="wizard_confirmation_sent">Sent</string>
     <string name="tile_settings">Tile settings</string>
@@ -342,4 +341,6 @@
     <string name="loop_status_target_range">Range</string>
     <string name="loop_status_target">Target</string>
     <string name="loop_status">Loop status</string>
+    <string name="loop_status_refresh">Refresh</string>
+    <string name="confirm">Confirm</string>
 </resources>
