@@ -11,6 +11,9 @@
     <string name="pump_status_suspended">Pozastaveno</string>
     <string name="pump_status_executing_command">Provádění příkazu</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Načítání nastavení</string>
+    <string name="pump_cmd_desc_get_firmware">Načítání firmware pumpy</string>
+    <string name="pump_cmd_desc_get_basal_profile">Načítání profilu</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazály</string>
     <string name="history_group_configuration">Konfigurace</string>
