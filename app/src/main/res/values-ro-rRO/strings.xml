@@ -27,4 +27,6 @@
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="sort_label">Sortează</string>
     <string name="search">Caută</string>
+    <string name="simple_mode">Mod simplu</string>
+    <string name="select">Selectează</string>
 </resources>
