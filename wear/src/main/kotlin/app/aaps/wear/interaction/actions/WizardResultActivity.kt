@@ -345,24 +345,28 @@ private fun WizardResultScreen(
 
                         rows.forEach { row -> CalculationRow(row = row) }
 
-                        // Subtotal = sum of scaled components (always shown)
                         val subtotalValue = (insulinBg ?: 0.0) + (insulinTrend ?: 0.0) + (insulinCob ?: 0.0) + insulinCarbs
-                        HorizontalDivider()
-                        CalculationRow(
-                            row = WizardCalculationRow(
-                                label = stringResource(R.string.wizard_result_subtotal),
-                                value = subtotalValue
-                            )
-                        )
-                        // X% row only when percentage != 100
-                        if (percentage != 100) {
-                            val afterPercentage = subtotalValue * percentage / 100.0
-                            CalculationRow(
-                                row = WizardCalculationRow(
-                                    label = stringResource(R.string.wizard_result_correction_percentage, percentage),
-                                    value = afterPercentage
+                        val showSubtotal = rows.size > 1
+                        val showPercentage = percentage != 100
+                        if (showSubtotal || showPercentage) {
+                            HorizontalDivider()
+                            if (showSubtotal) {
+                                CalculationRow(
+                                    row = WizardCalculationRow(
+                                        label = stringResource(R.string.wizard_result_subtotal),
+                                        value = subtotalValue
+                                    )
                                 )
-                            )
+                            }
+                            if (showPercentage) {
+                                val afterPercentage = subtotalValue * percentage / 100.0
+                                CalculationRow(
+                                    row = WizardCalculationRow(
+                                        label = stringResource(R.string.wizard_result_correction_percentage, percentage),
+                                        value = afterPercentage
+                                    )
+                                )
+                            }
                         }
 
                         if (totalIob != null && totalIob != 0.0) {
