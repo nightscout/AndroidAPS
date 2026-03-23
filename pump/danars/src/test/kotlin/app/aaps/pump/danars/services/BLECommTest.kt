@@ -5,6 +5,10 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.pump.ble.BleAdapter
+import app.aaps.core.interfaces.pump.ble.BleGatt
+import app.aaps.core.interfaces.pump.ble.BleScanner
+import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump

@@ -1,4 +1,4 @@
-package app.aaps.pump.danars.services
+package app.aaps.core.interfaces.pump.ble
 
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,9 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
  * - [BleScanner] — BLE scanning for device discovery
  * - [BleGatt] — GATT connection, services, characteristics, data transfer
  *
- * Two implementations:
- * - [BleTransportImpl] wraps real Android Bluetooth stack (production)
- * - EmulatorBleTransport in :pump:danars-emulator (testing)
+ * Pump modules provide production implementations wrapping the real Android Bluetooth stack,
+ * while emulator modules provide test implementations for integration testing without hardware.
  */
 interface BleTransport {
 
@@ -21,10 +20,10 @@ interface BleTransport {
     val scanner: BleScanner
     val gatt: BleGatt
 
-    /** Current pairing/handshake state, updated by BLEComm during connection. */
+    /** Current pairing/handshake state, updated during connection. */
     val pairingState: StateFlow<PairingState>
 
-    /** Update pairing state (called by BLEComm). */
+    /** Update pairing state. */
     fun updatePairingState(state: PairingState)
 
     fun setListener(listener: BleTransportListener?)
@@ -39,7 +38,11 @@ interface BleAdapter {
     fun removeBond(address: String)
 }
 
-data class ScannedDevice(val name: String, val address: String)
+data class ScannedDevice(
+    val name: String,
+    val address: String,
+    val scanRecordBytes: ByteArray? = null
+)
 
 interface BleScanner {
 
@@ -58,6 +61,7 @@ interface BleGatt {
     fun findCharacteristics(): Boolean
     fun enableNotifications()
     fun writeCharacteristic(data: ByteArray)
+    fun requestConnectionPriority(priority: Int) {}
 }
 
 interface BleTransportListener {

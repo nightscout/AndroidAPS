@@ -37,7 +37,7 @@ import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.dana.R
-import app.aaps.pump.danars.services.ScannedDevice
+import app.aaps.core.interfaces.pump.ble.ScannedDevice
 
 @Composable
 fun DanaRSPairWizardScreen(

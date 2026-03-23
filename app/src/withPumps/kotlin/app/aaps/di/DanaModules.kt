@@ -13,7 +13,7 @@ import app.aaps.pump.danars.di.DanaRSModule
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.pump.danars.emulator.NotificationPumpDisplay
 import app.aaps.pump.danars.encryption.EncryptionType
-import app.aaps.pump.danars.services.BleTransport
+import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.pump.danars.services.BleTransportImpl
 import dagger.Module
 import dagger.Provides
