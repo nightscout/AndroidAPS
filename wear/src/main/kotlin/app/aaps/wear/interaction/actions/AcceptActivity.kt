@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.activity.ConfirmationActivity
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.rememberPagerState
 import androidx.wear.compose.material3.HorizontalPageIndicator
@@ -248,6 +249,12 @@ class AcceptActivity : DaggerAppCompatActivity() {
     private fun confirm() {
         if (actionKey.isNotEmpty()) startService(IntentWearToMobile(this, actionKey))
         startForegroundService(IntentCancelNotification(this))
+        startActivity(
+            Intent(this, ConfirmationActivity::class.java).apply {
+                putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
+                putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.wizard_confirmation_sent))
+            }
+        )
         finish()
     }
 }
