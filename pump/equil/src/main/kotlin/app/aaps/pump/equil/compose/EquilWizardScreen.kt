@@ -9,11 +9,12 @@ import app.aaps.pump.equil.R
 import app.aaps.pump.equil.compose.steps.AirStep
 import app.aaps.pump.equil.compose.steps.AssembleStep
 import app.aaps.pump.equil.compose.steps.AttachStep
+import app.aaps.pump.equil.compose.steps.BleScanStepWrapper
 import app.aaps.pump.equil.compose.steps.ChangeInsulinStep
 import app.aaps.pump.equil.compose.steps.ConfirmStep
 import app.aaps.pump.equil.compose.steps.FillStep
+import app.aaps.pump.equil.compose.steps.PasswordStep
 import app.aaps.pump.equil.compose.steps.SelectInsulinStep
-import app.aaps.pump.equil.compose.steps.SerialNumberStep
 import app.aaps.pump.equil.compose.steps.SiteLocationStep
 import app.aaps.pump.equil.compose.steps.UnpairConfirmStep
 import app.aaps.pump.equil.compose.steps.UnpairDetachStep
@@ -43,7 +44,8 @@ internal fun EquilWizardScreen(
         stepContent = { step, onCancel ->
             when (step) {
                 EquilWizardStep.ASSEMBLE       -> AssembleStep(viewModel, onCancel)
-                EquilWizardStep.SERIAL_NUMBER  -> SerialNumberStep(viewModel, onCancel)
+                EquilWizardStep.BLE_SCAN       -> BleScanStepWrapper(viewModel, onCancel)
+                EquilWizardStep.PASSWORD       -> PasswordStep(viewModel, onCancel)
                 EquilWizardStep.FILL           -> FillStep(viewModel, onCancel)
                 EquilWizardStep.ATTACH         -> AttachStep(viewModel, onCancel)
                 EquilWizardStep.AIR            -> AirStep(viewModel, onCancel)

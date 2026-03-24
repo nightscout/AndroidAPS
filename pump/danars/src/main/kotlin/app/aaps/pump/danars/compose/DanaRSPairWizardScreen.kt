@@ -1,28 +1,21 @@
 package app.aaps.pump.danars.compose
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,12 +25,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.pump.BleScanStep
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.dana.R
-import app.aaps.core.interfaces.pump.ble.ScannedDevice
 
 @Composable
 fun DanaRSPairWizardScreen(
@@ -105,77 +98,6 @@ fun DanaRSPairWizardScreen(
                 errorMessage = uiState.errorMessage,
                 onRetry = viewModel::retry,
                 onCancel = onCancel
-            )
-        }
-    }
-}
-
-@Composable
-private fun BleScanStep(
-    devices: List<ScannedDevice>,
-    onSelectDevice: (ScannedDevice) -> Unit,
-    onStartScan: () -> Unit,
-    onCancel: () -> Unit
-) {
-    DisposableEffect(Unit) {
-        onStartScan()
-        onDispose { }
-    }
-
-    WizardStepLayout(
-        scrollable = false,
-        secondaryButton = WizardButton(
-            text = stringResource(app.aaps.core.ui.R.string.cancel),
-            onClick = onCancel
-        )
-    ) {
-        Text(
-            text = stringResource(R.string.select_your_pump),
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        Text(
-            text = stringResource(R.string.scanning_for_devices),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(devices, key = { it.address }) { device ->
-                DeviceItem(device = device, onClick = { onSelectDevice(device) })
-                HorizontalDivider()
-            }
-        }
-    }
-}
-
-@Composable
-private fun DeviceItem(
-    device: ScannedDevice,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Bluetooth,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = device.name,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = device.address,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

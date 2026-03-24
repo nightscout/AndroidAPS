@@ -1033,4 +1033,8 @@
     <string name="database_cleanup">Database cleanup</string>
     <string name="nav_resetdb">Reset Databases</string>
 
+    <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="ble_scan_select_pump">Select your pump from the list below</string>
+    <string name="ble_scan_scanning">Scanning for devices…</string>
+
 </resources>
