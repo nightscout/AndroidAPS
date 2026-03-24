@@ -261,7 +261,7 @@ val IcPluginIntelligo: ImageVector by lazy {
         // Background path with opacity 0.1
         path(
             fill = SolidColor(Color.Black),
-            fillAlpha = 0.1f,
+            fillAlpha = 0.6f,
             stroke = null,
             strokeAlpha = 1.0f,
             strokeLineWidth = 1.0f,
