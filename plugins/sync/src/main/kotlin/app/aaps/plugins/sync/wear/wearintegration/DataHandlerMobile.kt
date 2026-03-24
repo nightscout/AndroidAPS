@@ -903,7 +903,10 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints)
+                    returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints),
+                    insulin = insulinAfterConstraints,
+                    carbs = carbsAfterConstraints,
+                    constraintApplied = insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0,
                 )
             )
         )
@@ -933,7 +936,11 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionECarbsConfirmed(carbsAfterConstraints, startTimeStamp, command.duration)
+                    returnCommand = EventData.ActionECarbsConfirmed(carbsAfterConstraints, startTimeStamp, command.duration),
+                    carbs = carbsAfterConstraints,
+                    carbsTimeShift = command.carbsTimeShift,
+                    duration = command.duration,
+                    constraintApplied = carbsAfterConstraints != command.carbs,
                 )
             )
         )

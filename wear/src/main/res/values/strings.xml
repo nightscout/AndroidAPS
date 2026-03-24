@@ -113,6 +113,8 @@
     <string name="action_duration_hours">Duration\n[hours]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Time: %1$s</string>
+    <string name="ecarbs_confirm_duration">Duration: %1$d h</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -347,4 +349,5 @@
     <string name="loop_status_refresh">Refresh</string>
     <string name="confirm">Confirm</string>
     <string name="request">Request</string>
+    <string name="constraint_applied">Constraint applied!</string>
 </resources>

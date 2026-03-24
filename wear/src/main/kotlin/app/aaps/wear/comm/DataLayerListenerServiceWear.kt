@@ -286,6 +286,11 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val KEY_ACTION = "action"
         const val KEY_MESSAGE = "message"
         const val KEY_TITLE = "title"
+        const val KEY_INSULIN = "insulin"
+        const val KEY_CARBS = "carbs"
+        const val KEY_CARBS_TIME_SHIFT = "carbsTimeShift"
+        const val KEY_DURATION = "duration"
+        const val KEY_CONSTRAINT_APPLIED = "constraintApplied"
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2

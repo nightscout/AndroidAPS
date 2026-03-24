@@ -431,7 +431,16 @@ sealed class EventData : Event() {
     data class OpenLoopRequest(val title: String, val message: String, val returnCommand: EventData?) : EventData()
 
     @Serializable // returnCommand is sent back to Mobile after confirmation
-    data class ConfirmAction(val title: String, val message: String, val returnCommand: EventData?) : EventData()
+    data class ConfirmAction(
+        val title: String,
+        val message: String,
+        val returnCommand: EventData?,
+        val insulin: Double? = null,
+        val carbs: Int? = null,
+        val carbsTimeShift: Int? = null,
+        val duration: Int? = null,
+        val constraintApplied: Boolean = false,
+    ) : EventData()
 
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()

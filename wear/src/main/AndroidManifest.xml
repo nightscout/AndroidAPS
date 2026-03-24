@@ -627,7 +627,8 @@
             android:name=".interaction.actions.AcceptActivity"
             android:exported="true"
             android:label="@string/action_confirm"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.FillActivity"
             android:exported="true"
