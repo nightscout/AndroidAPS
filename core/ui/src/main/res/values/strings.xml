@@ -663,6 +663,7 @@
     <string name="wizard_calculation">Calculation</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
+    <string name="bolus_equal_zero_no_action">Bolus = 0. No action taken!</string>
     <string name="wizard_no_insulin_required">No insulin required!</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
     <string name="wizard_no_active_profile">No active profile set!</string>

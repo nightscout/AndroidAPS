@@ -109,6 +109,7 @@ class DataHandlerWear @Inject constructor(
                             it.carbsTimeShift?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_CARBS_TIME_SHIFT, v) }
                             it.duration?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_DURATION, v) }
                             bundle.putBoolean(DataLayerListenerServiceWear.KEY_CONSTRAINT_APPLIED, it.constraintApplied)
+                            bundle.putBoolean(DataLayerListenerServiceWear.KEY_IS_ERROR, it.returnCommand is EventData.Error)
                         }
                     )
                 })

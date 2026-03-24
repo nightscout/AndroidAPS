@@ -258,7 +258,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
-    <string name="error">!err!</string>
+    <string name="error">Error</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="key_heart_rate_smoothing" translatable="false">heart_rate_smoothing</string>

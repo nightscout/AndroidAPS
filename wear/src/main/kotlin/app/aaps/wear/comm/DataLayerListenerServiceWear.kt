@@ -291,6 +291,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val KEY_CARBS_TIME_SHIFT = "carbsTimeShift"
         const val KEY_DURATION = "duration"
         const val KEY_CONSTRAINT_APPLIED = "constraintApplied"
+        const val KEY_IS_ERROR = "isError"
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2

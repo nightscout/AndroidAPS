@@ -888,6 +888,10 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
         }
+        if (insulinAfterConstraints == 0.0 && command.carbs == 0) {
+            sendError(rh.gs(app.aaps.core.ui.R.string.bolus_equal_zero_no_action))
+            return
+        }
         // Handle negative carbs constraint
         if (carbsAfterConstraints < 0) {
             if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()

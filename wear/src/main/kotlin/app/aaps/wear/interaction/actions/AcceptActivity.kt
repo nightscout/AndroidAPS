@@ -69,6 +69,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
         val carbsTimeShift = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_CARBS_TIME_SHIFT)) it.getInt(DataLayerListenerServiceWear.KEY_CARBS_TIME_SHIFT) else null }
         val duration = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_DURATION)) it.getInt(DataLayerListenerServiceWear.KEY_DURATION) else null }
         val constraintApplied = extras?.getBoolean(DataLayerListenerServiceWear.KEY_CONSTRAINT_APPLIED, false) ?: false
+        val isError = extras?.getBoolean(DataLayerListenerServiceWear.KEY_IS_ERROR, false) ?: false
 
         if (message.isEmpty() && insulin == null && carbs == null) {
             finish()
@@ -94,7 +95,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
 
         setContent {
             MaterialTheme {
-                val pagerState = rememberPagerState(pageCount = { 2 })
+                val pagerState = rememberPagerState(pageCount = { if (isError) 1 else 2 })
 
                 LaunchedEffect(Unit) {
                     delay(60_000)
@@ -164,21 +165,30 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                         }
                                     }
                                 } else {
-                                    // Fallback: plain text message (non-migrated activities)
+                                    // Fallback: plain text message (errors and non-migrated activities)
                                     val scrollState = rememberScrollState()
                                     Column(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .verticalScroll(scrollState)
                                             .padding(horizontal = 24.dp, vertical = 16.dp),
-                                        horizontalAlignment = Alignment.Start,
+                                        horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center,
                                     ) {
+                                        if (isError) {
+                                            Text(
+                                                text = stringResource(R.string.error),
+                                                color = WearInsulinNegative,
+                                                fontSize = 18.sp,
+                                                fontWeight = FontWeight.Bold,
+                                            )
+                                            Spacer(Modifier.height(8.dp))
+                                        }
                                         Text(
                                             text = message,
                                             color = Color.White,
                                             fontSize = 16.sp,
-                                            textAlign = TextAlign.Start,
+                                            textAlign = if (isError) TextAlign.Center else TextAlign.Start,
                                         )
                                     }
                                 }
@@ -224,7 +234,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
                             }
                         }
                     }
-                    HorizontalPageIndicator(
+                    if (!isError) HorizontalPageIndicator(
                         pagerState = pagerState,
                         modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 4.dp),
                     )
