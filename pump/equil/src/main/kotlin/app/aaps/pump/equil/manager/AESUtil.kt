@@ -1,7 +1,5 @@
 package app.aaps.pump.equil.manager
 
-import android.util.Log
-import app.aaps.core.interfaces.logging.LTag
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -25,7 +23,6 @@ object AESUtil {
         val plaintextDefault = "Equil" //
         val defaultKey = generateAESKeyFromPassword(plaintextDefault)
         val aesKey = Utils.concat(defaultKey, generateAESKeyFromPassword(password))
-        Log.e(LTag.PUMPCOMM.toString(), Utils.bytesToHex(aesKey) + "===" + aesKey.size)
         return aesKey
     }
 

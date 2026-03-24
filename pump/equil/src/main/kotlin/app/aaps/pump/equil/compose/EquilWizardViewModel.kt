@@ -1,22 +1,8 @@
 package app.aaps.pump.equil.compose
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeScanner
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
-import android.bluetooth.le.ScanResult
-import android.bluetooth.le.ScanSettings
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.ParcelUuid
-import android.text.TextUtils
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
@@ -39,11 +25,10 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
-import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
-import app.aaps.pump.equil.ble.GattAttributes
+import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
@@ -97,7 +82,8 @@ class EquilWizardViewModel @Inject constructor(
     private val constraintsChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val rxBus: RxBus,
-    private val insulinManager: InsulinManager
+    private val insulinManager: InsulinManager,
+    private val bleTransport: EquilBleTransport
 ) : ViewModel(), SiteLocationStepHost {
 
     // region State
@@ -178,15 +164,18 @@ class EquilWizardViewModel @Inject constructor(
     // endregion
 
     // region BLE scan internals
-    private val bluetoothAdapter: BluetoothAdapter?
-        get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    private var bleScanner: BluetoothLeScanner? = null
-    private var scanSettings: ScanSettings? = null
-    private var scanFilters: List<ScanFilter>? = null
     private var isScanActive = false
+    private var scanJob: kotlinx.coroutines.Job? = null
     private val scanHandler = Handler(HandlerThread("EquilScanHandler").also { it.start() }.looper)
     private var serialNumber = ""
     private var password = ""
+
+    // Device scan step state
+    private val _scannedDevices = MutableStateFlow<List<app.aaps.core.interfaces.pump.ble.ScannedDevice>>(emptyList())
+    val scannedDevices: StateFlow<List<app.aaps.core.interfaces.pump.ble.ScannedDevice>> = _scannedDevices.asStateFlow()
+    private val _selectedDeviceName = MutableStateFlow("")
+    val selectedDeviceName: StateFlow<String> = _selectedDeviceName.asStateFlow()
+    private var selectedDeviceAddress = ""
     @Volatile private var fillStepCount = 0
     @Volatile private var autoFillActive = false
     // endregion
@@ -308,22 +297,11 @@ class EquilWizardViewModel @Inject constructor(
     // region Serial Number / BLE Scan step
 
     fun prepareBLEScan(): Boolean {
-        bleScanner = bluetoothAdapter?.bluetoothLeScanner
-        scanSettings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build()
-        scanFilters = listOf(
-            ScanFilter.Builder().setServiceUuid(
-                ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)
-            ).build()
-        )
-        return bleScanner != null
+        bleTransport.adapter.enable()
+        return true
     }
 
-    @SuppressLint("MissingPermission")
     fun startBLEScan(serial: String, pwd: String) {
-        if (bleScanner == null) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "startBLEScan failed: bleScanner is null")
-            return
-        }
         serialNumber = serial
         password = pwd
         preferences.put(EquilStringKey.PairPassword, password)
@@ -335,22 +313,38 @@ class EquilWizardViewModel @Inject constructor(
         _scanError.value = null
 
         scanHandler.postDelayed(scanTimeoutRunnable, SCAN_PERIOD_MILLIS)
-        if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.safeEnable(waitMilliseconds = 3000)
-        bleScanner?.startScan(scanFilters, scanSettings, bleScanCallback)
+
+        bleTransport.scanAddress = null // scan for all Equil devices
+        scanJob = viewModelScope.launch {
+            bleTransport.scanner.scannedDevices.collect { device ->
+                aapsLogger.debug(LTag.PUMPBTCOMM, "BLE scan result: ${device.name} / ${device.address}")
+                if (device.name.contains(serialNumber)) {
+                    device.scanRecordBytes?.let {
+                        if (it.size > 24) {
+                            val historyIndex = Utils.bytesToInt(it[24], it[23])
+                            equilManager.setStartHistoryIndex(historyIndex)
+                            aapsLogger.debug(LTag.PUMPCOMM, "historyIndex $historyIndex")
+                        }
+                    }
+                    scanHandler.removeCallbacks(scanTimeoutRunnable)
+                    stopBLEScan()
+                    getVersion(device.name, device.address)
+                }
+            }
+        }
+
+        bleTransport.scanner.startScan()
         aapsLogger.debug(LTag.PUMPCOMM, "startBLEScan: Scanning Start for $serial")
     }
 
-    @SuppressLint("MissingPermission")
     fun stopBLEScan() {
         if (isScanActive) {
             isScanActive = false
             _scanning.value = false
             scanHandler.removeCallbacks(scanTimeoutRunnable)
-            if (bluetoothAdapter?.isEnabled == true && bluetoothAdapter?.state == BluetoothAdapter.STATE_ON) {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-                    bleScanner?.stopScan(bleScanCallback)
-                }
-            }
+            scanJob?.cancel()
+            scanJob = null
+            bleTransport.scanner.stopScan()
             aapsLogger.debug(LTag.PUMPBTCOMM, "stopBLEScan: Scanning Stop")
         }
     }
@@ -363,28 +357,61 @@ class EquilWizardViewModel @Inject constructor(
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private val bleScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, scanRecord: ScanResult) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, scanRecord.toString())
-            val name = scanRecord.device.name
-            if (!TextUtils.isEmpty(name) && name.contains(serialNumber)) {
-                scanRecord.scanRecord?.bytes?.let {
-                    val historyIndex = Utils.bytesToInt(it[24], it[23])
-                    equilManager.setStartHistoryIndex(historyIndex)
-                    aapsLogger.debug(LTag.PUMPCOMM, "historyIndex $historyIndex")
+    // --- New scan-first flow ---
+
+    fun startDeviceScan() {
+        _scannedDevices.value = emptyList()
+        bleTransport.scanAddress = null
+        scanJob = viewModelScope.launch {
+            bleTransport.scanner.scannedDevices.collect { device ->
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Device scan result: ${device.name} / ${device.address}")
+                val current = _scannedDevices.value
+                if (current.none { it.address == device.address }) {
+                    _scannedDevices.value = current + device
                 }
-                scanHandler.removeCallbacks(scanTimeoutRunnable)
-                stopBLEScan()
-                getVersion(scanRecord.device)
             }
         }
-
-        override fun onBatchScanResults(results: List<ScanResult>) {}
+        bleTransport.scanner.startScan()
     }
 
-    private fun getVersion(device: BluetoothDevice) {
-        val cmdDevicesOldGet = CmdDevicesOldGet(device.address, aapsLogger, preferences, equilManager)
+    fun stopDeviceScan() {
+        scanJob?.cancel()
+        scanJob = null
+        bleTransport.scanner.stopScan()
+    }
+
+    fun onDeviceSelected(device: app.aaps.core.interfaces.pump.ble.ScannedDevice) {
+        stopDeviceScan()
+        _selectedDeviceName.value = device.name
+        selectedDeviceAddress = device.address
+        // Extract serial from BLE name (e.g. "Equil - A12345" → "A12345")
+        serialNumber = device.name.replace("Equil - ", "").trim()
+        device.scanRecordBytes?.let {
+            if (it.size > 24) {
+                val historyIndex = Utils.bytesToInt(it[24], it[23])
+                equilManager.setStartHistoryIndex(historyIndex)
+                aapsLogger.debug(LTag.PUMPCOMM, "historyIndex $historyIndex")
+            }
+        }
+        moveStep(EquilWizardStep.PASSWORD)
+    }
+
+    fun startPairing(pwd: String) {
+        password = pwd
+        preferences.put(EquilStringKey.PairPassword, password)
+        equilManager.setAddress("")
+        equilManager.setSerialNumber("")
+
+        _scanning.value = true
+        _scanError.value = null
+
+        getVersion(_selectedDeviceName.value, selectedDeviceAddress)
+    }
+
+    // --- End new scan-first flow ---
+
+    private fun getVersion(deviceName: String, deviceAddress: String) {
+        val cmdDevicesOldGet = CmdDevicesOldGet(deviceAddress, aapsLogger, preferences, equilManager)
         commandQueue.customCommand(cmdDevicesOldGet, object : Callback() {
             override fun run() {
                 aapsLogger.debug(LTag.PUMPCOMM, "getVersion result=${result.success}")
@@ -392,7 +419,7 @@ class EquilWizardViewModel @Inject constructor(
                     if (cmdDevicesOldGet.isSupport(serialNumber)) {
                         viewModelScope.launch {
                             delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            pair(device)
+                            pair(deviceName, deviceAddress)
                         }
                     } else {
                         _scanning.value = false
@@ -408,13 +435,12 @@ class EquilWizardViewModel @Inject constructor(
         })
     }
 
-    @SuppressLint("MissingPermission")
-    private fun pair(device: BluetoothDevice) {
+    private fun pair(deviceName: String, deviceAddress: String) {
         equilManager.setActivationProgress(ActivationProgress.PRIMING)
         equilManager.setBluetoothConnectionState(BluetoothConnectionState.CONNECTED)
-        aapsLogger.debug(LTag.PUMPCOMM, "pair: ${device.name} / ${device.address}")
+        aapsLogger.debug(LTag.PUMPCOMM, "pair: $deviceName / $deviceAddress")
         commandQueue.customCommand(
-            CmdPair(device.name.toString(), device.address, password, aapsLogger, preferences, equilManager),
+            CmdPair(deviceName, deviceAddress, password, aapsLogger, preferences, equilManager),
             object : Callback() {
                 override fun run() {
                     aapsLogger.debug(LTag.PUMPCOMM, "pair result=${result.success}, enacted=${result.enacted}")
@@ -422,7 +448,7 @@ class EquilWizardViewModel @Inject constructor(
                         if (result.enacted) {
                             viewModelScope.launch {
                                 delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                                pumpSettings(device.address, device.name.toString())
+                                pumpSettings(deviceAddress, deviceName)
                             }
                         } else {
                             _scanning.value = false

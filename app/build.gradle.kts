@@ -207,6 +207,7 @@ dependencies {
         ":pump:eopatch",
         ":pump:medtrum",
         ":pump:equil",
+        ":pump:equil-emulator",
         ":pump:insight",
         ":pump:medtronic",
         ":pump:common",

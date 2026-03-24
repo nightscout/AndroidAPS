@@ -1,7 +1,7 @@
 package app.aaps.pump.danars.emulator
 
 import app.aaps.pump.danars.encryption.BleEncryption
-import app.aaps.pump.danars.services.BleTransportListener
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -17,10 +17,10 @@ import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.services.BLEComm
-import app.aaps.pump.danars.services.BleTransport
-import app.aaps.pump.danars.services.PairingState
-import app.aaps.pump.danars.services.PairingStep
-import app.aaps.pump.danars.services.ScannedDevice
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.PairingState
+import app.aaps.core.interfaces.pump.ble.PairingStep
+import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

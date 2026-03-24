@@ -1,6 +1,5 @@
 package app.aaps.pump.equil.manager.command
 
-import android.util.Log
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
@@ -31,7 +30,7 @@ class CmdPair(
         port = "0E0E"
         sn = name.replace("Equil - ", "").trim { it <= ' ' }
         sn = convertString(sn!!)
-        Log.e(LTag.PUMPCOMM.toString(), "sn===$sn")
+        aapsLogger.debug(LTag.PUMPCOMM, "sn===$sn")
     }
 
     override fun getEquilResponse(): EquilResponse? {
