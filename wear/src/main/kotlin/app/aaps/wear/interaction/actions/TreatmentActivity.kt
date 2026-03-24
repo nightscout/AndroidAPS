@@ -90,6 +90,8 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                                 label = stringResource(R.string.action_insulin_units),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
+                                enabled = !pagerState.isScrollInProgress,
+                                valueColor = InsulinBlue,
                             )
                             1 -> PlusMinusInputScreen(
                                 value = carbs,
@@ -101,6 +103,8 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                                 label = stringResource(R.string.action_carbs_gram),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 1,
+                                enabled = !pagerState.isScrollInProgress,
+                                valueColor = CarbsOrange,
                             )
                             else -> TreatmentConfirmScreen(
                                 insulin = insulin,
@@ -144,7 +148,7 @@ private fun TreatmentConfirmScreen(insulin: Double, carbs: Int, onConfirm: () ->
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.confirm),
+            text = stringResource(R.string.request),
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold

@@ -107,10 +107,12 @@
     <string name="action_carbs_gram">Carbs [g]</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
-    <string name="action_percentage_unit">%</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
+    <string name="action_start_minutes_format">%1$d min</string>
     <string name="action_duration_h">Duration [h]</string>
     <string name="action_duration_hours">Duration\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="ecarbs_start_format">%1$d min</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -344,4 +346,5 @@
     <string name="loop_status">Loop status</string>
     <string name="loop_status_refresh">Refresh</string>
     <string name="confirm">Confirm</string>
+    <string name="request">Request</string>
 </resources>

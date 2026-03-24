@@ -70,7 +70,6 @@ class BolusActivity : DaggerAppCompatActivity() {
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
                         state = pagerState,
-                        userScrollEnabled = pagerState.currentPage > 0 || insulin > 0.0,
                     ) { page ->
                         when (page) {
                             0 -> PlusMinusInputScreen(
@@ -83,6 +82,8 @@ class BolusActivity : DaggerAppCompatActivity() {
                                 label = stringResource(R.string.action_insulin_units),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
+                                enabled = !pagerState.isScrollInProgress,
+                                valueColor = InsulinBlue,
                             )
                             else -> BolusConfirmScreen(
                                 insulin = insulin,
@@ -125,7 +126,7 @@ private fun BolusConfirmScreen(insulin: Double, onConfirm: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.confirm),
+            text = stringResource(R.string.request),
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold

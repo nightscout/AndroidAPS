@@ -5,6 +5,8 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -30,6 +32,7 @@ import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material3.Icon
@@ -82,6 +85,9 @@ internal fun PlusMinusInputScreen(
     allowZero: Boolean = false,
     isActive: Boolean = true,
     symmetricLargeSteps: Boolean = false,
+    simpleMode: Boolean = false,
+    enabled: Boolean = true,
+    valueColor: Color = Color.White,
 ) {
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
@@ -135,54 +141,83 @@ internal fun PlusMinusInputScreen(
             },
         contentAlignment = Alignment.Center
     ) {
-        // Center: value + unit label
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = displayText,
-                color = Color.White,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold
+        if (simpleMode) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                StepButton(step = stepValues[0], isIncrement = false, onStep = ::step, enabled = enabled)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = displayText,
+                        color = valueColor,
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = label,
+                        color = WearSecondaryText,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+                StepButton(step = stepValues[0], isIncrement = true, onStep = ::step, enabled = enabled)
+            }
+        } else {
+            // Center: value + unit label
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = displayText,
+                    color = valueColor,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = label,
+                    color = WearSecondaryText,
+                    fontSize = 20.sp
+                )
+            }
+
+            // Bottom-left: decrement (fine step)
+            StepButton(
+                modifier = Modifier.align(Alignment.Center).offset(-BtnH, BtnV),
+                step = stepValues[0],
+                isIncrement = false,
+                onStep = ::step,
+                enabled = enabled,
             )
-            Text(
-                text = label,
-                color = WearSecondaryText,
-                fontSize = 20.sp
+
+            // Bottom-right: increment (fine step, icon)
+            StepButton(
+                modifier = Modifier.align(Alignment.Center).offset(BtnH, BtnV),
+                step = stepValues[0],
+                isIncrement = true,
+                onStep = ::step,
+                enabled = enabled,
+            )
+
+            // Top-right: medium/large increment (labeled)
+            StepButton(
+                modifier = Modifier.align(Alignment.Center).offset(BtnH, -BtnV),
+                step = stepValues[1],
+                isIncrement = true,
+                onStep = ::step,
+                useTextLabel = true,
+                enabled = enabled,
+            )
+
+            // Top-left: large increment or symmetric decrement (labeled)
+            StepButton(
+                modifier = Modifier.align(Alignment.Center).offset(-BtnH, -BtnV),
+                step = if (symmetricLargeSteps) stepValues[1] else stepValues[2],
+                isIncrement = !symmetricLargeSteps,
+                onStep = ::step,
+                useTextLabel = true,
+                enabled = enabled,
             )
         }
-
-        // Bottom-left: decrement (fine step)
-        StepButton(
-            modifier = Modifier.align(Alignment.Center).offset(-BtnH, BtnV),
-            step = stepValues[0],
-            isIncrement = false,
-            onStep = ::step,
-        )
-
-        // Bottom-right: increment (fine step, icon)
-        StepButton(
-            modifier = Modifier.align(Alignment.Center).offset(BtnH, BtnV),
-            step = stepValues[0],
-            isIncrement = true,
-            onStep = ::step,
-        )
-
-        // Top-right: medium/large increment (labeled)
-        StepButton(
-            modifier = Modifier.align(Alignment.Center).offset(BtnH, -BtnV),
-            step = stepValues[1],
-            isIncrement = true,
-            onStep = ::step,
-            useTextLabel = true,
-        )
-
-        // Top-left: large increment or symmetric decrement (labeled)
-        StepButton(
-            modifier = Modifier.align(Alignment.Center).offset(-BtnH, -BtnV),
-            step = if (symmetricLargeSteps) stepValues[1] else stepValues[2],
-            isIncrement = !symmetricLargeSteps,
-            onStep = ::step,
-            useTextLabel = true,
-        )
     }
 }
 
@@ -193,6 +228,7 @@ private fun StepButton(
     isIncrement: Boolean,
     onStep: (Double) -> Unit,
     useTextLabel: Boolean = false,
+    enabled: Boolean = true,
 ) {
     val scope = rememberCoroutineScope()
     val delta = if (isIncrement) step else -step
@@ -202,19 +238,24 @@ private fun StepButton(
             .size(48.dp)
             .clip(CircleShape)
             .background(ButtonBg)
-            .pointerInput(delta) {
+            .pointerInput(delta, enabled) {
+                if (!enabled) return@pointerInput
                 detectTapGestures(
                     onPress = {
-                        onStep(delta)
+                        var stepped = false
                         val job = scope.launch {
-                            delay(300)
+                            delay(100)          // allow pager to claim swipe gestures first
+                            stepped = true
+                            onStep(delta)
+                            delay(200)          // hold-to-repeat: 300ms total from press
                             while (true) {
                                 onStep(delta)
                                 delay(150)
                             }
                         }
-                        tryAwaitRelease()
+                        val released = tryAwaitRelease()  // false if pager cancelled the gesture
                         job.cancel()
+                        if (!stepped && released) onStep(delta)  // quick tap under 100ms threshold
                     }
                 )
             },

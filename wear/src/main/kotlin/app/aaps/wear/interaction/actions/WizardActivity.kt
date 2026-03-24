@@ -85,18 +85,21 @@ class WizardActivity : DaggerAppCompatActivity() {
                                 label = stringResource(R.string.action_carbs_gram),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
+                                enabled = !pagerState.isScrollInProgress,
+                                valueColor = CarbsOrange,
                             )
                             hasPercentage && page == 1 -> PlusMinusInputScreen(
                                 value = percentage,
                                 onValueChange = { percentage = it },
                                 min = 10.0,
                                 max = 200.0,
-                                stepValues = listOf(5.0, 20.0, 20.0),
+                                stepValues = listOf(5.0, 5.0, 5.0),
                                 format = DecimalFormat("0"),
-                                label = stringResource(R.string.action_percentage_unit),
+                                label = stringResource(R.string.action_percentage),
                                 allowZero = true,
                                 isActive = pagerState.currentPage == 1,
-                                symmetricLargeSteps = true,
+                                simpleMode = true,
+                                enabled = !pagerState.isScrollInProgress,
                             )
                             else                       -> WizardConfirmScreen(
                                 carbs = carbs.toInt(),
@@ -139,7 +142,7 @@ private fun WizardConfirmScreen(carbs: Int, percentage: Int?, onConfirm: () -> U
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.confirm),
+            text = stringResource(R.string.request),
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold

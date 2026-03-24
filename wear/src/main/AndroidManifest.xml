@@ -635,7 +635,8 @@
         <activity
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
-            android:label="@string/action_ecarbs" />
+            android:label="@string/action_ecarbs"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.CarbActivity"
             android:exported="true"

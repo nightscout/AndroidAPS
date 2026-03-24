@@ -69,7 +69,6 @@ class CarbActivity : DaggerAppCompatActivity() {
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
                         state = pagerState,
-                        userScrollEnabled = pagerState.currentPage > 0 || carbs != 0.0,
                     ) { page ->
                         when (page) {
                             0 -> PlusMinusInputScreen(
@@ -82,6 +81,8 @@ class CarbActivity : DaggerAppCompatActivity() {
                                 label = stringResource(R.string.action_carbs_gram),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
+                                enabled = !pagerState.isScrollInProgress,
+                                valueColor = CarbsOrange,
                             )
                             else -> CarbConfirmScreen(
                                 carbs = carbs.toInt(),
@@ -123,7 +124,7 @@ private fun CarbConfirmScreen(carbs: Int, onConfirm: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.confirm),
+            text = stringResource(R.string.request),
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
