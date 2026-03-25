@@ -34,6 +34,8 @@ class PumpState {
     // Bolus
     var maxBolus: Double = 10.0
     var bolusStep: Double = 0.05
+    /** Interval between bolus delivery notifications in ms. Set to 0 for instant delivery in tests. */
+    var bolusDeliveryIntervalMs: Long = 1000
     var lastBolusAmount: Double = 0.0
     var lastBolusTime: Long = 0
     var isExtendedBolusRunning: Boolean = false

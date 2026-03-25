@@ -164,7 +164,9 @@ class DanaRSServiceIntegrationTest : TestBase() {
 
         // Real instances
         bleEncryption = BleEncryption()
-        emulatorTransport = EmulatorBleTransport(deviceName = deviceName)
+        emulatorTransport = EmulatorBleTransport(deviceName = deviceName).apply {
+            pumpState.bolusDeliveryIntervalMs = 0 // Instant delivery in tests
+        }
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
         // Wire up message hash table for bolus notification packets

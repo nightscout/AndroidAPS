@@ -274,6 +274,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         if (params.size >= 3) {
             val amountHundredths = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
             val amount = amountHundredths / 100.0
+            val speed = params[2].toInt() and 0xFF // seconds per unit (12, 30, or 60)
             state.lastBolusAmount = amount
             state.lastBolusTime = System.currentTimeMillis()
             state.dailyTotalUnits += amount
@@ -282,23 +283,25 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             // Record history event
             addHistoryEvent(DanaPump.HistoryEntry.BOLUS.value, state.lastBolusTime, amountHundredths, 0)
 
-            // Schedule bolus delivery notifications on a separate thread
+            // Schedule bolus delivery notifications on a separate thread.
+            // Delivery takes amount * speed seconds (e.g., 1U at speed 12 = 12 seconds).
+            // Send progress every second to match the app's expected delivery timing.
             Thread {
                 @Suppress("SleepInsteadOfDelay")
-                // Send progress updates, then complete
-                val steps = 5
+                val intervalMs = state.bolusDeliveryIntervalMs
+                val deliveryTimeMs = if (intervalMs > 0) (amount * speed * 1000).toLong() else 0L
+                val steps = if (intervalMs > 0) maxOf(1, (deliveryTimeMs / intervalMs).toInt()) else 1
                 val stepAmount = amountHundredths / steps
                 for (i in 1..steps) {
-                    Thread.sleep(200) // Simulate delivery time
+                    if (intervalMs > 0) Thread.sleep(intervalMs)
                     val delivered = minOf(stepAmount * i, amountHundredths)
-                    // NOTIFY__DELIVERY_RATE_DISPLAY: 2 bytes delivered amount
                     val rateData = byteArrayOf(
                         (delivered and 0xFF).toByte(),
                         ((delivered shr 8) and 0xFF).toByte()
                     )
                     onSpontaneousMessage?.invoke(BleEncryption.DANAR_PACKET__TYPE_NOTIFY, BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY, rateData)
                 }
-                // NOTIFY__DELIVERY_COMPLETE: 2 bytes total delivered
+                // NOTIFY__DELIVERY_COMPLETE
                 val completeData = byteArrayOf(
                     (amountHundredths and 0xFF).toByte(),
                     ((amountHundredths shr 8) and 0xFF).toByte()

@@ -107,7 +107,9 @@ class BLECommIntegrationTest : TestBase() {
 
         // Real instances (no Android deps)
         bleEncryption = BleEncryption()
-        emulatorTransport = EmulatorBleTransport(deviceName = deviceName)
+        emulatorTransport = EmulatorBleTransport(deviceName = deviceName).apply {
+            pumpState.bolusDeliveryIntervalMs = 0 // Instant delivery in tests
+        }
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
         bleComm = BLEComm(
