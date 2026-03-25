@@ -153,8 +153,8 @@ private fun ProfileSwitchRequestScreen(
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 
-    val timeshiftText = "${if (timeshift > 0) "+" else ""}$timeshift h"
-    val durationText = if (duration == 0) "\u221E" else stringResource(R.string.action_minutes_format, duration)
+    val timeshiftText = "${if (timeshift > 0) "+" else ""}${stringResource(R.string.action_duration_hours_format, timeshift)}"
+    val durationText = if (duration == 0) "\u221E" else formatDurationMinutes(duration)
     val detailLine = "$timeshiftText / $durationText"
 
     Column(

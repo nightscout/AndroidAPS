@@ -117,6 +117,9 @@
     <string name="ecarbs_start_format">%1$d min</string>
     <string name="ecarbs_confirm_time">Time: %1$s</string>
     <string name="ecarbs_confirm_duration">Duration: %1$d h</string>
+    <string name="action_confirm_reason">Reason: %1$s</string>
+    <string name="action_confirm_duration">Duration: %1$s</string>
+    <string name="action_confirm_timeshift">Timeshift: %1$s</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>

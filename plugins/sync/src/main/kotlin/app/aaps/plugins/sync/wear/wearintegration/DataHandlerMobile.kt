@@ -1017,7 +1017,11 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage, command.duration)
+                    returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage, command.duration),
+                    profileName = profileName,
+                    profilePercentage = command.percentage,
+                    profileTimeshift = command.timeShift,
+                    profileDurationMinutes = command.duration,
                 )
             )
         )
@@ -1045,7 +1049,10 @@ class DataHandlerMobile @Inject constructor(
                     EventMobileToWear(
                         EventData.ConfirmAction(
                             title, message,
-                            returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, activityTTDuration, activityTT, activityTT)
+                            returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, activityTTDuration, activityTT, activityTT),
+                            tempTargetLow = activityTT, tempTargetHigh = activityTT,
+                            tempTargetDurationMinutes = activityTTDuration, tempTargetIsMGDL = presetIsMGDL,
+                            tempTargetReason = reason,
                         )
                     )
                 )
@@ -1061,7 +1068,10 @@ class DataHandlerMobile @Inject constructor(
                     EventMobileToWear(
                         EventData.ConfirmAction(
                             title, message,
-                            returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, hypoTTDuration, hypoTT, hypoTT)
+                            returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, hypoTTDuration, hypoTT, hypoTT),
+                            tempTargetLow = hypoTT, tempTargetHigh = hypoTT,
+                            tempTargetDurationMinutes = hypoTTDuration, tempTargetIsMGDL = presetIsMGDL,
+                            tempTargetReason = reason,
                         )
                     )
                 )
@@ -1077,7 +1087,10 @@ class DataHandlerMobile @Inject constructor(
                     EventMobileToWear(
                         EventData.ConfirmAction(
                             title, message,
-                            returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, eatingSoonTTDuration, eatingSoonTT, eatingSoonTT)
+                            returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, eatingSoonTTDuration, eatingSoonTT, eatingSoonTT),
+                            tempTargetLow = eatingSoonTT, tempTargetHigh = eatingSoonTT,
+                            tempTargetDurationMinutes = eatingSoonTTDuration, tempTargetIsMGDL = presetIsMGDL,
+                            tempTargetReason = reason,
                         )
                     )
                 )
@@ -1089,7 +1102,8 @@ class DataHandlerMobile @Inject constructor(
                     EventMobileToWear(
                         EventData.ConfirmAction(
                             title, message,
-                            returnCommand = EventData.ActionTempTargetConfirmed(true, 0, 0.0, 0.0)
+                            returnCommand = EventData.ActionTempTargetConfirmed(true, 0, 0.0, 0.0),
+                            isCancelTempTarget = true,
                         )
                     )
                 )
@@ -1106,7 +1120,8 @@ class DataHandlerMobile @Inject constructor(
                         EventMobileToWear(
                             EventData.ConfirmAction(
                                 title, message,
-                                returnCommand = EventData.ActionTempTargetConfirmed(true, 0, 0.0, 0.0)
+                                returnCommand = EventData.ActionTempTargetConfirmed(true, 0, 0.0, 0.0),
+                                isCancelTempTarget = true,
                             )
                         )
                     )
@@ -1137,7 +1152,9 @@ class DataHandlerMobile @Inject constructor(
                         EventMobileToWear(
                             EventData.ConfirmAction(
                                 title, message,
-                                returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, action.duration, action.low, action.high)
+                                returnCommand = EventData.ActionTempTargetConfirmed(presetIsMGDL, action.duration, action.low, action.high),
+                                tempTargetLow = action.low, tempTargetHigh = action.high,
+                                tempTargetDurationMinutes = action.duration, tempTargetIsMGDL = action.isMgdl,
                             )
                         )
                     )
