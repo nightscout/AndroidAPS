@@ -583,7 +583,8 @@
         <activity
             android:name=".interaction.actions.WizardActivity"
             android:exported="true"
-            android:label="@string/menu_wizard" />
+            android:label="@string/menu_wizard"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.WizardResultActivity"
             android:exported="false"
@@ -611,11 +612,13 @@
         <activity
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
-            android:label="@string/menu_treatment" />
+            android:label="@string/menu_treatment"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:exported="true"
-            android:label="@string/action_insulin" />
+            android:label="@string/action_insulin"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
             android:exported="true"
@@ -624,7 +627,8 @@
             android:name=".interaction.actions.AcceptActivity"
             android:exported="true"
             android:label="@string/action_confirm"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.FillActivity"
             android:exported="true"
@@ -632,11 +636,13 @@
         <activity
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
-            android:label="@string/action_ecarbs" />
+            android:label="@string/action_ecarbs"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.CarbActivity"
             android:exported="true"
-            android:label="@string/action_carbs" />
+            android:label="@string/action_carbs"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:exported="true"

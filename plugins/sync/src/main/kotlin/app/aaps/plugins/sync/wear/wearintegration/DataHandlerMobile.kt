@@ -888,6 +888,10 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
         }
+        if (insulinAfterConstraints == 0.0 && command.carbs == 0) {
+            sendError(rh.gs(app.aaps.core.ui.R.string.bolus_equal_zero_no_action))
+            return
+        }
         // Handle negative carbs constraint
         if (carbsAfterConstraints < 0) {
             if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
@@ -903,7 +907,10 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints)
+                    returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints),
+                    insulin = insulinAfterConstraints,
+                    carbs = carbsAfterConstraints,
+                    constraintApplied = insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0,
                 )
             )
         )
@@ -933,7 +940,11 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionECarbsConfirmed(carbsAfterConstraints, startTimeStamp, command.duration)
+                    returnCommand = EventData.ActionECarbsConfirmed(carbsAfterConstraints, startTimeStamp, command.duration),
+                    carbs = carbsAfterConstraints,
+                    carbsTimeShift = command.carbsTimeShift,
+                    duration = command.duration,
+                    constraintApplied = carbsAfterConstraints != command.carbs,
                 )
             )
         )

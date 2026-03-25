@@ -108,8 +108,13 @@
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
+    <string name="action_start_minutes_format">%1$d min</string>
     <string name="action_duration_h">Duration [h]</string>
     <string name="action_duration_hours">Duration\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Time: %1$s</string>
+    <string name="ecarbs_confirm_duration">Duration: %1$d h</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -253,7 +258,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
-    <string name="error">!err!</string>
+    <string name="error">Error</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="key_heart_rate_smoothing" translatable="false">heart_rate_smoothing</string>
@@ -343,4 +348,6 @@
     <string name="loop_status">Loop status</string>
     <string name="loop_status_refresh">Refresh</string>
     <string name="confirm">Confirm</string>
+    <string name="request">Request</string>
+    <string name="constraint_applied">Constraint applied!</string>
 </resources>

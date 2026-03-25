@@ -70,9 +70,6 @@ private val SecondaryText   = Color(0xFFB0BEC5)
 private val Divider         = Color(0xFF37474F)
 private val SummaryCardBg   = Color(0xFF0D47A1)
 private val CalcCardBg      = Color(0xFF263238)
-private val InsulinBlue     = Color(0xFF67DFE8)
-private val CarbsOrange     = Color(0xFFFB8C00)
-private val ConfirmGreen    = Color(0xFF66BB6A)
 
 class WizardResultActivity : DaggerAppCompatActivity() {
 
