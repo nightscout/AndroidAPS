@@ -53,6 +53,9 @@
     <string name="pref_4_hours">4 ore</string>
     <string name="pref_5_hours">5 ore</string>
     <string name="pref_1_min">dezactivat</string>
+    <string name="pref_5_min">5 minute</string>
+    <string name="pref_10_min">10 minute</string>
+    <string name="pref_15_min">15 minute</string>
     <string name="pref_input_design">Design de intrare</string>
     <string name="pref_default">Implicit</string>
     <string name="pref_quick_righty">Drepta rapid</string>
@@ -87,8 +90,10 @@
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Durată\n[minute]</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
+    <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>
@@ -106,6 +111,7 @@
     <string name="action_duration_h">Durată [h]</string>
     <string name="action_duration_hours">Durată\n[ore]</string>
     <string name="action_insulin">Insulină</string>
+    <string name="action_insulin_units">Insulină [U]</string>
     <string name="action_preset_1">Presetare 1</string>
     <string name="action_preset_2">Presetare 2</string>
     <string name="action_preset_3">Presetare 3</string>
