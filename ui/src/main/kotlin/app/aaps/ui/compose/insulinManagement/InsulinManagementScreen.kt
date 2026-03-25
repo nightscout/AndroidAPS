@@ -24,6 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoFixHigh
+import androidx.compose.material.icons.filled.AutoFixOff
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
@@ -100,14 +102,22 @@ fun InsulinManagementScreen(
         viewModel.setScreenMode(initialMode)
     }
 
+    val suffixDisplay = viewModel.insulinManager.buildDisplaySuffix(
+        nickname = uiState.editorNickname.trim(),
+        peak = uiState.editorPeakMinutes,
+        dia = uiState.editorDiaHours,
+        concentration = uiState.editorConcentration.value,
+        excludeIndex = uiState.currentCardIndex
+    )
+
     // Derived state (reactive — recomputed when uiState changes)
     val stored = uiState.insulins.getOrNull(uiState.currentCardIndex)
     val hasUnsavedChanges = stored?.let { s ->
-        uiState.editorName != s.insulinLabel ||
+        uiState.editorNickname != s.insulinNickname ||
             uiState.editorPeakMinutes != s.peak ||
             uiState.editorDiaHours != s.dia ||
             uiState.editorConcentration.value != s.concentration
-    } ?: uiState.editorName.isNotEmpty()
+    } ?: uiState.editorNickname.isNotEmpty()
     val isCurrentActive = stored?.insulinLabel == uiState.activeInsulinLabel
     val canDelete = uiState.insulins.size > 1 && !isCurrentActive
 
@@ -292,14 +302,43 @@ fun InsulinManagementScreen(
                             val editorEnabled = !isCurrentActive
 
                             // Name field
-                            OutlinedTextField(
-                                value = uiState.editorName,
-                                onValueChange = { viewModel.updateEditorName(it) },
-                                label = { Text(stringResource(CoreUiR.string.insulin_name_label)) },
-                                singleLine = true,
-                                enabled = editorEnabled,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                OutlinedTextField(
+                                    value = uiState.editorNickname,
+                                    onValueChange = { viewModel.updateEditorNickname(it) },
+                                    label = { Text(stringResource(CoreUiR.string.insulin_nickname_label)) },
+                                    singleLine = true,
+                                    enabled = editorEnabled,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                IconButton(
+                                    onClick = { viewModel.toggleAutoName() },
+                                    enabled = editorEnabled
+                                ) {
+                                    Icon(
+                                        imageVector = if (uiState.autoNameEnabled) Icons.Default.AutoFixHigh else Icons.Default.AutoFixOff,
+                                        contentDescription = null,
+                                        tint = if (uiState.autoNameEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(4.dp))
+
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.surfaceVariant
+                                ) {
+                                    Text(
+                                        text = suffixDisplay,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
 
                             if (viewModel.concentrationEnabled) {
                                 Spacer(modifier = Modifier.height(12.dp))

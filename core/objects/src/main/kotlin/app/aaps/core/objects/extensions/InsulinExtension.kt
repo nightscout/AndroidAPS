@@ -12,6 +12,7 @@ fun ICfg.toJson(): JSONObject = JSONObject()
     .put("insulinPeakTime", insulinPeakTime)
     .put("concentration", concentration)
     .put("insulinTemplate", insulinTemplate)
+    .put("insulinNickname", insulinNickname)
     .put("isNew", isNew)
 
 /** used to restore configuration within InsulinPlugin and insulin Editor */
@@ -23,6 +24,7 @@ fun ICfg.Companion.fromJson(json: JSONObject): ICfg = ICfg(
 
 ) .also {
     it.insulinTemplate = json.optInt("insulinTemplate", 0)
+    it.insulinNickname = json.optString("insulinNickname", "")
     it.isNew =  json.optBoolean("isNew", false)
 }
 
@@ -32,6 +34,7 @@ fun ICfg.toJsonObject(): JsonObject = buildJsonObject {
     put("insulinPeakTime", insulinPeakTime)
     put("concentration", JsonPrimitive(concentration))
     put("insulinTemplate", insulinTemplate)
+    put("insulinNickname", insulinNickname)
     put("isNew", isNew)
 }
 
@@ -45,6 +48,7 @@ fun ICfg.Companion.fromJsonObject(json: JsonObject): ICfg {
     )
 
     icfg.insulinTemplate = json["insulinTemplate"]?.jsonPrimitive?.intOrNull ?: 0
+    icfg.insulinNickname = json["insulinNickname"]?.jsonPrimitive?.contentOrNull ?: ""
     icfg.isNew = json["isNew"]?.jsonPrimitive?.booleanOrNull ?: false
 
     return icfg

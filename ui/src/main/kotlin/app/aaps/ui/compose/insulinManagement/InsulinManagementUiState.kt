@@ -15,11 +15,12 @@ data class InsulinManagementUiState(
     val activeConcentration: Double = 1.0,
 
     // Editor fields
-    val editorName: String = "",
+    val editorNickname: String = "",
     val editorTemplate: InsulinType? = null,
     val editorConcentration: ConcentrationType = ConcentrationType.U100,
     val editorPeakMinutes: Int = 75,
     val editorDiaHours: Double = 5.0,
+    val autoNameEnabled: Boolean = true,
 
     // Activation dialog
     val activationMessage: String? = null,
