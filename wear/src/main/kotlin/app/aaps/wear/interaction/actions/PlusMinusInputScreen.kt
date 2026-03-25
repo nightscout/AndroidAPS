@@ -54,6 +54,7 @@ internal val WearSecondaryText   = Color(0xFFB0BEC5)
 internal val WearDivider         = Color(0xFF37474F)
 internal val WearSummaryCardBg   = Color(0xFF0D47A1)
 internal val WearCalcCardBg      = Color(0xFF263238)
+internal val TempTargetYellow    = Color(0xFFF4D700)
 
 private val ButtonBg = Color.White.copy(alpha = 0.15f)
 

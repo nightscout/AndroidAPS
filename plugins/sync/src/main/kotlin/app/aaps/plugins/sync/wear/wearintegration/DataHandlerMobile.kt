@@ -1025,9 +1025,9 @@ class DataHandlerMobile @Inject constructor(
 
     private fun formatGlucose(value: Double, isMgdl: Boolean): String {
         return if (isMgdl)
-            String.format(Locale.getDefault(), "%.0f mg/dl", value)
+            String.format(Locale.getDefault(), "%.0f mg/dL", value)
         else
-            String.format(Locale.getDefault(), "%.1f mmol/l", value)
+            String.format(Locale.getDefault(), "%.1f mmol/L", value)
     }
 
     private fun handleTempTargetPreCheck(action: EventData.ActionTempTargetPreCheck) {
