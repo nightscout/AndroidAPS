@@ -1,6 +1,7 @@
 package app.aaps.pump.danars.emulator
 
 import android.content.Context
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -9,6 +10,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -16,10 +18,8 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -30,7 +30,7 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.keys.DanaStringComposedKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
@@ -53,8 +53,6 @@ import app.aaps.pump.danars.comm.DanaRSPacketBolusSetExtendedBolusCancel
 import app.aaps.pump.danars.comm.DanaRSPacketBolusSetStepBolusStart
 import app.aaps.pump.danars.comm.DanaRSPacketBolusSetStepBolusStop
 import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
-import app.aaps.pump.danars.comm.DanaRSPacketNotifyDeliveryComplete
-import app.aaps.pump.danars.comm.DanaRSPacketNotifyDeliveryRateDisplay
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralGetPumpCheck
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralGetShippingInformation
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
@@ -68,6 +66,8 @@ import app.aaps.pump.danars.comm.DanaRSPacketHistoryDaily
 import app.aaps.pump.danars.comm.DanaRSPacketHistoryPrime
 import app.aaps.pump.danars.comm.DanaRSPacketHistoryRefill
 import app.aaps.pump.danars.comm.DanaRSPacketHistorySuspend
+import app.aaps.pump.danars.comm.DanaRSPacketNotifyDeliveryComplete
+import app.aaps.pump.danars.comm.DanaRSPacketNotifyDeliveryRateDisplay
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpTime
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetUserOption
@@ -138,9 +138,9 @@ class DanaRSServiceIntegrationTest : TestBase() {
         // Mock basics
         whenever(rh.gs(anyInt())).thenReturn("test")
         whenever(rh.gs(anyInt(), any())).thenReturn("test")
-        whenever(preferences.get(any<DanaStringKey>())).thenReturn("")
+        whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
-        whenever(preferences.get(DanaStringKey.Password)).thenReturn("0000")
+        whenever(preferences.get(DanaStringNonKey.Password)).thenReturn("0000")
         whenever(preferences.get(DanaStringComposedKey.ParingKey, deviceName)).thenReturn("ABCD")
         whenever(danaRSPlugin.mDeviceName).thenReturn(deviceName)
         whenever(constraintsChecker.applyBolusConstraints(any<Constraint<Double>>())).thenAnswer { it.arguments[0] }
@@ -156,7 +156,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
 
         // PumpSync returns empty expected state
         val emptyState = PumpSync.PumpState(null, null, null, null, "")
-        kotlinx.coroutines.runBlocking { whenever(pumpSync.expectedPumpState()).thenReturn(emptyState) }
+        runBlocking { whenever(pumpSync.expectedPumpState()).thenReturn(emptyState) }
 
         // PumpEnactResult
         whenever(pumpEnactResult.success(any())).thenReturn(pumpEnactResult)

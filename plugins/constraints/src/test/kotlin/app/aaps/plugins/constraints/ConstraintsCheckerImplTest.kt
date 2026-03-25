@@ -42,7 +42,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective9
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.insight.InsightPlugin
@@ -130,10 +130,10 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         whenever(pumpWithConcentration.pumpDescription).thenReturn(PumpDescription())
 
         // RS constructor
-        whenever(preferences.get(DanaStringKey.RsName)).thenReturn("")
-        whenever(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("")
         // R
-        whenever(preferences.get(DanaStringKey.RName)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("")
 
         //SafetyPlugin
         constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger)

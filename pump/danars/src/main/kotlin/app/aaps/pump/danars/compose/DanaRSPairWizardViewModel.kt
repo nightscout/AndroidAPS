@@ -9,18 +9,18 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.PairingState
+import app.aaps.core.interfaces.pump.ble.PairingStep
+import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.pump.dana.keys.DanaStringComposedKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.services.BLEComm
-import app.aaps.core.interfaces.pump.ble.BleTransport
-import app.aaps.core.interfaces.pump.ble.PairingState
-import app.aaps.core.interfaces.pump.ble.PairingStep
-import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -167,7 +167,7 @@ class DanaRSPairWizardViewModel @Inject constructor(
         if (!password.all { it.isDigit() || it in 'a'..'f' || it in 'A'..'F' }) return
 
         // Store password and retry connection
-        preferences.put(DanaStringKey.Password, password.uppercase())
+        preferences.put(DanaStringNonKey.Password, password.uppercase())
         _uiState.update { it.copy(step = WizardStep.PAIRING_PROGRESS, errorMessage = null) }
 
         val device = _uiState.value.selectedDevice ?: return
@@ -212,8 +212,8 @@ class DanaRSPairWizardViewModel @Inject constructor(
         val device = _uiState.value.selectedDevice ?: return
 
         // NOW store MAC + name to preferences (pairing succeeded)
-        preferences.put(DanaStringKey.MacAddress, device.address)
-        preferences.put(DanaStringKey.RsName, device.name)
+        preferences.put(DanaStringNonKey.MacAddress, device.address)
+        preferences.put(DanaStringNonKey.RsName, device.name)
 
         // Bond if not already
         bleTransport.adapter.createBond(device.address)

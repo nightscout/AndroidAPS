@@ -1,4 +1,4 @@
-package app.aaps.pump.danars.compose
+package app.aaps.pump.dana.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

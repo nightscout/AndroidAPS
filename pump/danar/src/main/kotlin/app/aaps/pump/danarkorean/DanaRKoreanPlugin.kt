@@ -37,20 +37,13 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.withEntriesProvider
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.DefaultEditTextValidator
-import app.aaps.core.validators.EditTextValidator
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
-import app.aaps.pump.dana.keys.DanaIntKey
-import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -357,11 +350,6 @@ class DanaRKoreanPlugin @Inject constructor(
         key = "danar_korean_settings",
         titleResId = app.aaps.pump.dana.R.string.danar_pump_settings,
         items = listOf(
-            DanaStringKey.RName.withEntriesProvider(
-                provider = { context -> getBondedBluetoothDevices(context).associateWith { it } },
-                emptyEntriesMessageResId = app.aaps.core.ui.R.string.need_connect_permission
-            ),
-            DanaIntKey.Password,
             DanaBooleanKey.UseExtended
         ),
         icon = pluginDescription.icon
@@ -403,26 +391,6 @@ class DanaRKoreanPlugin @Inject constructor(
             key = "danar_korean_settings"
             title = rh.gs(app.aaps.pump.dana.R.string.danar_pump_settings)
             initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveListPreference(
-                    ctx = context,
-                    stringKey = DanaStringKey.RName,
-                    title = app.aaps.pump.dana.R.string.danar_bt_name_title,
-                    dialogTitle = app.aaps.pump.dana.R.string.danar_bt_name_title,
-                    entries = entries,
-                    entryValues = entries
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context, intKey = DanaIntKey.Password, title = app.aaps.pump.dana.R.string.danar_password_title,
-                    validatorParams = DefaultEditTextValidator.Parameters(
-                        testType = EditTextValidator.TEST_REGEXP,
-                        customRegexp = rh.gs(app.aaps.core.validators.R.string.fourdigitnumber),
-                        testErrorString = rh.gs(app.aaps.core.validators.R.string.error_mustbe4digitnumber)
-                    )
-                )
-            )
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.UseExtended, title = app.aaps.pump.dana.R.string.danar_useextended_title))
         }
     }

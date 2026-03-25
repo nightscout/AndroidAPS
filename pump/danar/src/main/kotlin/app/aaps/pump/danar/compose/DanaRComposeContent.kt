@@ -1,6 +1,5 @@
-package app.aaps.pump.danars.compose
+package app.aaps.pump.danar.compose
 
-import android.content.Context
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -16,34 +15,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.core.ui.compose.pump.BlePreCheckHost
-import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.compose.DanaHistoryScreen
 import app.aaps.pump.dana.compose.DanaHistoryViewModel
 import app.aaps.pump.dana.compose.DanaOverviewEvent
+import app.aaps.pump.dana.compose.DanaOverviewScreen
+import app.aaps.pump.dana.compose.DanaOverviewViewModel
 import app.aaps.pump.dana.compose.DanaUserOptionsScreen
 import app.aaps.pump.dana.compose.DanaUserOptionsViewModel
 import app.aaps.pump.dana.compose.UserOptionsEvent
 
-private enum class DanaScreen {
+private enum class DanaRScreen {
     OVERVIEW,
     PAIR_WIZARD,
     HISTORY,
     USER_OPTIONS
 }
 
-class DanaRSComposeContent(
+class DanaRComposeContent(
     private val pluginName: String,
-    private val context: Context,
-    private val danaPump: DanaPump,
-    private val blePreCheck: BlePreCheck
+    private val danaPump: DanaPump
 ) : ComposablePluginContent {
 
     @Composable
@@ -52,11 +48,11 @@ class DanaRSComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: DanaRSOverviewViewModel = hiltViewModel()
-        val wizardViewModel: DanaRSPairWizardViewModel = hiltViewModel()
+        val overviewViewModel: DanaOverviewViewModel = hiltViewModel()
+        val wizardViewModel: DanaRPairWizardViewModel = hiltViewModel()
 
         // Navigation state
-        var currentScreen by remember { mutableStateOf(DanaScreen.OVERVIEW) }
+        var currentScreen by remember { mutableStateOf(DanaRScreen.OVERVIEW) }
 
         // Dialogs
         var showUnpairDialog by remember { mutableStateOf(false) }
@@ -94,7 +90,7 @@ class DanaRSComposeContent(
             }
         }
         val subScreenNavIcon: @Composable () -> Unit = {
-            IconButton(onClick = { currentScreen = DanaScreen.OVERVIEW }) {
+            IconButton(onClick = { currentScreen = DanaRScreen.OVERVIEW }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
             }
         }
@@ -109,10 +105,10 @@ class DanaRSComposeContent(
         LaunchedEffect(currentScreen) {
             setToolbarConfig(
                 when (currentScreen) {
-                    DanaScreen.OVERVIEW     -> ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction)
-                    DanaScreen.PAIR_WIZARD  -> ToolbarConfig(title = pairingTitle, navigationIcon = subScreenNavIcon, actions = {})
-                    DanaScreen.HISTORY      -> ToolbarConfig(title = historyTitle, navigationIcon = subScreenNavIcon, actions = {})
-                    DanaScreen.USER_OPTIONS -> ToolbarConfig(title = userOptionsTitle, navigationIcon = subScreenNavIcon, actions = {})
+                    DanaRScreen.OVERVIEW     -> ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction)
+                    DanaRScreen.PAIR_WIZARD  -> ToolbarConfig(title = pairingTitle, navigationIcon = subScreenNavIcon, actions = {})
+                    DanaRScreen.HISTORY      -> ToolbarConfig(title = historyTitle, navigationIcon = subScreenNavIcon, actions = {})
+                    DanaRScreen.USER_OPTIONS -> ToolbarConfig(title = userOptionsTitle, navigationIcon = subScreenNavIcon, actions = {})
                 }
             )
         }
@@ -121,12 +117,12 @@ class DanaRSComposeContent(
         LaunchedEffect(overviewViewModel) {
             overviewViewModel.events.collect { event ->
                 when (event) {
-                    is DanaOverviewEvent.StartHistory      -> currentScreen = DanaScreen.HISTORY
-                    is DanaOverviewEvent.StartUserSettings -> currentScreen = DanaScreen.USER_OPTIONS
+                    is DanaOverviewEvent.StartHistory      -> currentScreen = DanaRScreen.HISTORY
+                    is DanaOverviewEvent.StartUserSettings -> currentScreen = DanaRScreen.USER_OPTIONS
 
                     is DanaOverviewEvent.StartPairWizard   -> {
                         wizardViewModel.reset()
-                        currentScreen = DanaScreen.PAIR_WIZARD
+                        currentScreen = DanaRScreen.PAIR_WIZARD
                     }
 
                     is DanaOverviewEvent.ConfirmUnpair     -> showUnpairDialog = true
@@ -135,61 +131,46 @@ class DanaRSComposeContent(
         }
 
         when (currentScreen) {
-            DanaScreen.OVERVIEW     -> {
-                DanaRSOverviewScreen(
+            DanaRScreen.OVERVIEW     -> {
+                DanaOverviewScreen(
                     viewModel = overviewViewModel,
                     danaPump = danaPump
                 )
             }
 
-            DanaScreen.PAIR_WIZARD  -> {
-                KeepScreenOnEffect()
-
-                if (!wizardViewModel.isEmulating) {
-                    BlePreCheckHost(
-                        blePreCheck = blePreCheck,
-                        onFailed = { currentScreen = DanaScreen.OVERVIEW }
-                    )
-                }
-
+            DanaRScreen.PAIR_WIZARD  -> {
                 LaunchedEffect(wizardViewModel) {
                     wizardViewModel.events.collect { event ->
                         when (event) {
-                            is PairWizardEvent.Finish -> currentScreen = DanaScreen.OVERVIEW
+                            is DanaRPairWizardEvent.Finish -> currentScreen = DanaRScreen.OVERVIEW
                         }
                     }
                 }
 
-                DanaRSPairWizardScreen(
+                DanaRPairWizardScreen(
                     viewModel = wizardViewModel,
-                    onFinish = { currentScreen = DanaScreen.OVERVIEW },
-                    onCancel = {
-                        wizardViewModel.cancel()
-                        currentScreen = DanaScreen.OVERVIEW
-                    }
+                    onCancel = { currentScreen = DanaRScreen.OVERVIEW }
                 )
             }
 
-            DanaScreen.HISTORY      -> {
+            DanaRScreen.HISTORY      -> {
                 val historyViewModel: DanaHistoryViewModel = hiltViewModel()
                 DanaHistoryScreen(viewModel = historyViewModel)
             }
 
-            DanaScreen.USER_OPTIONS -> {
+            DanaRScreen.USER_OPTIONS -> {
                 val userOptionsViewModel: DanaUserOptionsViewModel = hiltViewModel()
 
                 LaunchedEffect(userOptionsViewModel) {
                     userOptionsViewModel.events.collect { event ->
                         when (event) {
-                            is UserOptionsEvent.Saved -> currentScreen = DanaScreen.OVERVIEW
+                            is UserOptionsEvent.Saved -> currentScreen = DanaRScreen.OVERVIEW
                             is UserOptionsEvent.Error -> errorMessage = event.message
                         }
                     }
                 }
 
-                DanaUserOptionsScreen(
-                    viewModel = userOptionsViewModel
-                )
+                DanaUserOptionsScreen(viewModel = userOptionsViewModel)
             }
         }
     }

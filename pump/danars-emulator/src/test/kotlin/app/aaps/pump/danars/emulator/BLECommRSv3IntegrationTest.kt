@@ -18,7 +18,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.keys.DanaStringComposedKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
@@ -92,9 +92,9 @@ class BLECommRSv3IntegrationTest : TestBase() {
 
         whenever(rh.gs(anyInt())).thenReturn("test")
         whenever(rh.gs(anyInt(), any())).thenReturn("test")
-        whenever(preferences.get(any<DanaStringKey>())).thenReturn("")
+        whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
-        whenever(preferences.get(DanaStringKey.Password)).thenReturn("0000")
+        whenever(preferences.get(DanaStringNonKey.Password)).thenReturn("0000")
         whenever(danaRSPlugin.mDeviceName).thenReturn(deviceName)
         whenever(constraintsChecker.applyBolusConstraints(any<Constraint<Double>>())).thenAnswer { it.arguments[0] }
 
