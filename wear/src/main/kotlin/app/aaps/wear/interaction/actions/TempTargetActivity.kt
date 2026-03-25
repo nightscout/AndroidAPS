@@ -207,10 +207,21 @@ private fun TempTargetRequestScreen(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = stringResource(R.string.action_minutes_format, duration),
+            text = formatDurationMinutes(duration),
             color = WearSecondaryText,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+@Composable
+private fun formatDurationMinutes(totalMinutes: Int): String {
+    val hours = totalMinutes / 60
+    val mins = totalMinutes % 60
+    return when {
+        hours == 0  -> stringResource(R.string.action_minutes_format, totalMinutes)
+        mins == 0   -> stringResource(R.string.action_duration_hours_format, hours)
+        else        -> stringResource(R.string.action_duration_hours_minutes_format, hours, mins)
     }
 }

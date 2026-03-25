@@ -112,6 +112,7 @@
     <string name="action_duration_h">Duration [h]</string>
     <string name="action_duration_hours">Duration\n[hours]</string>
     <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
     <string name="action_minutes_format">%1$d min</string>
     <string name="ecarbs_start_format">%1$d min</string>
     <string name="ecarbs_confirm_time">Time: %1$s</string>
