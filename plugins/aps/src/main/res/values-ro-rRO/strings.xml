@@ -88,6 +88,8 @@
     <string name="smb_disabled_in_preferences">SMB dezactivat în preferințe</string>
     <string name="uam_disabled_in_preferences">UAM dezactivat din setări</string>
     <string name="autosens_disabled_in_preferences">Autosens dezactivat în preferințe</string>
+    <string name="use_dynamic_sensitivity_title">Activează sensibilitate dinamică</string>
+    <string name="use_dynamic_sensitivity_summary">Setează algoritmul pentru a utiliza sensibilitatea dinamică în loc de valoarea din profil</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
@@ -120,6 +122,7 @@
     <string name="loop_open_mode_min_change">Cerere de schimbare minimală [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă noua valoare este mai mare cu %. Valoarea implicită este 20%</string>
     <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Revenire la sensibilitatea din profil. Nu sunt suficiente date. Motivul: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Setări Autotune</string>
