@@ -633,7 +633,9 @@
         <activity
             android:name=".interaction.actions.FillActivity"
             android:exported="true"
-            android:label="@string/menu_prime_fill" />
+            android:label="@string/menu_prime_fill"
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
@@ -656,7 +658,9 @@
 
         <activity
             android:name=".interaction.actions.LoopStateTimedActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
 
         <activity
             android:name=".interaction.ConfigurationActivity"
