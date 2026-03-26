@@ -1,10 +1,15 @@
 package app.aaps.pump.danars.emulator
 
+import app.aaps.pump.dana.emulator.HistoryEventStore
+
 /**
  * Mutable state of the emulated Dana RS pump.
  * Inspectable from tests for assertions.
  */
 class PumpState {
+
+    // History (shared with DanaR emulator)
+    val historyStore = HistoryEventStore()
 
     // Device info
     var serialNumber: String = "AAA00000AA"
@@ -29,6 +34,8 @@ class PumpState {
     // Bolus
     var maxBolus: Double = 10.0
     var bolusStep: Double = 0.05
+    /** Interval between bolus delivery notifications in ms. Set to 0 for instant delivery in tests. */
+    var bolusDeliveryIntervalMs: Long = 1000
     var lastBolusAmount: Double = 0.0
     var lastBolusTime: Long = 0
     var isExtendedBolusRunning: Boolean = false
@@ -91,8 +98,6 @@ class PumpState {
     var currentCIR: Int = 10
     var currentCF: Int = 30
 
-    // History
-    var historyEvents: MutableList<HistoryEvent> = mutableListOf()
     var historyDone: Boolean = true
 
     // Password (v1 encryption)
@@ -110,10 +115,3 @@ class PumpState {
     var ble5PairingKey: String = "474632"
 
 }
-
-data class HistoryEvent(
-    val code: Int,
-    val timestamp: Long,
-    val param1: Int = 0,
-    val param2: Int = 0
-)

@@ -4,13 +4,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
-import app.aaps.pump.danars.services.BleAdapter
-import app.aaps.pump.danars.services.BleGatt
-import app.aaps.pump.danars.services.BleScanner
-import app.aaps.pump.danars.services.BleTransport
-import app.aaps.pump.danars.services.BleTransportListener
-import app.aaps.pump.danars.services.PairingState
-import app.aaps.pump.danars.services.ScannedDevice
+import app.aaps.core.interfaces.pump.ble.BleAdapter
+import app.aaps.core.interfaces.pump.ble.BleGatt
+import app.aaps.core.interfaces.pump.ble.BleScanner
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
+import app.aaps.core.interfaces.pump.ble.PairingState
+import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -54,6 +54,11 @@ class EmulatorBleTransport(
     /** Current emulated device name. Changes when [deviceNameProvider] returns a new value on scan. */
     var currentDeviceName: String = deviceName
         private set
+
+    /** Delay before onCharacteristicWritten callback (simulates BLE write latency). Tests can set to 0. */
+    var writeLatencyMs: Long = 1L
+    /** Delay before sending deferred PASSKEY_RETURN during v1 pairing. Tests can set to 0. */
+    var pairingDelayMs: Long = 100L
 
     /** Pump-side encryption instance (mirrors the app-side BleEncryption) */
     val pumpEncryption = BleEncryption()
@@ -204,7 +209,7 @@ class EmulatorBleTransport(
             // callback would find an empty queue.
             Thread {
                 @Suppress("SleepInsteadOfDelay")
-                Thread.sleep(1) // Simulate BLE write latency — ensures sendMessage finishes queuing
+                if (writeLatencyMs > 0) Thread.sleep(writeLatencyMs) // Simulate BLE write latency — ensures sendMessage finishes queuing
                 listener?.onCharacteristicWritten()
             }.start()
 
@@ -361,7 +366,7 @@ class EmulatorBleTransport(
                 // This must be deferred so the OK response is delivered first.
                 Thread {
                     @Suppress("SleepInsteadOfDelay")
-                    Thread.sleep(100)
+                    if (pairingDelayMs > 0) Thread.sleep(pairingDelayMs)
                     val returnPacket = buildEncryptionResponse(
                         BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN,
                         pumpState.pairingKey

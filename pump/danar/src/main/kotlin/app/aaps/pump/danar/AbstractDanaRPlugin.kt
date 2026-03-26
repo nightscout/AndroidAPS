@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.Dana
@@ -35,14 +36,15 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.roundTo
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
+import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaIntentKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danar.compose.DanaRComposeContent
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -82,13 +84,18 @@ abstract class AbstractDanaRPlugin protected constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(DanaFragment::class.java.name)
+        .composeContent { _ ->
+            DanaRComposeContent(
+                pluginName = (activePlugin.activePumpInternal as? PluginBase)?.name ?: "",
+                danaPump = danaPump
+            )
+        }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danai_128)
-        .pluginName(app.aaps.pump.dana.R.string.danarspump)
+        .pluginName(app.aaps.pump.dana.R.string.danarpump)
         .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
-    ownPreferences = listOf(DanaStringKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
+    ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaIntNonKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
@@ -107,12 +114,12 @@ abstract class AbstractDanaRPlugin protected constructor(
 
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        preferences.observe(DanaStringKey.RName).drop(1).onEach {
+        preferences.observe(DanaStringNonKey.RName).drop(1).onEach {
             danaPump.reset()
             pumpSync.connectNewPump(true)
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
         }.launchIn(newScope)
-        danaPump.serialNumber = preferences.get(DanaStringKey.RName) // fill at start to allow password reset
+        danaPump.serialNumber = preferences.get(DanaStringNonKey.RName) // fill at start to allow password reset
     }
 
     override fun onStop() {
@@ -315,7 +322,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     }
 
     override fun isConfigured(): Boolean =
-        preferences.get(DanaStringKey.RName).isNotEmpty()
+        preferences.get(DanaStringNonKey.RName).isNotEmpty()
 
     override fun connect(reason: String) {
         executionService?.connect()

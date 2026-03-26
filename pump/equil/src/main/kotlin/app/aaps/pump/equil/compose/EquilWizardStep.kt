@@ -7,9 +7,10 @@ import app.aaps.pump.equil.R
  */
 enum class EquilWizardStep(val titleResId: Int) {
 
-    // PAIR flow: Assemble → SerialNumber → [SelectInsulin] → Fill → Attach → Air → [SiteLocation] → Confirm
+    // PAIR flow: Assemble → BleScan → Password → [SelectInsulin] → Fill → Attach → Air → [SiteLocation] → Confirm
     ASSEMBLE(R.string.equil_title_assemble),
-    SERIAL_NUMBER(R.string.equil_title_serial),
+    BLE_SCAN(R.string.equil_title_serial),
+    PASSWORD(R.string.equil_title_serial),
     FILL(R.string.equil_title_fill),
     ATTACH(R.string.equil_title_attach),
     AIR(R.string.equil_title_air),
@@ -37,7 +38,8 @@ enum class EquilWorkflow {
     fun steps(siteRotationEnabled: Boolean, insulinSelectionEnabled: Boolean): List<EquilWizardStep> = when (this) {
         PAIR           -> buildList {
             add(EquilWizardStep.ASSEMBLE)
-            add(EquilWizardStep.SERIAL_NUMBER)
+            add(EquilWizardStep.BLE_SCAN)
+            add(EquilWizardStep.PASSWORD)
             if (insulinSelectionEnabled) add(EquilWizardStep.SELECT_INSULIN)
             add(EquilWizardStep.FILL)
             add(EquilWizardStep.ATTACH)

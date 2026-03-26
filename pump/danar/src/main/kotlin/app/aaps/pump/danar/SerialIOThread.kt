@@ -1,9 +1,9 @@
 package app.aaps.pump.danar
 
-import android.bluetooth.BluetoothSocket
 import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.dana.DanaPump
@@ -20,7 +20,7 @@ import kotlin.math.max
  */
 class SerialIOThread(
     private val aapsLogger: AAPSLogger,
-    private val rfCommSocket: BluetoothSocket,
+    private val rfCommSocket: RfcommSocket,
     private val hashTable: MessageHashTableBase,
     private val danaPump: DanaPump
 ) : Thread() {
@@ -43,7 +43,12 @@ class SerialIOThread(
                 val newData = ByteArray(max(1024, availableBytes))
                 val gotBytes = try {
                     mInputStream.read(newData)
-                } catch (_: IOException) {
+                } catch (e: IOException) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Read IOException, breaking loop: ${e.message}")
+                    break
+                }
+                if (gotBytes < 0) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Read returned $gotBytes (EOF), breaking loop")
                     break
                 }
                 // When we are here there is some new data available
@@ -69,9 +74,10 @@ class SerialIOThread(
                 }
             }
         } catch (e: Exception) {
-            if (e.message?.contains("bt socket closed") == true) aapsLogger.error("Thread exception: ", e)
+            aapsLogger.error(LTag.PUMPBTCOMM, "Reader thread exception: ${e.javaClass.simpleName}: ${e.message}")
             mKeepRunning = false
         }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Reader loop exited. mKeepRunning=$mKeepRunning")
         disconnect("EndOfLoop")
     }
 

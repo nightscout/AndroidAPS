@@ -424,6 +424,16 @@ class ComposeMainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Safe popBackStack that prevents double-navigation during transitions.
+     * Only pops if the current entry is in RESUMED state (fully visible and interactive).
+     */
+    private fun NavHostController.safePopBackStack() {
+        if (currentBackStackEntry?.lifecycle?.currentState == androidx.lifecycle.Lifecycle.State.RESUMED) {
+            popBackStack()
+        }
+    }
+
     @Composable
     private fun AppContent(navController: NavHostController) {
         // Trigger initial refresh when app content first appears (after init completes)
@@ -665,7 +675,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 InsulinManagementScreen(
                     viewModel = insulinManagementViewModel,
                     initialMode = mode,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onRequestEditMode = {
                         withProtection(ProtectionCheck.Protection.PREFERENCES) {
                             insulinManagementViewModel.setScreenMode(ScreenMode.EDIT)
@@ -682,7 +692,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 ProfileManagementScreen(
                     viewModel = profileManagementViewModel,
                     initialMode = mode,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onRequestEditMode = {
                         withProtection(ProtectionCheck.Protection.PREFERENCES) {
                             profileManagementViewModel.setScreenMode(ScreenMode.EDIT)
@@ -708,7 +718,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 TempTargetManagementScreen(
                     viewModel = tempTargetManagementViewModel,
                     initialMode = mode,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onRequestEditMode = {
                         withProtection(ProtectionCheck.Protection.PREFERENCES) {
                             tempTargetManagementViewModel.setScreenMode(ScreenMode.EDIT)
@@ -725,7 +735,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 QuickWizardManagementScreen(
                     viewModel = quickWizardManagementViewModel,
                     initialMode = mode,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onRequestEditMode = {
                         withProtection(ProtectionCheck.Protection.PREFERENCES) {
                             quickWizardManagementViewModel.setScreenMode(ScreenMode.EDIT)
@@ -743,7 +753,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 RunningModeScreen(
                     viewModel = runningModeManagementViewModel,
                     showOkCancel = true,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.safePopBackStack() }
                 )
             }
 
@@ -760,7 +770,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val siteResult = if (siteLocation != null || siteArrow != null) Pair(siteLocation, siteArrow) else null
 
                 CareDialogScreen(
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onPickSiteLocation = {
                         navController.navigate(AppRoute.SiteLocationPicker.createRoute(TE.Type.SENSOR_CHANGE))
                     },
@@ -782,7 +792,7 @@ class ComposeMainActivity : AppCompatActivity() {
 
                 FillDialogScreen(
                     fillButtonsDef = builtInSearchables.fillButtons,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     },
@@ -799,7 +809,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     bgInfoState = graphViewModel.bgInfoState,
                     iobUiState = graphViewModel.iobUiState,
                     cobUiState = graphViewModel.cobUiState,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
@@ -812,7 +822,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     bgInfoState = graphViewModel.bgInfoState,
                     iobUiState = graphViewModel.iobUiState,
                     cobUiState = graphViewModel.cobUiState,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
@@ -824,7 +834,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     bgInfoState = graphViewModel.bgInfoState,
                     iobUiState = graphViewModel.iobUiState,
                     cobUiState = graphViewModel.cobUiState,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
@@ -833,7 +843,7 @@ class ComposeMainActivity : AppCompatActivity() {
 
             composable(route = AppRoute.TempBasalDialog.route) {
                 TempBasalDialogScreen(
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                     }
@@ -842,7 +852,7 @@ class ComposeMainActivity : AppCompatActivity() {
 
             composable(route = AppRoute.ExtendedBolusDialog.route) {
                 ExtendedBolusDialogScreen(
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
@@ -866,7 +876,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ) {
                 WizardDialogScreen(
                     wizardSettingsDef = builtInSearchables.wizardSettings,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onShowDeliveryError = { comment ->
                         uiInteraction.runAlarm(comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
@@ -890,7 +900,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 ImportSettingsScreen(
                     viewModel = importViewModel,
                     prefFileList = prefFileList,
-                    onClose = { navController.popBackStack() }
+                    onClose = { navController.safePopBackStack() }
                 )
             }
 
@@ -914,7 +924,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     showNotesField = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                     initialTimestamp = profileManagementViewModel.dateUtil.nowWithoutMilliseconds(),
                     rh = rh,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
                         val success = profileManagementViewModel.activateProfile(
                             profileIndex = profileIndex,
@@ -951,28 +961,28 @@ class ComposeMainActivity : AppCompatActivity() {
                 }
                 ProfileEditorScreen(
                     viewModel = profileEditorViewModel,
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.safePopBackStack() }
                 )
             }
 
             composable(AppRoute.Treatments.route) {
                 TreatmentsScreen(
                     viewModel = treatmentsViewModel,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.safePopBackStack() }
                 )
             }
 
             composable(AppRoute.Stats.route) {
                 StatsScreen(
                     viewModel = statsViewModel,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.safePopBackStack() }
                 )
             }
 
             composable(AppRoute.ProfileHelper.route) {
                 ProfileHelperScreen(
                     viewModel = profileHelperViewModel,
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.safePopBackStack() }
                 )
             }
 
@@ -981,7 +991,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     activePlugin = activePlugin,
                     rh = rh,
                     builtInSearchables = builtInSearchables,
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.safePopBackStack() }
                 )
             }
 
@@ -998,7 +1008,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val composeContent = plugin.getComposeContent()
                 if (composeContent is ComposablePluginContent) {
                     val navigateBack: @Composable () -> Unit = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = { navController.safePopBackStack() }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(app.aaps.core.ui.R.string.back)
@@ -1044,7 +1054,7 @@ class ComposeMainActivity : AppCompatActivity() {
                         ) {
                             composeContent.Render(
                                 setToolbarConfig = { config -> toolbarConfig = config },
-                                onNavigateBack = { navController.popBackStack() },
+                                onNavigateBack = { navController.safePopBackStack() },
                                 onSettings = {
                                     handleNavigationRequest(
                                         NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
@@ -1061,7 +1071,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = androidx.hilt.navigation.compose.hiltViewModel()
                 QuickLauchConfigScreen(
                     viewModel = quickLaunchConfigViewModel,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.safePopBackStack() }
                 )
             }
 
@@ -1070,7 +1080,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 app.aaps.ui.compose.configuration.ConfigurationScreen(
                     categories = configState.categories,
                     hardwarePumpConfirmation = configState.hardwarePumpConfirmation,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { navController.safePopBackStack() },
                     onNavigate = { request -> handleNavigationRequest(request, navController) },
                     onPluginEnableToggle = { pluginId, type, enabled ->
                         configurationViewModel.togglePluginEnabled(pluginId, type, enabled)
@@ -1093,7 +1103,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     PluginPreferencesScreen(
                         plugin = plugin,
                         visibilityContext = visibilityContext,
-                        onBackClick = { navController.popBackStack() }
+                        onBackClick = { navController.safePopBackStack() }
                     )
                 }
             }
@@ -1108,7 +1118,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     PreferenceScreenView(
                         screenDef = screenDef,
                         highlightKey = highlightKey,
-                        onBackClick = { navController.popBackStack() }
+                        onBackClick = { navController.safePopBackStack() }
                     )
                 }
             }
@@ -1129,13 +1139,13 @@ class ComposeMainActivity : AppCompatActivity() {
                     bodyType = app.aaps.core.ui.compose.siteRotation.BodyType.fromPref(
                         preferences.get(app.aaps.core.keys.IntKey.SiteRotationUserProfile)
                     ),
-                    onClose = { navController.popBackStack() },
+                    onClose = { navController.safePopBackStack() },
                     onLocationConfirmed = { location, arrow ->
                         navController.previousBackStackEntry?.savedStateHandle?.apply {
                             set("site_location", location.name)
                             set("site_arrow", arrow.name)
                         }
-                        navController.popBackStack()
+                        navController.safePopBackStack()
                     },
                     entries = entries
                 )
@@ -1144,7 +1154,7 @@ class ComposeMainActivity : AppCompatActivity() {
             composable(AppRoute.SiteRotationManagement.route) {
                 SiteRotationManagementScreen(
                     viewModel = siteRotationManagementViewModel,
-                    onClose = { navController.popBackStack() },
+                    onClose = { navController.safePopBackStack() },
                     onPreferenceClick = {
                         navController.navigate(AppRoute.SiteRotationSettings.route)
                     }
@@ -1154,7 +1164,7 @@ class ComposeMainActivity : AppCompatActivity() {
             composable(AppRoute.SiteRotationSettings.route) {
                 SiteRotationSettingsScreen(
                     viewModel = siteRotationManagementViewModel,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.safePopBackStack() }
                 )
             }
         }

@@ -56,7 +56,6 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
@@ -65,7 +64,7 @@ import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaLongKey
 import app.aaps.pump.dana.keys.DanaStringComposedKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.compose.DanaRSComposeContent
 import app.aaps.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -101,7 +100,6 @@ class DanaRSPlugin @Inject constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(DanaFragment::class.java.name)
         .composeContent { _ ->
             DanaRSComposeContent(
                 pluginName = rh.gs(app.aaps.pump.dana.R.string.danarspump),
@@ -116,7 +114,7 @@ class DanaRSPlugin @Inject constructor(
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
-    ownPreferences = listOf(DanaStringKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java, DanaStringComposedKey::class.java, DanaLongKey::class.java),
+    ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java, DanaStringComposedKey::class.java, DanaLongKey::class.java),
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
@@ -138,8 +136,8 @@ class DanaRSPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
 
-        if (pref.key == DanaStringKey.RsName.key) {
-            val value = preferences.getIfExists(DanaStringKey.RsName)
+        if (pref.key == DanaStringNonKey.RsName.key) {
+            val value = preferences.getIfExists(DanaStringNonKey.RsName)
             pref.summary = value ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
     }
@@ -179,9 +177,9 @@ class DanaRSPlugin @Inject constructor(
     }
 
     fun changePump() {
-        mDeviceAddress = preferences.get(DanaStringKey.MacAddress)
-        mDeviceName = preferences.get(DanaStringKey.RsName)
-        danaPump.serialNumber = preferences.get(DanaStringKey.RsName)
+        mDeviceAddress = preferences.get(DanaStringNonKey.MacAddress)
+        mDeviceName = preferences.get(DanaStringNonKey.RsName)
+        danaPump.serialNumber = preferences.get(DanaStringNonKey.RsName)
         danaPump.reset()
         if (isConfigured())
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)

@@ -176,6 +176,7 @@
     <string name="equil_device_unpaired">Device unpaired</string>
     <string name="equil_assemble">Please assemble the pump, the filled reservoir and the charged battery</string>
     <string name="equil_devices_number">Enter new pump ID</string>
+    <string name="equil_pair_password_title">Enter password for %1$s</string>
     <string name="equil_insert">Please prime the reservoir until there is a drop of insulin on the needle tip</string>
     <string name="equil_insert2">The pump must not be on the pump base.</string>
     <string name="equil_attach">Please attach the pump to the base</string>

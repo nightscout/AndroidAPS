@@ -29,7 +29,7 @@ val IcPluginGlunovo: ImageVector by lazy {
     ).apply {
         path(
             fill = SolidColor(Color.Black),
-            fillAlpha = 0.4f,
+            fillAlpha = 0.6f,
             stroke = null,
             strokeAlpha = 1.0f,
             strokeLineWidth = 1.0f,

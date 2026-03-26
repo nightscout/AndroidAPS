@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "9.0.1"
+gradlePlugin = "9.1.0"
 googleServices = "4.4.4"
 kotlin = "2.3.10"
 wearable = "2.9.0"

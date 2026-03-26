@@ -314,7 +314,9 @@ fun InsulinManagementScreen(
                                     enabled = editorEnabled,
                                     modifier = Modifier.weight(1f)
                                 )
+
                                 Spacer(modifier = Modifier.width(4.dp))
+
                                 IconButton(
                                     onClick = { viewModel.toggleAutoName() },
                                     enabled = editorEnabled

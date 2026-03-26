@@ -29,6 +29,7 @@ import info.nightscout.pump.combov2.di.ComboV2Module
         RileyLinkModule::class,
         MedtrumModule::class,
         EquilModule::class,
+        EquilModules::class,
     ]
 )
 @InstallIn(SingletonComponent::class)

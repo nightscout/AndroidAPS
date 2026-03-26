@@ -16,7 +16,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.keys.DanaStringComposedKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
@@ -73,9 +73,9 @@ class BLECommBLE5IntegrationTest : TestBase() {
     fun setup() {
         whenever(rh.gs(anyInt())).thenReturn("test")
         whenever(rh.gs(anyInt(), any())).thenReturn("test")
-        whenever(preferences.get(any<DanaStringKey>())).thenReturn("")
+        whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
-        whenever(preferences.get(DanaStringKey.Password)).thenReturn("0000")
+        whenever(preferences.get(DanaStringNonKey.Password)).thenReturn("0000")
         whenever(danaRSPlugin.mDeviceName).thenReturn(deviceName)
         whenever(constraintsChecker.applyBolusConstraints(any<Constraint<Double>>())).thenAnswer { it.arguments[0] }
 
@@ -87,7 +87,10 @@ class BLECommBLE5IntegrationTest : TestBase() {
         emulatorTransport = EmulatorBleTransport(
             deviceName = deviceName,
             encryptionType = EncryptionType.ENCRYPTION_BLE5
-        )
+        ).apply {
+            pairingDelayMs = 0
+            emulator.historyEventDelayMs = 0
+        }
         // Set hwModel to Dana-i (0x09) for BLE5
         emulatorTransport.pumpState.hwModel = 0x09
         emulatorTransport.pumpState.ble5PairingKey = ble5PairingKey
@@ -98,7 +101,9 @@ class BLECommBLE5IntegrationTest : TestBase() {
             danaRSMessageHashTable, danaPump, danaRSPlugin, bleEncryption,
             pumpSync, dateUtil, preferences, configBuilder, notificationManager,
             emulatorTransport
-        )
+        ).apply {
+            messageTimeoutMs = 500
+        }
     }
 
     private fun connectAndHandshake() {

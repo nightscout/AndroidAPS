@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.dana.keys.DanaIntKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaIntNonKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.joda.time.DateTime
@@ -420,11 +420,11 @@ class DanaPump @Inject constructor(
     }
 
     val isPasswordOK: Boolean
-        get() = password == preferences.get(DanaIntKey.Password)
+        get() = password == preferences.get(DanaIntNonKey.Password)
 
     val isRSPasswordOK: Boolean
         get() = rsPassword.equals(
-            preferences.get(DanaStringKey.Password),
+            preferences.get(DanaStringNonKey.Password),
             ignoreCase = true
         ) || ignoreUserPassword
 

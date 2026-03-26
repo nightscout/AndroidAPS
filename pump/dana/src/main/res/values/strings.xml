@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Pairing</string>
-    <string name="danars_no_device_available">No device found so far</string>
-    <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Pairing timed out</string>
-    <string name="danars_waitingforpairing">Waiting for pairing on pump</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS and Dana-i pumps</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">Pump integration for domestic DANA Diabecare R pumps</string>
     <string name="description_pump_dana_r_v2">Pump integration for DANA Diabecare R pumps with upgraded firmware</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">No bluetooth adapter found</string>
     <string name="devicenotfound">Selected device not found</string>
     <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="danarkoreanpump">DanaR Korean</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
-    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pump settings</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth device</string>
     <string name="danars_password_title">Pump password (v1 only)</string>
     <string name="danar_password_title">Pump password</string>
     <string name="danar_useextended_title">Use extended boluses for >200%</string>
@@ -117,7 +111,6 @@
     <string name="num1pin">1: (12 digits)</string>
     <string name="num2pin">2: (8 digits)</string>
     <string name="basal_bolus_step">Basal/bolus step</string>
-    <string name="carbs_store_error">Carbs were probably not stored correctly. Manually check and store again if needed.</string>
     <string name="unpair">Unpair</string>
     <string name="scanning_for_devices">Scanning for devices…</string>
     <string name="select_your_pump">Select your pump from the list below</string>
@@ -128,5 +121,13 @@
     <string name="cancel_pairing_message">The pairing process will be aborted.</string>
     <string name="done">Done</string>
     <string name="no_history_records">No records found</string>
+    <string name="open_bluetooth_settings">Open Bluetooth settings</string>
+    <string name="enter_pump_password">Enter pump password</string>
+    <string name="select_paired_device">Select paired device</string>
+    <string name="no_paired_devices">No paired Dana devices found. Pair your pump in Android Bluetooth settings first.</string>
+    <string name="password_hint">4-digit password (0–9999)</string>
+    <string name="connecting_verifying">Connecting and verifying password…</string>
+    <string name="password_ok">Password verified successfully!</string>
+    <string name="password_wrong">Wrong password. Go back and correct it.</string>
 
 </resources>

@@ -10,6 +10,10 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
+import app.aaps.core.interfaces.pump.ble.PairingState
+import app.aaps.core.interfaces.pump.ble.PairingStep
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.PumpSync
@@ -79,6 +83,8 @@ class BLEComm @Inject constructor(
 
     @Volatile var isConnected = false
     var isConnecting = false
+    /** Timeout for waiting for pump reply in [sendMessage]. Default 5 s; tests may lower this. */
+    var messageTimeoutMs: Long = 5000L
     private var encryptedDataRead = false
     private var encryptedCommandSent = false
     private var pumpCheckSent = false  // Guard against duplicate ENCRYPTION__PUMP_CHECK
@@ -735,7 +741,7 @@ class BLEComm @Inject constructor(
             if (!message.isReceived) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "waiting for reply " + message.friendlyName + " on thread " + Thread.currentThread().name)
                 try {
-                    message.waitMillis(5000)
+                    message.waitMillis(messageTimeoutMs)
                 } catch (e: InterruptedException) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage InterruptedException", e)
                 }
