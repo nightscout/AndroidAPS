@@ -127,8 +127,15 @@
     <string name="scan_on_connection_error_summary">ATENȚIE: Activează doar dacă ai probleme de conexiune. Dacă este activat, driverul scanează din nou pentru pompă înainte de a încerca să se reconecteze la pompă. Asigură-te că ai permisiunea de Locație setată ca „Permiteți mereu\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Se primește starea pompei</string>
+    <string name="syncing_records">Sincronizare înregistrări, %1$d rămase</string>
     <string name="getting_bolus_status">Se citește starea bolusului</string>
     <string name="getting_temp_basal_status">Se citește starea bazalei temporare</string>
     <string name="setting_pump_settings">Setare opțiuni utilizator</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus anulat de utilizator</string>
+    <string name="bolus_error_reason_not_connected">Pompa nu este conectată</string>
+    <string name="bolus_error_reason_already_in_progress">Bolusul este deja în desfășurare</string>
+    <string name="bolus_error_reason_unable_to_send_command">Nu se poate trimite comanda de bolus</string>
+    <string name="bolus_error_reason_communication_lost">Timp de așteptare expirat la obținerea stării bolusului</string>
+    <string name="bolus_error_reason_pump_error">Eroare pompă</string>
 </resources>
