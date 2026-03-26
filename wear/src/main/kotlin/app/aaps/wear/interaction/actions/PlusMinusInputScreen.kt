@@ -19,7 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.coroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -236,7 +236,6 @@ private fun StepButton(
     useTextLabel: Boolean = false,
     enabled: Boolean = true,
 ) {
-    val scope = rememberCoroutineScope()
     val delta = if (isIncrement) step else -step
 
     Box(
@@ -249,19 +248,21 @@ private fun StepButton(
                 detectTapGestures(
                     onPress = {
                         var stepped = false
-                        val job = scope.launch {
-                            delay(100)          // allow pager to claim swipe gestures first
-                            stepped = true
-                            onStep(delta)
-                            delay(200)          // hold-to-repeat: 300ms total from press
-                            while (true) {
+                        coroutineScope {
+                            val job = launch {
+                                delay(100)          // allow pager to claim swipe gestures first
+                                stepped = true
                                 onStep(delta)
-                                delay(150)
+                                delay(200)          // hold-to-repeat: 300ms total from press
+                                while (true) {
+                                    onStep(delta)
+                                    delay(150)
+                                }
                             }
+                            val released = tryAwaitRelease()  // false if pager cancelled the gesture
+                            job.cancel()
+                            if (!stepped && released) onStep(delta)  // quick tap under 100ms threshold
                         }
-                        val released = tryAwaitRelease()  // false if pager cancelled the gesture
-                        job.cancel()
-                        if (!stepped && released) onStep(delta)  // quick tap under 100ms threshold
                     }
                 )
             },
