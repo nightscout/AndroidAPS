@@ -205,14 +205,15 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                                 textAlign = TextAlign.Center,
                                             )
                                         } else if (tempTargetLow != null && tempTargetHigh != null && tempTargetDuration != null) {
-                                            val targetText = if (tempTargetLow == tempTargetHigh)
+                                            val isRange = tempTargetLow != tempTargetHigh
+                                            val targetText = if (!isRange)
                                                 "${ttFmt.format(tempTargetLow)} $ttUnit"
                                             else
                                                 "${ttFmt.format(tempTargetLow)} \u2013 ${ttFmt.format(tempTargetHigh)} $ttUnit"
                                             Text(
                                                 text = targetText,
                                                 color = TempTargetYellow,
-                                                fontSize = 20.sp,
+                                                fontSize = if (isRange) 17.sp else 20.sp,
                                                 fontWeight = FontWeight.Bold,
                                             )
                                             Text(

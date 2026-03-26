@@ -164,7 +164,8 @@ private fun TempTargetRequestScreen(
     var confirmationSent by remember { mutableStateOf(false) }
     val format = if (isMGDL) DecimalFormat("0") else DecimalFormat("#0.0")
     val unit = if (isMGDL) "mg/dL" else "mmol/L"
-    val targetText = if (isSingleTarget) "${format.format(low)} $unit"
+    val isRange = low != high
+    val targetText = if (!isRange) "${format.format(low)} $unit"
     else "${format.format(low)} \u2013 ${format.format(high)} $unit"
 
     Column(
@@ -203,7 +204,7 @@ private fun TempTargetRequestScreen(
         Text(
             text = targetText,
             color = TempTargetYellow,
-            fontSize = 20.sp,
+            fontSize = if (isRange) 17.sp else 20.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
