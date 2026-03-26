@@ -43,9 +43,11 @@
     <string name="omnipod_common_overview_button_set_time">Setați ora</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Suspendare</string>
     <string name="omnipod_common_overview_button_resume_delivery">Reia Livrarea</string>
+    <string name="omnipod_common_overview_button_pod_management">Gestionare Pompă</string>
     <string name="omnipod_common_overview_button_silence_alerts">Oprește Alarmele</string>
     <string name="omnipod_common_overview_pod_status">Status Pod</string>
     <string name="omnipod_common_overview_total_delivered">Total livrat</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">ID unic</string>
     <string name="omnipod_common_overview_lot_number">Număr LOT</string>
     <string name="omnipod_common_overview_pod_sequence_number">Număr de secvență</string>
