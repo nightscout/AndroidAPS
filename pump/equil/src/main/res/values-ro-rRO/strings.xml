@@ -2,6 +2,54 @@
 <resources>
     <string name="equil_pump_description">Pompă plasture Equil 5.3 sau mai nouă </string>
     <!--  start  -->
+    <string name="equil_tone_mode_shake">Doar vibrare</string>
+    <string name="equil_tone_mode_tone">Doar sunet</string>
+    <string name="equil_tone_mode_tone_and_shake">Vibrare și sunet</string>
+    <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unit_u_hours">%1$s U/h</string>
+    <string name="equil_unbind_content">Această operație va opri infuzia de insulină și va retrage pistonul pompei până la capăt! De asemenea, va șterge legătura!</string>
+    <string name="equil_error_no_devices">Niciun dispozitiv</string>
+    <string name="equil_ble_config_confirmation_title">Asociere pompă plasture Equil</string>
+    <string name="equil_error">Eroare conexiune</string>
+    <string name="equil_change">Schimbă pompa</string>
+    <string name="equil_change_content">Detașează pompa de pe placa de bază.</string>
+    <string name="equil_unpair_alert">Sunteți sigur că vreți să renunțați la controlul asupra %1$s?</string>
+    <string name="equil_devices_number_hint">Numărul dispozitivului</string>
+    <string name="equil_record_basal">Rată bazală %1$s U/h</string>
+    <string name="equil_record_basal_temp">Rată bazală temporară %1$s U/h</string>
+    <string name="equil_record_bolus">Bolus %1$s U</string>
+    <string name="equil_error_set_temp_basal_failed_validation">Durata TBR trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
+    <string name="equil_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
+    <string name="equil_low_battery">Nivel scăzut al bateriei</string>
+    <string name="equil_low_insulin">Nu a rămas suficientă insulină în rezervor</string>
+    <string name="equil_pump_not_run">Pompa nu funcționează</string>
+    <string name="equil_pair">Asociază</string>
+    <string name="equil_pair_error">Eroare asociere</string>
+    <string name="equil_retry">Reîncearcă</string>
+    <string name="equil_fill">Amorsare/Umplere</string>
+    <string name="equil_air">Evacuare aer</string>
+    <string name="equil_temp_basal_rate">Rată bazală temporară</string>
+    <string name="equil_total_delivered">Total livrat</string>
+    <string name="equil_last_bolus">Ultimul bolus</string>
+    <string name="equil_firmware_version">Versiune firmware</string>
+    <string name="equil_shutdown_be">Equil se va opri automat</string>
+    <string name="equil_shutdown">Oprire automată Equil</string>
+    <string name="equil_common_history_tbr_value">Rată: %1$.2f U/H, durată: %2$d minute</string>
+    <string name="equil_common_history_bolus_value">%1$.2f U</string>
+    <string name="equil_history_type">Tip:</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Setare bolus</string>
+    <string name="equil_common_cmd_cancel_bolus">Anulare bolus</string>
+    <string name="equil_common_cmd_set_tbr">Setare rată bazală temporară</string>
+    <string name="equil_common_cmd_cancel_tbr">Anulare rată bazală temporară</string>
+    <string name="equil_common_cmd_set_basal_schedule">Setare program rată bazală</string>
+    <string name="equil_common_cmd_set_time">Setare oră</string>
+    <string name="equil_common_cmd_suspend_delivery">Suspendare administrare</string>
+    <string name="equil_common_cmd_resume_delivery">Reluare administrare</string>
+    <string name="equil_common_cmd_pair">Asociază Equil</string>
+    <string name="equil_common_cmd_unpair">Dezasociază Equil</string>
+    <string name="equil_common_cmd_set_extended_bolus">Setează bolusul extins</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Anulează bolusul extins</string>
     <!--    推杆回退-->
+    <string name="equil_common_change_insulin">Retragere tijă de împingere</string>
 </resources>
