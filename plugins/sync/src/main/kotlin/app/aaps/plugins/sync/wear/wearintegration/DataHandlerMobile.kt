@@ -1198,7 +1198,10 @@ class DataHandlerMobile @Inject constructor(
                     AvailableLoopState(AvailableLoopState.LoopState.LOOP_RESUME)
             }
 
-        val states = loop.allowedNextModes().mapNotNull { mapMode(it) }
+        val allStates = loop.allowedNextModes().mapNotNull { mapMode(it) }
+        val states = if (allStates.any { it.state == AvailableLoopState.LoopState.LOOP_USER_SUSPEND })
+            allStates.filter { it.state != AvailableLoopState.LoopState.LOOP_DISABLE }
+        else allStates
         lastAuthorizedLoopStateChangeTS = System.currentTimeMillis()
         lastLoopStates = states
         rxBus.send(
