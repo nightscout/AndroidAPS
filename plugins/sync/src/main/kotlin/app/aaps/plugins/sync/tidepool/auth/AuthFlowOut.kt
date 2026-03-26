@@ -67,10 +67,20 @@ class AuthFlowOut @Inject constructor(
             .build()
     }
 
-    var connectionStatus: ConnectionStatus = ConnectionStatus.NONE
-        private set
+    val authService: AuthorizationService =
+        AuthorizationService(
             context,
             buildAppAuthConfiguration(context.packageManager)
+        )
+
+    enum class ConnectionStatus {
+        NONE, BLOCKED, NOT_LOGGED_IN, NO_SESSION, FETCHING_TOKEN, SESSION_ESTABLISHED, FAILED
+    }
+
+    var connectionStatus: ConnectionStatus = ConnectionStatus.NONE
+        private set
+        get() =
+            if (field == ConnectionStatus.NONE) {
                 if (authState.lastTokenResponse != null) ConnectionStatus.NO_SESSION
                 else ConnectionStatus.NOT_LOGGED_IN
             } else field
