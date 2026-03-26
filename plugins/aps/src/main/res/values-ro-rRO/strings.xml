@@ -3,12 +3,15 @@
     <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Activează raportul de sensibilitate bazat pe TDD pentru modificarea bazalei și a țintei glicemice</string>
     <string name="dynisf_adjust_sensitivity_summary">Folosește ultimele 24 de ore TDD/7D TDD pentru a calcula raportul de sensibilitate utilizat pentru creșterea sau scăderea ratei bazale, şi de asemenea ajustează ţinta glicemic[ dacă aceste opţiuni sunt activate, în acelaşi mod în care procedează Autosens. Este recomandat ca opțiunea să fie oprită la început</string>
+    <string name="dyn_isf_adjust_title" formatted="false">Factor de ajustare DynamicISF %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajustare pentru DynamicISF. Setează peste 100% pentru doze de corecție mai agresive, și sub 100% pentru corecții mai puțin agresive.</string>
     <string name="high_temptarget_raises_sensitivity_title">Ținte temporare mai mari cresc sensibilitatea</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Creșterea sensibilității pentru ținte temporare >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Țintele temporare joase scad sensibilitatea</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Sensibilitate scăzută pentru ținte temporare < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF dinamic</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Cât de des se vor administra SMB în min</string>
     <string name="resistance_lowers_target_title">Rezistența la insulină poate coborî targetul</string>
     <string name="resistance_lowers_target_summary">Când e detectata rezistență la insulină, coboară targetul</string>
@@ -18,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Nu există date despre glicemie</string>
     <string name="openaps_no_as_data">Nu există date disponibile privind autosens</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Se execută</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice de %1$d elemente.\nValoarea curentă:</string>
@@ -25,6 +29,7 @@
     <string name="description_ama">Starea algoritmului în 2017</string>
     <string name="description_smb">Cel mai recent algoritm destinat utilizatorilor avansaţi</string>
     <string name="description_smb_dynamic_isf">Cel mai recent algoritm pentru utilizatorii avansați cu ISF dinamic/automat</string>
+    <string name="description_auto_isf">Cel mai recent algoritm pentru utilizatori avansați cu extensii AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Amână bolusul prin divizor</string>
     <string name="openapsma_run">Execută</string>
     <string name="openapsma_last_run_label">Ultima execuție</string>
@@ -61,7 +66,9 @@
     <string name="enable_smb_summary">Folosește SMB în locul bazalei temporare pentru reacție mai rapidă</string>
     <string name="enable_uam_summary">S-a detectat masă neanunțată</string>
     <string name="enable_smb_always">Activează SMB întotdeauna</string>
+    <string name="enable_smb_always_summary">Activează SMB întotdeauna independent de CIO, ținte temporare sau bolusuri. Este posibil numai cu surse de glicemie cu filtrare avansată a datelor</string>
     <string name="enable_smb_after_carbs">Activează SMB după carbohidrați</string>
+    <string name="enable_smb_after_carbs_summary">Activează SMB pentru 6 ore după carbohidrați, chiar și cu COB 0. Este posibil numai cu surse de glicemie cu filtrare avansată a datelor</string>
     <string name="enable_smb_with_cob">Activează SMB cu COB</string>
     <string name="enable_smb_with_cob_summary">Activează SMB atunci când sunt COB activi.</string>
     <string name="enable_smb_with_temp_target">Activează SMB cu ținte temporare</string>
