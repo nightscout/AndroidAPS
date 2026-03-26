@@ -120,7 +120,6 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                                 low = low,
                                 high = if (isSingleTarget) low else high,
                                 isMGDL = isMGDL,
-                                isSingleTarget = isSingleTarget,
                                 onConfirm = {
                                     confirmTempTarget(
                                         isMGDL, duration.toInt(), low,
@@ -157,7 +156,6 @@ private fun TempTargetRequestScreen(
     low: Double,
     high: Double,
     isMGDL: Boolean,
-    isSingleTarget: Boolean,
     onConfirm: () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
