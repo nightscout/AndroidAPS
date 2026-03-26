@@ -31,7 +31,8 @@ class LoopStateSource @Inject constructor(private val context: Context, private 
                         LoopState.LOOP_DISABLE      -> R.drawable.ic_loop_disabled
                         LoopState.LOOP_USER_SUSPEND -> R.drawable.ic_loop_paused
                         LoopState.LOOP_RESUME       -> R.drawable.ic_loop_resume
-                        LoopState.PUMP_DISCONNECT -> R.drawable.ic_loop_disconnected
+                        LoopState.PUMP_DISCONNECT   -> R.drawable.ic_loop_disconnected
+                        LoopState.PUMP_RECONNECT    -> R.drawable.ic_loop_reconnect
                         else -> R.drawable.ic_loop_closed_green
                     },
                     activityClass = when (state.state) {

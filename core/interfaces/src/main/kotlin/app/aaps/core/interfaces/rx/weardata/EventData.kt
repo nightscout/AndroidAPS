@@ -237,6 +237,7 @@ sealed class EventData : Event() {
                 LOOP_RESUME,
 
                 PUMP_DISCONNECT, // 15m, 30m, 1h, 2h, 3h
+                PUMP_RECONNECT,
 
                 // Returned current statuses
                 LOOP_UNKNOWN,
