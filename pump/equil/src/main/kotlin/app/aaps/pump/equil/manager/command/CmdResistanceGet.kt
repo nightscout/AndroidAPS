@@ -36,8 +36,9 @@ class CmdResistanceGet(
 
     override fun decodeConfirmData(data: ByteArray) {
         val value = Utils.bytesToInt(data[7], data[6])
+        val resistanceThreshold = equilManager.getResistanceThreshold()
         cmdSuccess = true
-        enacted = value >= 500
+        enacted = value >= resistanceThreshold
         synchronized(this) {
             (this as Object).notify()
         }
