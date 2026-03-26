@@ -187,6 +187,11 @@
     <string name="enable_cloud_export_title">Activează exportul în cloud</string>
     <string name="enable_cloud_export_message">Doriți să activați exportul în cloud? Aceasta va activa opțiunea \"Toate în cloud\" din Setările de export.</string>
     <string name="can_change_in_export_settings">Puteți modifica acest lucru mai târziu în Setări Exportare</string>
+    <string name="setup_cloud_directory_first">Vă rugăm să setați Dosarul Cloud mai întâi pentru a utiliza Setările de Export</string>
+    <string name="local_directory">Dosar LOCAL</string>
+    <string name="cloud_directory">Dosar Cloud</string>
+    <string name="export_options">Opțiuni exportare</string>
+    <string name="log_export_option">Jurnal</string>
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <string name="google_drive_connection_test_failed">Testul de conectare Google Drive a eșuat</string>
