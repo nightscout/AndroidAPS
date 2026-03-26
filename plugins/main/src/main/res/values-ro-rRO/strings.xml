@@ -185,7 +185,18 @@
     <string name="statuslights_bat_warning">Prag de avertizare nivel baterie [%]</string>
     <string name="statuslights_bat_critical">Prag critic nivel baterie [%]</string>
     <string name="statuslights_copy_ns">Copiați setările din NS</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 ore</string>
+    <string name="graph_long_scale_12h">12 ore</string>
+    <string name="graph_long_scale_18h">18 ore</string>
     <string name="a11y_graph">grafic</string>
+    <string name="a11y_graph_scale">alege scara graficului</string>
+    <string name="a11y_graph_scale_6h">scară grafică 6 ore</string>
+    <string name="a11y_graph_scale_12h">scară grafică 12 ore</string>
+    <string name="a11y_graph_scale_18h">scară grafică 18 ore</string>
+    <string name="a11y_graph_scale_24h">scară grafică 24 ore</string>
     <string name="a11y_insulin_label">insulină</string>
     <string name="chart_menu">Meniu diagramă</string>
     <string name="a11y_bg_quality">calitatea valorii glicemiei</string>
@@ -197,6 +208,8 @@
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="overview_buttons_selection">Butoane</string>
+    <string name="show_calibration_button_summary">Trimite o calibrare la xDrip+ (asigură-te că \'Acceptă calibrări este activat în xDrip+ în setările între aplicații).</string>
+    <string name="show_cgm_button_summary">Deschide aplicația xDrip+ sau Dexcom (poți folosi butonul înapoi pentru a te întoarce la AAPS).</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="change_your_input">Schimbați ceea ce ați introdus!</string>
@@ -217,6 +230,12 @@
     <string name="thirdcarbsincrement">Al treilea increment de carbohidrați</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Ținte-Temporare implicite</string>
+    <string name="eatingsoon_duration">Durată Mănânc în curând (minute)</string>
+    <string name="eatingsoon_target">Valoare țintă Mănânc în curând</string>
+    <string name="activity_duration">Durata activității (minute)</string>
+    <string name="activity_target">Valoare țintă activitate</string>
+    <string name="hypo_duration">Durată Hipoglicemie (minute)</string>
+    <string name="hypo_target">Valoare țintă Hipoglicemie</string>
     <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
@@ -244,11 +263,13 @@
     <string name="overview_show_deviation_slope">Panta deviaţiei</string>
     <string name="overview_show_activity">Activitate</string>
     <string name="overview_show_bgi">Impactul glicemiei</string>
+    <string name="overview_show_sensitivity">Modificare sensibilitate</string>
     <string name="overview_show_deviations">Deviații</string>
     <string name="overview_show_cob">Carbohidrați activi</string>
     <string name="overview_show_iob">Insulină activă</string>
     <string name="overview_show_basals">Bazale</string>
     <string name="overview_show_abs_insulin">Insulină totală</string>
+    <string name="overview_show_variable_sens">Sensibilitate variabilă</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">R_BAZ</string>
     <string name="deviation_shortname">DEV</string>
@@ -258,8 +279,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema originală</string>
     <string name="lowres_description">Skin de rezoluție redusă</string>
@@ -272,4 +296,6 @@
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
     <string name="overview_show_steps">Paşi</string>
+    <string name="steps_shortname">PAȘI</string>
+    <string name="simple_mode_enabled">Mod simplu activat</string>
 </resources>
