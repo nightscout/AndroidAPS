@@ -13,6 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Crează anunțuri din alertele de cerere carbohidrați</string>
     <string name="ns_create_announcements_from_errors_summary">Crează anunțuri în Nightscout pentru dialoguri de erori și alerte locale (vizibile și în Careportal - Tratamente)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Creează anunțuri Nightscout din alertele de cerere carbohidrați</string>
+    <string name="description_ns_client">Sincronizează datele dumneavoastră cu Nightscout folosind API-ul v1</string>
     <string name="description_ns_client_v3">Sincronizează datele cu Nightscout folosind v3 API</string>
     <string name="blocked_by_charging">Blocat de opțiunile de încărcare</string>
     <string name="blocked_by_connectivity">Blocat de opțiunile de conectivitate</string>
@@ -20,11 +21,18 @@
     <string name="unsupported_ns_version">Versiune incompatibilă de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
+    <string name="ns_malfunction">Defecțiune NSClient. Considerați repornirea NS și NSClient.</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT nu are permisiuni de scriere. Cheia API este corect scrisă?</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Restartare</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Adresa Nightscout</string>
+    <string name="ns_client_url_dialog_message">Introduceți adresa URL Nightscout (e.g. https://numelesite-ului.platforma.dom)</string>
     <string name="deliver_now">Livrează acum</string>
     <string name="queue">Coadă:</string>
     <string name="status">Stare:</string>
@@ -144,4 +152,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Astăzi</string>
     <string name="weighted">ponderat</string>
+    <string name="garmin_request_key_summary">Cheie opțională pentru a asigura comunicarea HTTP între dispozitivul Garmin și AAPS.</string>
 </resources>
