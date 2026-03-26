@@ -13,11 +13,15 @@
     <string name="objectives_openloop_learned">Bucla deschisă poate fi folosită pentru recomandări dacă nu ai o pompă compatibilă sau dacă nu ești gata să închizi bucla.</string>
     <string name="objectives_maxbasal_objective">Se va înțelege modul de lucru în buclă deschisă, inclusiv recomandările de bazale temporare</string>
     <string name="objectives_maxbasal_gate">Pe baza experienței, se va decide care va fi bazala maximă, și se va implementa aceasta în pompă și în preferințe</string>
+    <string name="objectives_maxbasal">Efectuează acțiunea pentru a îndeplini recomandarea</string>
     <string name="objectives_maxbasal_learned">Ai grijă la caracteristicile de siguranţă şi ajustează parametrii de siguranţă, atunci când este necesar.</string>
     <string name="objectives_maxiobzero_objective">Se va începe modul buclă închisă cu funcția Suspendare la Glicemie Mică</string>
+    <string name="objectives_maxiobzero_gate">Rulează în bucla închisă în modul de Suspendare La Hipo (de ex. IOB maxim = 0 este setat automat) pentru câteva zile fără prea multe suspendări pentru hipo (LGS).</string>
     <string name="objectives_maxiobzero_learned">Setarea MaxIOB la zero previne hipoglicemia şi nu va adăuga mai multă insulină peste rata bazală (cu excepţia situaţiilor cu IOB negativ)</string>
     <string name="objectives_maxiob_objective">Îmbunătățirea buclei închise, mărirea valorii max IOB peste 0 și scăderea graduală a țintelor de glicemie</string>
     <string name="objectives_maxiob_gate">Se rulează pentru câteva zile și cel puțin o noapte fără a avea alarme de glicemie mică înainte de scăderea țintei</string>
+    <string name="objectives_maxiob_learned">Actualizează MaxIOB pe măsură ce copilul crește. Nu permite sistemului să dea mai multă insulină decât poate fi acoperită prin alimente = valoarea foarte mare este o idee rea. Max IOB este calculat automat în modul simplu</string>
+    <string name="maxiobset">IOB maxim setat corect (nu este necesar în modul simplu)</string>
     <string name="objectives_autosens_objective">Ajustarea bazalelor și a factorilor dacă este necesar și apoi activarea auto-sens</string>
     <string name="objectives_autosens_gate">O săptămână de buclă închisă încheiată cu succes în condițiile introducerii regulate a carbohidraților</string>
     <string name="objectives_autosens_learned">Dacă rezultatul autosens nu oscilează în jurul valorii de 100%, profilul tău probabil că este greșit.</string>
@@ -25,6 +29,7 @@
     <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru o funcționare corectă a SMB! Un start bun este maxIOB = (media bolusurilor prandiale) + (3x valoarea maximă a ratei bazale din zi)</string>
     <string name="objectives_smb_learned">Scopul tău este să folosești SMB. Algoritmul Oref1 a fost creat pentru a te ajuta și cu bolusurile. Nu ar trebui să administrezi un bolus complet pentru mâncare, ci doar o parte a acestuia, și să permiți AAPS să administreze restul, dacă este necesar. În acest fel ai mai mult loc de manevră pentru carbohidrați calculați greșit. Știai că poți seta un procent din rezultatul calculatorului de bolus pentru a reduce dimensiunea bolusului?</string>
     <string name="objectives_auto_objective">Activarea automatizării</string>
+    <string name="objectives_auto_gate">Citește documentația despre cum funcționează automatizările. Configurează primele reguli simple. În loc de acțiune, permite AAPS să afișeze doar notificări. Când te-ai asigurat că automatizarea se declanșează la momentul potrivit, înlocuiește notificarea cu acțiune reală. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatizarea poate fi un servitor bun, dar un stăpân rău. Nu o utiliza în exces. Nu încerca să înlocuiești algoritmul de bază. Mai întâi testează fiecare regulă cu un mesaj, înainte de activare. Regulile depind de prioritizări.</string>
     <string name="objectives_bgavailableinns">Glicemie disponibilă în NS sau Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Starea pompei este disponibilă în NS sau Tidepool</string>
@@ -71,8 +76,13 @@
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>
     <string name="objectives_hint">(bifați toate răspunsurile corecte)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="failedretrievetime">Nu s-a reușit preluarea timpului</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>
     <string name="what_i_ve_learned">Ce am învăţat:</string>
+    <string name="verify_master_password">Verificați că știți parola principală</string>
 </resources>
