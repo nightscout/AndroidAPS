@@ -83,6 +83,8 @@ class BLEComm @Inject constructor(
 
     @Volatile var isConnected = false
     var isConnecting = false
+    /** Timeout for waiting for pump reply in [sendMessage]. Default 5 s; tests may lower this. */
+    var messageTimeoutMs: Long = 5000L
     private var encryptedDataRead = false
     private var encryptedCommandSent = false
     private var pumpCheckSent = false  // Guard against duplicate ENCRYPTION__PUMP_CHECK
@@ -739,7 +741,7 @@ class BLEComm @Inject constructor(
             if (!message.isReceived) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "waiting for reply " + message.friendlyName + " on thread " + Thread.currentThread().name)
                 try {
-                    message.waitMillis(5000)
+                    message.waitMillis(messageTimeoutMs)
                 } catch (e: InterruptedException) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage InterruptedException", e)
                 }

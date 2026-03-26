@@ -28,6 +28,9 @@ class PumpEmulator(val state: PumpState = PumpState()) {
      */
     var onSpontaneousMessage: ((type: Int, opCode: Int, data: ByteArray) -> Unit)? = null
 
+    /** Delay between history events in [processApsHistoryEvents]. Tests can set to 0. */
+    var historyEventDelayMs: Long = 10L
+
     /**
      * Process a command and return the response data bytes.
      * The response format matches what DanaRSPacket.handleMessage() expects:
@@ -459,7 +462,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         Thread {
             @Suppress("SleepInsteadOfDelay")
             for (i in 1 until events.size) {
-                Thread.sleep(10)
+                if (historyEventDelayMs > 0) Thread.sleep(historyEventDelayMs)
                 val data = buildHistoryEventData(events[i], (i + 1).toShort())
                 onSpontaneousMessage?.invoke(
                     BleEncryption.DANAR_PACKET__TYPE_RESPONSE,

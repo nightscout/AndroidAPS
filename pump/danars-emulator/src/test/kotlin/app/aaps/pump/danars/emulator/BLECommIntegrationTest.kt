@@ -109,6 +109,8 @@ class BLECommIntegrationTest : TestBase() {
         bleEncryption = BleEncryption()
         emulatorTransport = EmulatorBleTransport(deviceName = deviceName).apply {
             pumpState.bolusDeliveryIntervalMs = 0 // Instant delivery in tests
+            pairingDelayMs = 0
+            emulator.historyEventDelayMs = 0
         }
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
@@ -127,7 +129,9 @@ class BLECommIntegrationTest : TestBase() {
             configBuilder,
             notificationManager,
             emulatorTransport
-        )
+        ).apply {
+            messageTimeoutMs = 500
+        }
     }
 
     private fun connectAndHandshake() {

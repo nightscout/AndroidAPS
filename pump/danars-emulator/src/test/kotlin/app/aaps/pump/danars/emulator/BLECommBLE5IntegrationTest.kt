@@ -87,7 +87,10 @@ class BLECommBLE5IntegrationTest : TestBase() {
         emulatorTransport = EmulatorBleTransport(
             deviceName = deviceName,
             encryptionType = EncryptionType.ENCRYPTION_BLE5
-        )
+        ).apply {
+            pairingDelayMs = 0
+            emulator.historyEventDelayMs = 0
+        }
         // Set hwModel to Dana-i (0x09) for BLE5
         emulatorTransport.pumpState.hwModel = 0x09
         emulatorTransport.pumpState.ble5PairingKey = ble5PairingKey
@@ -98,7 +101,9 @@ class BLECommBLE5IntegrationTest : TestBase() {
             danaRSMessageHashTable, danaPump, danaRSPlugin, bleEncryption,
             pumpSync, dateUtil, preferences, configBuilder, notificationManager,
             emulatorTransport
-        )
+        ).apply {
+            messageTimeoutMs = 500
+        }
     }
 
     private fun connectAndHandshake() {

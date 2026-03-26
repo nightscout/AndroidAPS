@@ -114,7 +114,10 @@ class BLECommRSv3IntegrationTest : TestBase() {
         emulatorTransport = EmulatorBleTransport(
             deviceName = deviceName,
             encryptionType = EncryptionType.ENCRYPTION_RSv3
-        )
+        ).apply {
+            pairingDelayMs = 0
+            emulator.historyEventDelayMs = 0
+        }
         // Set hwModel to Dana RS (0x05) for RSv3
         emulatorTransport.pumpState.hwModel = 0x05
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
@@ -124,7 +127,9 @@ class BLECommRSv3IntegrationTest : TestBase() {
             danaRSMessageHashTable, danaPump, danaRSPlugin, bleEncryption,
             pumpSync, dateUtil, preferences, configBuilder, notificationManager,
             emulatorTransport
-        )
+        ).apply {
+            messageTimeoutMs = 500
+        }
     }
 
     @AfterEach

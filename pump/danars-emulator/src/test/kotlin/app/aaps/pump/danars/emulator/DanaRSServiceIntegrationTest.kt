@@ -166,6 +166,9 @@ class DanaRSServiceIntegrationTest : TestBase() {
         bleEncryption = BleEncryption()
         emulatorTransport = EmulatorBleTransport(deviceName = deviceName).apply {
             pumpState.bolusDeliveryIntervalMs = 0 // Instant delivery in tests
+            // writeLatencyMs stays at 1 — needed so sendMessage can queue remaining chunks before callback fires
+            pairingDelayMs = 0 // No pairing delay in tests
+            emulator.historyEventDelayMs = 0 // No history event delay in tests
         }
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
@@ -179,7 +182,9 @@ class DanaRSServiceIntegrationTest : TestBase() {
             aapsLogger, rh, context, rxBus, danaRSMessageHashTable, danaPump,
             danaRSPlugin, bleEncryption, pumpSync, dateUtil, preferences,
             configBuilder, notificationManager, emulatorTransport
-        )
+        ).apply {
+            messageTimeoutMs = 500 // Emulator responds instantly; short timeout catches races faster
+        }
 
         // Create service and wire all dependencies
         danaRSService = DanaRSService()
