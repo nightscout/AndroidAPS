@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -54,6 +55,7 @@ internal val WearSecondaryText   = Color(0xFFB0BEC5)
 internal val WearDivider         = Color(0xFF37474F)
 internal val WearSummaryCardBg   = Color(0xFF0D47A1)
 internal val WearCalcCardBg      = Color(0xFF263238)
+internal val TempTargetYellow    = Color(0xFFF4D700)
 
 private val ButtonBg = Color.White.copy(alpha = 0.15f)
 
@@ -276,5 +278,16 @@ private fun StepButton(
                 modifier = Modifier.size(28.dp)
             )
         }
+    }
+}
+
+@Composable
+internal fun formatDurationMinutes(totalMinutes: Int): String {
+    val hours = totalMinutes / 60
+    val mins = totalMinutes % 60
+    return when {
+        hours == 0 -> stringResource(R.string.action_minutes_format, totalMinutes)
+        mins == 0  -> stringResource(R.string.action_duration_hours_format, hours)
+        else       -> stringResource(R.string.action_duration_hours_minutes_format, hours, mins)
     }
 }

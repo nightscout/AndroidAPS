@@ -292,6 +292,16 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val KEY_DURATION = "duration"
         const val KEY_CONSTRAINT_APPLIED = "constraintApplied"
         const val KEY_IS_ERROR = "isError"
+        const val KEY_TEMP_TARGET_LOW = "tempTargetLow"
+        const val KEY_TEMP_TARGET_HIGH = "tempTargetHigh"
+        const val KEY_TEMP_TARGET_DURATION = "tempTargetDuration"
+        const val KEY_TEMP_TARGET_IS_MGDL = "tempTargetIsMGDL"
+        const val KEY_CANCEL_TEMP_TARGET = "cancelTempTarget"
+        const val KEY_TEMP_TARGET_REASON = "tempTargetReason"
+        const val KEY_PROFILE_NAME = "profileName"
+        const val KEY_PROFILE_PERCENTAGE = "profilePercentage"
+        const val KEY_PROFILE_TIMESHIFT = "profileTimeshift"
+        const val KEY_PROFILE_DURATION = "profileDuration"
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2
