@@ -1,7 +1,6 @@
 package app.aaps.pump.danar.services
 
 import android.bluetooth.BluetoothManager
-import android.content.Context
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -9,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.comm.MessageHashTableBase
 import app.aaps.pump.danar.comm.MsgBolusStop
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -79,6 +78,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.activePlugin = activePlugin
         testService.notificationManager = notificationManager
         testService.pumpEnactResultProvider = pumpEnactResultProvider
+        testService.rfcommTransport = mock()
         testService.injector = injector
     }
 
@@ -266,13 +266,12 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun testGetBTSocketForSelectedPump_noBluetoothAdapter() {
-        `when`(preferences.get(DanaStringKey.RName)).thenReturn("TestPump")
-        `when`(context.getSystemService(Context.BLUETOOTH_SERVICE)).thenReturn(bluetoothManager)
-        `when`(bluetoothManager.adapter).thenReturn(null)
+    fun testGetSocketForSelectedPump_deviceNotFound() {
+        `when`(preferences.get(DanaStringNonKey.RName)).thenReturn("TestPump")
+        `when`(testService.rfcommTransport.getSocketForDevice("TestPump")).thenReturn(null)
 
-        testService.getBTSocketForSelectedPump()
+        testService.getSocketForSelectedPump()
 
-        // Should handle null adapter gracefully
+        // Should handle null socket gracefully
     }
 }

@@ -55,6 +55,11 @@ class EmulatorBleTransport(
     var currentDeviceName: String = deviceName
         private set
 
+    /** Delay before onCharacteristicWritten callback (simulates BLE write latency). Tests can set to 0. */
+    var writeLatencyMs: Long = 1L
+    /** Delay before sending deferred PASSKEY_RETURN during v1 pairing. Tests can set to 0. */
+    var pairingDelayMs: Long = 100L
+
     /** Pump-side encryption instance (mirrors the app-side BleEncryption) */
     val pumpEncryption = BleEncryption()
 
@@ -204,7 +209,7 @@ class EmulatorBleTransport(
             // callback would find an empty queue.
             Thread {
                 @Suppress("SleepInsteadOfDelay")
-                Thread.sleep(1) // Simulate BLE write latency — ensures sendMessage finishes queuing
+                if (writeLatencyMs > 0) Thread.sleep(writeLatencyMs) // Simulate BLE write latency — ensures sendMessage finishes queuing
                 listener?.onCharacteristicWritten()
             }.start()
 
@@ -361,7 +366,7 @@ class EmulatorBleTransport(
                 // This must be deferred so the OK response is delivered first.
                 Thread {
                     @Suppress("SleepInsteadOfDelay")
-                    Thread.sleep(100)
+                    if (pairingDelayMs > 0) Thread.sleep(pairingDelayMs)
                     val returnPacket = buildEncryptionResponse(
                         BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN,
                         pumpState.pairingKey

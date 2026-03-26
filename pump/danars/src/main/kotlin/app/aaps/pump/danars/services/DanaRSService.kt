@@ -345,7 +345,7 @@ class DanaRSService : DaggerService() {
         danaPump.bolusStopForced = false
         danaPump.bolusProgressLastTimeStamp = dateUtil.now()
         val start = danaRSPacketBolusSetStepBolusStart.get().with(detailedBolusInfo.insulin, preferencesSpeed)
-        val bolusStart = System.currentTimeMillis()
+        val bolusStart = dateUtil.now()
         var connectionBroken = false
         if (detailedBolusInfo.insulin > 0) {
             if (!danaPump.bolusStopped) {

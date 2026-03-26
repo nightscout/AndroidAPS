@@ -20,10 +20,17 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
+import app.aaps.pump.dana.compose.DanaHistoryScreen
+import app.aaps.pump.dana.compose.DanaHistoryViewModel
+import app.aaps.pump.dana.compose.DanaOverviewEvent
+import app.aaps.pump.dana.compose.DanaUserOptionsScreen
+import app.aaps.pump.dana.compose.DanaUserOptionsViewModel
+import app.aaps.pump.dana.compose.UserOptionsEvent
 
 private enum class DanaScreen {
     OVERVIEW,
@@ -51,8 +58,17 @@ class DanaRSComposeContent(
         // Navigation state
         var currentScreen by remember { mutableStateOf(DanaScreen.OVERVIEW) }
 
-        // Unpair confirmation dialog
+        // Dialogs
         var showUnpairDialog by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf<String?>(null) }
+
+        errorMessage?.let { msg ->
+            OkDialog(
+                title = stringResource(R.string.pumperror),
+                message = msg,
+                onDismiss = { errorMessage = null }
+            )
+        }
 
         if (showUnpairDialog) {
             OkCancelDialog(
@@ -105,15 +121,15 @@ class DanaRSComposeContent(
         LaunchedEffect(overviewViewModel) {
             overviewViewModel.events.collect { event ->
                 when (event) {
-                    is DanaRSOverviewEvent.StartHistory      -> currentScreen = DanaScreen.HISTORY
-                    is DanaRSOverviewEvent.StartUserSettings -> currentScreen = DanaScreen.USER_OPTIONS
+                    is DanaOverviewEvent.StartHistory      -> currentScreen = DanaScreen.HISTORY
+                    is DanaOverviewEvent.StartUserSettings -> currentScreen = DanaScreen.USER_OPTIONS
 
-                    is DanaRSOverviewEvent.StartPairWizard   -> {
+                    is DanaOverviewEvent.StartPairWizard   -> {
                         wizardViewModel.reset()
                         currentScreen = DanaScreen.PAIR_WIZARD
                     }
 
-                    is DanaRSOverviewEvent.ConfirmUnpair     -> showUnpairDialog = true
+                    is DanaOverviewEvent.ConfirmUnpair     -> showUnpairDialog = true
                 }
             }
         }
@@ -166,9 +182,7 @@ class DanaRSComposeContent(
                     userOptionsViewModel.events.collect { event ->
                         when (event) {
                             is UserOptionsEvent.Saved -> currentScreen = DanaScreen.OVERVIEW
-
-                            is UserOptionsEvent.Error -> { /* TODO: show error */
-                            }
+                            is UserOptionsEvent.Error -> errorMessage = event.message
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package app.aaps.pump.danars.emulator
 
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.emulator.HistoryEvent
 import app.aaps.pump.danars.encryption.BleEncryption
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -26,6 +27,9 @@ class PumpEmulator(val state: PumpState = PumpState()) {
      * @param data the data bytes
      */
     var onSpontaneousMessage: ((type: Int, opCode: Int, data: ByteArray) -> Unit)? = null
+
+    /** Delay between history events in [processApsHistoryEvents]. Tests can set to 0. */
+    var historyEventDelayMs: Long = 10L
 
     /**
      * Process a command and return the response data bytes.
@@ -273,6 +277,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         if (params.size >= 3) {
             val amountHundredths = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
             val amount = amountHundredths / 100.0
+            val speed = params[2].toInt() and 0xFF // seconds per unit (12, 30, or 60)
             state.lastBolusAmount = amount
             state.lastBolusTime = System.currentTimeMillis()
             state.dailyTotalUnits += amount
@@ -281,23 +286,25 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             // Record history event
             addHistoryEvent(DanaPump.HistoryEntry.BOLUS.value, state.lastBolusTime, amountHundredths, 0)
 
-            // Schedule bolus delivery notifications on a separate thread
+            // Schedule bolus delivery notifications on a separate thread.
+            // Delivery takes amount * speed seconds (e.g., 1U at speed 12 = 12 seconds).
+            // Send progress every second to match the app's expected delivery timing.
             Thread {
                 @Suppress("SleepInsteadOfDelay")
-                // Send progress updates, then complete
-                val steps = 5
+                val intervalMs = state.bolusDeliveryIntervalMs
+                val deliveryTimeMs = if (intervalMs > 0) (amount * speed * 1000).toLong() else 0L
+                val steps = if (intervalMs > 0) maxOf(1, (deliveryTimeMs / intervalMs).toInt()) else 1
                 val stepAmount = amountHundredths / steps
                 for (i in 1..steps) {
-                    Thread.sleep(200) // Simulate delivery time
+                    if (intervalMs > 0) Thread.sleep(intervalMs)
                     val delivered = minOf(stepAmount * i, amountHundredths)
-                    // NOTIFY__DELIVERY_RATE_DISPLAY: 2 bytes delivered amount
                     val rateData = byteArrayOf(
                         (delivered and 0xFF).toByte(),
                         ((delivered shr 8) and 0xFF).toByte()
                     )
                     onSpontaneousMessage?.invoke(BleEncryption.DANAR_PACKET__TYPE_NOTIFY, BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY, rateData)
                 }
-                // NOTIFY__DELIVERY_COMPLETE: 2 bytes total delivered
+                // NOTIFY__DELIVERY_COMPLETE
                 val completeData = byteArrayOf(
                     (amountHundredths and 0xFF).toByte(),
                     ((amountHundredths shr 8) and 0xFF).toByte()
@@ -445,38 +452,17 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     // --- APS ---
 
     private fun processApsHistoryEvents(params: ByteArray): ByteArray {
-        // Parse "from" timestamp from params
-        val fromMillis = if (params.size >= 6) {
-            val year = (params[0].toInt() and 0xFF) + 2000
-            val month = params[1].toInt() and 0xFF
-            val day = params[2].toInt() and 0xFF
-            val hour = params[3].toInt() and 0xFF
-            val minute = params[4].toInt() and 0xFF
-            val second = params[5].toInt() and 0xFF
-            if (year == 2000 && month == 1 && day == 1 && hour == 0 && minute == 0 && second == 0) 0L
-            else {
-                try {
-                    LocalDateTime(year, month, day, hour, minute, second)
-                        .toInstant(TimeZone.UTC).toEpochMilliseconds()
-                } catch (_: Exception) {
-                    0L
-                }
-            }
-        } else 0L
+        val store = state.historyStore
+        val fromMillis = store.parseFromTimestamp(params)
+        val events = store.getEventsAfter(fromMillis)
 
-        // Filter events after "from" timestamp
-        val events = state.historyEvents.filter { it.timestamp > fromMillis }
+        if (events.isEmpty()) return store.doneMarker
 
-        if (events.isEmpty()) {
-            // No events — return done marker immediately
-            return byteArrayOf(0xFF.toByte())
-        }
-
-        // Return first event as the direct response, send remaining + done via spontaneous messages
+        // Return first event directly; send remaining + done via spontaneous messages
         Thread {
             @Suppress("SleepInsteadOfDelay")
             for (i in 1 until events.size) {
-                Thread.sleep(10)
+                if (historyEventDelayMs > 0) Thread.sleep(historyEventDelayMs)
                 val data = buildHistoryEventData(events[i], (i + 1).toShort())
                 onSpontaneousMessage?.invoke(
                     BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
@@ -485,11 +471,10 @@ class PumpEmulator(val state: PumpState = PumpState()) {
                 )
             }
             Thread.sleep(10)
-            // Send done marker
             onSpontaneousMessage?.invoke(
                 BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
                 BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS,
-                byteArrayOf(0xFF.toByte())
+                store.doneMarker
             )
         }.start()
 
@@ -498,47 +483,17 @@ class PumpEmulator(val state: PumpState = PumpState()) {
 
     /**
      * Build a history event data payload in the format matching the pump's time mode.
-     *
-     * UTC format (Dana-i/BLE5): [id_hi][id_lo][recordCode][epoch_4bytes_MSB][param1_MSB][param2_MSB]
-     * Non-UTC format (Dana RS/v1): [recordCode][year-2000][month][day][hour][min][sec][param1_MSB][param2_MSB]
      */
     private fun buildHistoryEventData(event: HistoryEvent, id: Short): ByteArray {
         return if (state.usingUTC) {
-            val data = ByteArray(11)
-            val epochSeconds = (event.timestamp / 1000).toInt()
-            data[0] = ((id.toInt() shr 8) and 0xFF).toByte()
-            data[1] = (id.toInt() and 0xFF).toByte()
-            data[2] = event.code.toByte()
-            data[3] = ((epochSeconds shr 24) and 0xFF).toByte()
-            data[4] = ((epochSeconds shr 16) and 0xFF).toByte()
-            data[5] = ((epochSeconds shr 8) and 0xFF).toByte()
-            data[6] = (epochSeconds and 0xFF).toByte()
-            data[7] = ((event.param1 shr 8) and 0xFF).toByte()
-            data[8] = (event.param1 and 0xFF).toByte()
-            data[9] = ((event.param2 shr 8) and 0xFF).toByte()
-            data[10] = (event.param2 and 0xFF).toByte()
-            data
+            state.historyStore.buildEventDataUtc(event, id)
         } else {
-            val data = ByteArray(11)
-            val ldt = Instant.fromEpochMilliseconds(event.timestamp)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-            data[0] = event.code.toByte()
-            data[1] = (ldt.year - 2000).toByte()
-            data[2] = ldt.monthNumber.toByte()
-            data[3] = ldt.dayOfMonth.toByte()
-            data[4] = ldt.hour.toByte()
-            data[5] = ldt.minute.toByte()
-            data[6] = ldt.second.toByte()
-            data[7] = ((event.param1 shr 8) and 0xFF).toByte()
-            data[8] = (event.param1 and 0xFF).toByte()
-            data[9] = ((event.param2 shr 8) and 0xFF).toByte()
-            data[10] = (event.param2 and 0xFF).toByte()
-            data
+            state.historyStore.buildEventData(event)
         }
     }
 
     private fun addHistoryEvent(code: Int, timestamp: Long, param1: Int, param2: Int) {
-        state.historyEvents.add(HistoryEvent(code, timestamp, param1, param2))
+        state.historyStore.addEvent(code, timestamp, param1, param2)
     }
 
     private fun processApsSetEventHistory(params: ByteArray): ByteArray = byteArrayOf(0x00) // OK

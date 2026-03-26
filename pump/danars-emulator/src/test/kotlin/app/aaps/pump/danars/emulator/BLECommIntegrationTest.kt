@@ -16,7 +16,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.keys.DanaStringComposedKey
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
@@ -26,6 +26,10 @@ import app.aaps.pump.danars.comm.DanaRSPacketBasalGetProfileNumber
 import app.aaps.pump.danars.comm.DanaRSPacketBasalSetCancelTemporaryBasal
 import app.aaps.pump.danars.comm.DanaRSPacketBasalSetProfileBasalRate
 import app.aaps.pump.danars.comm.DanaRSPacketBasalSetProfileNumber
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGet24CIRCFArray
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGetBolusOption
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGetCIRCFArray
+import app.aaps.pump.danars.comm.DanaRSPacketBolusGetCalculationInformation
 import app.aaps.pump.danars.comm.DanaRSPacketBolusGetStepBolusInformation
 import app.aaps.pump.danars.comm.DanaRSPacketBolusSetExtendedBolus
 import app.aaps.pump.danars.comm.DanaRSPacketBolusSetExtendedBolusCancel
@@ -35,10 +39,6 @@ import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralGetPumpCheck
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralGetShippingInformation
 import app.aaps.pump.danars.comm.DanaRSPacketGeneralInitialScreenInformation
-import app.aaps.pump.danars.comm.DanaRSPacketBolusGet24CIRCFArray
-import app.aaps.pump.danars.comm.DanaRSPacketBolusGetBolusOption
-import app.aaps.pump.danars.comm.DanaRSPacketBolusGetCIRCFArray
-import app.aaps.pump.danars.comm.DanaRSPacketBolusGetCalculationInformation
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpTime
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionGetUserOption
@@ -95,10 +95,10 @@ class BLECommIntegrationTest : TestBase() {
         // Mock basics
         whenever(rh.gs(anyInt())).thenReturn("test")
         whenever(rh.gs(anyInt(), any())).thenReturn("test")
-        whenever(preferences.get(any<DanaStringKey>())).thenReturn("")
+        whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
         // Pump password "0000" matches emulator default
-        whenever(preferences.get(DanaStringKey.Password)).thenReturn("0000")
+        whenever(preferences.get(DanaStringNonKey.Password)).thenReturn("0000")
         // Provide a stored pairing key so handshake skips pairing request
         whenever(preferences.get(DanaStringComposedKey.ParingKey, deviceName)).thenReturn("ABCD")
         whenever(danaRSPlugin.mDeviceName).thenReturn(deviceName)
@@ -107,7 +107,11 @@ class BLECommIntegrationTest : TestBase() {
 
         // Real instances (no Android deps)
         bleEncryption = BleEncryption()
-        emulatorTransport = EmulatorBleTransport(deviceName = deviceName)
+        emulatorTransport = EmulatorBleTransport(deviceName = deviceName).apply {
+            pumpState.bolusDeliveryIntervalMs = 0 // Instant delivery in tests
+            pairingDelayMs = 0
+            emulator.historyEventDelayMs = 0
+        }
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
         bleComm = BLEComm(
@@ -125,7 +129,9 @@ class BLECommIntegrationTest : TestBase() {
             configBuilder,
             notificationManager,
             emulatorTransport
-        )
+        ).apply {
+            messageTimeoutMs = 500
+        }
     }
 
     private fun connectAndHandshake() {

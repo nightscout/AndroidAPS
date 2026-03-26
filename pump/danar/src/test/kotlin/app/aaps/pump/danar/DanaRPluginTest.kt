@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
@@ -29,8 +29,8 @@ class DanaRPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepareMocks() {
-        whenever(preferences.get(DanaStringKey.MacAddress)).thenReturn("")
-        whenever(preferences.get(DanaStringKey.RName)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("")
         whenever(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         whenever(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         whenever(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")

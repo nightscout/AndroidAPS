@@ -203,6 +203,7 @@ dependencies {
         ":pump:danars",
         ":pump:danars-emulator",
         ":pump:danar",
+        ":pump:danar-emulator",
         ":pump:diaconn",
         ":pump:eopatch",
         ":pump:medtrum",
