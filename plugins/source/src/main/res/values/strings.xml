@@ -48,4 +48,7 @@
     <string name="permission_dexcom_description">Application needs permission to receive CGM data from Dexcom app</string>
     <string name="permission_notification_listener_title">Notification Access</string>
     <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Receive BG values from the Instara App.</string>
 </resources>

@@ -142,6 +142,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Random              -> R.drawable.ic_aaps
         Sources.BgFragment          -> R.drawable.ic_aaps
         Sources.Insulin             -> R.drawable.ic_insulin
+        Sources.Instara             -> app.aaps.core.ui.R.drawable.ic_generic_icon
         else                        -> error("Missing resource")
     }
 

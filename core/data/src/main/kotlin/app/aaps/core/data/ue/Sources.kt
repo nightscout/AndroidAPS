@@ -81,6 +81,7 @@ enum class Sources {
     BgFragment,
     Garmin,
     Database,           // for PersistenceLayer
+    Instara,            // From Instara Plugin
     Unknown             //if necessary
     ;
 }

@@ -94,4 +94,7 @@
     <string name="last_run">上次运行</string>
     <string name="today">今天</string>
     <string name="weighted">权重</string>
+    <!-- Instara <==> 糖简国际版 -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">从Instara App接收血糖值。</string>
 </resources>

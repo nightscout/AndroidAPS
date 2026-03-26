@@ -204,6 +204,7 @@ data class UserEntry(
         SiBionic,
         Sino,
         NotificationReader,
+        Instara,            // From Instara plugin
         Stats,              //From Stat Activity
         Aaps,               // MainApp
         BgFragment,

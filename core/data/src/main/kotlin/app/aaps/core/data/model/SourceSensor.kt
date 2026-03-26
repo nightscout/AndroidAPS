@@ -33,6 +33,7 @@ enum class SourceSensor(val text: String) {
     EVERSENSE("Eversense"),
     AIDEX("GlucoRx Aidex"),
     SYAI_TAG("Syai Tag"),
+    INSTARA("Instara"),
     RANDOM("Random"),
     UNKNOWN("Unknown"),
 

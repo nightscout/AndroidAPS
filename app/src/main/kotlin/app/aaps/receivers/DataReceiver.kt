@@ -22,6 +22,7 @@ import app.aaps.plugins.source.PatchedSiAppPlugin
 import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.SyaiPlugin
+import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
@@ -93,6 +94,13 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
             Intents.SINO_APP                          ->
                 OneTimeWorkRequest.Builder(PatchedSinoAppPlugin.PatchedSinoAppWorker::class.java)
+                    .setInputData(Data.Builder().also {
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
+                    }.build()).build()
+
+            Intents.INSTARA_APP ->
+                OneTimeWorkRequest.Builder(InstaraPlugin.InstaraWorker::class.java)
                     .setInputData(Data.Builder().also {
                         it.copyString("collection", bundle)
                         it.copyString("data", bundle)
