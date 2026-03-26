@@ -124,6 +124,7 @@
     <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date TDD.</string>
     <string name="fallback_to_isf_no_tdd">Revenire la sensibilitatea din profil. Nu sunt suficiente date. Motivul: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Ajutor pentru ajustarea potențială a profilului (ISF, ICR și ratele bazale)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Setări Autotune</string>
     <string name="autotune_auto_title">Automatizare schimbare profil</string>
@@ -163,5 +164,12 @@
     <string name="autotune_update_local_profile_message">Actualizați profilul %1$s cu Profil Autotune?</string>
     <string name="autotune_revert_local_profile_message">Reveniți la profilul %1$s cu profilul de intrare?</string>
     <string name="autotune_profile_invalid">Profil invalid</string>
+    <string name="not_available_full">Indisponibil</string>
+    <string name="pump_disconnected">Pompă deconectată</string>
     <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Înjumătățire bazală. Țintă exercițiu</string>
+    <string name="half_basal_exercise_target_summary">Setat la un număr, spre exemplu 160, înseamnă că atunci când Ținta Temporară este de 160 mg/dL și Ținta Temporară ridicată crește sensibilitatea = adevărat, se execută 50%% bazală la acest nivel (120 = 75%%; 140 = 60%%).</string>
+    <string name="autoISF_settings_title">Setări AutoFSI</string>
+    <string name="autoISF_settings_summary">AutoFSI permite adaptarea factorului de sensibilitate la insulină (ISF) în diferite scenarii de comportament glicemic\n\nDe asemenea, poate adapta setările de livrare SMB</string>
+    <string name="smb_delivery_settings_title">Setări livrare SMB</string>
 </resources>
