@@ -257,6 +257,35 @@
     <string name="loop">Buclă</string>
     <string name="ns">NS</string>
     <string name="record">Înregistrare</string>
+    <string name="location_back_right_upper_arm">Partea superioară posterioară a brațului drept</string>
+    <string name="location_back_left_upper_arm">Partea superioară posterioară a brațului stâng</string>
+    <string name="location_side_right_upper_abdomen">Partea superioară exterioară a abdomenului drept</string>
+    <string name="location_side_left_upper_abdomen">Partea superioară exterioară a abdomenului stâng</string>
+    <string name="location_side_right_lower_abdomen">Partea inferioară exterioară a abdomenului drept</string>
+    <string name="location_side_left_lower_abdomen">Partea inferioară exterioară a abdomenului stâng</string>
+    <string name="location_front_right_upper_abdomen">Partea superioară anterioară a abdomenului drept</string>
+    <string name="location_front_left_upper_abdomen">Partea superioară anterioară a abdomenului stâng</string>
+    <string name="location_front_right_lower_abdomen">Partea inferioară anterioară a abdomenului drept</string>
+    <string name="location_front_left_lower_abdomen">Partea inferioară anterioară a abdomenului stâng</string>
+    <string name="location_back_right_buttock">Fesa dreaptă</string>
+    <string name="location_back_left_buttock">Fesa stângă</string>
+    <string name="location_side_right_upper_thigh">Partea superioară externă a coapsei drepte</string>
+    <string name="location_side_left_upper_thigh">Partea superioară externă a coapsei stângi</string>
+    <string name="location_side_right_lower_thigh">Partea inferioară externă a coapsei drepte</string>
+    <string name="location_side_left_lower_thigh">Partea inferioară externă a coapsei stângi</string>
+    <string name="location_front_right_upper_thigh">Partea din față, sus, a coapsei drepte</string>
+    <string name="location_front_left_upper_thigh">Partea din față, sus, a coapsei stângi</string>
+    <string name="location_front_right_lower_thigh">Partea din față, jos, a coapsei drepte</string>
+    <string name="location_front_left_lower_thigh">Partea din față, jos, a coapsei stângi</string>
+    <string name="arrow_up">Sus</string>
+    <string name="arrow_up_right">Sus dreapta</string>
+    <string name="arrow_right">Dreapta</string>
+    <string name="arrow_down_right">Jos dreapta</string>
+    <string name="arrow_down">Jos</string>
+    <string name="arrow_down_left">Jos stânga</string>
+    <string name="arrow_left">Stânga</string>
+    <string name="arrow_up_left">Sus stînga</string>
+    <string name="arrow_center">Centru</string>
     <!--    Command-->
     <string name="connectiontimedout">Conectare eșuată</string>
     <!--    PumpEnactResult-->
@@ -302,6 +331,8 @@
     <string name="uel_lgs_loop_mode">MOD BUCLA LGS</string>
     <string name="uel_open_loop_mode">MOD BUCLA DESCHISA</string>
     <string name="uel_loop_disabled">BUCLA DEZACTIVATA</string>
+    <string name="uel_loop_resumed">BUCLĂ RELUATĂ</string>
+    <string name="uel_pump_running">POMPĂ ÎN FUNCȚIUNE</string>
     <string name="uel_reconnect">RECONECTARE</string>
     <string name="uel_disconnect">DECONECTARE</string>
     <string name="uel_resume">REPORNIRE</string>
@@ -314,7 +345,9 @@
     <string name="uel_cancel_extended_bolus">ANULEAZĂ BOLUS EXTINS</string>
     <string name="uel_cancel_tt">ANULEAZĂ TINTA TEMPORARA</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">LOC SENZOR</string>
     <string name="uel_site_change">SCHIMBARE CANULA</string>
+    <string name="uel_site_location">LOC DE AMPLASARE</string>
     <string name="uel_reservoir_change">SCHIMBARE REZERVOR</string>
     <string name="uel_calibration">CALIBRARE</string>
     <string name="uel_prime_bolus">BOLUS DE AMORSARE</string>
@@ -353,7 +386,9 @@
     <string name="delete_future_treatments">Șterge tratamentele viitoare</string>
     <string name="uel_export_settings">EXPORT SETARI</string>
     <string name="uel_import_settings">IMPORT SETARI</string>
+    <string name="uel_select_directory">ALEGE DIRECTOR</string>
     <string name="uel_reset_databases">RESETARE BAZE DE DATE</string>
+    <string name="uel_reset_aps_results">RESETARE REZULTATE APS</string>
     <string name="uel_cleanup_databases">CURĂȚĂ BAZELE DE DATE</string>
     <string name="uel_export_databases">EXPORT BAZE DE DATE</string>
     <string name="uel_import_databases">IMPORT BAZE DE DATE</string>
@@ -375,6 +410,9 @@
     <string name="uel_loop_change">BUCLA SCHIMBATA</string>
     <string name="uel_loop_removed">BUCLA ELIMINATA</string>
     <string name="uel_other">ALTELE</string>
+    <string name="uel_running_mode">MODUL DE RULARE</string>
+    <string name="uel_running_mode_removed">MODUL DE RULARE ȘTERS</string>
+    <string name="uel_running_mode_updarted">MODUL DE RULARE ACTUALIZAT</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil ținta joasa</string>
     <string name="profile_high_target">Profil țintă ridicata</string>
@@ -415,6 +453,11 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Rate bazale</string>
     <string name="basalpct">Bazală %</string>
+    <string name="sensitivity">Sensibilitate</string>
+    <string name="isf_for_carbs">ISF pentru Calculator și Absorbția Carbohidraților: %1$.1f</string>
+    <string name="autosens_long">Valoare Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens în algoritm: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fişier</string>
     <string name="a11y_user">utilizator</string>
@@ -523,8 +566,10 @@
     <string name="export_failed">Eșuat</string>
     <string name="export_alert">ALERTĂ</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Setări exportate</string>
     <string name="export_result_message_failed">Exportare setări EȘUATĂ!</string>
     <string name="export_result_message_about_to_expire">Setări exportate: parolă pe cale să expire în curând. Exportați manual și (re)introduceți parola.</string>
+    <string name="export_result_message_expired">Exportare setări anulată: parola expirată. Exportați manual și (re)introduceți parola!</string>
     <string name="export_result_message_disabled">Avertisment (automatizare): Exportarea setărilor nu este activată!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">scădere %1$s cu %2$s</string>
