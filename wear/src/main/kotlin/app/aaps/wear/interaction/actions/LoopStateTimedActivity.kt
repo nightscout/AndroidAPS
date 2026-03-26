@@ -60,10 +60,11 @@ class LoopStateTimedActivity : DaggerAppCompatActivity() {
         val min = fineStep
         val max = (eventData.durations.lastOrNull() ?: 240).toDouble()
         val stepValues = listOf(fineStep, fineStep * 2, fineStep * 3)
+        val defaultDuration = if (fineStep < 60.0) fineStep * 2 else fineStep
 
         setContent {
             MaterialTheme {
-                var duration by remember { mutableStateOf(min) }
+                var duration by remember { mutableStateOf(defaultDuration) }
                 val pagerState = rememberPagerState(pageCount = { 2 })
 
                 Box(modifier = Modifier.fillMaxSize()) {
