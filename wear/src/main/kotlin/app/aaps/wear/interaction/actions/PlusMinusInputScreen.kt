@@ -84,6 +84,7 @@ internal fun PlusMinusInputScreen(
     stepValues: List<Double>,
     format: DecimalFormat,
     label: String,
+    displayText: String? = null,
     allowZero: Boolean = false,
     isActive: Boolean = true,
     symmetricLargeSteps: Boolean = false,
@@ -121,7 +122,8 @@ internal fun PlusMinusInputScreen(
         }
     }
 
-    val displayText = if (currentValue.value == 0.0 && !allowZero) "" else format.format(currentValue.value)
+    val displayValue = displayText ?: if (currentValue.value == 0.0 && !allowZero) "" else format.format(currentValue.value)
+    val valueFontSize = if (displayText != null) 32.sp else 40.sp
 
     Box(
         modifier = Modifier
@@ -152,10 +154,11 @@ internal fun PlusMinusInputScreen(
                 StepButton(step = stepValues[0], isIncrement = false, onStep = ::step, enabled = enabled)
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = displayText,
+                        text = displayValue,
                         color = valueColor,
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = valueFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
                     )
                     Text(
                         text = label,
@@ -170,10 +173,11 @@ internal fun PlusMinusInputScreen(
             // Center: value + unit label
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = displayText,
+                    text = displayValue,
                     color = valueColor,
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = valueFontSize,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
                 )
                 Text(
                     text = label,

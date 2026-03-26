@@ -185,7 +185,11 @@ private fun ECarbConfirmScreen(carbs: Int, startMinutes: Int, durationHours: Int
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        val startStr = if (startMinutes != 0) stringResource(R.string.ecarbs_start_format, startMinutes) else ""
+        val startStr = when {
+            startMinutes > 0  -> "+${stringResource(R.string.ecarbs_start_format, startMinutes)}"
+            startMinutes != 0 -> stringResource(R.string.ecarbs_start_format, startMinutes)
+            else              -> ""
+        }
         val durationStr = if (durationHours != 0) stringResource(R.string.action_duration_hours_format, durationHours) else ""
         val timing = listOf(startStr, durationStr).filter { it.isNotEmpty() }.joinToString(" / ")
         if (timing.isNotEmpty()) {
