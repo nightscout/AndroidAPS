@@ -453,6 +453,10 @@ sealed class EventData : Event() {
         val profilePercentage: Int? = null,
         val profileTimeshift: Int? = null,
         val profileDurationMinutes: Int? = null,
+        // LoopState fields
+        val loopStateTitle: String? = null,
+        val loopStateDurationMinutes: Int? = null,
+        val loopStateType: String? = null,
     ) : EventData()
 
     @Serializable
