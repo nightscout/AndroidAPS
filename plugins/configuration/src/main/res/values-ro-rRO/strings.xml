@@ -200,6 +200,16 @@
     <string name="google_drive_folder_access_error">Nu se poate crea sau accesa dosarul destinație: %1$s</string>
     <string name="google_drive_list_settings_failed">Eșuare în afișarea fișierelor de setări</string>
     <string name="google_drive_list_settings_error">Eroare în afișarea fișierelor de setări: %1$s</string>
+    <string name="google_drive_download_error">Eroare la descărcarea fișierului: %1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
+    <string name="cloud_authorization_title">Autorizare %1$s</string>
+    <string name="cloud_authorization_message">Pagina de autorizare %1$s a fost deschisă în browser-ul dumneavoastră.\n\nVă rugăm să finalizați autorizarea, apoi reveniți în această aplicație.\n\nAcest dialog se va închide automat de îndată ce autorizarea este finalizată.</string>
+    <string name="cloud_auth_start_failed">Pornirea procesului de autorizare a eșuat</string>
+    <string name="cloud_auth_cancelled">Autorizare anulată</string>
+    <string name="cloud_auth_timeout">Procesul de autorizare a expirat, vă rugăm reîncercați</string>
+    <string name="cloud_token_expired_or_invalid">Autorizarea stocării în cloud a expirat sau este invalidă. Vă rugăm să reautorizați.</string>
     <!-- Authorization status strings -->
+    <string name="authorization_status">Stare autorizare</string>
+    <string name="google_drive_authorized">Google Drive autorizat</string>
+    <string name="google_drive_reauth_required">Vă rugăm să ștergeți setările și să reautorizați Google Drive</string>
 </resources>
