@@ -329,6 +329,8 @@
     <string name="loop_status_lgs">Low glucose suspend</string>
     <string name="loop_status_disabled">Loop disabled</string>
     <string name="loop_status_suspended">Loop suspended</string>
+    <string name="loop_status_pump_suspended">Pump suspended</string>
+    <string name="loop_status_dst_suspended">Suspended by DST</string>
     <string name="loop_status_disconnected">Pump disconnected</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Unknown</string>

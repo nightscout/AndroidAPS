@@ -490,6 +490,8 @@ class DataHandlerMobile @Inject constructor(
             RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
             RM.Mode.DISABLED_LOOP     -> LoopStatusData.LoopMode.DISABLED
             RM.Mode.SUSPENDED_BY_USER -> LoopStatusData.LoopMode.SUSPENDED
+            RM.Mode.SUSPENDED_BY_PUMP -> LoopStatusData.LoopMode.PUMP_SUSPENDED
+            RM.Mode.SUSPENDED_BY_DST  -> LoopStatusData.LoopMode.DST_SUSPENDED
             RM.Mode.DISCONNECTED_PUMP -> LoopStatusData.LoopMode.DISCONNECTED
             RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
             else                      -> LoopStatusData.LoopMode.UNKNOWN
@@ -1173,7 +1175,6 @@ class DataHandlerMobile @Inject constructor(
 
         val pump = activePlugin.activePump
         val pumpDescription = pump.pumpDescription
-        if (loop.runningMode == RM.Mode.SUSPENDED_BY_PUMP || loop.runningMode == RM.Mode.SUSPENDED_BY_DST) return
         if (!runBlocking { profileFunction.isProfileValid("WearDataHandler_LoopChangeState") }) return
 
         val disconnectDurs = arrayListOf<Int>()

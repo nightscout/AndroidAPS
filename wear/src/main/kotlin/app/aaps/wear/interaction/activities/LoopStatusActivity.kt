@@ -86,8 +86,10 @@ private fun LoopStatusData.LoopMode.toColor(): Color = when (this) {
     LoopStatusData.LoopMode.OPEN         -> LoopOpenColor
     LoopStatusData.LoopMode.LGS          -> LoopLgsColor
     LoopStatusData.LoopMode.DISABLED     -> LoopDisabledColor
-    LoopStatusData.LoopMode.SUSPENDED    -> LoopSuspendedColor
-    LoopStatusData.LoopMode.DISCONNECTED -> LoopDisconnectedColor
+    LoopStatusData.LoopMode.SUSPENDED       -> LoopSuspendedColor
+    LoopStatusData.LoopMode.PUMP_SUSPENDED  -> LoopDisabledColor
+    LoopStatusData.LoopMode.DST_SUSPENDED   -> LoopDisabledColor
+    LoopStatusData.LoopMode.DISCONNECTED    -> LoopDisconnectedColor
     LoopStatusData.LoopMode.SUPERBOLUS   -> LoopSuperbolusColor
     LoopStatusData.LoopMode.UNKNOWN      -> LoopUnknownColor
 }
@@ -321,8 +323,10 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?) {
                 LoopStatusData.LoopMode.OPEN         -> stringResource(R.string.loop_status_open).uppercase()
                 LoopStatusData.LoopMode.LGS          -> stringResource(R.string.loop_status_lgs).uppercase()
                 LoopStatusData.LoopMode.DISABLED     -> stringResource(R.string.loop_status_disabled).uppercase()
-                LoopStatusData.LoopMode.SUSPENDED    -> stringResource(R.string.loop_status_suspended).uppercase()
-                LoopStatusData.LoopMode.DISCONNECTED -> stringResource(R.string.loop_status_disconnected).uppercase()
+                LoopStatusData.LoopMode.SUSPENDED      -> stringResource(R.string.loop_status_suspended).uppercase()
+                LoopStatusData.LoopMode.PUMP_SUSPENDED -> stringResource(R.string.loop_status_pump_suspended).uppercase()
+                LoopStatusData.LoopMode.DST_SUSPENDED  -> stringResource(R.string.loop_status_dst_suspended).uppercase()
+                LoopStatusData.LoopMode.DISCONNECTED   -> stringResource(R.string.loop_status_disconnected).uppercase()
                 LoopStatusData.LoopMode.SUPERBOLUS   -> stringResource(R.string.loop_status_superbolus).uppercase()
                 LoopStatusData.LoopMode.UNKNOWN      -> stringResource(R.string.loop_status_unknown).uppercase()
             },
