@@ -181,4 +181,13 @@
     <string name="openapsama_higher_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este peste țintă și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="openapsama_pp_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în scădere și care determină slăbirea ISF-ulu și, prin urmare, reducerea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="openapsama_autoISF_max">Raport maxim autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Raport minim autoISF\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">pondere interval ISF mai scăzut\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">pondere interval ISF mai ridicat\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">pondere ISF de după masă\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Pondere când glicemia accelerează\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Pondere când glicemia decelerează\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">pondere dura_FSI\n(dura_ISF_weight)</string>
 </resources>
