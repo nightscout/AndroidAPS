@@ -14,6 +14,7 @@
     <string name="error">Error</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
+    <string name="invalid_number">Invalid number</string>
     <string name="constraint_applied">Constraint applied!</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">TT</string>
