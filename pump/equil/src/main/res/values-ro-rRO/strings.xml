@@ -103,6 +103,7 @@
     <string name="equil_password_error">Parola de asociere Equil este incorectă</string>
     <string name="equil_none">niciunul</string>
     <string name="equil_history_item1">Rezervor-scăzut nivel de insulină</string>
+    <string name="equil_history_item2">Nivel de insulină Rezervor-Golit</string>
     <string name="equil_history_item3">Blocaj infuzare detectat</string>
     <string name="equil_history_item4">Inversare motor detectată</string>
     <string name="equil_history_item5">Defecțiune motor detectată</string>
