@@ -258,6 +258,7 @@
     <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
     <string name="loop_status_tbr_duration">%1$d min</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_tbr_duration_remaining">%1$d min rămase</string>
     <string name="loop_status_tbr_continues">Bazala temporară continuă</string>
     <string name="loop_status_tbr_cancel">Setarea bazalei regulate</string>
     <string name="loop_status_smb">%1$.2f U</string>
