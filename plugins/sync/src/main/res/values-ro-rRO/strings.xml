@@ -33,6 +33,10 @@
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Adresa Nightscout</string>
     <string name="ns_client_url_dialog_message">Introduceți adresa URL Nightscout (e.g. https://numelesite-ului.platforma.dom)</string>
+    <string name="ns_client_secret_title">Secret API Nightscout</string>
+    <string name="ns_client_secret_dialog_message">Introduceți secretul API Nightscout (parola cu minimum 12 caractere înregistrată în variabilele Nightscout)</string>
+    <string name="nsclient_token_title">Jeton de access Nightscout</string>
+    <string name="nsclient_token_dialog_message">Introduceți jetonul de acces de administrator generat în instrumentele de administrare Nightscout (minim 17 caractere, nu secretul API!)</string>
     <string name="deliver_now">Livrează acum</string>
     <string name="queue">Coadă:</string>
     <string name="status">Stare:</string>
@@ -45,7 +49,11 @@
     <string name="ns_receive_profile_store">Primire stocare profile</string>
     <string name="ns_receive_profile_store_summary">Sincronizează profilurile din editorul de profil NS</string>
     <string name="ns_receive_temp_target">Primește ținte temporare</string>
+    <string name="ns_receive_temp_target_summary">Acceptați ținte temporare introduse prin NS sau AAPSClient</string>
     <string name="ns_receive_profile_switch">Primește schimbări de profil</string>
+    <string name="ns_receive_profile_switch_summary">Acceptați schimbări de profil introduse prin NS sau AAPSClient</string>
+    <string name="ns_receive_running_mode">Primiți evenimente în modul Rulare</string>
+    <string name="ns_receive_running_mode_summary">Acceptați evenimentele din modul Rulare introduse prin NS sau AAPSClient</string>
     <string name="ns_receive_tbr_eb">Primește RBT și EB</string>
     <string name="ns_receive_tbr_eb_summary">Acceptă TBR și EB introduse prin altă instanță</string>
     <string name="ns_receive_insulin">Primiţi date insulina</string>
@@ -122,6 +130,7 @@
     <string name="wear_infos_watchface">Info cadran</string>
     <string name="wear_export_watchface">Exportă șablon</string>
     <string name="wear_new_custom_watchface_exported">Șablon ceas personalizat exportat</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Retrimite toate datele</string>
     <string name="open_settings_on_wear">Deschide setările pe Wear</string>
     <string name="cwf_infos_pref_locked">Lista de preferințe blocate de cadranul ceasului</string>
@@ -133,6 +142,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nicio schimbare de profil activă!</string>
+    <string name="profile_message">Profil: %1$s\nDecalaj temporal: %2$d h\nProcentaj: %3$d%%\nDurată: %4$d min</string>
     <string name="target_only_aps_mode">Țintele se aplică numai în modul APS!</string>
     <string name="no_history">Nu există date istorice!</string>
     <string name="temp_target">Țintă temporară</string>
@@ -145,6 +155,7 @@
     <string name="last_aps_result_na">Ultimul rezultat nu este disponibil!</string>
     <string name="loop_status_closed">BUCLĂ ÎNCHISĂ</string>
     <string name="loop_status_open">BUCLĂ DESCHISĂ</string>
+    <string name="loop_status_lgs">LGS</string>
     <string name="loop_status_disabled">BUCLĂ INACTIVĂ</string>
     <string name="aps">APS</string>
     <string name="last_run">Ultima rulare</string>
@@ -152,5 +163,24 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Astăzi</string>
     <string name="weighted">ponderat</string>
+    <string name="full_xdrip_sync_comment">Sincronizare completă? Poate dura ceva timp și până la finalizare nu vor exista date noi în xDrip+.</string>
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient nu este acceptat pentru această acțiune</string>
+    <string name="wear_action_loop_state_requires_duration">Această acțiune necesită durată</string>
+    <string name="wear_action_loop_state_pump_suspended">Pompa este suspendată!</string>
+    <string name="wear_action_loop_state_profile_invalid">Profilul este invalid!</string>
+    <string name="wear_action_loop_state_unauthorized">Vă rugăm să încercați din nou.</string>
+    <string name="wear_action_loop_state_invalid">Stare de buclă solicitată nevalidă</string>
+    <string name="wear_action_loop_state_title">STARE BUCLĂ</string>
+    <string name="wear_action_loop_state_now_closed">Închisă</string>
+    <string name="wear_action_loop_state_now_lgs">LGS</string>
+    <string name="wear_action_loop_state_now_open">Deschisă</string>
+    <string name="wear_action_loop_state_now_suspended">Suspendat</string>
+    <string name="wear_action_loop_state_now_resumed">Reluat</string>
+    <string name="wear_action_loop_state_now_disabled">Dezactivat</string>
+    <string name="wear_action_loop_state_now_pump_suspended">Pompă suspendată</string>
+    <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
+    <string name="wear_action_loop_state_now_invalid">Invalid</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Pompă deconectată</string>
+    <string name="garmin_request_key">Solicitare cheie</string>
     <string name="garmin_request_key_summary">Cheie opțională pentru a asigura comunicarea HTTP între dispozitivul Garmin și AAPS.</string>
 </resources>
