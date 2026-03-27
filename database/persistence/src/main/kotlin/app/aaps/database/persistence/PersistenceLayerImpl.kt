@@ -2394,4 +2394,23 @@ class PersistenceLayerImpl @Inject constructor(
             throw e
         }
     }
+
+    // Instara helpers
+    override suspend fun getOldestInstaraPumpIdForDevice(devicePrefix: Long): Long? =
+        repository.getOldestInstaraPumpIdForDevice(devicePrefix)
+
+    override suspend fun getLatestInstaraPumpIdForDevice(devicePrefix: Long): Long? =
+        repository.getLatestInstaraPumpIdForDevice(devicePrefix)
+
+    override suspend fun getLatestInstaraTimestampForDevice(devicePrefix: Long): Long? =
+        repository.getLatestInstaraTimestampForDevice(devicePrefix)
+
+    override suspend fun getFirstMissingInstaraPumpIdInRange(startId: Long, endId: Long): Long? =
+        repository.getFirstMissingInstaraPumpIdInRange(startId, endId)
+
+    override suspend fun getLatestInstaraDevicePrefix(): Long? =
+        repository.getLatestInstaraDevicePrefix()
+
+    override suspend fun instaraPumpIdExists(pumpId: Long): Boolean =
+        repository.instaraPumpIdExists(pumpId)
 }

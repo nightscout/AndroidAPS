@@ -815,6 +815,27 @@ class AppRepository @Inject internal constructor(
         database.apsResultDao.getApsResults(start, end)
 
     /**
+     * Instara helpers.
+     */
+    suspend fun getOldestInstaraPumpIdForDevice(devicePrefix: Long): Long? =
+        database.glucoseValueDao.getOldestInstaraPumpIdForDevice(devicePrefix)
+
+    suspend fun getLatestInstaraPumpIdForDevice(devicePrefix: Long): Long? =
+        database.glucoseValueDao.getLatestInstaraPumpIdForDevice(devicePrefix)
+
+    suspend fun getLatestInstaraTimestampForDevice(devicePrefix: Long): Long? =
+        database.glucoseValueDao.getLatestInstaraTimestampForDevice(devicePrefix)
+
+    suspend fun getFirstMissingInstaraPumpIdInRange(startId: Long, endId: Long): Long? =
+        database.glucoseValueDao.getFirstMissingInstaraPumpIdInRange(startId, endId)
+
+    suspend fun getLatestInstaraDevicePrefix(): Long? =
+        database.glucoseValueDao.getLatestInstaraDevicePrefix()
+
+    suspend fun instaraPumpIdExists(pumpId: Long): Boolean =
+        database.glucoseValueDao.instaraPumpIdExists(pumpId)
+
+    /**
      * Clean up Flow scope and release resources
      *
      * NOTE: AppRepository is a singleton that typically lives for the entire app lifecycle.

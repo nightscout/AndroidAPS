@@ -258,6 +258,8 @@
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="back">Back</string>
     <string name="show_hide_records">Hide loop records</string>
+    <string name="instara_history_request_settings_title">Instara historical data request</string>
+    <string name="instara_history_request_enabled_title">Request possible missing historical data in background</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>

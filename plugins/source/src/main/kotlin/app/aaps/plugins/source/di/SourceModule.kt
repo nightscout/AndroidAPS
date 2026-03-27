@@ -12,6 +12,7 @@ import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.instara.InstaraPlugin
+import app.aaps.plugins.source.instara.InstaraStaleCheckWorker
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
@@ -44,7 +45,9 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
     @ContributesAndroidInjector abstract fun contributesNotificationCollectorService(): NotificationCollectorService
 
+    // Instara related worker
     @ContributesAndroidInjector abstract fun contributesInstaraWorker(): InstaraPlugin.InstaraWorker
+    @ContributesAndroidInjector abstract fun contributesInstaraStaleCheckWorker(): InstaraStaleCheckWorker
 
     @Module
     @InstallIn(SingletonComponent::class)

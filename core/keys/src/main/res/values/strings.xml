@@ -40,6 +40,10 @@
     <string name="pref_title_bg_source_create_sensor_change">Log sensor change</string>
     <string name="pref_summary_bg_source_create_sensor_change">Create sensor change therapy event when sensor is inserted.</string>
 
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara historical data request</string>
+    <string name="pref_summary_instara_history_request">Request possible missing historical data in background</string>
+
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Use dynamic sensitivity</string>
     <string name="pref_summary_aps_use_dynamic_sensitivity">Use DynamicISF for sensitivity adjustment instead of Autosens.</string>

@@ -1,8 +1,10 @@
 package app.aaps.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import app.aaps.MainApp
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.PumpDriver
@@ -81,7 +83,7 @@ abstract class AppModule {
     interface AppBindings {
 
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
-
+        @Binds fun bindApplication(mainApp: MainApp): Application
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
     }
 }
