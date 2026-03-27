@@ -35,7 +35,7 @@
     <string name="ns_client_url_dialog_message">Introduceți adresa URL Nightscout (e.g. https://numelesite-ului.platforma.dom)</string>
     <string name="ns_client_secret_title">Secret API Nightscout</string>
     <string name="ns_client_secret_dialog_message">Introduceți secretul API Nightscout (parola cu minimum 12 caractere înregistrată în variabilele Nightscout)</string>
-    <string name="nsclient_token_title">Jeton de access Nightscout</string>
+    <string name="nsclient_token_title">Jeton de acces Nightscout</string>
     <string name="nsclient_token_dialog_message">Introduceți jetonul de acces de administrator generat în instrumentele de administrare Nightscout (minim 17 caractere, nu secretul API!)</string>
     <string name="deliver_now">Livrează acum</string>
     <string name="queue">Coadă:</string>
@@ -57,8 +57,11 @@
     <string name="ns_receive_tbr_eb">Primește RBT și EB</string>
     <string name="ns_receive_tbr_eb_summary">Acceptă TBR și EB introduse prin altă instanță</string>
     <string name="ns_receive_insulin">Primiţi date insulina</string>
+    <string name="ns_receive_insulin_summary">Acceptă insulina introdusă prin NS sau AAPSClient (nu este administrată, ci doar luată în calcul pentru IOB)</string>
     <string name="ns_receive_carbs">Primește carbohidrați</string>
+    <string name="ns_receive_carbs_summary">Acceptă carbohidrați introduși prin NS sau AAPSClient</string>
     <string name="ns_receive_therapy_events">Primește evenimente terapeutice</string>
+    <string name="ns_receive_therapy_events_summary">Acceptă evenimente de terapie (canulă, insulină, schimbarea bateriei șamd) introduse prin NS sau AAPSClient</string>
     <string name="ns_receive_cgm">Primire/completare date CGM</string>
     <string name="ns_receive_cgm_summary">Acceptați datele CGM din NS</string>
     <string name="ns_sync_slow">Încarcă mai lent</string>
@@ -72,6 +75,7 @@
     <string name="ns_use_ws_title">Conectează-te la websockets</string>
     <string name="ns_use_ws_summary">Activare înseamnă: actualizări mai rapide, primirea alarmelor și anunțurilor și un consum mai mare al bateriei similar cu v1. Restul upload-urilor NS trebuie să folosească protocolul v3.</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_dev_servers">Dacă este activată, încărcările vor merge către serverele de testare în loc de cele obișnuite</string>
     <string name="title_tidepool_dev_servers">Folosește serverele Integration (test)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
@@ -102,6 +106,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexiune la dispozitivul Garmin (Fenix, Edge, …)</string>
+    <string name="garmin_local_http_server_port">Port server HTTP local</string>
+    <string name="garmin_local_http_server">Server HTTP local</string>
     <!--    Wear-->
     <string name="wear_shortname">CEAS</string>
     <string name="description_wear">Monitorizează și controlează AAPS folosind ceasul WearOS.</string>
@@ -111,13 +117,22 @@
     <string name="wizard_result">Calc. Asistent:\nInsulină: %1$.2fU\nCarburi: %2$dg</string>
     <string name="quick_wizard_not_available">Asistentul rapid selectat nu mai este disponibil, vă rugăm să reîncărcați iconița</string>
     <string name="quick_wizard_message">Asistent calcul: %1$s\nInsulină: %2$.2fU\nCarbohidrați: %3$dg</string>
+    <string name="user_action_not_available">Acțiunea utilizatorului selectat %1$s nu mai este disponibilă, vă rugăm să reîmprospătați iconița</string>
+    <string name="wear_action_tempt_cancel_message">Anulează rularea Țintă Temporară?</string>
     <string name="wear_action_tempt_unit_error">Unități diferite folosite pe ceas și telefon!</string>
+    <string name="wear_action_tempt_zero_message">Țintă Temporară Zero - anulează rularea Țintei Temporare?</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG în afara intervalului!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG în afara intervalului!</string>
+    <string name="wear_action_tempt_range_error">Interval invalid: Ținta inferioară (%1$s) nu poate fi mai mare decât Ținta superioară (%2$s)</string>
+    <string name="wear_action_tempt_manual_range_message">Țintă Temporară\n\nMin: %1$s\nMax: %2$s\nDurata: %3$d min</string>
+    <string name="wear_action_tempt_manual_message">Țintă Temporară\n\nȚintă: %1$s\nDurată: %2$d min</string>
+    <string name="wear_action_tempt_preset_message">Țintă Temporară\n\nMotiv: %1$s\nȚintă: %2$s\nDurată: %3$d min</string>
     <string name="no_success">fără succes - verificați telefonul</string>
     <string name="wear_settings">Setări Wear</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
     <string name="wearcontrol_summary">Setare Ținte-Temporare și se introduc Tratamente din ceas.</string>
+    <string name="wear_broadcast_data">Transmite date</string>
+    <string name="wear_broadcast_data_summary">Transmite date către AAPS sau AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
     <string name="wear_general_settings">Setări generale</string>
     <string name="wear_notifysmb_title">Notifică despre SMB</string>
@@ -171,6 +186,7 @@
     <string name="wear_action_loop_state_unauthorized">Vă rugăm să încercați din nou.</string>
     <string name="wear_action_loop_state_invalid">Stare de buclă solicitată nevalidă</string>
     <string name="wear_action_loop_state_title">STARE BUCLĂ</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\nDurată: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Închisă</string>
     <string name="wear_action_loop_state_now_lgs">LGS</string>
     <string name="wear_action_loop_state_now_open">Deschisă</string>
