@@ -172,4 +172,13 @@
     <string name="autoISF_settings_title">Setări AutoFSI</string>
     <string name="autoISF_settings_summary">AutoFSI permite adaptarea factorului de sensibilitate la insulină (ISF) în diferite scenarii de comportament glicemic\n\nDe asemenea, poate adapta setările de livrare SMB</string>
     <string name="smb_delivery_settings_title">Setări livrare SMB</string>
+    <string name="smb_delivery_settings_summary">Set de opțiuni pentru creșterea volumului real al SMB care poate fi livrat în situațiile în care a fost întărit ISF-ul, adică o valoare ISF destul de scăzută.\n\nUTILIZAŢI CU PRECAUȚIE</string>
+    <string name="openapsama_enable_autoISF">Permite adaptarea ISF în baza comportamentului glicemiei</string>
+    <string name="openapsama_autoISF_max_summary">Similar cu autosens_max, aceasta definește cât de puternic poate deveni ISF-ul.\n\nValoarea implicită de 1,0 dezactivează acest efect.\n\nAVERTISMENT: Atenție mare la folosirea unei valori peste 2,5.</string>
+    <string name="openapsama_autoISF_min_summary">Similar cu autosens_min, acesta definește cât de slab poate deveni ISF-ul.\n\nValoarea implicită 1,0 dezactivează acest efect.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Aceasta este ponderea aplicată în timpul perioadelor persistente de hiperglicemie și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită de 0 oprește acest efect.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este sub țintă, ceea ce determină slăbirea ISF-ului și, prin urmare, reducerea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este peste țintă și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită 0,0 oprește acest efect.</string>
 </resources>
