@@ -43,6 +43,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginMedtronic
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -156,7 +157,7 @@ class MedtronicPumpPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtronicFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_veo_128)
+        .icon(IcPluginMedtronic)
         .pluginName(R.string.medtronic_name)
         .shortName(R.string.medtronic_name_short)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
