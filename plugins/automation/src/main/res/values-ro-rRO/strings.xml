@@ -92,6 +92,7 @@
     <string name="triggerSensorAgeDesc">Vârsta senzorului %1$s %2$.1f oră</string>
     <string name="triggerCannulaAgeLabel">Vârsta canulei</string>
     <string name="triggerCannulaAgeDesc">Vârsta canulei %1$s %2$.1f oră</string>
+    <string name="triggerPodChangeLabel">Activarea pompei</string>
     <string name="triggerPodChangeDesc">Pompă activată</string>
     <string name="triggerInsulinAgeLabel">Vechime insulină</string>
     <string name="triggerInsulinAgeDesc">Vechime insulină %1$s %2$.1f oră</string>
