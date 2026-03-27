@@ -190,4 +190,10 @@
     <string name="openapsama_bgAccel_ISF_weight">Pondere când glicemia accelerează\n(bgAccel_ISF_weight)</string>
     <string name="openapsama_bgBrake_ISF_weight">Pondere când glicemia decelerează\n(bgBrake_ISF_weight)</string>
     <string name="openapsama_dura_ISF_weight">pondere dura_FSI\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">rată fixă de livrare SMB\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">rată variabilă livrare SMB, limita inferioară\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">rată variabilă de livrare SMB, limita superioară\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">rată variabilă de livrare SMB, gamă glicemică mapată\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM extensie maximă interval\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valoarea implicită: 0,5 Acesta este un alt plafon de siguranță al OpenAPS şi specifică ce procent din insulina totală necesară poate fi livrat sub formă de SMB. Acest lucru este menit să împiedice intrarea într-o situație periculoasă setarea prin cereri în același timp de SMB de la telefonul persoanelor care îi îngrijesc. Crește această valoare experimentală încet și cu precauție.</string>
 </resources>
