@@ -6,7 +6,7 @@
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (Personalizat)</string>
     <string name="label_actions_tile">AAPS(Acțiuni)</string>
-    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
+    <string name="label_temp_target_tile">AAPS(Țintă Temporară)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistent Rapid)</string>
     <string name="label_user_action_tile">AAPS(Acțiune Utilizator)</string>
     <string name="label_warning_sync">Nu există date!</string>
@@ -21,7 +21,7 @@
     <string name="pref_graph_settings">Grafic</string>
     <string name="pref_interface_settings">Interfață</string>
     <string name="pref_others_settings">Altele</string>
-    <string name="pref_complication_settings">Complicaţie</string>
+    <string name="pref_complication_settings">Complicație</string>
     <string name="pref_show_date">Arată data</string>
     <string name="pref_show_iob">Arată IOB</string>
     <string name="pref_show_detailed_iob">Arată IOB detaliat</string>
@@ -38,7 +38,7 @@
     <string name="pref_show_bg">Arată glicemia</string>
     <string name="pref_show_bgi">Arată BGI</string>
     <string name="pref_show_direction_arrow">Arată săgeată pentru evoluție</string>
-    <string name="pref_show_ago">Afişare în urmă</string>
+    <string name="pref_show_ago">Afișare în urmă</string>
     <string name="pref_show_temp_basal">Arată RBT</string>
     <string name="pref_show_bolus">Arată Bolus &amp; SMB</string>
     <string name="pref_show_grid">Afișare grilă</string>
@@ -69,11 +69,11 @@
     <string name="pref_prime_in_menu">Amorsare în meniu</string>
     <string name="pref_single_target">Țintă unică</string>
     <string name="pref_wizard_percentage">Calculator Procentaj</string>
-    <string name="pref_complication_tap_action">Acţiuni pentru complicaţii</string>
+    <string name="pref_complication_tap_action">Acțiuni pentru complicații</string>
     <string name="pref_unicode_in_complications">Unicode în complicații</string>
     <string name="pref_version">Versiune:</string>
-    <string name="pref_moreWatchfaceSettings">Mai multe setări Watchface</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Uitaţi-vă în configurarea Watchface, vă rugăm.</string>
+    <string name="pref_moreWatchfaceSettings">Mai multe setări cadran ceas</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Uitați-vă în configurarea cadranului de ceas, vă rugăm.</string>
     <string name="menu_tempt">ŢintăTemporară</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calc</string>
@@ -81,7 +81,7 @@
     <string name="menu_treatment_short">Tratare</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Carbohidrați</string>
-    <string name="menu_ecarb">eCarbs</string>
+    <string name="menu_ecarb">Carbohidrați extinși</string>
     <string name="menu_settings">Setări</string>
     <string name="menu_status">Stare</string>
     <string name="menu_resync">Re-Sincronizare</string>
