@@ -12,6 +12,20 @@
     <string name="pump_status_executing_command">Executare comandă</string>
     <!-- Commands -->
     <string name="pump_cmd_desc_get_settings">Obține setările</string>
+    <string name="pump_cmd_desc_get_firmware">Obține firmware-ul pompei</string>
+    <string name="pump_cmd_desc_get_basal_profile">Obține profilul bazal</string>
+    <string name="pump_cmd_desc_set_basal_profile">Setează profilul bazal</string>
+    <string name="pump_cmd_desc_get_tbr">Obține bazala temporară</string>
+    <string name="pump_cmd_desc_cancel_tbr">Anulează bazala temporară</string>
+    <string name="pump_cmd_desc_set_tbr">Setează bazala temporară</string>
+    <string name="pump_cmd_desc_set_bolus">Setează bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Obține bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Anulează bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Obțineți insulina rămasă</string>
+    <string name="pump_cmd_desc_get_battery_status">Obține starea bateriei</string>
+    <string name="pump_cmd_desc_get_time">Obține timpul</string>
+    <string name="pump_cmd_desc_set_time">Setează timpul</string>
+    <string name="pump_cmd_desc_get_pump_status">Obține starea pompei</string>
     <string name="pump_cmd_desc_get_history">Obține istoricul</string>
     <string name="pump_cmd_desc_get_history_params">Obține istoricul %s</string>
     <string name="pump_cmd_desc_custom">Comandă particularizată</string>
