@@ -321,7 +321,8 @@ private fun InsulinDialogContent(
                     ) {
                         Text(
                             text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
                         )
                         Switch(checked = uiState.eatingSoonTtChecked, onCheckedChange = { onEatingSoonChange(it) })
                     }
@@ -340,7 +341,8 @@ private fun InsulinDialogContent(
                             text = stringResource(CoreUiR.string.bolus_recorded_only),
                             style = MaterialTheme.typography.bodyLarge,
                             color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
-                            else MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
                         )
                         Switch(
                             checked = uiState.recordOnlyChecked,

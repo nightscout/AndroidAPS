@@ -16,6 +16,7 @@ data class ManageUiState(
     val showExtendedBolus: Boolean = false,
     val showCancelExtendedBolus: Boolean = false,
     val showHistoryBrowser: Boolean = false,
+    val isPatchPump: Boolean = false,
 
     // Cancel button labels (with active values)
     val cancelTempBasalText: String = "",

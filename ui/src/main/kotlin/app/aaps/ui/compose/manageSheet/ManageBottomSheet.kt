@@ -64,6 +64,7 @@ fun ManageBottomSheet(
     cancelTempBasalText: String,
     cancelExtendedBolusText: String,
     // Pump
+    isPatchPump: Boolean,
     pumpPlugin: PluginBase,
     customActions: List<CustomAction>,
     // Callbacks
@@ -88,6 +89,7 @@ fun ManageBottomSheet(
             showCancelExtendedBolus = showCancelExtendedBolus,
             cancelTempBasalText = cancelTempBasalText,
             cancelExtendedBolusText = cancelExtendedBolusText,
+            isPatchPump = isPatchPump,
             pumpPlugin = pumpPlugin,
             customActions = customActions,
             onDismiss = onDismiss,
@@ -109,6 +111,7 @@ internal fun ManageBottomSheetContent(
     showCancelExtendedBolus: Boolean,
     cancelTempBasalText: String,
     cancelExtendedBolusText: String,
+    isPatchPump: Boolean = false,
     pumpPlugin: PluginBase? = null,
     customActions: List<CustomAction>,
     onDismiss: () -> Unit = {},
@@ -183,11 +186,13 @@ internal fun ManageBottomSheetContent(
                 onDismiss = onDismiss,
                 onNavigate = onNavigate
             )
-            ManageItem(
-                elementType = ElementType.FILL,
-                onDismiss = onDismiss,
-                onNavigate = onNavigate
-            )
+            if (!isPatchPump) {
+                ManageItem(
+                    elementType = ElementType.FILL,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate
+                )
+            }
 
             // Temp Basal or Cancel Temp Basal
             if (!isSimpleMode) {

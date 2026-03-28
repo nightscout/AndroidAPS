@@ -372,7 +372,8 @@ private fun CarbsDialogContent(
                         ) {
                             Text(
                                 text = stringResource(CoreUiR.string.bolus_reminder),
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f)
                             )
                             Switch(
                                 checked = uiState.bolusReminderChecked,
@@ -479,7 +480,8 @@ private fun TempTargetCheckboxes(
         ) {
             Text(
                 text = stringResource(app.aaps.ui.R.string.start_hypo_tt),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
             )
             Switch(checked = hypoChecked, onCheckedChange = { onHypoChange(it) })
         }
@@ -493,7 +495,8 @@ private fun TempTargetCheckboxes(
         ) {
             Text(
                 text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
             )
             Switch(checked = eatingSoonChecked, onCheckedChange = { onEatingSoonChange(it) })
         }
@@ -507,7 +510,8 @@ private fun TempTargetCheckboxes(
         ) {
             Text(
                 text = stringResource(app.aaps.ui.R.string.start_activity_tt),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
             )
             Switch(checked = activityChecked, onCheckedChange = { onActivityChange(it) })
         }

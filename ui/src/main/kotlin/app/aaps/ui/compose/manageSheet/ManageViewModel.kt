@@ -148,6 +148,7 @@ class ManageViewModel @Inject constructor(
                     showHistoryBrowser = profile != null,
                     cancelTempBasalText = cancelTempBasalText,
                     cancelExtendedBolusText = cancelExtendedBolusText,
+                    isPatchPump = pumpDescription.isPatchPump,
                     pumpPlugin = activePlugin.activePumpInternal as PluginBase,
                     customActions = customActions
                 )

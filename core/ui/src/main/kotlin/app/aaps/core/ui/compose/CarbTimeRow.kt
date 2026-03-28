@@ -153,6 +153,7 @@ fun CarbTimeRow(
                 ) {
                     val alarmAlpha = if (alarmEnabled) 1f else 0.38f
                     Row(
+                        modifier = Modifier.weight(1f),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {

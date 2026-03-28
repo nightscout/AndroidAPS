@@ -115,10 +115,6 @@ class BuiltInSearchables @Inject constructor(
         items = listOf(
             // Master Password
             StringKey.ProtectionMasterPassword,
-            // Settings Protection
-            IntKey.ProtectionTypeSettings,
-            StringKey.ProtectionSettingsPassword,
-            StringKey.ProtectionSettingsPin,
             // Application Protection
             IntKey.ProtectionTypeApplication,
             StringKey.ProtectionApplicationPassword,
@@ -127,6 +123,10 @@ class BuiltInSearchables @Inject constructor(
             IntKey.ProtectionTypeBolus,
             StringKey.ProtectionBolusPassword,
             StringKey.ProtectionBolusPin,
+            // Settings Protection
+            IntKey.ProtectionTypeSettings,
+            StringKey.ProtectionSettingsPassword,
+            StringKey.ProtectionSettingsPin,
             // Protection Timeout
             IntKey.ProtectionTimeout
         ),
