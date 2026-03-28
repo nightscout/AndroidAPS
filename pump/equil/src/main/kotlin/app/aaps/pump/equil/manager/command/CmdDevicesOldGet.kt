@@ -176,9 +176,8 @@ class CmdDevicesOldGet(
 
     fun isSupport(serialNumber: String): Boolean {
         val firstChar = serialNumber.firstOrNull()?.uppercaseChar()
-        val needsVersionCheck = setOf('0', '1', '3', 'A', 'D')
         return when (firstChar) {
-            in needsVersionCheck -> firmwareVersion >= EquilConst.EQUIL_SUPPORT_LEVEL
+            in EquilManager.VERSION_CHECK_SERIAL_PREFIXES -> firmwareVersion >= EquilConst.EQUIL_SUPPORT_LEVEL
             else -> true
         }
     }
