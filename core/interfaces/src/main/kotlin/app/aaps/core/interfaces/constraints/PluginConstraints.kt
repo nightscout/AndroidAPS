@@ -3,9 +3,28 @@ package app.aaps.core.interfaces.constraints
 import app.aaps.core.interfaces.profile.Profile
 
 /**
- * PluginConstraints interface
+ * Safety constraint interface that any plugin can implement.
  *
- * Allows to every plugin implement own constraints
+ * The constraint system is a **chain-of-responsibility** pattern: every enabled plugin
+ * implementing this interface gets a chance to restrict values before they are applied.
+ * The [ConstraintsChecker] iterates through all active constraint plugins and applies
+ * the most restrictive value.
+ *
+ * ## How It Works
+ * Each method receives a [Constraint] wrapper containing the current value and accumulated
+ * reasons. The plugin can call `value.setIfSmaller()` or `value.set(false, reason, this)`
+ * to tighten the constraint. The original or a more restrictive value is returned.
+ *
+ * ## Constraint Categories
+ * - **Boolean constraints**: Control whether features are allowed (loop, SMB, closed loop, etc.)
+ * - **Value constraints**: Limit numerical values (max basal, max bolus, max IOB, max carbs)
+ *
+ * ## Default Behavior
+ * All methods have default implementations that pass through the value unchanged.
+ * Plugins only override the constraints they need to enforce.
+ *
+ * @see Constraint
+ * @see app.aaps.core.interfaces.constraints.ConstraintsChecker
  */
 interface PluginConstraints {
 

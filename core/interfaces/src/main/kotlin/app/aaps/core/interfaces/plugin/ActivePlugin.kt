@@ -15,6 +15,27 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 
+/**
+ * Registry providing access to the currently active plugin for each plugin type.
+ *
+ * AndroidAPS allows only one plugin per type to be active at a time (e.g., one pump driver,
+ * one APS algorithm, one BG source). This interface is the central access point to retrieve
+ * the currently selected plugin instance for each category.
+ *
+ * ## Plugin Selection
+ * Plugin selection is managed by [ConfigBuilder] and persisted in SharedPreferences.
+ * [verifySelectionInCategories] ensures exactly one plugin per type is active.
+ *
+ * ## Usage
+ * ```kotlin
+ * val currentPump: Pump = activePlugin.activePump
+ * val bgSource: BgSource = activePlugin.activeBgSource
+ * val apsAlgorithm: APS = activePlugin.activeAPS
+ * ```
+ *
+ * @see app.aaps.core.interfaces.configuration.ConfigBuilder
+ * @see PluginBase
+ */
 interface ActivePlugin {
 
     /**

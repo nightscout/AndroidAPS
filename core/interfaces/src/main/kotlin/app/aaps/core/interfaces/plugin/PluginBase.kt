@@ -16,7 +16,31 @@ import kotlinx.coroutines.launch
 import org.jetbrains.annotations.TestOnly
 
 /**
- * Created by mike on 09.06.2016.
+ * Base class for all AndroidAPS plugins.
+ *
+ * Every feature in AndroidAPS (pump drivers, APS algorithms, BG sources, etc.) extends this class.
+ * Plugins have a three-state lifecycle: [State.NOT_INITIALIZED] -> [State.ENABLED] / [State.DISABLED].
+ *
+ * ## Lifecycle
+ * - When enabled, [onStart] is called asynchronously on a coroutine.
+ * - When disabled, [onStop] is called asynchronously.
+ * - State transitions trigger [onStateChange] for subclass notification.
+ *
+ * ## Plugin Description
+ * Each plugin provides a [PluginDescription] that defines its type, name, icon, preferences,
+ * whether it's always enabled, and which UI fragment to display.
+ *
+ * ## Constraint Support
+ * Plugins whose [PluginDescription.mainType] is [PluginType.PUMP] or [PluginType.APS]
+ * automatically have their [PluginType.CONSTRAINTS] facet enabled when the main type is active.
+ *
+ * @param pluginDescription Metadata describing this plugin's type, name, icon, and behavior.
+ * @param aapsLogger Logger instance for debug/info/error output.
+ * @param rh Resource helper for resolving string and drawable resources.
+ *
+ * @see PluginDescription
+ * @see PluginBaseWithPreferences
+ * @see app.aaps.core.interfaces.pump.PumpPluginBase
  */
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
@@ -26,6 +50,13 @@ abstract class PluginBase(
 
     private val scope = CoroutineScope(Dispatchers.Default + Job())
 
+    /**
+     * Plugin lifecycle state.
+     *
+     * - [NOT_INITIALIZED]: Initial state before any enable/disable call.
+     * - [ENABLED]: Plugin is active and operational ([onStart] has been called).
+     * - [DISABLED]: Plugin is dormant ([onStop] has been called).
+     */
     enum class State {
         NOT_INITIALIZED, ENABLED, DISABLED
     }
