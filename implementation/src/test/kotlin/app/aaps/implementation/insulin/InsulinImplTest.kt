@@ -45,6 +45,9 @@ class InsulinImplTest : TestBase() {
         insulinConfiguration = "{\"insulin\":[{\"insulinLabel\":\"test\",\"insulinEndTime\":18000000,\"insulinPeakTime\":1800000,\"concentration\":1.0}]}"
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn(insulinConfiguration)
         whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(emptyFlow())
+        // Mock rh.gs() for nickname resolution (OREF_FREE_PEAK template) and buildSuffix (U100 concentration)
+        whenever(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
+        whenever(rh.gs(eq(R.string.u100))).thenReturn("U100")
         sut = InsulinImpl(preferences, rh, profileFunction, persistenceLayer, aapsLogger, config, hardLimits, uel, testScope)
     }
 

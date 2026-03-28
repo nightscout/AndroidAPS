@@ -100,7 +100,9 @@ data class GeneralColors(
     val notificationLow: Color,
     val notificationInfo: Color,
     val notificationAnnouncement: Color,
-    val onNotification: Color
+    val onNotification: Color,
+    // Toggle colors
+    val toggleOn: Color
 )
 
 /**
@@ -154,7 +156,8 @@ internal val LightGeneralColors = GeneralColors(
     notificationLow = Color(0xFFFF827C),          // pink-red for low priority
     notificationInfo = Color(0xFF009705),         // green for info notifications
     notificationAnnouncement = Color(0xFFFF8C00), // orange for announcements
-    onNotification = Color(0xFFFFFFFF)            // white text on notification backgrounds
+    onNotification = Color(0xFFFFFFFF),            // white text on notification backgrounds
+    toggleOn = Color(0xFF4CAF50)                    // green for active/selected toggles
 )
 
 /**
@@ -208,7 +211,8 @@ internal val DarkGeneralColors = GeneralColors(
     notificationLow = Color(0xFFFF827C),
     notificationInfo = Color(0xFF009705),
     notificationAnnouncement = Color(0xFFFF8C00),
-    onNotification = Color(0xFFFFFFFF)
+    onNotification = Color(0xFFFFFFFF),
+    toggleOn = Color(0xFF81C784)                    // lighter green for active/selected toggles (dark mode)
 )
 
 /**

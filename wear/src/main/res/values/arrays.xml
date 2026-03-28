@@ -17,20 +17,6 @@
         <item>5</item>
     </string-array>
 
-    <string-array name="input_design">
-        <item>@string/pref_default</item>
-        <item>@string/pref_quick_righty</item>
-        <item>@string/pref_quick_lefty</item>
-        <item>@string/pref_modern_sparse</item>
-    </string-array>
-
-    <string-array name="input_design_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
     <string-array name="complication_tap_action">
         <item>@string/menu_default</item>
         <item>@string/menu_menu</item>

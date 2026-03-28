@@ -19,7 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.coroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +55,15 @@ internal val WearSecondaryText   = Color(0xFFB0BEC5)
 internal val WearDivider         = Color(0xFF37474F)
 internal val WearSummaryCardBg   = Color(0xFF0D47A1)
 internal val WearCalcCardBg      = Color(0xFF263238)
-internal val TempTargetYellow    = Color(0xFFF4D700)
+internal val TempTargetYellow       = Color(0xFFF4D700)
+internal val LoopClosedColor        = Color(0xFF00C03E)
+internal val LoopOpenColor          = Color(0xFF4983D7)
+internal val LoopLgsColor           = Color(0xFF800080)
+internal val LoopSuspendedColor     = Color(0xFFFFFF13)
+internal val LoopDisabledColor      = Color(0xFFFF1313)
+internal val LoopDisconnectedColor  = Color(0xFF939393)
+internal val LoopSuperbolusColor    = Color(0xFFFFAE01)
+internal val LoopUnknownColor       = Color(0xFF9E9E9E)
 
 private val ButtonBg = Color.White.copy(alpha = 0.15f)
 
@@ -84,6 +92,7 @@ internal fun PlusMinusInputScreen(
     stepValues: List<Double>,
     format: DecimalFormat,
     label: String,
+    displayText: String? = null,
     allowZero: Boolean = false,
     isActive: Boolean = true,
     symmetricLargeSteps: Boolean = false,
@@ -121,7 +130,8 @@ internal fun PlusMinusInputScreen(
         }
     }
 
-    val displayText = if (currentValue.value == 0.0 && !allowZero) "" else format.format(currentValue.value)
+    val displayValue = displayText ?: if (currentValue.value == 0.0 && !allowZero) "" else format.format(currentValue.value)
+    val valueFontSize = if (displayText != null) 32.sp else 40.sp
 
     Box(
         modifier = Modifier
@@ -152,10 +162,11 @@ internal fun PlusMinusInputScreen(
                 StepButton(step = stepValues[0], isIncrement = false, onStep = ::step, enabled = enabled)
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = displayText,
+                        text = displayValue,
                         color = valueColor,
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = valueFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
                     )
                     Text(
                         text = label,
@@ -170,10 +181,11 @@ internal fun PlusMinusInputScreen(
             // Center: value + unit label
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = displayText,
+                    text = displayValue,
                     color = valueColor,
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = valueFontSize,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
                 )
                 Text(
                     text = label,
@@ -232,7 +244,6 @@ private fun StepButton(
     useTextLabel: Boolean = false,
     enabled: Boolean = true,
 ) {
-    val scope = rememberCoroutineScope()
     val delta = if (isIncrement) step else -step
 
     Box(
@@ -245,19 +256,21 @@ private fun StepButton(
                 detectTapGestures(
                     onPress = {
                         var stepped = false
-                        val job = scope.launch {
-                            delay(100)          // allow pager to claim swipe gestures first
-                            stepped = true
-                            onStep(delta)
-                            delay(200)          // hold-to-repeat: 300ms total from press
-                            while (true) {
+                        coroutineScope {
+                            val job = launch {
+                                delay(100)          // allow pager to claim swipe gestures first
+                                stepped = true
                                 onStep(delta)
-                                delay(150)
+                                delay(200)          // hold-to-repeat: 300ms total from press
+                                while (true) {
+                                    onStep(delta)
+                                    delay(150)
+                                }
                             }
+                            val released = tryAwaitRelease()  // false if pager cancelled the gesture
+                            job.cancel()
+                            if (!stepped && released) onStep(delta)  // quick tap under 100ms threshold
                         }
-                        val released = tryAwaitRelease()  // false if pager cancelled the gesture
-                        job.cancel()
-                        if (!stepped && released) onStep(delta)  // quick tap under 100ms threshold
                     }
                 )
             },

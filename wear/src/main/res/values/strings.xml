@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Input Design</string>
-    <string name="pref_default">Default</string>
-    <string name="pref_quick_righty">Quick righty</string>
-    <string name="pref_quick_lefty">Quick lefty</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Big Numbers</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
@@ -239,7 +234,6 @@
     <string name="key_match_divider" translatable="false">match_divider</string>
     <string name="key_simplify_ui" translatable="false">simplify_ui</string>
     <string name="key_dark" translatable="false">dark</string>
-    <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
     <string name="key_include_external" translatable="false">include_external</string>
@@ -335,6 +329,8 @@
     <string name="loop_status_lgs">Low glucose suspend</string>
     <string name="loop_status_disabled">Loop disabled</string>
     <string name="loop_status_suspended">Loop suspended</string>
+    <string name="loop_status_pump_suspended">Pump suspended</string>
+    <string name="loop_status_dst_suspended">Suspended by DST</string>
     <string name="loop_status_disconnected">Pump disconnected</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Unknown</string>

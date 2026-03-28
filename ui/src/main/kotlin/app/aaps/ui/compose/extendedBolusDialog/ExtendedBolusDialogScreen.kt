@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.extendedBolusDialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,19 +8,25 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -148,52 +155,77 @@ private fun ExtendedBolusDialogContent(
                         )
                     }
                 },
-                actions = {
-                    IconButton(onClick = onConfirmClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(CoreUiR.string.ok),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+                actions = {}
             )
+        },
+        bottomBar = {
+            Button(
+                onClick = onConfirmClick,
+                enabled = uiState.insulin > 0.0,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                if (uiState.insulin > 0.0) {
+                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                } else {
+                    Text(stringResource(CoreUiR.string.ok))
+                }
+            }
         }
     ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // --- Insulin ---
-            NumberInputRow(
-                labelResId = CoreUiR.string.overview_insulin_label,
-                value = uiState.insulin,
-                onValueChange = onInsulinChange,
-                valueRange = uiState.extendedStep..uiState.maxInsulin,
-                step = uiState.extendedStep,
-                valueFormat = DecimalFormat("0.00"),
-                unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                modifier = Modifier.fillMaxWidth()
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            // Single card: insulin + duration
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.overview_insulin_label,
+                        value = uiState.insulin,
+                        onValueChange = onInsulinChange,
+                        valueRange = uiState.extendedStep..uiState.maxInsulin,
+                        step = uiState.extendedStep,
+                        valueFormat = DecimalFormat("0.00"),
+                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        modifier = itemModifier
+                    )
 
-            // --- Duration ---
-            NumberInputRow(
-                labelResId = CoreUiR.string.duration,
-                value = uiState.durationMinutes,
-                onValueChange = onDurationChange,
-                valueRange = uiState.extendedDurationStep..uiState.extendedMaxDuration,
-                step = uiState.extendedDurationStep,
-                valueFormat = DecimalFormat("0"),
-                unitLabelResId = KeysR.string.units_min,
-                modifier = Modifier.fillMaxWidth()
-            )
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.duration,
+                        value = uiState.durationMinutes,
+                        onValueChange = onDurationChange,
+                        valueRange = uiState.extendedDurationStep..uiState.extendedMaxDuration,
+                        step = uiState.extendedDurationStep,
+                        valueFormat = DecimalFormat("0"),
+                        unitLabelResId = KeysR.string.units_min,
+                        modifier = itemModifier
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

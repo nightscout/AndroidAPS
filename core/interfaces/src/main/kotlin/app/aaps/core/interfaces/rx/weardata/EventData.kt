@@ -237,6 +237,7 @@ sealed class EventData : Event() {
                 LOOP_RESUME,
 
                 PUMP_DISCONNECT, // 15m, 30m, 1h, 2h, 3h
+                PUMP_RECONNECT,
 
                 // Returned current statuses
                 LOOP_UNKNOWN,
@@ -452,6 +453,10 @@ sealed class EventData : Event() {
         val profilePercentage: Int? = null,
         val profileTimeshift: Int? = null,
         val profileDurationMinutes: Int? = null,
+        // LoopState fields
+        val loopStateTitle: String? = null,
+        val loopStateDurationMinutes: Int? = null,
+        val loopStateType: String? = null,
     ) : EventData()
 
     @Serializable

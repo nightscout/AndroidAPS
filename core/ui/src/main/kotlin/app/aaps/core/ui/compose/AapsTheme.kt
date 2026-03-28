@@ -3,6 +3,7 @@ package app.aaps.core.ui.compose
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -184,7 +185,9 @@ fun AapsTheme(
     val uiMode = UiMode.fromString(darkModeValue)
 
     val lightColors = lightColorScheme()
-    val darkColors = darkColorScheme()
+    val darkColors = darkColorScheme(
+        secondaryContainer = Color(0xFF635F6A)
+    )
 
     val isDark = when (uiMode) {
         UiMode.LIGHT  -> false

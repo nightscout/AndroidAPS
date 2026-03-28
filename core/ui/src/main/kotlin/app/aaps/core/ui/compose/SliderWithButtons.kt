@@ -265,7 +265,7 @@ fun SliderWithButtons(
     }
 }
 
-private fun roundToStep(value: Double, step: Double): Double {
+internal fun roundToStep(value: Double, step: Double): Double {
     val scaled = (value / step).roundToInt() * step
     // Fix floating point precision errors (e.g., 6.1000000000005 -> 6.1)
     val decimals = step.toString().substringAfter('.', "").length
@@ -278,7 +278,7 @@ private fun roundToStep(value: Double, step: Double): Double {
  * Speed increases progressively the longer the button is held.
  */
 @Composable
-private fun RepeatingIconButton(
+internal fun RepeatingIconButton(
     onClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,

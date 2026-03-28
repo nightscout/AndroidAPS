@@ -214,8 +214,7 @@ class InsulinDialogViewModel @Inject constructor(
         // Time offset
         val timeOffset = state.timeOffsetMinutes
         if (timeOffset != 0) {
-            val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()
-            lines.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(time))
+            lines.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(state.eventTime))
         }
 
         // Notes
@@ -246,7 +245,7 @@ class InsulinDialogViewModel @Inject constructor(
             ConstraintObject(insulin, aapsLogger)
         ).value()
         val timeOffset = state.timeOffsetMinutes
-        val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()
+        val time = state.eventTime
         val notes = state.notes
         val recordOnlyChecked = state.recordOnlyChecked
         val units = profileFunction.getUnits()

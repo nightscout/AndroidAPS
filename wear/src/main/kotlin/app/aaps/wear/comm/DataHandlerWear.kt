@@ -120,6 +120,9 @@ class DataHandlerWear @Inject constructor(
                             it.profilePercentage?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_PROFILE_PERCENTAGE, v) }
                             it.profileTimeshift?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_PROFILE_TIMESHIFT, v) }
                             it.profileDurationMinutes?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_PROFILE_DURATION, v) }
+                            it.loopStateTitle?.let { v -> bundle.putString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TITLE, v) }
+                            it.loopStateDurationMinutes?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_LOOP_STATE_DURATION_MINUTES, v) }
+                            it.loopStateType?.let { v -> bundle.putString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TYPE, v) }
                         }
                     )
                 })
