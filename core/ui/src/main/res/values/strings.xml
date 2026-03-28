@@ -291,6 +291,7 @@
     <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
     <string name="pump_insulin_cu">%1$.2f CU</string>
     <string name="pump_insulin_cu1">%1$.1f CU</string>
+    <string name="selected_insulin">Selected Insulin: %1$s</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>

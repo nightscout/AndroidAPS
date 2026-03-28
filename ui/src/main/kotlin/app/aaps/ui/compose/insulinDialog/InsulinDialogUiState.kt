@@ -2,6 +2,7 @@ package app.aaps.ui.compose.insulinDialog
 
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 
 @Immutable
 data class InsulinDialogUiState(
@@ -13,6 +14,8 @@ data class InsulinDialogUiState(
     val notes: String = "",
     val eventTime: Long = System.currentTimeMillis(),
     val eventTimeOriginal: Long = System.currentTimeMillis(),
+    val iCfg: ICfg? = null,
+    val insulins: ArrayList<ICfg> = ArrayList(),
 
     // Config (set once during init)
     val maxInsulin: Double = 0.0,

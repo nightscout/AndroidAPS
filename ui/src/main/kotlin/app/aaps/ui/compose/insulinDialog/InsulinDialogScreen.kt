@@ -54,11 +54,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
@@ -197,7 +199,8 @@ fun InsulinDialogScreen(
             { showButtonSettings = true }
         },
         onNavigateBack = onNavigateBack,
-        onConfirmClick = { showConfirmation = true }
+        onConfirmClick = { showConfirmation = true },
+        onInsulinSelect = { viewModel.selectInsulin(it) }
     )
 }
 
@@ -219,6 +222,7 @@ private fun InsulinDialogContent(
     onNotesChange: (String) -> Unit,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit,
+    onInsulinSelect: (ICfg) -> Unit,
     onSettingsClick: (() -> Unit)?,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
@@ -382,6 +386,14 @@ private fun InsulinDialogContent(
                     // Time Offset + DateTime (visible when recordOnly)
                     if (uiState.timeLayoutVisible) {
                         Column(modifier = itemModifier) {
+                            SelectInsulin(
+                                availableInsulins = uiState.insulins,
+                                selectedInsulin = uiState.iCfg,
+                                activeInsulinLabel = uiState.iCfg?.insulinLabel,
+                                onInsulinSelect = onInsulinSelect,
+                                initialExpanded = false,
+                                concentrationDropDownEnabled = true
+                            )
                             NumberInputRow(
                                 labelResId = CoreUiR.string.time,
                                 value = uiState.timeOffsetMinutes.toDouble(),
@@ -426,12 +438,14 @@ private fun InsulinDialogScreenPreview() {
         InsulinDialogContent(
             uiState = InsulinDialogUiState(
                 insulin = 2.5,
+                iCfg = null,
+                insulins = ArrayList(),
                 maxInsulin = 10.0,
-                bolusStep = 0.1,
-                insulinButtonIncrement1 = 0.5,
-                insulinButtonIncrement2 = 1.0,
-                insulinButtonIncrement3 = 2.0,
-                showNotesFromPreferences = true
+            bolusStep = 0.1,
+            insulinButtonIncrement1 = 0.5,
+            insulinButtonIncrement2 = 1.0,
+            insulinButtonIncrement3 = 2.0,
+            showNotesFromPreferences = true
             ),
             bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
             iob = IobUiState(),
@@ -450,7 +464,8 @@ private fun InsulinDialogScreenPreview() {
             onTimeClick = {},
             onSettingsClick = null,
             onNavigateBack = {},
-            onConfirmClick = {}
+            onConfirmClick = {},
+            onInsulinSelect = {}
         )
     }
 }
