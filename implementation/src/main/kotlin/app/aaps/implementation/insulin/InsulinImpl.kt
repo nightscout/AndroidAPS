@@ -51,18 +51,13 @@ class InsulinImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope
 ) : Insulin, InsulinManager {
 
-    override val id = InsulinType.UNKNOWN
-    override val friendlyName get(): String = rh.gs(app.aaps.core.interfaces.R.string.insulin_plugin)
+    override val id get() = InsulinType.fromPeak(iCfg.insulinPeakTime) // Only used within Autotune Plugin
+    override val friendlyName get() = iCfg.insulinNickname  // No more used to delete or a way to provide Nickname ?
 
     @Volatile private var cachedICfg: ICfg? = null
 
     override val iCfg: ICfg
         get() = cachedICfg ?: insulins[0]
-
-    override val comment: String
-        get() = TODO("Not yet implemented")
-
-    lateinit var currentInsulin: ICfg
 
     override var insulins: ArrayList<ICfg> = ArrayList()
     override var currentInsulinIndex = 0
@@ -82,32 +77,6 @@ class InsulinImpl @Inject constructor(
             // May fail during early init (e.g. no APS selected yet).
             // Will be updated on first EPS change after init completes.
         }
-    }
-
-    override fun insulinList(concentration: Double?): List<CharSequence> {
-        return insulins.filter {
-            when {
-                concentration == null -> it.concentration == iCfg.concentration
-                concentration == 0.0  -> true
-                concentration > 0.0   -> it.concentration == concentration
-                else                  -> false
-            }
-        }.map {
-            it.insulinLabel
-        }
-    }
-
-    override fun getInsulin(insulinLabel: String): ICfg {
-        insulins.forEach {
-            if (it.insulinLabel == insulinLabel)
-                return it
-        }
-        return iCfg     // if no insulin found then return current running iCfg
-    }
-
-    override fun getDefaultInsulin(concentration: Double?): ICfg {
-        if (concentration == null || concentration == iCfg.concentration) return iCfg  // without null or current concentration, return current running iCfg
-        return insulins.firstOrNull { it.concentration == concentration } ?: iCfg
     }
 
     override fun insulinTemplateList(): List<InsulinType> = listOf(
@@ -144,7 +113,6 @@ class InsulinImpl @Inject constructor(
             uel.log(Action.NEW_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(fullName))
         }
 
-        currentInsulin = deepClone(newInsulin)
         storeSettings()
         return newInsulin
     }
@@ -155,7 +123,6 @@ class InsulinImpl @Inject constructor(
         insulins.removeAt(currentInsulinIndex)
         uel.log(Action.INSULIN_REMOVED, Sources.Insulin, value = ValueWithUnit.SimpleString(insulinRemoved))
         currentInsulinIndex = 0     // Current running iCfg put in first position
-        currentInsulin = deepClone(currentInsulin())
         storeSettings()
     }
 
