@@ -93,18 +93,43 @@ class TidepoolUploader @Inject constructor(
         session = null
     }
 
+    /**
+     * IMPROVED: Simplified login without connectivity checks
+     *
+     * Connectivity is now checked by TidepoolPlugin.doUpload() BEFORE calling this method.
+     * This separation of concerns makes the code clearer and prevents state machine deadlock.
+     *
+     * Old behavior:
+     *   - Checked connectivity here and set BLOCKED state
+     *   - Auth state could get stuck in BLOCKED
+     *
+     * New behavior:
+     *   - Assumes caller already checked connectivity
+     *   - Only handles authentication state transitions
+     *   - No BLOCKED state to get stuck in
+     */
     @Synchronized
     fun doLogin(doUpload: Boolean = false, from: String?) {
-        //aapsLogger.debug(LTag.TIDEPOOL, "doLogin $from")
-        if (!isAllowed) {
-            authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.BLOCKED)
-            aapsLogger.debug(LTag.TIDEPOOL, "Blocked by connectivity settings")
+        aapsLogger.debug(LTag.TIDEPOOL, "doLogin from=$from doUpload=$doUpload currentStatus=${authFlowOut.connectionStatus}")
+
+        // IMPROVEMENT: Removed connectivity check - caller's responsibility
+        // This prevents mixing connectivity constraints with auth state
+        //
+        // REMOVED CODE:
+        // if (!isAllowed) {
+        //     authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.BLOCKED)
+        //     aapsLogger.debug(LTag.TIDEPOOL, "Blocked by connectivity settings")
+        //     return
+        // }
+
+        // Check if already in a connected or connecting state
+        if (authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED ||
+            authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.FETCHING_TOKEN) {
+            aapsLogger.debug(LTag.TIDEPOOL, "Already connected or connecting")
             return
         }
-        if (authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED || authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.FETCHING_TOKEN) {
-            aapsLogger.debug(LTag.TIDEPOOL, "Already connected")
-            return
-        }
+
+        // Proceed with authentication
         handleTokenLoginAndStartSession(doUpload, from)
     }
 

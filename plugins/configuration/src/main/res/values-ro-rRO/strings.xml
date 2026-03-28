@@ -44,6 +44,7 @@
     <string name="data_choices">Alegeri date</string>
     <string name="fabric_upload">Încărcare \"fabric\"</string>
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Cerință</string>
     <string name="apsmode_title">Mod APS</string>
     <string name="error_asking_for_permissions">Eroare în solicitarea permisiunilor</string>
@@ -153,4 +154,9 @@
     <string name="metadata_label_encryption">Criptare fișier</string>
     <string name="metadata_format_new">Format nou criptat</string>
     <string name="metadata_format_other">Format necunoscut pentru export</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

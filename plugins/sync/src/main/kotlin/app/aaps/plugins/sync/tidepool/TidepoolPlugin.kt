@@ -27,6 +27,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
@@ -133,15 +134,54 @@ class TidepoolPlugin @Inject constructor(
         super.onStop()
     }
 
+    /**
+     * Check if connectivity settings allow upload
+     * Separates connectivity constraints from auth state management
+     */
+    private fun isConnectivityAllowed(): Boolean = isAllowed
+
+    /**
+     * Initiate upload with improved state management
+     *
+     * Key improvement: Check connectivity BEFORE auth state
+     * - If blocked by connectivity: skip silently without changing auth state
+     * - If allowed: handle auth state transitions normally
+     * - Auth state no longer gets "stuck" in BLOCKED when connectivity is restored
+     */
     private fun doUpload(from: String?) {
-        //aapsLogger.debug(LTag.TIDEPOOL, "doUpload from $from")
+        aapsLogger.debug(LTag.TIDEPOOL, "doUpload from=$from isAllowed=${isConnectivityAllowed()} status=${authFlowOut.connectionStatus}")
+
+        // IMPROVEMENT: Check connectivity first, before examining auth state
+        // This prevents mixing connectivity constraints with auth state
+        if (!isConnectivityAllowed()) {
+            aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from: Blocked by connectivity settings")
+            // Send status event so user knows why upload is blocked (rate limited to avoid spam)
+            if (rateLimit.rateLimit("tidepool-connectivity-blocked-notification", T.mins(5).secs().toInt())) {
+                rxBus.send(EventTidepoolStatus("Upload blocked by connectivity settings (check WiFi/cellular/battery restrictions)"))
+            }
+            // Don't change auth state - just skip this upload attempt
+            // When connectivity is restored, next doUpload() will proceed normally
+            return
+        }
+
+        // IMPROVEMENT: Clean auth state machine without BLOCKED
+        // Connectivity is handled above, so we only deal with authentication states here
         return when (authFlowOut.connectionStatus) {
+            // Authentication needed
             AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN       -> tidepoolUploader.doLogin(true, "doUpload $from NOT_LOGGED_IN")
             AuthFlowOut.ConnectionStatus.FAILED              -> tidepoolUploader.doLogin(true, "doUpload $from FAILED")
             AuthFlowOut.ConnectionStatus.NO_SESSION          -> tidepoolUploader.doLogin(true, "doUpload $from NO_SESSION")
+
+            // Ready to upload
             AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED -> tidepoolUploader.doUpload(from)
 
-            else                                             -> aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from do nothing ${authFlowOut.connectionStatus}")
+            // Transient states - wait for completion
+            AuthFlowOut.ConnectionStatus.FETCHING_TOKEN      -> aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from: Already fetching token")
+
+            // REMOVED: BLOCKED case - connectivity is now checked separately above
+            // This prevents the state machine from getting stuck when connectivity changes
+
+            else                                             -> aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from: Unhandled state ${authFlowOut.connectionStatus}")
         }
     }
 
@@ -172,36 +212,54 @@ class TidepoolPlugin @Inject constructor(
         }
     }
 
+    /**
+     * IMPROVED: Status shows connectivity state for better UX
+     * If blocked by connectivity settings, shows "BLOCKED (connectivity)"
+     * Otherwise shows actual auth state
+     */
     override val status: String
-        get() = authFlowOut.connectionStatus.name
+        get() = if (!isConnectivityAllowed()) {
+            "BLOCKED (connectivity)"
+        } else {
+            authFlowOut.connectionStatus.name
+        }
+
+    /**
+     * IMPROVED: Write permission requires both connectivity AND auth
+     */
     override val hasWritePermission: Boolean
-        get() = authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED
+        get() = isConnectivityAllowed() &&
+                authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED
+
+    /**
+     * IMPROVED: Connected requires both connectivity AND auth
+     */
     override val connected: Boolean
-        get() = authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED
+        get() = isConnectivityAllowed() &&
+                authFlowOut.connectionStatus == AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "tidepool_connection_options" && requiredKey != "tidepool_advanced") return
+        if (requiredKey != null && requiredKey != "tidepool_connection_options") return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
             key = "tidepool_settings"
             title = rh.gs(R.string.tidepool)
             initialExpandedChildrenCount = 0
+            // Add direct preference to make category expandable (like NSClient pattern)
+            // Without this, category with only nested PreferenceScreens is not clickable
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = TidepoolBooleanKey.UseTestServers, summary = R.string.summary_tidepool_dev_servers, title = R.string.title_tidepool_dev_servers))
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "tidepool_connection_options"
                 title = rh.gs(R.string.connection_settings_title)
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseCellular, title = R.string.ns_cellular))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseRoaming, title = R.string.ns_allow_roaming))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseWifi, title = R.string.ns_wifi))
-                addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.NsClientWifiSsids, dialogMessage = R.string.ns_wifi_allowed_ssids, title = R.string.ns_wifi_ssids))
+                addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.NsClientWifiSsids, dialogMessage = R.string.ns_wifi_allowed_ssids, title = R.string.ns_wifi_ssids, validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseOnBattery, title = R.string.ns_battery))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseOnCharging, title = R.string.ns_charging))
             })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "tidepool_advanced"
-                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = TidepoolBooleanKey.UseTestServers, summary = R.string.summary_tidepool_dev_servers, title = R.string.title_tidepool_dev_servers))
-            })
+            // Advanced screen removed - UseTestServers moved to top level
         }
     }
 }

@@ -8,9 +8,11 @@
     <string name="omnipod_dash_history_item_amount">Hoeveelheid</string>
     <string name="omnipod_dash_history_item_source">Bron</string>
     <string name="omnipod_dash_history_item_date">Datum</string>
+    <string name="omnipod_dash_history_type">Type:</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adres</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Verbindingskwaliteit</string>
     <string name="omnipod_dash_overview_delivery_status">Leveringsstatus</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->

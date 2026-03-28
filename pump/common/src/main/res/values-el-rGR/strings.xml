@@ -10,6 +10,14 @@
     <string name="pump_status_busy">Απασχολημένο</string>
     <string name="pump_status_suspended">Σε αναστολή</string>
     <string name="pump_status_executing_command">Εκτέλεση εντολής</string>
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Λήψη ρυθμίσεων</string>
+    <string name="pump_cmd_desc_get_firmware">Λήψη λογισμικού αντλίας</string>
+    <string name="pump_cmd_desc_get_basal_profile">Λήψη προφίλ βασικού ρυθμού</string>
+    <string name="pump_cmd_desc_set_basal_profile">Ρύθμιση βασικού προφίλ</string>
+    <string name="pump_cmd_desc_get_tbr">Λήψη προσωρινού βασικού ρυθμού</string>
+    <string name="pump_cmd_desc_cancel_tbr">Ακύρωση προσωρινού βασικού ρυθμού</string>
+    <string name="pump_cmd_desc_set_tbr">Ρύθμιση προσωρινού βασικού ρυθμού</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Βασικοί</string>
     <string name="history_group_configuration">Ρύθμιση παραμέτρων</string>

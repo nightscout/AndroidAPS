@@ -44,10 +44,10 @@
     <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
     <string name="openapsma_script_debug_data_label">Ladenie skriptu</string>
     <string name="openapsama_use_autosens">Použi automatickú detekciu citlivosti</string>
-    <string name="openapsma_max_basal_title">Max. JI/h, ktoré je možné nastaviť pre dočas. bazál</string>
+    <string name="openapsma_max_basal_title">Max. U/h, ktoré je možné nastaviť pre dočas. bazál</string>
     <string name="openapsma_max_basal_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako \"max basal\"</string>
-    <string name="openapsma_max_iob_title">Maximálny bazálny IOB, ktorý OpenAPS môže podať [JI]</string>
-    <string name="openapsma_max_iob_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako max IOB, je to maximálne množstvo inzulínu v [JI], ktoré APS môže naraz podať.</string>
+    <string name="openapsma_max_iob_title">Maximálny bazálny IOB, ktorý OpenAPS môže podať [U]</string>
+    <string name="openapsma_max_iob_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako max IOB, je to maximálne množstvo inzulínu v [U], ktoré APS môže naraz podať.</string>
     <string name="openapsama_autosens_adjust_targets_summary">Štandardná hodnota: zapnuté\nToto je používané, aby automatická detekcia citlivosti mohla okrem cieľovej hodnoty glykémie, upravovať aj citlivosť, prevody a bazály.</string>
     <string name="openapsama_autosens_adjust_targets">Autosense takisto upravuje cieľovú glykémiu</string>
     <string name="openapsama_min_5m_carb_impact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
@@ -59,7 +59,7 @@
     <string name="always_use_short_avg_summary">Zmysluplné, pokiaľ dáta z xDrip+ obsahujú veľký šum.</string>
     <string name="openapsama_max_daily_safety_multiplier">Max násobiteľ denného najvyššieho bazálu</string>
     <string name="openapsama_current_basal_safety_multiplier">Max násobiteľ súčasného bazálu</string>
-    <string name="openapssmb_max_iob_title">Maximálne celkové IOB, ktoré OpenAPS nemôže prekročiť [JI]</string>
+    <string name="openapssmb_max_iob_title">Maximálne celkové IOB, ktoré OpenAPS nemôže prekročiť [U]</string>
     <string name="openapssmb_max_iob_summary">Táto hodnota je v kontexte OpenAPS nazývaná Max IOB.\nOpenAPS nikdy nepridá inzulín, pokiaľ je súčasné IOB väčšie, ako táto hodnota</string>
     <string name="enable_uam">Povoliť UAM</string>
     <string name="enable_smb">Povoliť SMB</string>
@@ -91,7 +91,7 @@
     <string name="use_dynamic_sensitivity_title">Povoliť dynamickú citlivosť</string>
     <string name="use_dynamic_sensitivity_summary">Upravte algoritmus pre použitie dynamickej citlivosti namiesto hodnoty z profilu</string>
     <!--    Verify if needed in safety-->
-    <string name="limiting_iob">IOB obmedzený na %1$.1f JI: %2$s</string>
+    <string name="limiting_iob">IOB obmedzený na %1$.1f U: %2$s</string>
     <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->
@@ -143,8 +143,8 @@
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_last_run">Posledné spustenie :</string>
     <string name="autotune_warning">Upozornenie :</string>
-    <string name="autotune_ic_warning">Vybraný profil má %1$d hodnôt IC. Autotune bude používať %2$.2f g/JI</string>
-    <string name="autotune_isf_warning">Vybraný profil má %1$d hodnôt ISF. Autotune bude používať %2$.1f %3$s/JI</string>
+    <string name="autotune_ic_warning">Vybraný profil má %1$d hodnôt IC. Autotune bude používať %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Vybraný profil má %1$d hodnôt ISF. Autotune bude používať %2$.1f %3$s/U</string>
     <string name="autotune_error">Chyba vstupných dát, skúste znova spustiť Autotune, alebo znížte počet dní</string>
     <string name="autotune_error_more_days">Chyba vo vstupných dátach, zvýšte počet dní</string>
     <string name="autotune_warning_during_run">Autotune spustený, prosím buďte trpezliví</string>

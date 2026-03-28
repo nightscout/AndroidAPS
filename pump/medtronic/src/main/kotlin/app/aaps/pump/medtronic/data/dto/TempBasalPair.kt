@@ -21,12 +21,13 @@ class TempBasalPair : TempBasalPair {
      * @param startTimeByte
      * @param isPercent
      */
-    constructor(rateByte: Byte, startTimeByte: Int, isPercent: Boolean) : super() {
-        val rateInt = ByteUtil.asUINT8(rateByte)
-        if (isPercent) insulinRate = rateByte.toDouble() else insulinRate = rateInt * 0.025
-        durationMinutes = startTimeByte * 30
-        this.isPercent = isPercent
-    }
+    constructor(rateByte: Byte, startTimeByte: Int, isPercent: Boolean) : super(
+        insulinRate = if (isPercent)  ByteUtil.asUINT8(rateByte).toDouble()
+        else  ByteUtil.asUINT8(rateByte) * 0.025,
+        isPercent = isPercent,
+        durationMinutes = startTimeByte * 30,
+        null
+    )
 
     /**
      * This constructor is for use with PumpHistoryDecoder
@@ -35,17 +36,18 @@ class TempBasalPair : TempBasalPair {
      * @param startTimeByte
      * @param isPercent
      */
-    constructor(rateByte0: Byte, rateByte1: Byte, startTimeByte: Int, isPercent: Boolean) {
-        if (isPercent) {
-            insulinRate = rateByte0.toDouble()
-        } else {
-            insulinRate = ByteUtil.toInt(rateByte1.toInt(), rateByte0.toInt()) * 0.025
-        }
+    constructor(rateByte0: Byte, rateByte1: Byte, startTimeByte: Int, isPercent: Boolean) : super(
+        insulinRate = if (isPercent) rateByte0.toDouble() else
+            ByteUtil.toInt(rateByte1.toInt(), rateByte0.toInt()) * 0.025  ,
+        isPercent = isPercent,
         durationMinutes = startTimeByte * 30
-        this.isPercent = isPercent
-    }
+    )
 
-    constructor(aapsLogger: AAPSLogger, response: ByteArray) : super() {
+    constructor(aapsLogger: AAPSLogger, response: ByteArray) : super(
+        insulinRate = 0.0,
+        isPercent = response[0] == 1.toByte(),
+        durationMinutes = 0
+    ) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response))
         isPercent = response[0] == 1.toByte()
         insulinRate = if (isPercent) {

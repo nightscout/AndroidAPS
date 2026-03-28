@@ -29,7 +29,14 @@ object SealedClassHelper {
             jsonReader.beginObject()
             val nextName = jsonReader.nextName()
             val innerClass = kClass.sealedSubclasses.firstOrNull { it.simpleName == nextName }
-                ?: throw Exception("$nextName is not a child of the sealed class ${kClass.qualifiedName}")
+            if (innerClass == null) {
+                // Skip the unknown value and return UNKNOWN if available
+                jsonReader.skipValue()
+                jsonReader.endObject()
+                @Suppress("UNCHECKED_CAST")
+                val unknownInstance = kClass.sealedSubclasses.firstOrNull { it.simpleName == "UNKNOWN" }?.objectInstance as T?
+                return unknownInstance
+            }
             val x = gson.fromJson<T>(jsonReader, innerClass.javaObjectType)
             jsonReader.endObject()
             // if there a static object, actually return that

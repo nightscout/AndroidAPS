@@ -48,6 +48,14 @@
     <string name="unattended_settings_export">Niet interactief instellingen exporteren</string>
     <string name="unattended_settings_export_summary">Met het activeren van deze optie wordt uw wachtwoord veilig opgeslagen op uw telefoon</string>
     <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="exported_to_cloud">Instellingen succesvol geëxporteerd naar cloudopslag</string>
+    <string name="export_to_cloud_failed">Exporteren naar cloudopslag is mislukt</string>
+    <string name="cloud_connection_failed">Verbinding maken met cloud opslag mislukt</string>
+    <string name="loading_from_cloud">Instellingen laden uit cloud opslag, even geduld…</string>
+    <string name="cloud_folder_error">Laden van cloud opslag mappen mislukt</string>
+    <string name="csv_uploaded_to_cloud">Gebruiker invoer CSV succesvol geüpload naar cloud opslag</string>
+    <string name="cloud_reauthorize_message">Verbinding maken met cloud opslag mislukt. Wil je je opnieuw authenticeren?</string>
     <string name="request">Verzoek</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="error_asking_for_permissions">Fout bij het vragen van toestemming</string>
@@ -166,4 +174,54 @@
     <string name="metadata_format_other">Onbekende export indeling</string>
     <string name="reset_aps_results">Reset APS resultaten</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Fout bij toegang tot het bestandssysteem. Selecteer de juiste AAPS map.</string>
+    <!-- Google Drive Storage -->
+    <string name="storage_local">Lokale opslag</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="select_storage_type">Selecteer een opslagtype</string>
+    <string name="backup_to_google_drive">Back-up maken naar Google Drive</string>
+    <string name="google_drive_connection_error">Google Drive verbindingsfout</string>
+    <string name="reauthorize">Opnieuw authenticeren</string>
+    <string name="cloud_auth_success">Authenticatie cloudopslag gelukt</string>
+    <string name="cloud_auth_failed">Authenticatie met cloudopslag mislukt</string>
+    <string name="cloud_auth_error">Authenticatie fout voor cloud opslag: %1$s</string>
+    <string name="enable_cloud_export_title">Cloud export inschakelen</string>
+    <string name="enable_cloud_export_message">Wilt u cloud export inschakelen? Dit zal de \"Alle Cloud\" optie inschakelen voor de Export instellingen.</string>
+    <string name="can_change_in_export_settings">U kunt dit later wijzigen in de exportinstellingen</string>
+    <string name="setup_cloud_directory_first">Stel de cloud storage directory eerst in om de export Instellingen te gebruiken</string>
+    <string name="local_directory">LOKALE map</string>
+    <string name="cloud_directory">Cloud map</string>
+    <string name="export_options">Export opties</string>
+    <string name="log_export_option">Logbestanden</string>
+    <string name="user_settings_export_option">Gebruikersinstellingen</string>
+    <string name="user_entries_csv_export_option">Exporteer gebruikersgegevens naar Excel (CSV)</string>
+    <string name="email_option">E-mail</string>
+    <string name="local_storage_option">Lokale opslag</string>
+    <string name="cloud_storage_option">Cloud opslag</string>
+    <string name="export_all_cloud">Alles cloud</string>
+    <string name="send_logs_to_cloud">Logbestanden exporteren naar cloud opslag</string>
+    <string name="export_csv_to_cloud">Exporteer gebruikersgegevens naar cloud opslag (CSV)</string>
+    <string name="export_csv_to_local">Exporteer gebruikersgegevens naar lokale opslag (CSV)</string>
+    <string name="export_settings_local">Exporteer instellingen (lokaal)</string>
+    <string name="export_settings_cloud">Exporteer instellingen (cloud)</string>
+    <string name="export_settings_both">Exporteer instellingen (lokaal+cloud)</string>
+    <string name="import_settings_local">Importeer instellingen (lokaal)</string>
+    <string name="import_settings_cloud">Importeer instellingen (cloud)</string>
+    <string name="import_settings_both">Importeer instellingen (lokaal/cloud)</string>
+    <!-- Import source selection dialog -->
+    <string name="select_import_source">Selecteer importbron</string>
+    <string name="import_from_local">Importeren uit lokale opslag</string>
+    <string name="import_from_cloud">Importeren uit cloud opslag</string>
+    <string name="import_source_local_description">Instellingen importeren uit apparaatopslag</string>
+    <string name="import_source_cloud_description">Instellingen importeren uit cloud opslag</string>
+    <string name="cloud_import_file_count">Toont %1$d van %2$d bestanden</string>
+    <string name="cloud_import_file_count_all">Alle %1$d bestanden worden getoond</string>
+    <string name="load_more">Meer laden</string>
+    <string name="load_more_with_count">Laden volgende %1$d (geladen %2$d)</string>
+    <string name="loading">Laden…</string>
+    <string name="loading_progress">Laden %1$d van %2$d…</string>
+    <string name="warning_wrong_directory_selected">Verkeerde map geselecteerd</string>
+    <string name="warning_wrong_directory_message">U heeft de \"%1$s\" submap geselecteerd in plaats van de AAPS hoofdmap. Selecteer de bovenliggende AAPS map. De app zal automatisch submappen aanmaken en beheren.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

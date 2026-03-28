@@ -15,7 +15,7 @@
     <string name="eopatch_base_basal_rate">Základná hodnota bazálu</string>
     <string name="eopatch_temp_basal_rate">Dočasná bazálna dávka</string>
     <string name="eopatch_total_delivered">Celkovo podané</string>
-    <string name="invalid_basal_rate">Bazál profilu je menší než 0.05 JI/h. EOPatch má minimálnu dávku 0.05 JI. Prosím skúste to znovu po nastavení v profile na viac ako minimálnu dávku.</string>
+    <string name="invalid_basal_rate">Bazál profilu je menší než 0.05 U/h. EOPatch má minimálnu dávku 0.05 U. Prosím skúste to znovu po nastavení v profile na viac ako minimálnu dávku.</string>
     <string name="no_profile_selected">Žiadny vybraný profil. Prosím vyberte si profil a skúste to znovu.</string>
     <string name="symbol_day">deň</string>
     <string name="symbol_plus">+</string>
@@ -83,10 +83,10 @@
     <string name="patch_communication_succeed_message">Pripojené k Patch.</string>
     <string name="patch_cancel_pairing">Zrušiť párovanie</string>
     <string name="symbol_days">dní</string>
-    <string name="all_dose_unit">&#160;JI</string>
-    <string name="insulin_suspend_msg1">Po pozastavení, budú práve podávaný bolus &amp; dočasný bazál zrušené. \n\nHodnota: %1$s JI/h\nZostávajúci čas : %2$s\n&amp; Zostávajúci inzulín: %3$.2f JI</string>
-    <string name="insulin_suspend_msg2">Po pozastavení, bude práve podávaný bolus zrušený. \n\nZostávajúci inzulín: %1$.2f JI</string>
-    <string name="insulin_suspend_msg3">Po pozastavení, bude práve podávaný dočasný bazál zrušený. \n\nHodnota: %1$s JI/h\nZostávajúci čas : %2$s</string>
+    <string name="all_dose_unit">&#160;U</string>
+    <string name="insulin_suspend_msg1">Po pozastavení, budú práve podávaný bolus &amp; dočasný bazál zrušené. \n\nHodnota: %1$s U/h\nZostávajúci čas : %2$s\n&amp; Zostávajúci inzulín: %3$.2f U</string>
+    <string name="insulin_suspend_msg2">Po pozastavení, bude práve podávaný bolus zrušený. \n\nZostávajúci inzulín: %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Po pozastavení, bude práve podávaný dočasný bazál zrušený. \n\nHodnota: %1$s U/h\nZostávajúci čas : %2$s</string>
     <string name="insulin_suspend_msg4">Podávanie inzulínu je pozastavené.</string>
     <string name="string_change_patch">Zahodiť/Vymeniť pumpu</string>
     <string name="string_activate_patch">Aktivovať pumpu</string>

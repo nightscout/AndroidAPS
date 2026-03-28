@@ -16,7 +16,7 @@
     <string name="alert_m21_title">Ống insulin đã hết</string>
     <string name="alert_m22_title">Pin hết</string>
     <string name="alert_m23_title">Tắt tự động – bơm đã dừng</string>
-    <string name="alert_m24_title">Tắc insulin</string>
+    <string name="alert_m24_title">Tắc nghẽn</string>
     <string name="alert_m25_title">Hết thời gian mượn(tạm) – kết thúc hoạt động</string>
     <string name="alert_m26_title">Thay ống chứa insulin chưa hoàn tất</string>
     <string name="alert_m27_title">Tải dữ liệu thất bại</string>

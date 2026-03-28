@@ -67,6 +67,8 @@
     <string name="smscommunicator_suspend_reply_with_code">Для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Чтобы возобновить цикл ответьте кодом %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Чтобы отключить цикл ответьте кодом %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">Для перезапуска AAPS ответьте кодом %1$s</string>
+    <string name="smscommunicator_restarting">AAPS перезапускается</string>
     <string name="smscommunicator_tempbasal_set">Врем. базал %1$.2f%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_extended_set">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
     <string name="smscommunicator_carbs_set">Углеводы %1$d г введены успешно</string>

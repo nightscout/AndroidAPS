@@ -44,6 +44,7 @@
     <string name="data_choices">Избор на данни</string>
     <string name="fabric_upload">Качване на статистики във Fabric</string>
     <string name="identification">Идентификация (имейл, Фейсбук или Дискорд и др.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Искане</string>
     <string name="apsmode_title">APS режим</string>
     <string name="error_asking_for_permissions">Грешка искане за разрешения</string>
@@ -153,4 +154,9 @@
     <string name="metadata_label_encryption">Криптиране</string>
     <string name="metadata_format_new">Нов формат</string>
     <string name="metadata_format_other">Непознат формат</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

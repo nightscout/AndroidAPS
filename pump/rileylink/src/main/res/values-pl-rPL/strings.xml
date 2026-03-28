@@ -9,6 +9,10 @@
     <string name="pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
     <string name="pump_status_pump_unreachable">Pompa nieosiągalna</string>
     <string name="pump_status_invalid_config">Nieprawidłowa konfiguracja</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Lokalne kodowanie 4b6b (w oprogramowaniu)</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Sprzętowe kodowanie 4b6b (w RileyLink)</string>
+    <string name="medtronic_pump_frequency_us_ca">USA &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Świat (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Skanuj</string>
     <string name="riley_link_ble_config_scan_stop">Stop</string>

@@ -10,6 +10,7 @@
     <string name="pump_status_busy">사용 중</string>
     <string name="pump_status_suspended">중지됨</string>
     <string name="pump_status_executing_command">명령 실행 중</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basal</string>
     <string name="history_group_configuration">환경설정</string>

@@ -78,6 +78,7 @@
     <string name="deltalabel">BG verschil</string>
     <string name="deltalabel_u">BG verschil [%1$s]</string>
     <string name="currentlocation">Huidige locatie</string>
+    <string name="choose_from_map">Kies van kaart</string>
     <string name="location">Locatie</string>
     <string name="glucose_u">Glucose [%1$s]:</string>
     <string name="target_u">Streefdoel [%1$s]:</string>
@@ -140,4 +141,9 @@
     <string name="triggerStepsCountDesc">Aantal stappen per %1$s minuten %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Metingsduur</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">SMB in-/uitschakelen</string>
+    <string name="changeSmbTo">Wijzig SMB naar %1$s</string>
+    <string name="newSmbMode">Nieuwe SMB modus:</string>
+    <string name="on">AAN</string>
+    <string name="off">UIT</string>
 </resources>

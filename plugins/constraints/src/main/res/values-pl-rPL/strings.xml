@@ -11,6 +11,7 @@
     <string name="application_expired">Aplikacja wygasła</string>
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
+    <string name="version_expire">Wersja %1$s wygasa dnia %2$s, po czym nastąpi przejście w tryb LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Użyto przeliczonych wartości</string>

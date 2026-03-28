@@ -52,6 +52,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         }
         buttonFill?.setOnClickListener {
             context?.let {
+                aapsLogger.info(LTag.PUMPCOMM, "EquilFill: User initiated auto-fill, starting pin movement from step=$intStep")
                 auto = true
                 showAutoDlg()
                 setStep()
@@ -109,14 +110,17 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
+        aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: setStep() called, currentStep=$intStep, stepIncrement=${EquilConst.EQUIL_STEP_FILL}, maxStep=${EquilConst.EQUIL_STEP_MAX}")
         commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
+                aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: CmdStepSet result.success=${result.success}, intStep=$intStep")
                 if (result.success) {
                     intStep += EquilConst.EQUIL_STEP_FILL
+                    aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: Pin moved, newTotalStep=$intStep (${intStep / EquilConst.EQUIL_STEP_FILL} iterations)")
                     readStatus()
                 } else {
+                    aapsLogger.warn(LTag.PUMPCOMM, "EquilFill: CmdStepSet FAILED at step $intStep")
                     if (auto) dismissAutoDlg()
                     else dismissLoading()
                 }
@@ -125,17 +129,20 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     private fun readStatus() {
+        aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: readStatus() checking resistance at step $intStep")
         commandQueue.customCommand(
             CmdResistanceGet(aapsLogger, preferences, equilManager),
             object : Callback() {
                 override fun run() {
                     if (activity == null) return
-                    aapsLogger.debug(LTag.PUMPCOMM, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
-                    // result.enacted=true
+                    aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: readStatus result.success=${result.success}, result.enacted=${result.enacted}, intStep=$intStep, auto=$auto")
+                    // result.enacted=true means pin reached piston (resistance >= 500)
                     if (result.success) {
                         if (!result.enacted) {
+                            aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: Pin NOT at piston yet, continuing...")
                             if (auto) {
                                 if (intStep > EquilConst.EQUIL_STEP_MAX) {
+                                    aapsLogger.error(LTag.PUMPCOMM, "EquilFill: MAXIMUM STEP EXCEEDED! intStep=$intStep > maxStep=${EquilConst.EQUIL_STEP_MAX}")
                                     ToastUtils.infoToast(context, rh.gs(R.string.equil_replace_reservoir))
                                     dismissLoading()
                                     activity?.finish()
@@ -143,9 +150,11 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                                 }
                                 setStep()
                             } else {
+                                aapsLogger.debug(LTag.PUMPCOMM, "EquilFill: Manual mode, dismissing loading")
                                 dismissLoading()
                             }
                         } else {
+                            aapsLogger.info(LTag.PUMPCOMM, "EquilFill: Pin REACHED piston at step $intStep (${intStep / EquilConst.EQUIL_STEP_FILL} iterations), stopping fill")
                             if (auto) {
                                 runOnUiThread {
                                     buttonFill?.visibility = View.GONE
@@ -155,6 +164,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                             } else dismissLoading()
                         }
                     } else {
+                        aapsLogger.warn(LTag.PUMPCOMM, "EquilFill: CmdResistanceGet FAILED at step $intStep")
                         if (auto) dismissAutoDlg()
                         else dismissLoading()
                     }

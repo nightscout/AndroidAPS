@@ -48,6 +48,15 @@
     <string name="unattended_settings_export">Unattended Settings Export</string>
     <string name="unattended_settings_export_summary">Enabling this will securely store your password on your phone</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
+    
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="exported_to_cloud">Settings successfully exported to cloud storage</string>
+    <string name="export_to_cloud_failed">Failed to export to cloud storage</string>
+    <string name="cloud_connection_failed">Cloud storage connection failed</string>
+    <string name="loading_from_cloud">Loading settings from cloud storage, please wait…</string>
+    <string name="cloud_folder_error">Failed to load cloud storage folders</string>
+    <string name="csv_uploaded_to_cloud">User Entries CSV successfully uploaded to cloud storage</string>
+    <string name="cloud_reauthorize_message">Cloud storage connection failed. Would you like to re-authenticate?</string>
     <string name="request">Request</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="error_asking_for_permissions">Error asking for permissions</string>
@@ -174,4 +183,95 @@
     <string name="reset_aps_results">Reset APS results</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Error accessing filesystem. Select AAPS directory properly.</string>
 
+    <!-- Google Drive Storage -->
+    <string name="storage_local">Local Storage</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="select_storage_type">Select Storage Type</string>
+    <string name="backup_to_google_drive">Backup to Google Drive</string>
+    <string name="google_drive_connection_error">Google Drive connection error</string>
+    <string name="reauthorize">Re-authenticate</string>
+    <string name="cloud_auth_success">Cloud storage authentication successful</string>
+    <string name="cloud_auth_failed">Cloud storage authentication failed</string>
+    <string name="cloud_auth_error">Cloud storage authentication error: %1$s</string>
+    <string name="enable_cloud_export_title">Enable Cloud Export</string>
+    <string name="enable_cloud_export_message">Would you like to enable cloud export? This will enable the \"All Cloud\" option in Export Settings.</string>
+    <string name="can_change_in_export_settings">You can modify this later in Export Settings</string>
+    <string name="setup_cloud_directory_first">Please set up Cloud Directory first to use Export Settings</string>
+    <string name="local_directory">LOCAL Directory</string>
+    <string name="cloud_directory">Cloud Directory</string>
+    <string name="export_options">Export Options</string>
+    <string name="log_export_option">Log</string>
+    <string name="user_settings_export_option">User Settings</string>
+    <string name="user_entries_csv_export_option">Export User Entries to Excel (CSV)</string>
+    <string name="email_option">Email</string>
+    <string name="local_storage_option">Local Storage</string>
+    <string name="cloud_storage_option">Cloud Storage</string>
+    <string name="export_all_cloud">All Cloud</string>
+    <string name="send_logs_to_cloud">Export Logs to Cloud</string>
+    <string name="export_csv_to_cloud">Export User Entries to Cloud (csv)</string>
+    <string name="export_csv_to_local">Export User Entries to Local (csv)</string>
+    <string name="export_settings_local">Export settings (Local)</string>
+    <string name="export_settings_cloud">Export settings (Cloud)</string>
+    <string name="export_settings_both">Export settings (Local+Cloud)</string>
+    <string name="import_settings_local">Import settings (Local)</string>
+    <string name="import_settings_cloud">Import settings (Cloud)</string>
+    <string name="import_settings_both">Import settings (Local/Cloud)</string>
+    
+    <!-- Import source selection dialog -->
+    <string name="select_import_source">Select Import Source</string>
+    <string name="import_from_local">Import from Local Storage</string>
+    <string name="import_from_cloud">Import from Cloud Storage</string>
+    <string name="import_source_local_description">Import settings from device storage</string>
+    <string name="import_source_cloud_description">Import settings from cloud storage</string>
+    <string name="cloud_import_file_count">Showing %1$d of %2$d files</string>
+    <string name="cloud_import_file_count_all">Showing all %1$d files</string>
+    <string name="load_more">Load More</string>
+    <string name="load_more_with_count">Load next %1$d (loaded %2$d)</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_progress">Loading %1$d of %2$d…</string>
+    <string name="loading_file_progress">Loading %1$s (%2$d/%3$d)…</string>
+    <string name="logs_uploaded_to_cloud">Logs successfully uploaded to cloud storage</string>
+    <string name="logs_upload_failed">Failed to upload logs to cloud storage</string>
+    <string name="logs_upload_error">Error occurred while uploading logs to cloud storage</string>
+    <string name="csv_upload_failed">Failed to upload User Entries CSV to cloud storage</string>
+    <string name="csv_upload_error">Error occurred while uploading CSV to cloud</string>
+    <string name="export_options_updated">Export options updated</string>
+    <string name="no_settings_files_found">No settings files found in cloud storage</string>
+    <string name="clear_action">Clear Settings</string>
+    <string name="clear_cloud_settings">Clear Cloud Settings</string>
+    <string name="clear_cloud_settings_message">This will switch to local storage and clear authorization. Continue?</string>
+    <string name="uploading_to_cloud">Uploading to cloud...</string>
+    <string name="cloud_directory_path">Cloud directory: %1$s</string>
+    <string name="warning_wrong_directory_selected">Wrong Directory Selected</string>
+    <string name="warning_wrong_directory_message">You have selected the \"%1$s\" subdirectory instead of the root AAPS directory. Please select the parent AAPS directory. The app will automatically create and manage subdirectories.</string>
+
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <string name="google_drive_token_refresh_failed">Unable to refresh Google Drive access token</string>
+    <string name="google_drive_token_refresh_error">Unable to refresh Google Drive access token: %1$s</string>
+    <string name="google_drive_connection_test_failed">Google Drive connection test failed</string>
+    <string name="google_drive_connect_error">Unable to connect to Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Failed to list Google Drive folders</string>
+    <string name="google_drive_list_folders_error">Error listing folders: %1$s</string>
+    <string name="google_drive_upload_no_id">Upload succeeded but no id returned</string>
+    <string name="google_drive_upload_verify_failed">Upload verification failed</string>
+    <string name="google_drive_upload_failed">Upload failed: %1$s</string>
+    <string name="google_drive_upload_error">Error uploading file: %1$s</string>
+    <string name="google_drive_folder_access_error">Cannot create or access destination folder: %1$s</string>
+    <string name="google_drive_list_settings_failed">Failed to list settings files</string>
+    <string name="google_drive_list_settings_error">Error listing settings files: %1$s</string>
+    <string name="google_drive_download_failed">Failed to download file</string>
+    <string name="google_drive_download_error">Error downloading file: %1$s</string>
+    
+    <!-- Provider-agnostic cloud storage strings -->
+    <string name="cloud_authorization_title">%1$s Authorization</string>
+    <string name="cloud_authorization_message">%1$s authorization page has been opened in your browser.\n\nPlease complete the authorization, then return to this app.\n\nThis dialog will close automatically once authorization is completed.</string>
+    <string name="cloud_auth_start_failed">Failed to start authorization</string>
+    <string name="cloud_auth_cancelled">Authorization cancelled</string>
+    <string name="cloud_auth_timeout">Authorization timed out, please retry</string>
+    <string name="cloud_token_expired_or_invalid">Cloud storage authorization has expired or is invalid. Please re-authorize.</string>
+    
+    <!-- Authorization status strings -->
+    <string name="authorization_status">Authorization Status</string>
+    <string name="google_drive_authorized">Google Drive Authorized</string>
+    <string name="google_drive_reauth_required">Please clear settings and re-authorize Google Drive</string>
 </resources>

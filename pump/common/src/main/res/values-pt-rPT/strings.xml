@@ -5,6 +5,7 @@
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Não inicializado</string>
     <string name="pump_status_suspended">Suspenso</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basais</string>
     <string name="history_group_configuration">Configurações</string>

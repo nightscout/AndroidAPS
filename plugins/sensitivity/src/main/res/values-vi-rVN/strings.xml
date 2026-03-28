@@ -13,11 +13,11 @@
     <string name="absorption_max_time_summary">Thời gian (giờ) mà dự kiến toàn bộ carb từ bữa ăn sẽ được hấp thụ</string>
     <string name="openapsama_autosens_period">Khoảng thời gian cho autosens [giờ]</string>
     <string name="openapsama_autosens_period_summary">Số giờ trong quá khứ được dùng để phát hiện độ nhạy (không tính thời gian hấp thụ carb)</string>
-    <string name="openapsama_autosens_max_summary">Giá trị mặc định: 1,2\nĐây là giới hạn hệ số nhân cho autosens (và sắp tới là autotune) để đặt mức giới hạn tối đa 20%% đối với tỷ lệ autosens. Điều này sẽ quyết định autosens có thể điều chỉnh basal tối đa bao nhiêu, điều chỉnh ISF xuống thấp nhất bao nhiêu, và đặt mục tiêu BG thấp đến mức nào.</string>
-    <string name="openapsama_autosens_min_summary">Giá trị mặc định: 0,7\nĐây là giới hạn an toàn phía ngược lại của autosens, đặt mức trần cho việc autosens có thể điều chỉnh basal xuống thấp nhất bao nhiêu, cũng như điều chỉnh ISF và mục tiêu BG lên cao nhất bao nhiêu.</string>
+    <string name="openapsama_autosens_max_summary">Giá trị mặc định: 1,2\nĐây là giới hạn hệ số nhân cho autosens (và sắp tới là autotune) để đặt mức giới hạn tối đa 20%% đối với tỷ lệ autosens. Điều này sẽ quyết định autosens có thể điều chỉnh liều nền tối đa bao nhiêu, điều chỉnh ISF xuống thấp nhất bao nhiêu, và đặt mục tiêu BG thấp đến mức nào.</string>
+    <string name="openapsama_autosens_min_summary">Giá trị mặc định: 0,7\nĐây là giới hạn an toàn phía ngược lại của autosens, đặt mức trần cho việc autosens có thể điều chỉnh liều nền xuống thấp nhất bao nhiêu, cũng như điều chỉnh ISF và mục tiêu BG lên cao nhất bao nhiêu.</string>
     <string name="openapsama_autosens_max">Tỷ lệ autosens tối đa</string>
     <string name="openapsama_autosens_min">Tỷ lệ autosens tối thiểu</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Giá trị mặc định: 3,0 (AMA) hoặc 8,0 (SMB). Đây là cài đặt cho mức ảnh hưởng hấp thụ carb mặc định trong mỗi 5 phút. Giá trị mặc định là 3mg/dl/5 phút. Thông số này ảnh hưởng đến tốc độ giảm của COB, và lượng hấp thụ carb được giả định khi tính toán dự đoán đường huyết trong tương lai, trong trường hợp đường huyết giảm nhiều hơn dự kiến hoặc không tăng như mong đợi.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Giá trị mặc định: 3,0 (AMA) hoặc 8,0 (SMB). Đây là cài đặt cho mức ảnh hưởng hấp thụ carb mặc định trong mỗi 5 phút. Giá trị mặc định là 3mg/dl/5 phút. Thông số này ảnh hưởng đến tốc độ giảm của COB, và lượng hấp thụ carb được giả định khi tính toán dự đoán đường huyết trong dự kiến, trong trường hợp đường huyết giảm nhiều hơn dự kiến hoặc không tăng như mong đợi.</string>
     <string name="absorption_cutoff_title">Thời gian tối đa hấp thụ của bữa ăn [giờ]</string>
     <string name="absorption_cutoff_summary">Thời điểm mà mọi bữa ăn được coi là đã hấp thụ xong. Lượng carb còn lại sẽ bị cắt bỏ.</string>
 </resources>

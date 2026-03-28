@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Provider-agnostic cloud export/import strings -->
     <!--    ConfigBuilder-->
     <!--ImportExport-->
     <!--    Maintenance-->
     <!-- Maintenance -->
     <!-- Custom Watchface -->
     <!-- Maintenance -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

@@ -17,4 +17,12 @@
     <string name="night_tir">Nocny TIR</string>
     <string name="carbs_short" comment="max 6 characters">Węglowodany</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Ost. Poł.: %1$d m. temu</string>
+    <string name="short_status_alert">Alarm: %1$s</string>
+    <string name="short_status_last_bolus">Ost. Bolus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Tymcz.: %1$s</string>
+    <string name="short_status_extended">Ext: %1$s</string>
+    <string name="short_status_reservoir">Zbior.: %1$dU</string>
+    <string name="short_status_battery">Bat.: %1$d%%</string>
+    <string name="short_status_not_initialized">Pompa nie zainicjal.</string>
 </resources>

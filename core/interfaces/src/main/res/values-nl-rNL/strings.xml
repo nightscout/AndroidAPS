@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Toedienen van %1$.2fE</string>
+    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E toegediend</string>
     <string name="bolus_delivered_successfully">Bolus van %1$.2fE succesvol toegediend</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
@@ -12,6 +13,18 @@
     <string name="hoursago">%1$.1fu geleden</string>
     <string name="days_ago">%1$.1f dagen geleden</string>
     <string name="days_ago_round">%1$.0f dagen geleden</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s dag %2$s uur geleden</item>
+        <item quantity="other">%1$s dagen %2$s uur geleden</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s uur geleden</item>
+        <item quantity="other">%1$s uur geleden</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">een moment geleden</item>
+        <item quantity="other">%1$s minuten geleden</item>
+    </plurals>
     <string name="seconds_ago">seconden geleden</string>
     <string name="in_days">over %1$.0f dagen</string>
     <string name="in_days_round">binnen %1$.0f dagen</string>

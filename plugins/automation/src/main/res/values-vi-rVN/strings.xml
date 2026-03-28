@@ -17,14 +17,14 @@
     <string name="notsuspended">Không tạm dừng</string>
     <string name="suspendloopforXmin">Tạm dừng vòng lặp %1$d phút</string>
     <string name="notification_message">Thông báo: %1$s</string>
-    <string name="profilename">Chuyển Cấu hình sang</string>
-    <string name="changengetoprofilename">Chuyển Cấu hình sang %1$s</string>
+    <string name="profilename">Chuyển Hồ sơ sang</string>
+    <string name="changengetoprofilename">Chuyển Hồ sơ sang %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Kết nối gần nhất đến bơm</string>
     <string name="automation_trigger_pump_last_connection_description">Lần kết nối gần nhất với bơm [phút trước]</string>
     <string name="automation_trigger_pump_last_connection_compared">Lần kết nối gần nhất với bơm %1$s %2$s phút trước</string>
     <string name="alreadyset">Đã thiết lập</string>
-    <string name="profilepercentage">Tỷ lệ phần trăm Cấu hình</string>
-    <string name="startprofileforever">Bắt đầu Cấu hình %1$d%%</string>
+    <string name="profilepercentage">Tỷ lệ phần trăm Hồ sơ</string>
+    <string name="startprofileforever">Bắt đầu Hồ sơ %1$d%%</string>
     <string name="percent_u">Tỷ lệ [%]:</string>
     <string name="sendsmsactionlabel">Gửi SMS: %1$s</string>
     <string name="sendsmsactiondescription">Gửi SMS đến tất cả các số</string>
@@ -42,7 +42,7 @@
     <string name="notemptarget">Mục tiêu tạm thời không tồn tại</string>
     <string name="temptargetcomparedmgdl">Mục tiêu tạm thời %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Mục tiêu tạm thời %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Cấu hình pct %1$s %2$d</string>
+    <string name="percentagecompared">Hồ sơ pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Hoặc</string>
     <string name="xor">Hoặc loại trừ</string>
@@ -75,8 +75,8 @@
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">BG difference</string>
-    <string name="deltalabel_u">BG difference [%1$s]</string>
+    <string name="deltalabel">Chênh lệch đường huyết</string>
+    <string name="deltalabel_u">Chênh lệch đường huyết [%1$s]</string>
     <string name="currentlocation">Vị trí hiện tại</string>
     <string name="choose_from_map">Chọn từ bản đồ</string>
     <string name="location">Vị trí</string>
@@ -96,12 +96,12 @@
     <string name="triggerPodChangeDesc">Pod đã kích hoạt</string>
     <string name="triggerInsulinAgeLabel">Thời gian insulin</string>
     <string name="triggerInsulinAgeDesc">Insulin đã dùng %1$s được %2$.1f giờ</string>
-    <string name="triggerPumpBatteryAgeLabel">Pump battery age</string>
-    <string name="triggerPumpBatteryAgeDesc">Pump battery age %1$s %2$.1f hour</string>
+    <string name="triggerPumpBatteryAgeLabel">Pin của Bơm</string>
+    <string name="triggerPumpBatteryAgeDesc">Pin của bơm đã dùng %1$s %2$.1f giờ</string>
     <string name="triggerReservoirLevelLabel">Reservoir level</string>
     <string name="triggerReservoirLevelDesc">Reservoir level %1$s %2$.0f</string>
-    <string name="triggerPumpBatteryLevelLabel">Pump battery level</string>
-    <string name="triggerPumpBatteryLevelDesc">Mức pin của pump %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Mức pin của Bơm</string>
+    <string name="triggerPumpBatteryLevelDesc">Mức pin của Bơm %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Thời gian định kỳ</string>
@@ -130,10 +130,10 @@
     <string name="time_to_bolus">Đến giờ tiêm bolus! \nHãy chạy Bolus wizard và thực hiện tính toán lại.</string>
     <string name="error_setting_reminder">Lỗi khi cài đặt báo thức sắp tới</string>
     <!--    Autotune-->
-    <string name="autotune_profile_name">Autotune profile %1$s</string>
+    <string name="autotune_profile_name">Hồ sơ Autotune %1$s</string>
     <string name="autotune_run">Chạy Autotune</string>
-    <string name="autotune_run_without_autoswitch">Autotune đã chạy mà không có chuyển đổi Cấu hình</string>
-    <string name="autotune_run_with_autoswitch">Autotune đã chạy và Cấu hình được tự động chuyển đổi</string>
+    <string name="autotune_run_without_autoswitch">Autotune đã chạy mà không có chuyển đổi Hồ sơ</string>
+    <string name="autotune_run_with_autoswitch">Autotune đã chạy và Hồ sơ được tự động chuyển đổi</string>
     <string name="autotune_run_with_error">Lỗi trong lần chạy Autotune gần nhất</string>
     <string name="autotune_run_cancelled">Phát hiện một lần chạy Autotune khác, tiến trình đã bị hủy</string>
     <!--    Steps count-->

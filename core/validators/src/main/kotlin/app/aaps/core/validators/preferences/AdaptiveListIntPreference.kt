@@ -30,6 +30,27 @@ open class AdaptiveListIntPreference(
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
         intKey?.let { key = it.key }
+
+        // Migrate old Int values to String for ListPreference compatibility
+        // AdaptiveListIntPreference extends ListPreference which stores values as String,
+        // but old code may have stored IntKey values as actual Integers.
+        // This causes ClassCastException when ListPreference tries to read the value.
+        intKey?.let { prefKey ->
+            val sp = android.preference.PreferenceManager.getDefaultSharedPreferences(ctx)
+            try {
+                val oldValue = sp.getInt(prefKey.key, -1)
+                if (oldValue != -1) {
+                    // Migrate: remove Int value, write as String
+                    sp.edit()
+                        .remove(prefKey.key)
+                        .putString(prefKey.key, oldValue.toString())
+                        .apply()
+                }
+            } catch (e: ClassCastException) {
+                // Already a String, no migration needed
+            }
+        }
+
         title?.let { this.title = context.getString(it) }
         dialogMessage?.let { this.dialogMessage = context.getString(it) }
         dialogTitle?.let { this.dialogTitle = context.getString(it) }

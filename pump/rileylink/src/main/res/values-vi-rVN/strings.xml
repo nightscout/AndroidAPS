@@ -7,7 +7,7 @@
     <string name="pump_status_active">Kích hoạt</string>
     <string name="pump_status_error_comm">Lỗi giao tiếp</string>
     <string name="pump_status_timeout_comm">Hết thời gian giao tiếp</string>
-    <string name="pump_status_pump_unreachable">Không thể kết nối với Pump</string>
+    <string name="pump_status_pump_unreachable">Không thể kết nối với Bơm</string>
     <string name="pump_status_invalid_config">Cấu hình không hợp lệ</string>
     <string name="medtronic_pump_encoding_4b6b_local">Mã hóa 4b6b phần mềm</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Mã hóa 4b6b phần cứng</string>
@@ -31,7 +31,7 @@
     <string name="rileylink_settings_tab1">Cài đặt</string>
     <string name="rileylink_settings_tab2">Lịch sử</string>
     <string name="rileylink_status">Trạng thái RileyLink</string>
-    <string name="medtronic_pump_status">Trạng thái Pump</string>
+    <string name="medtronic_pump_status">Trạng thái Bơm</string>
     <string name="title_activity_rileylink_settings">Cài đặt RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Địa chỉ:</string>
@@ -49,8 +49,8 @@
     <string name="rileylink_firmware_version">Phiên bản phần mềm:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
-    <string name="rileylink_pump_serial_number">Số serial Pump:</string>
-    <string name="rileylink_pump_frequency">Tần số Pump:</string>
+    <string name="rileylink_pump_serial_number">Số serial Bơm:</string>
+    <string name="rileylink_pump_frequency">Tần số Bơm:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Đang khởi tạo Bluetooth…</string>
@@ -59,8 +59,8 @@
     <string name="rileylink_state_not_started">Chưa bắt đầu</string>
     <string name="rileylink_state_rl_init">Đang khởi tạo RileyLink…</string>
     <string name="rileylink_state_rl_error">RileyLink lỗi</string>
-    <string name="rileylink_state_pc_tune_up">Đang hiệu chỉnh RileyLink và Pump</string>
-    <string name="rileylink_state_pc_error">Gặp sự cố khi kết nối với Pump</string>
+    <string name="rileylink_state_pc_tune_up">Đang hiệu chỉnh RileyLink và Bơm</string>
+    <string name="rileylink_state_pc_error">Gặp sự cố khi kết nối với Bơm</string>
     <string name="rileylink_state_connected">Đã kết nối</string>
     <string name="rileylink_state_rl_ready">RileyLink sẵn sàng</string>
     <!-- RL Errors -->
@@ -69,10 +69,10 @@
     <string name="rileylink_error_bt_disabled">Bluetooth chưa được bật</string>
     <string name="rileylink_error_no_bt_adapter">Không có bộ điều hợp Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Hiệu chỉnh thất bại</string>
-    <string name="rileylink_error_pump_unreachable">Không thể kết nối với Pump</string>
+    <string name="rileylink_error_pump_unreachable">Không thể kết nối với Bơm</string>
     <string name="rileylink_error_pod_unreachable">Không thể kết nối với Pod</string>
     <!-- RileyLink - Common -->
-    <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
+    <string name="rileylink_target_device_medtronic">Bơm Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Hiển thị mức pin được báo cáo bởi OrangeLink/EmaLink/DiaLink</string>

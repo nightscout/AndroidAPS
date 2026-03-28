@@ -31,7 +31,7 @@
     <string name="commanderror">Chyba príkazu</string>
     <string name="speederror">Chyba rýchlosti</string>
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
-    <string name="boluserrorcode">Požadované: %1$.2fJI Podané: %2$.2fJI Chyba: %3$s</string>
+    <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
     <string name="bolusspeed">Rýchlosť bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="diaconn_g8_bluetooth_status">Stav Bluetooth</string>
@@ -73,9 +73,9 @@
     <string name="diaconn_g8_logsyncinprogress">Prebieha synchronizácia logov</string>
     <string name="diaconn_g8_loginsulinshorage">Nedostatok inzulínu</string>
     <string name="diaconn_g8_logbatteryshorage">Slabá batéria</string>
-    <string name="diaconn_g8_logneedleprime">Plnenie ihly :%1$.2fJI</string>
-    <string name="diaconn_g8_loginjectorprime">Plnenie kanyly:%1$.2fJI</string>
-    <string name="diaconn_g8_logtubeprime">Plnenie hadičky :%1$.2fJI</string>
+    <string name="diaconn_g8_logneedleprime">Plnenie ihly :%1$.2fU</string>
+    <string name="diaconn_g8_loginjectorprime">Plnenie kanyly:%1$.2fU</string>
+    <string name="diaconn_g8_logtubeprime">Plnenie hadičky :%1$.2fU</string>
     <string name="diaconn_g8_resetfactoryreset">Resetovať po obnovení na továrenské nastavenia</string>
     <string name="diaconn_g8_resetemergencyoff">Resetovať po núdzovom vypnutí</string>
     <string name="diaconn_g8_resetbatteryreplacement">Resetovať po výmene batérie</string>

@@ -67,6 +67,8 @@
     <string name="smscommunicator_suspend_reply_with_code">要暫停循環 %1$d 分鐘請回覆代碼 %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">要恢復循環請回覆代碼 %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">要停用循環請回覆代碼 %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">To restart AAPS reply with code %1$s</string>
+    <string name="smscommunicator_restarting">AAPS 正在重新啟動</string>
     <string name="smscommunicator_tempbasal_set">臨時基礎速率 %1$.2fU/h 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_extended_set">延長注射 %1$.2fU 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_carbs_set">碳水化合物 %1$d g 已成功輸入</string>
@@ -297,7 +299,7 @@
     <string name="buttonson_description">按鈕總是顯示在螢幕底部</string>
     <string name="largedisplay_description">大顯示</string>
     <string name="skin">外觀</string>
-    <string name="cannula_usage">使用情況：</string>
+    <string name="cannula_usage">使用量：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>

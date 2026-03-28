@@ -44,6 +44,7 @@
     <string name="data_choices">Valg Af Data</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Anmod</string>
     <string name="apsmode_title">APS Tilstand</string>
     <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
@@ -154,4 +155,9 @@
     <string name="metadata_label_encryption">Filkryptering</string>
     <string name="metadata_format_new">Nyt krypteret format</string>
     <string name="metadata_format_other">Ukendt eksportformat</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>
