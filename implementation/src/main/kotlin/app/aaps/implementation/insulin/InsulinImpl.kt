@@ -137,7 +137,6 @@ class InsulinImpl @Inject constructor(
         )
         newICfg.insulinLabel = fullName
         newICfg.insulinNickname = nickname
-        newICfg.insulinTemplate = template.value
         val newInsulin = deepClone(newICfg)
         insulins.add(newInsulin)
         currentInsulinIndex = insulins.size - 1
@@ -146,7 +145,6 @@ class InsulinImpl @Inject constructor(
         }
 
         currentInsulin = deepClone(newInsulin)
-        //currentInsulin.insulinTemplate = 0
         storeSettings()
         return newInsulin
     }
@@ -234,7 +232,7 @@ class InsulinImpl @Inject constructor(
 
         val insulinArray = configuration["insulin"] as? JsonArray
         if (insulinArray.isNullOrEmpty()) {
-            addNewInsulin(InsulinType.OREF_RAPID_ACTING.getICfg(rh).also { it.insulinTemplate = InsulinType.OREF_RAPID_ACTING.ordinal })
+            addNewInsulin(InsulinType.OREF_RAPID_ACTING.getICfg(rh))
             return
         }
 
