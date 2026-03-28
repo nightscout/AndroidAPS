@@ -86,7 +86,7 @@
 | 6 | ExtendedBolusDialogScreen | ✅ Done | `ui/.../extendedBolusDialog/` |
 | 7 | CareDialogScreen | ✅ Done | `ui/.../careDialog/` |
 | 8 | CarbsDialogScreen | ✅ Done | `ui/.../carbsDialog/` |
-| 9 | ProfileActivationScreen | ⬜ (Play button) | `ui/.../profileManagement/` |
+| 9 | ProfileActivationScreen | ✅ Done | `ui/.../profileManagement/` |
 | 10 | ProfileHelperScreen | ⬜ (Clone button) | `ui/.../profileHelper/` |
 | 11 | InsulinManagementScreen | ⬜ (Save icon) | `ui/.../insulinManagement/` |
 | 12 | DanaUserOptionsScreen | ⬜ (Save button) | `pump/dana/.../compose/` |

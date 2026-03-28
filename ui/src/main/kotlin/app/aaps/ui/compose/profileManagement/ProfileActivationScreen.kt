@@ -1,5 +1,9 @@
 package app.aaps.ui.compose.profileManagement
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,27 +12,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -45,7 +51,13 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.DateTimeSection
+import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.LocalDateUtil
+import androidx.compose.runtime.saveable.rememberSaveable
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
@@ -206,13 +218,23 @@ fun ProfileActivationScreen(
         topBar = {
             AapsTopAppBar(
                 title = {
-                    Column {
-                        Text(stringResource(R.string.activate_label))
-                        Text(
-                            text = profileName,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = ElementType.PROFILE_MANAGEMENT_PLAY.icon(),
+                            contentDescription = null,
+                            tint = ElementType.PROFILE_MANAGEMENT_PLAY.color()
                         )
+                        Column {
+                            Text(stringResource(R.string.activate_label))
+                            Text(
+                                text = profileName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 },
                 navigationIcon = {
@@ -223,191 +245,187 @@ fun ProfileActivationScreen(
                         )
                     }
                 },
-                actions = {
-                    Button(
-                        onClick = { showConfirmDialog = true },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.PlayArrow,
-                            contentDescription = null,
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                        Text(stringResource(R.string.activate_label))
-                    }
-                }
+                actions = {}
             )
+        },
+        bottomBar = {
+            Button(
+                onClick = { showConfirmDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.activate_label))
+            }
         }
     ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .clearFocusOnTap(focusManager)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Date/Time selection row
-            Row(
+            // Single card with all inputs
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                // Date field
-                OutlinedTextField(
-                    value = dateUtil.dateString(eventTime),
-                    onValueChange = {},
-                    readOnly = true,
-                    enabled = false,
-                    label = { Text(stringResource(app.aaps.core.ui.R.string.date)) },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.DateRange,
-                            contentDescription = null,
-                            tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                        disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { showDatePicker = true },
-                    singleLine = true
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Percentage
+                    NumberInputRow(
+                        labelResId = R.string.percentage_label,
+                        value = percentage,
+                        onValueChange = { percentage = it },
+                        valueRange = Constants.CPP_MIN_PERCENTAGE.toDouble()..Constants.CPP_MAX_PERCENTAGE.toDouble(),
+                        step = 5.0,
+                        unitLabelResId = app.aaps.core.keys.R.string.units_percent,
+                        modifier = itemModifier
+                    )
 
-                // Time field
-                OutlinedTextField(
-                    value = dateUtil.timeString(eventTime),
-                    onValueChange = {},
-                    readOnly = true,
-                    enabled = false,
-                    label = { Text(stringResource(app.aaps.core.ui.R.string.time)) },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Schedule,
-                            contentDescription = null,
-                            tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                        disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { showTimePicker = true },
-                    singleLine = true
-                )
-            }
+                    // Duration
+                    NumberInputRow(
+                        labelResId = app.aaps.core.ui.R.string.duration,
+                        value = duration,
+                        onValueChange = { duration = it },
+                        valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
+                        step = 10.0,
+                        unitLabelResId = app.aaps.core.keys.R.string.units_min,
+                        modifier = itemModifier
+                    )
 
-            // Duration input - automatically formats as "Xh Ym" when >= 60
-            NumberInputRow(
-                labelResId = app.aaps.core.ui.R.string.duration,
-                value = duration,
-                onValueChange = { duration = it },
-                valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
-                step = 10.0,
-                controlPoints = listOf(
-                    0.0 to 0.0,             // 0% slider -> 0h
-                    0.25 to 6.0 * 60.0,     // 25% slider -> 6h
-                    0.5 to 24.0 * 60.0,     // 50% slider -> 24h
-                    0.75 to 48.0 * 60.0,    // 75% slider -> 48h
-                    1.0 to Constants.MAX_PROFILE_SWITCH_DURATION   // 100% slider -> 168h
-                ),
-                unitLabelResId = app.aaps.core.keys.R.string.units_min
-            )
+                    // Timeshift (collapsible)
+                    var timeshiftExpanded by rememberSaveable { mutableStateOf(false) }
+                    Column(modifier = itemModifier) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.timeshift_label) + ": ",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = "${timeshift.toInt()}h",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = if (timeshift.toInt() != 0) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            if (!timeshiftExpanded) {
+                                FilledTonalButton(onClick = { timeshiftExpanded = true }) {
+                                    Text(stringResource(app.aaps.core.ui.R.string.change))
+                                }
+                            }
+                        }
+                        AnimatedVisibility(
+                            visible = timeshiftExpanded,
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
+                        ) {
+                            NumberInputRow(
+                                labelResId = R.string.timeshift_label,
+                                value = timeshift,
+                                onValueChange = { timeshift = it },
+                                valueRange = Constants.CPP_MIN_TIMESHIFT.toDouble()..Constants.CPP_MAX_TIMESHIFT.toDouble(),
+                                step = 1.0,
+                                unitLabelResId = app.aaps.core.keys.R.string.units_hours
+                            )
+                        }
+                    }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    // Reuse button
+                    if (hasReuseValues && (currentPercentage != 100 || currentTimeshiftHours != 0)) {
+                        FilledTonalButton(
+                            onClick = {
+                                percentage = currentPercentage.toDouble()
+                                timeshift = currentTimeshiftHours.toDouble()
+                            },
+                            modifier = itemModifier
+                        ) {
+                            Text(rh.gs(R.string.reuse_profile_pct_hours, currentPercentage, currentTimeshiftHours))
+                        }
+                    }
 
-            // Percentage input
-            NumberInputRow(
-                labelResId = R.string.percentage_label,
-                value = percentage,
-                onValueChange = { percentage = it },
-                valueRange = Constants.CPP_MIN_PERCENTAGE.toDouble()..Constants.CPP_MAX_PERCENTAGE.toDouble(),
-                step = 5.0,
-                unitLabelResId = app.aaps.core.keys.R.string.units_percent
-            )
+                    // Temporary Target switch (only when duration > 0 and percentage < 100)
+                    if (showTTOption) {
+                        Row(
+                            modifier = itemModifier
+                                .clickable { withTT = !withTT },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = stringResource(app.aaps.core.ui.R.string.temporary_target),
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Text(
+                                    text = stringResource(app.aaps.core.ui.R.string.activity),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Switch(
+                                checked = withTT,
+                                onCheckedChange = { withTT = it }
+                            )
+                        }
+                    }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    // Time (collapsible "Now" pattern)
+                    EventTimeRow(
+                        timeChanged = eventTimeChanged,
+                        displayText = "${dateUtil.dateString(eventTime)} ${dateUtil.timeString(eventTime)}",
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateUtil.dateString(eventTime),
+                                timeString = dateUtil.timeString(eventTime),
+                                eventTimeChanged = eventTimeChanged,
+                                onDateClick = { showDatePicker = true },
+                                onTimeClick = { showTimePicker = true }
+                            )
+                        },
+                        modifier = itemModifier
+                    )
 
-            // Timeshift input
-            NumberInputRow(
-                labelResId = R.string.timeshift_label,
-                value = timeshift,
-                onValueChange = { timeshift = it },
-                valueRange = Constants.CPP_MIN_TIMESHIFT.toDouble()..Constants.CPP_MAX_TIMESHIFT.toDouble(),
-                step = 1.0,
-                unitLabelResId = app.aaps.core.keys.R.string.units_hours
-            )
-
-            // Reuse button
-            if (hasReuseValues && (currentPercentage != 100 || currentTimeshiftHours != 0)) {
-                Spacer(modifier = Modifier.height(8.dp))
-                FilledTonalButton(
-                    onClick = {
-                        percentage = currentPercentage.toDouble()
-                        timeshift = currentTimeshiftHours.toDouble()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(rh.gs(R.string.reuse_profile_pct_hours, currentPercentage, currentTimeshiftHours))
-                }
-            }
-
-            // Temporary Target switch (only when duration > 0 and percentage < 100)
-            if (showTTOption) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(app.aaps.core.ui.R.string.temporary_target),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = stringResource(app.aaps.core.ui.R.string.activity),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    // Notes
+                    if (showNotesField) {
+                        TextField(
+                            value = notes,
+                            onValueChange = { notes = it },
+                            label = { Text(stringResource(app.aaps.core.ui.R.string.notes_label)) },
+                            modifier = itemModifier,
+                            singleLine = false,
+                            maxLines = 3
                         )
                     }
-                    Switch(
-                        checked = withTT,
-                        onCheckedChange = { withTT = it }
-                    )
                 }
             }
 
-            // Notes (conditional based on BooleanKey.OverviewShowNotesInDialogs)
-            if (showNotesField) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                OutlinedTextField(
-                    value = notes,
-                    onValueChange = { notes = it },
-                    label = { Text(stringResource(app.aaps.core.ui.R.string.notes_label)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = false,
-                    minLines = 2,
-                    maxLines = 4
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
