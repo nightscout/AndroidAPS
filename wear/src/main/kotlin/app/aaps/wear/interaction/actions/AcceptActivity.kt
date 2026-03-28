@@ -80,11 +80,15 @@ class AcceptActivity : DaggerAppCompatActivity() {
         val profilePercentage = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_PROFILE_PERCENTAGE)) it.getInt(DataLayerListenerServiceWear.KEY_PROFILE_PERCENTAGE) else null }
         val profileTimeshift = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_PROFILE_TIMESHIFT)) it.getInt(DataLayerListenerServiceWear.KEY_PROFILE_TIMESHIFT) else null }
         val profileDuration = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_PROFILE_DURATION)) it.getInt(DataLayerListenerServiceWear.KEY_PROFILE_DURATION) else null }
+        val loopStateTitle = extras?.getString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TITLE)
+        val loopStateDuration = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_LOOP_STATE_DURATION_MINUTES)) it.getInt(DataLayerListenerServiceWear.KEY_LOOP_STATE_DURATION_MINUTES) else null }
+        val loopStateType = extras?.getString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TYPE)
 
         val hasTempTargetData = isCancelTempTarget || tempTargetDuration != null
         val hasProfileData = profileName != null
+        val hasLoopStateData = loopStateTitle != null
 
-        if (message.isEmpty() && insulin == null && carbs == null && !hasTempTargetData && !hasProfileData) {
+        if (message.isEmpty() && insulin == null && carbs == null && !hasTempTargetData && !hasProfileData && !hasLoopStateData) {
             finish()
             return
         }
@@ -93,7 +97,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
         vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 100, 50, 100, 50), -1))
 
         val hasStructuredData = insulin != null || carbs != null
-        val hasAnyStructuredSummary = hasStructuredData || hasTempTargetData || hasProfileData
+        val hasAnyStructuredSummary = hasStructuredData || hasTempTargetData || hasProfileData || hasLoopStateData
         val fmt = DecimalFormat("#0.0")
         val ttFmt = if (tempTargetIsMGDL) DecimalFormat("0") else DecimalFormat("#0.0")
         val ttUnit = if (tempTargetIsMGDL) "mg/dL" else "mmol/L"
@@ -279,6 +283,52 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                             val durText = if (profileDuration == 0) "\u221E" else formatDurationMinutes(profileDuration)
                                             Text(
                                                 text = stringResource(R.string.action_confirm_duration, durText),
+                                                color = WearSecondaryText,
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Bold,
+                                            )
+                                        }
+                                    }
+                                } else if (hasLoopStateData) {
+                                    // LoopState structured summary
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(horizontal = 24.dp, vertical = 16.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center,
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.confirm),
+                                            color = Color.White,
+                                            fontSize = 18.sp,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                        Spacer(Modifier.height(8.dp))
+                                        if (loopStateTitle != null) {
+                                            val stateColor = when (loopStateType) {
+                                                "LOOP_CLOSED"       -> LoopClosedColor
+                                                "LOOP_OPEN"         -> LoopOpenColor
+                                                "LOOP_LGS"          -> LoopLgsColor
+                                                "LOOP_USER_SUSPEND" -> LoopSuspendedColor
+                                                "LOOP_DISABLE"      -> LoopDisabledColor
+                                                "PUMP_DISCONNECT"   -> LoopDisconnectedColor
+                                                "SUPERBOLUS"        -> LoopSuperbolusColor
+                                                "LOOP_RESUME",
+                                                "PUMP_RECONNECT"    -> LoopClosedColor
+                                                else                -> ConfirmGreen
+                                            }
+                                            Text(
+                                                text = loopStateTitle,
+                                                color = stateColor,
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                textAlign = TextAlign.Center,
+                                            )
+                                        }
+                                        if (loopStateDuration != null) {
+                                            Text(
+                                                text = stringResource(R.string.action_confirm_duration, formatDurationMinutes(loopStateDuration)),
                                                 color = WearSecondaryText,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Bold,

@@ -15,7 +15,6 @@ import app.aaps.wear.interaction.actions.ProfileSwitchActivity
 import app.aaps.wear.interaction.actions.QuickSnoozeActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
-import app.aaps.wear.interaction.actions.ViewSelectorActivity
 import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.actions.WizardResultActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
@@ -38,7 +37,6 @@ abstract class WearActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributesBackgroundActionActivity(): BackgroundActionActivity
 
-    @ContributesAndroidInjector abstract fun contributesViewSelectorActivity(): ViewSelectorActivity
     @ContributesAndroidInjector abstract fun contributesAcceptActivity(): AcceptActivity
     @ContributesAndroidInjector abstract fun contributesBolusActivity(): BolusActivity
     @ContributesAndroidInjector abstract fun contributesCarbActivity(): CarbActivity

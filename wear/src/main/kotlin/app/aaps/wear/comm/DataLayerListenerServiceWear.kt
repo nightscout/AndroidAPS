@@ -302,6 +302,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val KEY_PROFILE_PERCENTAGE = "profilePercentage"
         const val KEY_PROFILE_TIMESHIFT = "profileTimeshift"
         const val KEY_PROFILE_DURATION = "profileDuration"
+        const val KEY_LOOP_STATE_TITLE = "loopStateTitle"
+        const val KEY_LOOP_STATE_DURATION_MINUTES = "loopStateDurationMinutes"
+        const val KEY_LOOP_STATE_TYPE = "loopStateType"
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2

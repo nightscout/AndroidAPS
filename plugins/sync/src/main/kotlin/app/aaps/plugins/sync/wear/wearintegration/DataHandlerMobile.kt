@@ -490,6 +490,8 @@ class DataHandlerMobile @Inject constructor(
             RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
             RM.Mode.DISABLED_LOOP     -> LoopStatusData.LoopMode.DISABLED
             RM.Mode.SUSPENDED_BY_USER -> LoopStatusData.LoopMode.SUSPENDED
+            RM.Mode.SUSPENDED_BY_PUMP -> LoopStatusData.LoopMode.PUMP_SUSPENDED
+            RM.Mode.SUSPENDED_BY_DST  -> LoopStatusData.LoopMode.DST_SUSPENDED
             RM.Mode.DISCONNECTED_PUMP -> LoopStatusData.LoopMode.DISCONNECTED
             RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
             else                      -> LoopStatusData.LoopMode.UNKNOWN
@@ -1173,7 +1175,6 @@ class DataHandlerMobile @Inject constructor(
 
         val pump = activePlugin.activePump
         val pumpDescription = pump.pumpDescription
-        if (loop.runningMode.isSuspended()) return
         if (!runBlocking { profileFunction.isProfileValid("WearDataHandler_LoopChangeState") }) return
 
         val disconnectDurs = arrayListOf<Int>()
@@ -1192,10 +1193,16 @@ class DataHandlerMobile @Inject constructor(
                 RM.Mode.SUSPENDED_BY_PUMP -> null
                 RM.Mode.SUSPENDED_BY_USER -> AvailableLoopState(AvailableLoopState.LoopState.LOOP_USER_SUSPEND, listOf(1, 2, 3, 10).map { it * 60 })
                 RM.Mode.SUSPENDED_BY_DST  -> null
-                RM.Mode.RESUME            -> AvailableLoopState(AvailableLoopState.LoopState.LOOP_RESUME)
+                RM.Mode.RESUME            -> if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP)
+                    AvailableLoopState(AvailableLoopState.LoopState.PUMP_RECONNECT)
+                else
+                    AvailableLoopState(AvailableLoopState.LoopState.LOOP_RESUME)
             }
 
-        val states = loop.allowedNextModes().mapNotNull { mapMode(it) }
+        val allStates = loop.allowedNextModes().mapNotNull { mapMode(it) }
+        val states = if (allStates.any { it.state == AvailableLoopState.LoopState.LOOP_USER_SUSPEND })
+            allStates.filter { it.state != AvailableLoopState.LoopState.LOOP_DISABLE }
+        else allStates
         lastAuthorizedLoopStateChangeTS = System.currentTimeMillis()
         lastLoopStates = states
         rxBus.send(
@@ -1209,23 +1216,37 @@ class DataHandlerMobile @Inject constructor(
         if (action.timeStamp != lastAuthorizedLoopStateChangeTS) return sendError(rh.gs(R.string.wear_action_loop_state_unauthorized))
         val newState = lastLoopStates?.elementAtOrNull(action.index) ?: return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
         val nDuration = action.duration ?: 0
+        val loopStateName = when (newState.state) {
+            AvailableLoopState.LoopState.LOOP_CLOSED       -> rh.gs(R.string.wear_action_loop_state_now_closed)
+            AvailableLoopState.LoopState.LOOP_LGS          -> rh.gs(R.string.wear_action_loop_state_now_lgs)
+            AvailableLoopState.LoopState.LOOP_OPEN         -> rh.gs(R.string.wear_action_loop_state_now_open)
+            AvailableLoopState.LoopState.LOOP_RESUME       -> rh.gs(R.string.wear_action_loop_state_now_resumed)
+            AvailableLoopState.LoopState.PUMP_RECONNECT    -> rh.gs(R.string.wear_action_loop_state_now_pump_reconnected)
+            AvailableLoopState.LoopState.LOOP_DISABLE      -> rh.gs(R.string.wear_action_loop_state_now_disabled)
+            AvailableLoopState.LoopState.SUPERBOLUS        -> rh.gs(R.string.wear_action_loop_state_now_superbolus)
+            AvailableLoopState.LoopState.LOOP_UNKNOWN      -> rh.gs(R.string.wear_action_loop_state_now_invalid)
+            AvailableLoopState.LoopState.LOOP_USER_SUSPEND -> rh.gs(R.string.wear_action_loop_state_now_suspended)
+            AvailableLoopState.LoopState.LOOP_PUMP_SUSPEND -> rh.gs(R.string.wear_action_loop_state_now_pump_suspended)
+            AvailableLoopState.LoopState.PUMP_DISCONNECT   -> rh.gs(R.string.wear_action_loop_state_now_pump_disconnected)
+        }
+        val loopStateDuration = when (newState.state) {
+            AvailableLoopState.LoopState.LOOP_USER_SUSPEND,
+            AvailableLoopState.LoopState.PUMP_DISCONNECT   -> if (nDuration > 0) nDuration else null
+            else                                           -> null
+        }
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(R.string.wear_action_loop_state_title),
                     when (newState.state) {
-                        AvailableLoopState.LoopState.LOOP_CLOSED       -> rh.gs(R.string.wear_action_loop_state_now_closed)
-                        AvailableLoopState.LoopState.LOOP_LGS          -> rh.gs(R.string.wear_action_loop_state_now_lgs)
-                        AvailableLoopState.LoopState.LOOP_OPEN         -> rh.gs(R.string.wear_action_loop_state_now_open)
-                        AvailableLoopState.LoopState.LOOP_RESUME       -> rh.gs(R.string.wear_action_loop_state_now_resumed)
-                        AvailableLoopState.LoopState.LOOP_DISABLE      -> rh.gs(R.string.wear_action_loop_state_now_disabled)
-                        AvailableLoopState.LoopState.SUPERBOLUS        -> rh.gs(R.string.wear_action_loop_state_now_superbolus)
-                        AvailableLoopState.LoopState.LOOP_UNKNOWN      -> rh.gs(R.string.wear_action_loop_state_now_invalid)
-                        AvailableLoopState.LoopState.LOOP_USER_SUSPEND -> rh.gs(R.string.wear_action_loop_state_changed_with_duration, rh.gs(R.string.wear_action_loop_state_now_suspended), nDuration)
-                        AvailableLoopState.LoopState.LOOP_PUMP_SUSPEND -> rh.gs(R.string.wear_action_loop_state_now_pump_suspended)
-                        AvailableLoopState.LoopState.PUMP_DISCONNECT   -> rh.gs(R.string.wear_action_loop_state_changed_with_duration, rh.gs(R.string.wear_action_loop_state_now_pump_disconnected), nDuration)
+                        AvailableLoopState.LoopState.LOOP_USER_SUSPEND -> rh.gs(R.string.wear_action_loop_state_changed_with_duration, loopStateName, nDuration)
+                        AvailableLoopState.LoopState.PUMP_DISCONNECT   -> rh.gs(R.string.wear_action_loop_state_changed_with_duration, loopStateName, nDuration)
+                        else                                           -> loopStateName
                     },
-                    EventData.LoopStateConfirmed(action.timeStamp, action.index, action.duration)
+                    EventData.LoopStateConfirmed(action.timeStamp, action.index, action.duration),
+                    loopStateTitle = loopStateName,
+                    loopStateDurationMinutes = loopStateDuration,
+                    loopStateType = newState.state.name,
                 )
             )
         )
@@ -1253,7 +1274,8 @@ class DataHandlerMobile @Inject constructor(
             AvailableLoopState.LoopState.LOOP_DISABLE                                                                                          ->
                 loop.handleRunningModeChange(newRM = RM.Mode.DISABLED_LOOP, action = Action.LOOP_DISABLED, source = Sources.Wear, profile = profile)
 
-            AvailableLoopState.LoopState.LOOP_RESUME                                                                                           -> {
+            AvailableLoopState.LoopState.LOOP_RESUME,
+            AvailableLoopState.LoopState.PUMP_RECONNECT                                                                                        -> {
                 loop.handleRunningModeChange(newRM = RM.Mode.RESUME, action = Action.LOOP_RESUME, source = Sources.Wear, profile = profile)
             }
 
@@ -1278,6 +1300,7 @@ class DataHandlerMobile @Inject constructor(
                 return sendError(rh.gs(R.string.wear_action_loop_state_invalid))
             }
         }
+        handleAvailableLoopStates()
     }
 
     private fun sendQuickWizardToWear() {
