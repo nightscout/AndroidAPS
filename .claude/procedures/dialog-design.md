@@ -80,11 +80,11 @@
 |---|---|---|---|
 | 1 | WizardDialogScreen | ✅ Done | `ui/.../wizardDialog/` |
 | 2 | TreatmentDialogScreen | ✅ Done | `ui/.../treatmentDialog/` |
-| 3 | TempBasalDialogScreen | ⬜ | `ui/.../tempBasalDialog/` |
+| 3 | TempBasalDialogScreen | ✅ Done | `ui/.../tempBasalDialog/` |
 | 4 | InsulinDialogScreen | ✅ Done | `ui/.../insulinDialog/` |
-| 5 | FillDialogScreen | ⬜ | `ui/.../fillDialog/` |
-| 6 | ExtendedBolusDialogScreen | ⬜ | `ui/.../extendedBolusDialog/` |
-| 7 | CareDialogScreen | ⬜ | `ui/.../careDialog/` |
+| 5 | FillDialogScreen | ✅ Done | `ui/.../fillDialog/` |
+| 6 | ExtendedBolusDialogScreen | ✅ Done | `ui/.../extendedBolusDialog/` |
+| 7 | CareDialogScreen | ✅ Done | `ui/.../careDialog/` |
 | 8 | CarbsDialogScreen | ✅ Done | `ui/.../carbsDialog/` |
 | 9 | ProfileActivationScreen | ⬜ (Play button) | `ui/.../profileManagement/` |
 | 10 | ProfileHelperScreen | ⬜ (Clone button) | `ui/.../profileHelper/` |

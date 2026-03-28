@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -91,6 +92,10 @@ fun InsulinDialogScreen(
     val iob by iobUiState.collectAsStateWithLifecycle()
     val cob by cobUiState.collectAsStateWithLifecycle()
 
+    // Dialog states
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+
     // Observe side effects
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
@@ -100,15 +105,11 @@ fun InsulinDialogScreen(
                 }
 
                 is InsulinDialogViewModel.SideEffect.ShowNoActionDialog -> {
-                    // handled via showNoAction local state
+                    showNoAction = true
                 }
             }
         }
     }
-
-    // Dialog states
-    var showConfirmation by rememberSaveable { mutableStateOf(false) }
-    var showNoAction by rememberSaveable { mutableStateOf(false) }
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     var showTimePicker by rememberSaveable { mutableStateOf(false) }
     var showButtonSettings by rememberSaveable { mutableStateOf(false) }
@@ -508,66 +509,3 @@ private fun InsulinButtonSettingsSheet(
     }
 }
 
-@Composable
-private fun DateTimeSection(
-    dateString: String,
-    timeString: String,
-    eventTimeChanged: Boolean,
-    onDateClick: () -> Unit,
-    onTimeClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        OutlinedTextField(
-            value = dateString,
-            onValueChange = {},
-            readOnly = true,
-            enabled = false,
-            label = { Text(stringResource(CoreUiR.string.date)) },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.DateRange,
-                    contentDescription = null,
-                    tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                disabledBorderColor = MaterialTheme.colorScheme.outline,
-                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .clickable { onDateClick() },
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = timeString,
-            onValueChange = {},
-            readOnly = true,
-            enabled = false,
-            label = { Text(stringResource(CoreUiR.string.time)) },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Schedule,
-                    contentDescription = null,
-                    tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                disabledBorderColor = MaterialTheme.colorScheme.outline,
-                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .clickable { onTimeClick() },
-            singleLine = true
-        )
-    }
-}

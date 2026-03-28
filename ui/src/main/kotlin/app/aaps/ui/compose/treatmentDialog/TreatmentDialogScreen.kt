@@ -69,6 +69,10 @@ fun TreatmentDialogScreen(
     val iob by iobUiState.collectAsStateWithLifecycle()
     val cob by cobUiState.collectAsStateWithLifecycle()
 
+    // Dialog states
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+
     // Observe side effects
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
@@ -78,15 +82,11 @@ fun TreatmentDialogScreen(
                 }
 
                 is TreatmentDialogViewModel.SideEffect.ShowNoActionDialog -> {
-                    // handled via showNoAction local state
+                    showNoAction = true
                 }
             }
         }
     }
-
-    // Dialog states
-    var showConfirmation by rememberSaveable { mutableStateOf(false) }
-    var showNoAction by rememberSaveable { mutableStateOf(false) }
 
     // Confirmation dialog
     if (showConfirmation) {

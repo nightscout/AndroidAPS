@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.careDialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,17 +9,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +34,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,6 +58,8 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.DateTimeSection
+import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -174,7 +185,19 @@ private fun CareDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(eventType.titleResId())) },
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = eventType.icon(),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(stringResource(eventType.titleResId()))
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -183,18 +206,33 @@ private fun CareDialogContent(
                         )
                     }
                 },
-                actions = {
-                    IconButton(onClick = onConfirmClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(CoreUiR.string.ok),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+                actions = {}
             )
+        },
+        bottomBar = {
+            Button(
+                onClick = onConfirmClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(CoreUiR.string.ok))
+            }
         }
     ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -202,91 +240,79 @@ private fun CareDialogContent(
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Icon header
-            Row(
+            // Single card with all inputs
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                Icon(
-                    imageVector = eventType.icon(),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Site rotation (for SENSOR_INSERT)
+                    if (uiState.showSiteRotationSection) {
+                        SiteLocationSummary(
+                            siteType = TE.Type.SENSOR_CHANGE,
+                            lastLocationString = uiState.lastSiteLocationString,
+                            selectedLocationString = uiState.selectedSiteLocationString,
+                            onPickSiteClick = onPickSiteLocation,
+                            modifier = itemModifier
+                        )
+                    }
+
+                    // BG Section
+                    if (uiState.showBgSection) {
+                        BgSection(
+                            meterType = uiState.meterType,
+                            bgValue = uiState.bgValue,
+                            glucoseUnits = uiState.glucoseUnits,
+                            onMeterTypeChange = onMeterTypeChange,
+                            onBgValueChange = onBgValueChange,
+                            modifier = itemModifier
+                        )
+                    }
+
+                    // Duration Section
+                    if (uiState.showDurationSection) {
+                        DurationSection(
+                            duration = uiState.duration,
+                            onDurationChange = onDurationChange,
+                            modifier = itemModifier
+                        )
+                    }
+
+                    // Time (collapsible "Now" pattern)
+                    EventTimeRow(
+                        timeChanged = uiState.eventTimeChanged,
+                        displayText = "$dateString $timeString",
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        },
+                        modifier = itemModifier
+                    )
+
+                    // Notes Section
+                    if (uiState.showNotesSection) {
+                        TextField(
+                            value = uiState.notes,
+                            onValueChange = onNotesChange,
+                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            modifier = itemModifier,
+                            singleLine = false,
+                            maxLines = 3
+                        )
+                    }
+                }
             }
 
-            // Site rotation section (for SENSOR_INSERT with CGM site rotation enabled)
-            if (uiState.showSiteRotationSection) {
-                SiteLocationSummary(
-                    siteType = TE.Type.SENSOR_CHANGE,
-                    lastLocationString = uiState.lastSiteLocationString,
-                    selectedLocationString = uiState.selectedSiteLocationString,
-                    onPickSiteClick = onPickSiteLocation,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            }
-
-            // BG Section
-            if (uiState.showBgSection) {
-                BgSection(
-                    meterType = uiState.meterType,
-                    bgValue = uiState.bgValue,
-                    glucoseUnits = uiState.glucoseUnits,
-                    onMeterTypeChange = onMeterTypeChange,
-                    onBgValueChange = onBgValueChange
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            }
-
-            // Duration Section
-            if (uiState.showDurationSection) {
-                DurationSection(
-                    duration = uiState.duration,
-                    onDurationChange = onDurationChange
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            }
-
-            // Date/Time Section
-            SectionHeader(stringResource(CoreUiR.string.time))
-            DateTimeSection(
-                dateString = dateString,
-                timeString = timeString,
-                eventTimeChanged = uiState.eventTimeChanged,
-                onDateClick = onDateClick,
-                onTimeClick = onTimeClick
-            )
-
-            // Notes Section
-            if (uiState.showNotesSection) {
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                OutlinedTextField(
-                    value = uiState.notes,
-                    onValueChange = onNotesChange,
-                    label = { Text(stringResource(CoreUiR.string.notes_label)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    minLines = 2,
-                    maxLines = 4,
-                    colors = OutlinedTextFieldDefaults.colors()
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
-}
-
-@Composable
-private fun SectionHeader(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary
-    )
 }
 
 @Composable
@@ -295,8 +321,10 @@ private fun BgSection(
     bgValue: Double,
     glucoseUnits: GlucoseUnit,
     onMeterTypeChange: (TE.MeterType) -> Unit,
-    onBgValueChange: (Double) -> Unit
+    onBgValueChange: (Double) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    Column(modifier = modifier) {
     val meterOptions = listOf(
         TE.MeterType.FINGER to stringResource(R.string.bg_meter),
         TE.MeterType.SENSOR to stringResource(R.string.bg_sensor),
@@ -345,9 +373,9 @@ private fun BgSection(
         valueRange = minBg..maxBg,
         step = step,
         valueFormat = format,
-        unitLabel = glucoseUnits.asText,
-        modifier = Modifier.fillMaxWidth()
+        unitLabel = glucoseUnits.asText
     )
+    }
 }
 
 private data class BgParams(
@@ -360,7 +388,8 @@ private data class BgParams(
 @Composable
 private fun DurationSection(
     duration: Double,
-    onDurationChange: (Double) -> Unit
+    onDurationChange: (Double) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     NumberInputRow(
         labelResId = CoreUiR.string.duration_label,
@@ -369,72 +398,8 @@ private fun DurationSection(
         valueRange = 0.0..Constants.MAX_PROFILE_SWITCH_DURATION,
         step = 10.0,
         unitLabelResId = KeysR.string.units_min,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     )
-}
-
-@Composable
-private fun DateTimeSection(
-    dateString: String,
-    timeString: String,
-    eventTimeChanged: Boolean,
-    onDateClick: () -> Unit,
-    onTimeClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        OutlinedTextField(
-            value = dateString,
-            onValueChange = {},
-            readOnly = true,
-            enabled = false,
-            label = { Text(stringResource(CoreUiR.string.date)) },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.DateRange,
-                    contentDescription = null,
-                    tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                disabledBorderColor = MaterialTheme.colorScheme.outline,
-                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .clickable { onDateClick() },
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = timeString,
-            onValueChange = {},
-            readOnly = true,
-            enabled = false,
-            label = { Text(stringResource(CoreUiR.string.time)) },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Schedule,
-                    contentDescription = null,
-                    tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                disabledBorderColor = MaterialTheme.colorScheme.outline,
-                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .clickable { onTimeClick() },
-            singleLine = true
-        )
-    }
 }
 
 // Extension functions for EventType mapping

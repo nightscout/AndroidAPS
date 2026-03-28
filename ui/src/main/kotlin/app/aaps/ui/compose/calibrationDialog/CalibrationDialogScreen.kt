@@ -28,6 +28,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import java.text.DecimalFormat
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -150,7 +152,7 @@ private fun CalibrationDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.hasValidBg) {
-                    val bgFormat = if (uiState.isMgdl) java.text.DecimalFormat("0") else java.text.DecimalFormat("0.0")
+                    val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) DecimalFormat("0") else DecimalFormat("0.0") }
                     Text("${bgFormat.format(uiState.bg)} ${uiState.unitLabel}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
