@@ -835,6 +835,10 @@ class AppRepository @Inject internal constructor(
     suspend fun instaraPumpIdExists(pumpId: Long): Boolean =
         database.glucoseValueDao.instaraPumpIdExists(pumpId)
 
+    // InstaraTrendArrowResolver support (previous sgvId value lookup)
+    suspend fun getInstaraValueMgdlByPumpId(pumpId: Long): Double? =
+        database.glucoseValueDao.getInstaraValueMgdlByPumpId(pumpId)
+
     /**
      * Clean up Flow scope and release resources
      *

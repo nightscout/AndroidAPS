@@ -1545,6 +1545,9 @@ interface PersistenceLayer {
 
     /** Instara dedupe helper: checks whether a given Instara pumpId (sgvId) already exists in DB. */
     suspend fun instaraPumpIdExists(pumpId: Long): Boolean
+
+    // InstaraTrendArrowResolver support (previous sgvId value lookup)
+    suspend fun getInstaraValueMgdlByPumpId(pumpId: Long): Double?
 }
 
 /**

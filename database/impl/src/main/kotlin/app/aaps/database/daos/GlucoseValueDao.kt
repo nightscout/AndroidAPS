@@ -72,4 +72,9 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     // 6) Instara sgvId is stored in DB column glucoseValues.pumpId
     @Query("SELECT EXISTS(SELECT 1 FROM glucoseValues WHERE sourceSensor='INSTARA' AND pumpId=:pumpId LIMIT 1)")
     suspend fun instaraPumpIdExists(pumpId: Long): Boolean
+
+    // 7) InstaraTrendArrowResolver support (previous sgvId value lookup)
+    // Returns mg/dL value for the given Instara pumpId (sgvId), or null if not found.
+    @Query("SELECT value FROM glucoseValues WHERE sourceSensor='INSTARA' AND pumpId=:pumpId LIMIT 1")
+    suspend fun getInstaraValueMgdlByPumpId(pumpId: Long): Double?
 }

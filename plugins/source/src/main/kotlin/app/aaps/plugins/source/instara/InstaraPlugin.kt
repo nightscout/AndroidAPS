@@ -172,12 +172,29 @@ class InstaraPlugin @Inject constructor(
         /**
          * Persist Instara meta (LATEST DEVICE ONLY, NO DB schema changes).
          *
+         * Policy:
+         * 1) Same devicePrefix: first one wins -> NEVER update existing sgvStart/sgvMark.
+         * 2) New devicePrefix: overwrite (keep latest device only).
          * JSON format example:
          * { "31000399": {"sgvStart": 3100039900003, "sgvMark": 6048} }
          */
         private fun overwriteDeviceMeta(devicePrefix: Long, sgvStart: Long, sgvMark: Int) {
+            // Read existing meta JSON
+            val raw = preferences.get(StringNonKey.InstaraDeviceMetaJson)
+            val existingRoot = try {
+                JSONObject(raw)
+            } catch (_: Throwable) {
+                JSONObject()
+            }
+
+            val key = devicePrefix.toString()
+
+            // If the same device already exists in meta, do NOT update (first-one-wins)
+            if (existingRoot.has(key)) return
+
+            // Otherwise, overwrite with latest device only
             val root = JSONObject()
-            root.put(devicePrefix.toString(), JSONObject().apply {
+            root.put(key, JSONObject().apply {
                 put("sgvStart", sgvStart)
                 put("sgvMark", sgvMark)
             })
@@ -212,8 +229,16 @@ class InstaraPlugin @Inject constructor(
                 var skippedDbDup = 0
                 var skippedInvalid = 0
 
-                for (i in 0 until jsonArray.length()) {
-                    val json = jsonArray.getJSONObject(i)
+                // NOTE: Process records in sgvId ascending order within the same batch
+                // This helps deterministic insertion/processing when multiple sequential ids arrive together.
+                val order = (0 until jsonArray.length()).toMutableList()
+                order.sortWith(compareBy { idx ->
+                    val json = jsonArray.getJSONObject(idx)
+                    parseSgvIdStrict(json) ?: Long.MAX_VALUE
+                })
+
+                for (idx in order) {
+                    val json = jsonArray.getJSONObject(idx)
 
                     // Must have a valid 13-digit sgvId; otherwise record is invalid -> skip DB insert.
                     val sgvId = parseSgvIdStrict(json)
@@ -264,12 +289,17 @@ class InstaraPlugin @Inject constructor(
 
                     val sgvMark = parseSgvMark(json)
 
+                    // Instara-specific TrendArrow handling when NONE/invalid:
+                    // If Instara provides NONE/invalid, attempt to calculate from previous (sgvId-1) via DB; fallback Flat.
+                    val resolvedArrow: TrendArrow =
+                        InstaraTrendArrowResolver.resolve(persistenceLayer, direction, mgdl, sgvId)
+
                     val gv = GV(
                         timestamp = ts,
                         value = mgdl,            // always mg/dL in GV.value
                         raw = rawMgdl,           // null or mg/dL
                         noise = null,
-                        trendArrow = TrendArrow.fromString(direction),
+                        trendArrow = resolvedArrow, // Instara: use resolved arrow (may be calculated/fallback)
                         sourceSensor = SourceSensor.INSTARA
                     )
 
@@ -312,6 +342,9 @@ class InstaraPlugin @Inject constructor(
 
                 // Persist latest-device-only meta JSON if we saw a valid mark seed.
                 if (latestDevicePrefix != null && latestDeviceStartWithMark != null && latestDeviceMark != null) {
+                    // NOTE (updated): overwriteDeviceMeta() already enforces:
+                    // - same devicePrefix: first one wins (no update)
+                    // - new devicePrefix: overwrite to latest only
                     overwriteDeviceMeta(latestDevicePrefix!!, latestDeviceStartWithMark!!, latestDeviceMark!!)
 
                     // Ensure worker is scheduled (new device can arrive after previous completion)

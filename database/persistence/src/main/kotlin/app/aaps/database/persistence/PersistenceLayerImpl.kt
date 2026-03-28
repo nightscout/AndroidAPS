@@ -2413,4 +2413,8 @@ class PersistenceLayerImpl @Inject constructor(
 
     override suspend fun instaraPumpIdExists(pumpId: Long): Boolean =
         repository.instaraPumpIdExists(pumpId)
+
+    // InstaraTrendArrowResolver support (previous sgvId value lookup)
+    override suspend fun getInstaraValueMgdlByPumpId(pumpId: Long): Double? =
+        repository.getInstaraValueMgdlByPumpId(pumpId)
 }
