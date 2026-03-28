@@ -127,12 +127,7 @@ class InsulinImpl @Inject constructor(
     @Synchronized
     override fun addNewInsulin(newICfg: ICfg, ue: Boolean): ICfg {
         val template = InsulinType.fromPeak(newICfg.insulinPeakTime)
-        val nickname = if (newICfg.insulinNickname.isNotBlank()) {
-            newICfg.insulinNickname
-        } else {
-            rh.gs(template.label)
-        }
-        aapsLogger.debug("xxxxx addNewInsulin nickname $nickname ${newICfg.insulinNickname}")
+        val nickname = newICfg.insulinNickname.ifBlank { rh.gs(template.label) }
         val fullName = buildFullName(
             nickname = nickname,
             peak = newICfg.peak,
@@ -140,7 +135,6 @@ class InsulinImpl @Inject constructor(
             concentration = newICfg.concentration,
             excludeIndex = -1
         )
-        aapsLogger.debug("xxxxx addNewInsulin fullName $fullName")
         newICfg.insulinLabel = fullName
         newICfg.insulinNickname = nickname
         newICfg.insulinTemplate = template.value
