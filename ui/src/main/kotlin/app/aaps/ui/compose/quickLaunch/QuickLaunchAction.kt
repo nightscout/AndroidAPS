@@ -46,7 +46,7 @@ sealed class QuickLaunchAction {
 
         override val typeId = "tt_preset"
         override val dynamicId = presetId
-        override val elementType = ElementType.TEMP_TARGET_MANAGEMENT_PLAY
+        override val elementType = ElementType.TEMP_TARGET_MANAGEMENT
     }
 
     data class ProfileAction(
@@ -57,7 +57,7 @@ sealed class QuickLaunchAction {
 
         override val typeId = "profile"
         override val dynamicId = "${profileName}_${percentage}_${durationMinutes}"
-        override val elementType = ElementType.PROFILE_MANAGEMENT_PLAY
+        override val elementType = ElementType.PROFILE_MANAGEMENT
     }
 
     data class PluginAction(val className: String) : QuickLaunchAction() {
@@ -76,8 +76,8 @@ sealed class QuickLaunchAction {
         val Treatment = StaticAction(ElementType.TREATMENT)
         val Cgm = StaticAction(ElementType.CGM_XDRIP)
         val Calibration = StaticAction(ElementType.CALIBRATION)
-        val InsulinManagement = StaticAction(ElementType.INSULIN_MANAGEMENT_PLAY)
-        val ProfileSwitch = StaticAction(ElementType.PROFILE_MANAGEMENT_PLAY)
+        val InsulinManagement = StaticAction(ElementType.INSULIN_MANAGEMENT)
+        val ProfileSwitch = StaticAction(ElementType.PROFILE_MANAGEMENT)
         val BgCheck = StaticAction(ElementType.BG_CHECK)
         val Note = StaticAction(ElementType.NOTE)
         val Exercise = StaticAction(ElementType.EXERCISE)

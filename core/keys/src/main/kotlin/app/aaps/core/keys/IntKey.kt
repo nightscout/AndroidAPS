@@ -134,28 +134,16 @@ enum class IntKey(
         unitType = UnitType.SEC,
         visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
     ),
-    ProtectionTypeSettings(
-        key = "settings_protection",
-        defaultValue = ProtectionType.NONE.ordinal,
-        min = ProtectionType.NONE.ordinal,
-        max = ProtectionType.CUSTOM_PIN.ordinal,
-        titleResId = R.string.pref_title_protection_type_settings,
-        preferenceType = PreferenceType.LIST,
-        entries = mapOf(
-            ProtectionType.NONE.ordinal to R.string.noprotection,
-            ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
-            ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
-            ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
-            ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
-        ),
-        visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword }
-    ),
+
+    // Protection types sorted by level: 0 (Application) → 1 (Bolus) → 2 (Settings)
+    // Application is independent; Bolus requires Settings to be set
     ProtectionTypeApplication(
         key = "application_protection",
         defaultValue = ProtectionType.NONE.ordinal,
         min = ProtectionType.NONE.ordinal,
         max = ProtectionType.CUSTOM_PIN.ordinal,
         titleResId = R.string.pref_title_protection_type_application,
+        summaryResId = R.string.pref_summary_protection_type_application,
         preferenceType = PreferenceType.LIST,
         entries = mapOf(
             ProtectionType.NONE.ordinal to R.string.noprotection,
@@ -172,6 +160,27 @@ enum class IntKey(
         min = ProtectionType.NONE.ordinal,
         max = ProtectionType.CUSTOM_PIN.ordinal,
         titleResId = R.string.pref_title_protection_type_bolus,
+        summaryResId = R.string.pref_summary_protection_type_bolus,
+        preferenceType = PreferenceType.LIST,
+        entries = mapOf(
+            ProtectionType.NONE.ordinal to R.string.noprotection,
+            ProtectionType.BIOMETRIC.ordinal to R.string.biometric,
+            ProtectionType.MASTER_PASSWORD.ordinal to R.string.master_password,
+            ProtectionType.CUSTOM_PASSWORD.ordinal to R.string.custom_password,
+            ProtectionType.CUSTOM_PIN.ordinal to R.string.custom_pin
+        ),
+        visibility = PreferenceVisibility.stringNotEmpty { StringKey.ProtectionMasterPassword },
+        enabledCondition = PreferenceEnabledCondition { ctx ->
+            ctx.preferences.get(ProtectionTypeSettings) != ProtectionType.NONE.ordinal
+        }
+    ),
+    ProtectionTypeSettings(
+        key = "settings_protection",
+        defaultValue = ProtectionType.NONE.ordinal,
+        min = ProtectionType.NONE.ordinal,
+        max = ProtectionType.CUSTOM_PIN.ordinal,
+        titleResId = R.string.pref_title_protection_type_settings,
+        summaryResId = R.string.pref_summary_protection_type_settings,
         preferenceType = PreferenceType.LIST,
         entries = mapOf(
             ProtectionType.NONE.ordinal to R.string.noprotection,

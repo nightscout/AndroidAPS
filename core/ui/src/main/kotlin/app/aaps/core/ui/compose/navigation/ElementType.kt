@@ -29,15 +29,11 @@ enum class ElementType(
     CGM_DEX(category = ElementCategory.CGM),
     CALIBRATION(category = ElementCategory.CGM, searchable = true),
 
-    // Profile & Targets
-    PROFILE_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
-    PROFILE_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
-    TEMP_TARGET_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
-    TEMP_TARGET_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
-    INSULIN_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
-    INSULIN_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
-    QUICK_WIZARD_MANAGEMENT_PLAY(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS),
-    QUICK_WIZARD_MANAGEMENT_EDIT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES),
+    // Profile & Targets — minimum level is BOLUS; screen mode (PLAY/EDIT) determined by granted auth level
+    PROFILE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
+    TEMP_TARGET_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
+    INSULIN_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
+    QUICK_WIZARD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
 
     // Careportal
     BG_CHECK(category = ElementCategory.CAREPORTAL, searchable = true),

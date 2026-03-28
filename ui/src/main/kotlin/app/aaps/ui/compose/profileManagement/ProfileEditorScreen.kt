@@ -111,9 +111,9 @@ fun ProfileEditorScreen(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = ElementType.PROFILE_MANAGEMENT_EDIT.icon(),
+                            imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
                             contentDescription = null,
-                            tint = ElementType.PROFILE_MANAGEMENT_EDIT.color(),
+                            tint = ElementType.PROFILE_MANAGEMENT.color(),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -186,7 +186,7 @@ fun ProfileEditorScreen(
                 Spacer(Modifier.height(12.dp))
 
                 // Tab layout with error indication
-                val diaHasError = state.tabErrors.containsKey(ProfileErrorType.DIA)
+                state.tabErrors.containsKey(ProfileErrorType.DIA)
                 val icHasError = state.tabErrors.containsKey(ProfileErrorType.IC)
                 val isfHasError = state.tabErrors.containsKey(ProfileErrorType.ISF)
                 val basalHasError = state.tabErrors.containsKey(ProfileErrorType.BASAL)

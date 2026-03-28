@@ -26,6 +26,47 @@ import app.aaps.core.ui.toast.ToastUtils
 
 object BiometricCheck {
 
+    /**
+     * Biometric prompt without internal master password fallback.
+     * All errors and the negative button trigger [onFallback], letting the caller
+     * (e.g. ProtectionHost) show the unified auth dialog instead.
+     */
+    fun biometricPromptSimple(activity: FragmentActivity, title: Int, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
+        val executor = ContextCompat.getMainExecutor(activity)
+
+        val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                when (errorCode) {
+                    ERROR_NEGATIVE_BUTTON -> onFallback?.run() // "Use PIN/Password" button
+                    ERROR_USER_CANCELED   -> onCancel?.run()
+
+                    else                  -> {
+                        ToastUtils.errorToast(activity.baseContext, errString.toString())
+                        onFallback?.run()
+                    }
+                }
+            }
+
+            override fun onAuthenticationSucceeded(result: AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                onSuccess?.run()
+            }
+
+        })
+
+        val promptInfo = PromptInfo.Builder()
+            .setTitle(activity.getString(title))
+            .setDescription(activity.getString(R.string.biometric_title))
+            .setNegativeButtonText(activity.getString(R.string.use_pin_password))
+            .setConfirmationRequired(false)
+            .build()
+
+        runOnUiThread {
+            biometricPrompt.authenticate(promptInfo)
+        }
+    }
+
     fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = ContextCompat.getMainExecutor(activity)
 

@@ -176,12 +176,12 @@ fun QuickWizardManagementScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Icon(
-                                imageVector = ElementType.QUICK_WIZARD_MANAGEMENT_EDIT.icon(),
+                                imageVector = ElementType.QUICK_WIZARD_MANAGEMENT.icon(),
                                 contentDescription = null,
-                                tint = ElementType.QUICK_WIZARD_MANAGEMENT_EDIT.color(),
+                                tint = ElementType.QUICK_WIZARD_MANAGEMENT.color(),
                                 modifier = Modifier.size(24.dp)
                             )
-                            Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT_EDIT.labelResId()))
+                            Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId()))
                         }
                     },
                     navigationIcon = {

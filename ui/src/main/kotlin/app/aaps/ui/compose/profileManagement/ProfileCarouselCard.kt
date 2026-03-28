@@ -98,7 +98,7 @@ internal fun ProfileCarouselCard(
         Box(modifier = Modifier.fillMaxSize()) {
             // Profile icon in top left corner
             Icon(
-                imageVector = ElementType.PROFILE_MANAGEMENT_EDIT.icon(),
+                imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.TopStart)

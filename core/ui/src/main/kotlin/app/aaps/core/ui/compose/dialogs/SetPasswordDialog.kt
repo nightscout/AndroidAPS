@@ -80,7 +80,7 @@ fun SetPasswordDialog(
                     value = password1,
                     onValueChange = { password1 = it },
                     label = {
-                        Text(stringResource(if (pinInput) R.string.pin_hint else R.string.password_hint))
+                        Text(stringResource(if (pinInput) R.string.protection_pin_hint else R.string.protection_password_hint))
                     },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(

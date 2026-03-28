@@ -196,9 +196,12 @@
 
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Protection timeout</string>
-    <string name="pref_title_protection_type_settings">Settings protection</string>
-    <string name="pref_title_protection_type_application">Application protection</string>
-    <string name="pref_title_protection_type_bolus">Bolus protection</string>
+    <string name="pref_title_protection_type_application">Level 0: Application protection</string>
+    <string name="pref_summary_protection_type_application">App launch. Independent from other levels</string>
+    <string name="pref_title_protection_type_bolus">Level 1: Bolus protection</string>
+    <string name="pref_summary_protection_type_bolus">Treatments, profile activation. Requires Level 2</string>
+    <string name="pref_title_protection_type_settings">Level 2: Settings protection</string>
+    <string name="pref_summary_protection_type_settings">Editing profiles, preferences</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="noprotection">No protection</string>
     <string name="biometric">Biometric</string>

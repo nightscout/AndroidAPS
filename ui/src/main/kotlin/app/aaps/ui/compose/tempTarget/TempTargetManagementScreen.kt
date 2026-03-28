@@ -226,13 +226,13 @@ fun TempTargetManagementScreen(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = ElementType.TEMP_TARGET_MANAGEMENT_EDIT.icon(),
+                                imageVector = ElementType.TEMP_TARGET_MANAGEMENT.icon(),
                                 contentDescription = null,
-                                tint = ElementType.TEMP_TARGET_MANAGEMENT_EDIT.color(),
+                                tint = ElementType.TEMP_TARGET_MANAGEMENT.color(),
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.padding(start = 8.dp))
-                            Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT_EDIT.labelResId()))
+                            Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT.labelResId()))
                         }
                     },
                     navigationIcon = {

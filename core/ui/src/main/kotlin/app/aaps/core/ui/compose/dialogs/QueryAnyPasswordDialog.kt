@@ -103,7 +103,7 @@ fun QueryAnyPasswordDialog(
                 OutlinedTextField(
                     value = passwordText,
                     onValueChange = { passwordText = it },
-                    label = { Text(stringResource(R.string.password_hint)) },
+                    label = { Text(stringResource(R.string.protection_password_hint)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,

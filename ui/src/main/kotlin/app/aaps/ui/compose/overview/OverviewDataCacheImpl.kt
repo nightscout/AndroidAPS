@@ -94,6 +94,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Implementation of OverviewDataCache using MutableStateFlow.
@@ -664,17 +665,19 @@ class OverviewDataCacheImpl @Inject constructor(
         // Build segments from sorted records
         val segments = mutableListOf<RunningModeSegment>()
         var currentMode = initialMode.mode
+        var currentRecordEnd = initialMode.timestamp + initialMode.duration
         var segmentStart = fromTime
 
         for (rm in rmRecords) {
             if (rm.timestamp > segmentStart && rm.mode != currentMode) {
                 segments.add(RunningModeSegment(currentMode, segmentStart, rm.timestamp))
                 currentMode = rm.mode
+                currentRecordEnd = rm.timestamp + rm.duration
                 segmentStart = rm.timestamp
             }
         }
-        // Final segment to endTime
-        segments.add(RunningModeSegment(currentMode, segmentStart, endTime))
+        // Final segment capped by record's planned end time
+        segments.add(RunningModeSegment(currentMode, segmentStart, min(currentRecordEnd, endTime)))
 
         _runningModeGraphFlow.value = RunningModeGraphData(segments = segments)
     }

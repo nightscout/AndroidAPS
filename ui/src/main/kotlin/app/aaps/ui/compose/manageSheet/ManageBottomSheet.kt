@@ -131,14 +131,14 @@ internal fun ManageBottomSheetContent(
 
         // Profile Management
         ManageItem(
-            elementType = ElementType.PROFILE_MANAGEMENT_EDIT,
+            elementType = ElementType.PROFILE_MANAGEMENT,
             onDismiss = onDismiss,
             onNavigate = onNavigate
         )
 
         // Insulin Management
         ManageItem(
-            elementType = ElementType.INSULIN_MANAGEMENT_EDIT,
+            elementType = ElementType.INSULIN_MANAGEMENT,
             onDismiss = onDismiss,
             onNavigate = onNavigate
         )
@@ -146,14 +146,14 @@ internal fun ManageBottomSheetContent(
         // Temp Target
         if (showTempTarget) {
             ManageItem(
-                elementType = ElementType.TEMP_TARGET_MANAGEMENT_EDIT,
+                elementType = ElementType.TEMP_TARGET_MANAGEMENT,
                 onDismiss = onDismiss,
                 onNavigate = onNavigate
             )
         }
 
         ManageItem(
-            elementType = ElementType.QUICK_WIZARD_MANAGEMENT_EDIT,
+            elementType = ElementType.QUICK_WIZARD_MANAGEMENT,
             onDismiss = onDismiss,
             onNavigate = onNavigate
         )

@@ -58,7 +58,6 @@ import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.PageIndicatorDots
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewModel
-import java.text.DecimalFormat
 import kotlin.math.absoluteValue
 
 /**
@@ -140,13 +139,13 @@ fun ProfileManagementScreen(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = ElementType.PROFILE_MANAGEMENT_EDIT.icon(),
+                                imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
                                 contentDescription = null,
-                                tint = ElementType.PROFILE_MANAGEMENT_EDIT.color(),
+                                tint = ElementType.PROFILE_MANAGEMENT.color(),
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.padding(start = 8.dp))
-                            Text(stringResource(ElementType.PROFILE_MANAGEMENT_EDIT.labelResId()))
+                            Text(stringResource(ElementType.PROFILE_MANAGEMENT.labelResId()))
                         }
                     },
                     navigationIcon = {
@@ -298,7 +297,8 @@ fun ProfileManagementScreen(
                                             getBasalList = viewModel::getBasalList,
                                             getTargetList = viewModel::getTargetList,
                                             formatBasalSum = viewModel::formatBasalSum
-                                    )}
+                                        )
+                                    }
                                     // Extra space for floating toolbar
                                     Spacer(modifier = Modifier.height(80.dp))
                                 }

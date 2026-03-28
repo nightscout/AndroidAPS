@@ -213,7 +213,7 @@ fun OverviewScreen(
                             profileName = profileName,
                             isModified = isProfileModified,
                             progress = profileProgress,
-                            onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT_PLAY)) }
+                            onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) }
                         )
                     }
                     // TempTarget chip (show when text is available)
@@ -223,7 +223,7 @@ fun OverviewScreen(
                             state = tempTargetState,
                             progress = tempTargetProgress,
                             reason = tempTargetReason,
-                            onClick = { onNavigate(NavigationRequest.Element(ElementType.TEMP_TARGET_MANAGEMENT_PLAY)) }
+                            onClick = { onNavigate(NavigationRequest.Element(ElementType.TEMP_TARGET_MANAGEMENT)) }
                         )
                     }
                     // IOB + COB chips row

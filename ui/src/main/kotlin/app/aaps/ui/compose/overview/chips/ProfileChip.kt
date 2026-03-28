@@ -51,7 +51,7 @@ fun ProfileChip(
                 modifier = Modifier.padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
             ) {
                 Icon(
-                    imageVector = ElementType.PROFILE_MANAGEMENT_PLAY.icon(),
+                    imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
                     contentDescription = null,
                     tint = contentColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)

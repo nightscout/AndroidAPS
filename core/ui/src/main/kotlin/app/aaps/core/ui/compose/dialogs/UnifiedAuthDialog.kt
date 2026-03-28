@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,25 +25,43 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.interfaces.protection.AuthMethod
+import app.aaps.core.interfaces.protection.AuthorizationResult
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.protection.ProtectionType
 import app.aaps.core.ui.R
 
 /**
- * Dialog for querying an existing password or PIN.
+ * Unified authentication dialog that accepts a single credential input and tries it
+ * against all configured authentication methods (from highest level down).
  *
- * @param title Dialog title
- * @param pinInput If true, shows numeric keyboard for PIN input
- * @param onConfirm Called with entered password when OK is clicked or Done is pressed
- * @param onCancel Called when Cancel is clicked or dialog is dismissed
+ * Returns the highest matching [ProtectionCheck.Protection] level.
+ * Shows numeric keyboard only if all methods use PIN input.
+ *
+ * @param methods Available authentication methods (excluding biometric, which is handled separately)
+ * @param checkPassword Function to verify an entered password against a stored hash
+ * @param onResult Callback with the authorization result
  */
 @Composable
-fun QueryPasswordDialog(
-    title: String,
-    pinInput: Boolean,
-    onConfirm: (String) -> Unit,
-    onCancel: () -> Unit
+fun UnifiedAuthDialog(
+    methods: List<AuthMethod>,
+    checkPassword: (password: String, hash: String) -> Boolean,
+    onResult: (AuthorizationResult) -> Unit
 ) {
+    // Use numeric keyboard only if ALL methods are PIN-based
+    val pinInput = methods.isNotEmpty() && methods.all { it.isPinInput }
+    val hasPin = methods.any { it.isPinInput }
+    val hasCustomPassword = methods.any { it.type == ProtectionType.CUSTOM_PASSWORD }
+
+    // Pick hint: master password is always accepted, plus any custom credentials
+    val hintRes = when {
+        hasPin -> R.string.auth_hint_master_or_pin
+        hasCustomPassword -> R.string.auth_hint_master_or_password
+        else -> R.string.auth_hint_master_password
+    }
+
     var passwordText by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -53,8 +70,23 @@ fun QueryPasswordDialog(
         focusRequester.requestFocus()
     }
 
+    fun tryAuthenticate(entered: String) {
+        // Try from highest level down to find the best match
+        val sorted = methods
+            .filter { it.type != ProtectionType.BIOMETRIC && it.credentialHash.isNotEmpty() }
+            .sortedByDescending { it.level.level }
+
+        for (method in sorted) {
+            if (checkPassword(entered, method.credentialHash)) {
+                onResult(AuthorizationResult(method.level, ProtectionResult.GRANTED))
+                return
+            }
+        }
+        onResult(AuthorizationResult(null, ProtectionResult.DENIED))
+    }
+
     AlertDialog(
-        onDismissRequest = onCancel,
+        onDismissRequest = { onResult(AuthorizationResult(null, ProtectionResult.CANCELLED)) },
         icon = {
             Icon(
                 imageVector = Icons.Filled.Key,
@@ -63,7 +95,7 @@ fun QueryPasswordDialog(
         },
         title = {
             Text(
-                text = title,
+                text = stringResource(R.string.biometric_title),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -73,7 +105,7 @@ fun QueryPasswordDialog(
                 value = passwordText,
                 onValueChange = { passwordText = it },
                 label = {
-                    Text(stringResource(if (pinInput) R.string.protection_pin_hint else R.string.protection_password_hint))
+                    Text(stringResource(hintRes))
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
@@ -83,7 +115,7 @@ fun QueryPasswordDialog(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         keyboardController?.hide()
-                        onConfirm(passwordText)
+                        tryAuthenticate(passwordText)
                     }
                 ),
                 singleLine = true,
@@ -96,30 +128,17 @@ fun QueryPasswordDialog(
             TextButton(
                 onClick = {
                     keyboardController?.hide()
-                    onConfirm(passwordText)
+                    tryAuthenticate(passwordText)
                 }
             ) {
                 Text(stringResource(R.string.ok))
             }
         },
         dismissButton = {
-            TextButton(onClick = onCancel) {
+            TextButton(onClick = { onResult(AuthorizationResult(null, ProtectionResult.CANCELLED)) }) {
                 Text(stringResource(R.string.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun QueryPasswordDialogPreview() {
-    MaterialTheme {
-        QueryPasswordDialog(
-            title = "Enter Password",
-            pinInput = false,
-            onConfirm = {},
-            onCancel = {}
-        )
-    }
 }
