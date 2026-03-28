@@ -25,7 +25,7 @@ import app.aaps.core.objects.extensions.toJsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -57,7 +57,10 @@ class InsulinImpl @Inject constructor(
     @Volatile private var cachedICfg: ICfg? = null
 
     override val iCfg: ICfg
-        get() = cachedICfg ?: insulins[0]
+        get() = cachedICfg ?: run {
+            cachedICfg = runBlocking { profileFunction.getProfile()?.iCfg }
+            cachedICfg ?: insulins[0]
+        }
 
     override var insulins: ArrayList<ICfg> = ArrayList()
     override var currentInsulinIndex = 0
@@ -67,16 +70,10 @@ class InsulinImpl @Inject constructor(
         persistenceLayer.observeChanges<EPS>()
             .onEach { updateCachedICfg() }
             .launchIn(appScope)
-        appScope.launch { updateCachedICfg() }
     }
 
     private suspend fun updateCachedICfg() {
-        try {
-            cachedICfg = profileFunction.getProfile()?.iCfg
-        } catch (_: Exception) {
-            // May fail during early init (e.g. no APS selected yet).
-            // Will be updated on first EPS change after init completes.
-        }
+        cachedICfg = profileFunction.getProfile()?.iCfg
     }
 
     override fun insulinTemplateList(): List<InsulinType> = listOf(
