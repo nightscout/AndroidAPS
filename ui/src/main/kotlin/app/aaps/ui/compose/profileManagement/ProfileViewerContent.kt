@@ -92,7 +92,7 @@ fun ProfileSingleContent(
                 ElevatedCard(
                     modifier = Modifier.weight(1f),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = { /* TODO Open Insulin Management on current running insulin */ }
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         ProfileRow(
