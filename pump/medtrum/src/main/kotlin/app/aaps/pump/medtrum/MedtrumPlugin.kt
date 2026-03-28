@@ -52,6 +52,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.withEntriesProvider
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.compose.icons.IcPluginMedtrum
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -105,7 +106,7 @@ class MedtrumPlugin @Inject constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_medtrum_128)
+        .icon(IcPluginMedtrum)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)

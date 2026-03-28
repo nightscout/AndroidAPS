@@ -53,6 +53,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.Round.isSame
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginOmnipod
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DateTimeUtil.getTimeInFutureFromMinutes
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -156,7 +157,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(OmnipodErosOverviewFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
+        .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_eros_name)
         .shortName(R.string.omnipod_eros_name_short)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)

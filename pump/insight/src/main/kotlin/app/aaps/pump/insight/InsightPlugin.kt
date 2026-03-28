@@ -49,6 +49,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.withActivity
+import app.aaps.core.ui.compose.icons.IcPluginInsight
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
@@ -156,7 +157,7 @@ class InsightPlugin @Inject constructor(
     private val ch: ConcentrationHelper
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_insight_128)
+        .icon(IcPluginInsight)
         .pluginName(R.string.insight_local)
         .shortName(R.string.insightpump_shortname)
         .mainType(PluginType.PUMP)
