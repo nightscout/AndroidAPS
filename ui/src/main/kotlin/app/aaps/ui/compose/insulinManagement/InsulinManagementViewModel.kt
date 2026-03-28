@@ -34,7 +34,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @HiltViewModel
 class InsulinManagementViewModel @Inject constructor(
-    private val insulinManager: InsulinManager,
+    val insulinManager: InsulinManager,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -74,8 +74,11 @@ class InsulinManagementViewModel @Inject constructor(
 
             val currentIndex = (targetIndex ?: uiState.value.currentCardIndex).coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
             val currentICfg = insulins.getOrNull(currentIndex)
-
             val template = currentICfg?.let { cfg -> InsulinType.fromPeak(cfg.insulinPeakTime) }
+            val defaultNickname = template?.let { rh.gs(it.label) } ?: ""
+            val editorNickname = currentICfg?.insulinNickname?.takeIf { it.isNotBlank() } ?: defaultNickname
+            val autoNameEnabled = editorNickname == defaultNickname || autoName
+
 
             uiState.update {
                 it.copy(
@@ -83,11 +86,12 @@ class InsulinManagementViewModel @Inject constructor(
                     currentCardIndex = currentIndex,
                     activeInsulinLabel = activeLabel,
                     activeConcentration = activeConcentration,
-                    editorName = currentICfg?.insulinLabel ?: "",
+                    editorNickname = editorNickname,
                     editorTemplate = template,
                     editorConcentration = currentICfg?.let { cfg -> ConcentrationType.fromDouble(cfg.concentration) } ?: ConcentrationType.U100,
                     editorPeakMinutes = currentICfg?.peak ?: 75,
                     editorDiaHours = currentICfg?.dia ?: 5.0,
+                    autoNameEnabled = autoNameEnabled,
                     isLoading = false
                 )
             }
@@ -118,77 +122,115 @@ class InsulinManagementViewModel @Inject constructor(
         if (index == uiState.value.currentCardIndex) return
         val insulins = uiState.value.insulins
         val iCfg = insulins.getOrNull(index) ?: return
+        val editorTemplate = InsulinType.fromPeak(iCfg.insulinPeakTime)
+        val editorNickname = iCfg.insulinNickname.takeIf { it.isNotBlank() } ?: rh.gs(editorTemplate.label)
+        val defaultNickname = rh.gs(editorTemplate.label)
+        val autoNameEnabled = editorNickname == defaultNickname
 
         uiState.update {
             it.copy(
                 currentCardIndex = index,
-                editorName = iCfg.insulinLabel,
-                editorTemplate = InsulinType.fromPeak(iCfg.insulinPeakTime),
+                editorNickname = editorNickname,
+                editorTemplate = editorTemplate,
                 editorConcentration = ConcentrationType.fromDouble(iCfg.concentration),
                 editorPeakMinutes = iCfg.peak,
-                editorDiaHours = iCfg.dia
+                editorDiaHours = iCfg.dia,
+                autoNameEnabled = autoNameEnabled
             )
         }
     }
 
     // Editor field updates
 
-    fun updateEditorName(name: String) {
-        uiState.update { it.copy(editorName = name) }
+    fun updateEditorNickname(nickname: String) {
+        uiState.update {
+            it.copy(
+                autoNameEnabled = false,
+                editorNickname = nickname)
+        }
     }
+
+
 
     fun updateEditorConcentration(concentration: ConcentrationType) {
         uiState.update { it.copy(editorConcentration = concentration) }
-        autoGenerateName()
     }
 
     fun updateEditorPeak(peakMinutes: Int) {
-        uiState.update { it.copy(editorPeakMinutes = peakMinutes) }
-        autoGenerateName()
+        val editorTemplate = InsulinType.fromPeak(peakMinutes.toLong() * 60_000L)
+        uiState.update {
+            it.copy(
+                editorTemplate = editorTemplate,
+                editorPeakMinutes = peakMinutes
+            )
+        }
+        if (uiState.value.autoNameEnabled)
+            autoGenerateName()
     }
 
     fun updateEditorDia(diaHours: Double) {
         uiState.update { it.copy(editorDiaHours = diaHours) }
-        autoGenerateName()
     }
 
     /** Load peak from a preset template (chips UI). Only sets peak, not DIA. */
     fun loadPeakFromPreset(preset: InsulinType) {
-        uiState.update { it.copy(editorTemplate = preset, editorPeakMinutes = preset.iCfg.peak) }
-        autoGenerateName()
-    }
-
-    private fun autoGenerateName() {
-        val state = uiState.value
-        val template = state.editorTemplate ?: InsulinType.fromPeak(state.editorPeakMinutes.toLong() * 60_000L)
-        val templateName = rh.gs(template.label)
-        val concLabel = rh.gs(state.editorConcentration.label)
-        val diaLabel = if (state.editorDiaHours % 1.0 == 0.0) "${state.editorDiaHours.toInt()}h" else "${state.editorDiaHours}h"
-        val baseName = "$templateName ${state.editorPeakMinutes}m $diaLabel $concLabel"
-        var name = baseName
-        val existingNames = state.insulins.mapIndexed { i, it -> if (i == state.currentCardIndex) null else it.insulinLabel }.filterNotNull()
-        if (name in existingNames) {
-            for (i in 1..100) {
-                if ("$baseName ($i)" !in existingNames) {
-                    name = "$baseName ($i)"
-                    break
-                }
-            }
+        uiState.update {
+            it.copy(
+                editorTemplate = preset,
+                editorPeakMinutes = preset.iCfg.peak,
+                editorNickname = rh.gs(preset.label)
+            )
         }
-        uiState.update { it.copy(editorName = name) }
     }
 
+    fun autoGenerateName() {
+        val newDefaultNickname = rh.gs((uiState.value.editorTemplate ?: InsulinType.fromPeak(uiState.value.editorPeakMinutes.toLong() * 60_000L)).label)
+        uiState.update { it.copy(editorNickname = newDefaultNickname) }
+    }
+
+    fun toggleAutoName() {
+        val autoNameEnabled = !uiState.value.autoNameEnabled
+        val newDefaultNickname = if (autoNameEnabled)
+            rh.gs((uiState.value.editorTemplate ?: InsulinType.fromPeak(uiState.value.editorPeakMinutes.toLong() * 60_000L)).label)
+        else
+            uiState.value.editorNickname
+        uiState.update {
+            it.copy(
+                autoNameEnabled = autoNameEnabled,
+                editorNickname = newDefaultNickname
+            )
+        }
+    }
     // CRUD operations
 
     fun saveCurrentInsulin(): Boolean {
         val state = uiState.value
-        val editedICfg = buildEditorICfg()
 
-        // Validation
-        if (editedICfg.insulinLabel.isEmpty()) {
+        val nickname = state.editorNickname.trim()
+        if (nickname.isEmpty()) {
             showSnackbar(rh.gs(R.string.missing_insulin_name))
             return false
         }
+
+        val fullName = insulinManager.buildFullName(
+            nickname = nickname,
+            peak = state.editorPeakMinutes,
+            dia = state.editorDiaHours,
+            concentration = state.editorConcentration.value,
+            excludeIndex = state.currentCardIndex
+        )
+
+        val editedICfg = ICfg(
+            insulinLabel = fullName,
+            insulinEndTime = 0,
+            insulinPeakTime = 0,
+            concentration = state.editorConcentration.value
+        )
+        editedICfg.insulinNickname = nickname
+        editedICfg.setDia(state.editorDiaHours)
+        editedICfg.setPeak(state.editorPeakMinutes)
+
+        // Validation
         if (editedICfg.dia < hardLimits.minDia() || editedICfg.dia > hardLimits.maxDia()) {
             showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
             return false
@@ -212,6 +254,7 @@ class InsulinManagementViewModel @Inject constructor(
             stored.insulinEndTime = editedICfg.insulinEndTime
             stored.insulinPeakTime = editedICfg.insulinPeakTime
             stored.concentration = editedICfg.concentration
+            stored.insulinNickname = editedICfg.insulinNickname
             uel.log(Action.STORE_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(editedICfg.insulinLabel))
         }
         insulinManager.storeSettings()
@@ -225,7 +268,7 @@ class InsulinManagementViewModel @Inject constructor(
         val newICfg = source?.deepClone() ?: InsulinType.OREF_RAPID_ACTING.iCfg
         newICfg.insulinLabel = ""
         insulinManager.addNewInsulin(newICfg)
-        loadData(targetIndex = insulinManager.currentInsulinIndex, reload = false, autoName = true, saveAfterAutoName = true)
+        loadData(targetIndex = insulinManager.currentInsulinIndex, reload = false, autoName = state.autoNameEnabled, saveAfterAutoName = true)
     }
 
     fun deleteCurrentInsulin(): Boolean {
@@ -299,11 +342,12 @@ class InsulinManagementViewModel @Inject constructor(
     fun buildEditorICfg(): ICfg {
         val state = uiState.value
         val iCfg = ICfg(
-            insulinLabel = state.editorName,
+            insulinLabel = state.editorNickname,
             insulinEndTime = 0,
             insulinPeakTime = 0,
             concentration = state.editorConcentration.value
         )
+        iCfg.insulinNickname = state.editorNickname
         iCfg.setDia(state.editorDiaHours)
         iCfg.setPeak(state.editorPeakMinutes)
         return iCfg

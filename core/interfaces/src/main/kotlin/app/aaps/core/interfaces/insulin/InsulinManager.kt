@@ -32,4 +32,15 @@ interface InsulinManager {
 
     /** Available concentration types */
     fun concentrationList(): List<ConcentrationType>
+
+    /**
+     * Build insulin Label (Nickname and suffix calculated with Peak, DIA, Concentration) and a potential index to prevent duplication names.
+     * @param excludeIndex index to exclude for duplicated name identification (-1 for none)
+     */
+    fun buildFullName(nickname: String, peak: Int, dia: Double, concentration: Double, excludeIndex: Int = -1): String
+
+    /**
+     * Calculate the suffix to be shown in UI (include potential index to prevent duplication names).
+     */
+    fun buildDisplaySuffix(nickname: String, peak: Int, dia: Double, concentration: Double, excludeIndex: Int = -1): String
 }

@@ -109,6 +109,7 @@
     <string name="date">Date</string>
     <string name="units_label">Units</string>
     <string name="insulin_name_label">Insulin name</string>
+    <string name="insulin_nickname_label">Insulin nickname</string>
     <string name="concentration_label">Concentration</string>
     <string name="format_concentration">U%1$.0f</string>
     <string name="peak_label">Peak</string>

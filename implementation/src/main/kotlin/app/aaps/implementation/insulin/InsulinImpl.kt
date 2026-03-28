@@ -126,15 +126,33 @@ class InsulinImpl @Inject constructor(
 
     @Synchronized
     override fun addNewInsulin(newICfg: ICfg, ue: Boolean): ICfg {
-        if (newICfg.insulinLabel == "" || insulinLabelAlreadyExists(newICfg.insulinLabel))
-            newICfg.insulinLabel = createNewInsulinLabel(newICfg)
+        val template = InsulinType.fromPeak(newICfg.insulinPeakTime)
+        val nickname = if (newICfg.insulinNickname.isNotBlank()) {
+            newICfg.insulinNickname
+        } else {
+            rh.gs(template.label)
+        }
+        aapsLogger.debug("xxxxx addNewInsulin nickname $nickname ${newICfg.insulinNickname}")
+        val fullName = buildFullName(
+            nickname = nickname,
+            peak = newICfg.peak,
+            dia = newICfg.dia,
+            concentration = newICfg.concentration,
+            excludeIndex = -1
+        )
+        aapsLogger.debug("xxxxx addNewInsulin fullName $fullName")
+        newICfg.insulinLabel = fullName
+        newICfg.insulinNickname = nickname
+        newICfg.insulinTemplate = template.value
         val newInsulin = deepClone(newICfg)
         insulins.add(newInsulin)
         currentInsulinIndex = insulins.size - 1
-        if (ue)
-            uel.log(Action.NEW_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(newICfg.insulinLabel))
+        if (ue) {
+            uel.log(Action.NEW_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(fullName))
+        }
+
         currentInsulin = deepClone(newInsulin)
-        currentInsulin.insulinTemplate = 0
+        //currentInsulin.insulinTemplate = 0
         storeSettings()
         return newInsulin
     }
@@ -149,30 +167,30 @@ class InsulinImpl @Inject constructor(
         storeSettings()
     }
 
-    fun createNewInsulinLabel(iCfg: ICfg, currentIndex: Int = -1, template: InsulinType? = null): String {
-        @Suppress("NAME_SHADOWING")
-        val template = template ?: InsulinType.fromPeak(iCfg.insulinPeakTime)
-        var insulinLabel = rh.gs(template.label)
-        if (insulinLabelAlreadyExists(insulinLabel, currentIndex)) {
-            for (i in 1..10000) {
-                if (!insulinLabelAlreadyExists("${insulinLabel}_$i", currentIndex)) {
-                    insulinLabel = "${insulinLabel}_$i"
-                    break
-                }
-            }
-        }
-        return insulinLabel
+    fun buildSuffix(peak: Int, dia: Double, concentration: Double): String {
+        val concLabel = rh.gs(ConcentrationType.fromDouble(concentration).label)
+        val diaLabel = if (dia % 1.0 == 0.0) "${dia.toInt()}h" else "${dia}h"
+        return "${peak}m $diaLabel $concLabel"
     }
 
-    private fun insulinLabelAlreadyExists(insulinLabel: String, currentIndex: Int = -1): Boolean {
-        insulins.forEachIndexed { index, insulin ->
-            if (index != currentIndex) {
-                if (insulin.insulinLabel == insulinLabel) {
-                    return true
-                }
-            }
+    override fun buildFullName(nickname: String, peak: Int, dia: Double, concentration: Double, excludeIndex: Int): String {
+        val suffix = buildSuffix(peak, dia, concentration)
+        val existingNames = insulins.mapIndexed { idx, it ->
+            if (idx == excludeIndex) null else it.insulinLabel
+        }.filterNotNull()
+        var full = "$nickname $suffix".trim()
+        var candidate = full
+        var counter = 1
+        while (existingNames.any { it == candidate } && counter <= 100) {
+            candidate = "$nickname ($counter) $suffix".trim()
+            counter++
         }
-        return false
+        return candidate
+    }
+
+    override fun buildDisplaySuffix(nickname: String, peak: Int, dia: Double, concentration: Double, excludeIndex: Int): String {
+        val fullName = buildFullName(nickname, peak, dia, concentration, excludeIndex)
+        return fullName.removePrefix(nickname).trim()
     }
 
     private fun insulinAlreadyExists(iCfg: ICfg, currentIndex: Int = -1): Boolean {
@@ -230,6 +248,10 @@ class InsulinImpl @Inject constructor(
             try {
                 val jsonObject = jsonElement as? JsonObject ?: return@forEach
                 val newICfg = ICfg.fromJsonObject(jsonObject)
+                if (newICfg.insulinNickname.isBlank()) {
+                    val template = InsulinType.fromPeak(newICfg.insulinPeakTime)
+                    newICfg.insulinNickname = rh.gs(template.label)
+                }
                 if (!insulinAlreadyExists(newICfg)) // No Duplicated Insulin Allowed
                     addNewInsulin(newICfg, newICfg.insulinLabel.isEmpty())
             } catch (_: Exception) {
