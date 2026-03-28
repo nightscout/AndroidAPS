@@ -75,28 +75,14 @@ data class ICfg(
     }
 
     /**
-     * insulinTemplate is only used in insulin editor
-     */
-    var insulinTemplate: Int = 0
-
-    /**
      * insulinNickname is only used in insulin editor
      */
     var insulinNickname: String = ""
 
     /**
-     * isNew is only used in insulin editor
-     */
-    var isNew: Boolean = false
-
-    /**
      * deepClone is only used in insulin editor
      */
-    fun deepClone(): ICfg = ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration).also {
-        it.insulinTemplate = insulinTemplate
-        it.insulinNickname = insulinNickname
-        it.isNew = isNew
-    }
+    fun deepClone(): ICfg = ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration).also { it.insulinNickname = insulinNickname }
 
     fun iobCalcForTreatment(bolus: BS, time: Long): Iob {
         assert(insulinEndTime != 0L)
