@@ -91,24 +91,13 @@ fun ProfileSingleContent(
             profile.iCfg?.let { iCfg ->
                 ElevatedCard(
                     modifier = Modifier.weight(1f),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+                    onClick = { /* TODO Open Insulin Management on current running insulin */ }
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         ProfileRow(
                             label = stringResource(R.string.insulin_label),
                             value = iCfg.insulinLabel
-                        )
-                        ProfileRow(
-                            label = stringResource(R.string.concentration_label),
-                            value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
-                        )
-                        ProfileRow(
-                            label = stringResource(R.string.peak_label),
-                            value = stringResource(R.string.format_mins, iCfg.peak)
-                        )
-                        ProfileRow(
-                            label = stringResource(R.string.dia_label),
-                            value = stringResource(R.string.format_hours, iCfg.dia)
                         )
                     }
                 }

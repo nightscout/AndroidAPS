@@ -24,8 +24,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.AutoFixOff
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
@@ -315,20 +313,7 @@ fun InsulinManagementScreen(
                                     modifier = Modifier.weight(1f)
                                 )
 
-                                Spacer(modifier = Modifier.width(4.dp))
-
-                                IconButton(
-                                    onClick = { viewModel.toggleAutoName() },
-                                    enabled = editorEnabled
-                                ) {
-                                    Icon(
-                                        imageVector = if (uiState.autoNameEnabled) Icons.Default.AutoFixHigh else Icons.Default.AutoFixOff,
-                                        contentDescription = null,
-                                        tint = if (uiState.autoNameEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.width(4.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
 
                                 Surface(
                                     shape = RoundedCornerShape(4.dp),
