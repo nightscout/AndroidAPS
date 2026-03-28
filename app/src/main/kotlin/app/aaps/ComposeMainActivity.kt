@@ -142,6 +142,7 @@ import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
 import app.aaps.ui.compose.fillDialog.FillPreselect
+import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -841,6 +842,12 @@ class ComposeMainActivity : AppCompatActivity() {
                 )
             }
 
+            composable(route = AppRoute.CalibrationDialog.route) {
+                CalibrationDialogScreen(
+                    onNavigateBack = { navController.safePopBackStack() }
+                )
+            }
+
             composable(route = AppRoute.TempBasalDialog.route) {
                 TempBasalDialogScreen(
                     onNavigateBack = { navController.safePopBackStack() },
@@ -1455,7 +1462,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.CGM_XDRIP                    -> openCgmApp("com.eveningoutpost.dexdrip")
             ElementType.CGM_DEX                      -> dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
 
-            ElementType.CALIBRATION                  -> uiInteraction.runCalibrationDialog(supportFragmentManager)
+            ElementType.CALIBRATION                  -> navController.navigate(AppRoute.CalibrationDialog.route)
 
             // Careportal
             ElementType.BG_CHECK                     -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))

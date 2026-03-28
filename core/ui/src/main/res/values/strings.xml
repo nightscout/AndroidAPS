@@ -352,7 +352,7 @@
     <string name="manage_quickwizard_desc">Manage quick wizard presets</string>
     <string name="treatment_note_desc">Add a note to your records</string>
     <string name="treatment_question_desc">Log a question for your care team</string>
-    <string name="treatment_cgm_desc">Enter CGM reading</string>
+    <string name="treatment_cgm_desc">Open CGM app</string>
     <string name="treatment_calibration_desc">Calibrate CGM sensor</string>
     <string name="treatment_bg_check_desc">Record blood glucose check</string>
     <string name="treatment_exercise_desc">Log exercise activity</string>
@@ -653,6 +653,8 @@
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">Total</string>
     <string name="wizard_carb_time">Carb time</string>
+    <string name="carb_time_now">Now</string>
+    <string name="change">Change</string>
     <string name="wizard_set_alarm">Set alarm</string>
     <string name="wizard_use_percentage">Use percentage</string>
     <string name="wizard_include_bg">Include BG</string>

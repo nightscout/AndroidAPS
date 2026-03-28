@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.carbsDialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,9 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,19 +23,23 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -255,17 +264,39 @@ private fun CarbsDialogContent(
                             )
                         }
                     }
-                    IconButton(onClick = onConfirmClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(CoreUiR.string.ok),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
                 }
             )
+        },
+        bottomBar = {
+            val hasAction = uiState.carbs > 0 || uiState.hypoTtChecked || uiState.eatingSoonTtChecked || uiState.activityTtChecked
+            Button(
+                onClick = onConfirmClick,
+                enabled = hasAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                if (uiState.carbs > 0) {
+                    Text(stringResource(CoreUiR.string.format_carbs, uiState.carbs))
+                } else {
+                    Text(stringResource(CoreUiR.string.ok))
+                }
+            }
         }
     ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -273,152 +304,118 @@ private fun CarbsDialogContent(
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // --- Status Bar ---
             DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
 
-            // --- Carbs Section ---
-            NumberInputRow(
-                labelResId = CoreUiR.string.carbs,
-                value = uiState.carbs.toDouble(),
-                onValueChange = onCarbsChange,
-                valueRange = (-uiState.maxCarbs).toDouble()..uiState.maxCarbs.toDouble(),
-                step = 1.0,
-                valueFormat = DecimalFormat("0"),
-                unitLabel = stringResource(CoreUiR.string.shortgramm),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Quick add buttons
-            QuickAddButtons(
-                increment1 = uiState.carbsButtonIncrement1,
-                increment2 = uiState.carbsButtonIncrement2,
-                increment3 = uiState.carbsButtonIncrement3,
-                onAddCarbs = onAddCarbs
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-            // --- Temp Target Section ---
-            TempTargetCheckboxes(
-                hypoChecked = uiState.hypoTtChecked,
-                eatingSoonChecked = uiState.eatingSoonTtChecked,
-                activityChecked = uiState.activityTtChecked,
-                onHypoChange = onHypoChange,
-                onEatingSoonChange = onEatingSoonChange,
-                onActivityChange = onActivityChange
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-            // --- Time Offset Section ---
-            NumberInputRow(
-                labelResId = CoreUiR.string.time,
-                value = uiState.timeOffsetMinutes.toDouble(),
-                onValueChange = onTimeOffsetChange,
-                valueRange = (-7.0 * 24 * 60)..(12.0 * 60),
-                step = 5.0,
-                controlPoints = listOf(
-                    0.0 to -7.0 * 24 * 60,
-                    0.33 to -2.0 * 60,
-                    0.67 to 2.0 * 60,
-                    1.0 to 12.0 * 60
-                ),
-                unitLabelResId = KeysR.string.units_min,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Alarm switch
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(enabled = uiState.alarmEnabled) {
-                        onAlarmChange(!uiState.alarmChecked)
-                    },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            // --- Card 1: TT switches ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    val alarmAlpha = if (uiState.alarmEnabled) 1f else 0.38f
-                    Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alarmAlpha),
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = stringResource(app.aaps.ui.R.string.a11y_carb_reminder),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = if (uiState.alarmEnabled) MaterialTheme.colorScheme.onSurface
-                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    )
-                }
-                Switch(
-                    checked = uiState.alarmChecked && uiState.alarmEnabled,
-                    onCheckedChange = { onAlarmChange(it) },
-                    enabled = uiState.alarmEnabled
-                )
-            }
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-            // --- Duration Section ---
-            NumberInputRow(
-                labelResId = CoreUiR.string.duration_label,
-                value = uiState.durationHours.toDouble(),
-                onValueChange = onDurationChange,
-                valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
-                step = 1.0,
-                valueFormat = DecimalFormat("0"),
-                unitLabel = stringResource(InterfacesR.string.shorthour),
-                modifier = Modifier.fillMaxWidth()
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-            // --- Bolus Reminder Section (conditional) ---
-            if (uiState.showBolusReminder) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onBolusReminderChange(!uiState.bolusReminderChecked) },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(CoreUiR.string.bolus_reminder),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Switch(
-                        checked = uiState.bolusReminderChecked,
-                        onCheckedChange = { onBolusReminderChange(it) }
-                    )
-                }
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            }
-
-            // --- DateTime Section ---
-            SectionHeader(stringResource(CoreUiR.string.date))
-            DateTimeSection(
-                dateString = dateString,
-                timeString = timeString,
-                eventTimeChanged = uiState.eventTimeChanged,
-                onDateClick = onDateClick,
-                onTimeClick = onTimeClick
-            )
-
-            // --- Notes Section ---
-            if (uiState.showNotesFromPreferences) {
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                OutlinedTextField(
-                    value = uiState.notes,
-                    onValueChange = onNotesChange,
-                    label = { Text(stringResource(CoreUiR.string.notes_label)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    minLines = 2,
-                    maxLines = 4,
-                    colors = OutlinedTextFieldDefaults.colors()
+                TempTargetCheckboxes(
+                    hypoChecked = uiState.hypoTtChecked,
+                    eatingSoonChecked = uiState.eatingSoonTtChecked,
+                    activityChecked = uiState.activityTtChecked,
+                    onHypoChange = onHypoChange,
+                    onEatingSoonChange = onEatingSoonChange,
+                    onActivityChange = onActivityChange,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // --- Card 2: Carbs + Duration + Bolus Reminder + Carb Time ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Carbs + Quick add
+                    Column(modifier = itemModifier) {
+                        NumberInputRow(
+                            labelResId = CoreUiR.string.carbs,
+                            value = uiState.carbs.toDouble(),
+                            onValueChange = onCarbsChange,
+                            valueRange = (-uiState.maxCarbs).toDouble()..uiState.maxCarbs.toDouble(),
+                            step = 1.0,
+                            valueFormat = DecimalFormat("0"),
+                            unitLabel = stringResource(CoreUiR.string.shortgramm)
+                        )
+                        QuickAddButtons(
+                            increment1 = uiState.carbsButtonIncrement1,
+                            increment2 = uiState.carbsButtonIncrement2,
+                            increment3 = uiState.carbsButtonIncrement3,
+                            onAddCarbs = onAddCarbs
+                        )
+                    }
+
+                    // Duration
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.duration_label,
+                        value = uiState.durationHours.toDouble(),
+                        onValueChange = onDurationChange,
+                        valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
+                        step = 1.0,
+                        valueFormat = DecimalFormat("0"),
+                        unitLabel = stringResource(InterfacesR.string.shorthour),
+                        modifier = itemModifier
+                    )
+
+                    // Bolus Reminder (conditional)
+                    if (uiState.showBolusReminder) {
+                        Row(
+                            modifier = itemModifier
+                                .clickable { onBolusReminderChange(!uiState.bolusReminderChecked) },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = stringResource(CoreUiR.string.bolus_reminder),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Switch(
+                                checked = uiState.bolusReminderChecked,
+                                onCheckedChange = { onBolusReminderChange(it) }
+                            )
+                        }
+                    }
+
+                    // Carb time (at bottom)
+                    CarbTimeRow(
+                        offsetMinutes = uiState.timeOffsetMinutes,
+                        alarmChecked = uiState.alarmChecked,
+                        onOffsetChange = { onTimeOffsetChange(it.toDouble()) },
+                        onAlarmChange = onAlarmChange,
+                        resolvedTimeText = if (uiState.timeOffsetMinutes != 0) timeString else null,
+                        offsetRange = -7 * 24 * 60..12 * 60,
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        },
+                        modifier = itemModifier
+                    )
+
+                    // Notes
+                    if (uiState.showNotesFromPreferences) {
+                        TextField(
+                            value = uiState.notes,
+                            onValueChange = onNotesChange,
+                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            modifier = itemModifier,
+                            singleLine = false,
+                            maxLines = 3
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -461,15 +458,6 @@ private fun CarbsDialogScreenPreview() {
     }
 }
 
-@Composable
-private fun SectionHeader(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary
-    )
-}
 
 @Composable
 private fun TempTargetCheckboxes(
@@ -478,9 +466,10 @@ private fun TempTargetCheckboxes(
     activityChecked: Boolean,
     onHypoChange: (Boolean) -> Unit,
     onEatingSoonChange: (Boolean) -> Unit,
-    onActivityChange: (Boolean) -> Unit
+    onActivityChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

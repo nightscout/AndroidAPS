@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.insulinDialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,9 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -18,10 +22,12 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +36,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -240,17 +248,47 @@ private fun InsulinDialogContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onConfirmClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(CoreUiR.string.ok),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                    if (onSettingsClick != null) {
+                        IconButton(onClick = onSettingsClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiR.string.settings),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             )
+        },
+        bottomBar = {
+            Button(
+                onClick = onConfirmClick,
+                enabled = uiState.insulin > 0.0,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                if (uiState.insulin > 0.0) {
+                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                } else {
+                    Text(stringResource(CoreUiR.string.ok))
+                }
+            }
         }
     ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -258,114 +296,122 @@ private fun InsulinDialogContent(
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // --- Status Bar ---
             DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
 
-            // --- Checkboxes Section ---
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                // Eating Soon TT checkbox
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onEatingSoonChange(!uiState.eatingSoonTtChecked) },
-                    verticalAlignment = Alignment.CenterVertically
+            // --- Card 1: Switches ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Checkbox(checked = uiState.eatingSoonTtChecked, onCheckedChange = null)
-                    Text(
-                        text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+                    // Eating Soon TT
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onEatingSoonChange(!uiState.eatingSoonTtChecked) },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Switch(checked = uiState.eatingSoonTtChecked, onCheckedChange = { onEatingSoonChange(it) })
+                    }
+
+                    // Record Only
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = uiState.recordOnlyEnabled) {
+                                onRecordOnlyChange(!uiState.recordOnlyChecked)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(CoreUiR.string.bolus_recorded_only),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
+                            else MaterialTheme.colorScheme.onSurface
+                        )
+                        Switch(
+                            checked = uiState.recordOnlyChecked,
+                            onCheckedChange = { onRecordOnlyChange(it) },
+                            enabled = uiState.recordOnlyEnabled
+                        )
+                    }
                 }
+            }
 
-                // Record Only checkbox
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = uiState.recordOnlyEnabled) {
-                            onRecordOnlyChange(!uiState.recordOnlyChecked)
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = uiState.recordOnlyChecked,
-                        onCheckedChange = null,
-                        enabled = uiState.recordOnlyEnabled
-                    )
-                    Text(
-                        text = stringResource(CoreUiR.string.bolus_recorded_only),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
-                        else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+            // --- Card 2: All inputs ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Insulin + Quick add
+                    Column(modifier = itemModifier) {
+                        NumberInputRow(
+                            labelResId = CoreUiR.string.overview_insulin_label,
+                            value = uiState.insulin,
+                            onValueChange = onInsulinChange,
+                            valueRange = 0.0..uiState.maxInsulin,
+                            step = uiState.bolusStep,
+                            valueFormat = bolusFormat,
+                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
+                        )
+                        InsulinQuickAddButtons(
+                            increment1 = uiState.insulinButtonIncrement1,
+                            increment2 = uiState.insulinButtonIncrement2,
+                            increment3 = uiState.insulinButtonIncrement3,
+                            formatAmount = formatAmount,
+                            onAddInsulin = onAddInsulin
+                        )
+                    }
+
+                    // Time Offset + DateTime (visible when recordOnly)
+                    if (uiState.timeLayoutVisible) {
+                        Column(modifier = itemModifier) {
+                            NumberInputRow(
+                                labelResId = CoreUiR.string.time,
+                                value = uiState.timeOffsetMinutes.toDouble(),
+                                onValueChange = onTimeOffsetChange,
+                                valueRange = -12.0 * 60..12.0 * 60,
+                                step = 5.0,
+                                unitLabelResId = KeysR.string.units_min
+                            )
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        }
+                    }
+
+                    // Notes
+                    if (uiState.showNotesFromPreferences) {
+                        TextField(
+                            value = uiState.notes,
+                            onValueChange = onNotesChange,
+                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            modifier = itemModifier,
+                            singleLine = false,
+                            maxLines = 3
+                        )
+                    }
                 }
             }
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
-            // --- Insulin Section ---
-            NumberInputRow(
-                labelResId = CoreUiR.string.overview_insulin_label,
-                value = uiState.insulin,
-                onValueChange = onInsulinChange,
-                valueRange = 0.0..uiState.maxInsulin,
-                step = uiState.bolusStep,
-                valueFormat = bolusFormat,
-                unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Quick add buttons
-            InsulinQuickAddButtons(
-                increment1 = uiState.insulinButtonIncrement1,
-                increment2 = uiState.insulinButtonIncrement2,
-                increment3 = uiState.insulinButtonIncrement3,
-                formatAmount = formatAmount,
-                onAddInsulin = onAddInsulin,
-                onSettingsClick = onSettingsClick
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-            // --- Time Offset Section (visible only when recordOnly) ---
-            if (uiState.timeLayoutVisible) {
-                NumberInputRow(
-                    labelResId = CoreUiR.string.time,
-                    value = uiState.timeOffsetMinutes.toDouble(),
-                    onValueChange = onTimeOffsetChange,
-                    valueRange = -12.0 * 60..12.0 * 60,
-                    step = 5.0,
-                    unitLabelResId = KeysR.string.units_min,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                // --- DateTime Section ---
-                SectionHeader(stringResource(CoreUiR.string.date))
-                DateTimeSection(
-                    dateString = dateString,
-                    timeString = timeString,
-                    eventTimeChanged = uiState.eventTimeChanged,
-                    onDateClick = onDateClick,
-                    onTimeClick = onTimeClick
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            }
-
-            // --- Notes Section ---
-            if (uiState.showNotesFromPreferences) {
-                OutlinedTextField(
-                    value = uiState.notes,
-                    onValueChange = onNotesChange,
-                    label = { Text(stringResource(CoreUiR.string.notes_label)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    minLines = 2,
-                    maxLines = 4,
-                    colors = OutlinedTextFieldDefaults.colors()
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -399,22 +445,13 @@ private fun InsulinDialogScreenPreview() {
             onNotesChange = {},
             onDateClick = {},
             onTimeClick = {},
-            onSettingsClick = {},
+            onSettingsClick = null,
             onNavigateBack = {},
             onConfirmClick = {}
         )
     }
 }
 
-@Composable
-private fun SectionHeader(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary
-    )
-}
 
 @Composable
 private fun InsulinQuickAddButtons(
@@ -422,11 +459,10 @@ private fun InsulinQuickAddButtons(
     increment2: Double,
     increment3: Double,
     formatAmount: (Double) -> String,
-    onAddInsulin: (Double) -> Unit,
-    onSettingsClick: (() -> Unit)?
+    onAddInsulin: (Double) -> Unit
 ) {
     val increments = listOf(increment1, increment2, increment3).filter { it != 0.0 }
-    if (increments.isEmpty() && onSettingsClick == null) return
+    if (increments.isEmpty()) return
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -438,19 +474,6 @@ private fun InsulinQuickAddButtons(
             val label = if (amount > 0) "+$formatted" else formatted
             FilledTonalButton(onClick = { onAddInsulin(amount) }) {
                 Text(label)
-            }
-        }
-        if (onSettingsClick != null) {
-            IconButton(
-                onClick = onSettingsClick,
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = stringResource(CoreUiR.string.settings),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
             }
         }
     }

@@ -3,8 +3,16 @@ package app.aaps.ui.compose.wizardDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Surface
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +26,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -39,7 +46,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextField
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -72,7 +79,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import java.text.DecimalFormat
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -293,53 +302,15 @@ private fun WizardDialogContent(
             AapsTopAppBar(
                 title = {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
-                            if (uiState.totalInsulin > 0.0) {
-                                Text(
-                                    text = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin),
-                                    fontWeight = FontWeight.Bold,
-                                    color = ElementType.INSULIN.color()
-                                )
-                            }
-                            if (uiState.carbs > 0) {
-                                Text(
-                                    text = stringResource(CoreUiR.string.format_carbs, uiState.carbs),
-                                    fontWeight = FontWeight.Bold,
-                                    color = ElementType.CARBS.color()
-                                )
-                            }
-                            val hasExtra = uiState.percentage != 100 || uiState.directCorrection != 0.0
-                            if (hasExtra) {
-                                Text("(", fontWeight = FontWeight.Bold)
-                                if (uiState.percentage != 100) {
-                                    Text(
-                                        text = stringResource(CoreUiR.string.format_percent, uiState.percentage),
-                                        fontWeight = FontWeight.Bold,
-                                        color = ElementType.CARBS.color()
-                                    )
-                                }
-                                if (uiState.directCorrection != 0.0) {
-                                    Text(
-                                        text = stringResource(CoreUiR.string.format_insulin_units_signed, uiState.directCorrection),
-                                        fontWeight = FontWeight.Bold,
-                                        color = ElementType.INSULIN.color()
-                                    )
-                                }
-                                Text(")", fontWeight = FontWeight.Bold)
-                            }
-                        } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
-                            Text(
-                                text = stringResource(R.string.missing_carbs, uiState.carbsEquivalent.toInt()),
-                                fontWeight = FontWeight.Bold,
-                                color = ElementType.CARBS.color()
-                            )
-                        } else {
-                            Text(stringResource(ElementType.BOLUS_WIZARD.labelResId()))
-                        }
+                        Icon(
+                            imageVector = ElementType.BOLUS_WIZARD.icon(),
+                            contentDescription = null,
+                            tint = ElementType.BOLUS_WIZARD.color()
+                        )
+                        Text(stringResource(ElementType.BOLUS_WIZARD.labelResId()))
                     }
                 },
                 navigationIcon = {
@@ -358,17 +329,37 @@ private fun WizardDialogContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    if (uiState.okVisible) {
-                        IconButton(onClick = onConfirmClick) {
-                            Icon(
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = stringResource(CoreUiR.string.ok),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
                 }
             )
+        },
+        bottomBar = {
+            Button(
+                onClick = onConfirmClick,
+                enabled = uiState.okVisible,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    if (uiState.totalInsulin > 0.0) {
+                        Text(stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin))
+                    }
+                    if (uiState.totalInsulin > 0.0 && uiState.carbs > 0) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
+                    if (uiState.carbs > 0) {
+                        Text(stringResource(CoreUiR.string.format_carbs, uiState.carbs))
+                    }
+                    if (!uiState.okVisible) {
+                        Text(stringResource(CoreUiR.string.ok))
+                    }
+                }
         }
     ) { paddingValues ->
         Column(
@@ -378,162 +369,15 @@ private fun WizardDialogContent(
                 .verticalScroll(rememberScrollState())
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // --- Inputs Card ---
+            // --- Calculation Card (expandable, at top) ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    // Carbs Input
-                    NumberInputRow(
-                        labelResId = CoreUiR.string.carbs,
-                        value = uiState.carbs.toDouble(),
-                        onValueChange = onCarbsChange,
-                        valueRange = 0.0..uiState.maxCarbs.toDouble(),
-                        step = 1.0,
-                        unitLabel = "g"
-                    )
-
-                    // Carbs type selector
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Spacer(modifier = Modifier.size(48.dp))
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            CarbsType.entries.forEachIndexed { index, type ->
-                                SegmentedButton(
-                                    selected = uiState.carbsType == type,
-                                    onClick = { onCarbsTypeChange(type) },
-                                    shape = SegmentedButtonDefaults.itemShape(index, CarbsType.entries.size),
-                                    icon = {}
-                                ) {
-                                    Icon(
-                                        imageVector = when (type) {
-                                            CarbsType.BREAD -> IcBread
-                                            CarbsType.CAKE  -> IcCake
-                                            CarbsType.PIZZA -> IcPizza
-                                        },
-                                        contentDescription = type.name,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        val tooltipState = rememberTooltipState()
-                        val scope = rememberCoroutineScope()
-                        TooltipBox(
-                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-                            tooltip = {
-                                PlainTooltip {
-                                    Column {
-                                        Text(
-                                            text = when (uiState.carbsType) {
-                                                CarbsType.BREAD -> stringResource(CoreUiR.string.carbs_type_bread)
-                                                CarbsType.CAKE  -> stringResource(CoreUiR.string.carbs_type_cake)
-                                                CarbsType.PIZZA -> stringResource(CoreUiR.string.carbs_type_pizza)
-                                            }
-                                        )
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        val type = uiState.carbsType
-                                        Text(
-                                            text = if (type == CarbsType.BREAD)
-                                                stringResource(R.string.wizard_carbs_type_bread_desc)
-                                            else
-                                                stringResource(
-                                                    R.string.wizard_carbs_type_desc,
-                                                    100 - type.carbsPercent,
-                                                    type.eCarbsPercent,
-                                                    type.eCarbsDelayMinutes,
-                                                    type.eCarbsDurationHours
-                                                ),
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                            },
-                            state = tooltipState
-                        ) {
-                            IconButton(onClick = { scope.launch { tooltipState.show() } }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Info,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
-                    }
-
-                    HorizontalDivider()
-
-                    // Direct Correction input
-                    NumberInputRow(
-                        labelResId = CoreUiR.string.wizard_correction,
-                        value = uiState.directCorrection,
-                        onValueChange = onDirectCorrectionChange,
-                        valueRange = -uiState.maxBolus..uiState.maxBolus,
-                        step = uiState.bolusStep,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
-                        decimalPlaces = 2
-                    )
-
-                    HorizontalDivider()
-
-                    // Carb Time Input
-                    NumberInputRow(
-                        labelResId = CoreUiR.string.wizard_carb_time,
-                        value = uiState.carbTime.toDouble(),
-                        onValueChange = onCarbTimeChange,
-                        valueRange = -60.0..60.0,
-                        step = 5.0,
-                        unitLabelResId = KeysR.string.units_min
-                    )
-
-                    // Alarm toggle
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onAlarmToggle(!uiState.alarmChecked) },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Alarm,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Text(
-                                text = stringResource(CoreUiR.string.wizard_set_alarm),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                        Switch(
-                            checked = uiState.alarmChecked,
-                            onCheckedChange = onAlarmToggle
-                        )
-                    }
-                }
-            }
-
-            // --- Calculation Card (expandable) ---
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    // Header row (clickable to toggle)
+                    // Header row with calculation result summary
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -546,11 +390,58 @@ private fun WizardDialogContent(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        Icon(
-                            imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            // Result summary (always visible)
+                            if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
+                                if (uiState.totalInsulin > 0.0) {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin),
+                                        fontWeight = FontWeight.Bold,
+                                        color = ElementType.INSULIN.color()
+                                    )
+                                }
+                                if (uiState.carbs > 0) {
+                                    Text(
+                                        text = stringResource(CoreUiR.string.format_carbs, uiState.carbs),
+                                        fontWeight = FontWeight.Bold,
+                                        color = ElementType.CARBS.color()
+                                    )
+                                }
+                                val hasExtra = uiState.percentage != 100 || uiState.directCorrection != 0.0
+                                if (hasExtra) {
+                                    Text("(", fontWeight = FontWeight.Bold)
+                                    if (uiState.percentage != 100) {
+                                        Text(
+                                            text = stringResource(CoreUiR.string.format_percent, uiState.percentage),
+                                            fontWeight = FontWeight.Bold,
+                                            color = ElementType.CARBS.color()
+                                        )
+                                    }
+                                    if (uiState.directCorrection != 0.0) {
+                                        Text(
+                                            text = stringResource(CoreUiR.string.format_insulin_units_signed, uiState.directCorrection),
+                                            fontWeight = FontWeight.Bold,
+                                            color = ElementType.INSULIN.color()
+                                        )
+                                    }
+                                    Text(")", fontWeight = FontWeight.Bold)
+                                }
+                            } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
+                                Text(
+                                    text = stringResource(R.string.missing_carbs, uiState.carbsEquivalent.toInt()),
+                                    fontWeight = FontWeight.Bold,
+                                    color = ElementType.CARBS.color()
+                                )
+                            }
+                            Icon(
+                                imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
 
                     // Toggle buttons row (always visible)
@@ -576,7 +467,7 @@ private fun WizardDialogContent(
                             }
                             // TT
                             SegmentedButton(
-                                checked = uiState.useTT,
+                                checked = uiState.useTT && uiState.hasTempTarget && uiState.useBg,
                                 onCheckedChange = onTTToggle,
                                 shape = SegmentedButtonDefaults.itemShape(1, 5),
                                 enabled = uiState.hasTempTarget && uiState.useBg,
@@ -754,108 +645,299 @@ private fun WizardDialogContent(
                 }
             }
 
-            // --- BG Card ---
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    NumberInputRow(
-                        labelResId = CoreUiR.string.wizard_bg_label,
-                        value = uiState.bg,
-                        onValueChange = onBgChange,
-                        valueRange = uiState.bgRange,
-                        step = uiState.bgStep,
-                        unitLabel = unitsLabel,
-                        decimalPlaces = if (uiState.isMgdl) 0 else 1
-                    )
-                    if (uiState.hasBgData) {
-                        Text(
-                            text = stringResource(R.string.wizard_bg_age, uiState.bgAgeMinutes),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(CoreUiR.string.not_available_full),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-            }
+            // --- All inputs in one card (gap-as-divider pattern) ---
+            val itemModifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
 
-            // --- Advanced Card (collapsible) ---
+            val bgIsOld = !uiState.hasBgData || uiState.bgAgeMinutes > 9
+            var bgExpanded by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(bgIsOld) {
+                if (bgIsOld) bgExpanded = true
+            }
+            var percentageExpanded by rememberSaveable { mutableStateOf(false) }
+
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    // Header row
+              Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                // Carbs Input
+                Column(modifier = itemModifier) {
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.carbs,
+                        value = uiState.carbs.toDouble(),
+                        onValueChange = onCarbsChange,
+                        valueRange = 0.0..uiState.maxCarbs.toDouble(),
+                        step = 1.0,
+                        unitLabel = "g"
+                    )
+
+                    // Carbs type selector
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onAdvancedExpandToggle() },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .padding(top = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = stringResource(CoreUiR.string.wizard_advanced),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Icon(
-                            imageVector = if (uiState.advancedExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+                        SingleChoiceSegmentedButtonRow(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            CarbsType.entries.forEachIndexed { index, type ->
+                                SegmentedButton(
+                                    selected = uiState.carbsType == type,
+                                    onClick = { onCarbsTypeChange(type) },
+                                    shape = SegmentedButtonDefaults.itemShape(index, CarbsType.entries.size),
+                                    icon = {}
+                                ) {
+                                    Icon(
+                                        imageVector = when (type) {
+                                            CarbsType.BREAD -> IcBread
+                                            CarbsType.CAKE  -> IcCake
+                                            CarbsType.PIZZA -> IcPizza
+                                        },
+                                        contentDescription = type.name,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
+                        }
 
-                    AnimatedVisibility(
-                        visible = uiState.advancedExpanded,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
-                    ) {
-                        Column(modifier = Modifier.padding(top = 8.dp)) {
-                            // Percentage Input
-                            NumberInputRow(
-                                labelResId = CoreUiR.string.wizard_use_percentage,
-                                value = uiState.percentage.toDouble(),
-                                onValueChange = onPercentageChange,
-                                valueRange = 10.0..200.0,
-                                step = 5.0,
-                                unitLabel = "%",
-                                decimalPlaces = 0
-                            )
-
-                            // Profile dropdown (hidden in simple mode)
-                            if (!uiState.simpleMode) {
-                                HorizontalDivider()
-                                ProfileDropdown(
-                                    profileNames = uiState.profileNames,
-                                    selectedIndex = uiState.selectedProfileIndex,
-                                    onSelect = onProfileSelect
+                        val tooltipState = rememberTooltipState()
+                        val scope = rememberCoroutineScope()
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                            tooltip = {
+                                PlainTooltip {
+                                    Column {
+                                        Text(
+                                            text = when (uiState.carbsType) {
+                                                CarbsType.BREAD -> stringResource(CoreUiR.string.carbs_type_bread)
+                                                CarbsType.CAKE  -> stringResource(CoreUiR.string.carbs_type_cake)
+                                                CarbsType.PIZZA -> stringResource(CoreUiR.string.carbs_type_pizza)
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        val type = uiState.carbsType
+                                        Text(
+                                            text = if (type == CarbsType.BREAD)
+                                                stringResource(R.string.wizard_carbs_type_bread_desc)
+                                            else
+                                                stringResource(
+                                                    R.string.wizard_carbs_type_desc,
+                                                    100 - type.carbsPercent,
+                                                    type.eCarbsPercent,
+                                                    type.eCarbsDelayMinutes,
+                                                    type.eCarbsDurationHours
+                                                ),
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            },
+                            state = tooltipState
+                        ) {
+                            IconButton(onClick = { scope.launch { tooltipState.show() } }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Info,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
                                 )
                             }
                         }
                     }
                 }
-            }
 
-            // --- Notes ---
-            if (uiState.showNotes) {
-                OutlinedTextField(
-                    value = uiState.notes,
-                    onValueChange = onNotesChange,
-                    label = { Text(stringResource(CoreUiR.string.notes_label)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(),
-                    singleLine = false,
-                    maxLines = 3
+                // Direct Correction input
+                NumberInputRow(
+                    labelResId = CoreUiR.string.wizard_correction,
+                    value = uiState.directCorrection,
+                    onValueChange = onDirectCorrectionChange,
+                    valueRange = -uiState.maxBolus..uiState.maxBolus,
+                    step = uiState.bolusStep,
+                    unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                    decimalPlaces = 2,
+                    modifier = itemModifier
                 )
+
+                // Carb Time (compact row with popup dialog)
+                CarbTimeRow(
+                    offsetMinutes = uiState.carbTime,
+                    alarmChecked = uiState.alarmChecked,
+                    onOffsetChange = { onCarbTimeChange(it.toDouble()) },
+                    onAlarmChange = onAlarmToggle,
+                    modifier = itemModifier
+                )
+                // BG (collapsible, auto-expand when old/missing)
+                Column(modifier = itemModifier) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = stringResource(CoreUiR.string.wizard_bg_label) + ": ",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            if (uiState.hasBgData) {
+                                val bgFormat = if (uiState.isMgdl) DecimalFormat("0") else DecimalFormat("0.0")
+                                Text(
+                                    text = "${bgFormat.format(uiState.bg)} $unitsLabel",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "(${uiState.bgAgeMinutes} min)",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (bgIsOld) MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(CoreUiR.string.not_available_full),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
+                        if (!bgExpanded) {
+                            FilledTonalButton(onClick = { bgExpanded = true }) {
+                                Text(stringResource(CoreUiR.string.change))
+                            }
+                        }
+                    }
+                    AnimatedVisibility(
+                        visible = bgExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        NumberInputRow(
+                            labelResId = CoreUiR.string.wizard_bg_label,
+                            value = uiState.bg,
+                            onValueChange = onBgChange,
+                            valueRange = uiState.bgRange,
+                            step = uiState.bgStep,
+                            unitLabel = unitsLabel,
+                            decimalPlaces = if (uiState.isMgdl) 0 else 1
+                        )
+                    }
+                }
+
+                // Percentage (collapsible)
+                Column(modifier = itemModifier) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = stringResource(CoreUiR.string.wizard_use_percentage) + ": ",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = "${uiState.percentage}%",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        if (!percentageExpanded) {
+                            FilledTonalButton(onClick = { percentageExpanded = true }) {
+                                Text(stringResource(CoreUiR.string.change))
+                            }
+                        }
+                    }
+                    AnimatedVisibility(
+                        visible = percentageExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        NumberInputRow(
+                            labelResId = CoreUiR.string.wizard_use_percentage,
+                            value = uiState.percentage.toDouble(),
+                            onValueChange = onPercentageChange,
+                            valueRange = 10.0..200.0,
+                            step = 5.0,
+                            unitLabel = "%",
+                            decimalPlaces = 0
+                        )
+                    }
+                }
+
+                // Profile (collapsible, hidden in simple mode)
+                if (!uiState.simpleMode) {
+                    val currentProfile = uiState.profileNames.getOrElse(uiState.selectedProfileIndex) { "" }
+                    var profileExpanded by rememberSaveable { mutableStateOf(false) }
+
+                    Column(modifier = itemModifier) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = stringResource(CoreUiR.string.profile) + ": ",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = currentProfile,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            if (!profileExpanded) {
+                                FilledTonalButton(onClick = { profileExpanded = true }) {
+                                    Text(stringResource(CoreUiR.string.change))
+                                }
+                            }
+                        }
+                        AnimatedVisibility(
+                            visible = profileExpanded,
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
+                        ) {
+                            ProfileDropdown(
+                                profileNames = uiState.profileNames,
+                                selectedIndex = uiState.selectedProfileIndex,
+                                onSelect = onProfileSelect
+                            )
+                        }
+                    }
+                }
+                // Notes
+                if (uiState.showNotes) {
+                    TextField(
+                        value = uiState.notes,
+                        onValueChange = onNotesChange,
+                        label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                        modifier = itemModifier,
+                        singleLine = false,
+                        maxLines = 3
+                    )
+                }
+              }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

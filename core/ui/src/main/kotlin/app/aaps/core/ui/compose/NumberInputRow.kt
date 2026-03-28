@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -174,7 +175,6 @@ private fun SliderNumberInputRow(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -252,7 +252,6 @@ private fun DirectNumberInputRow(
     var errorMessage by remember { mutableStateOf("") }
 
     // Sync text field when value changes externally (e.g., +/- buttons) and not focused
-    // Sync text field when value changes externally (e.g., +/- buttons) and not focused
     LaunchedEffect(value) {
         if (!isFocused) {
             val text = if (value == 0.0) "" else valueFormat.format(value)
@@ -305,17 +304,13 @@ private fun DirectNumberInputRow(
         else                   -> ""
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.fillMaxWidth()
     ) {
-        // TextField with label inside + external +/- buttons
-        Row(
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        // TextField + range text below it
+        Column(modifier = Modifier.weight(1f)) {
             TextField(
                 value = textFieldValue,
                 onValueChange = { newValue ->
@@ -329,24 +324,6 @@ private fun DirectNumberInputRow(
                 suffix = if (resolvedUnitLabel.isNotEmpty()) {
                     { Text(resolvedUnitLabel) }
                 } else null,
-                supportingText = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = if (isError) errorMessage else rangeText,
-                            color = if (isError) MaterialTheme.colorScheme.error
-                            else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        if (showFormattedDisplay && !isError) {
-                            Text(
-                                text = formattedDisplay,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = if (step != step.roundToInt().toDouble())
                         KeyboardType.Decimal else KeyboardType.Number,
@@ -359,7 +336,7 @@ private fun DirectNumberInputRow(
                     }
                 ),
                 modifier = Modifier
-                    .weight(1f)
+                    .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (isFocused && !focusState.isFocused) {
                             validateAndCommit(textFieldValue.text)
@@ -372,26 +349,47 @@ private fun DirectNumberInputRow(
                         isFocused = focusState.isFocused
                     }
             )
+            // Range and formatted display
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = if (isError) errorMessage else rangeText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isError) MaterialTheme.colorScheme.error
+                    else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (showFormattedDisplay && !isError) {
+                    Text(
+                        text = formattedDisplay,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
 
-            // +/- filled buttons outside the field with long-press repeat
-            RepeatingIconButton(
-                onClick = { stepValue(-1) },
-                enabled = enabled && value > valueRange.start
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Remove,
-                    contentDescription = "Decrease"
-                )
-            }
-            RepeatingIconButton(
-                onClick = { stepValue(1) },
-                enabled = enabled && value < valueRange.endInclusive
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Increase"
-                )
-            }
+        // +/- filled buttons with long-press repeat
+        RepeatingIconButton(
+            onClick = { stepValue(-1) },
+            enabled = enabled && value > valueRange.start
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Remove,
+                contentDescription = "Decrease",
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        RepeatingIconButton(
+            onClick = { stepValue(1) },
+            enabled = enabled && value < valueRange.endInclusive
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "Increase",
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }
