@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Đang tiêm %1$.2f U</string>
+    <string name="bolus_delivered_so_far">Đã truyền %1$.2fU trên %2$.2fU</string>
     <string name="bolus_delivered_successfully">Đã tiêm Bolus thành công %1$.2f U</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Thay trình điều khiển Bơm.</string>
@@ -61,14 +62,14 @@
     <string name="pref_show_iob">Hiển thị IOB</string>
     <string name="pref_show_detailed_iob">Hiển thị chi tiết IOB</string>
     <string name="pref_show_cob">Hiển thị COB</string>
-    <string name="pref_show_delta">Hiển thị Delta</string>
-    <string name="pref_show_detailed_delta">Hiển thị chi tiết Delta</string>
+    <string name="pref_show_delta">Hiển thị độ lệch</string>
+    <string name="pref_show_detailed_delta">Hiển thị chi tiết độ lệch</string>
     <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
     <string name="pref_show_tempTarget">Hiển thị mục tiêu tạm thời</string>
     <string name="pref_show_reservoir_level">Hiển thị mức ống chứa</string>
     <string name="pref_show_phone_battery">Hiển thị pin điện thoại</string>
     <string name="pref_show_rig_battery">Hiển thị mức pin Rig</string>
-    <string name="pref_show_basal_rate">Hiển thị liều basal</string>
+    <string name="pref_show_basal_rate">Hiển thị liều nền</string>
     <string name="pref_show_loop_status">Hiển thị trạng thái vòng lặp</string>
     <string name="pref_show_bg">Hiển thị đường huyết</string>
     <string name="pref_show_bgi">Hiển thị BGI</string>

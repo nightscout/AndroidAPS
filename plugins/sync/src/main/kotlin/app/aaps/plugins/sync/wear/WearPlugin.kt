@@ -91,7 +91,7 @@ class WearPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventOverviewBolusProgress ->
                            if (!BolusProgressData.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
-                               if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = BolusProgressData.percent, status = BolusProgressData.status)))
+                               if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = BolusProgressData.percent, status = BolusProgressData.wearStatus)))
                            }
                        }, fabricPrivacy::logException)
         disposable += rxBus

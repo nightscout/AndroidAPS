@@ -10,6 +10,7 @@
     <string name="pump_status_busy">В процес на работа</string>
     <string name="pump_status_suspended">Прекратено</string>
     <string name="pump_status_executing_command">Изпълнение на команда</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Базали</string>
     <string name="history_group_configuration">Конфигурации</string>

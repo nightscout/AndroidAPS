@@ -275,7 +275,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success + "===" + result.enacted)
                 if (result.success) {
-                    if (cmdDevicesOldGet.isSupport()) {
+                    if (cmdDevicesOldGet.isSupport(serialNumber)) {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pair(scanResult)
                     } else {

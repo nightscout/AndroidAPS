@@ -2,6 +2,7 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Leverer %1$.2f E</string>
+    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E levert</string>
     <string name="bolus_delivered_successfully">Bolus på %1$.2f E ble levert</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>

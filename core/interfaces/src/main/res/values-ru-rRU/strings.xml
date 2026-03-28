@@ -2,14 +2,15 @@
 <resources>
     <!--    Events-->
     <string name="bolus_delivering">Подается %1$.2fед</string>
+    <string name="bolus_delivered_so_far">Введено %1$.2fед / %2$.2fед</string>
     <string name="bolus_delivered_successfully">Болюс %1$.2fед. введен успешно</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d мин. назад</string>
+    <string name="minago">%1$d мин назад</string>
     <string name="secago">%1$d сек назад</string>
     <string name="minago_long">%1$d минут назад</string>
-    <string name="hoursago">%1$.1fч. назад</string>
+    <string name="hoursago">%1$.1fч назад</string>
     <string name="days_ago">%1$s дн назад</string>
     <string name="days_ago_round">%1$s дн назад</string>
     <plurals name="plurals_day_hour_ago">
@@ -55,9 +56,9 @@
     <!-- Rx -->
     <string name="connecting_for">Связь установлена за %1$d сек</string>
     <string name="handshaking">Подтверждение связи</string>
-    <string name="connected">соединение установлено</string>
+    <string name="connected">Подключено</string>
     <string name="authorized">Авторизовано</string>
-    <string name="disconnecting">разъединение</string>
+    <string name="disconnecting">Разъединение</string>
     <string name="waiting_for_disconnection">Ожидание разъединения</string>
     <!-- Custom Watchface -->
     <string name="metadata_label_watchface_created_at">Создано: %1$s</string>
@@ -91,7 +92,7 @@
     <string name="wear_default_watchface">Циферблат по умолчанию</string>
     <string name="wear_more_watchfaces">Еще циферблаты</string>
     <string name="temp_basal_absolute_rate">%1$.2f ед/ч @%2$s %3$d/%4$d\'</string>
-    <string name="temp_basal_percent_rate">%1$.2f ед/ч @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f % @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f ед/ч @%2$s %3$d/%4$d мин</string>
     <string name="forever">Навсегда</string>
 </resources>

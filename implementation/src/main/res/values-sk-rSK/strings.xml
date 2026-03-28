@@ -19,10 +19,10 @@
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">Posledné Spoj: pred %1$d min</string>
     <string name="short_status_alert">Upozornenie: %1$s</string>
-    <string name="short_status_last_bolus">Posledný bolus: %1$sJI @ %2$s</string>
+    <string name="short_status_last_bolus">Posledný bolus: %1$sU @ %2$s</string>
     <string name="short_status_temp_basal">Doč. bazál: %1$s</string>
     <string name="short_status_extended">Ext: %1$s</string>
-    <string name="short_status_reservoir">Zásobník: %1$dJI</string>
+    <string name="short_status_reservoir">Zásobník: %1$dU</string>
     <string name="short_status_battery">Bat: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpa nie je inicializovaná</string>
 </resources>

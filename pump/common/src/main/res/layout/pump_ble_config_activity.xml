@@ -4,6 +4,12 @@
     android:orientation="vertical"
     android:padding="5dp">
 
+    <TextView
+        android:id="@+id/pump_ble_config_instructions_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp" />
+
     <!-- Currently selected Pump -->
     <TextView
         style="@style/TextAppearance.AppCompat.Title"
@@ -49,7 +55,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="24dp">
 
         <TextView
             style="@style/TextAppearance.AppCompat.Title"

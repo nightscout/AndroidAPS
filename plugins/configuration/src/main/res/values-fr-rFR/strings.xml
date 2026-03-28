@@ -49,6 +49,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="unattended_settings_export">Export des paramètres sans surveillance</string>
     <string name="unattended_settings_export_summary">L\'activation permettra de stocker votre mot de passe en toute sécurité sur votre téléphone</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Demande</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
@@ -167,4 +168,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="metadata_format_other">Format d\'export inconnu</string>
     <string name="reset_aps_results">Réinitialiser les résultats d\'APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Erreur lors de l’accès au fichier. Sélectionnez le répertoire AAPS correctement.</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

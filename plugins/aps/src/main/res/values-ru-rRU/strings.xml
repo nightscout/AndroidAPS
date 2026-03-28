@@ -68,7 +68,7 @@
     <string name="enable_smb_always">Всегда включать супер микро болюс SMB</string>
     <string name="enable_smb_always_summary">Включать SMB всегда, вне зависимости от активных углеводов, ВЦ или болюсов. Возможно только на источниках СК с хорошей фильтрацией данных</string>
     <string name="enable_smb_after_carbs">Включать супер микро болюс SMB после углеводов</string>
-    <string name="enable_smb_after_carbs_summary">Включать SMB на 6ч после приема пищи, даже при отсутствии активных углеводов. Возможно только на источниках СК с продвинутой фильтрацией данных</string>
+    <string name="enable_smb_after_carbs_summary">Включать SMB на 6ч после приема пищи, даже при отсутствии активных углеводов. Возможно только на источниках ГК с улучшенной фильтрацией данных</string>
     <string name="enable_smb_with_cob">Включать супер микро болюсы при активных углеводах COB</string>
     <string name="enable_smb_with_cob_summary">Включить супер микро болюс SMB, когда имеются активные углеводы COB.</string>
     <string name="enable_smb_with_temp_target">Включить супер микро болюсы SMB с временными целями</string>

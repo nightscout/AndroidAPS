@@ -243,6 +243,7 @@
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">Tend. 15 min</string>
     <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Nuevo IOB: %1$s U</string>
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Carbs (%1$d g)</string>
     <string name="wizard_result_subtotal">Subtotal</string>

@@ -7,6 +7,7 @@
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pokaż przycisk Pulse Log w menu zarządzania Podem</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pokaż przycisk Statystyki RileyLink w menu zarządzania Podem</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Włącz rejestrowanie zmiany baterii w Akcjach</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Dźwięk dla niepewnych powiadomień TBR włączony</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Dźwięk dla niepewnych powiadomień SMB włączony</string>
     <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Dźwięk dla niepewnych powiadomień o bolusie włączony</string>
@@ -16,6 +17,7 @@
     <string name="omnipod_eros_history_item_source">Źródło</string>
     <string name="omnipod_eros_history_item_date">Data</string>
     <string name="omnipod_eros_history_type">Typ:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, Węgl.=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Dawka: %1$.2f U, Czas: %2$d min</string>
     <!-- Omnipod Eros - Short Status -->

@@ -25,12 +25,12 @@
     <string name="data_uploaded">Dữ liệu đã được tải lên</string>
     <string name="glucose_values">Giá trị đường huyết</string>
     <string name="boluses">Liều bolus</string>
-    <string name="extended_boluses">Liều Bolus mở rộng</string>
+    <string name="extended_boluses">Liều Bolus kéo dài</string>
     <string name="carbohydrates">Carbohydrates</string>
     <string name="careportal_events">Sự kiện Careportal (trừ ghi chú)</string>
-    <string name="profile_switches">Chuyển Cấu hình</string>
+    <string name="profile_switches">Chuyển Hồ sơ</string>
     <string name="total_daily_doses">Tổng liều dùng hàng ngày</string>
-    <string name="temporary_basal_rates">Basal tạm thời</string>
+    <string name="temporary_basal_rates">Tỷ lệ liều nền tạm thời</string>
     <string name="temporary_targets">Mục tiêu Tạm thời</string>
     <string name="settings">Cài đặt</string>
     <string name="application_version">Phiên bản ứng dụng</string>

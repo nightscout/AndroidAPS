@@ -10,6 +10,7 @@
     <string name="pump_status_busy">忙碌</string>
     <string name="pump_status_suspended">挂起</string>
     <string name="pump_status_executing_command">正在执行指令</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">基础率</string>
     <string name="history_group_configuration">配置</string>

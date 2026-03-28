@@ -78,6 +78,7 @@
     <string name="deltalabel">Różnica poziomu cukru</string>
     <string name="deltalabel_u">Różnica poziomu cukru [%1$s]</string>
     <string name="currentlocation">Obecna lokalizacja</string>
+    <string name="choose_from_map">Wybierz z mapy</string>
     <string name="location">Lokalizacja</string>
     <string name="glucose_u">Poziom [%1$s]:</string>
     <string name="target_u">Cel [%1$s]:</string>
@@ -136,5 +137,13 @@
     <string name="autotune_run_with_error">Błąd podczas ostatniego uruchomienia Autotune</string>
     <string name="autotune_run_cancelled">Wykryto Autotune w toku, anulowano próbę kolejnego uruchomienia</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Liczba kroków</string>
+    <string name="triggerStepsCountDesc">Liczba kroków na %1$s minut %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Czas trwania pomiaru</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Włącz/wyłącz SMB</string>
+    <string name="changeSmbTo">Zmień SMB na %1$s</string>
+    <string name="newSmbMode">Nowy tryb SMB:</string>
+    <string name="on">WŁ</string>
+    <string name="off">WYŁ</string>
 </resources>

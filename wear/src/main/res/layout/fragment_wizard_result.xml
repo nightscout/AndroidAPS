@@ -119,6 +119,16 @@
                             android:textColor="#B0BEC5" />
 
                         <TextView
+                            android:id="@+id/new_iob_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New IOB: 0.0 U"
+                            android:textSize="11sp"
+                            android:textColor="#90A4AE"
+                            android:paddingEnd="8dp"
+                            android:paddingStart="8dp" />
+
+                        <TextView
                             android:id="@+id/expand_icon"
                             android:contentDescription="@string/expand_calculation_details"
                             android:layout_width="wrap_content"
@@ -126,7 +136,7 @@
                             android:text="▼"
                             android:textSize="12sp"
                             android:textColor="#B0BEC5"
-                            android:paddingStart="8dp"
+                            android:paddingStart="0dp"
                             android:paddingEnd="0dp" />
                     </LinearLayout>
 

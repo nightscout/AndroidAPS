@@ -19,9 +19,12 @@ import app.aaps.core.interfaces.rx.events.EventAAPSDirectorySelected
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.dialogs.WarningDialog
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.CustomWatchfaceFileContract
+import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import app.aaps.plugins.configuration.maintenance.PrefsFileContract
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -53,6 +56,31 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
         accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             uri?.let {
+                // Check if user selected a subdirectory instead of root AAPS directory
+                val lastPathSegment = uri.lastPathSegment ?: ""
+
+                // Extract directory name from the path
+                // First remove the storage prefix (e.g., "primary:")
+                val pathAfterColon = when {
+                    lastPathSegment.contains(":") -> lastPathSegment.substringAfterLast(":")
+                    else -> lastPathSegment
+                }
+                // Then get just the last directory name (e.g., "AAPS/preferences" -> "preferences")
+                val directoryName = pathAfterColon.substringAfterLast("/", pathAfterColon)
+
+                // Warn if user selected a subdirectory instead of root AAPS directory
+                // These subdirectories are managed by the app
+                val managedSubdirectories = listOf("preferences", "extra", "exports", "temp")
+                if (managedSubdirectories.any { it.equals(directoryName, ignoreCase = true) }) {
+                    WarningDialog.showWarning(
+                        this,
+                        rh.gs(R.string.warning_wrong_directory_selected),
+                        rh.gs(R.string.warning_wrong_directory_message, directoryName),
+                        android.R.string.ok
+                    )
+                    return@registerForActivityResult
+                }
+
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 preferences.put(StringKey.AapsDirectoryUri, uri.toString())
                 rxBus.send(EventAAPSDirectorySelected(uri.path ?: "UNKNOWN"))
@@ -105,6 +133,15 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Handle cloud import result
+        if (requestCode == CloudConstants.CLOUD_IMPORT_REQUEST_CODE && resultCode == RESULT_OK) {
+            importExportPrefs.doImportSharedPreferences(this)
+        }
     }
 
     // Used for SetupWizardActivity

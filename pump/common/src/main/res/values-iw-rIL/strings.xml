@@ -10,6 +10,7 @@
     <string name="pump_status_busy">עסוק</string>
     <string name="pump_status_suspended">מושהה</string>
     <string name="pump_status_executing_command">מבצע פקודה</string>
+    <!-- Commands -->
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">בזאלים</string>
     <string name="history_group_configuration">תצורות</string>

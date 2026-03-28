@@ -172,7 +172,7 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
                                 ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE)
                             ).filterNotNull()
                         ).subscribe()
-                        if (preferences.get(BooleanKey.SiteRotationManageCgm)) {
+                        if (preferences.get(BooleanKey.SiteRotationManagePump)) {
                             SiteRotationDialog().also { srd ->
                                 srd.arguments = Bundle().also { args ->
                                     args.putLong("time", eventTime)

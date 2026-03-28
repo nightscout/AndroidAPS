@@ -349,7 +349,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
                 "RESTART"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
-                    else if (divided.size == 1) processRestart()
+                    else if (divided.size == 1) processRestart(receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
                 else         ->
@@ -579,8 +579,21 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processRestart() {
-        configBuilder.exitApp("SMS", Sources.SMS, true)
+    private fun processRestart(receivedSms: Sms) {
+        val passCode = generatePassCode()
+        val reply = rh.gs(R.string.smscommunicator_restart_reply_with_code, passCode)
+        receivedSms.processed = true
+        messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
+            override fun run() {
+                uel.log(
+                    Action.EXIT_AAPS, Sources.SMS,
+                    rh.gs(R.string.smscommunicator_restarting),
+                    ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_restarting))
+                )
+                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_restarting)))
+                configBuilder.exitApp("SMS", Sources.SMS, true)
+            }
+        })
     }
 
     private fun processPUMP(divided: Array<String>, receivedSms: Sms) {

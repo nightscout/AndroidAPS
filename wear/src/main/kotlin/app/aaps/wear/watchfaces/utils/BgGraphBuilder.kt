@@ -12,8 +12,14 @@ import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line
 import lecho.lib.hellocharts.model.LineChartData
 import lecho.lib.hellocharts.model.PointValue
-import java.util.Calendar
-import java.util.GregorianCalendar
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -402,16 +408,14 @@ class BgGraphBuilder(
         val xAxisValues: MutableList<AxisValue> = ArrayList()
 
         //get the time-tick at the full hour after start_time
-        val startGC = GregorianCalendar()
-        startGC.timeInMillis = startingTime
-        startGC[Calendar.MILLISECOND] = 0
-        startGC[Calendar.SECOND] = 0
-        startGC[Calendar.MINUTE] = 0
-        startGC.add(Calendar.HOUR, 1)
+        val tz = TimeZone.currentSystemDefault()
+        val startLocal = Instant.fromEpochMilliseconds(startingTime).toLocalDateTime(tz)
+        val truncatedHour = LocalDateTime(startLocal.year, startLocal.month, startLocal.dayOfMonth, startLocal.hour, 0)
+        var hourInstant = truncatedHour.toInstant(tz).plus(1, DateTimeUnit.HOUR, tz)
 
         //Display current time on the graph
         xAxisValues.add(AxisValue(fuzz(timeNow)).setLabel(dateUtil.timeString(timeNow)))
-        var hourTick = startGC.timeInMillis
+        var hourTick = hourInstant.toEpochMilliseconds()
 
         // add all full hours within the timeframe
         while (hourTick < endingTime) {
@@ -422,8 +426,9 @@ class BgGraphBuilder(
                 xAxisValues.add(AxisValue(fuzz(hourTick)).setLabel(""))
             }
 
-            //increment by one hour
-            hourTick += (60 * 60 * 1000).toLong()
+            //increment by one hour using wall-clock time to handle DST correctly
+            hourInstant = hourInstant.plus(1, DateTimeUnit.HOUR, tz)
+            hourTick = hourInstant.toEpochMilliseconds()
         }
         xAxis.values = xAxisValues
         xAxis.textSize = 10

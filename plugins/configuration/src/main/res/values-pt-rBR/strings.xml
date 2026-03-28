@@ -44,6 +44,7 @@
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
     <string name="identification">Identificação (e-mail, apelido FB ou Discord, etc)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Pedido</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="error_asking_for_permissions">Erro alterando permissões</string>
@@ -153,4 +154,9 @@
     <string name="metadata_label_encryption">Criptografia do arquivo</string>
     <string name="metadata_format_new">Novo formato de encriptação</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

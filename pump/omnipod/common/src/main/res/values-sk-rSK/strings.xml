@@ -47,7 +47,7 @@
     <string name="omnipod_common_overview_button_silence_alerts">Stíšiť alarmy</string>
     <string name="omnipod_common_overview_pod_status">Stav Podu</string>
     <string name="omnipod_common_overview_total_delivered">Celkovo podané</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f JI</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">Jedinečné ID</string>
     <string name="omnipod_common_overview_lot_number">Číslo šarže</string>
     <string name="omnipod_common_overview_pod_sequence_number">Poradové číslo</string>
@@ -60,9 +60,9 @@
     <string name="omnipod_common_overview_pod_active_alerts">Výstrahy aktívneho Podu</string>
     <string name="omnipod_common_overview_firmware_version">Verzia firmvéru</string>
     <string name="omnipod_common_overview_time_on_pod">Čas na Pode</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fJI/h @%2$s (%3$d/%4$d minút)</string>
-    <string name="omnipod_common_overview_reservoir_value">Zostáva %1$.2f JI</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">Zostáva viac ako 50 JI</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minut)</string>
+    <string name="omnipod_common_overview_reservoir_value">Zostáva %1$.2f U</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Zostáva viac ako 50 U</string>
     <string name="omnipod_common_overview_errors">Chyby</string>
     <string name="omnipod_common_uncertain">neznáme</string>
     <!-- Omnipod - Wizard Base -->

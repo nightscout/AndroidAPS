@@ -29,8 +29,8 @@
     <string name="equil_tone_mode_shake">Iba vibrovať</string>
     <string name="equil_tone_mode_tone">Iba zvuky</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrácie a zvuky</string>
-    <string name="equil_unit_u">%1$s JI</string>
-    <string name="equil_unit_u_hours">%1$s JI/h</string>
+    <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unit_u_hours">%1$s U/h</string>
     <string name="equil_unbind_content">Táto operácia zastaví vydávanie inzulínu, a zasunie piest pumpy do východzej polohy! Taktiež zruší spárovanie!</string>
     <string name="equil_error_no_devices">Žiadne zariadenie</string>
     <string name="equil_ble_config_confirmation_title">Spárovať Equil Patch pumpu</string>
@@ -39,9 +39,9 @@
     <string name="equil_change_content">Vyberte pumpu zo základne.</string>
     <string name="equil_unpair_alert">Naozaj sa chcete vzdať kontroly nad %1$s?</string>
     <string name="equil_devices_number_hint">Číslo zariadenia</string>
-    <string name="equil_record_basal">Bazálna dávka %1$s JI/h</string>
-    <string name="equil_record_basal_temp">Dočasný bazál %1$s JI/h</string>
-    <string name="equil_record_bolus">Bolus %1$s JI</string>
+    <string name="equil_record_basal">Bazálna dávka %1$s U/h</string>
+    <string name="equil_record_basal_temp">Dočasný bazál %1$s U/h</string>
+    <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
     <string name="equil_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
     <string name="equil_low_battery">Slabá batéria</string>
@@ -58,8 +58,8 @@
     <string name="equil_firmware_version">Verzia firmvéru</string>
     <string name="equil_shutdown_be">Equil bude automaticky vypnutá</string>
     <string name="equil_shutdown">Equil automatické vypnutie</string>
-    <string name="equil_common_history_tbr_value">Rýchlosť: %1$.2f JI/h, Doba trvania: %2$d minút</string>
-    <string name="equil_common_history_bolus_value">%1$.2f JI</string>
+    <string name="equil_common_history_tbr_value">Rýchlosť: %1$.2f U/h, Doba trvania: %2$d minút</string>
+    <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <string name="equil_history_type">Typ:</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nastaviť bolus</string>
@@ -122,7 +122,7 @@
     <string name="equil_history_item18">Zastavené abnormálne podávanie izulínu</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastaviť</string>
     <string name="equil_common_overview_button_resume_delivery">Obnoviť podávanie inzulínu</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fJI/h @%2$s (%3$d/%4$d minút)</string>
+    <string name="equil_common_overview_temp_basal_value">%1$.2f U/h @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Pred chvíľou</string>
     <string name="equil_common_less_than_a_minute_ago">Pred menej ako minútou</string>
     <string name="equil_common_time_ago">pred %1$s</string>

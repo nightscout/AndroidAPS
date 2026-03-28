@@ -6,9 +6,7 @@
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Hiển thị nhật ký Pulse trong menu Quản lý Pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Hiển thị thống kê RileyLink trong menu Quản lý Pod</string>
-    <string name="omnipod_eros_preferences_battery_change_logging_enabled">ChatGPT đã nói:
-
-Bật ghi nhật ký thay pin trong mục Actions</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Bật ghi nhật ký thay pin trong Các thao tác</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Đã bật âm thanh thông báo TBR không chắc chắn</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Đã bật âm thanh thông báo SMB không chắc chắn</string>
@@ -41,12 +39,12 @@ Bật ghi nhật ký thay pin trong mục Actions</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Không có phản hồi từ RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Kết nối RileyLink bị gián đoạn</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Không có phản hồi từ Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Thiết lập cấu hình basal thất bại. Việc truyền insulin có thể đã bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Việc thiết lập cấu hình basal có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Thiết lập cấu hình basal thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Việc hủy basal tạm thời có thể đã thất bại. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Thiết lập basal tạm thời thất bại. Nếu trước đó đã có basal tạm thời đang chạy, nó có thể đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Việc thiết lập basal tạm thời có thể đã thất bại. Nếu trước đó đã có basal tạm thời đang chạy, nó đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Thiết lập Hồ sơ liều nền thất bại. Việc truyền insulin có thể đã bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Việc thiết lập Hồ sơ liều nền có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Thiết lập Hồ sơ liều nền thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Việc hủy liều nền tạm thời có thể đã thất bại. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Thiết lập liều nền tạm thời thất bại. Nếu trước đó đã có liều nền tạm thời đang chạy, nó có thể đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Việc thiết lập liều nền tạm thời có thể đã thất bại. Nếu trước đó đã có liều nền tạm thời đang chạy, nó đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Thời lượng TBR phải lớn hơn 0 và là bội số của %1$s phút.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Việc cài đặt thời gian có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Cài đặt thời gian thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
@@ -55,7 +53,7 @@ Bật ghi nhật ký thay pin trong mục Actions</string>
     <string name="omnipod_eros_error_operation_not_possible_no_configuration">Không thể thực hiện thao tác này.\n\nBạn cần cấu hình Omnipod trước khi có thể sử dụng chức năng này.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Không thể xác minh liệu bolus có thành công hay không. Vui lòng kiểm tra thủ công xem Pod có đang tiêm bolus bằng cách nghe tiếng nhấp (clicks). <b>Nếu bạn chắc chắn bolus không thành công, bạn nên xóa thủ công mục bolus trong Treatments, ngay cả khi bạn bấm \'Hủy bỏ bolus\' ngay bây giờ!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Không thể xác minh liệu bolus SMB (%1$.2f U) có thành công hay không. <b>Nếu bạn chắc chắn bolus không thành công, bạn nên xóa thủ công mục SMB trong Treatments.</b></string>
-    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Một basal tạm thời đang chạy trên Pod, nhưng AAPS không nhận biết được basal tạm thời này. Vui lòng hủy basal tạm thời thủ công.</string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Một liều nền tạm thời đang chạy trên Pod, nhưng AAPS không nhận biết được liều nền tạm thời này. Vui lòng hủy liều nền tạm thời thủ công.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Thống kê RileyLink</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Đang chờ kết nối với RileyLink…</string>

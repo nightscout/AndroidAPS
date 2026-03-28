@@ -39,17 +39,17 @@ Hãy chắc chắn bơm hết toàn bộ lượng insulin trong ống tiêm, nga
     <string name="omnipod_dash_not_enough_insulin">Insulin trong pod không đủ</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Lệnh chưa được xác nhận</string>
     <string name="requested_by_user" comment="26 characters max for translation">Người dùng yêu cầu</string>
-    <string name="profile_set_ok">Cáu hình đã được cài đặt</string>
+    <string name="profile_set_ok">Hồ sơ đã được cài đặt</string>
     <string name="suspend_delivery_is_unconfirmed">Việc tạm dừng tiêm chưa được xác nhận! Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod và tiếp tục tiêm nếu cần.</string>
     <string name="insulin_delivery_suspended">Việc tiêm insulin đã bị tạm dừng</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Múi giờ trên Pod khác với múi giờ trên điện thoại. Tốc độ basal không chính xác. Vui lòng chuyển cấu hình để khắc phục</string>
-    <string name="failed_to_set_the_new_basal_profile">Cài đặt cấu hình basal mới thất bại. Đã tạm dừng tiêm</string>
-    <string name="setting_basal_profile_might_have_failed">Cài đặt cấu hình basal có thể đã thất bại. Việc tiêm có thể đã bị tạm dừng! Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod và tiếp tục tiêm nếu cần.</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Múi giờ trên Pod khác với múi giờ trên điện thoại. Tốc độ liều nền không chính xác. Vui lòng chuyển Hồ sơ để khắc phục</string>
+    <string name="failed_to_set_the_new_basal_profile">Cài đặt Hồ sơ liều nền mới thất bại. Đã tạm dừng tiêm</string>
+    <string name="setting_basal_profile_might_have_failed">Cài đặt Hồ sơ liều nền có thể đã thất bại. Việc tiêm có thể đã bị tạm dừng! Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod và tiếp tục tiêm nếu cần.</string>
     <string name="bolus_delivery_status_uncertain">Trạng thái tiêm bolus chưa chắc chắn. Vui lòng làm mới trạng thái Pod để xác nhận hoặc phủ nhận.</string>
-    <string name="temp_basal_out_of_sync">Trạng thái basal tạm thời không như mong đợi! Nếu trước đó đang chạy basal tạm thời thì nó đã bị hủy. Vui lòng kiểm tra lượng insulin đã tiêm và lịch sử Pod</string>
+    <string name="temp_basal_out_of_sync">Trạng thái liều nền tạm thời không như mong đợi! Nếu trước đó đang chạy liều nền tạm thời thì nó đã bị hủy. Vui lòng kiểm tra lượng insulin đã tiêm và lịch sử Pod</string>
     <string name="checking_delivery_status">Đang kiểm tra trạng thái tiêm</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Cài đặt basal tạm thời có thể đã thất bại. Nếu trước đó đang chạy basal tạm thời thì nó đã bị hủy. Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod.</string>
-    <string name="cancel_temp_basal_result_is_uncertain">Chưa rõ kết quả hủy basal tạm thời</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Cài đặt liều nền tạm thời có thể đã thất bại. Nếu trước đó đang chạy liều nền tạm thời thì nó đã bị hủy. Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Chưa rõ kết quả hủy liều nền tạm thời</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Lệnh tiếp tục bơm chưa xác nhận. Hãy làm mới trạng thái Pod</string>
-    <string name="cancelling_temp_basal_might_have_failed">Việc hủy basal tạm thời có thể đã thất bại. Nếu trước đó đang chạy basal tạm thời thì có thể nó đã bị hủy. Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod.</string>
+    <string name="cancelling_temp_basal_might_have_failed">Việc hủy liều nền tạm thời có thể đã thất bại. Nếu trước đó đang chạy liều nền tạm thời thì có thể nó đã bị hủy. Vui lòng làm mới thủ công trạng thái Pod trong tab Omnipod.</string>
 </resources>
