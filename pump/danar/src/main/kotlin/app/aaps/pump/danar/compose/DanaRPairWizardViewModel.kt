@@ -66,7 +66,7 @@ class DanaRPairWizardViewModel @Inject constructor(
     private val disposable = CompositeDisposable()
 
     /** Dana device name pattern: 3 letters + 5 digits + 2 letters */
-    private val danaNamePattern = Regex("^[a-zA-Z]{3}[0-9]{5}[a-zA-Z]{2}$")
+    private val danaNamePattern = Regex("^[a-zA-Z]{3}[0-9]{5}[a-zA-Z]{2}(_[a-zA-Z])?$")
 
     init {
         reset()
