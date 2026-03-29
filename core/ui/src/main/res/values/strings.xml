@@ -292,6 +292,9 @@
     <string name="pump_insulin_cu">%1$.2f CU</string>
     <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">Selected Insulin: %1$s</string>
+    <string name="record_source_pump">Pump</string>
+    <string name="record_source_pen">Pen</string>
+    <string name="pen_insulin_warning">Pens always use U100 labeling. Enter the dose in units as shown on the pen and select your insulin below. Only U100 insulins are listed.</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>

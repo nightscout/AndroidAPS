@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 
+enum class RecordSource { PUMP, PEN }
+
 @Immutable
 data class InsulinDialogUiState(
     // User input
@@ -11,11 +13,13 @@ data class InsulinDialogUiState(
     val timeOffsetMinutes: Int = 0,
     val eatingSoonTtChecked: Boolean = false,
     val recordOnlyChecked: Boolean = false,
+    val recordSource: RecordSource = RecordSource.PUMP,
     val notes: String = "",
     val eventTime: Long = System.currentTimeMillis(),
     val eventTimeOriginal: Long = System.currentTimeMillis(),
     val iCfg: ICfg? = null,
     val insulins: ArrayList<ICfg> = ArrayList(),
+    val penIcfg: ICfg? = null,
 
     // Config (set once during init)
     val maxInsulin: Double = 0.0,
@@ -40,3 +44,13 @@ val InsulinDialogUiState.timeLayoutVisible: Boolean
 
 val InsulinDialogUiState.recordOnlyEnabled: Boolean
     get() = !forcedRecordOnly && !isAapsClient
+
+val InsulinDialogUiState.u100Insulins: List<ICfg>
+    get() = insulins.filter { it.concentration == 1.0 }
+
+/** True when insulin selection requirement is satisfied (always true for pump, requires penIcfg for pen) */
+val InsulinDialogUiState.insulinSelectionReady: Boolean
+    get() = recordSource != RecordSource.PEN || penIcfg != null
+
+val InsulinDialogUiState.confirmEnabled: Boolean
+    get() = (insulin > 0.0 || eatingSoonTtChecked) && insulinSelectionReady
