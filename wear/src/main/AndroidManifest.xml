@@ -570,7 +570,8 @@
         <activity
             android:name=".interaction.menus.MainMenuActivity"
             android:exported="true"
-            android:label="@string/label_actions_activity">
+            android:label="@string/label_actions_activity"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -596,11 +597,13 @@
         <activity
             android:name=".interaction.menus.FillMenuActivity"
             android:exported="true"
-            android:label="@string/menu_prime_fill" />
+            android:label="@string/menu_prime_fill"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.StatusMenuActivity"
             android:exported="true"
-            android:label="@string/menu_status" />
+            android:label="@string/menu_status"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.LoopStatusActivity"
             android:exported="false"
@@ -608,7 +611,8 @@
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
             android:exported="true"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
