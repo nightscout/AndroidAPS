@@ -181,8 +181,7 @@ class InsulinDialogViewModel @Inject constructor(
             when (source) {
                 RecordSource.PUMP -> state.copy(recordSource = source, penIcfg = null)
                 RecordSource.PEN  -> {
-                    val u100 = state.insulins.filter { it.concentration == 1.0 }
-                    val autoSelected = if (u100.size == 1) u100.first() else null
+                    val autoSelected = state.iCfg
                     state.copy(recordSource = source, penIcfg = autoSelected)
                 }
             }
