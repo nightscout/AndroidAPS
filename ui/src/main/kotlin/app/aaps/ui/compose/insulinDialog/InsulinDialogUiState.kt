@@ -45,9 +45,6 @@ val InsulinDialogUiState.timeLayoutVisible: Boolean
 val InsulinDialogUiState.recordOnlyEnabled: Boolean
     get() = !forcedRecordOnly && !isAapsClient
 
-val InsulinDialogUiState.u100Insulins: List<ICfg>
-    get() = insulins.filter { it.concentration == 1.0 }
-
 /** True when insulin selection requirement is satisfied (always true for pump, requires penIcfg for pen) */
 val InsulinDialogUiState.insulinSelectionReady: Boolean
     get() = recordSource != RecordSource.PEN || penIcfg != null
