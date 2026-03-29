@@ -3,6 +3,7 @@ package app.aaps.wear.interaction.utils
 import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +28,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ScrollIndicator
 import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.ListHeader
@@ -95,41 +98,51 @@ private fun MenuListScreen(
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
-    ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
-            ListHeader {
-                if (titleIcon != null) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(titleIcon),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
+    val listState = rememberScalingLazyListState()
+    Box(modifier = Modifier.fillMaxSize()) {
+        ScalingLazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            item {
+                ListHeader {
+                    if (titleIcon != null) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(titleIcon),
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(title)
+                        }
+                    } else {
                         Text(title)
                     }
-                } else {
-                    Text(title)
                 }
             }
+            items(elements) { item ->
+                Button(
+                    onClick = { onAction(item.actionItem) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MenuItemBg,
+                        contentColor = Color.White
+                    ),
+                    label = { Text(item.actionItem) },
+                    icon = {
+                        MenuIcon(
+                            iconRes = item.actionIcon,
+                            contentDescription = item.actionItem
+                        )
+                    }
+                )
+            }
         }
-        items(elements) { item ->
-            Button(
-                onClick = { onAction(item.actionItem) },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MenuItemBg,
-                    contentColor = Color.White
-                ),
-                label = { Text(item.actionItem) },
-                icon = {
-                    MenuIcon(
-                        iconRes = item.actionIcon,
-                        contentDescription = item.actionItem
-                    )
-                }
-            )
-        }
+        ScrollIndicator(
+            state = listState,
+            modifier = Modifier.align(Alignment.CenterEnd)
+        )
     }
 }
 
