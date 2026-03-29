@@ -221,7 +221,6 @@ fun ProfileSingleContent(
  *
  * @param profile1 First profile to compare
  * @param profile2 Second profile to compare
- * @param unitsText Blood glucose units (mg/dL or mmol/L)
  * @param shortHourUnit Short form of hour unit (e.g., "h")
  * @param icsRows List of IC comparison rows with time and values for both profiles
  * @param icUnits IC units text (e.g., "g/U")
@@ -238,7 +237,6 @@ fun ProfileSingleContent(
 fun ProfileCompareContent(
     profile1: Profile,
     profile2: Profile,
-    unitsText: String,
     shortHourUnit: String,
     icsRows: List<ProfileCompareRow>,
     icUnits: String,
@@ -296,47 +294,31 @@ fun ProfileCompareContent(
             }
         }
 
-        // Units & ICfg Card if running profile (combined to save space)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        // ICfg Card if running profile
+        profile1.iCfg?.let { iCfg ->
             ElevatedCard(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    ProfileRow(
-                        label = stringResource(R.string.units_label),
-                        value = unitsText
+                    ProfileInlineRow(
+                        label = stringResource(R.string.insulin_label),
+                        value = iCfg.insulinLabel
                     )
-                }
-            }
-            profile1.iCfg?.let { iCfg ->
-                ElevatedCard(
-                    modifier = Modifier.weight(1f),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        ProfileRow(
-                            label = stringResource(R.string.insulin_label),
-                            value = iCfg.insulinLabel
-                        )
-                        ProfileRow(
-                            label = stringResource(R.string.concentration_label),
-                            value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
-                        )
-                        ProfileRow(
-                            label = stringResource(R.string.peak_label),
-                            value = stringResource(R.string.format_mins, iCfg.peak)
-                        )
-                        ProfileRow(
-                            label = stringResource(R.string.dia_label),
-                            value = stringResource(R.string.format_hours, iCfg.dia)
-                        )
-                    }
+                    ProfileInlineRow(
+                        label = stringResource(R.string.concentration_label),
+                        value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
+                    )
+                    ProfileInlineRow(
+                        label = stringResource(R.string.peak_label),
+                        value = stringResource(R.string.format_mins, iCfg.peak)
+                    )
+                    ProfileInlineRow(
+                        label = stringResource(R.string.dia_label),
+                        value = stringResource(R.string.format_hours, iCfg.dia)
+                    )
                 }
             }
         }
@@ -488,6 +470,26 @@ fun ProfileCompareContent(
  * @param value The value text (e.g., "mg/dL", "5.0 h")
  * @param showColon Whether to show the colon separator (default true, set false for Units in comparison mode)
  */
+@Composable
+fun ProfileInlineRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp)
+    ) {
+        Text(
+            text = "$label:",
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+}
+
 @Composable
 fun ProfileRow(label: String, value: String, showColon: Boolean = true) {
     val lines = value.split("\n").filter { it.isNotBlank() }

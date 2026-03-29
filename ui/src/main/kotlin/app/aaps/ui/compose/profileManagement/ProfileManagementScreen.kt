@@ -276,7 +276,6 @@ fun ProfileManagementScreen(
                                         ProfileCompareContent(
                                             profile1 = compareData.baseProfile,
                                             profile2 = compareData.effectiveProfile,
-                                            unitsText = compareData.unitsText,
                                             shortHourUnit = compareData.shortHourUnit,
                                             icsRows = compareData.icRows,
                                             icUnits = compareData.icUnits,
@@ -348,17 +347,19 @@ fun ProfileManagementScreen(
                                         contentDescription = stringResource(R.string.clone_label)
                                     )
                                 }
+                                val canDelete = uiState.profileNames.size > 1
+                                    && uiState.profileNames.getOrNull(currentPage) != uiState.activeProfileName
                                 IconButton(
                                     onClick = {
                                         profileToDelete = currentPage
                                         showDeleteDialog = true
                                     },
-                                    enabled = uiState.profileNames.size > 1
+                                    enabled = canDelete
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.Delete,
                                         contentDescription = stringResource(R.string.remove_label),
-                                        tint = if (uiState.profileNames.size > 1)
+                                        tint = if (canDelete)
                                             MaterialTheme.colorScheme.error
                                         else
                                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)

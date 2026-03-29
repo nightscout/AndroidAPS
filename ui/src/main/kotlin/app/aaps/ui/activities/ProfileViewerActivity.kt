@@ -198,7 +198,6 @@ class ProfileViewerActivity : DaggerAppCompatActivity() {
                     ProfileCompareContent(
                         profile1 = profile1,
                         profile2 = profile2,
-                        unitsText = profileFunction.getUnits().asText,
                         shortHourUnit = rh.gs(app.aaps.core.interfaces.R.string.shorthour),
                         icsRows = buildIcRows(profile1, profile2, dateUtil),
                         icUnits = rh.gs(R.string.profile_carbs_per_unit),
