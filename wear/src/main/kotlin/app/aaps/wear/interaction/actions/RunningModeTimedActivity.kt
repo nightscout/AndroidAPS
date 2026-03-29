@@ -61,6 +61,7 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
         val max = (eventData.durations.lastOrNull() ?: 240).toDouble()
         val stepValues = listOf(fineStep, fineStep * 2, fineStep * 3)
         val defaultDuration = if (fineStep < 60.0) fineStep * 2 else fineStep
+        val stepLabels = if (fineStep >= 60.0) listOf("+${(fineStep * 2 / 60).toInt()}", "+${(fineStep * 3 / 60).toInt()}") else null
 
         setContent {
             MaterialTheme {
@@ -82,6 +83,7 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
+                                stepLabels = stepLabels,
                             )
                             else -> RunningModeConfirmScreen(
                                 duration = duration.toInt(),
