@@ -150,8 +150,6 @@ class InsulinManagementViewModel @Inject constructor(
         }
     }
 
-
-
     fun updateEditorConcentration(concentration: ConcentrationType) {
         uiState.update { it.copy(editorConcentration = concentration) }
     }
@@ -178,7 +176,8 @@ class InsulinManagementViewModel @Inject constructor(
             it.copy(
                 editorTemplate = preset,
                 editorPeakMinutes = preset.iCfg.peak,
-                editorNickname = rh.gs(preset.label)
+                editorNickname = rh.gs(preset.label),
+                autoNameEnabled = true
             )
         }
     }
@@ -188,19 +187,6 @@ class InsulinManagementViewModel @Inject constructor(
         uiState.update { it.copy(editorNickname = newDefaultNickname) }
     }
 
-    fun toggleAutoName() {
-        val autoNameEnabled = !uiState.value.autoNameEnabled
-        val newDefaultNickname = if (autoNameEnabled)
-            rh.gs((uiState.value.editorTemplate ?: InsulinType.fromPeak(uiState.value.editorPeakMinutes.toLong() * 60_000L)).label)
-        else
-            uiState.value.editorNickname
-        uiState.update {
-            it.copy(
-                autoNameEnabled = autoNameEnabled,
-                editorNickname = newDefaultNickname
-            )
-        }
-    }
     // CRUD operations
 
     fun saveCurrentInsulin(): Boolean {

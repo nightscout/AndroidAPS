@@ -53,13 +53,12 @@ class InsulinImplTest : TestBase() {
 
     @Test
     fun getIdTest() {
-        assertThat(sut.id).isEqualTo(InsulinType.UNKNOWN)
+        assertThat(sut.id).isEqualTo(InsulinType.OREF_FREE_PEAK)
     }
 
     @Test
     fun getFriendlyNameTest() {
-        whenever(rh.gs(eq(R.string.insulin_plugin))).thenReturn("Insulin")
-        assertThat(sut.friendlyName).isEqualTo("Insulin")
+        assertThat(sut.friendlyName).isEqualTo("Free-Peak Oref")
     }
 
     @Test
