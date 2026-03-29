@@ -29,6 +29,8 @@ class MainMenuActivity : MenuListActivity() {
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
 
+    override fun provideTitleIcon(): Int = R.drawable.ic_aaps_light
+
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             if (!preferences.get(BooleanKey.WearControl)) {

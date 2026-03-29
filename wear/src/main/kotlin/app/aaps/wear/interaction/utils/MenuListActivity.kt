@@ -3,19 +3,25 @@ package app.aaps.wear.interaction.utils
 import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
@@ -49,6 +55,7 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
 
     protected abstract fun provideElements(): List<MenuItem>
     protected abstract fun doAction(position: String)
+    protected open fun provideTitleIcon(): Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +65,12 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
             .subscribe { _: EventUpdateSelectedWatchface -> elements = provideElements() }
         elements = provideElements()
         val menuTitle = title.toString()
+        val titleIcon = provideTitleIcon()
         setContent {
             MaterialTheme {
                 MenuListScreen(
                     title = menuTitle,
+                    titleIcon = titleIcon,
                     elements = elements,
                     onAction = { doAction(it) }
                 )
@@ -82,17 +91,32 @@ private val MenuItemBg = Color.White.copy(alpha = 0.15f)
 @Composable
 private fun MenuListScreen(
     title: String,
+    titleIcon: Int?,
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
     ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
-            ListHeader { Text(title) }
+            ListHeader {
+                if (titleIcon != null) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(titleIcon),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(title)
+                    }
+                } else {
+                    Text(title)
+                }
+            }
         }
         items(elements) { item ->
             Button(
                 onClick = { onAction(item.actionItem) },
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MenuItemBg,
                     contentColor = Color.White
@@ -114,7 +138,7 @@ private fun MenuIcon(iconRes: Int, contentDescription: String) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val sizePx = with(density) { 35.dp.toPx() }.toInt()
-    val painter = remember(iconRes) {
+    val painter = remember(iconRes, sizePx) {
         val drawable = ContextCompat.getDrawable(context, iconRes)!!
         val bitmap = createBitmap(sizePx, sizePx)
         drawable.setBounds(0, 0, sizePx, sizePx)
