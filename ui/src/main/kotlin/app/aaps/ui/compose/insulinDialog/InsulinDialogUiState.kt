@@ -18,7 +18,7 @@ data class InsulinDialogUiState(
     val eventTime: Long = System.currentTimeMillis(),
     val eventTimeOriginal: Long = System.currentTimeMillis(),
     val iCfg: ICfg? = null,
-    val insulins: ArrayList<ICfg> = ArrayList(),
+    val insulins: List<ICfg> = emptyList(),
     val penIcfg: ICfg? = null,
 
     // Config (set once during init)

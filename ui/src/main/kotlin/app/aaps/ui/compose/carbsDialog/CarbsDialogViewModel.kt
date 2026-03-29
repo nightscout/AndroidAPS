@@ -243,8 +243,11 @@ class CarbsDialogViewModel @Inject constructor(
         }
     }
 
+    private var confirmedState: CarbsDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<String>()
         val unitLabel = if (state.units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
 
@@ -337,7 +340,7 @@ class CarbsDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val carbs = state.carbs
         val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
         var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(

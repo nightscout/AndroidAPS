@@ -222,8 +222,11 @@ class FillDialogViewModel @Inject constructor(
 
     enum class SummaryColor { NORMAL, INSULIN, WARNING }
 
+    private var confirmedState: FillDialogUiState? = null
+
     fun buildConfirmationSummary(): List<SummaryLine> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<SummaryLine>()
         val bolusStep = state.bolusStep
 
@@ -285,7 +288,7 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val eventTime = state.eventTime - (state.eventTime % 1000)
         val notes = state.notes
 

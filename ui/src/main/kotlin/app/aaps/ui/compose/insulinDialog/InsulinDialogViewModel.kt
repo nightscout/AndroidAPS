@@ -107,7 +107,7 @@ class InsulinDialogViewModel @Inject constructor(
                 notes = "",
                 eventTime = now,
                 eventTimeOriginal = now,
-                insulins = insulinManager.insulins,
+                insulins = insulinManager.insulins.toList(),
                 maxInsulin = maxInsulin,
                 bolusStep = bolusStep,
                 insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
@@ -207,8 +207,11 @@ class InsulinDialogViewModel @Inject constructor(
             )
         }
     }
+    private var confirmedState: InsulinDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<String>()
         val unitLabel = if (state.units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val pump = activePlugin.activePump
@@ -273,7 +276,7 @@ class InsulinDialogViewModel @Inject constructor(
     }
 
     private suspend fun confirmAndSaveSuspend() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val insulin = state.insulin
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
             ConstraintObject(insulin, aapsLogger)

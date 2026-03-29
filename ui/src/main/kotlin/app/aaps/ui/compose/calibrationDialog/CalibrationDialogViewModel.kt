@@ -54,14 +54,17 @@ class CalibrationDialogViewModel @Inject constructor(
 
     fun hasAction(): Boolean = uiState.value.bg > 0.0
 
+    private var confirmedState: CalibrationDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val bgText = profileUtil.stringInCurrentUnitsDetect(state.bg)
         return listOf("${rh.gs(app.aaps.core.ui.R.string.bg_label)}: $bgText ${state.unitLabel}")
     }
 
     fun confirmAndSave() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         if (state.bg > 0) {
             uel.log(
                 action = Action.CALIBRATION,

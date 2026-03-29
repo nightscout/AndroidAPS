@@ -141,8 +141,11 @@ class CareDialogViewModel @Inject constructor(
         uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
     }
 
+    private var confirmedState: CareDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<String>()
 
         lines.add(rh.gs(R.string.confirm_treatment))
@@ -181,7 +184,7 @@ class CareDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val eventType = state.eventType
 
         val eventTime = state.eventTime - (state.eventTime % 1000)

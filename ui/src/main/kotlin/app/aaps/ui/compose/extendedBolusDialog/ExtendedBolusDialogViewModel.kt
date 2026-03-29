@@ -89,8 +89,11 @@ class ExtendedBolusDialogViewModel @Inject constructor(
         return insulinAfterConstraints > 0 && state.durationMinutes > 0
     }
 
+    private var confirmedState: ExtendedBolusDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<String>()
         val durationInMinutes = state.durationMinutes.toInt()
 
@@ -107,7 +110,7 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     }
 
     fun confirmAndSave() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val durationInMinutes = state.durationMinutes.toInt()
 
         val insulinAfterConstraints = constraintChecker.applyExtendedBolusConstraints(
