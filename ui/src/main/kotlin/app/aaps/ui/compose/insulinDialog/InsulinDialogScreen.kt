@@ -19,22 +19,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -43,17 +47,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.NumberInputRow
@@ -197,7 +202,9 @@ fun InsulinDialogScreen(
             { showButtonSettings = true }
         },
         onNavigateBack = onNavigateBack,
-        onConfirmClick = { showConfirmation = true }
+        onConfirmClick = { showConfirmation = true },
+        onRecordSourceChange = viewModel::updateRecordSource,
+        onPenInsulinSelect = viewModel::selectPenInsulin
     )
 }
 
@@ -219,6 +226,8 @@ private fun InsulinDialogContent(
     onNotesChange: (String) -> Unit,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit,
+    onRecordSourceChange: (RecordSource) -> Unit,
+    onPenInsulinSelect: (ICfg) -> Unit,
     onSettingsClick: (() -> Unit)?,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
@@ -264,7 +273,7 @@ private fun InsulinDialogContent(
         bottomBar = {
             Button(
                 onClick = onConfirmClick,
-                enabled = uiState.insulin > 0.0,
+                enabled = uiState.confirmEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .imePadding()
@@ -353,64 +362,175 @@ private fun InsulinDialogContent(
                 }
             }
 
-            // --- Card 2: All inputs ---
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    // Insulin + Quick add
-                    Column(modifier = itemModifier) {
-                        NumberInputRow(
-                            labelResId = CoreUiR.string.overview_insulin_label,
-                            value = uiState.insulin,
-                            onValueChange = onInsulinChange,
-                            valueRange = 0.0..uiState.maxInsulin,
-                            step = uiState.bolusStep,
-                            valueFormat = bolusFormat,
-                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
-                        )
-                        InsulinQuickAddButtons(
-                            increment1 = uiState.insulinButtonIncrement1,
-                            increment2 = uiState.insulinButtonIncrement2,
-                            increment3 = uiState.insulinButtonIncrement3,
-                            formatAmount = formatAmount,
-                            onAddInsulin = onAddInsulin
-                        )
-                    }
-
-                    // Time Offset + DateTime (visible when recordOnly)
-                    if (uiState.timeLayoutVisible) {
-                        Column(modifier = itemModifier) {
-                            NumberInputRow(
-                                labelResId = CoreUiR.string.time,
-                                value = uiState.timeOffsetMinutes.toDouble(),
-                                onValueChange = onTimeOffsetChange,
-                                valueRange = -12.0 * 60..12.0 * 60,
-                                step = 5.0,
-                                unitLabelResId = KeysR.string.units_min
-                            )
-                            DateTimeSection(
-                                dateString = dateString,
-                                timeString = timeString,
-                                eventTimeChanged = uiState.eventTimeChanged,
-                                onDateClick = onDateClick,
-                                onTimeClick = onTimeClick
+            // --- Record source selector (visible when recordOnly) ---
+            if (uiState.timeLayoutVisible) {
+                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    RecordSource.entries.forEachIndexed { index, source ->
+                        SegmentedButton(
+                            selected = uiState.recordSource == source,
+                            onClick = { onRecordSourceChange(source) },
+                            shape = SegmentedButtonDefaults.itemShape(index, RecordSource.entries.size)
+                        ) {
+                            Text(
+                                stringResource(
+                                    when (source) {
+                                        RecordSource.PUMP -> CoreUiR.string.record_source_pump
+                                        RecordSource.PEN  -> CoreUiR.string.record_source_pen
+                                    }
+                                )
                             )
                         }
                     }
+                }
+            }
 
-                    // Notes
-                    if (uiState.showNotesFromPreferences) {
-                        TextField(
-                            value = uiState.notes,
-                            onValueChange = onNotesChange,
-                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
-                            modifier = itemModifier,
-                            singleLine = false,
-                            maxLines = 3
+            // --- Card 2: Insulin amount ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    NumberInputRow(
+                        labelResId = CoreUiR.string.overview_insulin_label,
+                        value = uiState.insulin,
+                        onValueChange = onInsulinChange,
+                        valueRange = 0.0..uiState.maxInsulin,
+                        step = uiState.bolusStep,
+                        valueFormat = bolusFormat,
+                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
+                    )
+                    InsulinQuickAddButtons(
+                        increment1 = uiState.insulinButtonIncrement1,
+                        increment2 = uiState.insulinButtonIncrement2,
+                        increment3 = uiState.insulinButtonIncrement3,
+                        formatAmount = formatAmount,
+                        onAddInsulin = onAddInsulin
+                    )
+                }
+            }
+
+            // --- Card 3: Pen insulin selection (visible when recordOnly + Pen) ---
+            if (uiState.timeLayoutVisible && uiState.recordSource == RecordSource.PEN) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                        // Warning
+                        Text(
+                            text = stringResource(CoreUiR.string.pen_insulin_warning),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        // insulin list Variant with DropDown
+                        var expanded by remember { mutableStateOf(false) }
+
+                        @OptIn(ExperimentalMaterial3Api::class)
+                        (ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            OutlinedTextField(
+                                value = uiState.penIcfg?.insulinLabel ?: "",
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text(stringResource(CoreUiR.string.select_insulin)) },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor()
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                uiState.insulins.forEach { iCfg ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = iCfg.insulinLabel,
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
+                                        },
+                                        onClick = {
+                                            onPenInsulinSelect(iCfg)
+                                            expanded = false
+                                        },
+                                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                                    )
+                                }
+                            }
+                        })
+                        /* insulin list Variant with RadioButtons
+                        uiState.insulins.forEach { iCfg ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onPenInsulinSelect(iCfg) }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = iCfg == uiState.penIcfg,
+                                    onClick = { onPenInsulinSelect(iCfg) }
+                                )
+                                Text(
+                                    text = iCfg.insulinLabel,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+                        */
+                    }
+                }
+            }
+
+            // --- Card 4: Time Selection (visible when recordOnly) ---
+            if (uiState.timeLayoutVisible) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                        NumberInputRow(
+                            labelResId = CoreUiR.string.time,
+                            value = uiState.timeOffsetMinutes.toDouble(),
+                            onValueChange = onTimeOffsetChange,
+                            valueRange = -12.0 * 60..12.0 * 60,
+                            step = 5.0,
+                            unitLabelResId = KeysR.string.units_min
+                        )
+                        DateTimeSection(
+                            dateString = dateString,
+                            timeString = timeString,
+                            eventTimeChanged = uiState.eventTimeChanged,
+                            onDateClick = onDateClick,
+                            onTimeClick = onTimeClick
                         )
                     }
+                }
+            }
+
+            // --- Notes ---
+            if (uiState.showNotesFromPreferences) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+                ) {
+                    TextField(
+                        value = uiState.notes,
+                        onValueChange = onNotesChange,
+                        label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        singleLine = false,
+                        maxLines = 3
+                    )
                 }
             }
 
@@ -426,12 +546,14 @@ private fun InsulinDialogScreenPreview() {
         InsulinDialogContent(
             uiState = InsulinDialogUiState(
                 insulin = 2.5,
+                iCfg = null,
+                insulins = ArrayList(),
                 maxInsulin = 10.0,
-                bolusStep = 0.1,
-                insulinButtonIncrement1 = 0.5,
-                insulinButtonIncrement2 = 1.0,
-                insulinButtonIncrement3 = 2.0,
-                showNotesFromPreferences = true
+            bolusStep = 0.1,
+            insulinButtonIncrement1 = 0.5,
+            insulinButtonIncrement2 = 1.0,
+            insulinButtonIncrement3 = 2.0,
+            showNotesFromPreferences = true
             ),
             bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
             iob = IobUiState(),
@@ -450,7 +572,9 @@ private fun InsulinDialogScreenPreview() {
             onTimeClick = {},
             onSettingsClick = null,
             onNavigateBack = {},
-            onConfirmClick = {}
+            onConfirmClick = {},
+            onRecordSourceChange = {},
+            onPenInsulinSelect = {}
         )
     }
 }

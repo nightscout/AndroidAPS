@@ -104,8 +104,11 @@ class TreatmentDialogViewModel @Inject constructor(
         return insulinAfterConstraints > 0 || carbsAfterConstraints > 0
     }
 
+    private var confirmedState: TreatmentDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<String>()
         val pumpDescription = activePlugin.activePump.pumpDescription
 
@@ -149,7 +152,7 @@ class TreatmentDialogViewModel @Inject constructor(
     }
 
     private suspend fun confirmAndSaveSuspend() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val insulin = state.insulin
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
             ConstraintObject(insulin, aapsLogger)

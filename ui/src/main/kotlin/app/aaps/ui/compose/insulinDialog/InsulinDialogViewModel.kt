@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
@@ -16,6 +17,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -57,7 +59,8 @@ class InsulinDialogViewModel @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
-    private val activeInsulin: Insulin,
+    val activeInsulin: Insulin,
+    val insulinManager: InsulinManager,
     val config: Config,
     private val automation: Automation,
     private val uel: UserEntryLogger,
@@ -104,6 +107,7 @@ class InsulinDialogViewModel @Inject constructor(
                 notes = "",
                 eventTime = now,
                 eventTimeOriginal = now,
+                insulins = insulinManager.insulins.toList(),
                 maxInsulin = maxInsulin,
                 bolusStep = bolusStep,
                 insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
@@ -118,7 +122,13 @@ class InsulinDialogViewModel @Inject constructor(
                 forcedRecordOnly = forcedRecordOnly
             )
         }
+        viewModelScope.launch {
+            val runningIcfg = getRunningIcfg()
+            uiState.update { it.copy(iCfg = runningIcfg) }
+        }
     }
+
+    private suspend fun getRunningIcfg() = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg
 
     fun refreshInsulinButtons() {
         uiState.update {
@@ -158,7 +168,28 @@ class InsulinDialogViewModel @Inject constructor(
     }
 
     fun updateRecordOnly(checked: Boolean) {
-        uiState.update { it.copy(recordOnlyChecked = checked) }
+        uiState.update { it.copy(recordOnlyChecked = checked, recordSource = RecordSource.PUMP, penIcfg = null) }
+        if (!checked)
+            viewModelScope.launch {
+                val runningIcfg = getRunningIcfg()
+                uiState.update { it.copy(iCfg = runningIcfg, penIcfg = null) }
+            }
+    }
+
+    fun updateRecordSource(source: RecordSource) {
+        uiState.update { state ->
+            when (source) {
+                RecordSource.PUMP -> state.copy(recordSource = source, penIcfg = null)
+                RecordSource.PEN  -> {
+                    val autoSelected = state.iCfg
+                    state.copy(recordSource = source, penIcfg = autoSelected)
+                }
+            }
+        }
+    }
+
+    fun selectPenInsulin(iCfg: ICfg) {
+        uiState.update { it.copy(penIcfg = iCfg) }
     }
 
     fun updateNotes(value: String) {
@@ -175,9 +206,11 @@ class InsulinDialogViewModel @Inject constructor(
             )
         }
     }
+    private var confirmedState: InsulinDialogUiState? = null
 
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val lines = mutableListOf<String>()
         val unitLabel = if (state.units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val pump = activePlugin.activePump
@@ -196,6 +229,10 @@ class InsulinDialogViewModel @Inject constructor(
             )
             if (state.recordOnlyChecked) {
                 lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
+                val selectedIcfg = if (state.recordSource == RecordSource.PEN) state.penIcfg else state.iCfg
+                selectedIcfg?.let {
+                    lines.add(rh.gs(app.aaps.core.ui.R.string.selected_insulin, it.insulinLabel))
+                }
             }
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
                 lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints))
@@ -238,8 +275,7 @@ class InsulinDialogViewModel @Inject constructor(
     }
 
     private suspend fun confirmAndSaveSuspend() {
-        val state = uiState.value
-        activePlugin.activePump
+        val state = confirmedState ?: return
         val insulin = state.insulin
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
             ConstraintObject(insulin, aapsLogger)
@@ -249,8 +285,11 @@ class InsulinDialogViewModel @Inject constructor(
         val notes = state.notes
         val recordOnlyChecked = state.recordOnlyChecked
         val units = profileFunction.getUnits()
-        val iCfg = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg // Todo: iCfg can be different for external boluses
-
+        val iCfg = when {
+            !state.recordOnlyChecked               -> getRunningIcfg() ?: activeInsulin.iCfg
+            state.recordSource == RecordSource.PEN  -> state.penIcfg ?: error("Pen insulin must be selected")
+            else                                    -> state.iCfg ?: activeInsulin.iCfg
+        }
         // Insert temp target if eating soon checked
         if (state.eatingSoonTtChecked) {
             val eatingSoonTT = state.eatingSoonTtTarget

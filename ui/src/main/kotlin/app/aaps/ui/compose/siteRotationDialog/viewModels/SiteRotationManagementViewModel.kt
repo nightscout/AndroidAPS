@@ -193,16 +193,20 @@ class SiteRotationManagementViewModel @Inject constructor(
         )
     }
 
+    private var confirmedTe: TE? = null
+
     fun buildConfirmationSummary(): List<String> {
         val lines = mutableListOf<String>()
-        uiState.value.editedTe?.let { te ->
-            if (te.location != loadedLocation)
-                lines.add(rh.gs(R.string.record_site_location, translator.translate(te.location)))
-            if (te.arrow != loadedArrow)
-                lines.add(rh.gs(R.string.record_site_arrow, translator.translate(te.arrow)))
-            if (te.note != loadedNote) {
-                if (!te.note.isNullOrEmpty())
-                    lines.add(rh.gs(R.string.record_site_note, te.note))
+        val te = uiState.value.editedTe
+        confirmedTe = te
+        te?.let {
+            if (it.location != loadedLocation)
+                lines.add(rh.gs(R.string.record_site_location, translator.translate(it.location)))
+            if (it.arrow != loadedArrow)
+                lines.add(rh.gs(R.string.record_site_arrow, translator.translate(it.arrow)))
+            if (it.note != loadedNote) {
+                if (!it.note.isNullOrEmpty())
+                    lines.add(rh.gs(R.string.record_site_note, it.note))
                 else
                     lines.add(rh.gs(R.string.delete_site_note))
             }
@@ -212,7 +216,7 @@ class SiteRotationManagementViewModel @Inject constructor(
 
     fun confirmAndSave() {
         viewModelScope.launch {
-            _uiState.value.editedTe?.let { original ->
+            confirmedTe?.let { original ->
                 val te = original.copy(ids = IDs())  // Force Upload in NS
                 uel.log(
                     action = when (te.type) {

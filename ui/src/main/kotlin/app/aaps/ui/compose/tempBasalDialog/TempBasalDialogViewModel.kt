@@ -103,8 +103,11 @@ class TempBasalDialogViewModel @Inject constructor(
         return state.durationMinutes > 0
     }
 
+    private var confirmedState: TempBasalDialogUiState? = null
+
     fun buildConfirmationSummary(): List<String> {
         val state = uiState.value
+        confirmedState = state
         val profile = cachedProfile ?: return emptyList()
         val lines = mutableListOf<String>()
         val durationInMinutes = state.durationMinutes.toInt()
@@ -135,7 +138,7 @@ class TempBasalDialogViewModel @Inject constructor(
     }
 
     private suspend fun confirmAndSaveSuspend() {
-        val state = uiState.value
+        val state = confirmedState ?: return
         val profile = profileFunction.getProfile() ?: return
         val durationInMinutes = state.durationMinutes.toInt()
 
