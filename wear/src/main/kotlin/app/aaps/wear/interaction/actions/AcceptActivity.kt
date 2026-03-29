@@ -80,15 +80,15 @@ class AcceptActivity : DaggerAppCompatActivity() {
         val profilePercentage = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_PROFILE_PERCENTAGE)) it.getInt(DataLayerListenerServiceWear.KEY_PROFILE_PERCENTAGE) else null }
         val profileTimeshift = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_PROFILE_TIMESHIFT)) it.getInt(DataLayerListenerServiceWear.KEY_PROFILE_TIMESHIFT) else null }
         val profileDuration = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_PROFILE_DURATION)) it.getInt(DataLayerListenerServiceWear.KEY_PROFILE_DURATION) else null }
-        val loopStateTitle = extras?.getString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TITLE)
-        val loopStateDuration = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_LOOP_STATE_DURATION_MINUTES)) it.getInt(DataLayerListenerServiceWear.KEY_LOOP_STATE_DURATION_MINUTES) else null }
-        val loopStateType = extras?.getString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TYPE)
+        val runningModeTitle = extras?.getString(DataLayerListenerServiceWear.KEY_RUNNING_MODE_TITLE)
+        val runningModeDuration = extras?.let { if (it.containsKey(DataLayerListenerServiceWear.KEY_RUNNING_MODE_DURATION_MINUTES)) it.getInt(DataLayerListenerServiceWear.KEY_RUNNING_MODE_DURATION_MINUTES) else null }
+        val runningModeType = extras?.getString(DataLayerListenerServiceWear.KEY_RUNNING_MODE_TYPE)
 
         val hasTempTargetData = isCancelTempTarget || tempTargetDuration != null
         val hasProfileData = profileName != null
-        val hasLoopStateData = loopStateTitle != null
+        val hasRunningModeData = runningModeTitle != null
 
-        if (message.isEmpty() && insulin == null && carbs == null && !hasTempTargetData && !hasProfileData && !hasLoopStateData) {
+        if (message.isEmpty() && insulin == null && carbs == null && !hasTempTargetData && !hasProfileData && !hasRunningModeData) {
             finish()
             return
         }
@@ -97,7 +97,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
         vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 100, 50, 100, 50), -1))
 
         val hasStructuredData = insulin != null || carbs != null
-        val hasAnyStructuredSummary = hasStructuredData || hasTempTargetData || hasProfileData || hasLoopStateData
+        val hasAnyStructuredSummary = hasStructuredData || hasTempTargetData || hasProfileData || hasRunningModeData
         val fmt = DecimalFormat("#0.0")
         val ttFmt = if (tempTargetIsMGDL) DecimalFormat("0") else DecimalFormat("#0.0")
         val ttUnit = if (tempTargetIsMGDL) "mg/dL" else "mmol/L"
@@ -289,8 +289,8 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                             )
                                         }
                                     }
-                                } else if (hasLoopStateData) {
-                                    // LoopState structured summary
+                                } else if (hasRunningModeData) {
+                                    // RunningMode structured summary
                                     Column(
                                         modifier = Modifier
                                             .fillMaxSize()
@@ -305,8 +305,8 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                             fontWeight = FontWeight.Bold,
                                         )
                                         Spacer(Modifier.height(8.dp))
-                                        if (loopStateTitle != null) {
-                                            val stateColor = when (loopStateType) {
+                                        if (runningModeTitle != null) {
+                                            val stateColor = when (runningModeType) {
                                                 "LOOP_CLOSED"       -> LoopClosedColor
                                                 "LOOP_OPEN"         -> LoopOpenColor
                                                 "LOOP_LGS"          -> LoopLgsColor
@@ -319,16 +319,16 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                                 else                -> ConfirmGreen
                                             }
                                             Text(
-                                                text = loopStateTitle,
+                                                text = runningModeTitle,
                                                 color = stateColor,
                                                 fontSize = 20.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 textAlign = TextAlign.Center,
                                             )
                                         }
-                                        if (loopStateDuration != null) {
+                                        if (runningModeDuration != null) {
                                             Text(
-                                                text = stringResource(R.string.action_confirm_duration, formatDurationMinutes(loopStateDuration)),
+                                                text = stringResource(R.string.action_confirm_duration, formatDurationMinutes(runningModeDuration)),
                                                 color = WearSecondaryText,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Bold,

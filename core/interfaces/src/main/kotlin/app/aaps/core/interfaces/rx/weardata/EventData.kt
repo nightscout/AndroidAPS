@@ -141,13 +141,13 @@ sealed class EventData : Event() {
     data class ActionUserActionConfirmed(val id: Int, val title: String) : EventData()
 
     @Serializable
-    data class LoopStatesRequest(val timeStamp: Long) : EventData()
+    data class RunningModeRequest(val timeStamp: Long) : EventData()
 
     @Serializable
-    data class LoopStateSelected(val timeStamp: Long, val index: Int, val duration: Int? = null) : EventData()
+    data class RunningModeSelected(val timeStamp: Long, val index: Int, val duration: Int? = null) : EventData()
 
     @Serializable
-    data class LoopStateConfirmed(val timeStamp: Long, val index: Int, val duration: Int? = null) : EventData()
+    data class RunningModeConfirmed(val timeStamp: Long, val index: Int, val duration: Int? = null) : EventData()
 
     @Serializable
     data class ActionHeartRate(
@@ -216,15 +216,15 @@ sealed class EventData : Event() {
     data class OpenLoopRequestConfirmed(val timeStamp: Long) : EventData()
 
     @Serializable
-    data class LoopStatesList(val timeStamp: Long, val states: List<AvailableLoopState>) : EventData() {
+    data class RunningModeList(val timeStamp: Long, val states: List<AvailableRunningMode>) : EventData() {
         @Serializable
-        data class AvailableLoopState(
-            val state: LoopState,
+        data class AvailableRunningMode(
+            val state: RunningMode,
             val durations: List<Int>? = null,
             val title: String? = null, // used for FAKE_DIVIDER
         ) {
             @Serializable
-            enum class LoopState {
+            enum class RunningMode {
                 // See LoopDialog
                 LOOP_OPEN,
                 LOOP_LGS,
@@ -453,10 +453,10 @@ sealed class EventData : Event() {
         val profilePercentage: Int? = null,
         val profileTimeshift: Int? = null,
         val profileDurationMinutes: Int? = null,
-        // LoopState fields
-        val loopStateTitle: String? = null,
-        val loopStateDurationMinutes: Int? = null,
-        val loopStateType: String? = null,
+        // RunningMode fields
+        val runningModeTitle: String? = null,
+        val runningModeDurationMinutes: Int? = null,
+        val runningModeType: String? = null,
     ) : EventData()
 
     @Serializable
@@ -464,7 +464,7 @@ sealed class EventData : Event() {
 
     // Wear -> Wear (workaround)
     @Serializable
-    data class LoopStatePreSelect(
+    data class RunningModePreSelect(
         val timeStamp: Long,
         val stateIndex: Int,
         val durations: List<Int>
