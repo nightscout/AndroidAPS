@@ -45,7 +45,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class LoopStateTimedActivity : DaggerAppCompatActivity() {
+class RunningModeTimedActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
 
@@ -53,7 +53,7 @@ class LoopStateTimedActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val eventData = intent.extras?.getString(DataLayerListenerServiceWear.KEY_ACTION)
-            ?.let { EventData.deserialize(it) as? EventData.LoopStatePreSelect }
+            ?.let { EventData.deserialize(it) as? EventData.RunningModePreSelect }
             ?: run { finish(); return }
 
         val fineStep = (eventData.durations.firstOrNull() ?: 60).toDouble()
@@ -61,6 +61,7 @@ class LoopStateTimedActivity : DaggerAppCompatActivity() {
         val max = (eventData.durations.lastOrNull() ?: 240).toDouble()
         val stepValues = listOf(fineStep, fineStep * 2, fineStep * 3)
         val defaultDuration = if (fineStep < 60.0) fineStep * 2 else fineStep
+        val stepLabels = if (fineStep >= 60.0) listOf("+${(fineStep * 2 / 60).toInt()}", "+${(fineStep * 3 / 60).toInt()}") else null
 
         setContent {
             MaterialTheme {
@@ -82,11 +83,12 @@ class LoopStateTimedActivity : DaggerAppCompatActivity() {
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
+                                stepLabels = stepLabels,
                             )
-                            else -> LoopStateConfirmScreen(
+                            else -> RunningModeConfirmScreen(
                                 duration = duration.toInt(),
                                 onConfirm = {
-                                    confirmLoopState(eventData.timeStamp, eventData.stateIndex, duration.toInt())
+                                    confirmRunningMode(eventData.timeStamp, eventData.stateIndex, duration.toInt())
                                 },
                             )
                         }
@@ -100,12 +102,12 @@ class LoopStateTimedActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun confirmLoopState(timeStamp: Long, stateIndex: Int, duration: Int) {
-        rxBus.send(EventWearToMobile(EventData.LoopStateSelected(timeStamp, stateIndex, duration)))
+    private fun confirmRunningMode(timeStamp: Long, stateIndex: Int, duration: Int) {
+        rxBus.send(EventWearToMobile(EventData.RunningModeSelected(timeStamp, stateIndex, duration)))
         startActivity(
             Intent(this, ConfirmationActivity::class.java).apply {
                 putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
-                putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.action_loop_state_selected))
+                putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.action_running_mode_selected))
             }
         )
         finish()
@@ -113,7 +115,7 @@ class LoopStateTimedActivity : DaggerAppCompatActivity() {
 }
 
 @Composable
-private fun LoopStateConfirmScreen(duration: Int, onConfirm: () -> Unit) {
+private fun RunningModeConfirmScreen(duration: Int, onConfirm: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 

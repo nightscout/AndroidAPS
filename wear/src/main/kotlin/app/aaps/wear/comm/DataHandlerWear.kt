@@ -50,7 +50,7 @@ import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
 import app.aaps.wear.tile.ActionsTileService
-import app.aaps.wear.tile.LoopStateTileService
+import app.aaps.wear.tile.RunningModeTileService
 import app.aaps.wear.tile.QuickWizardTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
@@ -120,9 +120,9 @@ class DataHandlerWear @Inject constructor(
                             it.profilePercentage?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_PROFILE_PERCENTAGE, v) }
                             it.profileTimeshift?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_PROFILE_TIMESHIFT, v) }
                             it.profileDurationMinutes?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_PROFILE_DURATION, v) }
-                            it.loopStateTitle?.let { v -> bundle.putString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TITLE, v) }
-                            it.loopStateDurationMinutes?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_LOOP_STATE_DURATION_MINUTES, v) }
-                            it.loopStateType?.let { v -> bundle.putString(DataLayerListenerServiceWear.KEY_LOOP_STATE_TYPE, v) }
+                            it.runningModeTitle?.let { v -> bundle.putString(DataLayerListenerServiceWear.KEY_RUNNING_MODE_TITLE, v) }
+                            it.runningModeDurationMinutes?.let { v -> bundle.putInt(DataLayerListenerServiceWear.KEY_RUNNING_MODE_DURATION_MINUTES, v) }
+                            it.runningModeType?.let { v -> bundle.putString(DataLayerListenerServiceWear.KEY_RUNNING_MODE_TYPE, v) }
                         }
                     )
                 })
@@ -297,14 +297,14 @@ class DataHandlerWear @Inject constructor(
                 }
             }
         disposable += rxBus
-            .toObservable(EventData.LoopStatesList::class.java)
+            .toObservable(EventData.RunningModeList::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Loop states received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "Running mode received from ${it.sourceNodeId}")
                 val serialized = it.serialize()
-                if (serialized != sp.getString(R.string.key_loop_states_data, "")) {
-                    sp.putString(R.string.key_loop_states_data, serialized)
-                    TileService.getUpdater(context).requestUpdate(LoopStateTileService::class.java)
+                if (serialized != sp.getString(R.string.key_running_mode_data, "")) {
+                    sp.putString(R.string.key_running_mode_data, serialized)
+                    TileService.getUpdater(context).requestUpdate(RunningModeTileService::class.java)
                 }
             }
         disposable += rxBus

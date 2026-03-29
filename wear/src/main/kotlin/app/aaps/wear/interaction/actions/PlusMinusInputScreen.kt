@@ -99,6 +99,7 @@ internal fun PlusMinusInputScreen(
     simpleMode: Boolean = false,
     enabled: Boolean = true,
     valueColor: Color = Color.White,
+    stepLabels: List<String>? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
@@ -220,6 +221,7 @@ internal fun PlusMinusInputScreen(
                 onStep = ::step,
                 useTextLabel = true,
                 enabled = enabled,
+                labelOverride = stepLabels?.getOrNull(0),
             )
 
             // Top-left: large increment or symmetric decrement (labeled)
@@ -230,6 +232,7 @@ internal fun PlusMinusInputScreen(
                 onStep = ::step,
                 useTextLabel = true,
                 enabled = enabled,
+                labelOverride = stepLabels?.getOrNull(1),
             )
         }
     }
@@ -243,6 +246,7 @@ private fun StepButton(
     onStep: (Double) -> Unit,
     useTextLabel: Boolean = false,
     enabled: Boolean = true,
+    labelOverride: String? = null,
 ) {
     val delta = if (isIncrement) step else -step
 
@@ -277,7 +281,7 @@ private fun StepButton(
         contentAlignment = Alignment.Center
     ) {
         if (useTextLabel) {
-            val label = remember(step, isIncrement) {
+            val label = labelOverride ?: remember(step, isIncrement) {
                 val fmt = DecimalFormat("#.#")
                 val prefix = if (isIncrement) "+" else "-"
                 "$prefix${fmt.format(step).replaceFirst("^0+(?!$)".toRegex(), "")}"

@@ -292,10 +292,10 @@
     <string name="complication_iob_icon">IoB Icon</string>
     <string name="complication_iob_detailed">IoB Detailed</string>
     <string name="complication_uploader_phone_battery">Uploader/Phone Battery</string>
-    <string name="status_loop_state">Loop state</string>
-    <string name="key_loop_states_data" translatable="false">loop_states</string>
-    <string name="label_loop_state_title">AAPS(Loop state)</string>
-    <string name="action_loop_state_selected">Loop state requested</string>
+    <string name="status_running_mode">Running mode</string>
+    <string name="key_running_mode_data" translatable="false">loop_states</string>
+    <string name="label_running_mode_title">AAPS(Running mode)</string>
+    <string name="action_running_mode_selected">Running mode requested</string>
     <string name="wizard_total_insulin">Total Insulin</string>
     <string name="wizard_calculation">Calculation</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>

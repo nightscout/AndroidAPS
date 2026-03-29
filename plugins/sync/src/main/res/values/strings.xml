@@ -192,7 +192,7 @@
     <string name="wear_action_loop_state_unauthorized">Please try again.</string>
     <string name="wear_action_loop_state_invalid">Invalid loop state requested</string>
 
-    <string name="wear_action_loop_state_title">LOOP STATE</string>
+    <string name="wear_action_running_mode_title">RUNNING MODE</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuration: %2$d min</string>
 
     <string name="wear_action_loop_state_now_closed">Closed Loop</string>
