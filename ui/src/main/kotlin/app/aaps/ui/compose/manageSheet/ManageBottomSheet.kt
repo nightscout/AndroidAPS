@@ -168,7 +168,9 @@ internal fun ManageBottomSheetContent(
             @Suppress("DEPRECATION")
             ManageItem(
                 text = stringResource(CoreUiR.string.pump_management),
-                iconPainter = painterResource(pumpPlugin.menuIcon),
+                iconPainter = pumpPlugin.pluginDescription.icon?.let { rememberVectorPainter(it) }
+                    ?: if (pumpPlugin.menuIcon != -1) painterResource(pumpPlugin.menuIcon)
+                    else rememberVectorPainter(ElementType.PUMP.icon()),
                 color = ElementType.PUMP.color(),
                 onDismiss = onDismiss,
                 onClick = { onNavigate(NavigationRequest.Element(ElementType.PUMP)) },
