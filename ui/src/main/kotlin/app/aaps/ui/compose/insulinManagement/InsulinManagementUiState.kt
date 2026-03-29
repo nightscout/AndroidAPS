@@ -7,6 +7,11 @@ import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 
+sealed class PendingNavigation {
+    data class CardSwitch(val targetIndex: Int) : PendingNavigation()
+    data object Back : PendingNavigation()
+}
+
 @Immutable
 data class InsulinManagementUiState(
     val insulins: List<ICfg> = emptyList(),
@@ -21,6 +26,9 @@ data class InsulinManagementUiState(
     val editorPeakMinutes: Int = 75,
     val editorDiaHours: Double = 5.0,
     val autoNameEnabled: Boolean = true,
+
+    // Unsaved changes dialog
+    val pendingNavigation: PendingNavigation? = null,
 
     // Activation dialog
     val activationMessage: String? = null,

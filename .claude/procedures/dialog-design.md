@@ -87,9 +87,9 @@
 | 7 | CareDialogScreen | ✅ Done | `ui/.../careDialog/` |
 | 8 | CarbsDialogScreen | ✅ Done | `ui/.../carbsDialog/` |
 | 9 | ProfileActivationScreen | ✅ Done | `ui/.../profileManagement/` |
-| 10 | ProfileHelperScreen | ⬜ (Clone button) | `ui/.../profileHelper/` |
-| 11 | InsulinManagementScreen | ⬜ (Save icon) | `ui/.../insulinManagement/` |
-| 12 | DanaUserOptionsScreen | ⬜ (Save button) | `pump/dana/.../compose/` |
+| 10 | ProfileHelperScreen | ✅ Done | `ui/.../profileHelper/` |
+| 11 | InsulinManagementScreen | ✅ Done | `ui/.../insulinManagement/` |
+| 12 | DanaUserOptionsScreen | ✅ Done | `pump/dana/.../compose/` |
 | 13 | CalibrationDialogScreen | ✅ New | `ui/.../calibrationDialog/` |
 
 ## Review Findings (2026-03-28)

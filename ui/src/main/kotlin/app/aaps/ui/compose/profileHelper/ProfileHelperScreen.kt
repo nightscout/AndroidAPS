@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -26,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -335,23 +336,29 @@ private fun ProfileHelperContent(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
                     }
                 },
-                actions = {
-                    if (showCloneAction) {
-                        FilledTonalButton(
-                            onClick = onCloneClick,
-                            modifier = Modifier.padding(end = 8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.ContentCopy,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(stringResource(R.string.clone_label))
-                        }
-                    }
-                }
+                actions = {}
             )
+        },
+        bottomBar = {
+            Button(
+                onClick = onCloneClick,
+                enabled = showCloneAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ContentCopy,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    if (showCloneAction) stringResource(R.string.clone_label)
+                    else stringResource(app.aaps.core.ui.R.string.ok)
+                )
+            }
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
     ) { paddingValues ->

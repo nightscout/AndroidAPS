@@ -55,6 +55,7 @@ class InsulinManagementViewModel @Inject constructor(
 
     sealed class SideEffect {
         data class ScrollToInsulin(val index: Int) : SideEffect()
+        data object NavigateBack : SideEffect()
     }
 
     init {
@@ -120,6 +121,14 @@ class InsulinManagementViewModel @Inject constructor(
 
     fun updateCurrentCardIndex(index: Int) {
         if (index == uiState.value.currentCardIndex) return
+        if (hasUnsavedChanges()) {
+            uiState.update { it.copy(pendingNavigation = PendingNavigation.CardSwitch(index)) }
+            return
+        }
+        applyCardSwitch(index)
+    }
+
+    private fun applyCardSwitch(index: Int) {
         val insulins = uiState.value.insulins
         val iCfg = insulins.getOrNull(index) ?: return
         val editorTemplate = InsulinType.fromPeak(iCfg.insulinPeakTime)
@@ -130,6 +139,7 @@ class InsulinManagementViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 currentCardIndex = index,
+                pendingNavigation = null,
                 editorNickname = editorNickname,
                 editorTemplate = editorTemplate,
                 editorConcentration = ConcentrationType.fromDouble(iCfg.concentration),
@@ -138,6 +148,59 @@ class InsulinManagementViewModel @Inject constructor(
                 autoNameEnabled = autoNameEnabled
             )
         }
+    }
+
+    fun requestBack() {
+        if (hasUnsavedChanges()) {
+            uiState.update { it.copy(pendingNavigation = PendingNavigation.Back) }
+        } else {
+            uiState.update { it.copy(pendingNavigation = null) }
+            viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
+        }
+    }
+
+    fun saveAndProceed() {
+        val pending = uiState.value.pendingNavigation
+        if (saveCurrentInsulin()) {
+            when (pending) {
+                is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
+                is PendingNavigation.Back       -> {
+                    uiState.update { it.copy(pendingNavigation = null) }
+                    viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
+                }
+
+                null                            -> Unit
+            }
+        }
+    }
+
+    fun discardAndProceed() {
+        val pending = uiState.value.pendingNavigation
+        when (pending) {
+            is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
+            is PendingNavigation.Back       -> {
+                uiState.update { it.copy(pendingNavigation = null) }
+                viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
+            }
+
+            null                            -> Unit
+        }
+    }
+
+    fun dismissPendingNavigation() {
+        uiState.update { it.copy(pendingNavigation = null) }
+    }
+
+    fun hasUnsavedChanges(): Boolean {
+        val state = uiState.value
+        if (state.screenMode == ScreenMode.PLAY) return false
+        val stored = state.insulins.getOrNull(state.currentCardIndex)
+        return stored?.let { s ->
+            state.editorNickname != s.insulinNickname ||
+                state.editorPeakMinutes != s.peak ||
+                state.editorDiaHours != s.dia ||
+                state.editorConcentration.value != s.concentration
+        } ?: state.editorNickname.isNotEmpty()
     }
 
     // Editor field updates

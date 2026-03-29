@@ -28,9 +28,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +40,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -110,18 +113,12 @@ fun InsulinManagementScreen(
 
     // Derived state (reactive — recomputed when uiState changes)
     val stored = uiState.insulins.getOrNull(uiState.currentCardIndex)
-    val hasUnsavedChanges = stored?.let { s ->
-        uiState.editorNickname != s.insulinNickname ||
-            uiState.editorPeakMinutes != s.peak ||
-            uiState.editorDiaHours != s.dia ||
-            uiState.editorConcentration.value != s.concentration
-    } ?: uiState.editorNickname.isNotEmpty()
+    val hasUnsavedChanges = viewModel.hasUnsavedChanges()
     val isCurrentActive = stored?.insulinLabel == uiState.activeInsulinLabel
     val canDelete = uiState.insulins.size > 1 && !isCurrentActive
 
     // Dialog states
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var showUnsavedDialog by remember { mutableStateOf(false) }
 
     // Scroll-to-page state for programmatic scrolling
     var scrollToPage by remember { mutableStateOf<Int?>(null) }
@@ -144,6 +141,10 @@ fun InsulinManagementScreen(
             when (effect) {
                 is InsulinManagementViewModel.SideEffect.ScrollToInsulin -> {
                     scrollToPage = effect.index
+                }
+
+                is InsulinManagementViewModel.SideEffect.NavigateBack   -> {
+                    onNavigateBack()
                 }
             }
         }
@@ -175,12 +176,11 @@ fun InsulinManagementScreen(
     }
 
     // Unsaved changes dialog
-    if (showUnsavedDialog) {
-        OkDialog(
-            title = stringResource(CoreUiR.string.confirm),
-            message = stringResource(R.string.save_or_reset_changes_first),
-            icon = IcPluginInsulin,
-            onDismiss = { showUnsavedDialog = false }
+    if (uiState.pendingNavigation != null) {
+        UnsavedChangesDialog(
+            onSave = { viewModel.saveAndProceed() },
+            onDiscard = { viewModel.discardAndProceed() },
+            onCancel = { viewModel.dismissPendingNavigation() }
         )
     }
 
@@ -189,7 +189,7 @@ fun InsulinManagementScreen(
             AapsTopAppBar(
                 title = { Text(stringResource(CoreUiR.string.insulin_label)) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = { viewModel.requestBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
@@ -244,6 +244,14 @@ fun InsulinManagementScreen(
                     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
                         if (!pagerState.isScrollInProgress) {
                             viewModel.updateCurrentCardIndex(pagerState.currentPage)
+                        }
+                    }
+
+                    // Snap pager back when pending navigation is dismissed (Cancel)
+                    // pendingNavigation becoming null means dialog was dismissed without switching
+                    LaunchedEffect(uiState.pendingNavigation) {
+                        if (uiState.pendingNavigation == null && pagerState.currentPage != uiState.currentCardIndex) {
+                            pagerState.animateScrollToPage(uiState.currentCardIndex)
                         }
                     }
 
@@ -439,9 +447,7 @@ fun InsulinManagementScreen(
                     // Activate FAB
                         AapsFab(
                             onClick = {
-                                if (hasUnsavedChanges) {
-                                    showUnsavedDialog = true
-                                } else {
+                                if (!hasUnsavedChanges) {
                                     viewModel.prepareActivation()
                                 }
                             }
@@ -462,6 +468,37 @@ fun InsulinManagementScreen(
             )
         }
     }
+}
+
+// --- Unsaved Changes Dialog ---
+
+@Composable
+private fun UnsavedChangesDialog(
+    onSave: () -> Unit,
+    onDiscard: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        title = { Text(stringResource(CoreUiR.string.unsaved_changes)) },
+        text = { Text(stringResource(CoreUiR.string.unsaved_changes_message)) },
+        confirmButton = {
+            FilledTonalButton(onClick = onSave) {
+                Text(stringResource(CoreUiR.string.save))
+            }
+        },
+        dismissButton = {
+            Row {
+                TextButton(onClick = onCancel) {
+                    Text(stringResource(CoreUiR.string.cancel))
+                }
+                Spacer(Modifier.width(8.dp))
+                TextButton(onClick = onDiscard) {
+                    Text(stringResource(CoreUiR.string.discard))
+                }
+            }
+        }
+    )
 }
 
 // --- "Load peak from" preset chips ---

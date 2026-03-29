@@ -1,25 +1,37 @@
 package app.aaps.pump.dana.compose
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,133 +75,155 @@ private fun DanaUserOptionsContent(
     onLowReservoirChange: (Double) -> Unit = {},
     onSave: () -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        // Time format
-        SwitchRow(
-            label = stringResource(R.string.danar_time_display),
-            summary = if (state.timeFormat24h) stringResource(R.string.time_format_24h) else stringResource(R.string.time_format_12h),
-            checked = state.timeFormat24h,
-            onCheckedChange = onTimeFormatChange
-        )
-
-        HorizontalDivider()
-
-        // Button scroll
-        SwitchRow(
-            label = stringResource(R.string.danar_button_scroll),
-            summary = if (state.buttonScroll) stringResource(R.string.option_on) else stringResource(R.string.option_off),
-            checked = state.buttonScroll,
-            onCheckedChange = onButtonScrollChange
-        )
-
-        HorizontalDivider()
-
-        // Beep on press
-        SwitchRow(
-            label = stringResource(R.string.danar_beep),
-            summary = if (state.beepOnPress) stringResource(R.string.option_on) else stringResource(R.string.option_off),
-            checked = state.beepOnPress,
-            onCheckedChange = onBeepChange
-        )
-
-        HorizontalDivider()
-
-        // Alarm mode
-        Text(
-            text = stringResource(R.string.danar_pump_alarm),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        Column(modifier = Modifier.selectableGroup()) {
-            AlarmRadioOption(
-                label = stringResource(R.string.danar_pump_alarm_sound),
-                selected = state.alarmMode == 1,
-                onClick = { onAlarmModeChange(1) }
-            )
-            AlarmRadioOption(
-                label = stringResource(R.string.danar_pump_alarm_vibrate),
-                selected = state.alarmMode == 2,
-                onClick = { onAlarmModeChange(2) }
-            )
-            AlarmRadioOption(
-                label = stringResource(R.string.danar_pump_alarm_both),
-                selected = state.alarmMode == 3,
-                onClick = { onAlarmModeChange(3) }
-            )
+    Scaffold(
+        bottomBar = {
+            Button(
+                onClick = onSave,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.danar_save_user_options))
+            }
         }
+    ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
 
-        HorizontalDivider()
-
-        // Screen timeout
-        NumberInputRow(
-            labelResId = R.string.danar_screen_timeout,
-            value = state.screenTimeout.toDouble(),
-            onValueChange = onScreenTimeoutChange,
-            valueRange = 5.0..240.0,
-            step = 5.0,
-            formatAsInt = true,
-            unitLabelResId = app.aaps.core.keys.R.string.units_sec
-        )
-
-        // Backlight
-        NumberInputRow(
-            labelResId = R.string.danar_backlight,
-            value = state.backlight.toDouble(),
-            onValueChange = onBacklightChange,
-            valueRange = state.minBacklight.toDouble()..60.0,
-            step = 1.0,
-            formatAsInt = true,
-            unitLabelResId = app.aaps.core.keys.R.string.units_sec
-        )
-
-        HorizontalDivider()
-
-        // Glucose units
-        SwitchRow(
-            label = stringResource(R.string.danar_glucose_units),
-            summary = if (state.glucoseUnitMmol) "mmol/L" else "mg/dL",
-            checked = state.glucoseUnitMmol,
-            onCheckedChange = onGlucoseUnitChange
-        )
-
-        HorizontalDivider()
-
-        // Shutdown hour
-        NumberInputRow(
-            labelResId = R.string.danar_shutdown,
-            value = state.shutdownHour.toDouble(),
-            onValueChange = onShutdownHourChange,
-            valueRange = 0.0..24.0,
-            step = 1.0,
-            formatAsInt = true,
-            unitLabelResId = app.aaps.core.keys.R.string.units_hours
-        )
-
-        // Low reservoir
-        NumberInputRow(
-            labelResId = R.string.danar_low_reservoir,
-            value = state.lowReservoir.toDouble(),
-            onValueChange = onLowReservoirChange,
-            valueRange = 10.0..50.0,
-            step = 10.0,
-            formatAsInt = true,
-            unitLabel = "U"
-        )
-
-        // Save button
-        Button(
-            onClick = onSave,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(stringResource(R.string.danar_save_user_options))
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Time format
+                    SwitchRow(
+                        label = stringResource(R.string.danar_time_display),
+                        summary = if (state.timeFormat24h) stringResource(R.string.time_format_24h) else stringResource(R.string.time_format_12h),
+                        checked = state.timeFormat24h,
+                        onCheckedChange = onTimeFormatChange,
+                        modifier = itemModifier
+                    )
+
+                    // Button scroll
+                    SwitchRow(
+                        label = stringResource(R.string.danar_button_scroll),
+                        summary = if (state.buttonScroll) stringResource(R.string.option_on) else stringResource(R.string.option_off),
+                        checked = state.buttonScroll,
+                        onCheckedChange = onButtonScrollChange,
+                        modifier = itemModifier
+                    )
+
+                    // Beep on press
+                    SwitchRow(
+                        label = stringResource(R.string.danar_beep),
+                        summary = if (state.beepOnPress) stringResource(R.string.option_on) else stringResource(R.string.option_off),
+                        checked = state.beepOnPress,
+                        onCheckedChange = onBeepChange,
+                        modifier = itemModifier
+                    )
+
+                    // Alarm mode
+                    Column(modifier = itemModifier) {
+                        Text(
+                            text = stringResource(R.string.danar_pump_alarm),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        Column(modifier = Modifier.selectableGroup()) {
+                            AlarmRadioOption(
+                                label = stringResource(R.string.danar_pump_alarm_sound),
+                                selected = state.alarmMode == 1,
+                                onClick = { onAlarmModeChange(1) }
+                            )
+                            AlarmRadioOption(
+                                label = stringResource(R.string.danar_pump_alarm_vibrate),
+                                selected = state.alarmMode == 2,
+                                onClick = { onAlarmModeChange(2) }
+                            )
+                            AlarmRadioOption(
+                                label = stringResource(R.string.danar_pump_alarm_both),
+                                selected = state.alarmMode == 3,
+                                onClick = { onAlarmModeChange(3) }
+                            )
+                        }
+                    }
+
+                    // Screen timeout
+                    NumberInputRow(
+                        labelResId = R.string.danar_screen_timeout,
+                        value = state.screenTimeout.toDouble(),
+                        onValueChange = onScreenTimeoutChange,
+                        valueRange = 5.0..240.0,
+                        step = 5.0,
+                        formatAsInt = true,
+                        unitLabelResId = app.aaps.core.keys.R.string.units_sec,
+                        modifier = itemModifier
+                    )
+
+                    // Backlight
+                    NumberInputRow(
+                        labelResId = R.string.danar_backlight,
+                        value = state.backlight.toDouble(),
+                        onValueChange = onBacklightChange,
+                        valueRange = state.minBacklight.toDouble()..60.0,
+                        step = 1.0,
+                        formatAsInt = true,
+                        unitLabelResId = app.aaps.core.keys.R.string.units_sec,
+                        modifier = itemModifier
+                    )
+
+                    // Glucose units
+                    SwitchRow(
+                        label = stringResource(R.string.danar_glucose_units),
+                        summary = if (state.glucoseUnitMmol) "mmol/L" else "mg/dL",
+                        checked = state.glucoseUnitMmol,
+                        onCheckedChange = onGlucoseUnitChange,
+                        modifier = itemModifier
+                    )
+
+                    // Shutdown hour
+                    NumberInputRow(
+                        labelResId = R.string.danar_shutdown,
+                        value = state.shutdownHour.toDouble(),
+                        onValueChange = onShutdownHourChange,
+                        valueRange = 0.0..24.0,
+                        step = 1.0,
+                        formatAsInt = true,
+                        unitLabelResId = app.aaps.core.keys.R.string.units_hours,
+                        modifier = itemModifier
+                    )
+
+                    // Low reservoir
+                    NumberInputRow(
+                        labelResId = R.string.danar_low_reservoir,
+                        value = state.lowReservoir.toDouble(),
+                        onValueChange = onLowReservoirChange,
+                        valueRange = 10.0..50.0,
+                        step = 10.0,
+                        formatAsInt = true,
+                        unitLabel = "U",
+                        modifier = itemModifier
+                    )
+                }
+            }
         }
     }
 }
@@ -220,12 +254,11 @@ private fun SwitchRow(
     label: String,
     summary: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
