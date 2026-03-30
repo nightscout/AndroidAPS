@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilPacketCodec
 import app.aaps.pump.equil.manager.Utils
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -49,6 +50,11 @@ class EquilEmulatorTransportTest {
         )
         transport.setListener(testListener)
         receivedPackets.clear()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        transport.awaitPendingCallbacks()
     }
 
     @Test
