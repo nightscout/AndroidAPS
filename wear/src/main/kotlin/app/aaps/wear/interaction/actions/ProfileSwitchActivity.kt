@@ -81,6 +81,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 simpleMode = true,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.status_profile_switch),
                             )
                             1    -> PlusMinusInputScreen(
                                 value = currentPercentage,
@@ -95,6 +96,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                                 simpleMode = true,
                                 symmetricLargeSteps = true,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.status_profile_switch),
                             )
                             2    -> PlusMinusInputScreen(
                                 value = currentDuration,
@@ -108,6 +110,7 @@ class ProfileSwitchActivity : DaggerAppCompatActivity() {
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 2,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.status_profile_switch),
                             )
                             else -> ProfileSwitchRequestScreen(
                                 timeshift = currentTimeshift.toInt(),

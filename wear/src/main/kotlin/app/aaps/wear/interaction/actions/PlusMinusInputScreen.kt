@@ -36,8 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.foundation.AnchorType
+import androidx.wear.compose.foundation.CurvedLayout
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.curvedText
 import app.aaps.wear.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -100,6 +103,7 @@ internal fun PlusMinusInputScreen(
     enabled: Boolean = true,
     valueColor: Color = Color.White,
     stepLabels: List<String>? = null,
+    title: String? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
@@ -133,6 +137,12 @@ internal fun PlusMinusInputScreen(
 
     val displayValue = displayText ?: if (currentValue.value == 0.0 && !allowZero) "" else format.format(currentValue.value)
     val valueFontSize = if (displayText != null) 32.sp else 40.sp
+    val labelFontSize = when {
+        label.length <= 16 -> 20.sp
+        label.length <= 22 -> 16.sp
+        label.length <= 28 -> 13.sp
+        else               -> 11.sp
+    }
 
     Box(
         modifier = Modifier
@@ -154,6 +164,20 @@ internal fun PlusMinusInputScreen(
             },
         contentAlignment = Alignment.Center
     ) {
+        if (title != null) {
+            val titleFontSize = when {
+                title.length <= 15 -> 12.sp
+                title.length <= 19 -> 10.sp
+                else               -> 9.sp
+            }
+            CurvedLayout(anchor = 270f, anchorType = AnchorType.Center) {
+                curvedText(
+                    text = title,
+                    color = WearSecondaryText,
+                    fontSize = titleFontSize,
+                )
+            }
+        }
         if (simpleMode) {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -172,7 +196,7 @@ internal fun PlusMinusInputScreen(
                     Text(
                         text = label,
                         color = WearSecondaryText,
-                        fontSize = 20.sp,
+                        fontSize = labelFontSize,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -191,7 +215,8 @@ internal fun PlusMinusInputScreen(
                 Text(
                     text = label,
                     color = WearSecondaryText,
-                    fontSize = 20.sp
+                    fontSize = labelFontSize,
+                    textAlign = TextAlign.Center,
                 )
             }
 

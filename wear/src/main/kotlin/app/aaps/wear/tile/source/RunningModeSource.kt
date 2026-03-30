@@ -40,7 +40,13 @@ class RunningModeSource @Inject constructor(private val context: Context, privat
                         else                                                   -> BackgroundActionActivity::class.java.name
                     },
                     action = when (state.state) {
-                        RunningMode.PUMP_DISCONNECT, RunningMode.LOOP_USER_SUSPEND -> EventData.RunningModePreSelect(states.timeStamp, index, state.durations ?: listOf())
+                        RunningMode.PUMP_DISCONNECT, RunningMode.LOOP_USER_SUSPEND -> EventData.RunningModePreSelect(
+                            states.timeStamp, index, state.durations ?: listOf(),
+                            title = context.resources.getString(
+                                if (state.state == RunningMode.PUMP_DISCONNECT) R.string.title_activity_disconnect_pump
+                                else R.string.title_activity_suspend_loop
+                            )
+                        )
                         else                                                   -> EventData.RunningModeSelected(states.timeStamp, index)
                     },
                     message = when (state.state) {

@@ -83,6 +83,7 @@ class CarbActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = CarbsOrange,
+                                title = stringResource(R.string.action_carbs),
                             )
                             else -> CarbConfirmScreen(
                                 carbs = carbs.toInt(),
