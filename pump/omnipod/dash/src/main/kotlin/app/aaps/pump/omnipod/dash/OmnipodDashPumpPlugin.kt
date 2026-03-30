@@ -76,7 +76,7 @@ import app.aaps.pump.omnipod.dash.history.data.BolusRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusType
 import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
-import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
+import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.core.Completable
@@ -118,11 +118,19 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val dashHistoryDatabase: DashHistoryDatabase
+    private val dashHistoryDatabase: DashHistoryDatabase,
+    private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
+    private val blePreCheck: app.aaps.core.interfaces.pump.BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
+        .composeContent { _ ->
+            OmnipodDashComposeContent(
+                pluginName = rh.gs(R.string.omnipod_dash_name),
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
         .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_dash_name)
         .shortName(R.string.omnipod_dash_name_short)

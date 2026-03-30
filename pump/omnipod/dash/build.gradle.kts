@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -33,6 +34,11 @@ dependencies {
     api(libs.androidx.room.runtime)
     api(libs.androidx.room.rxjava3)
     api(libs.com.github.guepardoapps.kulid)
+
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     androidTestImplementation(project(":shared:tests"))
     testImplementation(project(":shared:tests"))

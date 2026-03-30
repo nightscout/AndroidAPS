@@ -101,7 +101,7 @@ import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import app.aaps.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
-import app.aaps.pump.omnipod.eros.ui.OmnipodErosOverviewFragment
+import app.aaps.pump.omnipod.eros.ui.compose.OmnipodErosComposeContent
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -152,11 +152,17 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val erosHistoryDatabase: ErosHistoryDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(OmnipodErosOverviewFragment::class.java.name)
+        .composeContent { _ ->
+            OmnipodErosComposeContent(
+                pluginName = rh.gs(R.string.omnipod_eros_name),
+                protectionCheck = protectionCheck
+            )
+        }
         .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_eros_name)
         .shortName(R.string.omnipod_eros_name_short)

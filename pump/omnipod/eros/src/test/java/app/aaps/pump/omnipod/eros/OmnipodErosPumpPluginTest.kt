@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.eros
 
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -33,6 +34,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
     @Mock lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Mock lateinit var aapsOmnipodUtil: AapsOmnipodUtil
     @Mock lateinit var omnipodAlertUtil: OmnipodAlertUtil
+    @Mock lateinit var protectionCheck: ProtectionCheck
 
     private lateinit var plugin: OmnipodErosPumpPlugin
 
@@ -45,7 +47,8 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
         plugin = OmnipodErosPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, TestAapsSchedulers(), rxBus, context,
             erosPodStateManager, aapsOmnipodErosManager, fabricPrivacy, rileyLinkServiceData, aapsOmnipodUtil,
-            rileyLinkUtil, omnipodAlertUtil, pumpSync, uiInteraction, notificationManager, erosHistoryDatabase, pumpEnactResultProvider
+            rileyLinkUtil, omnipodAlertUtil, pumpSync, uiInteraction, notificationManager, erosHistoryDatabase, pumpEnactResultProvider,
+            protectionCheck
         )
     }
 
