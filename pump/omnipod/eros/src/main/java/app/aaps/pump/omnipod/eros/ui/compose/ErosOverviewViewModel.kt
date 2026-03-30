@@ -17,9 +17,12 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.queue.Callback
@@ -105,6 +108,7 @@ class ErosOverviewViewModel @Inject constructor(
     private val config: Config,
     private val aapsLogger: AAPSLogger,
     private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
+    private val ch: ConcentrationHelper,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -458,10 +462,8 @@ class ErosOverviewViewModel @Inject constructor(
 
     private fun buildLastBolus(): Pair<String, StatusLevel> {
         if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
-            var text = rh.gs(
-                CommonR.string.omnipod_common_overview_last_bolus_value,
-                omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount),
-                rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
+            var text = ch.insulinAmountAgoString(
+                PumpInsulin(omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount)),
                 readableDuration(podStateManager.lastBolusStartTime)
             )
             if (!podStateManager.isLastBolusCertain) {
@@ -481,8 +483,8 @@ class ErosOverviewViewModel @Inject constructor(
             val now = DateTime.now()
             val minutesRunning = Duration(podStateManager.tempBasalStartTime, now).standardMinutes
             var text = rh.gs(
-                CommonR.string.omnipod_common_overview_temp_basal_value,
-                podStateManager.tempBasalAmount,
+                CommonR.string.omnipod_common_overview_temp_basal_concentration_value,
+                ch.basalRateString(PumpRate(podStateManager.tempBasalAmount),true),
                 dateUtil.timeString(podStateManager.tempBasalStartTime.millis),
                 minutesRunning,
                 podStateManager.tempBasalDuration.standardMinutes
@@ -503,11 +505,11 @@ class ErosOverviewViewModel @Inject constructor(
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
         if (podStateManager.reservoirLevel == null) {
-            return rh.gs(CommonR.string.omnipod_common_overview_reservoir_value_over50) to StatusLevel.NORMAL
+            return rh.gs(CommonR.string.omnipod_common_overview_reservoir_concentration_value_over50, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
         }
         val lowThreshold = (omnipodAlertUtil.lowReservoirAlertUnits ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
-        val text = rh.gs(CommonR.string.omnipod_common_overview_reservoir_value, podStateManager.reservoirLevel)
-        val level = if (podStateManager.reservoirLevel < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
+        val text = ch.insulinAmountString(PumpInsulin(podStateManager.reservoirLevel))
+        val level = if (ch.fromPump(PumpInsulin(podStateManager.reservoirLevel)) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
         return text to level
     }
 
