@@ -137,6 +137,12 @@ internal fun PlusMinusInputScreen(
 
     val displayValue = displayText ?: if (currentValue.value == 0.0 && !allowZero) "" else format.format(currentValue.value)
     val valueFontSize = if (displayText != null) 32.sp else 40.sp
+    val labelFontSize = when {
+        label.length <= 16 -> 20.sp
+        label.length <= 22 -> 16.sp
+        label.length <= 28 -> 13.sp
+        else               -> 11.sp
+    }
 
     Box(
         modifier = Modifier
@@ -190,7 +196,7 @@ internal fun PlusMinusInputScreen(
                     Text(
                         text = label,
                         color = WearSecondaryText,
-                        fontSize = 20.sp,
+                        fontSize = labelFontSize,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -209,7 +215,8 @@ internal fun PlusMinusInputScreen(
                 Text(
                     text = label,
                     color = WearSecondaryText,
-                    fontSize = 20.sp
+                    fontSize = labelFontSize,
+                    textAlign = TextAlign.Center,
                 )
             }
 
