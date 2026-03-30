@@ -467,6 +467,7 @@ sealed class EventData : Event() {
     data class RunningModePreSelect(
         val timeStamp: Long,
         val stateIndex: Int,
-        val durations: List<Int>
+        val durations: List<Int>,
+        val title: String = ""
     ) : EventData()
 }

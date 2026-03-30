@@ -92,6 +92,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = InsulinBlue,
+                                title = stringResource(R.string.menu_treatment),
                             )
                             1 -> PlusMinusInputScreen(
                                 value = carbs,
@@ -105,6 +106,7 @@ class TreatmentActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 1,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = CarbsOrange,
+                                title = stringResource(R.string.menu_treatment),
                             )
                             else -> TreatmentConfirmScreen(
                                 insulin = insulin,

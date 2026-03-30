@@ -79,6 +79,7 @@ class FillActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = InsulinBlue,
+                                title = stringResource(R.string.menu_prime_fill),
                             )
                             else -> FillConfirmScreen(
                                 insulin = insulin,

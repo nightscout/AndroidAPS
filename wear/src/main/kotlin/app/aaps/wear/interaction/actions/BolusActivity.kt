@@ -84,6 +84,7 @@ class BolusActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = InsulinBlue,
+                                title = stringResource(R.string.action_insulin),
                             )
                             else -> BolusConfirmScreen(
                                 insulin = insulin,

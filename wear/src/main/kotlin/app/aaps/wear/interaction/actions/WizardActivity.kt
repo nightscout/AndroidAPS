@@ -87,6 +87,7 @@ class WizardActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = CarbsOrange,
+                                title = stringResource(R.string.menu_wizard),
                             )
                             hasPercentage && page == 1 -> PlusMinusInputScreen(
                                 value = percentage,
@@ -100,6 +101,7 @@ class WizardActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 1,
                                 simpleMode = true,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.menu_wizard),
                             )
                             else                       -> WizardConfirmScreen(
                                 carbs = carbs.toInt(),

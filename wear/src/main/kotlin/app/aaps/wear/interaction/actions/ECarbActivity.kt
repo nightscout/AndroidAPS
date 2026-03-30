@@ -85,6 +85,7 @@ class ECarbActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = CarbsOrange,
+                                title = stringResource(R.string.action_ecarbs),
                             )
                             1    -> PlusMinusInputScreen(
                                 value = startMinutes,
@@ -98,6 +99,7 @@ class ECarbActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 1,
                                 simpleMode = true,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.action_ecarbs),
                             )
                             2    -> PlusMinusInputScreen(
                                 value = durationHours,
@@ -111,6 +113,7 @@ class ECarbActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 2,
                                 simpleMode = true,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.action_ecarbs),
                             )
                             else -> ECarbConfirmScreen(
                                 carbs = carbs.toInt(),
