@@ -292,9 +292,7 @@
     <string name="pump_insulin_cu">%1$.2f CU</string>
     <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">Selected Insulin: %1$s</string>
-    <string name="record_source_pump">Pump</string>
-    <string name="record_source_pen">Pen</string>
-    <string name="pen_insulin_warning">Pens always use International Units. Enter the dose in units as shown on the pen and select your insulin below.</string>
+    <string name="record_insulin_hint">If entering insulin applied by pen, select the correct insulin type below. The dose is always in International Units.</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>

@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.constraints.ConstraintObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -46,7 +47,8 @@ class TreatmentDialogViewModel @Inject constructor(
     val decimalFormatter: DecimalFormatter,
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val hardLimits: HardLimits
 ) : ViewModel() {
 
     val uiState: StateFlow<TreatmentDialogUiState>
@@ -66,7 +68,8 @@ class TreatmentDialogViewModel @Inject constructor(
 
     init {
         val pump = activePlugin.activePump
-        val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
+        val constrainedMax = constraintChecker.getMaxBolusAllowed().value()
+        val maxInsulin = if (constrainedMax > 0.0) constrainedMax else hardLimits.maxBolus()
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val bolusStep = pump.pumpDescription.bolusStep
         val isAapsClient = config.AAPSCLIENT
