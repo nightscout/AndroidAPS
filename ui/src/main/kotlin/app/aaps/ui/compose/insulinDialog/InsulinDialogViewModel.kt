@@ -207,9 +207,13 @@ class InsulinDialogViewModel @Inject constructor(
         val pumpDescription = pump.pumpDescription
 
         val insulin = state.insulin
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(insulin, aapsLogger)
-        ).value()
+        val insulinAfterConstraints = if (state.recordOnlyChecked) {
+            insulin
+        } else {
+            constraintChecker.applyBolusConstraints(
+                ConstraintObject(insulin, aapsLogger)
+            ).value()
+        }
 
         // Bolus line
         if (insulinAfterConstraints > 0) {
@@ -253,10 +257,14 @@ class InsulinDialogViewModel @Inject constructor(
 
     fun hasAction(): Boolean {
         val state = uiState.value
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
-            ConstraintObject(state.insulin, aapsLogger)
-        ).value()
-        return insulinAfterConstraints > 0 || state.eatingSoonTtChecked
+        val insulin = if (state.recordOnlyChecked) {
+            state.insulin
+        } else {
+            constraintChecker.applyBolusConstraints(
+                ConstraintObject(state.insulin, aapsLogger)
+            ).value()
+        }
+        return insulin > 0 || state.eatingSoonTtChecked
     }
 
     fun confirmAndSave() {
