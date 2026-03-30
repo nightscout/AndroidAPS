@@ -84,6 +84,28 @@ class EmulatorBleTransport(
     @Volatile private var connectionGeneration = 0
     private var v3PairingRequested = false // true after TIME_INFO with requestNewPairing=1
 
+    // Track background threads so tests can wait for them to finish
+    private val pendingThreads = mutableListOf<Thread>()
+
+    /**
+     * Wait for all pending async callbacks to complete.
+     * Call this in tests before teardown to avoid Mockito mock-cleared races.
+     */
+    fun awaitPendingCallbacks(timeoutMs: Long = 2000) {
+        val threads = synchronized(pendingThreads) { pendingThreads.toList() }
+        for (t in threads) t.join(timeoutMs)
+        synchronized(pendingThreads) { pendingThreads.removeAll { !it.isAlive } }
+    }
+
+    private fun launchAsync(block: () -> Unit) {
+        val t = Thread(block)
+        synchronized(pendingThreads) {
+            pendingThreads.removeAll { !it.isAlive }
+            pendingThreads.add(t)
+        }
+        t.start()
+    }
+
     val pumpState: PumpState get() = emulator.state
 
     init {
@@ -207,11 +229,11 @@ class EmulatorBleTransport(
             // completes, so there's always latency. We must mimic this because BLEComm adds
             // remaining chunks to mSendQueue AFTER writeCharacteristic returns — a synchronous
             // callback would find an empty queue.
-            Thread {
+            launchAsync {
                 @Suppress("SleepInsteadOfDelay")
                 if (writeLatencyMs > 0) Thread.sleep(writeLatencyMs) // Simulate BLE write latency — ensures sendMessage finishes queuing
                 listener?.onCharacteristicWritten()
-            }.start()
+            }
 
             // Try to parse a complete packet
             val packet = extractPacket()
@@ -364,7 +386,7 @@ class EmulatorBleTransport(
                 pumpDisplay.showPairingConfirmation()
                 // After confirming, the pump spontaneously sends PASSKEY_RETURN with the pairing key.
                 // This must be deferred so the OK response is delivered first.
-                Thread {
+                launchAsync {
                     @Suppress("SleepInsteadOfDelay")
                     if (pairingDelayMs > 0) Thread.sleep(pairingDelayMs)
                     val returnPacket = buildEncryptionResponse(
@@ -372,7 +394,7 @@ class EmulatorBleTransport(
                         pumpState.pairingKey
                     )
                     sendResponse(returnPacket)
-                }.start()
+                }
                 buildEncryptionResponse(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST, byteArrayOf(0x00))
             }
 

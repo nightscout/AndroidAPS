@@ -48,6 +48,7 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.services.BLEComm
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -131,6 +132,16 @@ class BLECommIntegrationTest : TestBase() {
             emulatorTransport
         ).apply {
             messageTimeoutMs = 500
+        }
+    }
+
+    @AfterEach
+    fun tearDown() {
+        if (::bleComm.isInitialized && bleComm.isConnected) {
+            bleComm.disconnect("test cleanup")
+        }
+        if (::emulatorTransport.isInitialized) {
+            emulatorTransport.awaitPendingCallbacks()
         }
     }
 

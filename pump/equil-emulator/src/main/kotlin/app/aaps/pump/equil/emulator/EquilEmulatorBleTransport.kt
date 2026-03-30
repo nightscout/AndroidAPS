@@ -9,8 +9,6 @@ import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.pump.equil.ble.EquilBleTransport
-import app.aaps.pump.equil.manager.AESUtil
-import app.aaps.pump.equil.manager.Crc
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilPacketCodec
 import app.aaps.pump.equil.manager.EquilResponse
@@ -53,6 +51,28 @@ class EquilEmulatorBleTransport(
     private var receiveBuffer = EquilResponse(System.currentTimeMillis())
     private var pumpReqIndex = 0 // pump-side response index
     @Volatile private var connectionGeneration = 0 // incremented on connect() to detect stale responses after reconnect
+
+    // Track background threads so tests can wait for them to finish
+    private val pendingThreads = mutableListOf<Thread>()
+
+    /**
+     * Wait for all pending async callbacks to complete.
+     * Call this in tests before teardown to avoid Mockito mock-cleared races.
+     */
+    fun awaitPendingCallbacks(timeoutMs: Long = 2000) {
+        val threads = synchronized(pendingThreads) { pendingThreads.toList() }
+        for (t in threads) t.join(timeoutMs)
+        synchronized(pendingThreads) { pendingThreads.removeAll { !it.isAlive } }
+    }
+
+    private fun launchAsync(block: () -> Unit) {
+        val t = Thread(block)
+        synchronized(pendingThreads) {
+            pendingThreads.removeAll { !it.isAlive }
+            pendingThreads.add(t)
+        }
+        t.start()
+    }
 
     val pumpState: EquilPumpState get() = emulator.state
 
@@ -219,10 +239,10 @@ class EquilEmulatorBleTransport(
             // EquilBLE.onCharacteristicWritten() then sleeps 20ms (EQUIL_BLE_WRITE_TIME_OUT)
             // before calling writeData(). Total per-packet: delay + 20ms sleep.
             // Must be async (not synchronous) to avoid infinite recursion / stack overflow.
-            Thread {
+            launchAsync {
                 Thread.sleep(25)
                 if (gen == connectionGeneration) listener?.onCharacteristicWritten()
-            }.start()
+            }
 
             if (!isEndPacket) return
 
@@ -304,7 +324,7 @@ class EquilEmulatorBleTransport(
      */
     @Suppress("SleepInsteadOfDelay")
     private fun deliverResponse(gen: Int, responsePackets: EquilResponse) {
-        Thread {
+        launchAsync {
             Thread.sleep(5) // Simulate BLE response latency
             if (gen == connectionGeneration) {
                 for (buf in responsePackets.send) {
@@ -313,7 +333,7 @@ class EquilEmulatorBleTransport(
             } else {
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: discarding stale response (gen=$gen, current=$connectionGeneration)")
             }
-        }.start()
+        }
     }
 
     /**
