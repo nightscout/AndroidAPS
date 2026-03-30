@@ -11,6 +11,7 @@
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="more_options">More options</string>
     <string name="refresh">Refresh</string>
+    <string name="no_history_records">No records found</string>
     <string name="error">Error</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
@@ -848,6 +849,8 @@
 
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
+    <string name="pump_pair">Pair</string>
+    <string name="pump_unpair">Unpair</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
     <!--    BlePreCheck-->

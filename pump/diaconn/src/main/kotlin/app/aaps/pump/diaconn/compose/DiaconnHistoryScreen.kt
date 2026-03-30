@@ -1,4 +1,4 @@
-package app.aaps.pump.dana.compose
+package app.aaps.pump.diaconn.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,13 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.pump.PumpHistoryScreen
-import app.aaps.pump.dana.R
-import app.aaps.pump.dana.comm.RecordTypes
-import app.aaps.pump.dana.database.DanaHistoryRecord
+import app.aaps.pump.diaconn.common.RecordTypes
+import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 
 @Composable
-fun DanaHistoryScreen(
-    viewModel: DanaHistoryViewModel
+fun DiaconnHistoryScreen(
+    viewModel: DiaconnHistoryViewModel
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -33,19 +32,18 @@ fun DanaHistoryScreen(
         onSelectType = viewModel::selectType,
         onReload = viewModel::reload,
         itemKey = { it.timestamp },
-        historyItem = { record, type -> DanaHistoryItem(record, type, viewModel) }
+        historyItem = { record, type -> DiaconnHistoryItem(record, type, viewModel) }
     )
 }
 
 @Composable
-private fun DanaHistoryItem(
-    record: DanaHistoryRecord,
+private fun DiaconnHistoryItem(
+    record: DiaconnHistoryRecord,
     type: Byte,
-    viewModel: DanaHistoryViewModel
+    viewModel: DiaconnHistoryViewModel
 ) {
     AapsCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
-            // Timestamp
             Text(
                 text = viewModel.formatTime(record),
                 style = MaterialTheme.typography.labelMedium,
@@ -64,6 +62,9 @@ private fun DanaHistoryItem(
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
+                    }
+                    if (record.stringValue.isNotEmpty()) {
+                        Text(text = record.stringValue, style = MaterialTheme.typography.bodySmall)
                     }
                 }
 
@@ -86,6 +87,9 @@ private fun DanaHistoryItem(
                             )
                         }
                     }
+                    if (record.stringValue.isNotEmpty()) {
+                        Text(text = record.stringValue, style = MaterialTheme.typography.bodySmall)
+                    }
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY -> {
@@ -94,9 +98,32 @@ private fun DanaHistoryItem(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        LabeledValue(label = stringResource(R.string.danar_history_bolus), value = viewModel.formatDailyBolus(record))
+                        LabeledValue(label = stringResource(app.aaps.core.ui.R.string.bolus), value = viewModel.formatDailyBolus(record))
                         LabeledValue(label = stringResource(app.aaps.core.ui.R.string.basal), value = viewModel.formatDailyBasal(record))
                         LabeledValue(label = stringResource(app.aaps.core.ui.R.string.wizard_total), value = viewModel.formatDailyTotal(record))
+                    }
+                }
+
+                RecordTypes.RECORD_TYPE_TB -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = viewModel.formatValue(record),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                        if (record.duration > 0) {
+                            Text(
+                                text = "${record.duration}'",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    if (record.stringValue.isNotEmpty()) {
+                        Text(text = record.stringValue, style = MaterialTheme.typography.bodySmall)
                     }
                 }
 
@@ -105,11 +132,15 @@ private fun DanaHistoryItem(
                 }
 
                 else -> {
+                    // BASALHOUR, REFILL
                     Text(
                         text = viewModel.formatValue(record),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
+                    if (record.stringValue.isNotEmpty()) {
+                        Text(text = record.stringValue, style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             }
         }

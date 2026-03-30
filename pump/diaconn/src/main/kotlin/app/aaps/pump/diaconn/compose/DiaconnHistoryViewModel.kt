@@ -1,28 +1,27 @@
-package app.aaps.pump.dana.compose
+package app.aaps.pump.diaconn.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.pump.PumpHistoryType
 import app.aaps.core.ui.compose.pump.PumpHistoryUiState
-import app.aaps.pump.dana.R
-import app.aaps.pump.dana.comm.RecordTypes
-import app.aaps.pump.dana.database.DanaHistoryRecord
-import app.aaps.pump.dana.database.DanaHistoryRecordDao
-import app.aaps.pump.dana.events.EventDanaRSyncStatus
+import app.aaps.pump.diaconn.R
+import app.aaps.pump.diaconn.common.RecordTypes
+import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
+import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,55 +31,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 @Stable
-class DanaHistoryViewModel @Inject constructor(
+class DiaconnHistoryViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
-    private val danaHistoryRecordDao: DanaHistoryRecordDao,
+    private val diaconnHistoryRecordDao: DiaconnHistoryRecordDao,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
-    private val profileUtil: ProfileUtil,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers
+    private val aapsSchedulers: AapsSchedulers,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PumpHistoryUiState<DanaHistoryRecord>())
-    val uiState: StateFlow<PumpHistoryUiState<DanaHistoryRecord>> = _uiState
+    private val _uiState = MutableStateFlow(PumpHistoryUiState<DiaconnHistoryRecord>())
+    val uiState: StateFlow<PumpHistoryUiState<DiaconnHistoryRecord>> = _uiState
 
     private val disposable = CompositeDisposable()
 
     init {
-        val pump = activePlugin.activePump
-        val isKorean = pump.pumpDescription.pumpType == PumpType.DANA_R_KOREAN
-        val isRS = pump.pumpDescription.pumpType == PumpType.DANA_RS || pump.pumpDescription.pumpType == PumpType.DANA_I
-
-        val types = buildList {
-            add(PumpHistoryType(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.danar_history_alarm)))
-            add(PumpHistoryType(RecordTypes.RECORD_TYPE_BASALHOUR, rh.gs(R.string.danar_history_basalhours)))
-            add(PumpHistoryType(RecordTypes.RECORD_TYPE_BOLUS, rh.gs(R.string.danar_history_bolus)))
-            add(PumpHistoryType(RecordTypes.RECORD_TYPE_CARBO, rh.gs(R.string.danar_history_carbohydrates)))
-            add(PumpHistoryType(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.danar_history_dailyinsulin)))
-            add(PumpHistoryType(RecordTypes.RECORD_TYPE_GLUCOSE, rh.gs(R.string.danar_history_glucose)))
-            if (!isKorean && !isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_ERROR, rh.gs(R.string.danar_history_errors)))
-            if (isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_PRIME, rh.gs(R.string.danar_history_prime)))
-            if (!isKorean) {
-                add(PumpHistoryType(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
-                add(PumpHistoryType(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
-            }
-        }
+        val types = listOf(
+            PumpHistoryType(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.diaconn_g8_history_alarm)),
+            PumpHistoryType(RecordTypes.RECORD_TYPE_BASALHOUR, rh.gs(R.string.diaconn_g8_history_basalhours)),
+            PumpHistoryType(RecordTypes.RECORD_TYPE_BOLUS, rh.gs(R.string.diaconn_g8_history_bolus)),
+            PumpHistoryType(RecordTypes.RECORD_TYPE_TB, rh.gs(R.string.diaconn_g8_history_tempbasal)),
+            PumpHistoryType(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.diaconn_g8_history_dailyinsulin)),
+            PumpHistoryType(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.diaconn_g8_history_refill)),
+            PumpHistoryType(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.diaconn_g8_history_suspend))
+        )
 
         _uiState.value = PumpHistoryUiState(availableTypes = types, selectedType = types.firstOrNull())
 
-        // Listen for sync status
         disposable += rxBus
-            .toObservable(EventDanaRSyncStatus::class.java)
+            .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ event ->
-                           _uiState.update { it.copy(statusMessage = event.message) }
+                           _uiState.update { it.copy(statusMessage = event.getStatus(context)) }
                        }, { aapsLogger.error(LTag.PUMP, "Error", it) })
 
-        // Load initial data
         types.firstOrNull()?.let { loadRecords(it.type) }
     }
 
@@ -100,15 +87,10 @@ class DanaHistoryViewModel @Inject constructor(
         })
     }
 
-    fun formatValue(record: DanaHistoryRecord): String {
-        val type = _uiState.value.selectedType?.type ?: return ""
-        return when (type) {
-            RecordTypes.RECORD_TYPE_GLUCOSE -> profileUtil.fromMgdlToStringInUnits(record.value)
-            else                            -> decimalFormatter.to2Decimal(record.value)
-        }
-    }
+    fun formatValue(record: DiaconnHistoryRecord): String =
+        decimalFormatter.to2Decimal(record.value)
 
-    fun formatTime(record: DanaHistoryRecord): String {
+    fun formatTime(record: DiaconnHistoryRecord): String {
         val type = _uiState.value.selectedType?.type ?: return ""
         return when (type) {
             RecordTypes.RECORD_TYPE_DAILY -> dateUtil.dateString(record.timestamp)
@@ -116,13 +98,13 @@ class DanaHistoryViewModel @Inject constructor(
         }
     }
 
-    fun formatDailyTotal(record: DanaHistoryRecord): String =
+    fun formatDailyTotal(record: DiaconnHistoryRecord): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
 
-    fun formatDailyBolus(record: DanaHistoryRecord): String =
+    fun formatDailyBolus(record: DiaconnHistoryRecord): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
 
-    fun formatDailyBasal(record: DanaHistoryRecord): String =
+    fun formatDailyBasal(record: DiaconnHistoryRecord): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
 
     override fun onCleared() {
@@ -131,7 +113,7 @@ class DanaHistoryViewModel @Inject constructor(
     }
 
     private fun loadRecords(type: Byte) {
-        disposable += danaHistoryRecordDao
+        disposable += diaconnHistoryRecordDao
             .allFromByType(dateUtil.now() - T.months(1).msecs(), type)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
