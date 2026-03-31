@@ -53,22 +53,28 @@ fun PumpOverviewScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        // 1. Status banner + queue status (combined card)
-        CommunicationStatusCard(state.statusBanner, state.queueStatus)
+        // Scrollable content
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 1. Status banner + queue status (combined card)
+            CommunicationStatusCard(state.statusBanner, state.queueStatus)
 
-        // 3. Info rows
-        if (state.infoRows.isNotEmpty()) {
-            InfoSection(state.infoRows)
+            // 3. Info rows
+            if (state.infoRows.isNotEmpty()) {
+                InfoSection(state.infoRows)
+            }
+
+            // 4. Custom content (pump image, etc.)
+            customContent?.invoke()
         }
 
-        // 4. Custom content (pump image, etc.)
-        customContent?.invoke()
-
-        // 5+6. Action buttons (primary + management, 2 per row)
+        // 5+6. Action buttons pinned to bottom
         ActionButtons(state.primaryActions + state.managementActions)
     }
 }

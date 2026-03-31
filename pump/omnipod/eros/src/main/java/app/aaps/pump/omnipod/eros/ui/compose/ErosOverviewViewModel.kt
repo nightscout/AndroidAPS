@@ -73,6 +73,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -123,14 +124,14 @@ class ErosOverviewViewModel @Inject constructor(
     private val _events = MutableSharedFlow<OmnipodOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<OmnipodOverviewEvent> = _events
 
-    private val omnipodRefresh = MutableSharedFlow<Long>(extraBufferCapacity = 1).also { flow ->
+    private val omnipodRefresh = MutableStateFlow(0L).also { flow ->
         scope.launch {
             rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class.java)
-                .collect { flow.tryEmit(System.currentTimeMillis()) }
+                .collect { flow.value = System.currentTimeMillis() }
         }
         scope.launch {
             rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
-                .collect { flow.tryEmit(System.currentTimeMillis()) }
+                .collect { flow.value = System.currentTimeMillis() }
         }
     }
 

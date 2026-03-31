@@ -58,6 +58,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -104,10 +105,10 @@ class DashOverviewViewModel @Inject constructor(
     val events: SharedFlow<OmnipodOverviewEvent> = _events
 
     // Trigger flow from RxBus omnipod events
-    private val omnipodRefresh = MutableSharedFlow<Long>(extraBufferCapacity = 1).also { flow ->
+    private val omnipodRefresh = MutableStateFlow(0L).also { flow ->
         scope.launch {
             rxBus.toFlow(EventOmnipodDashPumpValuesChanged::class.java)
-                .collect { flow.tryEmit(System.currentTimeMillis()) }
+                .collect { flow.value = System.currentTimeMillis() }
         }
     }
 

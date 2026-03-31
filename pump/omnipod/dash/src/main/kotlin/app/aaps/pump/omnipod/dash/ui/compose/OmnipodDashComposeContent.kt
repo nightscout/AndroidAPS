@@ -25,6 +25,7 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
+import app.aaps.pump.omnipod.common.ui.compose.PodImage
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardScreen
@@ -201,7 +202,10 @@ class OmnipodDashComposeContent(
 
             else        -> {
                 val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
-                PumpOverviewScreen(state = uiState)
+                PumpOverviewScreen(
+                    state = uiState,
+                    customContent = { PodImage() }
+                )
             }
         }
     }
