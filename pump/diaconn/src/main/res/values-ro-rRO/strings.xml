@@ -10,7 +10,7 @@
     <string name="diaconn_g8_history_dailyinsulin">Insulină zilnică</string>
     <string name="diaconn_g8_history_refill">Reumplere</string>
     <string name="diaconn_g8_history_suspend">Suspendare</string>
-    <string name="invalidpairing">Informații de împerechere invalide. Se cere o noua împerechere</string>
+    <string name="invalidpairing">Informații de asociere invalide. Se solicită o nouă asociere</string>
     <string name="gettingpumpsettings">Se obțin setările pompei</string>
     <string name="gettingpumptime">Se citește ora pompei</string>
     <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nCorectati manual ora din pompă și asigurați-vă că sincronizarea cu datele din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
@@ -30,7 +30,7 @@
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
     <string name="commanderror">Eroare de comandă</string>
     <string name="speederror">Eroare de viteză</string>
-    <string name="insulinlimitviolation">Încălcare a limitei de insulina</string>
+    <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
     <string name="boluserrorcode">Solicitat: %1$.2fU Livrat: %2$.2fU Cod eroare: %3$s</string>
     <string name="bolusspeed">Viteză bolusare</string>
     <string name="selectedpump">Pompa selectată</string>
@@ -39,7 +39,7 @@
     <string name="basal_step">Pas bazală</string>
     <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">OPȚIUNI UTILIZATOR</string>
-    <string name="pairfirst">Vă rog să împerecheați pompa cu telefonul!</string>
+    <string name="pairfirst">Vă rog să asociați pompa cu telefonul!</string>
     <string name="processinghistory">"Se procesează evenimentul "</string>
     <string name="diaconn_g8_history_tempbasal">Bazală temporară</string>
     <string name="diaconng8_pump_settings">Setări pompă Diaconn</string>
@@ -89,7 +89,7 @@
     <string name="diaconn_g8_reasonuserstop">Oprire utilizator</string>
     <string name="diaconn_g8_reasonsystemreset">Resetare sistem</string>
     <string name="diaconn_g8_reasonother">Altele</string>
-    <string name="diaconn_g8_reasonemergencystop">Stop de urgenţă</string>
+    <string name="diaconn_g8_reasonemergencystop">Stop de urgență</string>
     <string name="diacon_g8_blockbasal">BAZALA</string>
     <string name="diacon_g8_blockmealbolus">BOLUS DE MASA</string>
     <string name="diacon_g8_blocknormalbolus">BOLUS NORMAL</string>
@@ -112,16 +112,16 @@
     <string name="diaconn_g8_errorcode_1">Nu se poate căuta din cauza erorii pachetului CRC.</string>
     <string name="diaconn_g8_errorcode_2">Nu poate fi setat la o eroare de introducere a parametrului.</string>
     <string name="diaconn_g8_errorcode_3">Nu poate fi setat la o eroare de specificare a protocolului.</string>
-    <string name="diaconn_g8_errorcode_4">Masa a fost inregistrata, nu poate fi injectat.</string>
+    <string name="diaconn_g8_errorcode_4">Masa a fost înregistrată, nu poate fi injectat.</string>
     <string name="diaconn_g8_errorcode_6">Anulat de pompa</string>
-    <string name="diaconn_g8_errorcode_7">Se iau alte acțiuni, se limiteaza setările aplicației.</string>
+    <string name="diaconn_g8_errorcode_7">Se iau alte acțiuni, se limitează setările aplicației.</string>
     <string name="diaconn_g8_errorcode_8">În timpul livrării unui bolus, injectarea este restricționată.</string>
-    <string name="diaconn_g8_errorcode_9">Necesită reluarea livrarii de bazala</string>
+    <string name="diaconn_g8_errorcode_9">Necesită reluarea livrării de bazala</string>
     <string name="diaconn_g8_errorcode_10">Anulat din cauza faptului că pompa nu răspunde.</string>
     <string name="diaconn_g8_errorcode_11">Injectarea nu este posibilă din cauza bateriei descărcate.</string>
     <string name="diaconn_g8_errorcode_12">Insuficienta insulina. Nu poate fi injectată.</string>
-    <string name="diaconn_g8_errorcode_13">Nu se poata injecta deoarece depăşeşte limita.</string>
-    <string name="diaconn_g8_errorcode_14">Injecţia nu poate fi injectată deoarece depăşeşte volumul injectării în prezent.</string>
+    <string name="diaconn_g8_errorcode_13">Nu se poate injecta deoarece depășește limita.</string>
+    <string name="diaconn_g8_errorcode_14">Injecția nu poate fi injectată deoarece depășește volumul injectării în prezent.</string>
     <string name="diaconn_g8_errorcode_15">După finalizarea configurării ratei bazale, se poate injecta bazala.</string>
     <string name="diaconn_g8_logtubechange_title">Înregistrează schimbarea furtunului</string>
     <string name="diaconn_g8_logtubechange_summary">Adăugare eveniment \"Schimbare furtun\" în Nota atunci când este detectat în istoric</string>
