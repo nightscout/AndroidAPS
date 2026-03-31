@@ -24,7 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
@@ -73,11 +76,21 @@ fun QuickWizardCarouselCard(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Icon in top left corner
+            // Icon in top left corner — mode-aware
+            val modeIcon = when (entry.mode()) {
+                QuickWizardMode.INSULIN -> IcBolus
+                QuickWizardMode.CARBS   -> IcCarbs
+                QuickWizardMode.WIZARD  -> ElementType.QUICK_WIZARD.icon()
+            }
+            val modeColor = when (entry.mode()) {
+                QuickWizardMode.INSULIN -> ElementType.INSULIN.color()
+                QuickWizardMode.CARBS   -> ElementType.CARBS.color()
+                QuickWizardMode.WIZARD  -> ElementType.QUICK_WIZARD.color()
+            }
             Icon(
-                imageVector = ElementType.QUICK_WIZARD.icon(),
+                imageVector = modeIcon,
                 contentDescription = null,
-                tint = ElementType.QUICK_WIZARD.color(),
+                tint = modeColor,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(16.dp)
@@ -93,7 +106,7 @@ fun QuickWizardCarouselCard(
             ) {
                 // Button Text (main title)
                 Text(
-                    text = entry.buttonText().ifEmpty { stringResource(CoreR.string.manage) },
+                    text = entry.buttonText().ifEmpty { "?" },
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -132,17 +145,19 @@ fun QuickWizardCarouselCard(
 }
 
 /**
- * Build carbs display text with eCarbs info if enabled
+ * Build detail text based on mode
  */
-private fun buildCarbsText(entry: QuickWizardEntry): String {
-    val carbs = entry.carbs()
-
-    return if (entry.useEcarbs() == QuickWizardEntry.YES) {
-        val carbs2 = entry.carbs2()
-        val duration = entry.duration()
-        val time = entry.time()
-        "${carbs}g + ${carbs2}g / ${duration}h → ${time}min"
-    } else {
-        "${carbs}g"
+private fun buildCarbsText(entry: QuickWizardEntry): String = when (entry.mode()) {
+    QuickWizardMode.INSULIN -> "${entry.insulin()} U"
+    QuickWizardMode.CARBS, QuickWizardMode.WIZARD -> {
+        val carbs = entry.carbs()
+        if (entry.useEcarbs() == QuickWizardEntry.YES) {
+            val carbs2 = entry.carbs2()
+            val duration = entry.duration()
+            val time = entry.time()
+            "${carbs}g + ${carbs2}g / ${duration}h → ${time}min"
+        } else {
+            "${carbs}g"
+        }
     }
 }

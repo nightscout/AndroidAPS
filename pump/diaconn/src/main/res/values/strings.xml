@@ -141,4 +141,7 @@
     <string name="bolus_speed_6">6 U/min</string>
     <string name="bolus_speed_7">7 U/min</string>
     <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_g8_unpair">Unpair</string>
+    <string name="diaconn_pairing_successful">Pairing successful!</string>
+    <string name="diaconn_pairing_successful_message">Your pump is now connected and ready to use.</string>
 </resources>

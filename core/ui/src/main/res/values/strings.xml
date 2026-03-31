@@ -11,6 +11,7 @@
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="more_options">More options</string>
     <string name="refresh">Refresh</string>
+    <string name="no_history_records">No records found</string>
     <string name="error">Error</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
@@ -292,9 +293,7 @@
     <string name="pump_insulin_cu">%1$.2f CU</string>
     <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">Selected Insulin: %1$s</string>
-    <string name="record_source_pump">Pump</string>
-    <string name="record_source_pen">Pen</string>
-    <string name="pen_insulin_warning">Pens always use International Units. Enter the dose in units as shown on the pen and select your insulin below.</string>
+    <string name="record_insulin_hint">If entering insulin applied by pen, select the correct insulin type below. The dose is always in International Units.</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>
@@ -850,6 +849,8 @@
 
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
+    <string name="pump_pair">Pair</string>
+    <string name="pump_unpair">Unpair</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
     <!--    BlePreCheck-->

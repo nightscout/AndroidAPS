@@ -14,6 +14,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.ui.events.EventQuickWizardChange
@@ -54,6 +55,7 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Get max carbs allowed from constraints
      */
     fun getMaxCarbs(): Double = constraintChecker.getMaxCarbsAllowed().value().toDouble()
+    fun getMaxInsulin(): Double = constraintChecker.getMaxBolusAllowed().value().coerceAtLeast(25.0)
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
         replay = 0,
@@ -143,7 +145,9 @@ class QuickWizardManagementViewModel @Inject constructor(
      */
     private fun loadEntryIntoEditor(state: QuickWizardManagementUiState, entry: QuickWizardEntry): QuickWizardManagementUiState {
         return state.copy(
+            editorMode = entry.mode(),
             editorButtonText = entry.buttonText(),
+            editorInsulin = entry.insulin(),
             editorCarbs = entry.carbs(),
             editorCarbTime = entry.carbTime(),
             editorValidFrom = entry.validFrom(),
@@ -204,14 +208,28 @@ class QuickWizardManagementViewModel @Inject constructor(
 
                 val entry = currentState.entries[index]
 
-                // Validate inputs
-                if (currentState.editorCarbs <= 0 && (!currentState.editorUseEcarbs || currentState.editorCarbs2 <= 0)) {
-                    uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Carbs must be greater than 0")) }
-                    return@launch
+                // Validate inputs based on mode
+                val mode = currentState.editorMode
+                when (mode) {
+                    QuickWizardMode.WIZARD, QuickWizardMode.CARBS -> {
+                        if (currentState.editorCarbs <= 0 && (!currentState.editorUseEcarbs || currentState.editorCarbs2 <= 0)) {
+                            uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Carbs must be greater than 0")) }
+                            return@launch
+                        }
+                    }
+
+                    QuickWizardMode.INSULIN                       -> {
+                        if (currentState.editorInsulin <= 0.0) {
+                            uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Insulin must be greater than 0")) }
+                            return@launch
+                        }
+                    }
                 }
 
                 // Update entry storage
+                entry.storage.put("mode", mode.value)
                 entry.storage.put("buttonText", currentState.editorButtonText)
+                entry.storage.put("insulin", currentState.editorInsulin)
                 entry.storage.put("carbs", currentState.editorCarbs)
                 entry.storage.put("carbTime", currentState.editorCarbTime)
                 entry.storage.put("useAlarm", booleanToRadioNumber(currentState.editorUseAlarm))
@@ -291,7 +309,9 @@ class QuickWizardManagementViewModel @Inject constructor(
                 val newEntry = quickWizard.newEmptyItem()
 
                 // Copy all fields from source entry
+                newEntry.storage.put("mode", sourceEntry.mode().value)
                 newEntry.storage.put("buttonText", sourceEntry.buttonText() + " (Copy)")
+                newEntry.storage.put("insulin", sourceEntry.insulin())
                 newEntry.storage.put("carbs", sourceEntry.carbs())
                 newEntry.storage.put("carbTime", sourceEntry.carbTime())
                 newEntry.storage.put("useAlarm", sourceEntry.useAlarm())
@@ -351,8 +371,16 @@ class QuickWizardManagementViewModel @Inject constructor(
     }
 
     // Editor field update functions
+    fun updateMode(value: QuickWizardMode) {
+        uiState.update { it.copy(editorMode = value, hasUnsavedChanges = true) }
+    }
+
     fun updateButtonText(value: String) {
         uiState.update { it.copy(editorButtonText = value, hasUnsavedChanges = true) }
+    }
+
+    fun updateInsulin(value: Double) {
+        uiState.update { it.copy(editorInsulin = value, hasUnsavedChanges = true) }
     }
 
     fun updateCarbs(value: Int) {

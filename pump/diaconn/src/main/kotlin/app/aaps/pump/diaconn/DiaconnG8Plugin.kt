@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.Diaconn
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -50,14 +51,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.withActivity
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.pump.diaconn.activities.DiaconnG8BLEScanActivity
+import app.aaps.pump.diaconn.compose.DiaconnComposeContent
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.keys.DiaconnBooleanKey
@@ -93,11 +92,18 @@ class DiaconnG8Plugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val notificationManager: NotificationManager,
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(DiaconnG8Fragment::class.java.name)
+        .composeContent { _ ->
+            DiaconnComposeContent(
+                pluginName = rh.gs(R.string.diaconn_g8_pump),
+                context = context,
+                blePreCheck = blePreCheck
+            )
+        }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_diaconn_g8)
         .pluginName(R.string.diaconn_g8_pump)
         .shortName(R.string.diaconn_g8_pump_shortname)
@@ -535,7 +541,6 @@ class DiaconnG8Plugin @Inject constructor(
         key = "diaconn_settings",
         titleResId = R.string.diaconn_g8_pump,
         items = listOf(
-            DiaconnIntentKey.BtSelector.withActivity(DiaconnG8BLEScanActivity::class.java),
             DiaconnIntKey.BolusSpeed,
             DiaconnBooleanKey.LogInsulinChange,
             DiaconnBooleanKey.LogCannulaChange,
@@ -559,7 +564,6 @@ class DiaconnG8Plugin @Inject constructor(
             key = "diaconn_settings"
             title = rh.gs(R.string.diaconn_g8_pump)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveIntentPreference(ctx = context, intentKey = DiaconnIntentKey.BtSelector, title = R.string.selectedpump, intent = Intent(context, DiaconnG8BLEScanActivity::class.java)))
             addPreference(AdaptiveListIntPreference(ctx = context, intKey = DiaconnIntKey.BolusSpeed, title = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogInsulinChange, title = R.string.diaconn_g8_loginsulinchange_title, summary = R.string.diaconn_g8_loginsulinchange_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogCannulaChange, title = R.string.diaconn_g8_logcanulachange_title, summary = R.string.diaconn_g8_logcanulachange_summary))

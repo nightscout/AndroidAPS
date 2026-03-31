@@ -22,7 +22,6 @@ import app.aaps.wear.interaction.menus.FillMenuActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.PreferenceMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
-import app.aaps.wear.interaction.utils.MenuListActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -48,7 +47,6 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesWizardActivity(): WizardActivity
     @ContributesAndroidInjector abstract fun wizardResultActivity(): WizardResultActivity
 
-    @ContributesAndroidInjector abstract fun contributesMenuListActivity(): MenuListActivity
     @ContributesAndroidInjector abstract fun contributesFillMenuActivity(): FillMenuActivity
     @ContributesAndroidInjector abstract fun contributesPreferenceMenuActivity(): PreferenceMenuActivity
     @ContributesAndroidInjector abstract fun contributesMainMenuActivity(): MainMenuActivity

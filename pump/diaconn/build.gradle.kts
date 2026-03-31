@@ -35,6 +35,8 @@ dependencies {
     api(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 
+    implementation(libs.androidx.hilt.navigation.compose)
+
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.retrofit2.retrofit)
     api(libs.com.squareup.retrofit2.converter.gson)

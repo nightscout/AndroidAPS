@@ -204,6 +204,9 @@
     <string name="a11y_only_on_phone">only on phone</string>
     <string name="quickwizard_settings">QuickWizard settings</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
+    <string name="quick_wizard_mode_wizard">Wizard</string>
+    <string name="quick_wizard_mode_insulin">Insulin</string>
+    <string name="quick_wizard_mode_carbs">Carbs</string>
     <string name="overview_edit_quickwizard_valid">Valid:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive IOB only</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>

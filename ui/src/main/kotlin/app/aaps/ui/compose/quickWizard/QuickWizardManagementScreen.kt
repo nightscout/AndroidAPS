@@ -21,7 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -212,7 +212,7 @@ fun QuickWizardManagementScreen(
                             if (uiState.entries.isNotEmpty() && uiState.hasUnsavedChanges) {
                                 IconButton(onClick = { viewModel.saveCurrentEntry() }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Check,
+                                        imageVector = Icons.Filled.Save,
                                         contentDescription = stringResource(CoreR.string.save),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
@@ -328,7 +328,9 @@ fun QuickWizardManagementScreen(
                         ) {
                             if (!isPlayMode && uiState.selectedIndex >= 0 && uiState.selectedIndex < uiState.entries.size) {
                                 QuickWizardEditor(
+                                    mode = uiState.editorMode,
                                     buttonText = uiState.editorButtonText,
+                                    insulin = uiState.editorInsulin,
                                     carbs = uiState.editorCarbs,
                                     carbTime = uiState.editorCarbTime,
                                     validFrom = uiState.editorValidFrom,
@@ -351,8 +353,11 @@ fun QuickWizardManagementScreen(
                                     showSuperBolusOption = uiState.showSuperBolusOption,
                                     showWearOptions = uiState.showWearOptions,
                                     maxCarbs = viewModel.getMaxCarbs(),
+                                    maxInsulin = viewModel.getMaxInsulin(),
                                     rh = viewModel.rh,
+                                    onModeChange = viewModel::updateMode,
                                     onButtonTextChange = viewModel::updateButtonText,
+                                    onInsulinChange = viewModel::updateInsulin,
                                     onCarbsChange = viewModel::updateCarbs,
                                     onCarbTimeChange = viewModel::updateCarbTime,
                                     onValidFromChange = viewModel::updateValidFrom,

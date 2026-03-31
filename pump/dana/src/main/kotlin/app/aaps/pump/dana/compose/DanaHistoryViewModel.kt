@@ -15,6 +15,8 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.ui.compose.pump.PumpHistoryType
+import app.aaps.core.ui.compose.pump.PumpHistoryUiState
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecord
@@ -27,16 +29,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-
-data class HistoryType(val type: Byte, val name: String)
-
-data class HistoryUiState(
-    val selectedType: HistoryType? = null,
-    val records: List<DanaHistoryRecord> = emptyList(),
-    val isLoading: Boolean = false,
-    val statusMessage: String = "",
-    val availableTypes: List<HistoryType> = emptyList()
-)
 
 @HiltViewModel
 @Stable
@@ -53,8 +45,8 @@ class DanaHistoryViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HistoryUiState())
-    val uiState: StateFlow<HistoryUiState> = _uiState
+    private val _uiState = MutableStateFlow(PumpHistoryUiState<DanaHistoryRecord>())
+    val uiState: StateFlow<PumpHistoryUiState<DanaHistoryRecord>> = _uiState
 
     private val disposable = CompositeDisposable()
 
@@ -64,21 +56,21 @@ class DanaHistoryViewModel @Inject constructor(
         val isRS = pump.pumpDescription.pumpType == PumpType.DANA_RS || pump.pumpDescription.pumpType == PumpType.DANA_I
 
         val types = buildList {
-            add(HistoryType(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.danar_history_alarm)))
-            add(HistoryType(RecordTypes.RECORD_TYPE_BASALHOUR, rh.gs(R.string.danar_history_basalhours)))
-            add(HistoryType(RecordTypes.RECORD_TYPE_BOLUS, rh.gs(R.string.danar_history_bolus)))
-            add(HistoryType(RecordTypes.RECORD_TYPE_CARBO, rh.gs(R.string.danar_history_carbohydrates)))
-            add(HistoryType(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.danar_history_dailyinsulin)))
-            add(HistoryType(RecordTypes.RECORD_TYPE_GLUCOSE, rh.gs(R.string.danar_history_glucose)))
-            if (!isKorean && !isRS) add(HistoryType(RecordTypes.RECORD_TYPE_ERROR, rh.gs(R.string.danar_history_errors)))
-            if (isRS) add(HistoryType(RecordTypes.RECORD_TYPE_PRIME, rh.gs(R.string.danar_history_prime)))
+            add(PumpHistoryType(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.danar_history_alarm)))
+            add(PumpHistoryType(RecordTypes.RECORD_TYPE_BASALHOUR, rh.gs(R.string.danar_history_basalhours)))
+            add(PumpHistoryType(RecordTypes.RECORD_TYPE_BOLUS, rh.gs(R.string.danar_history_bolus)))
+            add(PumpHistoryType(RecordTypes.RECORD_TYPE_CARBO, rh.gs(R.string.danar_history_carbohydrates)))
+            add(PumpHistoryType(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.danar_history_dailyinsulin)))
+            add(PumpHistoryType(RecordTypes.RECORD_TYPE_GLUCOSE, rh.gs(R.string.danar_history_glucose)))
+            if (!isKorean && !isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_ERROR, rh.gs(R.string.danar_history_errors)))
+            if (isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_PRIME, rh.gs(R.string.danar_history_prime)))
             if (!isKorean) {
-                add(HistoryType(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
-                add(HistoryType(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
+                add(PumpHistoryType(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
+                add(PumpHistoryType(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
             }
         }
 
-        _uiState.value = HistoryUiState(availableTypes = types, selectedType = types.firstOrNull())
+        _uiState.value = PumpHistoryUiState(availableTypes = types, selectedType = types.firstOrNull())
 
         // Listen for sync status
         disposable += rxBus
@@ -92,7 +84,7 @@ class DanaHistoryViewModel @Inject constructor(
         types.firstOrNull()?.let { loadRecords(it.type) }
     }
 
-    fun selectType(type: HistoryType) {
+    fun selectType(type: PumpHistoryType) {
         _uiState.update { it.copy(selectedType = type) }
         loadRecords(type.type)
     }

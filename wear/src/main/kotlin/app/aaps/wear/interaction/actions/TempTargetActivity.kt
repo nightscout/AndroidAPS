@@ -86,6 +86,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                                 allowZero = true,
                                 isActive = pagerState.currentPage == 0,
                                 enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.loop_status_temp_target),
                             )
                             page == 1                    -> PlusMinusInputScreen(
                                 value = low,
@@ -102,6 +103,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 1,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = TempTargetYellow,
+                                title = stringResource(R.string.loop_status_temp_target),
                             )
                             page == 2 && !isSingleTarget -> PlusMinusInputScreen(
                                 value = high,
@@ -115,6 +117,7 @@ class TempTargetActivity : DaggerAppCompatActivity() {
                                 isActive = pagerState.currentPage == 2,
                                 enabled = !pagerState.isScrollInProgress,
                                 valueColor = TempTargetYellow,
+                                title = stringResource(R.string.loop_status_temp_target),
                             )
                             else                         -> TempTargetRequestScreen(
                                 duration = duration.toInt(),

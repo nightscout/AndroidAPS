@@ -34,11 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -203,8 +199,7 @@ fun InsulinDialogScreen(
         },
         onNavigateBack = onNavigateBack,
         onConfirmClick = { showConfirmation = true },
-        onRecordSourceChange = viewModel::updateRecordSource,
-        onPenInsulinSelect = viewModel::selectPenInsulin
+        onInsulinTypeSelect = viewModel::selectInsulinType
     )
 }
 
@@ -226,8 +221,7 @@ private fun InsulinDialogContent(
     onNotesChange: (String) -> Unit,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit,
-    onRecordSourceChange: (RecordSource) -> Unit,
-    onPenInsulinSelect: (ICfg) -> Unit,
+    onInsulinTypeSelect: (ICfg) -> Unit,
     onSettingsClick: (() -> Unit)?,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
@@ -362,28 +356,6 @@ private fun InsulinDialogContent(
                 }
             }
 
-            // --- Record source selector (visible when recordOnly) ---
-            if (uiState.timeLayoutVisible) {
-                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                    RecordSource.entries.forEachIndexed { index, source ->
-                        SegmentedButton(
-                            selected = uiState.recordSource == source,
-                            onClick = { onRecordSourceChange(source) },
-                            shape = SegmentedButtonDefaults.itemShape(index, RecordSource.entries.size)
-                        ) {
-                            Text(
-                                stringResource(
-                                    when (source) {
-                                        RecordSource.PUMP -> CoreUiR.string.record_source_pump
-                                        RecordSource.PEN  -> CoreUiR.string.record_source_pen
-                                    }
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-
             // --- Card 2: Insulin amount ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -409,21 +381,19 @@ private fun InsulinDialogContent(
                 }
             }
 
-            // --- Card 3: Pen insulin selection (visible when recordOnly + Pen) ---
-            if (uiState.timeLayoutVisible && uiState.recordSource == RecordSource.PEN) {
+            // --- Card 3: Insulin type selection (visible when recordOnly) ---
+            if (uiState.timeLayoutVisible) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        // Warning
                         Text(
-                            text = stringResource(CoreUiR.string.pen_insulin_warning),
+                            text = stringResource(CoreUiR.string.record_insulin_hint),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        // insulin list Variant with DropDown
                         var expanded by remember { mutableStateOf(false) }
 
                         @OptIn(ExperimentalMaterial3Api::class)
@@ -433,7 +403,7 @@ private fun InsulinDialogContent(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             OutlinedTextField(
-                                value = uiState.penIcfg?.insulinLabel ?: "",
+                                value = uiState.selectedIcfg?.insulinLabel ?: "",
                                 onValueChange = {},
                                 readOnly = true,
                                 label = { Text(stringResource(CoreUiR.string.select_insulin)) },
@@ -457,7 +427,7 @@ private fun InsulinDialogContent(
                                             )
                                         },
                                         onClick = {
-                                            onPenInsulinSelect(iCfg)
+                                            onInsulinTypeSelect(iCfg)
                                             expanded = false
                                         },
                                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -465,26 +435,6 @@ private fun InsulinDialogContent(
                                 }
                             }
                         })
-                        /* insulin list Variant with RadioButtons
-                        uiState.insulins.forEach { iCfg ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { onPenInsulinSelect(iCfg) }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = iCfg == uiState.penIcfg,
-                                    onClick = { onPenInsulinSelect(iCfg) }
-                                )
-                                Text(
-                                    text = iCfg.insulinLabel,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-                        }
-                        */
                     }
                 }
             }
@@ -546,7 +496,7 @@ private fun InsulinDialogScreenPreview() {
         InsulinDialogContent(
             uiState = InsulinDialogUiState(
                 insulin = 2.5,
-                iCfg = null,
+                selectedIcfg = null,
                 insulins = ArrayList(),
                 maxInsulin = 10.0,
             bolusStep = 0.1,
@@ -573,8 +523,7 @@ private fun InsulinDialogScreenPreview() {
             onSettingsClick = null,
             onNavigateBack = {},
             onConfirmClick = {},
-            onRecordSourceChange = {},
-            onPenInsulinSelect = {}
+            onInsulinTypeSelect = {}
         )
     }
 }

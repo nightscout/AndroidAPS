@@ -120,7 +120,6 @@
     <string name="cancel_pairing_title">Cancel pairing?</string>
     <string name="cancel_pairing_message">The pairing process will be aborted.</string>
     <string name="done">Done</string>
-    <string name="no_history_records">No records found</string>
     <string name="open_bluetooth_settings">Open Bluetooth settings</string>
     <string name="enter_pump_password">Enter pump password</string>
     <string name="select_paired_device">Select paired device</string>
