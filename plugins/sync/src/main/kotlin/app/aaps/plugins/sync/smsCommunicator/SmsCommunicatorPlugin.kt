@@ -715,19 +715,21 @@ class SmsCommunicatorPlugin @Inject constructor(
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
                             val iCfg = insulin.iCfg          // use Current running iCfg, changing iCfg with Automation not allowed
-                            if (profileFunction.createProfileSwitch(
-                                    profileStore = store,
-                                    profileName = list[pIndex - 1] as String,
-                                    durationInMinutes = 0,
-                                    percentage = finalPercentage,
-                                    timeShiftInHours = 0,
-                                    timestamp = dateUtil.now(),
-                                    action = Action.PROFILE_SWITCH,
-                                    source = Sources.SMS,
-                                    note = rh.gs(R.string.sms_profile_switch_created),
-                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))),
-                                    iCfg = iCfg
-                                )
+                            if (runBlocking {
+                                    profileFunction.createProfileSwitch(
+                                        profileStore = store,
+                                        profileName = list[pIndex - 1] as String,
+                                        durationInMinutes = 0,
+                                        percentage = finalPercentage,
+                                        timeShiftInHours = 0,
+                                        timestamp = dateUtil.now(),
+                                        action = Action.PROFILE_SWITCH,
+                                        source = Sources.SMS,
+                                        note = rh.gs(R.string.sms_profile_switch_created),
+                                        listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))),
+                                        iCfg = iCfg
+                                    )
+                                } != null
                             ) {
                                 val replyText = rh.gs(R.string.sms_profile_switch_created)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))

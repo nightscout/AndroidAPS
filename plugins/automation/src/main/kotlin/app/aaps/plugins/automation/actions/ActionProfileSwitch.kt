@@ -74,7 +74,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             ),
             iCfg = iCfg
         )
-        callback.result(pumpEnactResultProvider.get().success(result).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(pumpEnactResultProvider.get().success(result != null).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun generateDialog(root: LinearLayout) {

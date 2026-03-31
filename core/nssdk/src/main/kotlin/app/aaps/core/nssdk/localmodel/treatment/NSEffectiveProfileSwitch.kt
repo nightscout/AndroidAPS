@@ -30,5 +30,6 @@ data class NSEffectiveProfileSwitch(
     /** Duration in milliseconds */
     val originalDuration: Long,
     val originalEnd: Long,
+    val originalPsId: Long? = null,
     val iCfg: NSICfg?
 ) : NSTreatment

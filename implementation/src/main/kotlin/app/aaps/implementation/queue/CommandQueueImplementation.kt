@@ -153,6 +153,7 @@ class CommandQueueImplementation @Inject constructor(
                             originalPercentage = it.percentage,
                             originalDuration = it.duration,
                             originalEnd = it.end,
+                            originalPsId = it.id,
                             iCfg = it.iCfg
                         ).also { eps ->
                             appScope.launch { persistenceLayer.insertOrUpdateEffectiveProfileSwitch(eps) }

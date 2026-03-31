@@ -12,7 +12,7 @@ import java.util.TimeZone
 /** Steps count values measured by a user smart watch or the like. */
 @Entity(
     tableName = TABLE_STEPS_COUNT,
-    indices = [Index("id"), Index("timestamp")]
+    indices = [Index("timestamp")]
 )
 data class StepsCount(
     @PrimaryKey(autoGenerate = true)

@@ -22,7 +22,6 @@ import java.util.TimeZone
         childColumns = ["referenceId"]
     )],
     indices = [
-        Index("id"),
         Index("referenceId"),
         Index("timestamp"),
         Index("nightscoutId")

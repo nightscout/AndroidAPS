@@ -141,7 +141,7 @@ class LoopTest @Inject constructor() {
             ),
             iCfg = ICfg("Test", insulinEndTime = 5 * 3600 * 1000L, insulinPeakTime = 75 * 60 * 1000L)
         )
-        assertThat(result).isTrue()
+        assertThat(result).isNotNull()
 
         // wait until PS is processed and EPS is created in DB
         assertThat(rxHelper.waitUntil("step3: profile available") { runBlocking { profileFunction.getProfile() } != null }).isTrue()

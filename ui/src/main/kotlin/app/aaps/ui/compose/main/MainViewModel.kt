@@ -542,17 +542,17 @@ class MainViewModel @Inject constructor(
         actionConfirmation.update { null }
     }
 
-    fun executeConfirmableAction(action: ConfirmableAction) {
+    fun executeConfirmableAction(action: ConfirmableAction) = viewModelScope.launch {
         actionConfirmation.update { null }
         when (action) {
             is ConfirmableAction.ExecuteAutomation        -> {
-                val event = automation.findEventById(action.automationId) ?: return
+                val event = automation.findEventById(action.automationId) ?: return@launch
                 viewModelScope.launch { automation.processEvent(event) }
             }
 
             is ConfirmableAction.ActivateTempTargetPreset -> {
                 val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
-                val preset = presets.find { it.id == action.presetId } ?: return
+                val preset = presets.find { it.id == action.presetId } ?: return@launch
                 viewModelScope.launch {
                     val tempTarget = TT(
                         timestamp = dateUtil.now(),
@@ -575,7 +575,7 @@ class MainViewModel @Inject constructor(
             }
 
             is ConfirmableAction.ActivateProfile          -> {
-                val store = localProfileManager.profile ?: return
+                val store = localProfileManager.profile ?: return@launch
                 profileFunction.createProfileSwitch(
                     profileStore = store,
                     profileName = action.profileName,

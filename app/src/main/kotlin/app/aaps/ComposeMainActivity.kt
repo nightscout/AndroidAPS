@@ -49,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -925,6 +926,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
                 val profileName = profileManagementViewModel.uiState.value.profileNames.getOrNull(profileIndex) ?: ""
                 val reuseValues = profileManagementViewModel.getReuseValues()
+                val coroutineScope = rememberCoroutineScope()
 
                 ProfileActivationScreen(
                     profileName = profileName,
@@ -936,18 +938,20 @@ class ComposeMainActivity : AppCompatActivity() {
                     rh = rh,
                     onNavigateBack = { navController.safePopBackStack() },
                     onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
-                        val success = profileManagementViewModel.activateProfile(
-                            profileIndex = profileIndex,
-                            durationMinutes = duration,
-                            percentage = percentage,
-                            timeshiftHours = timeshift,
-                            withTT = withTT,
-                            notes = notes,
-                            timestamp = timestamp,
-                            timeChanged = timeChanged
-                        )
-                        if (success) {
-                            navController.popBackStack(AppRoute.Profile.route, inclusive = false)
+                        coroutineScope.launch {
+                            val success = profileManagementViewModel.activateProfile(
+                                profileIndex = profileIndex,
+                                durationMinutes = duration,
+                                percentage = percentage,
+                                timeshiftHours = timeshift,
+                                withTT = withTT,
+                                notes = notes,
+                                timestamp = timestamp,
+                                timeChanged = timeChanged
+                            )
+                            if (success) {
+                                navController.popBackStack(AppRoute.Profile.route, inclusive = false)
+                            }
                         }
                     }
                 )

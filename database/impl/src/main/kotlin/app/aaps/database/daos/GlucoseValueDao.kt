@@ -26,16 +26,16 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("SELECT id FROM $TABLE_GLUCOSE_VALUES ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): GlucoseValue?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp = :timestamp) AND likely(sourceSensor = :sourceSensor) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp = :timestamp) AND (sourceSensor = :sourceSensor) AND (referenceId IS NULL)")
     suspend fun findByTimestampAndSensor(timestamp: Long, sourceSensor: GlucoseValue.SourceSensor): GlucoseValue?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) AND likely(value >= 39) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) AND (value >= 39) ORDER BY timestamp ASC")
     suspend fun compatGetBgReadingsDataFromTime(timestamp: Long): List<GlucoseValue>
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp BETWEEN :start AND :end) AND likely(isValid = 1) AND likely(referenceId IS NULL) AND likely(value >= 39) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp BETWEEN :start AND :end) AND (isValid = 1) AND (referenceId IS NULL) AND (value >= 39) ORDER BY timestamp ASC")
     suspend fun compatGetBgReadingsDataFromTime(start: Long, end: Long): List<GlucoseValue>
 
     // for WS we need 1 record only

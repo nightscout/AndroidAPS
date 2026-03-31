@@ -28,22 +28,22 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
     suspend fun findByTimestamp(timestamp: Long): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryProfileSwitchActiveAt(timestamp: Long): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp <= :timestamp) AND unlikely(duration = 0) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp <= :timestamp) AND (duration = 0) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getPermanentProfileSwitchActiveAt(timestamp: Long): ProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
     suspend fun getAllProfileSwitches(): List<ProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getProfileSwitchDataIncludingInvalidFromTime(timestamp: Long): List<ProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getProfileSwitchDataFromTime(timestamp: Long): List<ProfileSwitch>
 
     // for WS we need 1 record only

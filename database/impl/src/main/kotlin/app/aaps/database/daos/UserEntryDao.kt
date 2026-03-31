@@ -19,6 +19,6 @@ interface UserEntryDao {
     @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE timestamp >= :timestamp ORDER BY timestamp DESC")
     suspend fun getUserEntryDataFromTime(timestamp: Long): List<UserEntry>
 
-    @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE unlikely(timestamp >= :timestamp) AND likely(source != :excludeSource) ORDER BY timestamp DESC")
+    @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE (timestamp >= :timestamp) AND (source != :excludeSource) ORDER BY timestamp DESC")
     suspend fun getUserEntryFilteredDataFromTime(excludeSource: Sources, timestamp: Long): List<UserEntry>
 }

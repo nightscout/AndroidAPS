@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -43,7 +44,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() = runTest {
-        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(true)
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock())
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
