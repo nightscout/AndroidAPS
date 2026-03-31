@@ -181,7 +181,7 @@ class DiaconnOverviewViewModel @Inject constructor(
 
         val passedMin = ((min(dateUtil.now(), pump.tempBasalStart + pump.tempBasalDuration) - pump.tempBasalStart) / 60.0 / 1000).roundToInt()
         return ch.basalRateString(PumpRate(pump.tempBasalAbsoluteRate), true) +
-            dateUtil.timeString(pump.tempBasalStart) +
+            "\n" + dateUtil.timeString(pump.tempBasalStart) +
             " " + passedMin + "/" + T.msecs(pump.tempBasalDuration).mins() + "'"
     }
 
@@ -227,8 +227,7 @@ class DiaconnOverviewViewModel @Inject constructor(
         val todayInsulinLimitAmount = ch.fromPump(PumpInsulin((pump.maxBasal * 24) + pump.maxBolusePerDay)).toInt()
 
         // Base basal rate
-        val baseBasalRate = ch.basalRateString(PumpRate(pump.baseInjAmount), true) + " / " +
-            ch.basalRateString(activePump.baseBasalRate, true)
+        val baseBasalRate = ch.basalRateString(activePump.baseBasalRate, true)
 
         // Temp basal / Extended bolus
         val tempBasalText = temporaryBasalToString()
