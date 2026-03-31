@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
@@ -45,10 +46,12 @@ fun RetryActivationStep(
         }
     }
 
+    var showFilledErrorDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(setupStep) {
         if (patchStep == PatchStep.RETRY_ACTIVATION_CONNECT) {
             when (setupStep) {
-                MedtrumPatchViewModel.SetupStep.FILLED    -> viewModel.forceMoveStep(PatchStep.PRIME)
+                MedtrumPatchViewModel.SetupStep.FILLED    -> showFilledErrorDialog = true
                 MedtrumPatchViewModel.SetupStep.PRIMING   -> viewModel.forceMoveStep(PatchStep.PRIMING)
                 MedtrumPatchViewModel.SetupStep.PRIMED    -> viewModel.forceMoveStep(PatchStep.PRIME_COMPLETE)
                 MedtrumPatchViewModel.SetupStep.ACTIVATED -> viewModel.forceMoveStep(PatchStep.ACTIVATE_COMPLETE)
@@ -56,6 +59,17 @@ fun RetryActivationStep(
                 else                                      -> {}
             }
         }
+    }
+
+    if (showFilledErrorDialog) {
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.retry_activation_filled_error),
+            onDismiss = {
+                showFilledErrorDialog = false
+                viewModel.moveStep(PatchStep.FORCE_DEACTIVATION)
+            }
+        )
     }
 
     if (showDiscardDialog) {
