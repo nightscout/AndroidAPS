@@ -1,9 +1,10 @@
 package app.aaps.pump.omnipod.dash.di
 
 import app.aaps.pump.omnipod.common.di.ActivityScope
+import app.aaps.pump.omnipod.common.di.OmnipodCommonBleModule
 import app.aaps.pump.omnipod.common.di.OmnipodWizardModule
-import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManager
-import app.aaps.pump.omnipod.common.bledriver.OmnipodDashManagerImpl
+import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
+import app.aaps.pump.omnipod.dash.driver.OmnipodDashManagerImpl
 import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManager
 import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManagerImpl
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
@@ -17,7 +18,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Module(includes = [OmnipodDashHistoryModule::class])
+@Module(includes = [OmnipodDashHistoryModule::class, OmnipodCommonBleModule::class])
 @Suppress("unused")
 abstract class OmnipodDashModule {
     // ACTIVITIES

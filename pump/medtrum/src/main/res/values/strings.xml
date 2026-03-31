@@ -110,6 +110,7 @@
 
     <string name="activation_in_progress">Oops! Something went wrong, it seems there is already an activation in progress.</string>
     <string name="press_retry_or_discard">Press <b>Next</b> to resume the activation or <b>Discard</b> to reset the activation status.</string>
+    <string name="retry_activation_filled_error">Activation cannot be resumed. The pump state has been lost. Do NOT re-prime, as the patch may already be inserted. Please discard the patch and start a new activation.</string>
     <string name="reading_activation_status">Please wait, reading activation status from pump.</string>
 
     <!-- settings-->

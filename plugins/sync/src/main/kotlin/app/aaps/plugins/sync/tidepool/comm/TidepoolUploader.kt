@@ -87,10 +87,12 @@ class TidepoolUploader @Inject constructor(
     }
 
     fun resetInstance() {
-        //aapsLogger.debug(LTag.TIDEPOOL, "resetInstance")
         aapsLogger.debug(LTag.TIDEPOOL, "Instance reset")
         retrofit = null
         session = null
+        // Reset connection status so the next doUpload() triggers a fresh login
+        // instead of trying to use the now-null session
+        authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NONE)
     }
 
     /**
@@ -223,8 +225,9 @@ class TidepoolUploader @Inject constructor(
         }
         session.let { session ->
             if (session == null) {
-                aapsLogger.error("Session is null, cannot proceed")
-                releaseWakeLock()
+                aapsLogger.warn(LTag.TIDEPOOL, "Session is null, triggering re-login")
+                authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NONE)
+                doLogin(doUpload = true, from = "doUpload session recovery")
                 return
             }
             extendWakeLock(60000)

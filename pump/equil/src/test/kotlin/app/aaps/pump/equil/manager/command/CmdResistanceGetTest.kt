@@ -22,6 +22,7 @@ class CmdResistanceGetTest : TestBaseWithProfile() {
     fun setUp() {
         whenever(preferences.get(EquilStringKey.Device)).thenReturn("0123456789ABCDEF")
         whenever(preferences.get(EquilStringKey.Password)).thenReturn("0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF")
+        whenever(equilManager.getResistanceThreshold()).thenReturn(500)
     }
 
     @Test
