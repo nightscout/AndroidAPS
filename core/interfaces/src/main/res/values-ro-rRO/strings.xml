@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Events-->
+    <string name="bolus_delivering">Se livrează %1$.2fU</string>
+    <string name="bolus_delivered_so_far">Livrat %1$.2fU / %2$.2fU</string>
+    <string name="bolus_delivered_successfully">Bolusul de %1$.2fU a fost livrat cu succes</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d minute în urmă</string>
+    <string name="secago">%1$d zile în urmă</string>
     <string name="minago_long">%1$d minute în urmă</string>
+    <string name="hoursago">%1$.1f ore în urmă</string>
     <string name="days_ago">%1$.1f zile în urmă</string>
     <string name="days_ago_round">%1$.0f zile în urmă</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s zi %2$s ore în urmă</item>
+        <item quantity="few">%1$s zile %2$s ore în urmă</item>
+        <item quantity="other">%1$s zile %2$s ore în urmă</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s oră în urmă</item>
+        <item quantity="few">%1$s ore în urmă</item>
+        <item quantity="other">%1$s ore în urmă</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">acum un moment</item>
+        <item quantity="few">%1$s minute în urmă</item>
+        <item quantity="other">%1$s minute în urmă</item>
+    </plurals>
+    <string name="seconds_ago">secunde în urmă</string>
     <string name="in_days">în %1$.0f zile</string>
     <string name="in_days_round">în %1$.0f zile</string>
     <string name="shorthour">h</string>
@@ -32,6 +54,7 @@
     <string name="connecting_for">Conectat de %1$d s</string>
     <string name="handshaking">Împerechere</string>
     <string name="connected">Conectat</string>
+    <string name="authorized">Autorizat</string>
     <string name="disconnecting">Se deconectează</string>
     <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
     <!-- Custom Watchface -->
@@ -48,6 +71,8 @@
     <string name="pref_show_delta">Arată Delta</string>
     <string name="pref_show_detailed_delta">Arată variație detaliată</string>
     <string name="pref_show_avgdelta">Arată Delta medie</string>
+    <string name="pref_show_tempTarget">Afișare țintă temporară</string>
+    <string name="pref_show_reservoir_level">Afișare nivel rezervor</string>
     <string name="pref_show_phone_battery">Arată baterie telefon</string>
     <string name="pref_show_rig_battery">Arată Baterie Rig</string>
     <string name="pref_show_basal_rate">Arată rata bazală</string>
@@ -58,6 +83,13 @@
     <string name="pref_show_ago">Afişare în urmă</string>
     <string name="pref_show_week_number">Arată numărul săptămânii</string>
     <string name="pref_show_date">Arată data</string>
+    <string name="pref_show_seconds">Afișare secunde</string>
     <string name="default_custom_watchface_comment">Fațetă implicită. Poți apăsa pe butonul EXPORT pentru a genera un șablon</string>
+    <string name="default_custom_watchface_external_comment">Cadran de ceas implicit, inclusiv vizualizări externe pentru urmăritori, puteți apăsa pe butonul EXPORTARE CADRAN pentru a genera un șablon</string>
     <string name="wear_default_watchface">Fațetă implicită</string>
+    <string name="wear_more_watchfaces">Mai multe cadrane de ceas</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Pentru totdeauna</string>
 </resources>
