@@ -15,6 +15,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.valueToUnits
+import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetLong
 import app.aaps.core.utils.JsonHelper.safeGetString
@@ -24,6 +25,17 @@ import org.json.JSONObject
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Provider
+
+enum class QuickWizardMode(val value: Int) {
+    WIZARD(0),
+    INSULIN(1),
+    CARBS(2);
+
+    companion object {
+
+        fun fromValue(value: Int) = entries.firstOrNull { it.value == value } ?: WIZARD
+    }
+}
 
 class QuickWizardEntry @Inject constructor(
     aapsLogger: AAPSLogger,
@@ -110,11 +122,16 @@ class QuickWizardEntry @Inject constructor(
         return this
     }
 
-    fun isActive(): Boolean =
-        time.secondsFromMidnight() >= validFrom() &&
-            time.secondsFromMidnight() <= validTo() &&
-            forDevice(DEVICE_PHONE) &&
-            dateUtil.now() - lastUsed() > COOLDOWN_MILLIS
+    fun isActive(): Boolean {
+        val now = time.secondsFromMidnight()
+        val inTimeRange = if (validTo() >= validFrom()) now in validFrom()..validTo()
+        else now >= validFrom() || now <= validTo() // wraps midnight
+        if (!inTimeRange || !forDevice(DEVICE_PHONE)) return false
+        val timeRangeSeconds = if (validTo() >= validFrom()) validTo() - validFrom()
+        else (86400 - validFrom()) + validTo()
+        val needsCooldown = timeRangeSeconds < 4 * 3600
+        return !needsCooldown || (dateUtil.now() - lastUsed() > COOLDOWN_MILLIS)
+    }
 
     suspend fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue): BolusWizard {
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
@@ -177,6 +194,10 @@ class QuickWizardEntry @Inject constructor(
             positiveIOBOnly = uPositiveIOBOnly
         ) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
+
+    fun mode(): QuickWizardMode = QuickWizardMode.fromValue(safeGetInt(storage, "mode", 0))
+
+    fun insulin(): Double = safeGetDouble(storage, "insulin", 0.0)
 
     fun guid(): String = safeGetString(storage, "guid", "")
 

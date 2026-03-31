@@ -51,7 +51,8 @@ data class QuickWizardItem(
     val buttonText: String,
     val detail: String? = null,
     val isEnabled: Boolean = false,
-    val disabledReason: String? = null
+    val disabledReason: String? = null,
+    val mode: Int = 0  // QuickWizardMode.value — 0=WIZARD, 1=INSULIN, 2=CARBS
 )
 
 /**

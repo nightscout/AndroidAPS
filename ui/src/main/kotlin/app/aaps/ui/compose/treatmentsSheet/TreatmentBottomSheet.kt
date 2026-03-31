@@ -11,6 +11,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +39,7 @@ import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
@@ -149,10 +152,18 @@ private fun TreatmentSelectionContent(
         val disabledAlpha = 0.38f
 
         // QuickWizard entries
-        val quickWizardColor = ElementType.QUICK_WIZARD.color()
-        val quickWizardIcon = ElementType.QUICK_WIZARD.icon()
         quickWizardItems.forEach { item ->
             val itemEnabled = item.isEnabled
+            val itemIcon = when (item.mode) {
+                1    -> IcBolus    // INSULIN
+                2    -> IcCarbs    // CARBS
+                else -> ElementType.QUICK_WIZARD.icon() // WIZARD
+            }
+            val itemColor = when (item.mode) {
+                1    -> ElementType.INSULIN.color()
+                2    -> ElementType.CARBS.color()
+                else -> ElementType.QUICK_WIZARD.color()
+            }
             val supportingText = if (itemEnabled) item.detail
             else item.disabledReason?.let { reason ->
                 if (item.detail != null) "${item.detail} — $reason" else reason
@@ -161,7 +172,7 @@ private fun TreatmentSelectionContent(
                 headlineContent = {
                     Text(
                         text = item.buttonText,
-                        color = if (itemEnabled) quickWizardColor
+                        color = if (itemEnabled) itemColor
                         else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha)
                     )
                 },
@@ -176,8 +187,8 @@ private fun TreatmentSelectionContent(
                 },
                 leadingContent = {
                     TonalIcon(
-                        painter = rememberVectorPainter(quickWizardIcon),
-                        color = if (itemEnabled) quickWizardColor
+                        painter = rememberVectorPainter(itemIcon),
+                        color = if (itemEnabled) itemColor
                         else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
                         enabled = itemEnabled
                     )

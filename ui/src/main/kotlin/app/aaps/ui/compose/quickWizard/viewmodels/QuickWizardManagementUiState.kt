@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.quickWizard.viewmodels
 
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.SnackbarMessage
 
@@ -17,7 +18,9 @@ data class QuickWizardManagementUiState(
     val snackbarMessage: SnackbarMessage? = null,
 
     // Editor fields (match EditQuickWizardDialog fields)
+    val editorMode: QuickWizardMode = QuickWizardMode.WIZARD,
     val editorButtonText: String = "",
+    val editorInsulin: Double = 0.0,
     val editorCarbs: Int = 0,
     val editorCarbTime: Int = 0,
     val editorValidFrom: Int = 0,           // seconds from midnight

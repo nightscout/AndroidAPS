@@ -1320,7 +1320,9 @@ class DataHandlerMobile @Inject constructor(
             carbs = carbs(),
             validFrom = validFrom(),
             validTo = validTo(),
-            lastUsed = lastUsed()
+            lastUsed = lastUsed(),
+            mode = mode().value,
+            insulin = insulin()
         )
 
     fun resendData(from: String) {
