@@ -18,16 +18,21 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.overview.graph.TempTargetState
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -36,6 +41,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
@@ -74,7 +80,10 @@ class MainViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val localProfileManager: LocalProfileManager,
     private val aapsLogger: AAPSLogger,
-    private val quickLaunchResolver: QuickLaunchResolver
+    private val quickLaunchResolver: QuickLaunchResolver,
+    private val commandQueue: CommandQueue,
+    private val uiInteraction: UiInteraction,
+    private val uel: UserEntryLogger
 ) : ViewModel() {
 
     val uiState: StateFlow<MainUiState>
@@ -207,7 +216,60 @@ class MainViewModel @Inject constructor(
         val profileName = profileFunction.getProfileName()
         val pump = activePlugin.activePump
 
-        // Global disable reason (applies to all entries)
+        return activeEntries.map { entry ->
+            when (entry.mode()) {
+                QuickWizardMode.INSULIN -> computeInsulinItem(entry, pump, runningMode)
+                QuickWizardMode.CARBS   -> computeCarbsItem(entry)
+                QuickWizardMode.WIZARD  -> computeWizardItem(entry, lastBG, profile, profileName, pump, runningMode)
+            }
+        }
+    }
+
+    private fun computeInsulinItem(entry: QuickWizardEntry, pump: Pump, runningMode: RM.Mode?): QuickWizardItem {
+        val buttonText = entry.buttonText()
+        val guid = entry.guid()
+        val detail = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, entry.insulin())
+
+        val disabledReason = when {
+            !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
+            pump.isSuspended()                       -> rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
+            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
+            else                                     -> null
+        }
+        if (disabledReason != null)
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = disabledReason)
+
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(entry.insulin(), aapsLogger)).value()
+        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
+        if (abs(insulinAfterConstraints - entry.insulin()) >= minStep)
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.insulin_constraint_violation))
+
+        return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
+    }
+
+    private fun computeCarbsItem(entry: QuickWizardEntry): QuickWizardItem {
+        val buttonText = entry.buttonText()
+        val guid = entry.guid()
+        val detail = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())
+
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
+        if (carbsAfterConstraints != entry.carbs())
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.carbs_constraint_violation))
+
+        return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
+    }
+
+    private suspend fun computeWizardItem(
+        entry: QuickWizardEntry,
+        lastBG: InMemoryGlucoseValue?,
+        profile: Profile?,
+        profileName: String,
+        pump: Pump,
+        runningMode: RM.Mode?
+    ): QuickWizardItem {
+        val buttonText = entry.buttonText()
+        val guid = entry.guid()
+
         val globalReason = when {
             lastBG == null                           -> rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg)
             profile == null                          -> rh.gs(app.aaps.core.ui.R.string.noprofile)
@@ -216,44 +278,24 @@ class MainViewModel @Inject constructor(
             runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
             else                                     -> null
         }
+        if (globalReason != null)
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = globalReason)
 
-        if (globalReason != null) {
-            return activeEntries.map { entry ->
-                QuickWizardItem(guid = entry.guid(), buttonText = entry.buttonText(), disabledReason = globalReason)
-            }
-        }
-
-        // Per-entry calculation (profile and lastBG guaranteed non-null here)
-        return activeEntries.map { entry ->
-            computeSingleQuickWizardItem(entry, profile!!, profileName, lastBG!!, pump)
-        }
-    }
-
-    private suspend fun computeSingleQuickWizardItem(
-        entry: QuickWizardEntry,
-        profile: Profile,
-        profileName: String,
-        lastBG: InMemoryGlucoseValue,
-        pump: Pump
-    ): QuickWizardItem {
-        val buttonText = entry.buttonText()
-        val guid = entry.guid()
-
-        val wizard = entry.doCalc(profile, profileName, lastBG)
+        val wizard = entry.doCalc(profile!!, profileName, lastBG!!)
         if (wizard.calculatedTotalInsulin <= 0.0)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, disabledReason = rh.gs(app.aaps.ui.R.string.wizard_no_insulin_required))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(app.aaps.ui.R.string.wizard_no_insulin_required))
 
         val detail = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs()) +
             " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
-            return QuickWizardItem(guid = guid, buttonText = buttonText, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.carbs_constraint_violation))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.carbs_constraint_violation))
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints)
         if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.insulin_constraint_violation))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.insulin_constraint_violation))
 
-        return QuickWizardItem(guid = guid, buttonText = buttonText, detail = detail, isEnabled = true)
+        return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
     }
 
     /**
@@ -264,14 +306,104 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val entry = quickWizard.get(guid) ?: return@launch
             if (!entry.isActive()) return@launch
-            val bg = iobCobCalculator.ads.actualBg() ?: return@launch
-            val profile = profileFunction.getProfile() ?: return@launch
-            val profileName = profileFunction.getProfileName()
-            val wizard = entry.doCalc(profile, profileName, bg)
-            if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
-                wizard.confirmAndExecute(context, entry)
+            when (entry.mode()) {
+                QuickWizardMode.WIZARD  -> executeQuickWizardMode(context, entry)
+                QuickWizardMode.INSULIN -> executeInsulinMode(context, entry)
+                QuickWizardMode.CARBS   -> executeCarbsMode(context, entry)
             }
         }
+    }
+
+    private suspend fun executeQuickWizardMode(context: android.content.Context, entry: QuickWizardEntry) {
+        val bg = iobCobCalculator.ads.actualBg() ?: return
+        val profile = profileFunction.getProfile() ?: return
+        val profileName = profileFunction.getProfileName()
+        val wizard = entry.doCalc(profile, profileName, bg)
+        if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
+            wizard.confirmAndExecute(context, entry)
+        }
+    }
+
+    private fun executeInsulinMode(context: android.content.Context, entry: QuickWizardEntry) {
+        val pump = activePlugin.activePump
+        if (!pump.isInitialized() || pump.isSuspended()) return
+
+        val insulin = entry.insulin()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(
+            ConstraintObject(insulin, aapsLogger)
+        ).value()
+        if (insulinAfterConstraints <= 0.0) return
+
+        val message = buildString {
+            append(rh.gs(app.aaps.core.ui.R.string.bolus) + ": ")
+            append(rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints))
+            if (abs(insulinAfterConstraints - insulin) > pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
+                append("<br/>")
+                append(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints))
+            }
+        }
+
+        uiInteraction.showOkCancelDialog(
+            context = context,
+            title = entry.buttonText(),
+            message = message,
+            ok = {
+                uel.log(
+                    Action.BOLUS, Sources.QuickWizard,
+                    entry.buttonText(),
+                    ValueWithUnit.Insulin(insulinAfterConstraints)
+                )
+                val detailedBolusInfo = DetailedBolusInfo().apply {
+                    eventType = app.aaps.core.data.model.TE.Type.CORRECTION_BOLUS
+                    this.insulin = insulinAfterConstraints
+                    this.context = context
+                }
+                commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                        }
+                    }
+                })
+                entry.markAsUsed()
+            }
+        )
+    }
+
+    private fun executeCarbsMode(context: android.content.Context, entry: QuickWizardEntry) {
+        val carbs = entry.carbs()
+        if (carbs <= 0) return
+
+        val message = buildString {
+            append(rh.gs(app.aaps.core.ui.R.string.carbs) + ": ${carbs}g")
+        }
+
+        uiInteraction.showOkCancelDialog(
+            context = context,
+            title = entry.buttonText(),
+            message = message,
+            ok = {
+                uel.log(
+                    Action.CARBS, Sources.QuickWizard,
+                    entry.buttonText(),
+                    ValueWithUnit.Gram(carbs)
+                )
+                val detailedBolusInfo = DetailedBolusInfo().apply {
+                    eventType = app.aaps.core.data.model.TE.Type.CARBS_CORRECTION
+                    this.carbs = carbs.toDouble()
+                    this.context = context
+                    carbsTimestamp = dateUtil.now()
+                }
+                commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                        }
+                    }
+                })
+                entry.markAsUsed()
+            }
+        )
     }
 
     /**

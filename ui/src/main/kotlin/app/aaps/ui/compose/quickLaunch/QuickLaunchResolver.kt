@@ -9,7 +9,11 @@ import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
@@ -39,13 +43,26 @@ class QuickLaunchResolver @Inject constructor(
             val plugin = findPlugin(action.className)
             if (plugin != null) return resolvePluginItem(plugin)
         }
+        val icon = resolveIcon(action)
         return ResolvedQuickLaunchItem(
             action = action,
             label = resolveLabel(action),
-            icon = action.elementType?.icon() ?: Icons.Default.Extension,
+            icon = icon,
             enabled = true,
             description = resolveDescription(action)
         )
+    }
+
+    private fun resolveIcon(action: QuickLaunchAction): ImageVector = when (action) {
+        is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid)?.let { entry ->
+            when (entry.mode()) {
+                QuickWizardMode.INSULIN -> IcBolus
+                QuickWizardMode.CARBS   -> IcCarbs
+                QuickWizardMode.WIZARD  -> action.elementType?.icon()
+            }
+        } ?: action.elementType?.icon() ?: Icons.Default.Extension
+
+        else                                   -> action.elementType?.icon() ?: Icons.Default.Extension
     }
 
     fun isValid(action: QuickLaunchAction): Boolean = when (action) {
@@ -95,8 +112,22 @@ class QuickLaunchResolver @Inject constructor(
 
     fun resolveDescription(action: QuickLaunchAction): String? = when (action) {
         is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid)?.let { entry ->
-            val carbs = entry.carbs()
-            if (carbs > 0) "${carbs}g" else null
+            when (entry.mode()) {
+                QuickWizardMode.INSULIN -> {
+                    val insulin = entry.insulin()
+                    if (insulin > 0.0) "${rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulin)}" else null
+                }
+
+                QuickWizardMode.CARBS   -> {
+                    val carbs = entry.carbs()
+                    if (carbs > 0) "${carbs}g" else null
+                }
+
+                QuickWizardMode.WIZARD  -> {
+                    val carbs = entry.carbs()
+                    if (carbs > 0) "${carbs}g" else null
+                }
+            }
         }
 
         is QuickLaunchAction.AutomationAction  -> automation.findEventById(action.automationId)

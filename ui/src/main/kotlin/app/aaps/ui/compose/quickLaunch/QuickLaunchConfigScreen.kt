@@ -1,6 +1,11 @@
 package app.aaps.ui.compose.quickLaunch
 
 import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +52,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.navigation.ElementCategory
-import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
@@ -159,7 +163,7 @@ fun QuickLauchConfigScreen(
                 it.action.elementType?.category in setOf(ElementCategory.TREATMENT, ElementCategory.CGM)
             }
             item(key = "divider_treatment") {
-                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                HorizontalDivider()
             }
             item(key = "header_treatment") {
                 SectionHeader(stringResource(R.string.quick_launch_category_treatment))
@@ -177,7 +181,7 @@ fun QuickLauchConfigScreen(
                 it.action.elementType?.category in setOf(ElementCategory.CAREPORTAL, ElementCategory.DEVICE)
             }
             item(key = "divider_care") {
-                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                HorizontalDivider()
             }
             item(key = "header_care") {
                 SectionHeader(stringResource(R.string.quick_launch_category_care))
@@ -192,7 +196,7 @@ fun QuickLauchConfigScreen(
 
             // ── Dynamic: Quick Wizard ──
             item(key = "divider_qw") {
-                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                HorizontalDivider()
             }
             item(key = "header_qw") {
                 SectionHeader(stringResource(R.string.quick_launch_category_quick_wizard))
@@ -207,7 +211,7 @@ fun QuickLauchConfigScreen(
 
             // ── Dynamic: Automation ──
             item(key = "divider_auto") {
-                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                HorizontalDivider()
             }
             item(key = "header_auto") {
                 SectionHeader(stringResource(R.string.quick_launch_category_automation))
@@ -222,7 +226,7 @@ fun QuickLauchConfigScreen(
 
             // ── Dynamic: TT Presets ──
             item(key = "divider_tt") {
-                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                HorizontalDivider()
             }
             item(key = "header_tt") {
                 SectionHeader(stringResource(R.string.quick_launch_category_temp_target))
@@ -237,7 +241,7 @@ fun QuickLauchConfigScreen(
 
             // ── Dynamic: Profiles ──
             item(key = "divider_profiles") {
-                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                HorizontalDivider()
             }
             item(key = "header_profiles") {
                 SectionHeader(stringResource(R.string.quick_launch_category_profile))
@@ -253,7 +257,7 @@ fun QuickLauchConfigScreen(
             // ── Dynamic: Plugins (grouped by type) ──
             state.availablePluginGroups.forEach { group ->
                 item(key = "divider_plugin_${group.pluginType}") {
-                    HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                    HorizontalDivider()
                 }
                 item(key = "header_plugin_${group.pluginType}") {
                     SectionHeader(stringResource(group.labelResId))
@@ -283,12 +287,28 @@ private fun SectionHeader(text: String) {
 }
 
 @Composable
+private fun resolveActionColor(item: ResolvedQuickLaunchItem): Color {
+    val action = item.action
+    if (action is QuickLaunchAction.QuickWizardAction) {
+        return when (item.icon) {
+            IcBolus -> ElementType.INSULIN.color()
+            IcCarbs -> ElementType.CARBS.color()
+            else    -> ElementType.QUICK_WIZARD.color()
+        }
+    }
+    return action.elementType?.color() ?: MaterialTheme.colorScheme.primary
+}
+
+@Composable
 private fun EmptyHint(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(horizontal = 24.dp, vertical = 8.dp)
     )
 }
 
@@ -299,7 +319,7 @@ private fun SelectedActionItem(
     onEdit: (() -> Unit)?,
     dragModifier: Modifier
 ) {
-    val color = item.action.elementType?.color() ?: MaterialTheme.colorScheme.primary
+    val color = resolveActionColor(item)
     ListItem(
         headlineContent = {
             Text(text = item.label, color = color)
@@ -361,7 +381,7 @@ private fun AvailableActionItem(
     onAdd: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val color = item.action.elementType?.color() ?: MaterialTheme.colorScheme.primary
+    val color = resolveActionColor(item)
     ListItem(
         modifier = modifier,
         headlineContent = {

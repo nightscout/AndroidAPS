@@ -10,6 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Watch
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.icons.IcQuickwizard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TimeRangePicker
@@ -84,7 +91,9 @@ import app.aaps.core.ui.R as CoreR
  */
 @Composable
 fun QuickWizardEditor(
+    mode: QuickWizardMode,
     buttonText: String,
+    insulin: Double,
     carbs: Int,
     carbTime: Int,
     validFrom: Int,
@@ -107,8 +116,11 @@ fun QuickWizardEditor(
     showSuperBolusOption: Boolean,
     showWearOptions: Boolean,
     maxCarbs: Double,
+    maxInsulin: Double,
     rh: ResourceHelper,
+    onModeChange: (QuickWizardMode) -> Unit,
     onButtonTextChange: (String) -> Unit,
+    onInsulinChange: (Double) -> Unit,
     onCarbsChange: (Int) -> Unit,
     onCarbTimeChange: (Int) -> Unit,
     onValidFromChange: (Int) -> Unit,
@@ -144,27 +156,78 @@ fun QuickWizardEditor(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Carbs
-        NumberInputRow(
-            labelResId = CoreR.string.carbs,
-            value = carbs.toDouble(),
-            onValueChange = { onCarbsChange(it.toInt()) },
-            valueRange = 0.0..maxCarbs,
-            step = 1.0,
-            unitLabelResId = KeysR.string.units_grams,
-            modifier = Modifier.fillMaxWidth()
-        )
+        // Mode selector
+        @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            QuickWizardMode.entries.forEach { m ->
+                SegmentedButton(
+                    selected = mode == m,
+                    onClick = { onModeChange(m) },
+                    shape = SegmentedButtonDefaults.itemShape(index = m.ordinal, count = QuickWizardMode.entries.size),
+                    icon = {
+                        SegmentedButtonDefaults.Icon(active = mode == m) {
+                            Icon(
+                                imageVector = when (m) {
+                                    QuickWizardMode.WIZARD  -> IcQuickwizard
+                                    QuickWizardMode.INSULIN -> IcBolus
+                                    QuickWizardMode.CARBS   -> IcCarbs
+                                },
+                                contentDescription = null,
+                                modifier = Modifier.size(SegmentedButtonDefaults.IconSize)
+                            )
+                        }
+                    }
+                ) {
+                    Text(
+                        text = when (m) {
+                            QuickWizardMode.WIZARD  -> stringResource(R.string.quick_wizard_mode_wizard)
+                            QuickWizardMode.INSULIN -> stringResource(R.string.quick_wizard_mode_insulin)
+                            QuickWizardMode.CARBS   -> stringResource(R.string.quick_wizard_mode_carbs)
+                        }
+                    )
+                }
+            }
+        }
 
-        // Carb Time
-        NumberInputRow(
-            labelResId = R.string.carb_time,
-            value = carbTime.toDouble(),
-            onValueChange = { onCarbTimeChange(it.toInt()) },
-            valueRange = -60.0..60.0,
-            step = 5.0,
-            unitLabelResId = KeysR.string.units_min,
-            modifier = Modifier.fillMaxWidth()
-        )
+        // Insulin (INSULIN mode only)
+        if (mode == QuickWizardMode.INSULIN) {
+            NumberInputRow(
+                labelResId = CoreR.string.overview_insulin_label,
+                value = insulin,
+                onValueChange = onInsulinChange,
+                valueRange = 0.0..maxInsulin,
+                step = 0.05,
+                decimalPlaces = 2,
+                unitLabel = stringResource(CoreR.string.insulin_unit_shortname),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        // Carbs (WIZARD and CARBS modes)
+        if (mode != QuickWizardMode.INSULIN) {
+            NumberInputRow(
+                labelResId = CoreR.string.carbs,
+                value = carbs.toDouble(),
+                onValueChange = { onCarbsChange(it.toInt()) },
+                valueRange = 0.0..maxCarbs,
+                step = 1.0,
+                unitLabelResId = KeysR.string.units_grams,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        // Carb Time (WIZARD mode only)
+        if (mode == QuickWizardMode.WIZARD) {
+            NumberInputRow(
+                labelResId = R.string.carb_time,
+                value = carbTime.toDouble(),
+                onValueChange = { onCarbTimeChange(it.toInt()) },
+                valueRange = -60.0..60.0,
+                step = 5.0,
+                unitLabelResId = KeysR.string.units_min,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         // Valid Time Range
         TimeRangePicker(
@@ -176,6 +239,8 @@ fun QuickWizardEditor(
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Calculator Options (WIZARD mode only)
+        if (mode == QuickWizardMode.WIZARD) {
         HorizontalDivider()
 
         // Calculator Options Section
@@ -284,6 +349,8 @@ fun QuickWizardEditor(
             modifier = Modifier.fillMaxWidth()
         )
 
+        } // end WIZARD-only section
+
         // Device Selection (only if wear control enabled)
         if (showWearOptions) {
             HorizontalDivider()
@@ -308,7 +375,8 @@ fun QuickWizardEditor(
             )
         }
 
-        // Extended Carbs Section
+        // Extended Carbs Section (WIZARD and CARBS modes)
+        if (mode != QuickWizardMode.INSULIN) {
         HorizontalDivider()
         SwitchRow(
             label = stringResource(R.string.additional_ecarbs),
@@ -357,6 +425,7 @@ fun QuickWizardEditor(
                 )
             }
         }
+        } // end non-INSULIN section
     }
 }
 

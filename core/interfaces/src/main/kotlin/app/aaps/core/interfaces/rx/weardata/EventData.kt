@@ -396,7 +396,9 @@ sealed class EventData : Event() {
             val carbs: Int,
             val validFrom: Int,
             val validTo: Int,
-            val lastUsed: Long = 0L
+            val lastUsed: Long = 0L,
+            val mode: Int = 0,
+            val insulin: Double = 0.0
         ) : EventData()
     }
 
