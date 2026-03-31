@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Pentru a dezactiva serviciul SMS la distanta raspundeti cu: %1$s.\n\nRetineti ca o sa il puteti reactiva doar direct de pe smartphone-ul master AAPS.</string>
     <string name="smscommunicator_stopped_sms">Serviciul SMS la distanta s-a oprit. Pentru a il reactiva, utilizati AAPS de pe smartphone-ul master.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pentru a trimite calibrarea cu %1$.2f răspundeți cu codul %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolusul a eșuat. Verifică starea reală înainte de a trimite o altă comandă!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Numarul minim de minute care trebuie sa treaca intre un bolus la distanta si urmatorul</string>
     <string name="smscommunicator_remote_bolus_min_distance">Cate minute trebuie sa treaca, cel puţin, intre un bolus si următorul</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Pentru siguranta dumneavoastra, pentru a edita aceasta preferinta trebuie sa adaugati cel putin 2 numere de telefon.</string>
@@ -56,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">Pompă deconectată</string>
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remote_command_not_allowed">Comanda de la distanță nu este permisă</string>
+    <string name="smscommunicator_remote_command_not_possible">Comanda la distanță nu este posibilă</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus de la distanță nu este disponibil. Încearcă din nou mai târziu.</string>
     <string name="smscommunicator_basal_reply_with_code">Pentru a iniția bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Pentru a schimba profilul în %1$s %2$d%% trimiteți codul %3$s</string>
@@ -65,6 +67,8 @@
     <string name="smscommunicator_suspend_reply_with_code">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Pentru a reactiva bucla inchisa, raspundeti cu %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Pentru a dezactiva bucla inchisa, raspundeti cu %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">Pentru a reporni AAPS, răspundeți cu codul %1$s</string>
+    <string name="smscommunicator_restarting">AAPS repornește</string>
     <string name="smscommunicator_tempbasal_set">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
     <string name="smscommunicator_extended_set">Bolusul extins de %1$.2fU pentru %2$d min a fost inițiat</string>
     <string name="smscommunicator_carbs_set">%1$dg carbohidrați introduși cu succes</string>
@@ -127,6 +131,7 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definiți un profil care descrie nevoile dumneavoastră de insulină.</string>
     <string name="a11y_add_new_to_list">adăugare nouă la listă</string>
     <string name="do_you_want_switch_profile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
     <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
@@ -149,6 +154,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BZL</string>
+    <string name="isf_dynamic_label_warning">Algoritmul tău poate furniza un calcul dinamic al ISF. Valorile de mai jos sunt utilizate doar ca o rezervă în cazul în care lipsesc date</string>
+    <string name="ic_dynamic_label_warning">Algoritmul tău poate furniza un calcul dinamic al IC. Valorile de mai jos sunt utilizate doar ca o rezervă în cazul în care lipsesc date</string>
     <!-- Actions -->
     <string name="actions">Acțiuni</string>
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
@@ -157,6 +164,7 @@
     <string name="extended_bolus_button">Bolus extins</string>
     <string name="extended_bolus_cancel_button">Renunță la bolusul extins</string>
     <string name="tools">Instrumente</string>
+    <string name="site_rotation">Rotație loc</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">vârstă:</string>
@@ -185,7 +193,20 @@
     <string name="statuslights_bat_warning">Prag de avertizare nivel baterie [%]</string>
     <string name="statuslights_bat_critical">Prag critic nivel baterie [%]</string>
     <string name="statuslights_copy_ns">Copiați setările din NS</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 ore</string>
+    <string name="graph_long_scale_12h">12 ore</string>
+    <string name="graph_long_scale_18h">18 ore</string>
+    <string name="graph_long_scale_24h">24 de ore</string>
     <string name="a11y_graph">grafic</string>
+    <string name="a11y_graph_scale">alege scara graficului</string>
+    <string name="a11y_graph_scale_6h">scară grafică 6 ore</string>
+    <string name="a11y_graph_scale_12h">scară grafică 12 ore</string>
+    <string name="a11y_graph_scale_18h">scară grafică 18 ore</string>
+    <string name="a11y_graph_scale_24h">scară grafică 24 ore</string>
     <string name="a11y_insulin_label">insulină</string>
     <string name="chart_menu">Meniu diagramă</string>
     <string name="a11y_bg_quality">calitatea valorii glicemiei</string>
@@ -197,6 +218,8 @@
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="overview_buttons_selection">Butoane</string>
+    <string name="show_calibration_button_summary">Trimite o calibrare la xDrip+ (asigură-te că \'Acceptă calibrări este activat în xDrip+ în setările între aplicații).</string>
+    <string name="show_cgm_button_summary">Deschide aplicația xDrip+ sau Dexcom (poți folosi butonul înapoi pentru a te întoarce la AAPS).</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="change_your_input">Schimbați ceea ce ați introdus!</string>
@@ -217,6 +240,12 @@
     <string name="thirdcarbsincrement">Al treilea increment de carbohidrați</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Ținte-Temporare implicite</string>
+    <string name="eatingsoon_duration">Durată Mănânc în curând (minute)</string>
+    <string name="eatingsoon_target">Valoare țintă Mănânc în curând</string>
+    <string name="activity_duration">Durata activității (minute)</string>
+    <string name="activity_target">Valoare țintă activitate</string>
+    <string name="hypo_duration">Durată Hipoglicemie (minute)</string>
+    <string name="hypo_target">Valoare țintă Hipoglicemie</string>
     <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
@@ -244,11 +273,13 @@
     <string name="overview_show_deviation_slope">Panta deviaţiei</string>
     <string name="overview_show_activity">Activitate</string>
     <string name="overview_show_bgi">Impactul glicemiei</string>
+    <string name="overview_show_sensitivity">Modificare sensibilitate</string>
     <string name="overview_show_deviations">Deviații</string>
     <string name="overview_show_cob">Carbohidrați activi</string>
     <string name="overview_show_iob">Insulină activă</string>
     <string name="overview_show_basals">Bazale</string>
     <string name="overview_show_abs_insulin">Insulină totală</string>
+    <string name="overview_show_variable_sens">Sensibilitate variabilă</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">R_BAZ</string>
     <string name="deviation_shortname">DEV</string>
@@ -258,8 +289,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema originală</string>
     <string name="lowres_description">Skin de rezoluție redusă</string>
@@ -272,4 +306,6 @@
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
     <string name="overview_show_steps">Paşi</string>
+    <string name="steps_shortname">PAȘI</string>
+    <string name="simple_mode_enabled">Mod simplu activat</string>
 </resources>
