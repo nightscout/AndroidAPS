@@ -349,8 +349,9 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     }
 
     private fun pumpSettings(address: String, serialNumber: String) {
-        val profile = pumpSync.expectedPumpState().profile ?: return
-        commandQueue.customCommand(CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager), object : Callback() {
+        val profile = pumpSync.expectedPumpState().profile
+        val maxBasal = if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()
+        commandQueue.customCommand(CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {
