@@ -109,15 +109,6 @@ class DiaconnG8Pump @Inject constructor(
     val tempBasalRemainingMin: Int
         get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil.now()).mins().toInt(), 0)
 
-    fun temporaryBasalToString(): String {
-        if (!isTempBasalInProgress) return ""
-
-        val passedMin = ((min(dateUtil.now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
-        return tempBasalAbsoluteRate.toString() + "U/h @" +
-            dateUtil.timeString(tempBasalStart) +
-            " " + passedMin + "/" + T.msecs(tempBasalDuration).mins() + "'"
-    }
-
     fun fromTemporaryBasal(tbr: PumpSync.PumpState.TemporaryBasal?) {
         if (tbr == null) {
             tempBasalStart = 0
@@ -182,7 +173,7 @@ class DiaconnG8Pump @Inject constructor(
         get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
     val extendedBolusRemainingMinutes: Int
         get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
-    private val extendedBolusDurationInMinutes: Int
+    val extendedBolusDurationInMinutes: Int
         get() = T.msecs(extendedBolusDuration).mins().toInt()
 
     var extendedBolusAbsoluteRate: Double
@@ -190,15 +181,6 @@ class DiaconnG8Pump @Inject constructor(
         set(rate) {
             extendedBolusAmount = rate * extendedBolusDuration / T.hours(1).msecs()
         }
-
-    fun extendedBolusToString(): String {
-        if (!isExtendedInProgress) return ""
-        //return "E "+ decimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-        //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
-        return "E " + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-            dateUtil.timeString(extendedBolusStart) +
-            " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
-    }
 
     fun fromExtendedBolus(eb: PumpSync.PumpState.ExtendedBolus?) {
         if (eb == null) {

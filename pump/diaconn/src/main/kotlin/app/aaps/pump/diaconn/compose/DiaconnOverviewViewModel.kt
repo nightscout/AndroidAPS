@@ -10,13 +10,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.TB
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -52,6 +56,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 sealed class DiaconnOverviewEvent {
     data object StartPairWizard : DiaconnOverviewEvent()
@@ -74,6 +80,7 @@ class DiaconnOverviewViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val uel: UserEntryLogger,
     private val preferences: Preferences,
+    private val ch: ConcentrationHelper,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -168,6 +175,26 @@ class DiaconnOverviewViewModel @Inject constructor(
         lastBolusAmount = diaconnG8Pump.lastBolusAmount
     )
 
+    private fun temporaryBasalToString(): String {
+        val pump = diaconnG8Pump
+        if (!pump.isTempBasalInProgress) return ""
+
+        val passedMin = ((min(dateUtil.now(), pump.tempBasalStart + pump.tempBasalDuration) - pump.tempBasalStart) / 60.0 / 1000).roundToInt()
+        return ch.basalRateString(PumpRate(pump.tempBasalAbsoluteRate), true) +
+            dateUtil.timeString(pump.tempBasalStart) +
+            " " + passedMin + "/" + T.msecs(pump.tempBasalDuration).mins() + "'"
+    }
+
+    private fun extendedBolusToString(): String {
+        val pump = diaconnG8Pump
+        if (!pump.isExtendedInProgress) return ""
+        //return "E "+ decimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
+        return "E " + ch.basalRateString(PumpRate(pump.extendedBolusAbsoluteRate), true) +
+            dateUtil.timeString(pump.extendedBolusStart) +
+            " " + pump.extendedBolusPassedMinutes + "/" + pump.extendedBolusDurationInMinutes + "'"
+    }
+
     private fun buildUiState(
         lastConnectionTime: Long,
         reservoir: Double,
@@ -191,28 +218,27 @@ class DiaconnOverviewViewModel @Inject constructor(
         val lastBolus = if (lastBolusTime != null && lastBolusAmount != null) {
             val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 3_600_000.0
             if (agoHours < 6.0) {
-                dateUtil.timeString(lastBolusTime) + " " + dateUtil.sinceString(lastBolusTime, rh) + " " +
-                    rh.gs(app.aaps.core.ui.R.string.format_insulin_units, lastBolusAmount)
+                ch.insulinAmountAgoString(PumpInsulin(lastBolusAmount), dateUtil.sinceString(lastBolusTime, rh))
             } else null
         } else null
 
         // Daily units
-        val todayInsulinAmount = pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount
-        val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
+        val todayInsulinAmount = ch.fromPump(PumpInsulin(pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount))
+        val todayInsulinLimitAmount = ch.fromPump(PumpInsulin((pump.maxBasal * 24) + pump.maxBolusePerDay)).toInt()
 
         // Base basal rate
-        val baseBasalRate = pump.baseInjAmount.toString() + " / " +
-            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, activePump.baseBasalRate.cU)
+        val baseBasalRate = ch.basalRateString(PumpRate(pump.baseInjAmount), true) + " / " +
+            ch.basalRateString(activePump.baseBasalRate, true)
 
         // Temp basal / Extended bolus
-        val tempBasalText = pump.temporaryBasalToString()
-        val extendedBolusText = pump.extendedBolusToString()
+        val tempBasalText = temporaryBasalToString()
+        val extendedBolusText = extendedBolusToString()
 
         // Battery
         val batteryText = battery?.let { "${it}%" }
 
         // Reservoir
-        val reservoirText = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.systemRemainInsulin, 307)
+        val reservoirText = ch.insulinAmountString(PumpInsulin(pump.systemRemainInsulin)) // "/ 307 U" removed
 
         // Warn levels
         val lastConnectionLevel = if (lastConnectionTime != 0L) {
@@ -232,8 +258,8 @@ class DiaconnOverviewViewModel @Inject constructor(
         }
 
         val reservoirLevel = when {
-            pump.systemRemainInsulin <= 20.0 -> StatusLevel.CRITICAL
-            pump.systemRemainInsulin <= 50.0 -> StatusLevel.WARNING
+            ch.fromPump(PumpInsulin(pump.systemRemainInsulin)) <= 20.0 -> StatusLevel.CRITICAL
+            ch.fromPump(PumpInsulin(pump.systemRemainInsulin)) <= 50.0 -> StatusLevel.WARNING
             else                              -> StatusLevel.NORMAL
         }
 
@@ -272,7 +298,7 @@ class DiaconnOverviewViewModel @Inject constructor(
             add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), value = tempBasalText, visible = tempBasalText.isNotEmpty()))
             add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.extended_bolus_label), value = extendedBolusText, visible = extendedBolusText.isNotEmpty()))
             add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = reservoirText, level = reservoirLevel))
-            add(PumpInfoRow(label = rh.gs(R.string.basal_step) + " / " + rh.gs(R.string.bolus_step), value = "${pump.basalStep} / ${pump.bolusStep}"))
+            add(PumpInfoRow(label = rh.gs(R.string.basal_step) + " / " + rh.gs(R.string.bolus_step), value = "${ch.fromPump(PumpInsulin(pump.basalStep))} / ${ch.fromPump(PumpInsulin(pump.bolusStep))}"))
 
             // Firmware
             val firmware = rh.gs(R.string.diaconn_g8_pump) +
