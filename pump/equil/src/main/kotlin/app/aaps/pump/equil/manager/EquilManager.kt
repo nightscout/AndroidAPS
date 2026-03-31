@@ -263,6 +263,7 @@ class EquilManager @Inject constructor(
                 }
                 // constraint percent.
                 percent = min(percent, 100.0f)
+                rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
                 result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
             } else {
                 result.success = false
