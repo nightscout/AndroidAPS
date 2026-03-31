@@ -76,7 +76,7 @@
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Afișare nivel baterie raportat de OrangeLink/EmaLink/DiaLink</string>
-    <string name="riley_link_show_battery_level_summary">NU funcționează cu RileyLink original. Este posibil sa nu funcționeze nici cu versiuni alternative de RileyLink.</string>
+    <string name="riley_link_show_battery_level_summary">NU funcționează cu RileyLink original. Este posibil să nu funcționeze nici cu versiuni alternative de RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>
