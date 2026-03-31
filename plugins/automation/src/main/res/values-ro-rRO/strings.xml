@@ -81,9 +81,9 @@
     <string name="choose_from_map">Alegeți de pe hartă</string>
     <string name="location">Localizare</string>
     <string name="glucose_u">Glicemie [%1$s]:</string>
-    <string name="target_u">Tinta [%1$s]:</string>
+    <string name="target_u">Ținta [%1$s]:</string>
     <string name="lastboluslabel">Ultimul bolus</string>
-    <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s min</string>
+    <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s minut</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritm cardiac</string>
@@ -103,7 +103,7 @@
     <string name="triggerPumpBatteryLevelLabel">Nivel baterie pompă</string>
     <string name="triggerPumpBatteryLevelDesc">Nivel baterie pompă %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
-    <string name="distance_short">Dist [m]:</string>
+    <string name="distance_short">Distanță [m]:</string>
     <string name="recurringTime">Timp recurent</string>
     <string name="every">La fiecare</string>
     <string name="never">Niciodată</string>
