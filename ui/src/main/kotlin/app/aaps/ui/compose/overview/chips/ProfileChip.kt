@@ -31,7 +31,8 @@ fun ProfileChip(
     isModified: Boolean,
     progress: Float,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sceneManaged: Boolean = false
 ) {
     val containerColor = if (isModified) AapsTheme.generalColors.inProgress.copy(alpha = 0.2f) else Color.Transparent
     val contentColor = if (isModified) AapsTheme.generalColors.inProgress else MaterialTheme.colorScheme.onSurfaceVariant
@@ -61,6 +62,9 @@ fun ProfileChip(
                     color = contentColor,
                     modifier = Modifier.padding(start = AapsSpacing.medium)
                 )
+                if (sceneManaged) {
+                    SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
+                }
             }
             Box(
                 modifier = Modifier

@@ -38,6 +38,11 @@ data class ActiveSceneState(
         /** Profile time shift before activation (null if profile wasn't changed by scene) */
         val profileTimeShiftHours: Int? = null,
         /** Running mode before activation (null if loop mode wasn't changed by scene) */
-        val runningMode: RM.Mode? = null
+        val runningMode: RM.Mode? = null,
+        // Record IDs created by scene activation — used to detect manual overrides at revert time
+        /** ID of the TT record created by scene (null if scene didn't set TT) */
+        val sceneTtId: Long? = null,
+        /** ID of the RunningMode record created by scene (null if scene didn't change loop mode) */
+        val sceneRunningModeId: Long? = null
     )
 }

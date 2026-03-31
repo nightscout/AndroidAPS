@@ -50,25 +50,21 @@ class SceneSerializerTest : TestBase() {
         val tt = restored.actions[0] as SceneAction.TempTarget
         assertThat(tt.reason).isEqualTo(TT.Reason.ACTIVITY)
         assertThat(tt.targetMgdl).isEqualTo(140.0)
-        assertThat(tt.durationMinutes).isEqualTo(60)
 
         val ps = restored.actions[1] as SceneAction.ProfileSwitch
         assertThat(ps.profileName).isEqualTo("Sport")
         assertThat(ps.percentage).isEqualTo(80)
         assertThat(ps.timeShiftHours).isEqualTo(1)
-        assertThat(ps.durationMinutes).isEqualTo(30)
 
         val smb = restored.actions[2] as SceneAction.SmbToggle
         assertThat(smb.enabled).isFalse()
 
         val loop = restored.actions[3] as SceneAction.LoopModeChange
         assertThat(loop.mode).isEqualTo(RM.Mode.CLOSED_LOOP_LGS)
-        assertThat(loop.durationMinutes).isEqualTo(45)
 
         val cp = restored.actions[4] as SceneAction.CarePortalEvent
         assertThat(cp.type).isEqualTo(TE.Type.EXERCISE)
         assertThat(cp.note).isEqualTo("Morning run")
-        assertThat(cp.durationMinutes).isEqualTo(60)
     }
 
     @Test

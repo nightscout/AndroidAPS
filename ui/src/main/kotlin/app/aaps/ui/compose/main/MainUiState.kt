@@ -29,6 +29,8 @@ data class MainUiState(
     val showMaintenanceSheet: Boolean = false,
     // Profile state for top bar chip
     val profileName: String = "",
+    val rawProfileName: String = "", // Profile name without remaining time (for scene badge comparison)
+    val profilePercentage: Int = 100, // Current profile percentage (for scene badge comparison)
     val isProfileModified: Boolean = false,
     val profileProgress: Float = 0f, // 0-1 progress for temporary profile switch
     // TempTarget state for chip
@@ -36,10 +38,12 @@ data class MainUiState(
     val tempTargetState: TempTargetChipState = TempTargetChipState.None,
     val tempTargetProgress: Float = 0f, // 0-1 progress for active temp target
     val tempTargetReason: TT.Reason? = null, // TT reason for icon coloring
+    val tempTargetRecordId: Long = 0, // DB record ID (for scene override detection)
     // Running mode state for chip
     val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
     val runningModeText: String = "",
     val runningModeProgress: Float = 0f, // 0-1 progress for temporary modes
+    val runningModeRecordId: Long = 0, // DB record ID (for scene override detection)
     // Running TBR state for chip (HIGH / LOW / NONE)
     val tbrState: TbrState = TbrState.NONE,
     // QuickWizard entries for treatment bottom sheet

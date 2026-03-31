@@ -61,6 +61,14 @@ class ActiveSceneManager @Inject constructor(
     /** Get the current active state */
     fun getActiveState(): ActiveSceneState? = _activeSceneState.value
 
+    /** Update the prior state (called after scene activation to store record IDs) */
+    fun updatePriorState(priorState: ActiveSceneState.PriorState) {
+        val state = _activeSceneState.value ?: return
+        val updated = state.copy(priorState = priorState)
+        _activeSceneState.value = updated
+        persistActiveState(updated)
+    }
+
     private fun persistActiveState(state: ActiveSceneState) {
         val json = JSONObject().apply {
             put("sceneId", state.scene.id)
@@ -99,6 +107,8 @@ private fun ActiveSceneState.PriorState.toJson(): JSONObject = JSONObject().appl
     profilePercentage?.let { put("profilePercentage", it) }
     profileTimeShiftHours?.let { put("profileTimeShiftHours", it) }
     runningMode?.let { put("runningMode", it.name) }
+    sceneTtId?.let { put("sceneTtId", it) }
+    sceneRunningModeId?.let { put("sceneRunningModeId", it) }
 }
 
 private fun JSONObject.toPriorState(): ActiveSceneState.PriorState = ActiveSceneState.PriorState(
@@ -112,5 +122,7 @@ private fun JSONObject.toPriorState(): ActiveSceneState.PriorState = ActiveScene
         } catch (_: Exception) {
             null
         }
-    } else null
+    } else null,
+    sceneTtId = if (has("sceneTtId")) getLong("sceneTtId") else null,
+    sceneRunningModeId = if (has("sceneRunningModeId")) getLong("sceneRunningModeId") else null
 )

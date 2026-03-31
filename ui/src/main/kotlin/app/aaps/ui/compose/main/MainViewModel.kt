@@ -158,15 +158,19 @@ class MainViewModel @Inject constructor(
             showAuthFailedDialog = ev.showAuthFailedDialog,
             isProfileLoaded = chip.isProfileLoaded,
             profileName = chip.profileName,
+            rawProfileName = chip.rawProfileName,
+            profilePercentage = chip.profilePercentage,
             isProfileModified = chip.isProfileModified,
             profileProgress = chip.profileProgress,
             tempTargetText = chip.tempTargetText,
             tempTargetState = chip.tempTargetState,
             tempTargetProgress = chip.tempTargetProgress,
             tempTargetReason = chip.tempTargetReason,
+            tempTargetRecordId = chip.tempTargetRecordId,
             runningMode = chip.runningMode,
             runningModeText = chip.runningModeText,
             runningModeProgress = chip.runningModeProgress,
+            runningModeRecordId = chip.runningModeRecordId,
             tbrState = chip.tbrState,
             quickWizardItems = chip.quickWizardItems
         )
@@ -255,6 +259,8 @@ class MainViewModel @Inject constructor(
         return ChipState(
             isProfileLoaded = profileData?.isLoaded ?: false,
             profileName = profileText,
+            rawProfileName = profileData?.profileName ?: "",
+            profilePercentage = profileData?.percentage ?: 100,
             isProfileModified = profileData?.isModified ?: false,
             profileProgress = profileProgress,
             tempTargetText = ttText,
@@ -262,9 +268,11 @@ class MainViewModel @Inject constructor(
             else ttData?.state?.toChipState() ?: TempTargetChipState.None,
             tempTargetProgress = ttProgress,
             tempTargetReason = if (ttExpired) null else ttData?.reason,
+            tempTargetRecordId = if (ttExpired) 0 else ttData?.recordId ?: 0,
             runningMode = rmData?.mode ?: RM.Mode.DISABLED_LOOP,
             runningModeText = rmText,
             runningModeProgress = rmProgress,
+            runningModeRecordId = if (rmExpired) 0 else rmData?.recordId ?: 0,
             tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE,
             quickWizardItems = computeQuickWizardItems(rmData?.mode)
         )
@@ -761,15 +769,19 @@ private data class EventState(
 private data class ChipState(
     val isProfileLoaded: Boolean = false,
     val profileName: String = "",
+    val rawProfileName: String = "",
+    val profilePercentage: Int = 100,
     val isProfileModified: Boolean = false,
     val profileProgress: Float = 0f,
     val tempTargetText: String = "",
     val tempTargetState: TempTargetChipState = TempTargetChipState.None,
     val tempTargetProgress: Float = 0f,
     val tempTargetReason: TT.Reason? = null,
+    val tempTargetRecordId: Long = 0,
     val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
     val runningModeText: String = "",
     val runningModeProgress: Float = 0f,
+    val runningModeRecordId: Long = 0,
     val tbrState: TbrState = TbrState.NONE,
     val quickWizardItems: List<QuickWizardItem> = emptyList()
 )

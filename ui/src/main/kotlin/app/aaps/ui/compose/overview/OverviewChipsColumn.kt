@@ -37,14 +37,17 @@ fun OverviewChipsColumn(
     runningMode: RM.Mode,
     runningModeText: String,
     runningModeProgress: Float,
+    runningModeSceneManaged: Boolean = false,
     isSimpleMode: Boolean,
     profileName: String,
     isProfileModified: Boolean,
     profileProgress: Float,
+    profileSceneManaged: Boolean = false,
     tempTargetText: String,
     tempTargetState: TempTargetChipState,
     tempTargetProgress: Float,
     tempTargetReason: TT.Reason?,
+    tempTargetSceneManaged: Boolean = false,
     tbrState: TbrState,
     iobUiState: IobUiState,
     cobUiState: CobUiState,
@@ -71,14 +74,17 @@ fun OverviewChipsColumn(
                             runningMode = runningMode,
                             runningModeText = runningModeText,
                             runningModeProgress = runningModeProgress,
+                            runningModeSceneManaged = runningModeSceneManaged,
                             isSimpleMode = isSimpleMode,
                             profileName = profileName,
                             isProfileModified = isProfileModified,
                             profileProgress = profileProgress,
+                            profileSceneManaged = profileSceneManaged,
                             tempTargetText = tempTargetText,
                             tempTargetState = tempTargetState,
                             tempTargetProgress = tempTargetProgress,
                             tempTargetReason = tempTargetReason,
+                            tempTargetSceneManaged = tempTargetSceneManaged,
                             tbrState = tbrState,
                             onNavigate = onNavigate
                         )
@@ -94,14 +100,17 @@ fun OverviewChipsColumn(
                 runningMode = runningMode,
                 runningModeText = runningModeText,
                 runningModeProgress = runningModeProgress,
+                runningModeSceneManaged = runningModeSceneManaged,
                 isSimpleMode = isSimpleMode,
                 profileName = profileName,
                 isProfileModified = isProfileModified,
                 profileProgress = profileProgress,
+                profileSceneManaged = profileSceneManaged,
                 tempTargetText = tempTargetText,
                 tempTargetState = tempTargetState,
                 tempTargetProgress = tempTargetProgress,
                 tempTargetReason = tempTargetReason,
+                tempTargetSceneManaged = tempTargetSceneManaged,
                 tbrState = tbrState,
                 onNavigate = onNavigate
             )
@@ -118,14 +127,17 @@ private fun NarrowChips(
     runningMode: RM.Mode,
     runningModeText: String,
     runningModeProgress: Float,
+    runningModeSceneManaged: Boolean,
     isSimpleMode: Boolean,
     profileName: String,
     isProfileModified: Boolean,
     profileProgress: Float,
+    profileSceneManaged: Boolean,
     tempTargetText: String,
     tempTargetState: TempTargetChipState,
     tempTargetProgress: Float,
     tempTargetReason: TT.Reason?,
+    tempTargetSceneManaged: Boolean,
     tbrState: TbrState,
     onNavigate: (NavigationRequest) -> Unit
 ) {
@@ -136,6 +148,7 @@ private fun NarrowChips(
                 text = runningModeText,
                 progress = runningModeProgress,
                 modifier = Modifier.weight(1f),
+                sceneManaged = runningModeSceneManaged,
                 onClick = { onNavigate(NavigationRequest.Element(ElementType.RUNNING_MODE)) }
             )
             if (isSimpleMode) {
@@ -155,7 +168,8 @@ private fun NarrowChips(
             profileName = profileName,
             isModified = isProfileModified,
             progress = profileProgress,
-            onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) }
+            onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) },
+            sceneManaged = profileSceneManaged
         )
     }
     Row(
@@ -169,7 +183,8 @@ private fun NarrowChips(
                 progress = tempTargetProgress,
                 reason = tempTargetReason,
                 modifier = Modifier.weight(1f),
-                onClick = { onNavigate(NavigationRequest.Element(ElementType.TEMP_TARGET_MANAGEMENT)) }
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.TEMP_TARGET_MANAGEMENT)) },
+                sceneManaged = tempTargetSceneManaged
             )
         }
         TbrChip(

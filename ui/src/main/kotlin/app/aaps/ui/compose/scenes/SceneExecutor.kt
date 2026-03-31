@@ -77,12 +77,20 @@ class SceneExecutor @Inject constructor(
             actionResults.add(result)
         }
 
-        // Set active state
+        // Query record IDs of what we just created (for override detection at revert time)
+        val updatedPriorState = priorState.copy(
+            sceneTtId = if (scene.actions.any { it is SceneAction.TempTarget })
+                persistenceLayer.getTemporaryTargetActiveAt(now)?.id else null,
+            sceneRunningModeId = if (scene.actions.any { it is SceneAction.LoopModeChange })
+                persistenceLayer.getRunningModeActiveAt(now).id.takeIf { it > 0 } else null
+        )
+
+        // Set active state (with record IDs for override detection)
         val activeState = ActiveSceneState(
             scene = scene,
             activatedAt = now,
             durationMs = durationMs,
-            priorState = priorState
+            priorState = updatedPriorState
         )
         activeSceneManager.setActive(activeState)
 
@@ -337,53 +345,71 @@ class SceneExecutor @Inject constructor(
         return try {
             when (action) {
                 is SceneAction.TempTarget       -> {
-                    // Cancel the TT that was set by the scene
-                    persistenceLayer.cancelCurrentTemporaryTargetIfAny(
-                        timestamp = now,
-                        action = Action.CANCEL_TT,
-                        source = Sources.Scene,
-                        note = null,
-                        listValues = emptyList()
-                    )
+                    // Check if scene's TT is still active (not manually overridden)
+                    val currentTt = persistenceLayer.getTemporaryTargetActiveAt(now)
+                    if (priorState.sceneTtId != null && currentTt?.id == priorState.sceneTtId) {
+                        persistenceLayer.cancelCurrentTemporaryTargetIfAny(
+                            timestamp = now,
+                            action = Action.CANCEL_TT,
+                            source = Sources.Scene,
+                            note = null,
+                            listValues = emptyList()
+                        )
+                    } else {
+                        aapsLogger.info(LTag.UI, "Skipping TT revert — TT was changed during scene")
+                    }
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
                 is SceneAction.ProfileSwitch    -> {
-                    // Revert to prior profile if we have it
-                    val name = priorState.profileName
-                    val store = localProfileManager.profile
-                    if (name != null && store != null) {
-                        profileFunction.createProfileSwitch(
-                            profileStore = store,
-                            profileName = name,
-                            durationInMinutes = 0, // permanent (revert)
-                            percentage = priorState.profilePercentage ?: 100,
-                            timeShiftInHours = priorState.profileTimeShiftHours ?: 0,
-                            timestamp = now,
-                            action = Action.PROFILE_SWITCH,
-                            source = Sources.Scene,
-                            note = null,
-                            listValues = listOf(ValueWithUnit.SimpleString(name)),
-                            iCfg = insulin.iCfg
-                        )
+                    // Check if scene's profile is still active (compare name + percentage)
+                    val currentProfile = profileFunction.getProfile()
+                    val currentName = profileFunction.getProfileName()
+                    val sceneProfileName = action.profileName.ifEmpty { priorState.profileName ?: "" }
+                    val profileStillFromScene = currentName == sceneProfileName && currentProfile?.percentage == action.percentage
+
+                    if (profileStillFromScene) {
+                        val name = priorState.profileName
+                        val store = localProfileManager.profile
+                        if (name != null && store != null) {
+                            profileFunction.createProfileSwitch(
+                                profileStore = store,
+                                profileName = name,
+                                durationInMinutes = 0, // permanent (revert)
+                                percentage = priorState.profilePercentage ?: 100,
+                                timeShiftInHours = priorState.profileTimeShiftHours ?: 0,
+                                timestamp = now,
+                                action = Action.PROFILE_SWITCH,
+                                source = Sources.Scene,
+                                note = null,
+                                listValues = listOf(ValueWithUnit.SimpleString(name)),
+                                iCfg = insulin.iCfg
+                            )
+                        }
+                    } else {
+                        aapsLogger.info(LTag.UI, "Skipping profile revert — profile was changed during scene")
                     }
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
                 is SceneAction.SmbToggle        -> {
-                    // Revert SMB to prior state
                     priorState.smbEnabled?.let { preferences.put(BooleanKey.ApsUseSmb, it) }
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
                 is SceneAction.LoopModeChange   -> {
-                    // Cancel the running mode set by the scene
-                    persistenceLayer.cancelCurrentRunningMode(
-                        timestamp = now,
-                        action = Action.RUNNING_MODE,
-                        source = Sources.Scene,
-                        listValues = emptyList()
-                    )
+                    // Check if scene's running mode is still active (not manually overridden)
+                    val currentRm = persistenceLayer.getRunningModeActiveAt(now)
+                    if (priorState.sceneRunningModeId != null && currentRm.id == priorState.sceneRunningModeId) {
+                        persistenceLayer.cancelCurrentRunningMode(
+                            timestamp = now,
+                            action = Action.RUNNING_MODE,
+                            source = Sources.Scene,
+                            listValues = emptyList()
+                        )
+                    } else {
+                        aapsLogger.info(LTag.UI, "Skipping loop mode revert — mode was changed during scene")
+                    }
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
