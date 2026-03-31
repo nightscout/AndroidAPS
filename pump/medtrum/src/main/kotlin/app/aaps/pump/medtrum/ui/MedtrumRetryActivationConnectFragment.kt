@@ -36,7 +36,14 @@ class MedtrumRetryActivationConnectFragment : MedtrumBaseFragment<FragmentMedtru
                     if (patchStep.value != PatchStep.CANCEL) {
                         when (it) {
                             MedtrumViewModel.SetupStep.INITIAL   -> Unit // Nothing to do here
-                            MedtrumViewModel.SetupStep.FILLED    -> forceMoveStep(PatchStep.PRIME)
+                            MedtrumViewModel.SetupStep.FILLED    -> {
+                                aapsLogger.error(LTag.PUMP, "Pump reports FILLED during retry activation. Blocking re-prime to prevent insulin delivery into already-inserted patch.")
+                                OKDialog.show(requireActivity(), rh.gs(app.aaps.core.ui.R.string.error), rh.gs(R.string.retry_activation_filled_error)) {
+                                    viewModel?.apply {
+                                        moveStep(PatchStep.CANCEL)
+                                    }
+                                }
+                            }
                             MedtrumViewModel.SetupStep.PRIMING   -> forceMoveStep(PatchStep.PRIMING)
                             MedtrumViewModel.SetupStep.PRIMED    -> forceMoveStep(PatchStep.PRIME_COMPLETE)
                             MedtrumViewModel.SetupStep.ACTIVATED -> forceMoveStep(PatchStep.ACTIVATE_COMPLETE)
