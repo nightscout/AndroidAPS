@@ -10,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
@@ -40,6 +41,7 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
     @Inject lateinit var constraintsChecker: ConstraintsChecker
+    @Inject lateinit var hardLimits: HardLimits
 
     private var _binding: EquilPairBaseFragmentBinding? = null
     private var _progressIndicationBinding: EquilPairProgressBinding? = null
