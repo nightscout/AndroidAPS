@@ -15,7 +15,7 @@
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitorizare activitate</string>
+    <string name="activity_monitor">Monitor activitate</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
     <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
     <string name="statistics">Statistici</string>
@@ -68,7 +68,7 @@
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
-    <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
+    <string name="suspendloopfor10h">Suspendă bucla pentru 10h</string>
     <string name="disconnectpump">Deconectează pompa</string>
     <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
     <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
@@ -76,7 +76,7 @@
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
     <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
     <string name="resume">Restabilește</string>
-    <string name="reconnect">Reconectaţi pompa</string>
+    <string name="reconnect">Reconectați pompa</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 oră</string>
