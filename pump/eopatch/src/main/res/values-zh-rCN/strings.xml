@@ -7,9 +7,6 @@
     <string name="symbol_day">天</string>
     <string name="patch_finish">完成</string>
     <string name="symbol_days">天</string>
-    <string name="string_resume">恢复</string>
-    <string name="string_suspend">暂停</string>
-    <string name="string_suspended">挂起</string>
     <string name="string_running">正在运行</string>
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
@@ -19,4 +16,5 @@
     <string name="string_suspended_insulin_delivery_message">胰岛素输注已暂停.</string>
     <string name="finish">完成</string>
     <string name="next">下一个</string>
+    <!-- Permission rationales -->
 </resources>
