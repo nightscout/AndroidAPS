@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Pompayı takmak için hazırlayın</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Yapışkan bandı çıkarın ve ardından \'İleri\'ye dokunun.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Eğer iğne dışarı çıkmışsa, \'Çıkar\'a dokunun.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Pompa ıslak veya kirliyse ya da yapışkan bandı katlanmışsa, \'Çıkar\'a dokunun.</string>
     <string name="patch_remove_protection_tape">Pompayı takın</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">İnfüzyon bölgesini temizleyin ve kurulayın, ardından Pompayı cilde yapıştırın.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Güvenlik kontrolü…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Yaklaşık 30 saniye sürer.</string>
-    <string name="patch_safety_check_desc_2">[Caution] Güvenli kullanım için, güvenlik kontrolü tamamlanana kadar İğne hareket kolunu çıkarmayın!</string>
     <string name="patch_rotate_knob">İğneyi yerleştirme</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">İğneyi yerleştirmek için İğne hareket kolunu 100°\'den fazla çevirin ve ardından çıkarmak için tamamen döndürün</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Pompayı Değiştirme/Çıkarma</string>
     <string name="string_activate_patch">Pompa Etkinleştirme</string>
     <string name="string_discard_patch">Pompa Çıkarma</string>
-    <string name="string_resume">Devam et</string>
     <string name="discard">Çıkar</string>
     <string name="string_communication_check">Haberleşme kontrolü</string>
-    <string name="string_suspend">Askıya al</string>
-    <string name="string_suspended">Askıya Alındı</string>
     <string name="string_running">Çalışıyor</string>
     <string name="cancel">İptal</string>
     <string name="confirm">Onayla</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Değişiyor</string>
     <string name="string_in_progress">İşlem Sürüyor</string>
     <string name="retry">Tekrar dene</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] Bir sonraki talimata kadar iğne kapağını ve yapışkan arkalığı ÇIKARMAYIN.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Mevcut pompayı çıkarmak istediğinizden emin misiniz?</string>
     <string name="needle_insertion_error_1">İğne yerleştirme Hatası.</string>
     <string name="needle_insertion_error_2">Kolu çevirdikten sonra kalan deliğin yönünün düz olup olmadığını kontrol edin ve ardından \'Yeniden Dene\'ye dokunun.</string>
     <string name="needle_insertion_error_3">Pompayı devre dışı bırakmak için \'Çıkar\'a dokunun.</string>
     <string name="string_suspend_time_insulin_delivery_title">Bazal Askıya Alma Süresi</string>
     <string name="string_resume_insulin_delivery_title">İnsülin iletimini devam ettir</string>
-    <string name="string_resume_insulin_delivery_message">İnsülin askıya almanın sonu.\nİnsülin iletimini sürdürmek için \"Onayla\"ya dokunun.\n\n[Caution]\nİnsülin iletimi, \"Onayla\"ya dokunana kadar devam etmeyecek.\n\'Onayla\'ya dokunmazsanız, hiperglisemi gelişebilir.</string>
     <string name="string_suspended_insulin_delivery_message">İnsülin iletimi askıya alındı.</string>
     <string name="string_resumed_insulin_delivery_message">İnsülin iletimi yeniden başladı.</string>
     <string name="finish">Bitti</string>
     <string name="string_temp_basal_remained_hhmm">kalan süre: %1$s:%2$s</string>
     <string name="next">İleri</string>
-    <string name="string_pause_failed">Askıya alma başarısız oldu.</string>
     <string name="string_resume_failed">Devam başarısız oldu.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, aaaa hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
