@@ -25,4 +25,6 @@
     <string name="short_status_reservoir">Zás: %1$dU</string>
     <string name="short_status_battery">Bat: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpa není inicializována</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
