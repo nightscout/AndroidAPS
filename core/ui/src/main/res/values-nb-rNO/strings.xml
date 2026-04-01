@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Last opp BS-data til NS</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Hovedpassord</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
     <string name="confirm">Bekreft</string>
     <string name="pump">Pumpe</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">Overvåking av Bluetooth</string>
-    <string name="btwatchdog_summary">Restarter telefonens bluetooth i ett sekund hvis tilkobling til pumpen mislykkes. Dette hjelper på enkelte telefoner hvor bluetooth av og til stopper.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpens tid er oppdatert</string>
     <string name="exit">Avslutt</string>
@@ -113,7 +111,6 @@
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
     <string name="treatmentdeliveryerror">Det er registrert en feil med boluslevering. Sjekk manuelt om den er levert og hvor mye</string>
-    <string name="bolus_reminder">Bolus-påminnelse</string>
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpen er pauset</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">i målområdet</string>
     <string name="a11y_low">lavt</string>
     <string name="average">Gjennomsnitt</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<ingen>]]></string>
     <string name="remove_label">FJERN</string>
     <string name="activate_profile">Aktiver profil</string>
-    <string name="reset">tilbakestill</string>
     <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Velg hva som skal fjernes</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
-    <string name="wear_wizard_settings">Kalkulatorinnstillinger</string>
     <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -204,6 +198,7 @@
     <string name="duration">Varighet</string>
     <string name="reason">Årsak</string>
     <string name="nochangerequested">Ingen endring behøves</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">Eksponentielt vektet TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Dager</string>
     <string name="weight">Vekt</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basalverdi</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">KARBO %1$d g</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">Sensitivitet</string>
     <string name="isf_for_carbs">ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
     <string name="autosens_long">Autosens-verdi: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Algoritmens sensitivitet: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fil</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">Antall dager:</string>
     <string name="autotune_select_profile">Velg profil du vil justere</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
     <string name="urgent_alarm">Viktig varsel</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjonsbolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke boluskalkulatoren igjen når vi gir deg en påminnelse.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
-    <string name="partialboluswizard">Doser denne delen av resultatet fra boluskalkulatoren [%]</string>
-    <string name="partialboluswizard_reset_time">Terskel for gammel BS-verdi [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
@@ -558,7 +549,6 @@
     <string name="message">Melding</string>
     <string name="ok">OK</string>
     <string name="cancel">Avbryt</string>
-    <string name="dismiss">Avvis</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
     <string name="close">Lukk</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">Deaktivert</string>
     <string name="export_failed">Mislyktes</string>
     <string name="export_alert">Varsel</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Innstillinger eksportert</string>
     <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
     <string name="export_result_message_about_to_expire">Innstillinger eksportert: passord er i ferd med å utløpe snart. Eksporter manuelt og skriv inn passord på nytt.</string>
     <string name="export_result_message_expired">Eksport av innstillinger avbrutt: passord utløpt. Eksporter manuelt og skriv inn passord på nytt!</string>
     <string name="export_result_message_disabled">Advarsel (automatisering): Eksport av innstillinger er ikke aktivert!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Innstillinger for plugin</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Ikke steng appen min?</string>
     <string name="fabric_upload_disabled">Opplast av krasjlogger er deaktivert!</string>
@@ -644,4 +641,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dose</b>: %1$.2f E/t (%2$.2f%%) <br><b>Varighet</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS spiller av lyd"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
