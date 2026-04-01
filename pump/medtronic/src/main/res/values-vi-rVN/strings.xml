@@ -19,6 +19,8 @@
     <string name="medtronic_pump_battery_lithium">Pin lithium (xem mở rộng)</string>
     <string name="medtronic_pump_battery_nizn">Pin NiZn (xem mở rộng)</string>
     <string name="medtronic_pump_battery_nimh">Pin NiMH (xem mở rộng)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Pin RileyLink</string>
     <!-- MDT Errors -->
