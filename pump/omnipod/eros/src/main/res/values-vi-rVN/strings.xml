@@ -57,7 +57,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Thống kê RileyLink</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Đang chờ kết nối với RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Đặt lại cấu hình RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Đọc nhật ký Pulse</string>
     <string name="omnipod_eros_pod_management_button_reading_pulse_log">Đang đọc nhật ký Pulse…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Nhật ký Pulse</string>
