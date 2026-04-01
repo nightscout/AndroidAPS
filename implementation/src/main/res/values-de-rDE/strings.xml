@@ -17,4 +17,6 @@
     <string name="night_tir">Nacht TIR</string>
     <string name="carbs_short" comment="max 6 characters">KHs</string>
     <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
