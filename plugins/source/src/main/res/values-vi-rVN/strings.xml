@@ -39,4 +39,6 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Ứng dụng Sino</string>
     <string name="description_source_patched_sino_app">Nhận dữ liệu đường huyết từ ứng dụng Sino.</string>
+    <!-- Notification Reader -->
+    <!-- Permission rationales -->
 </resources>
