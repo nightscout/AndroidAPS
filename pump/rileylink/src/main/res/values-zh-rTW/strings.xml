@@ -9,6 +9,7 @@
     <string name="pump_status_timeout_comm">通訊逾時</string>
     <string name="pump_status_pump_unreachable">幫浦無法使用</string>
     <string name="pump_status_invalid_config">配置無效</string>
+    <string name="medtronic_pump_encoding_title">Medtronic 編碼</string>
     <string name="medtronic_pump_encoding_4b6b_local">軟體 4b6b 編碼</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">硬體 4b6b 編碼</string>
     <string name="medtronic_pump_frequency_us_ca">美國與加拿大（916 MHz）</string>
