@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Sammenkobling</string>
-    <string name="danars_no_device_available">Ingen enhet funnet foreløpig</string>
-    <string name="danars_pairingok">Sammenkobling OK</string>
     <string name="danars_pairingtimedout">Sammenkobling ble tidsavbrutt</string>
-    <string name="danars_waitingforpairing">Venter på sammenkobling med pumpen</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pumpeintegrasjon for DANA Diabecare RS og Dana-i-pumper</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">Pumpeintegrasjon for DANA Diabecare R pumper, koreansk versjon</string>
     <string name="description_pump_dana_r_v2">Pumpeintegrasjon for DANA Diabecare R pumper med oppgradert firmware</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Ingen bluetooth adapter funnet</string>
     <string name="devicenotfound">Fant ikke valgte enhet</string>
     <string name="danar_switchtouhmode">Bytt modus fra E/d til E/t på pumpe</string>
     <string name="danarkoreanpump">DanaR Koreansk</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Deaktiver EasyUI modus i pumpe</string>
     <string name="profile_set_failed">Innstilling av basalprofil mislyktes</string>
-    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Innstillinger for Danapumpe</string>
     <string name="time_format_12h">12t</string>
     <string name="time_format_24h">24t</string>
     <string name="option_on">På</string>
     <string name="option_off">Av</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth-enhet</string>
     <string name="danars_password_title">Pumpepassord (kun v1)</string>
     <string name="danar_password_title">Pumpepassord</string>
     <string name="danar_useextended_title">Bruk forlenget bolus for &gt;200%</string>
@@ -114,5 +108,4 @@
     <string name="num1pin">1: (12 tall)</string>
     <string name="num2pin">2: (8 tall)</string>
     <string name="basal_bolus_step">Basal/bolus trinn</string>
-    <string name="carbs_store_error">Karbohydrater ble antakelig ikke lagret riktig. Kontroller og lagre på nytt om nødvendig.</string>
 </resources>
