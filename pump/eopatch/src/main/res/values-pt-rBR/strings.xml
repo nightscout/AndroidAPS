@@ -44,11 +44,8 @@
     <string name="string_change_patch">Descartar/Mudar Patch</string>
     <string name="string_activate_patch">Pod ativo</string>
     <string name="string_discard_patch">Descartar Patch</string>
-    <string name="string_resume">Continuar</string>
     <string name="discard">Descartar</string>
     <string name="string_communication_check">Verificação de comunicação</string>
-    <string name="string_suspend">Suspender</string>
-    <string name="string_suspended">Suspenso</string>
     <string name="string_running">Funcionando</string>
     <string name="cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
@@ -57,10 +54,10 @@
     <string name="string_changing">Mudança</string>
     <string name="string_in_progress">Processando</string>
     <string name="retry">Tente novamente</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] NÃO remova o limite de agulha e o suporte para adesivo até as instruções.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Tem certeza de que deseja descartar este Patch?</string>
     <string name="needle_insertion_error_1">Erro de inserção de Agulha.</string>
     <string name="string_suspended_insulin_delivery_message">A administração da insulina está suspensa.</string>
     <string name="finish">Fim</string>
     <string name="next">Seguinte</string>
+    <!-- Permission rationales -->
 </resources>
