@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s 首选项</string>
-    <string name="nav_exit">退出</string>
     <string name="delta">增量</string>
     <string name="save">保存</string>
     <string name="wear">手表</string>
-    <string name="nav_about">关于</string>
     <string name="sensitivity_warning">如果要打开 Autosense功能, 记住输入所有吃的碳水化合物。否则碳水化合物的偏差将被识别为错误的灵敏度变化!!</string>
     <string name="invalid">无效</string>
-    <string name="gradually_increase_notification_volume">逐渐增加警报和通知的音量</string>
-    <string name="localalertsettings_title">本地警报</string>
-    <string name="enable_missed_bg_readings_alert">如果未收到血糖数据, 则发出警报</string>
-    <string name="enable_pump_unreachable_alert">如果无法连接泵, 则发出警报</string>
     <string name="pump_unreachable_threshold">泵无法连接的时间阈值[min]</string>
-    <string name="enable_carbs_req_alert">当需要碳水化合物时发出提醒</string>
-    <string name="open_navigation">打开导航栏</string>
     <string name="close_navigation">关闭导航栏</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
