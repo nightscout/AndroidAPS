@@ -240,6 +240,8 @@
     <string name="careportal_temporarytargetvalue">Valoare țintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire ţintă temporară</string>
     <string name="boluswizard">Asistent bolusare</string>
+    <string name="treatment_cgm_desc">Deschide aplicația senzorului de glicemie</string>
+    <string name="treatment_calibration_desc">Calibrează senzorul de glicemie</string>
     <string name="glucosetype_finger">Deget</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Manual</string>
@@ -285,7 +287,7 @@
     <string name="arrow_down">Jos</string>
     <string name="arrow_down_left">Jos stânga</string>
     <string name="arrow_left">Stânga</string>
-    <string name="arrow_up_left">Sus stînga</string>
+    <string name="arrow_up_left">Sus stânga</string>
     <string name="arrow_center">Centru</string>
     <!--    Command-->
     <string name="connectiontimedout">Conectare eșuată</string>
@@ -321,7 +323,7 @@
     <string name="uel_carbs">CARBOHIDRAȚI</string>
     <string name="uel_extended_carbs">CARBOHIDRAȚI EXTINȘI</string>
     <string name="uel_temp_basal">BAZALĂ TEMPORARĂ</string>
-    <string name="uel_tt">TINTA TEMPORARA</string>
+    <string name="uel_tt">ȚINTĂ TEMPORARĂ</string>
     <string name="uel_new_profile">PROFIL NOU</string>
     <string name="uel_clone_profile">CLONEAZĂ PROFILUL</string>
     <string name="uel_store_profile">PĂSTREAZĂ PROFILUL</string>
@@ -329,7 +331,7 @@
     <string name="uel_profile_switch_cloned">SCHIMBARE PROFIL CLONATĂ</string>
     <string name="uel_closed_loop_mode">MOD BUCLA ÎNCHISĂ</string>
     <string name="uel_lgs_loop_mode">MOD BUCLA SUSPENDARE LA HIPOGLICMIE</string>
-    <string name="uel_open_loop_mode">MOD BUCLA DESCHISA</string>
+    <string name="uel_open_loop_mode">MOD BUCLA DESCHISĂ</string>
     <string name="uel_loop_disabled">BUCLĂ DEZACTIVATĂ</string>
     <string name="uel_loop_resumed">BUCLĂ RELUATĂ</string>
     <string name="uel_pump_running">POMPĂ ÎN FUNCȚIUNE</string>
