@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Forbered på å plassere plasteret</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Fjern plasteret og trykk \'Neste\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Dersom en nål stikker ut, trykk på \'Forkast\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Hvis plasteret er vått, skittent eller plasteret er brettet, trykk \'Forkast\'.</string>
     <string name="patch_remove_protection_tape">Fester plasteret</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Desinfiser påføringsstedet og la det tørke før du fester plasteret til huden.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Sikkerhetssjekk…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Det tar omtrent 30 sekunder.</string>
-    <string name="patch_safety_check_desc_2">[Caution] For sikker bruk, ikke fjern kanylens utløsermekanisme før sikkerhetskontrollen er fullført!</string>
     <string name="patch_rotate_knob">Innføring av kanylen</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Drei utløsermekanismen mer enn 100 ° for å stikke inn kanylen inn, og fortsett rotasjonen for å frigjøre utløsermekanismen</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Kast/bytt patch</string>
     <string name="string_activate_patch">Aktiver Patch</string>
     <string name="string_discard_patch">Forkast Patch</string>
-    <string name="string_resume">Gjenoppta</string>
     <string name="discard">Forkast</string>
     <string name="string_communication_check">Kommunikasjonskontroll</string>
-    <string name="string_suspend">Pause</string>
-    <string name="string_suspended">Pauset</string>
     <string name="string_running">Kjører</string>
     <string name="cancel">Avbryt</string>
     <string name="confirm">Bekreft</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Endrer</string>
     <string name="string_in_progress">Behandler</string>
     <string name="retry">Prøv igjen</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] IKKE fjern kanylehetten og det selvklebende lokket før du får beskjed.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil forkaste plasteret?</string>
     <string name="needle_insertion_error_1">Feil ved innsetting av kanyle.</string>
     <string name="needle_insertion_error_2">Sjekk om hullet er rett når du dreier spaken, og trykk på «Prøv på nytt».</string>
     <string name="needle_insertion_error_3">Trykk på \'Discard\' for å deaktivere plasteret.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal pausetid</string>
     <string name="string_resume_insulin_delivery_title">Gjenoppta insulinlevering</string>
-    <string name="string_resume_insulin_delivery_message">Slutt på insulinpausen.\nTrykk på \"Bekreft\" for å gjenoppta insulinlevering.\n\n[Forsiktig]\nInsulinlevering vil ikke gjenopptas før du trykker \"Bekreft\".\nHvis du ikke trykker på \"Bekreft\", kan du utvikle hyperglykemi.</string>
     <string name="string_suspended_insulin_delivery_message">Insulinlevering er pauset.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinlevering er gjenopptatt.</string>
     <string name="finish">Fullfør</string>
     <string name="string_temp_basal_remained_hhmm">gjenstående tid: %1$s:%2$s</string>
     <string name="next">Neste</string>
-    <string name="string_pause_failed">Suspendering feilet.</string>
     <string name="string_resume_failed">Gjenopptakelse feilet.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy h:mm a</string>
+    <!-- Permission rationales -->
 </resources>
