@@ -97,6 +97,9 @@
     <string name="danar_password_title">幫浦密碼</string>
     <string name="danar_useextended_title">對於 &gt;200% 使用延長注射</string>
     <string name="bolusspeed">注射速度</string>
+    <string name="bolus_speed_12">12 秒/單位</string>
+    <string name="bolus_speed_30">30 秒/單位</string>
+    <string name="bolus_speed_60">60 秒/單位</string>
     <string name="selectedpump">選擇的幫浦</string>
     <string name="rs_loginsulinchange_title">紀錄儲液器更換</string>
     <string name="rs_loginsulinchange_summary">當在歷史紀錄中偵測到時，向 careportal 添加“胰島素更換”事件</string>
@@ -108,4 +111,21 @@
     <string name="num1pin">1:（12 位數字）</string>
     <string name="num2pin">2:（8 位數字）</string>
     <string name="basal_bolus_step">基礎速率/注射</string>
+    <string name="unpair">取消配對</string>
+    <string name="scanning_for_devices">正在掃描裝置…</string>
+    <string name="select_your_pump">請從下方清單選擇您的幫浦</string>
+    <string name="connecting_to_pump">正在連線至幫浦…</string>
+    <string name="pairing_successful">配對成功！</string>
+    <string name="pairing_successful_message">您的幫浦已連線並可開始使用。</string>
+    <string name="cancel_pairing_title">要取消配對嗎？</string>
+    <string name="cancel_pairing_message">將中止配對流程。</string>
+    <string name="done">完成</string>
+    <string name="open_bluetooth_settings">開啟藍牙設定</string>
+    <string name="enter_pump_password">輸入幫浦密碼</string>
+    <string name="select_paired_device">選擇已配對的裝置</string>
+    <string name="no_paired_devices">未找到已配對的 Dana 裝置。請先在 Android 藍牙設定中為您的幫浦進行配對。</string>
+    <string name="password_hint">4 位數密碼（0–9999）</string>
+    <string name="connecting_verifying">正在連線並驗證密碼…</string>
+    <string name="password_ok">密碼驗證成功！</string>
+    <string name="password_wrong">密碼錯誤。請返回更正。</string>
 </resources>
