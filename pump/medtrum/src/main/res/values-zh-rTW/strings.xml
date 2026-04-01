@@ -61,6 +61,7 @@
     <string name="discard">捨棄</string>
     <string name="step_prepare_patch">啟動貼片</string>
     <string name="step_prepare_patch_connect">連線並填充</string>
+    <string name="step_select_insulin">選擇胰島素</string>
     <string name="step_prime">灌注</string>
     <string name="step_priming">灌注中</string>
     <string name="step_priming_complete">灌注完成</string>
@@ -111,9 +112,18 @@
     <string name="sn_input_title">序列號</string>
     <string name="sn_input_summary">輸入幫浦底座的序列號。</string>
     <string name="sn_input_invalid">無效的序列號！</string>
+    <string name="change_sn">變更</string>
     <string name="pump_unsupported">幫浦未測試: %1$s！請通過 Discord 或 GitHub 聯繫我們以獲取支援</string>
     <string name="alarm_setting_title">警報設定</string>
     <string name="alarm_setting_summary">選擇您偏好的幫浦警報設定。</string>
+    <string name="alarm_setting_light_vibrate_beep">燈光、震動與嗶聲</string>
+    <string name="alarm_setting_light_vibrate">燈光與震動</string>
+    <string name="alarm_setting_light_beep">燈光與嗶聲</string>
+    <string name="alarm_setting_light">燈光</string>
+    <string name="alarm_setting_vibrate_beep">震動與嗶聲</string>
+    <string name="alarm_setting_vibrate">震動</string>
+    <string name="alarm_setting_beep">嗶聲</string>
+    <string name="alarm_setting_silent">靜音</string>
     <string name="pump_warning_notification_title">幫浦警告通知</string>
     <string name="pump_warning_notification_summary">在非關鍵幫浦警告時顯示通知：低電量、低儲存量（20 單位）和即將到期。建議在幫浦警報設置為靜音時保持啟用。</string>
     <string name="pump_warning_expiry_hour_title">幫浦到期警告 [小時]</string>
