@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="time_offset">Retardo</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Recordar ejecutar el bolo más tarde</string>
-    <string name="a11y_carb_reminder">establecer recordatorio</string>
     <!--    Widget-->
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
-    <string name="statistics">Estadísticas</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="invalid_age">Entrada de edad no válida</string>
     <string name="invalid_weight">Entrada de peso no válida</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
     <string name="age">Edad</string>
     <string name="weight_label">Peso</string>
-    <string name="most_common_profile">Perfil más común:</string>
-    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
     <string name="glucose_type">Tipo de glucosa</string>
     <string name="bg_other">Otro</string>
     <string name="bg_meter">Medidor de glucosa</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">La descripción del perfil del usuario se utiliza para mostrar los sitios más frecuentes disponibles para un hombre, una mujer o un niño.</string>
     <string name="site_management">Perfil de gestión del sitio</string>
     <string name="site_management_description">Aquí establecerá si desea gestionar la ubicación del sitio de la bomba, la del sensor (MCG) o ambos. Esta configuración se utilizará para enviar automáticamente el diálogo de administración del sitio en cada nueva entrada detectada</string>
-    <string name="select_site">Haga clic abajo para seleccionar la ubicación</string>
     <string name="record_site_change">Registrar ubicación del sitio</string>
     <string name="edit_site">Editar</string>
     <string name="record_site_location">Ubicación del sitio: %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Anotar cambio del cartucho de insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">No administrar bolo, sólo anotarlo</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Cambio de hora</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">glucosa en sangre actual</string>
     <string name="carb_time_label">Tiempo de absorción</string>
     <string name="a11y_set_carb_timer">establecer alarma de carbohidratos</string>
-    <string name="show_calculation">Mostrar cálculo</string>
     <!-- Treatments -->
     <string name="no_records_available">No hay registros disponibles</string>
     <string name="calculation_short">Cálculo</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">Comida</string>
     <string name="prime">Cebar</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
-    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
-    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Mostrar bucle</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
-    <string name="show_loop_records">Mostrar registros del bucle</string>
-    <string name="show_hide_records">Ocultar registros del bucle</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Perfil 1</string>
-    <string name="profile2">Perfil 2</string>
     <string name="profile_type">Tipo de perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Seleccionado:</string>
-    <string name="compare_profile">Comparar perfiles</string>
-    <string name="nav_profile_helper">Asistente de perfil</string>
     <string name="motol_default_profile">Perfil predeterminado</string>
     <string name="current_profile">Perfil actual</string>
     <string name="available_profile">Perfil disponible</string>
@@ -156,9 +140,12 @@
     <string name="widget_configuration">Configuración del Widget</string>
     <string name="until_changed">Hasta el cambio</string>
     <string name="limitations">Limitaciones</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>
         <item>Sólo negativo</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>
