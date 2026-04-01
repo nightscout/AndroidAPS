@@ -19,6 +19,15 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="search">Søk</string>
+    <string name="use_compose_main_screen">Bruk Compose hovedskjerm (eksperimentelt)</string>
+    <string name="switch_to_compose_ui">Bytt til Compose UI</string>
+    <string name="switch_to_classic_ui">Bytt til klassisk UI</string>
     <string name="select">Velg</string>
     <string name="set">Angi</string>
+    <string name="migrating_preferences">Migrerer innstillinger…</string>
+    <string name="initializing_plugins">Initialiserer plugins…</string>
+    <string name="initializing">Initialiserer…</string>
+    <string name="migrating_profile_switches">Migrerer profilbytter…</string>
+    <string name="migrating_effective_profile_switches">Migrerer effektive profilbytter…</string>
+    <string name="migrating_boluses">Migrerer boluser…</string>
 </resources>
