@@ -164,7 +164,6 @@
     <string name="autotune_update_local_profile_message">Atnaujinti %1$s profilį pagal Autotune profilį?</string>
     <string name="autotune_revert_local_profile_message">Atstatyti %1$s profilį į įkeltą profilį?</string>
     <string name="autotune_profile_invalid">Profilis negalioja</string>
-    <string name="not_available_full">Nepasiekiama</string>
     <string name="pump_disconnected">Pompa atjungta</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Pusė bazinio insulino fizinio krūvio metu</string>
