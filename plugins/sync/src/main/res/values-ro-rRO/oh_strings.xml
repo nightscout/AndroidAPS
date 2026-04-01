@@ -42,7 +42,7 @@
     <string name="nightscout_url">Adresa Nightscout</string>
     <string name="nightscout_api_secret">Nightscout API Secret</string>
     <string name="free_text_fields">Câmpuri de text liber</string>
-    <string name="agree">Înţeleg şi sunt de acord.</string>
+    <string name="agree">Înțeleg și sunt de acord.</string>
     <string name="login_open_humans">Conectare la Open Humans</string>
     <string name="final_touches">Retușuri finale</string>
     <string name="uploading_proceed">Mai aveți doar un pas până să încărcați datele în Open Humans. Vreți să continuați?</string>
