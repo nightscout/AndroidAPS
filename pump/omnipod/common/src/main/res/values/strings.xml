@@ -64,8 +64,10 @@
     <string name="omnipod_common_overview_firmware_version">Firmware Version</string>
     <string name="omnipod_common_overview_time_on_pod">Time on Pod</string>
     <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
+    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minutes)</string>
     <string name="omnipod_common_overview_reservoir_value">%1$.2f U left</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Over 50 U left</string>
+    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Over %1$s left</string>
     <string name="omnipod_common_overview_errors">Errors</string>
     <string name="omnipod_common_overview_last_bolus_value" translatable="false">%1$.2f %2$s (%3$s)</string>
     <string name="omnipod_common_uncertain">uncertain</string>
@@ -126,6 +128,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sound when delivery suspended notification enabled</string>
     <string name="omnipod_dash_use_bonding">Bond BT device on Android 15</string>
 
     <!-- Omnipod - Pod Status -->
