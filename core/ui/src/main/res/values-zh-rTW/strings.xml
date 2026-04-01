@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">將血糖資料上傳至 NS 伺服器</string>
     <string name="configbuilder_insulin">胰島素</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">主密碼</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">藍牙</string>
-    <string name="btwatchdog_title">藍牙看門狗</string>
-    <string name="btwatchdog_summary">如果無法連線幫浦，將關閉手機的藍牙一秒鐘。這可能有助於某些藍牙異常的手機。</string>
     <string name="virtualpump_resultok">確定</string>
     <string name="pump_time_updated">幫浦時間已更新</string>
     <string name="exit">退出</string>
@@ -113,7 +111,6 @@
     <string name="calibration">校正</string>
     <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
     <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
-    <string name="bolus_reminder">注射提醒</string>
     <string name="duration_label">持續時間</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">幫浦已暫停</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">在範圍內</string>
     <string name="a11y_low">低</string>
     <string name="average">平均</string>
-    <string name="tir">目標範圍內的時間占比(TIR)</string>
     <string name="none"><![CDATA[<無>]]></string>
     <string name="remove_label">移除</string>
     <string name="activate_profile">啟用設定檔</string>
-    <string name="reset">重置</string>
     <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
     <string name="profile">設定檔</string>
     <string name="select_for_removal">選擇移除</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
-    <string name="wear_wizard_settings">嚮導設定</string>
     <string name="bg_trend_label">15 分鐘趨勢</string>
     <string name="treatments_wizard_cob_label">COB 活性碳水</string>
     <string name="bolus_iob_label">注射 IOB</string>
@@ -204,6 +198,7 @@
     <string name="duration">持續時間</string>
     <string name="reason">原因</string>
     <string name="nochangerequested">未請求更改</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">無效的設定檔：%1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">指數加權每日總劑量</string>
     <string name="basalrate">基礎率</string>
     <string name="bolus">注射</string>
-    <string name="tdd">每日總劑量</string>
     <string name="ratio">比率</string>
     <string name="amount_days">天數</string>
     <string name="weight">權重</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">»%1$s« 超出硬限制範圍</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f 超出硬限制範圍</string>
     <string name="basal_value">基礎率值</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">注射 %1$.2f U</string>
     <string name="carbs_g">碳水化合物 %1$d g</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">敏感度</string>
     <string name="isf_for_carbs">計算機和碳水化合物吸收的 ISF：%1$.1f</string>
     <string name="autosens_long">自動靈敏值：%.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">演算法中的自動靈敏值：%.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">檔案</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">調整天數：</string>
     <string name="autotune_select_profile">選擇設定檔以調整</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">使用系統通知來提示警報和通知</string>
     <string name="urgent_alarm">緊急警報</string>
     <string name="info">資訊</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會紀錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
     <string name="cobvsiob">COB 對 IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 偵測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會導致給予過多的胰島素 (建議取消計算機中的COB後再重新計算)!!!!!</font>]]></string>
-    <string name="partialboluswizard">傳送一部分的注射嚮導結果 [%]</string>
-    <string name="partialboluswizard_reset_time">舊血糖時間門檻值 [分鐘]</string>
     <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
     <string name="bolus_recorded_only">僅紀錄注射（不由幫浦傳送）</string>
     <string name="advisoralarm">當到達用餐時間時提醒我</string>
@@ -558,7 +549,6 @@
     <string name="message">訊息</string>
     <string name="ok">確定</string>
     <string name="cancel">取消</string>
-    <string name="dismiss">關閉</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="close">關閉</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">停用</string>
     <string name="export_failed">失敗</string>
     <string name="export_alert">警報</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">設定已匯出</string>
     <string name="export_result_message_failed">設定匯出失敗!</string>
     <string name="export_result_message_about_to_expire">設定已匯出: 密碼即將過期。請手動匯出並（重新）輸入密碼。</string>
     <string name="export_result_message_expired">設定匯出已取消: 密碼已過期。請手動匯出並（重新）輸入!</string>
     <string name="export_result_message_disabled">警告（自動化）: 設定匯出未啟用!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description">將 %1$s 增加 %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">為了使藍牙發現能在新設備上運作，必須啟用位置。AAPS 不會追蹤您的位置，配對成功後可將其停用。</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">外掛偏好設定</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">缺少 SMS 權限</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">不要關閉我的應用程式？</string>
     <string name="fabric_upload_disabled">異常日誌上傳已停用！</string>
@@ -641,4 +638,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f U/h（%2$.2f%%）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS 播放音檔"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
