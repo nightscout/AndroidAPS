@@ -85,6 +85,7 @@
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Durată [min]</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
@@ -94,13 +95,26 @@
     <string name="action_fill_confirmation">Completare solicitată</string>
     <string name="action_ecarb_confirmation">Carbohidrați solicitați</string>
     <string name="action_profile_switch_confirmation">Schimbare profil solicitată</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Țintă [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Scăzut [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Ridicat [%s]</string>
     <string name="action_carbs">Carbohidrați</string>
     <string name="action_carbs_gram">Carbohidrați [g]</string>
     <string name="action_ecarbs">Carbohidrați extinși</string>
     <string name="action_percentage">Procentaj\n[%]</string>
     <string name="action_start_minutes">Start\n[minute]</string>
+    <string name="action_start_minutes_format">%1$d minute</string>
     <string name="action_duration_h">Durată [h]</string>
     <string name="action_duration_hours">Durată\n[ore]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Timp: %1$s</string>
+    <string name="ecarbs_confirm_duration">Durată: %1$d h</string>
+    <string name="action_confirm_reason">Motiv: %1$s</string>
+    <string name="action_confirm_duration">Durată: %1$s</string>
+    <string name="action_confirm_timeshift">Decalaj: %1$s</string>
     <string name="action_insulin">Insulină</string>
     <string name="action_insulin_units">Insulină [U]</string>
     <string name="action_preset_1">Presetare 1</string>
@@ -190,6 +204,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vechi</string>
     <string name="old_warning">!vechi!</string>
+    <string name="error">Eroare</string>
     <string name="pref_heartRateSampling">Ritm cardiac</string>
     <string name="pref_heartRateSmoothing">Uniformizare rată cardio (RC)</string>
     <string name="pref_stepsSampling">Activează numărătoare de pași</string>
@@ -221,6 +236,11 @@
     <string name="complication_iob_icon">Pictogramă IoB</string>
     <string name="complication_iob_detailed">IoB Detaliat</string>
     <string name="complication_uploader_phone_battery">Baterie Încărcător date/Telefon</string>
+    <string name="status_running_mode">Mod de rulare</string>
+    <string name="label_running_mode_title">AAPS(Mod de rulare)</string>
+    <string name="action_running_mode_selected">Mod de rulare solicitat</string>
+    <string name="title_activity_disconnect_pump">Deconectează pompa</string>
+    <string name="title_activity_suspend_loop">Suspendă bucla</string>
     <string name="wizard_total_insulin">Insulină totală</string>
     <string name="wizard_calculation">Calcul</string>
     <string name="wizard_carbs_format">%1$d g carbohidrați</string>
@@ -236,6 +256,7 @@
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Atingeți pentru a extinde detaliile calculului</string>
     <string name="wizard_confirmation_sent">Trimis</string>
     <string name="tile_settings">Setări panouri</string>
