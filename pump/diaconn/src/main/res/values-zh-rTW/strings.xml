@@ -133,4 +133,15 @@
     <string name="diaconn_g8_errorcode_36">在臨時基礎速率未運行時拒絕臨時基礎速率停止</string>
     <string name="diaconn_g8_cloudsend_summary">將幫浦日誌發送到 Diaconn 雲端。</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn 雲端同步</string>
+    <string name="bolus_speed_1">1 單位/分鐘</string>
+    <string name="bolus_speed_2">2 單位/分鐘</string>
+    <string name="bolus_speed_3">3 單位/分鐘</string>
+    <string name="bolus_speed_4">4 U/分鐘</string>
+    <string name="bolus_speed_5">5 U/分鐘</string>
+    <string name="bolus_speed_6">6 U/分鐘</string>
+    <string name="bolus_speed_7">7 U/分鐘</string>
+    <string name="bolus_speed_8">8 U/分鐘</string>
+    <string name="diaconn_g8_unpair">取消配對</string>
+    <string name="diaconn_pairing_successful">配對成功！</string>
+    <string name="diaconn_pairing_successful_message">您的幫浦已連線並可使用。</string>
 </resources>
