@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Vložte dizajn</string>
-    <string name="pref_default">Štandardný</string>
-    <string name="pref_quick_righty">Rýchlo vpravo</string>
-    <string name="pref_quick_lefty">Rýchlo vľavo</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Veľké čísla</string>
     <string name="pref_ring_history">História glykémií - kruh</string>
     <string name="pref_light_ring_history">História glykémií - svetlý kruh</string>
@@ -90,7 +85,6 @@
     <string name="menu_default">Štandardný</string>
     <string name="menu_menu">Ponuka</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Trvanie\n[minúty]</string>
     <string name="action_tempt_confirmation">Požadovaný dočasný cieľ</string>
     <string name="action_quick_wizard_confirmation">Požadovaný rýchly bolus</string>
     <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
@@ -100,9 +94,6 @@
     <string name="action_fill_confirmation">Požadované plnenie</string>
     <string name="action_ecarb_confirmation">Požadované sacharidy</string>
     <string name="action_profile_switch_confirmation">Požadované prepnutie profilu</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Cieľ\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nízka\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Vysoká\n[%s]</string>
     <string name="action_carbs">Sacharidy</string>
     <string name="action_carbs_gram">Sacharidy [g]</string>
     <string name="action_ecarbs">eSacharidy</string>
@@ -199,7 +190,6 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">starý</string>
     <string name="old_warning">!starý!</string>
-    <string name="error">!chyba!</string>
     <string name="pref_heartRateSampling">Tepová frekvencia</string>
     <string name="pref_heartRateSmoothing">Vyhladzovanie HR</string>
     <string name="pref_stepsSampling">Povoliť počítanie krokov</string>
@@ -231,14 +221,10 @@
     <string name="complication_iob_icon">Ikona IOB</string>
     <string name="complication_iob_detailed">Detailný IOB</string>
     <string name="complication_uploader_phone_battery">Batéria telefónu/uploadera</string>
-    <string name="status_loop_state">Stav uzavretého okruhu</string>
-    <string name="label_loop_state_title">AAPS (Stav uzavretého okruhu)</string>
-    <string name="action_loop_state_selected">Požadovaný stav uzavretého okruhu</string>
     <string name="wizard_total_insulin">Celkový inzulín</string>
     <string name="wizard_calculation">Výpočet</string>
     <string name="wizard_carbs_format">%1$d g sacharidov</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Potiahnite prstom doľava pre potvrdenie</string>
     <string name="wizard_result_bg">GL</string>
     <string name="wizard_result_bg_tt">GL (DC: %1$s)</string>
     <string name="wizard_result_trend">15min trend</string>
@@ -250,7 +236,6 @@
     <string name="wizard_result_total">Spolu</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Korekcia %1$d%%</string>
     <string name="expand_calculation_details">Kliknutím rozbalíte podrobnosti výpočtu</string>
     <string name="wizard_confirmation_sent">Odoslané</string>
     <string name="tile_settings">Nastavenie dlaždice</string>
