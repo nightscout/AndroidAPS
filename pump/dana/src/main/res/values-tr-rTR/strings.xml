@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Eşleştirme</string>
-    <string name="danars_no_device_available">Şu ana kadar hiçbir cihaz bulunamadı</string>
-    <string name="danars_pairingok">Eşleştirme tamam</string>
     <string name="danars_pairingtimedout">Eşleştirme zaman aşımı</string>
-    <string name="danars_waitingforpairing">Pompa ile eşleşme bekleniyor</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS ve Dana-i pompaları için pompa entegrasyonu</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">DANA Diabecare R yerli Kore pompaları için pompa entegrasyonu</string>
     <string name="description_pump_dana_r_v2">Güncellenmiş ürün yazılımlı DANA Diabecare R pompaları için pompa entegrasyonu</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Bluetooth bağdaştırıcısı bulunamadı</string>
     <string name="devicenotfound">Seçili aygıt bulunamadı</string>
     <string name="danar_switchtouhmode">Pompayı Ü/d\'den Ü/s\'te değiştirin</string>
     <string name="danarkoreanpump">DanaR Kore</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Pompada EasyUI modunu devre dışı bırak</string>
     <string name="profile_set_failed">Bazal profil ayarı başarısız oldu</string>
-    <string name="danar_bluetooth_status">Bluetooth durumu</string>
     <string name="firmware_label">Aygıt Yazılımı</string>
     <string name="danar_pump_settings">Dana pompa ayarları</string>
     <string name="time_format_12h">12sa</string>
     <string name="time_format_24h">24sa</string>
     <string name="option_on">Aç</string>
     <string name="option_off">Kapa</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth aygıtı</string>
     <string name="danars_password_title">Pompa şifresi (yalnızca v1)</string>
     <string name="danar_password_title">Pompa Şifresi</string>
     <string name="danar_useextended_title">&gt;200% için yayma bolus kullanın</string>
@@ -114,5 +108,4 @@
     <string name="num1pin">1: (12 basamak)</string>
     <string name="num2pin">2: (8 basamak)</string>
     <string name="basal_bolus_step">Bazal/bolus adımı</string>
-    <string name="carbs_store_error">Karbonhidratlar muhtemelen doğru şekilde kaydedilmemiştir. Manuel olarak kontrol edin ve gerekirse tekrar kaydedin.</string>
 </resources>
