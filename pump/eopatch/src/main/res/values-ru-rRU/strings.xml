@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Подготовьтесь к установке Patch\'а</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Удалите клеевую ленту и нажмите «Далее».</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Если торчит игла, нажмите \'Завершить пользование Patch\'ем\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Если Patch влажный или грязный, или загнута его клейкая лента, нажмите \'Завершить пользование Patch\'ем\'.</string>
     <string name="patch_remove_protection_tape">Установка Patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Очистите и просушите место применения, затем прикрепите Patch к коже.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Проверка безопасности…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Потребуется около 30 секунд.</string>
-    <string name="patch_safety_check_desc_2">[Caution] Не удаляйте рычаг действия Иглы до завершения проверки безопасности!</string>
     <string name="patch_rotate_knob">Введение иглы</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Поверните рычаг действия Иглы более чем на 100 градусов, чтобы вставить иглу, а затем поворачивайте рычаг дальше для ее снятия</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Завершить пользование Patch\'ем/Заменить Patch</string>
     <string name="string_activate_patch">Активировать Patch</string>
     <string name="string_discard_patch">Завершить пользование Patch\'ем</string>
-    <string name="string_resume">Возобновить</string>
     <string name="discard">Завершить пользование</string>
     <string name="string_communication_check">Проверка связи</string>
-    <string name="string_suspend">Останов</string>
-    <string name="string_suspended">Приостановлено</string>
     <string name="string_running">Выполняется</string>
     <string name="cancel">Отменить</string>
     <string name="confirm">Подтверждаю</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Замена</string>
     <string name="string_in_progress">Обработка</string>
     <string name="retry">Повторить попытку</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] НЕ удаляйте колпачок иглы и клеящийся слой до дальнейших инструкций.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Завершить пользование этим Patch\'ем?</string>
     <string name="needle_insertion_error_1">Ошибка ввода иглы.</string>
     <string name="needle_insertion_error_2">Убедитесь, что направление отверстия после поворота рычага осталось прямым, затем нажмите «Повтор».</string>
     <string name="needle_insertion_error_3">Нажмите \'Завершить пользование Patch\'ем\', чтобы деактивировать Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Время приостановки базала</string>
     <string name="string_resume_insulin_delivery_title">Возобновить подачу инсулина</string>
-    <string name="string_resume_insulin_delivery_message">Окончание приостановки подачи инсулина.\n Нажмите \'Подтвердить\', чтобы возобновить подачу.\n\n[Caution]\n Подача не возобновится, если не нажать \'Подтвердить\'.\n Если не нажать \'Подтвердить\', может развиться гипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Введение инсулина приостановлено.</string>
     <string name="string_resumed_insulin_delivery_message">Подача инсулина возобновлена.</string>
     <string name="finish">Завершить</string>
     <string name="string_temp_basal_remained_hhmm">оставшееся время: %1$s:%2$s</string>
     <string name="next">Далее</string>
-    <string name="string_pause_failed">Сбой приостановки.</string>
     <string name="string_resume_failed">Возобновление не состоялось.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, гггг чч:мм a</string>
+    <!-- Permission rationales -->
 </resources>
