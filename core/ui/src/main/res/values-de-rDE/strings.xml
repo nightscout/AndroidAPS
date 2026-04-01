@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Speichere BZ-Werte in Nightscout</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">N/A</string>
-    <string name="master_password">Master-Passwort</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Benutzereinträge nach Excel exportieren (csv)</string>
     <string name="confirm">Bestätigen</string>
     <string name="pump">Pumpe</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Deaktiviert Bluetooth kurzzeitig, falls keine Verbindung zur Pumpe besteht. Dies kann für Smartphones mit Verbindungsproblemen nützlich sein.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
     <string name="exit">Verlassen</string>
@@ -109,7 +107,6 @@
     <string name="bg_label">BZ</string>
     <string name="calibration">Kalibrierung</string>
     <string name="alarminxmin">Alarm in %1$d Min.</string>
-    <string name="bolus_reminder">Bolus-Erinnerung</string>
     <string name="duration_label">Dauer</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
@@ -131,18 +128,15 @@
     <string name="a11y_inrange">im Zielbereich</string>
     <string name="a11y_low">niedrig</string>
     <string name="average">Durchschnitt</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<nichts>]]></string>
     <string name="remove_label">ENTFERNEN</string>
     <string name="activate_profile">Aktiviere Profil</string>
-    <string name="reset">Zurücksetzen</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Zum Entfernen auswählen</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
-    <string name="wear_wizard_settings">Wizard-Einstellungen</string>
     <string name="bg_trend_label">15 min Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus-IOB</string>
@@ -185,6 +179,7 @@
     <string name="duration">Dauer</string>
     <string name="reason">Begründung</string>
     <string name="nochangerequested">Keine Anpassung benötigt</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
     <!--    Temptarget-->
@@ -250,7 +245,6 @@
     <string name="expweight">Exponentiell gewichtete TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Verhältnis</string>
     <string name="amount_days"># Tage</string>
     <string name="weight">Gewichtung</string>
@@ -367,6 +361,7 @@
     <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f ist außerhalb der fest programmierten Grenzen</string>
     <string name="basal_value">Basal-Wert</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f IE</string>
     <string name="carbs_g">KH %1$d g</string>
@@ -399,7 +394,6 @@
     <string name="autotune_tune_days">Anpassungstage :</string>
     <string name="autotune_select_profile">Wähle das Profil zum Anpassen aus</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
     <string name="urgent_alarm">Wichtiger Alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -407,8 +401,6 @@
     <string name="bolus_advisor_message">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
-    <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
-    <string name="partialboluswizard_reset_time">Schwellenwert für alte Glykämie [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
@@ -485,14 +477,18 @@
     <string name="message">Nachricht</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
-    <string name="dismiss">VERWERFEN</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="close">Schließen</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die importierten Einstellungen entschlüsselt.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
     <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
@@ -513,8 +509,10 @@
     <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Meine App nicht beenden?</string>
     <string name="fabric_upload_disabled">Absturzprotokolle hochladen deaktiviert!</string>
@@ -555,4 +553,10 @@
     <string name="format_insulin_units1">%1$.1f IE</string>
     <string name="format_insulin_units">%1$.2f IE</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
