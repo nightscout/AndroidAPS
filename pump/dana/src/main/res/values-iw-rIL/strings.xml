@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">מצמד</string>
-    <string name="danars_no_device_available">לא נמצאו מכשירים עד כה</string>
-    <string name="danars_pairingok">הצימוד הצליח</string>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
-    <string name="danars_waitingforpairing">מחכה לצימוד עם משאבה</string>
     <string name="danarspump">Dana-i / RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">חיבור משאבות DANA RS/i</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">חיבור משאבת DANA Diabecare R מהשוק הקוריאני</string>
     <string name="description_pump_dana_r_v2">חיבור משאבת DANA Diabecare R עם קושחה משודרגת</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">לא נמצא מתאם בלוטות\'</string>
     <string name="devicenotfound">ההתקן שנבחר לא נמצא</string>
     <string name="danar_switchtouhmode">שנה מצב מיח\' ליום ליח\' לשעה במשאבה</string>
     <string name="danarkoreanpump">DanaR קוריאנית</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">ביטול מצב EasyUI במשאבה</string>
     <string name="profile_set_failed">הגדרת פרופיל הבזאלי נכשל</string>
-    <string name="danar_bluetooth_status">מצב בלוטות\'</string>
     <string name="firmware_label">קושחה</string>
     <string name="danar_pump_settings">הגדרות משאבת Dana</string>
     <string name="time_format_12h">12 שעות</string>
     <string name="time_format_24h">24 שעות</string>
     <string name="option_on">מופעל</string>
     <string name="option_off">כבוי</string>
-    <string name="danar_bt_name_title">מכשיר בלוטות\' DanaR</string>
     <string name="danars_password_title">סיסמת משאבה (v1 בלבד)</string>
     <string name="danar_password_title">סיסמת משאבה</string>
     <string name="bolusspeed">מהירות בולוס</string>
@@ -113,5 +107,4 @@
     <string name="num1pin">1: (12 ספרות)</string>
     <string name="num2pin">2: (8 ספרות)</string>
     <string name="basal_bolus_step">צעד בזאלי\\בולוס</string>
-    <string name="carbs_store_error">הפחמימות כנראה שלא אוחסנו כיאות. נא לבדוק זאת ידנית ונסו שוב אם יש צורך.</string>
 </resources>
