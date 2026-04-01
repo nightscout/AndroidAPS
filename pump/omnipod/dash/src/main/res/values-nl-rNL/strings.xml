@@ -18,7 +18,6 @@
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Vul de nieuwe Pod met voldoende insuline voor 3 dagen.\n\nLuister of je twee piepjes hoort tijdens het vullen. Deze geven aan dat de minimum hoeveelheid van 80E is bereikt. Ook als je de twee piepjes hebt gehoord ga je verder met vullen totdat de vulspuit volledig leeg is.\n\nNa het vullen van de Pod druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> verwijder de beschermkap van de Pod naald nog niet.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Poging tot koppelen en voorvullen van de Pod.\n\nWanneer het initialisatieproces succesvol is voltooid, kunt u op <b>Volgende</b> drukken.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Geluid voor levering onderbroken notificatie ingeschakeld</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Verbinding maken met de pod mislukt</string>
     <string name="omnipod_dash_found_too_many_pods">Te veel pods gevonden voor activering</string>
