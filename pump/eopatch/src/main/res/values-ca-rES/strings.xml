@@ -7,9 +7,6 @@
     <string name="symbol_day">dia</string>
     <string name="patch_finish">Finalitzar</string>
     <string name="symbol_days">dies</string>
-    <string name="string_resume">Reprendre</string>
-    <string name="string_suspend">Suspendre</string>
-    <string name="string_suspended">En pausa</string>
     <string name="string_running">Funcionant</string>
     <string name="cancel">Cancel·lar</string>
     <string name="confirm">Confirmar</string>
@@ -18,4 +15,5 @@
     <string name="retry">Reintentar</string>
     <string name="finish">Finalitzar</string>
     <string name="next">Següent</string>
+    <!-- Permission rationales -->
 </resources>
