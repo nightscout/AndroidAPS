@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="unsupported_ns_version">Nepodržana verzija Nightscout-a</string>
     <!-- AAPSClient -->
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="ns_alarm_options">Opcije alarma</string>
     <string name="ns_alarms">Kreirajte obaveštenja od NS alarma</string>
     <string name="ns_announcements">Kreirajte obaveštenja od NS najava</string>
@@ -26,4 +34,5 @@
     <string name="wear_action_tempt_min_bg_error">Minimalni ŠUK izvan opsega!</string>
     <string name="wear_action_tempt_max_bg_error">MaksimalnI ŠUK izvan opsega!</string>
     <string name="units_short">J</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
