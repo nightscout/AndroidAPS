@@ -18,7 +18,6 @@
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod dostatkom inzulínu na 3 dni.\n\nČakajte na dve pípnutia z Podu v priebehu procesu plnenia. Tieto indikujú, že minimálne množstvo 85U bolo naplnené. Uistite sa, že striekačka je úplne vyprázdnená a to aj po vypočutí dvoch pípnutí.\n\nPo naplnení Podu, prosím, stlačte <b>Ďalšia</b>.\n\n<b>Poznámka:</b> zatiaľ nesnímajte kryt z ihly Podu.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Systém sa snaží spárovať s novým Podom a naplniť ho.\n\nAkonáhle bude inicializační proces úspešne dokončený, môžete stlačiť tlačítko <b>Ďalšia</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Zvuk oznámenia pri pozastavenom podávaní povolený</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Nepodarilo sa pripojiť k Podu</string>
     <string name="omnipod_dash_found_too_many_pods">Našlo sa príliš veľa Podov na aktiváciu</string>
