@@ -5,28 +5,23 @@
     <string name="setupwizard_finish">BEFEJEZ</string>
     <string name="display_settings">Megjelenítési beállítások</string>
     <string name="permission">Engedély</string>
-    <string name="need_location_permission">Az applikációnak helymeghatázozási engedélyre van szüksége a BT keresés és WiFi azonosítás használatához</string>
-    <string name="need_storage_permission">Az applikációnak tárhely hozzáférési engedélyre van szüksége, hogy napló fájlokat tárolhasson és hogy a beállításokat exportálni tudja</string>
-    <string name="need_whitelisting">%1$s igényli a megfelelő működéshez, hogy az akkumulátor optimalizálás ne vonatkozzon rá</string>
-    <string name="current_master_password">Jelenlegi mesterjelszó</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="status">Állapot:</string>
-    <string name="patient_name">Beteg neve</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <!--    ConfigBuilder-->
-    <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_loop">Loop</string>
     <!--ImportExport-->
-    <string name="import_setting">Beállítások importálása</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
     <string name="setting_imported">Beállítások importálva</string>
     <string name="old_master_password">Régi mesterjelszó</string>
     <string name="filenotfound">Fájl nem található</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="configbuilder_nightscoutversion_label">Nightscout verzió:</string>
     <!-- Maintenance -->
-    <!-- Custom Watchface -->
     <!-- Maintenance -->
     <string name="metadata_label_format">Fájlformátum</string>
     <string name="metadata_label_created_at">Létrehozva</string>
@@ -37,6 +32,7 @@
     <string name="metadata_label_encryption">Fájltitkosítás</string>
     <string name="metadata_format_new">Új titkosított formátom</string>
     <string name="metadata_format_other">Ismeretlen export formátum</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
