@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_exit">Kilép</string>
     <string name="wear">Wear</string>
-    <string name="open_navigation">Navigáció megnyitása</string>
     <string name="close_navigation">Navigáció bezárása</string>
     <string name="cannula">Kanül</string>
     <!-- WEAR OS-->
