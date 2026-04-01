@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">핸드폰 연결 사용하기</string>
     <string name="ns_wifi">WiFi 연결 사용하기</string>
-    <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">충전하는 중</string>
     <string name="ns_battery">배터리 사용</string>
     <string name="connection_settings_title">연결 설정</string>
-    <string name="ns_wifi_allowed_ssids">허가된 SSIDs(세미콜론으로 구분)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">로밍에서 연결 허용</string>
     <string name="ns_create_announcements_from_errors_title">에러 발생시 알림 생성</string>
     <string name="ns_create_announcements_from_carbs_req_title">\"필요 탄수화물 경고\"에서 알림 만들기</string>
@@ -17,13 +17,15 @@
     <string name="blocked_by_charging">충전 옵션에 의해 차단됨</string>
     <string name="blocked_by_connectivity">연결 옵션에 의해 차단됨</string>
     <string name="unsupported_ns_version">지원하지 않는 Nightscout 버전입니다</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT이 쓰기 권한이 없습니다. 잘못된 API secret인지 확인해보세요</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">재시작</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">즉시전송</string>
     <string name="queue">대기열:</string>
     <string name="status">상태:</string>
@@ -51,7 +53,6 @@
     <string name="ns_alarm_stale_data_value_label">누락 데이터 기준값 [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">위험 누락 데이터 기준값 [min]</string>
     <string name="ns_log_app_started_event">앱시작을 NS에 기록하기</string>
-    <string name="copy_existing_values">NS 설정(이 존재하는 경우) 복사하기?</string>
     <string name="ns_use_ws_title">웹 소켓에 연결하기</string>
     <string name="ns_use_ws_summary">활성화 수단: 더 빠른 업데이트, 경보 및 알림 수신 및 v1과 유사한 배터리 소모 증가. NS에 대한 다른 모든 업로딩은 v3 프로토콜을 사용해야 합니다.</string>
     <!-- Tidepool -->
@@ -137,4 +138,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">오늘</string>
     <string name="weighted">몸무게</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
