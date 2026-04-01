@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba trocado.</string>
@@ -57,4 +58,7 @@
     <string name="pref_show_ago">Mostrar Atrás</string>
     <string name="default_custom_watchface_comment">Watchface padrão, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
     <string name="wear_default_watchface">Watchface padrão</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>
