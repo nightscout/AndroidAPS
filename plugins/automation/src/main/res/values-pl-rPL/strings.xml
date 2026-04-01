@@ -146,4 +146,6 @@
     <string name="newSmbMode">Nowy tryb SMB:</string>
     <string name="on">WŁ</string>
     <string name="off">WYŁ</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>
