@@ -164,7 +164,6 @@
     <string name="autotune_update_local_profile_message">用自動調整檔案更新 %1$s 檔案？</string>
     <string name="autotune_revert_local_profile_message">用輸入檔案恢復 %1$s 檔案？</string>
     <string name="autotune_profile_invalid">無效的檔案</string>
-    <string name="not_available_full">無法使用</string>
     <string name="pump_disconnected">幫浦已中斷連線</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">半基礎運動目標</string>
