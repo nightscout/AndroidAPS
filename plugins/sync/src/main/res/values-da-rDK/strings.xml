@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Brug mobilforbindelse</string>
     <string name="ns_wifi">Brug Wi-Fi-forbindelse</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Under opladning</string>
     <string name="ns_battery">På batteri</string>
     <string name="connection_settings_title">Indstillinger for forbindelse</string>
-    <string name="ns_wifi_allowed_ssids">Tilladte SSID\'er (semikolon separeret)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Tillad forbindelse i roaming</string>
     <string name="ns_create_announcements_from_errors_title">Opret annonceringer fra fejl</string>
     <string name="ns_create_announcements_from_carbs_req_title">Opret meddelelser fra kulhydrat krævet advarsler</string>
@@ -17,13 +17,15 @@
     <string name="blocked_by_charging">Blokeret af opladningsmuligheder</string>
     <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
     <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT har ingen skrivetilladelse. Forkert API-secret?</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Genstart</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Afgiver nu</string>
     <string name="queue">Kø:</string>
     <string name="status">Status:</string>
@@ -51,7 +53,6 @@
     <string name="ns_alarm_stale_data_value_label">Forældet data grænse [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Akut forældet data grænse [min]</string>
     <string name="ns_log_app_started_event">Log app-start til NS</string>
-    <string name="copy_existing_values">Kopier NS-indstillinger (hvis de findes)?</string>
     <string name="ns_use_ws_title">Opret forbindelse til websockets</string>
     <string name="ns_use_ws_summary">Aktivering betyder: hurtigere opdateringer, modtagelse af alarmer og meddelelser og højere batteriforbrug svarende til v1. Alle andre uploadere til NS skal bruge v3-protokollen.</string>
     <!-- Tidepool -->
@@ -138,4 +139,5 @@
     <string name="tdd_line">%1$.2fIE %1$.0f%%</string>
     <string name="today">I dag</string>
     <string name="weighted">vægtet</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
