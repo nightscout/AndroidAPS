@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Använd mobilanslutning</string>
     <string name="ns_wifi">Använd WiFi-anslutning</string>
-    <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Vid laddning</string>
     <string name="ns_battery">På batteri</string>
     <string name="connection_settings_title">Anslutningsinställningar</string>
-    <string name="ns_wifi_allowed_ssids">Tillåtna nätverksnamn (separerade med semikolon)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Tillåt NS-data vid roaming</string>
     <string name="ns_create_announcements_from_errors_title">Skapa notiser vid fel</string>
     <string name="ns_create_announcements_from_carbs_req_title">Skapa aviseringar för KH-förslag</string>
@@ -17,13 +17,15 @@
     <string name="blocked_by_charging">Blockerad av laddningsinställningar</string>
     <string name="blocked_by_connectivity">Blockerad av anslutningsinställningar</string>
     <string name="unsupported_ns_version">Versionen av Nightscout stöds inte</string>
-    <string name="openaps_short">APS</string>
-    <string name="uploader_short">Upld batt</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NS Client kan inte uppdatera Nightscout. Fel API secret?</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Starta om</string>
-    <string name="ns_client_url_title">Nightscout-URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Synkronisera nu</string>
     <string name="queue">Kö:</string>
     <string name="status">Status:</string>
@@ -51,7 +53,6 @@
     <string name="ns_alarm_stale_data_value_label">Första varning efter [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Akut varning efter [min]</string>
     <string name="ns_log_app_started_event">Rapportera appstart till Nightscout</string>
-    <string name="copy_existing_values">Kopiera NS-inställningar (om det finns)?</string>
     <string name="ns_use_ws_title">Anslut till websockets</string>
     <string name="ns_use_ws_summary">Aktivering innebär: snabbare uppdateringar, mottagande av larm och meddelanden och högre batteriförbrukning liknande v1. OBS! Alla uppladdare till NS måste använda v3-protokollet.</string>
     <!-- Tidepool -->
@@ -138,4 +139,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Idag</string>
     <string name="weighted">viktad</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
