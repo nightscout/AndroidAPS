@@ -40,8 +40,8 @@
     <string name="glucosecomparedmgdl">Glicemie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicemie %1$s %2$.1f %3$s</string>
     <string name="notemptarget">Ținta temporară nu există</string>
-    <string name="temptargetcomparedmgdl">Tinta temporara %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">Tinta temporara %1$s %2$.1f %3$s</string>
+    <string name="temptargetcomparedmgdl">Ținta temporară %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Ținta temporară %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Sau</string>
@@ -65,9 +65,9 @@
     <string name="time_range">Interval de timp</string>
     <string name="timerange_value">Timpul este între %1$s și %2$s</string>
     <string name="between">Între </string>
-    <string name="delete_short">ȘTRG</string>
-    <string name="add_short">ADAU</string>
-    <string name="copy_short">COPI</string>
+    <string name="delete_short">ȘTERGE</string>
+    <string name="add_short">ADAUGĂ</string>
+    <string name="copy_short">COPIAZĂ</string>
     <string name="temptargetcompared">Țintă temporară %1$s</string>
     <string name="btdevicecompared">Conexiune Bluetooth cu dispozitivul %1$s %2$s</string>
     <string name="btdevice">Conexiune la dispozitivul Bluetooth </string>
