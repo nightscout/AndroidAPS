@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Pasiruoškite priklijuoti rezervuarą</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Nuimkite pleistro apsaugą ir paspauskite \'Toliau\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Jei adata kyšo, spauskite \'Išjungti\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Jei rezervuaras yra šlapias ar purvinas, arba pleistras susiraukšlėjęs, spauskite \'Išjungti\'.</string>
     <string name="patch_remove_protection_tape">Rezervuaro prijungimas</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Nuvalykite ir nudžiovinkite infuzijos vietą, tada priklijuokite rezervuarą prie odos.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Saugos patikra…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Tai trunka apie 30 sek.</string>
-    <string name="patch_safety_check_desc_2">[Caution] Saugos sumetimais nepašalinkite adatos įvedimo svirtelės, kol saugos patikra nebaigta!</string>
     <string name="patch_rotate_knob">Adatos įvedimas</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Norėdami įdurti adatą, pasukite adatos įvedimo svirtelę daugiau 100 °, po to pilnai pasukite ir pašalinkite ją</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Išjungti/Keisti rezervuarą</string>
     <string name="string_activate_patch">Aktyvuoti rezervuarą</string>
     <string name="string_discard_patch">Išjungti rezervuarą</string>
-    <string name="string_resume">Atnaujinti</string>
     <string name="discard">Išjungti</string>
     <string name="string_communication_check">Ryšio patikrinimas</string>
-    <string name="string_suspend">Sustabdyti</string>
-    <string name="string_suspended">Sustabdyta</string>
     <string name="string_running">Vykdoma</string>
     <string name="cancel">Atšaukti</string>
     <string name="confirm">Patvirtinti</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Keičiama</string>
     <string name="string_in_progress">Apdorojama</string>
     <string name="retry">Kartoti</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] Nenuimkite adatos dangtelio ir pleistro, kol nebus paprašyta.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Ar tikrai išjungti rezervuarą?</string>
     <string name="needle_insertion_error_1">Adatos įvedimo klaida.</string>
     <string name="needle_insertion_error_2">Įsitikinkite, kad skylė, likusi pasukus svirtelę, yra tiesi ir spauskite \'Kartoti\'.</string>
     <string name="needle_insertion_error_3">Norėdami deaktyvuoti rezervuarą spauskite \'Išjungti\'.</string>
     <string name="string_suspend_time_insulin_delivery_title">Bazės sustabdymo laikas</string>
     <string name="string_resume_insulin_delivery_title">Atnaujinti insulino tiekimą</string>
-    <string name="string_resume_insulin_delivery_message">Pompos sustabdymo pabaiga.\nNorėdami atnaujinti insulino tiekimą, spauskite \'Patvirtinti\'.\n\n[Caution]\nInsulino tiekimas nebus atnaujintas, kol nepaspausite \'Patvirtinti\'.\nNepaspaudus \'Patvirtinti\', gali kilti hiperglikemija.</string>
     <string name="string_suspended_insulin_delivery_message">Insulino tiekimas sustabdytas.</string>
     <string name="string_resumed_insulin_delivery_message">Insulino tiekimas atnaujintas.</string>
     <string name="finish">Užbaigti</string>
     <string name="string_temp_basal_remained_hhmm">liko laiko: %1$s:%2$s</string>
     <string name="next">Toliau</string>
-    <string name="string_pause_failed">Sustabdyti nepavyko.</string>
     <string name="string_resume_failed">Atnaujinti nepavyko.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
