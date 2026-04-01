@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Προετοιμασία για την τοποθέτηση του Patch</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Αφαιρέστε την αυτοκόλλητη ταινία και πατήστε \'Επόμενο\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Προσοχή1] Αν η βελόνα είναι εμφανής, πατήστε \'Απόρριψη\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Προσοχή2] Αν το Patch είναι υγρό ή βρώμικο, ή η κολλητική ταινία διπλώνεται, πατήστε \'Απόρριψη\'.</string>
     <string name="patch_remove_protection_tape">Επισύναψη του Patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Καθαρίστε και στεγνώστε το σημείο εφαρμογής, στη συνέχεια τοποθετήστε το Patch στο δέρμα.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Έλεγχος ασφαλείας…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Χρειάζονται περίπου 30 δευτερόλεπτα.</string>
-    <string name="patch_safety_check_desc_2">[Προσοχή] Για ασφαλή χρήση, μην αφαιρέσετε τον μοχλό δράσης της βελόνας μέχρι να ολοκληρωθεί ο έλεγχος ασφαλείας!</string>
     <string name="patch_rotate_knob">Εισαγωγή της βελόνας</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Περιστρέψτε τον μοχλό δράσης της βελόνας πάνω από 100 ° για να εισαγάγετε τη βελόνα και στη συνέχεια περιστρέψτε τον πλήρως για να τον αφαιρέσετε</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Απόρριψη/Αλλαγή Διόρθωσης</string>
     <string name="string_activate_patch">Ενεργοποίηση Patch</string>
     <string name="string_discard_patch">Απόρριψη Patch</string>
-    <string name="string_resume">Επαναφορά</string>
     <string name="discard">Απόρριψη</string>
     <string name="string_communication_check">Έλεγχος επικοινωνίας</string>
-    <string name="string_suspend">Αναστολή</string>
-    <string name="string_suspended">Σε αναστολή</string>
     <string name="string_running">Εκτελείτε</string>
     <string name="cancel">Ακύρωση</string>
     <string name="confirm">Επιβεβαίωση</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Αλλαγή</string>
     <string name="string_in_progress">Σε επεξεργασία</string>
     <string name="retry">Επανάληψη</string>
-    <string name="string_caution_not_remove_needle_cap">[Προσοχή] ΜΗΝ αφαιρέσετε το καπάκι της βελόνας και την αυτοκόλλητη υποστήριξη μέχρι να λάβετε σχετικές οδηγίες.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Είστε βέβαιοι να απορρίψετε το τρέχον Patch;</string>
     <string name="needle_insertion_error_1">Σφάλμα εισαγωγής βελόνας.</string>
     <string name="needle_insertion_error_2">Ελέγξτε την κατεύθυνση της οπής αριστερά μετά την ευθεία στροφή του μοχλού και στη συνέχεια πατήστε \'Επανάληψη\'.</string>
     <string name="needle_insertion_error_3">Πατήστε \'Απόρριψη\' για να απενεργοποιήσετε το Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Χρόνος Αναστολής Βασικού</string>
     <string name="string_resume_insulin_delivery_title">Συνέχιση χορήγησης ινσουλίνης</string>
-    <string name="string_resume_insulin_delivery_message">Τέλος αναστολής χορήγησης ινσουλίνης.\nΠατήστε \'Επιβεβαίωση\' για να συνεχίσει η χορήγηση ινσουλίνης.\n\n[Προσοχή]\nΗ χορήγηση ινσουλίνης δε θα συνεχίσει μέχρι να πατήσετε \'Επιβεβαίωση\'.\nΑν δεν πατήσετε \'Επιβεβαίωση\', μπορεί να πάθετε υπεργλυκαιμία.</string>
     <string name="string_suspended_insulin_delivery_message">Αναστολή χορήγησης ινσουλίνης.</string>
     <string name="string_resumed_insulin_delivery_message">Η χορήγηση ινσουλίνης συνεχίζεται.</string>
     <string name="finish">Τέλος</string>
     <string name="string_temp_basal_remained_hhmm">υπολειπόμενος χρόνος: %1$s:%2$s</string>
     <string name="next">Επόμενο</string>
-    <string name="string_pause_failed">Η αναστολή απέτυχε.</string>
     <string name="string_resume_failed">Η συνέχιση απέτυχε.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, μ MMM, εεεε ωω:λλ α</string>
+    <!-- Permission rationales -->
 </resources>
