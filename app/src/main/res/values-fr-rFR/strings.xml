@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">Préférences de %1$s</string>
-    <string name="nav_exit">Quitter</string>
     <string name="delta">Delta</string>
     <string name="save">Enregistrer</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">À propos</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tous les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées pour les changements de sensibilité !!</string>
     <string name="invalid">INVALIDE</string>
-    <string name="gradually_increase_notification_volume">Augmentation progressive du volume pour les alertes et les notifications</string>
-    <string name="localalertsettings_title">Alertes locales</string>
-    <string name="enable_missed_bg_readings_alert">Alerte pas nouvelle donnée glycémique</string>
-    <string name="enable_pump_unreachable_alert">Alerte si la pompe est hors de portée</string>
     <string name="pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée [min]</string>
-    <string name="enable_carbs_req_alert">Alerte si glucides requis</string>
-    <string name="open_navigation">Ouvrir navigation</string>
     <string name="close_navigation">Fermer navigation</string>
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
     <string name="search">Chercher</string>
-    <string name="simple_mode">Mode simple</string>
     <string name="select">Choisir</string>
     <string name="set">Appliquer</string>
 </resources>
