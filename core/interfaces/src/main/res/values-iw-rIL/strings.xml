@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <string name="bolus_delivering">מזריק %1$.2f יח\'</string>
     <string name="bolus_delivered_successfully">%1$.2f יח\' הוזרקו בהצלחה</string>
@@ -65,4 +66,7 @@
     <string name="default_custom_watchface_comment">ברירת המחדל של פני השעון, ניתן ללחוץ על כפתור ייצוא פני שעון כדי ליצור תבנית</string>
     <string name="wear_default_watchface">ברירת מחדל פני שעון</string>
     <string name="wear_more_watchfaces">עוד פני שעון</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>
