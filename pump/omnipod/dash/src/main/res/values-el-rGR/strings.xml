@@ -19,7 +19,6 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Γεμίστε ένα νέο Pod
         με αρκετή ινσουλίνη για 3 ημέρες.\n\nΑκούστε δύο μπιπ από το Pod κατά τη διάρκεια της πλήρωσης. Αυτά δείχνουν ότι έχει εισαχθεί η ελάχιστη ποσότητα 80U. Βεβαιωθείτε ότι αδειάσατε εντελώς τη γεμισμένη σύριγγα, ακόμα και μετά την ακοή των δύο μπιπ.\n\nΜετά την πλήρωση του Pod, παρακαλώ πατήστε <b>Επόμενο</b>.\n\n<b>Σημείωση:</b> μην αφαιρέσετε το καπάκι της βελόνας του Pod ακόμα.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Προσπάθεια σύζευξης με το νέο Pod και πλήρωσή του.\n\nΌταν ολοκληρωθεί επιτυχώς η διαδικασία αρχικοποίησης, μπορείτε να πατήσετε <b>Επόμενο</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Ήχος όταν ενεργοποιηθεί ειδοποίηση αναστολής παράδοσης</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Αποτυχία σύνδεσης με την pod</string>
     <string name="omnipod_dash_found_too_many_pods">Βρέθηκαν πολλά pods για ενεργοποίηση</string>
