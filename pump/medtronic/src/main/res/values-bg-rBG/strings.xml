@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding">Медтроник коодиране</string>
     <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
-    <string name="medtronic_custom_action_reset_rileylink">Изчисти RileyLink конфигурацията</string>
     <string name="medtronic_pump_battery_select">Тип батерия (напреднали)</string>
     <string name="medtronic_pump_battery_no">Не е избрано (общ)</string>
     <string name="medtronic_pump_battery_alkaline">Алкални</string>
