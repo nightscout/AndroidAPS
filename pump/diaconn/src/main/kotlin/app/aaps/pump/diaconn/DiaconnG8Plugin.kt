@@ -52,6 +52,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.compose.icons.IcPluginDiaconn
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
@@ -104,7 +105,7 @@ class DiaconnG8Plugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         }
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_diaconn_g8)
+        .icon(IcPluginDiaconn)
         .pluginName(R.string.diaconn_g8_pump)
         .shortName(R.string.diaconn_g8_pump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)

@@ -27,50 +27,6 @@ val IcPluginOmnipod: ImageVector by lazy {
         viewportWidth = 24f,
         viewportHeight = 24f
     ).apply {
-        // Couche avec opacité 0.4
-        path(
-            fill = SolidColor(Color.Black),
-            fillAlpha = 0.0f,
-            stroke = null,
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 1.0f,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 1.0f
-        ) {
-            // Tape
-            moveTo(14.081f, 3.615f)
-            horizontalLineTo(5.649f)
-            curveTo(3.212f, 3.608f, 1.207f, 5.582f, 1.2f, 8.019f)
-            verticalLineToRelative(7.939f)
-            curveToRelative(-0.007f, 2.437f, 1.967f, 4.422f, 4.404f, 4.427f)
-            horizontalLineToRelative(9.281f)
-            curveToRelative(4.408f, -0.311f, 7.826f, -4.193f, 7.913f, -8.34f)
-            curveTo(22.891f, 7.488f, 19.606f, 4.157f, 14.081f, 3.615f)
-            close()
-
-            moveTo(10.709f, 19.684f)
-            curveToRelative(-0.223f, -0.002f, -0.405f, -0.183f, -0.403f, -0.408f)
-            curveToRelative(0f, -0.225f, 0.182f, -0.407f, 0.405f, -0.407f)
-            curveToRelative(0.225f, 0.002f, 0.407f, 0.183f, 0.405f, 0.408f)
-            curveToRelative(0f, 0.225f, -0.182f, 0.406f, -0.407f, 0.406f)
-            close()
-
-            moveTo(10.747f, 5.255f)
-            curveToRelative(-0.223f, 0f, -0.405f, -0.183f, -0.405f, -0.408f)
-            curveToRelative(0.002f, -0.225f, 0.183f, -0.407f, 0.407f, -0.405f)
-            curveToRelative(0.225f, 0f, 0.405f, 0.183f, 0.405f, 0.408f)
-            curveToRelative(0f, 0.225f, -0.182f, 0.407f, -0.407f, 0.405f)
-            close()
-
-            moveTo(20.317f, 15.117f)
-            curveToRelative(-0.472f, -0.033f, -0.796f, -0.875f, -0.725f, -1.879f)
-            curveToRelative(0.073f, -1.005f, 0.512f, -1.792f, 0.984f, -1.758f)
-            lineToRelative(-0.163f, 1.763f)
-            lineToRelative(-0.096f, 1.874f)
-            close()
-        }
-
         // Pod
         path(
             fill = SolidColor(Color.Black),
