@@ -19,6 +19,8 @@
     <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
