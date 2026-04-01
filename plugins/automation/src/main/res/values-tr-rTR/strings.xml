@@ -141,4 +141,6 @@
     <string name="triggerStepsCountDesc">Her %1$s dakikadaki %2$s %3$.0f Adım sayısı</string>
     <string name="triggerStepsCountDropdownLabel">Ölçüm Süresi</string>
     <!--    SMB mode-->
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>
