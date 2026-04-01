@@ -35,11 +35,6 @@
     <string name="pref_3_hours">3 小时</string>
     <string name="pref_4_hours">4 小时</string>
     <string name="pref_5_hours">5 小时</string>
-    <string name="pref_input_design">输入计划</string>
-    <string name="pref_default">默认 </string>
-    <string name="pref_quick_righty">快速右对齐</string>
-    <string name="pref_quick_lefty">快速左对齐</string>
-    <string name="pref_modern_sparse">现代场景</string>
     <string name="pref_big_numbers">大数字</string>
     <string name="pref_ring_history">Ring 历史记录</string>
     <string name="pref_light_ring_history">Light Ring历史记录</string>
