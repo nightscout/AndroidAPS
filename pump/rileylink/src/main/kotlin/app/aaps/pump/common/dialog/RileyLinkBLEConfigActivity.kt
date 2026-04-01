@@ -91,7 +91,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
             val deviceName = view.findViewById<TextView>(R.id.riley_link_ble_config_scan_item_device_name)?.text.toString()
             preferences.put(RileyLinkStringPreferenceKey.MacAddress, bleAddress)
             preferences.put(RileyLinkStringKey.Name, deviceName)
-            val rileyLinkPump = activePlugin.activePump as RileyLinkPumpDevice
+            val rileyLinkPump = activePlugin.activePumpInternal as RileyLinkPumpDevice
             rileyLinkPump.rileyLinkService?.verifyConfiguration(true) // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
             rileyLinkPump.triggerPumpConfigurationChangedEvent()
             finish()

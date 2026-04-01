@@ -299,7 +299,7 @@ class ErosOverviewViewModel @Inject constructor(
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_set_time),
                 icon = Icons.Filled.Schedule,
-                enabled = !podStateManager.isSuspended && rlReady && queueEmpty,
+                enabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rlReady && queueEmpty,
                 visible = podStateManager.isPodRunning && (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5)) || commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class.java)),
                 onClick = { commandQueue.customCommand(CommandHandleTimeChange(true), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_set_time), true)) }
             )

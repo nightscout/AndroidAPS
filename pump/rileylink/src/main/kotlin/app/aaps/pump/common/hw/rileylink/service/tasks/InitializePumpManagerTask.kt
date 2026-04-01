@@ -38,7 +38,7 @@ class InitializePumpManagerTask @Inject constructor(
         } else lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: 0.0
 
         val rileyLinkCommunicationManager = pumpDevice?.rileyLinkService?.deviceCommunicationManager
-        if (activePlugin.activePump.manufacturer() === ManufacturerType.Medtronic) {
+        if (activePlugin.activePumpInternal.manufacturer() === ManufacturerType.Medtronic) {
             if (lastGoodFrequency > 0.0 && rileyLinkCommunicationManager?.isValidFrequency(lastGoodFrequency) == true) {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.RileyLinkReady)
                 aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to $lastGoodFrequency MHz")

@@ -14,9 +14,9 @@ open class ServiceTask(val activePlugin: ActivePlugin) : Runnable {
     fun postOp() {}
 
     val isRileyLinkDevice: Boolean
-        get() = activePlugin.activePump is RileyLinkPumpDevice
+        get() = activePlugin.activePumpInternal is RileyLinkPumpDevice
 
     val pumpDevice: RileyLinkPumpDevice?
-        get() = if (isRileyLinkDevice) activePlugin.activePump as RileyLinkPumpDevice else null
+        get() = if (isRileyLinkDevice) activePlugin.activePumpInternal as RileyLinkPumpDevice else null
 
 }

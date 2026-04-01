@@ -72,12 +72,12 @@ class RileyLinkStatusGeneralFragment : DaggerFragment() {
                 rileyLinkServiceData.versionCC110 ?: EMPTY
             )
         }
-        val rileyLinkPumpDevice = activePlugin.activePump as RileyLinkPumpDevice
+        val rileyLinkPumpDevice = activePlugin.activePumpInternal as RileyLinkPumpDevice
         val rileyLinkPumpInfo = rileyLinkPumpDevice.pumpInfo
         binding.deviceType.setText(targetDevice.resourceId)
         if (targetDevice == RileyLinkTargetDevice.MedtronicPump) {
             binding.connectedDeviceDetails.visibility = View.VISIBLE
-            binding.configuredDeviceModel.text = activePlugin.activePump.pumpDescription.pumpType.description
+            binding.configuredDeviceModel.text = activePlugin.activePumpInternal.pumpDescription.pumpType.description
             binding.connectedDeviceModel.text = rileyLinkPumpInfo.connectedDeviceModel
         } else binding.connectedDeviceDetails.visibility = View.GONE
         binding.serialNumber.text = rileyLinkPumpInfo.connectedDeviceSerialNumber
