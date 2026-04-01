@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Качвай данните за КЗ в NS</string>
     <string name="configbuilder_insulin">Инсулин (ед.):</string>
     <string name="value_unavailable_short">---</string>
-    <string name="master_password">Главна парола</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Експортиране на потребителски данни към Excel (csv)</string>
     <string name="confirm">Потвърди</string>
     <string name="pump">Помпа</string>
@@ -78,8 +78,6 @@
     <string name="shortgram">гр.</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT ограничения</string>
-    <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="virtualpump_resultok">ОК</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="exit">Изход</string>
@@ -108,7 +106,6 @@
     <string name="bg_label">КЗ</string>
     <string name="calibration">Калибрация</string>
     <string name="alarminxmin">Аларма след %1$d мин</string>
-    <string name="bolus_reminder">Болус подсещане</string>
     <string name="duration_label">Продължителност</string>
     <string name="shortgramm">гр.</string>
     <string name="pumpsuspended">Помпата е спряна</string>
@@ -130,18 +127,15 @@
     <string name="a11y_inrange">в диапазон</string>
     <string name="a11y_low">ниска</string>
     <string name="average">Средно</string>
-    <string name="tir">Време в границите</string>
     <string name="none"><![CDATA[<празно>]]></string>
     <string name="remove_label">ИЗТРИИ</string>
     <string name="activate_profile">Активирай профила</string>
-    <string name="reset">нулиране</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
     <string name="select_for_removal">Изберете за премахване</string>
     <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
-    <string name="wear_wizard_settings">Настройки на съветник</string>
     <string name="bg_trend_label">Δ за 15мин</string>
     <string name="treatments_wizard_cob_label">СОВ</string>
     <string name="bolus_iob_label">IOB от болуси</string>
@@ -182,6 +176,7 @@
     <string name="duration">Срок</string>
     <string name="reason">Основание</string>
     <string name="nochangerequested">Не се изисква промяна</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Грешен профил: %1$s</string>
     <!--    Temptarget-->
@@ -247,7 +242,6 @@
     <string name="expweight">Експоненциално претеглена TDD</string>
     <string name="basalrate">Базал</string>
     <string name="bolus">Болус</string>
-    <string name="tdd">ОДД</string>
     <string name="ratio">Коефициент</string>
     <string name="amount_days"># дни</string>
     <string name="weight">Тегло</string>
@@ -364,6 +358,7 @@
     <string name="valueoutofrange">»Стойността %1$s е извън ограниченията</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f е извън ограниченията</string>
     <string name="basal_value">Базална стойност</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">БОЛУС %1$.2f Е</string>
     <string name="carbs_g">ВЪГЛЕХИДРАТИ %1$d гр</string>
@@ -396,7 +391,6 @@
     <string name="autotune_tune_days">Дни на настройка:</string>
     <string name="autotune_select_profile">Изберете профил за настройка</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
     <string name="urgent_alarm">Спешна аларма</string>
     <string name="info">ИНФО</string>
     <!-- BolusWizard -->
@@ -404,8 +398,6 @@
     <string name="bolus_advisor_message">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
     <string name="cobvsiob">COB срещу IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете пресметнатите данни. Активните въглехидрати могат да доведат до превишаване на дозите на инсулин !!!!!</font>]]></string>
-    <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
-    <string name="partialboluswizard_reset_time">Времеви праг на гликемията [min]</string>
     <string name="bolus_constraint_applied_warn">Приложено болус ограничение: %1$.2f Е към %2$.2f Е</string>
     <string name="bolus_recorded_only">Болусът ще бъде само записан (без да е доставен чрез помпата)</string>
     <string name="advisoralarm">Аларма, когато е време за хранене</string>
@@ -479,14 +471,18 @@
     <string name="message">Съобщение</string>
     <string name="ok">ОК</string>
     <string name="cancel">Откажи</string>
-    <string name="dismiss">Разбрах</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="close">Затвори</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">понижение %1$s с %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s с %2$s</string>
@@ -507,8 +503,10 @@
     <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Настройки на модул</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Качването на логове е изключено!</string>
@@ -547,4 +545,10 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2fЕ</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
