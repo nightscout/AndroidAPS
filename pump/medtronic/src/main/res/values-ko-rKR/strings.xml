@@ -19,6 +19,8 @@
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
     <string name="medtronic_pump_battery_nimh">니켈수소전지 (연장 뷰)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 배터리</string>
     <!-- MDT Errors -->
