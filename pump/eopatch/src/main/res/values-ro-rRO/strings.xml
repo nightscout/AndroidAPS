@@ -24,7 +24,7 @@
     <string name="time_1hr">1 oră</string>
     <string name="time_1hr_30min">1 oră şi 30 minute</string>
     <string name="time_2hr">2 ore</string>
-    <string name="patch_safe_deactivation_desc">Pentru a instala un nou Patch, cel curent trebuie aruncat. Toate eliberările de insulină din actualul Patch vor fi anulate.</string>
+    <string name="patch_safe_deactivation_desc">Pentru a instala un nou plasture, cel prezent trebuie îndepărtat. Administrarea de insulină din actualul plasture va fi anulată.</string>
     <string name="patch_discard_complete_title">Oprirea plasturelui este finalizată.</string>
     <string name="patch_discard_complete_desc">Plasturele a fost dezactivat.\nÎndepărtați plasturele.\nScoateți plasturele atașat corpului dumneavoastră.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">A fost livrat un bolus chiar acum. Sigur doriți să anulați livrarea insulinei și să îndepărtați plasturele?</string>
@@ -101,7 +101,7 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="retry">Încearcă din nou</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sunteți sigur că renunțați la plasturele curent?</string>
     <string name="needle_insertion_error_1">Eroare la inserarea acului.</string>
-    <string name="needle_insertion_error_2">Verificaţi că direcția orificiului rămas după ce rotiţi pârghia este dreaptă şi apoi apăsaţi \'Reîncearcă\'.</string>
+    <string name="needle_insertion_error_2">Verificați că direcția orificiului rămas după ce rotiți pârghia este dreaptă și apoi apăsați \'Reîncearcă\'.</string>
     <string name="needle_insertion_error_3">Atingeți \'Dezactivează\' pentru a dezactiva plasturele.</string>
     <string name="string_suspend_time_insulin_delivery_title">Timp de suspendare bazală</string>
     <string name="string_resume_insulin_delivery_title">Reia livrarea insulinei</string>
