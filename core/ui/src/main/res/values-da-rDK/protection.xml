@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Adgangskode og PIN-fastholdelse [s]</string>
     <string name="protection_timeout_summary">Tid før adgangskode eller PIN skal indtastes</string>
-    <string name="biometric">Biometrisk</string>
-    <string name="custom_password">Brugerdefineret adgangskode</string>
-    <string name="custom_pin">Brugerdefineret PIN</string>
-    <string name="noprotection">Ingen beskyttelse</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Usikkert Tilbagefald</string>
     <string name="unsecure_fallback_descriotion_biometric">For at være effektiv har biometrisk beskyttelse brug for en primær adgangskode i tilfælde af tilbagefald.\n\nAngiv venligst en primær adgangskode!</string>
     <string name="password_set">Adgangskode angivet!</string>
@@ -26,6 +23,4 @@
     <string name="password_not_changed">Adgangskode ikke ændret</string>
     <string name="pin_not_changed">PIN ikke ændret</string>
     <string name="pin_cleared">PIN fjernet!</string>
-    <string name="password_hint">Indtast adgangskode her</string>
-    <string name="pin_hint">Indtast PIN her</string>
 </resources>
