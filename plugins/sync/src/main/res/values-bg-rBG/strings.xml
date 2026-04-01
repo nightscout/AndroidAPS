@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Използвай мобилен интернет</string>
     <string name="ns_wifi">Използвай само WiFi</string>
-    <string name="ns_wifi_ssids">WiFi име</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Само при зареждане на телефона</string>
     <string name="ns_battery">На батерия</string>
     <string name="connection_settings_title">Настройки за свързване</string>
-    <string name="ns_wifi_allowed_ssids">Разрешени WiFi мрежи(разделени с запетая)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Позволи връзка в роуминг</string>
     <string name="ns_create_announcements_from_errors_title">Създаване на известие при грешки</string>
     <string name="ns_create_announcements_from_carbs_req_title">Създаване на известия при предупреждения за необходими въглехидрати</string>
@@ -17,13 +17,15 @@
     <string name="blocked_by_charging">Блокирано от настройки</string>
     <string name="blocked_by_connectivity">Блокирано от настйкиро</string>
     <string name="unsupported_ns_version">Несъвместима версия на Nightscout</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">КАЧВ</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSClient няма права за запис. Грешна API парола?</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
-    <string name="restart">Рестарт</string>
-    <string name="ns_client_url_title">Nightscout адрес</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Изпрати сега</string>
     <string name="queue">Опашка:</string>
     <string name="status">Статус:</string>
@@ -51,7 +53,6 @@
     <string name="ns_alarm_stale_data_value_label">Когато няма данни повече от [мин]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Много стари данни при повече от [мин]</string>
     <string name="ns_log_app_started_event">Записвай всяко стартиране на AndroidAPS в NS</string>
-    <string name="copy_existing_values">Копиране на профил от NS (ако има)?</string>
     <string name="ns_use_ws_title">Свържи се с websockets /протокола за връзка/</string>
     <string name="ns_use_ws_summary">Активирането означава: по-бързи актуализации, получаване на аларми и обявления и по-висока консумация на батерия, подобно на v1. Всички други програми за качване в NS трябва да използват v3 протокол.</string>
     <!-- Tidepool -->
@@ -137,4 +138,5 @@
     <string name="tdd_line">%1$.2fЕ %1$.0f%%</string>
     <string name="today">Днес</string>
     <string name="weighted">тегло</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
