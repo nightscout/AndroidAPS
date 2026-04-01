@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
     <string name="configbuilder_insulin">İnsülin</string>
     <string name="value_unavailable_short">yok</string>
-    <string name="master_password">Ana parola</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Kullanıcı Girişlerini Excel\'e Aktar (csv)</string>
     <string name="confirm">Onayla</string>
     <string name="pump">Pompa</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">gr</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Pompa ile herhangi bir bağlantı sorunu yaşanıyorsa, Akıllı telefonunuzda Bluetooth bağlantısını kapatıp açın. Bu bluetooth bağlantı sorununu giderecektir.</string>
     <string name="virtualpump_resultok">Tamam</string>
     <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="exit">Çıkış</string>
@@ -111,7 +109,6 @@
     <string name="calibration">Kalibrasyon</string>
     <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
     <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek iletilen insülin ve karbonhidrat miktarını manuel olarak kontrol edin</string>
-    <string name="bolus_reminder">Bolus hatırlatıcısı</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
     <string name="pumpsuspended">Pompa Durduruldu</string>
@@ -133,18 +130,15 @@
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
     <string name="average">Ortalama</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<yok>]]></string>
     <string name="remove_label">KALDIR</string>
     <string name="activate_profile">Profil etkinleştir</string>
-    <string name="reset">sıfırla</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Silmek için seçin</string>
     <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
     <string name="overview_treatment_label">Tedavi</string>
     <string name="copytolocalprofile">Bu profilden yeni profil oluşturulsun mu?</string>
-    <string name="wear_wizard_settings">Kurulum Sihirbazı Ayarları</string>
     <string name="bg_trend_label">15 dk eğilim</string>
     <string name="treatments_wizard_cob_label">AKRB</string>
     <string name="bolus_iob_label">Bolus AİNS</string>
@@ -195,6 +189,7 @@
     <string name="duration">Süre</string>
     <string name="reason">Sebep</string>
     <string name="nochangerequested">Değişiklik yapılmadı</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Geçersiz profil: %1$s</string>
     <!--    Temptarget-->
@@ -263,7 +258,6 @@
     <string name="expweight">Üstel Ağırlıklı GTD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">GTD</string>
     <string name="ratio">Oran</string>
     <string name="amount_days"># Gün</string>
     <string name="weight">Ağırlık</string>
@@ -382,6 +376,7 @@
     <string name="valueoutofrange">»%1$s« sınırların dışında</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f Ü</string>
     <string name="carbs_g">Karbonhidrat %1$d g</string>
@@ -410,7 +405,6 @@
     <string name="sensitivity">Duyarlılık</string>
     <string name="isf_for_carbs">Hesap makinesi ve Karb. emilimi için İDF: %1$.1f</string>
     <string name="autosens_long">Otoduyarlılık değeri: %.0f%%</string>
-    <string name="autosens_short">OD: %.0f%%</string>
     <string name="algorithm_long">Algoritmadaki otoduyarlılık: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">dosya</string>
@@ -420,7 +414,6 @@
     <string name="autotune_tune_days">Ayar günleri:</string>
     <string name="autotune_select_profile">Ayarlanacak profili seçin</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="urgent_alarm">Acil önemli Alarm</string>
     <string name="info">BİLGİ</string>
     <!-- BolusWizard -->
@@ -428,8 +421,6 @@
     <string name="bolus_advisor_message">Yüksek glisemiksiniz. Şimdi yemek yemek yerine daha iyi glisemi beklemeniz önerilir. Şimdi bir düzeltme bolusu yapmak ve yemek zamanı geldiğinde size hatırlatmak ister misiniz? Bu durumda karbonhidrat kaydı yapılmaz ve size hatırlattığımızda sihirbazı tekrar kullanmanız gerekir.</string>
     <string name="cobvsiob">AKRB vs AİNS</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%% si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (AKRB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
-    <string name="partialboluswizard">Bolus sihirbazı sonucunun bu kadarını ilet [%]</string>
-    <string name="partialboluswizard_reset_time">Eski KŞ süresi eşiği [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
     <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
@@ -506,7 +497,6 @@
     <string name="message">İleti</string>
     <string name="ok">Tamam</string>
     <string name="cancel">Vazgeç</string>
-    <string name="dismiss">REDDET</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="close">Kapat</string>
@@ -519,12 +509,17 @@
     <string name="export_disabled">Devre dışı</string>
     <string name="export_failed">Başarısız oldu</string>
     <string name="export_alert">UYARI</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Ayarlar dışa aktarıldı</string>
     <string name="export_result_message_failed">Ayarları dışa aktama BAŞARISIZ!</string>
     <string name="export_result_message_about_to_expire">Ayarlar dışa aktarıldı: parola yakında sona erecek. Manuel olarak dışa aktarın ve parolayı (tekrar) girin.</string>
     <string name="export_result_message_expired">Ayarların dışa aktarımı iptal edildi: parola süresi doldu. Manuel olarak dışa aktarın ve (tekrar) girin!</string>
     <string name="export_result_message_disabled">Uyarı (otomasyon): Ayarların dışa aktarılması etkin değil!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">%2$s\'dan %1$s\'a azalma</string>
     <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
@@ -545,8 +540,10 @@
     <string name="location_not_found_message">Bluetooth cihaz bulmanın daha yeni cihazlarda çalışması için konum etkinleştirilmelidir. AAPS konumunuzu izlemez ve eşleştirme başarılı olduktan sonra devre dışı bırakılabilir.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
     <string name="fabric_upload_disabled">Çökme günlükleri yükleme devre dışı bırakıldı!</string>
@@ -591,4 +588,10 @@
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f%% (%2$.2f Ü/s)<br><b>Süre</b>: %3$d dk<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/s (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
