@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding">Medronic kodavimas</string>
     <string name="medtronic_custom_action_wake_and_tune">Pažadinti ir nustatyti</string>
     <string name="medtronic_custom_action_clear_bolus_block">Išvalyti Boluso bloką</string>
-    <string name="medtronic_custom_action_reset_rileylink">Išvalyti RileyLink nustatymus</string>
     <string name="medtronic_pump_battery_select">Baterijos tipas (pagal galią)</string>
     <string name="medtronic_pump_battery_no">Nepasirinkta (paprastas vaizdas)</string>
     <string name="medtronic_pump_battery_alkaline">Šarminė (išplėstinis vaizdas)</string>
