@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <string name="bolus_delivering">Подается %1$.2fед</string>
     <string name="bolus_delivered_so_far">Введено %1$.2fед / %2$.2fед</string>
@@ -95,4 +96,7 @@
     <string name="temp_basal_percent_rate">%1$.2f % @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f ед/ч @%2$s %3$d/%4$d мин</string>
     <string name="forever">Навсегда</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>
