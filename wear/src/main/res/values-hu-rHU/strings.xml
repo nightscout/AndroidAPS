@@ -20,10 +20,6 @@
     <string name="pref_3_hours">3 óra</string>
     <string name="pref_4_hours">4 óra</string>
     <string name="pref_5_hours">5 óra</string>
-    <string name="pref_input_design">Bevitel elrendezése</string>
-    <string name="pref_default">Alapértelmezett</string>
-    <string name="pref_quick_righty">Gyorsan jobbra</string>
-    <string name="pref_quick_lefty">Gyorsan balra</string>
     <string name="pref_big_numbers">Nagy számok</string>
     <string name="pref_animations">Animációk</string>
     <string name="pref_version">Verzió:</string>
