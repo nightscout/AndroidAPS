@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding">메드트로닉 인코딩</string>
     <string name="medtronic_custom_action_wake_and_tune">켜기 및 튜닝</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus 블록 삭제</string>
-    <string name="medtronic_custom_action_reset_rileylink">RileyLink 구성 재설정</string>
     <string name="medtronic_pump_battery_select">배터리 타입(파워뷰)</string>
     <string name="medtronic_pump_battery_no">선택되지 않음(심플뷰)</string>
     <string name="medtronic_pump_battery_alkaline">알카라인(확장뷰)</string>
