@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Připravte se na připojení pumpy</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Odstraňte lepicí pásku a klepněte na \"Další\".</string>
-    <string name="patch_remove_needle_cap_desc_2">[Pozor 1] Pokud se jehla vyklopí, klepněte na \'Zahodit\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Pokud je pumpa mokrá nebo špinavá, nebo je jeho lepicí páska přeložená, klepněte na \"Zahodit\".</string>
     <string name="patch_remove_protection_tape">Připojení pumpy</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Vyčistěte a vysušte místo aplikace a pak přilepte pumpu ke kůži.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Kontrola bezpečnosti…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Zabere to asi 30 vteřin.</string>
-    <string name="patch_safety_check_desc_2">[Pozor] Pro bezpečné používání neodstraňte páku pro zasunutí jehly, dokud není dokončena bezpečnostní kontrola!</string>
     <string name="patch_rotate_knob">Vkládání jehly</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Otočte páku jehly o více než 100 ° pro vložení a pak ji úplně otočte, aby byla odstraněna</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Zahodit/vyměnit pumpu</string>
     <string name="string_activate_patch">Aktivovat pumpu</string>
     <string name="string_discard_patch">Zahodit pumpu</string>
-    <string name="string_resume">Uvolnit</string>
     <string name="discard">Zahodit</string>
     <string name="string_communication_check">Kontrola komunikace</string>
-    <string name="string_suspend">Vypnutí</string>
-    <string name="string_suspended">Pozastaveno</string>
     <string name="string_running">Běží</string>
     <string name="cancel">Zrušit</string>
     <string name="confirm">Potvrdit</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Měním</string>
     <string name="string_in_progress">Zpracovává se</string>
     <string name="retry">Opakovat</string>
-    <string name="string_caution_not_remove_needle_cap">[Pozor] Neodstraňujte kryt jehly a náplasť než budete požádáni.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Opravdu chcete zahodit pumpu?</string>
     <string name="needle_insertion_error_1">Chyba vložení jehly.</string>
     <string name="needle_insertion_error_2">Zkontroluj směr otvoru vlevo po otočení páky, že je rovný, a pak klepněte na \'Opakovat\'.</string>
     <string name="needle_insertion_error_3">Klepněte na \'Zahodit\' pro deaktivaci pumpy.</string>
     <string name="string_suspend_time_insulin_delivery_title">Čas pozastavení pumpy</string>
     <string name="string_resume_insulin_delivery_title">Obnovit výdej inzulínu</string>
-    <string name="string_resume_insulin_delivery_message">Konec pozastavení pumpy.\nKlepnutím na \'Potvrdit\' pokračujete v dodávce inzulínu.\n\n[Pozor]\nDodávání inzulínu nebude obnoveno, dokud neklepnete na \'Potvrdit\'.\nPokud neklepnete na \'Potvrdit\', můžete si přivodit hyperglykémii.</string>
     <string name="string_suspended_insulin_delivery_message">Výdej inzulínu je pozastaven.</string>
     <string name="string_resumed_insulin_delivery_message">Výdej inzulínu je pozastaven.</string>
     <string name="finish">Konec</string>
     <string name="string_temp_basal_remained_hhmm">zbývající čas: %1$s:%2$s</string>
     <string name="next">Další</string>
-    <string name="string_pause_failed">Pozastavení selhalo.</string>
     <string name="string_resume_failed">Obnovení se nezdařilo.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy HH:mm</string>
+    <!-- Permission rationales -->
 </resources>
