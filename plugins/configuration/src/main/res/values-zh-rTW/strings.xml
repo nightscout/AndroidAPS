@@ -59,6 +59,7 @@
     <string name="configbuilder_profile">檔案</string>
     <string name="configbuilder_aps_description">哪個APS算法應進行療法調整？</string>
     <string name="configbuilder_general_description">這些是一些您可能覺得有用的一般外掛。</string>
+    <string name="configbuilder_sync_description">資料上傳、同步與通訊外掛。</string>
     <string name="configbuilder_constraints_description">哪些約束條件應用？</string>
     <string name="configbuilder_loop_description">使用此功能啟用AAPS的循環集成。</string>
     <string name="configbuilder_insulin_description">您正在使用哪種類型的胰島素？</string>
