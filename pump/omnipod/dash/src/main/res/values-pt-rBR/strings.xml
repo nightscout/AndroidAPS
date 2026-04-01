@@ -18,7 +18,6 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Preencha um novo Pod
         com insulina suficiente para 3 dias.\n\nEscute dois beeps do Pod durante o processo de preenchimento. Eles indicam que a quantidade mínima de 80U foi inserida. Certifique-se de esvaziar completamente a seringa de preenchimento, mesmo depois de ouvir os dois beeps.\n\nDepois de preencher o Pod, por favor, pressione <b>Next</b>.\n\n<b>Nota:</b> não remova a tampa da agulha do Pod neste momento.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentando parear com o novo Pod e preenchê-lo.\n\nQuando o processo de inicialização for concluído com sucesso, pressione <b>Next</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Som quando ativar a notificação de suspensão da administração</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Falha de conexão ao pod</string>
     <string name="omnipod_dash_found_too_many_pods">Encontrados muitos pods para ativação</string>
