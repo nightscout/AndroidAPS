@@ -1,118 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- SMS Communicator & OTP Authenticator -->
-
-    <string name="smscommunicator">SMS Communicator</string>
-    <string name="smscommunicator_shortname">SMS</string>
-    <string name="description_sms_communicator">Remote control AAPS using SMS commands.</string>
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">from Authenticator app for: %1$s followed by PIN</string>
-    <string name="smscommunicator_otp_pin">Additional mandatory PIN at token end</string>
-    <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and glued at end of each generated One Time Password</string>
-    <string name="smscommunicator_tab_otp_label">Authenticator setup</string>
-    <string name="smscommunicator_code_verify_label">Code to check:</string>
-    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">The verification code consist of 6 digits displayed by Authenticator app (known as OTP) followed by 3 or more digits of mandatory PIN.</string>
-    <string name="smscommunicator_otp_reset_btn">Reset Authenticators</string>
-    <string name="smscommunicator_otp_reset_title">Reset Authenticator Key</string>
-    <string name="smscommunicator_otp_reset_prompt">Are you sure to reset Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
-    <string name="smscommunicator_otp_reset_successful">New Authenticator Key was generated! Please use updated QRCode to provision authenticators.</string>
-    <string name="smscommunicator_otp_export_title">Exporting OTP secret</string>
-    <string name="smscommunicator_otp_export_prompt">Are you sure you want to copy OTP secret to clipboard?\n\nYou may only need that if your authenticator app have issues scanning QRCode, you want to enter it manually or you want to configure hardware OTP token using dedicated app.</string>
-    <string name="smscommunicator_otp_export_successful">OTP secret (in Base32 format) exported and copied into clipboard. Paste it into authenticator or hardware OTP burner!</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AAPS OTP codes</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
-    <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
-    <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
-    <string name="smscommunicator_otp_verification_ok">OK</string>
-    <string name="smscommunicator_otp_verification_ivalid_size">INVALID SIZE!</string>
-    <string name="smscommunicator_otp_verification_wrong_pin">WRONG PIN</string>
-    <string name="smscommunicator_otp_verification_wrong_otp">WRONG OTP</string>
-    <string name="sms_wrong_code">Wrong code. Command cancelled.</string>
-    <string name="sms_timeout_while_waiting">Timeout while waiting for finish of previous pump communication</string>
-    <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
-    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolus_reply_with_code">To deliver bolus %1$.2fU reply with code %2$s</string>
-    <string name="smscommunicator_meal_bolus_reply_with_code">To deliver meal bolus %1$.2fU reply with code %2$s</string>
-    <string name="smscommunicator_temptarget_with_code">To set the Temp Target %1$s reply with code %2$s</string>
-    <string name="smscommunicator_temptarget_cancel">To cancel Temp Target reply with code %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">To disable the SMS Remote Service reply with code %1$s.\n\nKeep in mind that you\'ll able to reactivate it directly from the AAPS master smartphone only.</string>
-    <string name="smscommunicator_stopped_sms">SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.</string>
-    <string name="smscommunicator_calibration_reply_with_code">To send calibration %1$.2f reply with code %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus failed. Verify real state before sending another command!</string>
-    <string name="smscommunicator_remote_bolus_min_distance_summary">Minimum number of minutes that must elapse between one remote bolus and the next</string>
-    <string name="smscommunicator_remote_bolus_min_distance">How many minutes must elapse, at least, between one bolus and the next</string>
-    <string name="smscommunicator_remote_bolus_min_distance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
-    <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U delivered successfully</string>
-    <string name="smscommunicator_meal_bolus_delivered">Meal Bolus %1$.2f U delivered successfully</string>
-    <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s for %2$d minutes</string>
-    <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
-    <string name="smscommunicator_tt_canceled">Temp Target canceled successfully</string>
-    <string name="smscommunicator_remote_commands_allowed">Allow remote commands via SMS</string>
-    <string name="smscommunicator_loop_has_been_disabled">Loop has been disabled</string>
-    <string name="smscommunicator_loop_is_enabled">Loop is enabled</string>
-    <string name="smscommunicator_pump_connect_with_code">To connect pump reply with code %1$s</string>
-    <string name="smscommunicator_pump_connect_fail">Connection to pump failed</string>
-    <string name="smscommunicator_pump_disconnect_with_code">To disconnect pump for %1$d minutes reply with code %2$s</string>
-    <string name="smscommunicator_pump_disconnected">Pump disconnected</string>
-    <string name="smscommunicator_reconnect">Pump reconnected</string>
-    <string name="smscommunicator_remote_command_not_allowed">Remote command is not allowed</string>
-    <string name="smscommunicator_remote_command_not_possible">Remote command is not possible</string>
-    <string name="smscommunicator_remote_bolus_not_allowed">Remote bolus not available. Try again later.</string>
-    <string name="smscommunicator_basal_reply_with_code">To start basal %1$.2f U/h for %2$d min reply with code %3$s</string>
-    <string name="smscommunicator_profile_reply_with_code">To switch profile to %1$s %2$d%% reply with code %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">To start extended bolus %1$.2f U for %2$d min reply with code %3$s</string>
-    <string name="smscommunicator_carbs_reply_with_code">To enter %1$dg at %2$s reply with code %3$s</string>
-    <string name="smscommunicator_basal_pct_reply_with_code">To start basal %1$d%% for %2$d min reply with code %3$s</string>
-    <string name="smscommunicator_suspend_reply_with_code">To suspend loop for %1$d minutes reply with code %2$s</string>
-    <string name="smscommunicator_loop_resume_reply_with_code">To resume loop reply with code %1$s</string>
-    <string name="smscommunicator_loop_disable_reply_with_code">To disable loop reply with code %1$s</string>
-    <string name="smscommunicator_restart_reply_with_code">To restart AAPS reply with code %1$s</string>
-    <string name="smscommunicator_restarting">AAPS is restarting</string>
-    <string name="smscommunicator_tempbasal_set">Temp basal %1$.2fU/h for %2$d min started successfully</string>
-    <string name="smscommunicator_extended_set">Extended bolus %1$.2fU for %2$d min started successfully</string>
-    <string name="smscommunicator_carbs_set">Carbs %1$d  g entered successfully</string>
-    <string name="smscommunicator_carbs_failed">Entering %1$dg of carbs failed</string>
-    <string name="smscommunicator_tempbasal_set_percent">Temp basal %1$d%% for %2$d min started successfully</string>
-    <string name="smscommunicator_tempbasal_failed">Temp basal start failed</string>
-    <string name="smscommunicator_extended_failed">Extended bolus start failed</string>
-    <string name="smscommunicator_basal_stop_reply_with_code">To stop temp basal reply with code %1$s</string>
-    <string name="smscommunicator_extended_stop_reply_with_code">To stop extended bolus reply with code %1$s</string>
-    <string name="smscommunicator_tempbasal_canceled">Temp basal canceled</string>
-    <string name="smscommunicator_extended_canceled">Extended bolus canceled</string>
-    <string name="smscommunicator_tempbasal_cancel_failed">Canceling temp basal failed</string>
-    <string name="smscommunicator_extended_cancel_failed">Canceling extended bolus failed</string>
-    <string name="smscommunicator_unknown_command">Unknown command or wrong reply</string>
-    <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
-    <string name="smscommunicator_wrong_duration">Wrong duration</string>
-    <string name="smscommunicator_loop_suspended">Loop suspended</string>
-    <string name="smscommunicator_loop_resumed">Loop resumed</string>
-    <string name="smscommunicator_invalid_phone_number">Invalid SMS phone number</string>
-    <string name="smscommunicator_calibration_sent">Calibration sent. Receiving must be enabled in xDrip+.</string>
-    <string name="smscommunicator_calibration_failed">xDrip+ is not receiving calibrations</string>
-    <string name="smscommunicator_message_body">Invalid message body</string>
-    <string name="smscommunicator_report_pump_unreachable_summary">Send SMS if unreachable pump event is triggered</string>
-    <string name="smscommunicator_pump_unreachable">Report pump unreachable</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1$s</string>
-    <string name="smscommunicator_set_closed_loop_reply_with_code">In order to switch Loop mode to Closed loop reply with code %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Current loop mode: %1$s</string>
-    <string name="wrong_format">Wrong format</string>
-    <string name="sms_actual_bg">BG:</string>
-    <string name="sms_last_bg">Last BG:</string>
-    <string name="sms_delta">Delta:</string>
-    <string name="sms_iob">IOB:</string>
-    <string name="sms_bolus">Bolus:</string>
-    <string name="sms_basal">Basal:</string>
-    <string name="sms_min_ago">%1$dmin ago</string>
-    <string name="sms_loop_suspended_for">Suspended (%1$d m)</string>
-    <string name="sms_read_status_failed">Read status failed</string>
-    <string name="sms_profile_switch_created">Profile switch created</string>
-    <string name="sms_wrong_tbr_duration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
-    <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
-
     <string name="disabled_loop">Loop Disabled</string>
+    <string name="smscommunicator_pump_disconnected">Pump disconnected</string>
 
     <!-- Food-->
     <string name="food_short">Food</string>
@@ -127,19 +17,8 @@
     <string name="subcategory">Subcategory</string>
     <string name="calculator_label">Calculator</string>
 
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher" translatable="false">Theme switcher</string>
-    <string name="theme_switcher_summary">Choose dark, light, or to follow the system theme</string>
-    <string name="app_color_scheme">App Color Scheme</string>
-    <string name="dark_theme">Dark theme</string>
-    <string name="light_theme">Light theme</string>
-    <string name="follow_system_theme">Use device theme</string>
-    <string name="value_dark_theme" translatable="false">dark</string>
-    <string name="value_light_theme" translatable="false">light</string>
-    <string name="value_system_theme" translatable="false">system</string>
-
     <!-- Profile -->
-    <string name="localprofile">Profile</string>
+    <!-- localprofile moved to core:ui module -->
     <string name="localprofile_shortname">LP</string>
     <string name="description_profile_local">Define a profile describing your insulin needs.</string>
     <string name="a11y_add_new_to_list">add new to list</string>
@@ -147,30 +26,14 @@
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
     <string name="delete_current_profile">Delete current profile?</string>
     <string name="units_colon">Units:</string>
-    <string name="missing_profile_name">Missing profile name</string>
-    <string name="error_in_ic_values">Error in IC values</string>
-    <string name="error_in_basal_values">Error in basal values</string>
-    <string name="error_in_target_values">Error in target values</string>
-    <string name="error_in_isf_values">Error in ISF values</string>
-    <string name="profile_name_contains_dot">Some of profile names contains dots.\nThis is not supported by NS.\nProfiles will not be uploaded to NS.</string>
-    <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
-    <string name="view">View</string>
-    <string name="errors">Errors</string>
-    <string name="select_profile">Select profile to edit</string>
-    <string name="profile_name">Profile name:</string>
-    <string name="a11y_add_new_profile">add new profile</string>
-    <string name="a11y_clone_profile">clone current profile</string>
-    <string name="a11y_delete_current_profile">delete current profile</string>
-    <string name="dia_short">DIA</string>
-    <string name="target_short">TARG</string>
-    <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label_warning">Your algorithm can provide dynamic calculation of ISF. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
-    <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below cen be used only as a fallback in case of missing data or as a reference value only</string>
 
     <!-- Actions -->
     <string name="actions">Actions</string>
+    <!-- manage moved to core:ui module -->
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="actions_shortname">ACT</string>
+    <string name="status">Status</string>
+    <string name="pump_actions">Pump actions</string>
     <string name="tempbasal_button">TempBasal</string>
     <string name="extended_bolus_button">Extended Bolus</string>
     <string name="extended_bolus_cancel_button">Cancel Extended Bolus</string>
@@ -183,27 +46,11 @@
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pump battery</string>
     <string name="cannula">Cannula</string>
-    <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="statuslights_cannula_age">cannula age</string>
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="show_statuslights">Show status lights on home screen</string>
-    <string name="statuslights_cage_warning">Threshold warning cannula age [h]</string>
-    <string name="statuslights_cage_critical">Threshold critical cannula age [h]</string>
-    <string name="statuslights_iage_warning">Threshold warning insulin age [h]</string>
-    <string name="statuslights_iage_critical">Threshold critical insulin age [h]</string>
-    <string name="statuslights_sage_warning">Threshold warning sensor age [h]</string>
-    <string name="statuslights_sage_critical">Threshold critical sensor age [h]</string>
-    <string name="statuslights_sbat_warning">Threshold warning sensor battery level [%]</string>
-    <string name="statuslights_sbat_critical">Threshold critical sensor battery level [%]</string>
-    <string name="statuslights_bage_warning">Threshold warning pump battery age [h]</string>
-    <string name="statuslights_bage_critical">Threshold critical pump battery age [h]</string>
-    <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
-    <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
-    <string name="statuslights_bat_warning">Threshold warning pump battery level [%]</string>
-    <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="statuslights_copy_ns">Copy settings from NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
@@ -226,56 +73,17 @@
     <string name="a11y_bg_outdated">outdated</string>
     <string name="set_basal_question">Accept new temp basal:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="overview">Overview</string>
+    <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="overview_buttons_selection">Buttons</string>
-    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ (ensure \'Accept Calibrations\' is enabled in xDrip+ under Inter-App settings).</string>
-    <string name="show_cgm_button_summary">Opens xDrip+ or Dexcom App (you can use back button to return to AAPS).</string>
     <string name="not_available_full">Not available</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="change_your_input">Change your input!</string>
-    <string name="openaps">OpenAPS</string>
-    <string name="uploader">Uploader</string>
     <string name="data_status">BG data status</string>
     <string name="quickwizard_settings">QuickWizard settings</string>
-    <string name="keep_screen_on_title">Keep screen on</string>
-    <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
-    <string name="treatments">Treatments</string>
-    <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
-    <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
-    <string name="firstinsulinincrement">First insulin increment</string>
-    <string name="secondinsulinincrement">Second insulin increment</string>
-    <string name="thirdinsulinincrement">Third insulin increment</string>
-    <string name="firstcarbsincrement">First carbs increment</string>
-    <string name="secondcarbsincrement">Second carbs increment</string>
-    <string name="thirdcarbsincrement">Third carbs increment</string>
-    <string name="cgm">CGM</string>
     <string name="default_temptargets">Default Temp-Targets</string>
-    <string name="eatingsoon_duration">Eating Soon duration (minutes)</string>
-    <string name="eatingsoon_target">Eating Soon target value</string>
-    <string name="activity_duration">Activity duration (minutes)</string>
-    <string name="activity_target">Activity target value</string>
-    <string name="hypo_duration">Hypo duration (minutes)</string>
-    <string name="hypo_target">Hypo target value</string>
     <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
-    <string name="button1">Button 1</string>
-    <string name="button2">Button 2</string>
-    <string name="button3">Button 3</string>
-    <string name="prefs_range_title">Range for visualization</string>
-    <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
-    <string name="low_mark">LOW mark</string>
-    <string name="high_mark">HIGH mark</string>
-    <string name="short_tabtitles">Shorten tab titles</string>
-    <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
-    <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Deliver full bolus (100%) if glycemia is older than</string>
-    <string name="enable_bolus_advisor">Enable bolus advisor</string>
-    <string name="enable_bolus_advisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
-    <string name="enablesuperbolus">Enable superbolus in wizard</string>
-    <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
-    <string name="enablebolusreminder">Enable bolus reminder</string>
-    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard ("post-bolus")</string>
     <string name="run_question">Run %s?</string>
 
     <!--    OverviewMenu-->
