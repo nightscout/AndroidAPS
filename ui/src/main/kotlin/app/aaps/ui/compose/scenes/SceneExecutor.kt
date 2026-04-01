@@ -81,6 +81,7 @@ class SceneExecutor @Inject constructor(
         val updatedPriorState = priorState.copy(
             sceneTtId = if (scene.actions.any { it is SceneAction.TempTarget })
                 persistenceLayer.getTemporaryTargetActiveAt(now)?.id else null,
+            scenePsId = actionResults.firstOrNull { it.action is SceneAction.ProfileSwitch }?.psId,
             sceneRunningModeId = if (scene.actions.any { it is SceneAction.LoopModeChange })
                 persistenceLayer.getRunningModeActiveAt(now).id.takeIf { it > 0 } else null
         )
@@ -266,7 +267,7 @@ class SceneExecutor @Inject constructor(
                     val store = localProfileManager.profile
                     val profileName = action.profileName.ifEmpty { profileFunction.getProfileName() }
                     if (store != null) {
-                        profileFunction.createProfileSwitch(
+                        val ps = profileFunction.createProfileSwitch(
                             profileStore = store,
                             profileName = profileName,
                             durationInMinutes = sceneDurationMinutes,
@@ -283,7 +284,7 @@ class SceneExecutor @Inject constructor(
                             ),
                             iCfg = insulin.iCfg
                         )
-                        SceneExecutionResult.ActionResult(action, success = true)
+                        SceneExecutionResult.ActionResult(action, success = ps != null, psId = ps?.id)
                     } else {
                         SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(app.aaps.core.ui.R.string.scene_no_profile_store))
                     }
@@ -362,11 +363,10 @@ class SceneExecutor @Inject constructor(
                 }
 
                 is SceneAction.ProfileSwitch    -> {
-                    // Check if scene's profile is still active (compare name + percentage)
-                    val currentProfile = profileFunction.getProfile()
-                    val currentName = profileFunction.getProfileName()
-                    val sceneProfileName = action.profileName.ifEmpty { priorState.profileName ?: "" }
-                    val profileStillFromScene = currentName == sceneProfileName && currentProfile?.percentage == action.percentage
+                    // Check if scene's profile is still active (PS id tracking via EPS.originalPsId)
+                    val currentEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)
+                    val profileStillFromScene = priorState.scenePsId != null &&
+                        currentEps?.originalPsId == priorState.scenePsId
 
                     if (profileStillFromScene) {
                         val name = priorState.profileName

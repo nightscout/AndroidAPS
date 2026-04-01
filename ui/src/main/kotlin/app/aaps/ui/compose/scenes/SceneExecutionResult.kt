@@ -14,6 +14,7 @@ data class SceneExecutionResult(
     data class ActionResult(
         val action: SceneAction,
         val success: Boolean,
-        val errorMessage: String? = null
+        val errorMessage: String? = null,
+        val psId: Long? = null // PS id created by ProfileSwitch action (for scene tracking)
     )
 }

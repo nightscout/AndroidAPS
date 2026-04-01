@@ -546,7 +546,8 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             isModified = isModified,
             percentage = percentage,
             timestamp = timestamp,
-            duration = duration
+            duration = duration,
+            originalPsId = (profile as? ProfileSealed.EPS)?.value?.originalPsId
         )
     }
 

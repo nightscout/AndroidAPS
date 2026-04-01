@@ -42,6 +42,8 @@ data class ActiveSceneState(
         // Record IDs created by scene activation — used to detect manual overrides at revert time
         /** ID of the TT record created by scene (null if scene didn't set TT) */
         val sceneTtId: Long? = null,
+        /** ID of the ProfileSwitch record created by scene (null if scene didn't change profile) */
+        val scenePsId: Long? = null,
         /** ID of the RunningMode record created by scene (null if scene didn't change loop mode) */
         val sceneRunningModeId: Long? = null
     )

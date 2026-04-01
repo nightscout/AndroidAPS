@@ -1,46 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Scene wizard: template names -->
-    <string name="scene_template_exercise">Exercise</string>
-    <string name="scene_template_sick_day">Sick Day</string>
-    <string name="scene_template_sleep">Sleep</string>
-    <string name="scene_template_pre_meal">Pre-meal</string>
-    <string name="scene_template_swimming">Swimming</string>
-    <string name="scene_template_alcohol">Alcohol</string>
-    <string name="scene_template_driving">Driving</string>
-    <string name="scene_template_sick_day_vomiting">Sick Day — Vomiting</string>
-    <string name="scene_template_luteal_phase">Luteal Phase</string>
-    <string name="scene_template_hot_weather">Hot Weather</string>
-    <string name="scene_template_medical_procedure">Medical Procedure</string>
-    <string name="scene_template_blank">Blank</string>
-
-    <!-- Scene wizard: template picker descriptions -->
+    <!-- Scene wizard: template picker intro -->
     <string name="scene_wizard_choose_template">Pick a starting point. Templates pre-fill recommended actions for common situations — you can adjust everything in the following steps.</string>
-    <string name="scene_wizard_exercise_desc">Raise target, reduce profile to 70%, disable SMB to prevent exercise lows.</string>
-    <string name="scene_wizard_sick_day_desc">Stronger profile (150%) to handle increased insulin resistance during illness.</string>
-    <string name="scene_wizard_sleep_desc">Tighter target for better overnight control.</string>
-    <string name="scene_wizard_pre_meal_desc">Lower target to get ahead of the post-meal spike.</string>
-    <string name="scene_wizard_swimming_desc">Disconnect pump for swimming, showering, or water activities.</string>
-    <string name="scene_wizard_alcohol_desc">LGS mode, reduced profile, SMB off — protects against delayed alcohol hypos.</string>
-    <string name="scene_wizard_driving_desc">Slightly higher target to stay safe behind the wheel.</string>
-    <string name="scene_wizard_sick_day_vomiting_desc">Reduced profile with LGS — opposite of standard sick day when you cannot absorb food.</string>
-    <string name="scene_wizard_luteal_phase_desc">Increased profile to handle pre-period insulin resistance.</string>
-    <string name="scene_wizard_hot_weather_desc">Reduced profile — heat accelerates insulin absorption.</string>
-    <string name="scene_wizard_medical_procedure_desc">Open loop with SMB off for surgery or medical procedures.</string>
-    <string name="scene_wizard_blank_desc">Start from scratch with no pre-selected actions.</string>
 
-    <!-- Scene wizard: info step (template-specific education) -->
+    <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Exercise</string>
+    <string name="scene_wizard_exercise_desc">Raise target, reduce profile to 70%, disable SMB to prevent exercise lows.</string>
     <string name="scene_wizard_info_exercise">During physical activity, muscles consume glucose faster and insulin sensitivity increases. Raising your temporary target beforehand gives the algorithm a head start — it will begin reducing insulin delivery early, building a buffer against exercise-induced lows. Disabling SMB is also recommended, since correction boluses during exercise can cause rapid drops. For best results, activate this scene 1–2 hours before you start exercising so the algorithm has time to lower your insulin on board.</string>
+
+    <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Sick Day</string>
+    <string name="scene_wizard_sick_day_desc">Stronger profile (150%) to handle increased insulin resistance during illness.</string>
     <string name="scene_wizard_info_sick_day">Illness, fever, and stress hormones can dramatically increase insulin resistance — sometimes by 50% or more. A stronger profile (e.g. 150%) tells the algorithm to deliver more insulin across all calculations — basal rates, bolus suggestions, and correction factors. You can also add a temporary target or adjust the running mode in the following steps. Monitor closely and adjust as your body recovers.</string>
-    <string name="scene_wizard_info_sleep">Overnight is when many people experience undetected highs or lows. A slightly tighter target during sleep lets the algorithm make finer corrections throughout the night. Pair this with a profile that reflects your nighttime basal needs for best results.</string>
-    <string name="scene_wizard_info_pre_meal">Setting a lower target 30–60 minutes before eating tells the algorithm to start building up insulin on board before carbs arrive. This helps blunt the post-meal spike that happens when food hits the bloodstream faster than insulin can act. Best used when you know a meal is coming soon.</string>
-    <string name="scene_wizard_info_swimming">When you disconnect your pump, insulin delivery stops completely — no basal, no boluses, no corrections. The algorithm switches to disconnected mode and stops making adjustments. This is normal for short periods like showering or swimming. When the scene ends, the pump reconnects and the algorithm resumes automatically. Keep disconnects short — without basal insulin, blood glucose will start rising within 1–2 hours.</string>
-    <string name="scene_wizard_info_alcohol">Alcohol is one of the most dangerous situations for people with type 1 diabetes. The liver prioritizes processing alcohol over releasing glucose, which can cause delayed hypoglycemia 6–24 hours later — often overnight while you are asleep. LGS mode prevents insulin stacking by only reducing delivery when glucose drops. A reduced profile and disabled SMB further limit insulin on board. Always check your blood glucose before going to sleep and consider setting an alarm for a middle-of-the-night check.</string>
-    <string name="scene_wizard_info_driving">Safe driving requires stable blood glucose above 5.0 mmol/L (90 mg/dL). In some countries, checking before and during long drives is a legal requirement. A slightly higher target gives the algorithm a safety buffer — it will work to keep you above the level where concentration and reaction time start to decline. If you go low while driving, pull over immediately, treat the hypo, and wait at least 45 minutes after glucose returns to normal before continuing.</string>
+
+    <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Sick Day — Vomiting</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Reduced profile with LGS — opposite of standard sick day when you cannot absorb food.</string>
     <string name="scene_wizard_info_sick_day_vomiting">When you cannot keep food down, the standard sick day approach of increasing insulin can be dangerous. Vomiting means carbs are not being absorbed, so blood glucose may drop rather than rise. A reduced profile (60%) lowers insulin delivery, and LGS mode adds an extra safety net by suspending insulin if glucose falls. Disabling SMB prevents any extra boluses. Monitor frequently — check blood glucose every 1–2 hours and ketones every 2–4 hours. Seek medical help if vomiting persists more than a few hours or ketones rise above 1.5 mmol/L.</string>
+
+    <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Sleep</string>
+    <string name="scene_wizard_sleep_desc">Tighter target for better overnight control.</string>
+    <string name="scene_wizard_info_sleep">Overnight is when many people experience undetected highs or lows. A slightly tighter target during sleep lets the algorithm make finer corrections throughout the night. Pair this with a profile that reflects your nighttime basal needs for best results.</string>
+
+    <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Pre-meal</string>
+    <string name="scene_wizard_pre_meal_desc">Lower target to get ahead of the post-meal spike.</string>
+    <string name="scene_wizard_info_pre_meal">Setting a lower target 30–60 minutes before eating tells the algorithm to start building up insulin on board before carbs arrive. This helps blunt the post-meal spike that happens when food hits the bloodstream faster than insulin can act. Best used when you know a meal is coming soon.</string>
+
+    <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcohol</string>
+    <string name="scene_wizard_alcohol_desc">LGS mode, reduced profile, SMB off — protects against delayed alcohol hypos.</string>
+    <string name="scene_wizard_info_alcohol">Alcohol is one of the most dangerous situations for people with type 1 diabetes. The liver prioritizes processing alcohol over releasing glucose, which can cause delayed hypoglycemia 6–24 hours later — often overnight while you are asleep. LGS mode prevents insulin stacking by only reducing delivery when glucose drops. A reduced profile and disabled SMB further limit insulin on board. Always check your blood glucose before going to sleep and consider setting an alarm for a middle-of-the-night check.</string>
+
+    <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Driving</string>
+    <string name="scene_wizard_driving_desc">Slightly higher target to stay safe behind the wheel.</string>
+    <string name="scene_wizard_info_driving">Safe driving requires stable blood glucose above 5.0 mmol/L (90 mg/dL). In some countries, checking before and during long drives is a legal requirement. A slightly higher target gives the algorithm a safety buffer — it will work to keep you above the level where concentration and reaction time start to decline. If you go low while driving, pull over immediately, treat the hypo, and wait at least 45 minutes after glucose returns to normal before continuing.</string>
+
+    <!-- Swimming: Disconnected Pump — 1h -->
+    <string name="scene_template_swimming">Swimming</string>
+    <string name="scene_wizard_swimming_desc">Disconnect pump for swimming, showering, or water activities.</string>
+    <string name="scene_wizard_info_swimming">When you disconnect your pump, insulin delivery stops completely — no basal, no boluses, no corrections. The algorithm switches to disconnected mode and stops making adjustments. This is normal for short periods like showering or swimming. When the scene ends, the pump reconnects and the algorithm resumes automatically. Keep disconnects short — without basal insulin, blood glucose will start rising within 1–2 hours.</string>
+
+    <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Luteal Phase</string>
+    <string name="scene_wizard_luteal_phase_desc">Increased profile to handle pre-period insulin resistance.</string>
     <string name="scene_wizard_info_luteal_phase">Many women experience increased insulin resistance during the luteal phase (roughly 1–2 weeks before their period). This is caused by rising progesterone levels that reduce insulin sensitivity. The effect varies enormously between individuals — some notice a 10–30% increase in insulin needs, others see minimal change. Start with a conservative increase (115%) and adjust based on your own patterns over several cycles. Tracking this in CarePortal helps identify your personal rhythm.</string>
+
+    <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Hot Weather</string>
+    <string name="scene_wizard_hot_weather_desc">Reduced profile — heat accelerates insulin absorption.</string>
     <string name="scene_wizard_info_hot_weather">High temperatures cause blood vessels to dilate, which accelerates insulin absorption — the same dose hits faster and harder. This can lead to unexpected lows, especially during outdoor activities. A modest profile reduction (85%) compensates for the faster absorption. Stay hydrated, monitor more frequently, and be aware that insulin stored in a warm pump or pen may degrade. If you are also exercising in the heat, consider combining this with the exercise scene for additional protection.</string>
+
+    <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Medical Procedure</string>
+    <string name="scene_wizard_medical_procedure_desc">Open loop with SMB off for surgery or medical procedures.</string>
     <string name="scene_wizard_info_medical_procedure">During surgery or medical procedures, anesthesia and stress hormones make blood glucose unpredictable. Open loop mode is recommended because the algorithm cannot reliably predict what your body will do under these conditions. A higher target (150 mg/dL) provides a safety margin against intraoperative hypoglycemia. Disabling SMB prevents unexpected insulin delivery during the procedure. Always inform medical staff that you are wearing an insulin pump and CGM. For procedures longer than 3 hours, your team may switch to intravenous insulin instead.</string>
+
+    <!-- Blank: no actions — 1h -->
+
+    <string name="scene_template_blank">Blank</string>
+    <string name="scene_wizard_blank_desc">Start from scratch with no pre-selected actions.</string>
 
     <!-- Scene wizard: action step education -->
     <string name="scene_wizard_profile_info">A profile switch changes your basal rates, insulin sensitivity factor (ISF), and insulin-to-carb ratios (IC) all at once. You can scale everything by percentage — for example, 110% increases basal delivery, bolus calculations, and carb absorption rates by 10%. You can also switch to a different profile entirely if you have one set up for specific situations.</string>

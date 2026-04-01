@@ -356,7 +356,8 @@ data class ProfileDisplayData(
     val isModified: Boolean,             // True if percentage/timeshift/duration modified
     val percentage: Int = 100,           // Profile percentage (100 = no change)
     val timestamp: Long,                 // When profile switch started (for progress)
-    val duration: Long                   // Profile switch duration in ms (0 if permanent)
+    val duration: Long,                  // Profile switch duration in ms (0 if permanent)
+    val originalPsId: Long? = null       // PS id that created the current EPS (for scene tracking)
 )
 
 /**

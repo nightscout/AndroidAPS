@@ -220,6 +220,7 @@ fun MainScreen(
                             profileName = uiState.profileName,
                             rawProfileName = uiState.rawProfileName,
                             profilePercentage = uiState.profilePercentage,
+                            profilePsId = uiState.profilePsId,
                             isProfileModified = uiState.isProfileModified,
                             profileProgress = uiState.profileProgress,
                             tempTargetText = uiState.tempTargetText,

@@ -31,6 +31,7 @@ data class MainUiState(
     val profileName: String = "",
     val rawProfileName: String = "", // Profile name without remaining time (for scene badge comparison)
     val profilePercentage: Int = 100, // Current profile percentage (for scene badge comparison)
+    val profilePsId: Long = 0, // PS id that triggered current EPS (for scene override detection)
     val isProfileModified: Boolean = false,
     val profileProgress: Float = 0f, // 0-1 progress for temporary profile switch
     // TempTarget state for chip
