@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Подгответе се за закрепване на Patch</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Отстранете залепващата лента и след това натиснете „Напред“.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Ако иглата стърчи навън, докоснете „Изхвърляне“.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Ако пластирът е мокър или мръсен, или залепващата му лента е прегъната, докоснете „Изхвърляне“.</string>
     <string name="patch_remove_protection_tape">Закрепяне на Patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Почистете и подсушете мястото на приложение, след което прикрепете Patch към кожата.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Проверка за безопасност…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Отнема около 30 секунди.</string>
-    <string name="patch_safety_check_desc_2">[Caution] За безопасна употреба, не отстранявайте лоста за действие на иглата, докато проверката за безопасност не приключи!</string>
     <string name="patch_rotate_knob">Поставяне на иглата</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Завъртете лоста за действие на иглата на повече от 100°, за да поставите иглата и след това завъртете напълно, за да го махнете</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Изхвърлете/Подменете Patch</string>
     <string name="string_activate_patch">Активирай Patch</string>
     <string name="string_discard_patch">Изхвърлете Patch</string>
-    <string name="string_resume">Възстанови</string>
     <string name="discard">Изхвърли</string>
     <string name="string_communication_check">Проверка на свързването</string>
-    <string name="string_suspend">Спиране</string>
-    <string name="string_suspended">Прекратено</string>
     <string name="string_running">Изпълнява</string>
     <string name="cancel">Откажи</string>
     <string name="confirm">Потвърди</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Промяна</string>
     <string name="string_in_progress">Обработване</string>
     <string name="retry">Повтори</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] НЕ отстранявайте капачката на иглата и залепващата подложка до допълнителни инструкции.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Сигурни ли сте, че ще изхвърлите настоящия Patch?</string>
     <string name="needle_insertion_error_1">Грешка при поставяне на иглата.</string>
     <string name="needle_insertion_error_2">Проверете дали посоката на дупката, останала след завъртане на лоста, е права и след това натиснете „Опитай отново“.</string>
     <string name="needle_insertion_error_3">Натиснете „Отхвърляне“, за да деактивирате Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Време за спиране на базала</string>
     <string name="string_resume_insulin_delivery_title">Възобновяване доставянето на инсулин</string>
-    <string name="string_resume_insulin_delivery_message">Край на спирането на инсулина.\nДокоснете „Потвърди“, за да възобновите подаването на инсулин.\n\n[Caution]\nПодаването на инсулин няма да се възобнови, докато не докоснете „Потвърди“.\nАко не докоснете „Потвърди“, може да развиете хипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Доставянето на инсулин е спряно.</string>
     <string name="string_resumed_insulin_delivery_message">Доставянето на инсулин е възобновено.</string>
     <string name="finish">Край</string>
     <string name="string_temp_basal_remained_hhmm">оставащо време: %1$s:%2$s</string>
     <string name="next">Следващ</string>
-    <string name="string_pause_failed">Прекъсването е неуспешно.</string>
     <string name="string_resume_failed">Възобновяването е неуспешно.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">ЕЕЕ, д МММ, гггг чч:мм а</string>
+    <!-- Permission rationales -->
 </resources>
