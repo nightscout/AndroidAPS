@@ -34,6 +34,7 @@
     <string name="do_ns_upload_title">Enviar dades de glucèmia a NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/d</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exportar entrades d\'usuari a Excel (csv)</string>
     <string name="confirm">Confirmar</string>
     <string name="pump">Bomba</string>
@@ -68,8 +69,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Apaga el bluetooth del telèfon un segon si no és possible connectar amb la bomba. Pot ajudar amb certs telèfons a on la connexió bluetooth es bloqueja.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Actualitzada hora de la bomba</string>
     <string name="exit">Sortir</string>
@@ -96,7 +95,6 @@
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
     <string name="alarminxmin">Executar alarma en %1$d min</string>
-    <string name="bolus_reminder">Recordatori de bolus</string>
     <string name="duration_label">Durada</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Bomba aturada</string>
@@ -109,16 +107,13 @@
     <string name="a11y_high">alt</string>
     <string name="a11y_low">baix</string>
     <string name="average">Mitja</string>
-    <string name="tir">TIR (Temps en rang)</string>
     <string name="none"><![CDATA[<cap>]]></string>
     <string name="remove_label">ELIMINA</string>
     <string name="activate_profile">Activar perfil</string>
-    <string name="reset">restablir</string>
     <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
     <string name="profile">Perfil</string>
     <string name="overview_treatment_label">Tractament</string>
     <string name="copytolocalprofile">Crear nou perfil local a partir d\'aquest perfil?</string>
-    <string name="wear_wizard_settings">Configuració de l\'assistent</string>
     <string name="bg_trend_label">Tendència 15 min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">IOB Bolus</string>
@@ -150,6 +145,7 @@
     <string name="duration">Durada</string>
     <string name="reason">Motiu</string>
     <string name="nochangerequested">Cap canvi sol·licitat</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Perfil no vàlid: %1$s</string>
     <!--    Temptarget-->
@@ -208,7 +204,6 @@
     <string name="expweight">TDD ponderada exponencialment</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD (Total Dosi Diària)</string>
     <string name="ratio">Ràtio</string>
     <string name="amount_days"># Dies</string>
     <string name="weight">Ponderació</string>
@@ -322,6 +317,7 @@
     <string name="valueoutofrange">»%1$s« supera els límits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
     <string name="basal_value">Valor basal</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">HIDRATS DE CARBONI %1$d g</string>
@@ -338,13 +334,11 @@
     <string name="a11y_user">usuari</string>
     <!-- Autotune -->
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Utilitzar avisos del sistema per alarmes i avisos</string>
     <string name="urgent_alarm">Alarma urgent</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detectada absorció lenta de carbohidrats: %2$d%% del temps. Torneu a comprovar els vostres càlculs. Els COB (carbs actius) podrien sobreestimar-se i lliurar-se més insulina del compte!!!!!</font>]]></string>
-    <string name="partialboluswizard">Lliurar aquesta part del resultat del càlcul [%]</string>
     <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
     <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
     <string name="quickwizard">Assistent</string>
@@ -388,14 +382,18 @@
     <string name="message">Missatge</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel·lar</string>
-    <string name="dismiss">DESCARTAR</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="close">Tancar</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
@@ -411,8 +409,10 @@
     <string name="location_not_found_message">Per a que el descobriment de nous dispositius en Bluetooth funcioni, la ubicació ha d\'estar habilitada. AAPS no fa un seguiment de la vostra localització. A més, pot ser deshabilitada un cop la sincronització s\'ha produït.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Configuració plugin</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Falta permís SMS</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="fabric_upload_disabled">Enviament de logs d\'error desactivat!</string>
     <plurals name="days">
@@ -445,4 +445,10 @@
     <string name="sunday_short">Dg</string>
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
