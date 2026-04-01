@@ -72,7 +72,7 @@
     <string name="medtronic_cmd_desc_set_tbr">Setează bazala temporară</string>
     <string name="medtronic_cmd_desc_cancel_tbr">Anulează Bazala Temporară</string>
     <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
-    <string name="medtronic_cmd_desc_get_remaining_insulin">Obţine insulina rămasă</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obține insulina rămasă</string>
     <string name="medtronic_pump_status_pump_unreachable">Pompă indisponibilă</string>
     <string name="medtronic_warning">Atenție</string>
     <!-- medtronic_warning -->
@@ -84,8 +84,8 @@
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
     <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min ramase)</string>
-    <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschideți o nouă problemă și furnizați jurnalele.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d minute rămase)</string>
+    <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschide o sesizare nouă și trimite jurnalul de activitate.</string>
     <string name="riley_statistics">Statistici RL</string>
     <string name="medtronic_history_type">Tip:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Reîmprospătare apăsată</string>
