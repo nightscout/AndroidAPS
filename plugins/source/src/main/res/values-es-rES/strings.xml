@@ -39,4 +39,6 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplicación Sino</string>
     <string name="description_source_patched_sino_app">Recibir los valores de glucosa de la aplicación parcheada Sino</string>
+    <!-- Notification Reader -->
+    <!-- Permission rationales -->
 </resources>
