@@ -53,7 +53,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink 통계</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">RileyLink 연결 대기...</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">RileyLink 구성 재설정</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Pulse Log 확인</string>
     <string name="omnipod_eros_pod_management_button_reading_pulse_log">Pulse Log 확인 중...</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse 로그</string>
