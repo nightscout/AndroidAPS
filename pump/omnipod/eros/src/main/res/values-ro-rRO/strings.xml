@@ -28,12 +28,12 @@
     <string name="omnipod_eros_error_invalid_packet_type">Comunicarea a eșuat: a fost primit un pachet invalid de la pompă</string>
     <string name="omnipod_eros_error_invalid_progress_state">Comunicarea a eșuat: Pompa este într-o stare incorectă</string>
     <string name="omnipod_eros_error_invalid_response">Comunicarea a eșuat: s-a primit un răspuns invalid de la pompă</string>
-    <string name="omnipod_eros_error_invalid_message_sequence_number">Comunicarea a eșuat: s-a primit un mesaj cu un număr de secvență invalid de la Pod</string>
-    <string name="omnipod_eros_error_invalid_message_address">Comunicarea a eșuat: s-a primit un mesaj cu o adresă invalidă de la Pod</string>
-    <string name="omnipod_eros_error_message_decoding_failed">Comunicarea a eșuat: nu s-a reușit decodarea mesajului de la Pod</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Comunicarea a eșuat: s-a primit un mesaj cu un număr de secvență invalid de la pompă</string>
+    <string name="omnipod_eros_error_invalid_message_address">Comunicarea a eșuat: s-a primit un mesaj cu o adresă invalidă de la pompă</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Comunicarea a eșuat: nu s-a reușit decodarea mesajului de la pompă</string>
     <string name="omnipod_eros_error_nonce_resync_failed">Comunicarea a eșuat: resincronizarea cheii de securitate nu a reușit</string>
     <string name="omnipod_eros_error_nonce_out_of_sync">Comunicarea a eșuat: cheia de securitate nu poate fi sincronizată</string>
-    <string name="omnipod_eros_error_not_enough_data">Comunicarea a eșuat: nu s-au primit suficiente date de la Pod</string>
+    <string name="omnipod_eros_error_not_enough_data">Comunicarea a eșuat: nu s-au primit suficiente date de la pompă</string>
     <string name="omnipod_eros_error_pod_fault">A fost detectată o eroare a pompei (%1$03d %2$s). Vă rugăm să o dezactivați pe aceasta și să activați una nouă</string>
     <string name="omnipod_eros_error_pod_returned_error_response">Comunicarea a eșuat: Pompa a returnat un răspuns de eroare</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Niciun răspuns de la RileyLink</string>
@@ -42,7 +42,7 @@
     <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Setarea profilului bazal a eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea pompei din fila Omnipod și să continuați livrarea dacă este necesar.</string>
     <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Setarea profilului bazal s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea pompei din fila Omnipod și să continuați livrarea dacă este necesar.</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Setarea profilului bazal a eșuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Este posibil ca anularea bazalei temporare să fi eșuat. Vă rugăm să actualizați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Este posibil ca anularea bazalei temporare să fi eșuat. Vă rugăm să actualizați manual starea Pod-ului din fila Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setarea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, ar fi putut fi anulată. Reîmprospătați manual starea pompei din fila Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setarea bazalei temporare s-ar putea sa fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea pompei din fila Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Durata TBR trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
@@ -50,7 +50,7 @@
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Setarea timpului a eșuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
     <string name="omnipod_eros_error_failed_to_read_pulse_log">Citirea jurnalului de puls a eșuat</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Eroare la schimbarea automată a orei în pompă. Ar trebui să sincronizezi manual timpul în secțiunea Omnipod.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operațiunea nu este posibilă.\n\nTrebuie să configuraţi Omnipod înainte de a putea efectua această operațiune.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operațiunea nu este posibilă.\n\nTrebuie să configurați Omnipod înainte de a putea efectua această operațiune.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nu se poate verifica dacă bolusul a reuşit. Vă rugăm să verificați manual că pompa poate bolusa ascultând click-urile. <b>Daca ești sigur ca bolus nu a reușit, ar trebui să ștergi manual intrarea bolus din Tratamente, chiar dacă dai click pe \'Oprește bolus\' acum!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nu s-a putut verifica dacă bolusul SMB (%1$.2f U) a reușit. <b>Daca sunteți sigur ca bolusul nu a reușit, ar trebui să ștergeți manual intrarea SMB din Tratamente.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">O rata bazală temporară rulează pe Pod, dar AAPS nu este la curent cu această bazală temporară. Vă rugăm să anulați manual bazala temporară.</string>
