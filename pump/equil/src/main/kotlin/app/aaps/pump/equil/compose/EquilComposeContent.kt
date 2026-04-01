@@ -1,6 +1,5 @@
 package app.aaps.pump.equil.compose
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -20,6 +19,7 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
@@ -36,7 +36,8 @@ class EquilComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val context = LocalContext.current
+        LocalContext.current
+        val snackbarHostState = LocalSnackbarHostState.current
         val overviewViewModel: EquilOverviewViewModel = hiltViewModel()
 
         // Navigation state
@@ -135,7 +136,7 @@ class EquilComposeContent(
                             }
 
                             is EquilWizardViewModel.EquilWizardEvent.ShowMessage -> {
-                                Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                                snackbarHostState.showSnackbar(event.message)
                             }
                         }
                     }

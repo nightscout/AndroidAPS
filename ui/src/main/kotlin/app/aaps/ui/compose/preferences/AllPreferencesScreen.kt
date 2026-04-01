@@ -35,8 +35,8 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.preference.LocalNavigateToCompose
-import app.aaps.core.ui.compose.preference.LocalSnackbarHostState
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.preference.addPreferenceContent

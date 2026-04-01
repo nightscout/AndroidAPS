@@ -17,12 +17,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
+import app.aaps.pump.common.compose.RileyLinkPairWizardEvent
+import app.aaps.pump.common.compose.RileyLinkPairWizardScreen
+import app.aaps.pump.common.compose.RileyLinkPairWizardViewModel
 import app.aaps.pump.omnipod.common.ui.compose.PodImage
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
@@ -31,7 +37,8 @@ import app.aaps.pump.omnipod.eros.ui.wizard.compose.ErosOmnipodWizardViewModel
 
 class OmnipodErosComposeContent(
     private val pluginName: String,
-    private val protectionCheck: ProtectionCheck
+    private val protectionCheck: ProtectionCheck,
+    private val blePreCheck: BlePreCheck
 ) : ComposablePluginContent {
 
     @Composable
@@ -42,10 +49,12 @@ class OmnipodErosComposeContent(
     ) {
         val overviewViewModel: ErosOverviewViewModel = hiltViewModel()
         val context = LocalContext.current
+        val snackbarHostState = LocalSnackbarHostState.current
 
         // Workflow state
         var showWizard by remember { mutableStateOf(false) }
         var showHistory by remember { mutableStateOf(false) }
+        var showRileyLinkPairWizard by remember { mutableStateOf(false) }
         var wizardActivationType by remember { mutableStateOf<ActivationType?>(null) }
         var isDeactivation by remember { mutableStateOf(false) }
 
@@ -73,8 +82,8 @@ class OmnipodErosComposeContent(
         }
 
         // Restore overview toolbar when not in wizard
-        LaunchedEffect(showWizard) {
-            if (!showWizard) {
+        LaunchedEffect(showWizard, showRileyLinkPairWizard) {
+            if (!showWizard && !showRileyLinkPairWizard) {
                 setToolbarConfig(ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction))
             }
         }
@@ -83,22 +92,22 @@ class OmnipodErosComposeContent(
         LaunchedEffect(overviewViewModel) {
             overviewViewModel.events.collect { event ->
                 when (event) {
-                    is OmnipodOverviewEvent.StartActivation   -> {
+                    is OmnipodOverviewEvent.StartActivation         -> {
                         wizardActivationType = event.activationType
                         isDeactivation = false
                         showWizard = true
                     }
 
-                    is OmnipodOverviewEvent.StartDeactivation -> {
+                    is OmnipodOverviewEvent.StartDeactivation       -> {
                         isDeactivation = true
                         showWizard = true
                     }
 
-                    is OmnipodOverviewEvent.ShowHistory       -> {
+                    is OmnipodOverviewEvent.ShowHistory             -> {
                         showHistory = true
                     }
 
-                    is OmnipodOverviewEvent.ShowDialog        -> {
+                    is OmnipodOverviewEvent.ShowDialog              -> {
                         if (event.title == context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_discard_pod)) {
                             showDiscardConfirm = true
                             dialogTitle = event.title
@@ -110,14 +119,22 @@ class OmnipodErosComposeContent(
                         }
                     }
 
-                    is OmnipodOverviewEvent.ShowErrorDialog   -> {
+                    is OmnipodOverviewEvent.ShowErrorDialog         -> {
                         errorTitle = event.title
                         errorMessage = event.message
                         showErrorDialog = true
                     }
 
-                    is OmnipodOverviewEvent.StartActivity     -> {
+                    is OmnipodOverviewEvent.StartActivity           -> {
                         context.startActivity(event.intent)
+                    }
+
+                    is OmnipodOverviewEvent.ShowRileyLinkPairWizard -> {
+                        showRileyLinkPairWizard = true
+                    }
+
+                    is OmnipodOverviewEvent.ShowSnackbar            -> {
+                        snackbarHostState.showSnackbar(event.message)
                     }
                 }
             }
@@ -142,9 +159,33 @@ class OmnipodErosComposeContent(
             )
         }
 
-        // Content: overview, wizard, or history
+        // Content: overview, wizard, history, or RL pair
         when {
-            showWizard  -> {
+            showRileyLinkPairWizard -> {
+                BlePreCheckHost(
+                    blePreCheck = blePreCheck,
+                    onFailed = { showRileyLinkPairWizard = false }
+                )
+
+                val rlWizardViewModel: RileyLinkPairWizardViewModel = hiltViewModel()
+
+                LaunchedEffect(rlWizardViewModel) {
+                    rlWizardViewModel.events.collect { event ->
+                        when (event) {
+                            is RileyLinkPairWizardEvent.Finish ->
+                                showRileyLinkPairWizard = false
+                        }
+                    }
+                }
+
+                RileyLinkPairWizardScreen(
+                    viewModel = rlWizardViewModel,
+                    onFinish = { showRileyLinkPairWizard = false },
+                    onCancel = { showRileyLinkPairWizard = false }
+                )
+            }
+
+            showWizard              -> {
                 KeepScreenOnEffect()
 
                 val wizardViewModel: ErosOmnipodWizardViewModel = hiltViewModel()
@@ -165,7 +206,7 @@ class OmnipodErosComposeContent(
                 )
             }
 
-            showHistory -> {
+            showHistory             -> {
                 val historyViewModel: ErosPodHistoryViewModel = hiltViewModel()
                 val records by historyViewModel.records.collectAsStateWithLifecycle()
 
@@ -173,14 +214,14 @@ class OmnipodErosComposeContent(
                 LaunchedEffect(Unit) {
                     setToolbarConfig(
                         ToolbarConfig(
-                        title = context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_pod_history),
-                        navigationIcon = {
-                            IconButton(onClick = { showHistory = false }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
-                            }
-                        },
-                        actions = {}
-                    ))
+                            title = context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_pod_history),
+                            navigationIcon = {
+                                IconButton(onClick = { showHistory = false }) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                                }
+                            },
+                            actions = {}
+                        ))
                 }
 
                 ErosPodHistoryScreen(
@@ -191,7 +232,7 @@ class OmnipodErosComposeContent(
                 )
             }
 
-            else        -> {
+            else                    -> {
                 val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
                 PumpOverviewScreen(
                     state = uiState,

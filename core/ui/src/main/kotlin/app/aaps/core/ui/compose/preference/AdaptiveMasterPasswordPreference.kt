@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import kotlinx.coroutines.launch
@@ -90,7 +91,7 @@ fun AdaptiveMasterPasswordPreferenceItem(
                     showQueryDialog = false
                     showSetDialog = true
                 } else {
-                    scope.launch { snackbarHostState?.showSnackbar(wrongPasswordMsg) }
+                    scope.launch { snackbarHostState.showSnackbar(wrongPasswordMsg) }
                 }
             },
             onCancel = { showQueryDialog = false }
@@ -105,31 +106,31 @@ fun AdaptiveMasterPasswordPreferenceItem(
             onConfirm = { password1, password2 ->
                 when {
                     password1 != password2 -> {
-                        scope.launch { snackbarHostState?.showSnackbar(dontMatchMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(dontMatchMsg) }
                     }
 
                     password1.isNotEmpty() -> {
                         preferences.put(stringKey, hashPassword(password1))
                         passwordState = preferences.get(stringKey)
-                        scope.launch { snackbarHostState?.showSnackbar(passwordSetMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(passwordSetMsg) }
                         showSetDialog = false
                     }
 
                     preferences.getIfExists(stringKey) != null -> {
                         preferences.remove(stringKey)
                         passwordState = ""
-                        scope.launch { snackbarHostState?.showSnackbar(passwordClearedMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(passwordClearedMsg) }
                         showSetDialog = false
                     }
 
                     else -> {
-                        scope.launch { snackbarHostState?.showSnackbar(notChangedMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(notChangedMsg) }
                         showSetDialog = false
                     }
                 }
             },
             onCancel = {
-                scope.launch { snackbarHostState?.showSnackbar(notChangedMsg) }
+                scope.launch { snackbarHostState.showSnackbar(notChangedMsg) }
                 showSetDialog = false
             }
         )

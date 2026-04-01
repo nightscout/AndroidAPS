@@ -19,6 +19,7 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import kotlinx.coroutines.launch
 
@@ -99,31 +100,31 @@ fun AdaptivePasswordPreferenceItem(
             onConfirm = { password1, password2 ->
                 when {
                     password1 != password2 -> {
-                        scope.launch { snackbarHostState?.showSnackbar(dontMatchMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(dontMatchMsg) }
                     }
 
                     password1.isNotEmpty() -> {
                         preferences.put(stringKey, if (stringKey.isHashed) hashPassword(password1) else password1)
-                        scope.launch { snackbarHostState?.showSnackbar(setMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(setMsg) }
                         hasValue = true
                         showDialog = false
                     }
 
                     preferences.getIfExists(stringKey) != null -> {
                         preferences.remove(stringKey)
-                        scope.launch { snackbarHostState?.showSnackbar(clearedMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(clearedMsg) }
                         hasValue = false
                         showDialog = false
                     }
 
                     else -> {
-                        scope.launch { snackbarHostState?.showSnackbar(notChangedMsg) }
+                        scope.launch { snackbarHostState.showSnackbar(notChangedMsg) }
                         showDialog = false
                     }
                 }
             },
             onCancel = {
-                scope.launch { snackbarHostState?.showSnackbar(notChangedMsg) }
+                scope.launch { snackbarHostState.showSnackbar(notChangedMsg) }
                 showDialog = false
             }
         )

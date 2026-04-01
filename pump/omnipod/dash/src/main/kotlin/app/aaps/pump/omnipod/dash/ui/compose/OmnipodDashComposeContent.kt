@@ -86,22 +86,22 @@ class OmnipodDashComposeContent(
         LaunchedEffect(overviewViewModel) {
             overviewViewModel.events.collect { event ->
                 when (event) {
-                    is OmnipodOverviewEvent.StartActivation   -> {
+                    is OmnipodOverviewEvent.StartActivation         -> {
                         wizardActivationType = event.activationType
                         isDeactivation = false
                         showWizard = true
                     }
 
-                    is OmnipodOverviewEvent.StartDeactivation -> {
+                    is OmnipodOverviewEvent.StartDeactivation       -> {
                         isDeactivation = true
                         showWizard = true
                     }
 
-                    is OmnipodOverviewEvent.ShowHistory       -> {
+                    is OmnipodOverviewEvent.ShowHistory             -> {
                         showHistory = true
                     }
 
-                    is OmnipodOverviewEvent.ShowDialog        -> {
+                    is OmnipodOverviewEvent.ShowDialog              -> {
                         // Check if this is a discard confirmation
                         if (event.title == context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_discard_pod)) {
                             showDiscardConfirm = true
@@ -114,15 +114,18 @@ class OmnipodDashComposeContent(
                         }
                     }
 
-                    is OmnipodOverviewEvent.ShowErrorDialog   -> {
+                    is OmnipodOverviewEvent.ShowErrorDialog         -> {
                         errorTitle = event.title
                         errorMessage = event.message
                         showErrorDialog = true
                     }
 
-                    is OmnipodOverviewEvent.StartActivity     -> {
+                    is OmnipodOverviewEvent.StartActivity           -> {
                         context.startActivity(event.intent)
                     }
+
+                    is OmnipodOverviewEvent.ShowRileyLinkPairWizard -> Unit // Not applicable for Dash
+                    is OmnipodOverviewEvent.ShowSnackbar            -> Unit // Not used by Dash
                 }
             }
         }
@@ -183,14 +186,14 @@ class OmnipodDashComposeContent(
                 LaunchedEffect(Unit) {
                     setToolbarConfig(
                         ToolbarConfig(
-                        title = context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_pod_history),
-                        navigationIcon = {
-                            IconButton(onClick = { showHistory = false }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
-                            }
-                        },
-                        actions = {}
-                    ))
+                            title = context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_pod_history),
+                            navigationIcon = {
+                                IconButton(onClick = { showHistory = false }) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                                }
+                            },
+                            actions = {}
+                        ))
                 }
 
                 DashPodHistoryScreen(

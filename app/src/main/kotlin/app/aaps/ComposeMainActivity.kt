@@ -111,6 +111,7 @@ import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -1052,30 +1053,34 @@ class ComposeMainActivity : AppCompatActivity() {
                             )
                         )
                     }
-                    Scaffold(
-                        topBar = {
-                            AapsTopAppBar(
-                                title = { Text(toolbarConfig.title) },
-                                navigationIcon = { toolbarConfig.navigationIcon() },
-                                actions = { toolbarConfig.actions(this) }
-                            )
-                        }
-                    ) { paddingValues ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues)
-                        ) {
-                            composeContent.Render(
-                                setToolbarConfig = { config -> toolbarConfig = config },
-                                onNavigateBack = { navController.safePopBackStack() },
-                                onSettings = {
-                                    handleNavigationRequest(
-                                        NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
-                                        navController
-                                    )
-                                }
-                            )
+                    val pluginSnackbarHostState = remember { SnackbarHostState() }
+                    CompositionLocalProvider(LocalSnackbarHostState provides pluginSnackbarHostState) {
+                        Scaffold(
+                            snackbarHost = { SnackbarHost(pluginSnackbarHostState) },
+                            topBar = {
+                                AapsTopAppBar(
+                                    title = { Text(toolbarConfig.title) },
+                                    navigationIcon = { toolbarConfig.navigationIcon() },
+                                    actions = { toolbarConfig.actions(this) }
+                                )
+                            }
+                        ) { paddingValues ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues)
+                            ) {
+                                composeContent.Render(
+                                    setToolbarConfig = { config -> toolbarConfig = config },
+                                    onNavigateBack = { navController.safePopBackStack() },
+                                    onSettings = {
+                                        handleNavigationRequest(
+                                            NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
+                                            navController
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }

@@ -341,6 +341,12 @@ class ErosOverviewViewModel @Inject constructor(
                 onClick = { _events.tryEmit(OmnipodOverviewEvent.ShowHistory) }
             ),
             PumpAction(
+                label = rh.gs(RileyLinkR.string.rileylink_pair),
+                icon = Icons.Filled.Bluetooth,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { _events.tryEmit(OmnipodOverviewEvent.ShowRileyLinkPairWizard) }
+            ),
+            PumpAction(
                 label = rh.gs(R.string.omnipod_eros_pod_management_button_riley_link_stats),
                 icon = Icons.Filled.Bluetooth,
                 category = ActionCategory.MANAGEMENT,
@@ -355,7 +361,10 @@ class ErosOverviewViewModel @Inject constructor(
                 label = rh.gs(R.string.omnipod_eros_pod_management_button_reset_riley_link_config),
                 icon = Icons.Filled.RestartAlt,
                 category = ActionCategory.MANAGEMENT,
-                onClick = { serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider.get()) }
+                onClick = {
+                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider.get())
+                    _events.tryEmit(OmnipodOverviewEvent.ShowSnackbar(rh.gs(RileyLinkR.string.rileylink_config_reset)))
+                }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_discard_pod),
@@ -485,7 +494,7 @@ class ErosOverviewViewModel @Inject constructor(
             val minutesRunning = Duration(podStateManager.tempBasalStartTime, now).standardMinutes
             var text = rh.gs(
                 CommonR.string.omnipod_common_overview_temp_basal_concentration_value,
-                ch.basalRateString(PumpRate(podStateManager.tempBasalAmount),true),
+                ch.basalRateString(PumpRate(podStateManager.tempBasalAmount), true),
                 dateUtil.timeString(podStateManager.tempBasalStartTime.millis),
                 minutesRunning,
                 podStateManager.tempBasalDuration.standardMinutes

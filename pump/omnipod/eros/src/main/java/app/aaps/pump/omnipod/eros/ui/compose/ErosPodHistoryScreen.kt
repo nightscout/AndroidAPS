@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
@@ -41,7 +42,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalDateUtil
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.common.defs.TempBasalPair
 import app.aaps.pump.omnipod.eros.R
@@ -170,11 +170,13 @@ internal fun ErosHistoryCardContent(
                 ) {
                     Text(
                         text = commandName,
+                        modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = if (isSuccess) MaterialTheme.colorScheme.onSurface
                         else MaterialTheme.colorScheme.error
                     )
+                    Spacer(Modifier.width(AapsSpacing.medium))
                     Text(
                         text = time,
                         style = MaterialTheme.typography.bodySmall,
@@ -267,7 +269,9 @@ private fun formatErosValue(
             try {
                 val tbp = aapsOmnipodUtil.gsonInstance.fromJson(record.data, TempBasalPair::class.java)
                 rh.gs(R.string.omnipod_eros_history_tbr_value, tbp.insulinRate, tbp.durationMinutes)
-            } catch (_: Exception) { "" }
+            } catch (_: Exception) {
+                ""
+            }
         }
 
         PodHistoryEntryType.INSERT_CANNULA,
@@ -276,7 +280,9 @@ private fun formatErosValue(
                 try {
                     val profileValues = aapsOmnipodUtil.gsonInstance.fromJson(it, Array<ProfileValue>::class.java)
                     profileUtil.getBasalProfilesDisplayable(profileValues, PumpType.OMNIPOD_EROS)
-                } catch (_: Exception) { "" }
+                } catch (_: Exception) {
+                    ""
+                }
             } ?: ""
         }
 
