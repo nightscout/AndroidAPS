@@ -146,4 +146,6 @@
     <string name="newSmbMode">Ny SMB-modus:</string>
     <string name="on">PÅ</string>
     <string name="off">AV</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>
