@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Đang ghép đôi</string>
-    <string name="danars_no_device_available">Chưa tìm thấy thiết bị nào</string>
-    <string name="danars_pairingok">Ghép đôi thành công</string>
     <string name="danars_pairingtimedout">Hết thời gian ghép đôi</string>
-    <string name="danars_waitingforpairing">Đang chờ ghép đôi trên bơm</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Tích hợp bơm cho DANA Diabecare RS và Dana-i</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">Tích hợp bơm DANA Diabecare R (bản nội địa)</string>
     <string name="description_pump_dana_r_v2">Tích hợp bơm DANA Diabecare R với firmware đã nâng cấp</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Không phát hiện Bluetooth</string>
     <string name="devicenotfound">Không tìm thấy thiết bị đã chọn</string>
     <string name="danar_switchtouhmode">Thay đổi chế độ từ U/d sang U/h trên bơm</string>
     <string name="danarkoreanpump">DanaR Korean</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Tắt chế độ EasyUI trên bơm</string>
     <string name="profile_set_failed">Cài đặt Hồ sơ liều nền thất bại</string>
-    <string name="danar_bluetooth_status">Trạng thái Bluetooth</string>
     <string name="firmware_label">Phần mềm</string>
     <string name="danar_pump_settings">Cài đặt bơm Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">Bật</string>
     <string name="option_off">Tắt</string>
-    <string name="danar_bt_name_title">Thiết bị Bluetooth DanaR</string>
     <string name="danars_password_title">Mật khẩu bơm (chỉ v1)</string>
     <string name="danar_password_title">Mật khẩu bơm</string>
     <string name="danar_useextended_title">Sử dụng bolus kéo dài khi &gt;200%</string>
@@ -114,5 +108,4 @@
     <string name="num1pin">1: (12 chữ số)</string>
     <string name="num2pin">2: (8 chữ số)</string>
     <string name="basal_bolus_step">Bước điều chỉnh basal/bolus</string>
-    <string name="carbs_store_error">Carb có thể chưa được lưu đúng cách. Hãy kiểm tra thủ công và lưu lại nếu cần.</string>
 </resources>
