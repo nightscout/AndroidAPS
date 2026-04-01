@@ -39,4 +39,6 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplicația Sino</string>
     <string name="description_source_patched_sino_app">Primiți date glicemice din aplicația Sino modificată.</string>
+    <!-- Notification Reader -->
+    <!-- Permission rationales -->
 </resources>
