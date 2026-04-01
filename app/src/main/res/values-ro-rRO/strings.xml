@@ -19,7 +19,15 @@
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="sort_label">Sortează</string>
     <string name="search">Caută</string>
+    <string name="use_compose_main_screen">Utilizare ecran principal compunere (experimental)</string>
+    <string name="switch_to_compose_ui">Comutare la Compose UI</string>
+    <string name="switch_to_classic_ui">Comutare la interfața clasică</string>
     <string name="select">Selectează</string>
     <string name="set">Setează</string>
+    <string name="migrating_preferences">Se migrează preferințele…</string>
+    <string name="initializing_plugins">Se inițializează modulele…</string>
     <string name="initializing">Se inițializează…</string>
+    <string name="migrating_profile_switches">Se migrează modificările de profil…</string>
+    <string name="migrating_effective_profile_switches">Se migrează modificările de profil active…</string>
+    <string name="migrating_boluses">Migrarea bolusurilor…</string>
 </resources>
