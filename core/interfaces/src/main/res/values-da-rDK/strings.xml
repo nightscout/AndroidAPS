@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpe driver ændret.</string>
@@ -59,4 +60,7 @@
     <string name="pref_show_week_number">Vis ugenummer</string>
     <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTÉR URSKIVE-knappen for at generere en skabelon</string>
     <string name="wear_default_watchface">Standard Urskive</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>
