@@ -25,4 +25,6 @@
     <string name="short_status_reservoir">Reservorio: %1$dU</string>
     <string name="short_status_battery">Batería: %1$d%%</string>
     <string name="short_status_not_initialized">Bomba no inicializada</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
