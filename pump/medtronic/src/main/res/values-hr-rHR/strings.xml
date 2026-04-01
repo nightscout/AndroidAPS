@@ -19,6 +19,8 @@
     <string name="medtronic_pump_battery_lithium">Litij (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nizn">Nikal-Cink (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (prošireni prikaz)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterija RileyLink</string>
     <!-- MDT Errors -->
