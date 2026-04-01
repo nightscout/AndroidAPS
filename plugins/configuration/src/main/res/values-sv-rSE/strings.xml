@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Välj enheter du vill visa värden i</string>
     <string name="next_button">Nästa</string>
     <string name="previous_button">Föregående</string>
-    <string name="nav_setupwizard">Installationsguide</string>
     <string name="setupwizard_finish">Avsluta</string>
     <string name="welcome">Välkommen</string>
     <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
@@ -18,18 +17,13 @@
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
     <string name="permission">Behörighet</string>
     <string name="need_system_window_permission">Applikationen behöver förhöjd behörighet för aviseringar</string>
-    <string name="need_location_permission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
-    <string name="need_storage_permission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
     <string name="askforpermission">Be om behörighet</string>
-    <string name="need_whitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="storedsettingsfound">Tidigare sparade inställningar hittade</string>
     <string name="master_password_summary">Huvudlösenordet används för att kryptera backuper och för att åsidosätta vissa säkerhetsfunktioner i applikationen. Kom ihåg det eller förvara det på ett säkert ställe.</string>
-    <string name="current_master_password">Nuvarande huvudlösenord</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
     <string name="syncinfotext">Synkronisera data till molnet. Du kan hoppa över detta steg nu, men du kommer inte att kunna klara inlärningsmålen förrän du ansluter Nightscout eller Tidepool.</string>
     <string name="status">Status:</string>
-    <string name="patient_name">Patientens namn</string>
-    <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
@@ -51,25 +45,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurationsverktyg</string>
-    <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Vilken profil ska AAPS använda?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Vilken algoritm ska användas för behandlingar?</string>
-    <string name="configbuilder_general">Generella inställningar</string>
     <string name="configbuilder_general_description">Dessa är några allmänna insticksprogram som kan vara användbara.</string>
-    <string name="configbuilder_sync">Synkronisering</string>
-    <string name="configbuilder_sync_description">Plugin för uppladdning och synkronisering av data.</string>
     <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
-    <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Använd detta för att aktivera AAPS loop-möjligheter.</string>
     <string name="configbuilder_insulin_description">Vilken typ av insulin använder du?</string>
-    <string name="configbuilder_bgsource">BG-källa</string>
     <string name="configbuilder_bgsource_description">Var ska AAPS få sitt data ifrån?</string>
-    <string name="configbuilder_smoothing">Utjämning</string>
     <string name="configbuilder_smoothing_description">Välj utjämningsalgoritm</string>
-    <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
     <string name="config_builder_shortname">Konf</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
@@ -78,19 +62,18 @@
     <string name="nsclient_version_does_not_match">Följarversionen matchar inte AAPS-versionen. Vänligen uppdatera.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Inställningar</string>
-    <string name="password_preferences_encrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att kryptera exporterade inställningar.</string>
-    <string name="preferences_export_canceled">Exporten avbröts. Inställningarna har INTE exporterats!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>
     <string name="preferences_import_impossible">Kan inte importera inställningar!</string>
     <string name="check_preferences_details_btn">Förklara importproblem…</string>
     <string name="check_preferences_details_title">Detaljer kring importproblem</string>
     <string name="check_preferences_import_btn">Importera</string>
     <string name="check_preferences_import_anyway_btn">Importera ändå (FARLIGT!)</string>
-    <string name="import_setting">Importera inställningar</string>
     <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
     <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
     <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
-    <string name="export_to">Exportera inställningar till</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importera inställningar från</string>
     <string name="setting_imported">Inställningar importerade</string>
     <string name="old_master_password">Gamla huvudlösenordet</string>
@@ -101,25 +84,12 @@
     <string name="goto_main_try_again">Vänligen gå tillbaka till huvudskärmen och försök igen.</string>
     <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
     <string name="ue_exported">Användarposter exporterade</string>
-    <string name="protection">Skydd</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>
-    <string name="description_maintenance">Tillhandahåller funktioner för underhåll (t ex skicka eller ta bort loggar).</string>
-    <string name="database_cleanup">Rensning av databas</string>
-    <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
     <string name="maintenance_email">e-postmottagare</string>
     <string name="maintenance_amount">Antal loggar att skicka</string>
-    <string name="send_all_logs">Skicka loggar per e-post</string>
-    <string name="delete_logs">Radera loggar</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
-    <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
-    <string name="log_files">Loggfiler</string>
-    <string name="nav_logsettings">Loggningsinställningar</string>
-    <string name="miscellaneous">Diverse</string>
-    <string name="nav_resetdb">Återställ databaserna</string>
-    <string name="resettodefaults">Återställ standardinställningar</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporterades för %1$s sedan</string>
     <string name="exported_at" comment="at placeholder we add export date">exporterades %1$s</string>
@@ -142,8 +112,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfel. Det angivna lösenordet är ogiltigt eller så har inställningsfilen ändrats. Filen verkar ha exporterats med ett annat lösenord.</string>
     <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Välj anpassad urtavla</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Skapad</string>
@@ -154,6 +122,7 @@
     <string name="metadata_label_encryption">· Filkryptering</string>
     <string name="metadata_format_new">Nytt krypterat format</string>
     <string name="metadata_format_other">Okänt exportformat</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
