@@ -24,20 +24,20 @@
     <string name="pref_complication_settings">Complicație</string>
     <string name="pref_show_date">Arată data</string>
     <string name="pref_show_iob">Arată IOB</string>
-    <string name="pref_show_detailed_iob">Arată IOB detaliat</string>
+    <string name="pref_show_detailed_iob">Arată rată IOB detaliat</string>
     <string name="pref_show_cob">Arată COB</string>
     <string name="pref_show_delta">Arată Delta</string>
     <string name="pref_show_detailed_delta">Arată variație detaliată</string>
     <string name="pref_show_avgdelta">Arată AvgDelta</string>
     <string name="pref_show_phone_battery">Arată baterie telefon</string>
-    <string name="pref_show_rig_battery">Arată Baterie Echipament</string>
+    <string name="pref_show_rig_battery">Arată baterie echipament</string>
     <string name="pref_show_basal_rate">Arată rata bazală</string>
-    <string name="pref_show_temp_target">Afișați Ținta Temporară</string>
-    <string name="pref_show_reservoir_level">Afișați Nivelul Rezervorului</string>
+    <string name="pref_show_temp_target">Arată Ținta Temporară</string>
+    <string name="pref_show_reservoir_level">Arată Nivelul Rezervorului</string>
     <string name="pref_show_loop_status">Arată stare buclă închisă</string>
     <string name="pref_show_bg">Arată glicemia</string>
     <string name="pref_show_bgi">Arată BGI</string>
-    <string name="pref_show_direction_arrow">Arată săgeată pentru evoluție</string>
+    <string name="pref_show_direction_arrow">Arată săgeată tendință</string>
     <string name="pref_show_ago">Afișare în urmă</string>
     <string name="pref_show_temp_basal">Arată RBT</string>
     <string name="pref_show_bolus">Arată Bolus &amp; SMB</string>
@@ -45,7 +45,7 @@
     <string name="pref_dark" comment="Enables dark visual theme">Întunecat</string>
     <string name="pref_highlight_basals">Evidențiere rate bazale</string>
     <string name="pref_prediction_lines">Arată predicții</string>
-    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Potrivire divider</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Separator</string>
     <string name="pref_chart_timeframe">Grafic Timp</string>
     <string name="pref_1_hour">1 oră</string>
     <string name="pref_2_hours">2 ore</string>
@@ -96,7 +96,7 @@
     <string name="action_profile_switch_confirmation">Schimbare profil solicitată</string>
     <string name="action_carbs">Carbohidrați</string>
     <string name="action_carbs_gram">Carbohidrați [g]</string>
-    <string name="action_ecarbs">eCarbs</string>
+    <string name="action_ecarbs">Carbohidrați extinși</string>
     <string name="action_percentage">Procentaj\n[%]</string>
     <string name="action_start_minutes">Start\n[minute]</string>
     <string name="action_duration_h">Durată [h]</string>
@@ -158,7 +158,7 @@
     <string name="bolus_progress_channel_name">Progres bolus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Progres bolus AAPS silențios</string>
     <string name="bolus_progress_channel_description">Progres bolus și anulare</string>
-    <string name="bolus_progress_silent_channel_description">Progres bolus şi anulare cu mai puţine vibraţii</string>
+    <string name="bolus_progress_silent_channel_description">Progres bolus și anulare cu mai puține vibrații</string>
     <string name="simple_ui_off">Oprit</string>
     <string name="simple_ui_charging">În timpul încărcării</string>
     <string name="simple_ui_always_on">Modul mereu activ</string>
