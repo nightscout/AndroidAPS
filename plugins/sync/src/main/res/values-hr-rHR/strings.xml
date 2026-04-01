@@ -3,12 +3,19 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Koristite mobilnu vezu</string>
     <string name="ns_wifi">Koristite WiFi vezu</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Tijekom punjenja</string>
     <string name="ns_battery">Na bateriji</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
     <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
     <!-- AAPSClient -->
-    <string name="ns_client_url_title">Nightscout URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="ns_upload_summary">Profili, bolusi, ugljikohidrati, privremeni bazali učitavaju se u NS</string>
     <string name="ns_upload">Upload podataka u NS</string>
     <string name="ns_receive_profile_store">Primite pohranu profila</string>
@@ -59,4 +66,5 @@
     <string name="rate_duration">Stopa: %1$.2fU/h (%2$.2f%%) \nTrajanje %3$d min</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Danas</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
