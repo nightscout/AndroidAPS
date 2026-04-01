@@ -164,7 +164,6 @@
     <string name="autotune_update_local_profile_message">Cập nhật Hồ sơ %1$s bằng Hồ sơ Autotune?</string>
     <string name="autotune_revert_local_profile_message">Hoàn nguyên Hồ sơ %1$s về Hồ sơ Đầu vào không?</string>
     <string name="autotune_profile_invalid">Hồ sơ không hợp lệ</string>
-    <string name="not_available_full">Không khả dụng</string>
     <string name="pump_disconnected">Bơm đã ngắt kết nối</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Mục tiêu tập luyện với 50% liều nền</string>
