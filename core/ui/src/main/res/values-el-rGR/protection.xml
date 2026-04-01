@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Διατήρηση κωδικού πρόσβασης και PIN [s]</string>
     <string name="protection_timeout_summary">Χρόνος πριν ο κωδικός πρόσβασης ή το PIN πρέπει να εισαχθεί</string>
-    <string name="biometric">Βιομετρικά</string>
-    <string name="custom_password">Προσαρμοσμένος κωδικός</string>
-    <string name="custom_pin">Προσαρμοσμένο PIN</string>
-    <string name="noprotection">Καμία προστασία</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Μη Ασφαλής Επανάκληση</string>
     <string name="unsecure_fallback_descriotion_biometric">Για να είναι αποτελεσματική, η βιομετρική προστασία, χρειάζεται να οριστεί ένας κωδικός master για δυνατότητα επανάκλησης.\n\nΠαρακαλώ ρυθμίστε ένα κωδικό master!</string>
     <string name="password_set">Ο κωδικός ορίστηκε!</string>
@@ -26,6 +23,4 @@
     <string name="password_not_changed">Ο κωδικός δεν άλλαξε</string>
     <string name="pin_not_changed">Το PIN δεν άλλαξε</string>
     <string name="pin_cleared">Το PIN διαγράφηκε!</string>
-    <string name="password_hint">Εισάγετε τον κωδικό εδώ</string>
-    <string name="pin_hint">Εισάγετε το PIN εδώ</string>
 </resources>
