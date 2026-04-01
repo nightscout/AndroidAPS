@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
     <string name="start_hypo_tt">Start TT hipo</string>
     <string name="time_offset">Decalaj</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
-    <string name="a11y_carb_reminder">setați memento</string>
     <!--    Widget-->
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Monitor activitate</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
     <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
-    <string name="statistics">Statistici</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="invalid_age">Valoare vârstă invalidă</string>
     <string name="invalid_weight">Valoare greutate invalidă</string>
-    <string name="id">ID:</string>
-    <string name="submit">Trimiteți</string>
     <string name="age">Vârstă</string>
     <string name="weight_label">Greutate</string>
-    <string name="most_common_profile">Cel mai frecvent profil:</string>
-    <string name="survey_comment">Notă: Doar datele vizibile pe acest ecran vor fi încărcate în mod anonim. ID-ul este alocat acestei instalări a AndroidAPS. Puteți trimite date din nou dacă profilul dumneavoastră principal se modifică, dar lăsați-l să ruleze cel puțin o săptămână pentru ca rezultatul să fie vizibil în interval de timp. Ajutorul dumneavoastră este apreciat.</string>
     <string name="glucose_type">Tip glicemie</string>
     <string name="bg_other">Altul</string>
     <string name="bg_meter">Glucometru</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">Descrierea profilului utilizatorului este utilizată pentru a afișa cele mai frecvente locuri de inserție disponibile pentru bărbați, femei sau copii</string>
     <string name="site_management">Profil Administrare Loc Inserție</string>
     <string name="site_management_description">Veți seta aici dacă doriți să gestionați locul de inserție al pompei, al CGM-ului sau ambele. Această setare va fi folosită pentru a trimite automat dialogul de administrare al locului de inserție la fiecare intrare detectată nouă</string>
-    <string name="select_site">Apăsați mai jos pentru a selecta locul de inserție</string>
     <string name="record_site_change">Înregistrați locul de inserție</string>
     <string name="edit_site">Editează</string>
     <string name="record_site_location">Locul de inserție: %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalare</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
-    <string name="show_calculation">Arată calculul</string>
     <!-- Treatments -->
     <string name="no_records_available">Nicio înregistrare disponibila</string>
     <string name="calculation_short">Calc</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">Masă</string>
     <string name="prime">Amorsare</string>
     <string name="carbs_and_bolus">Carbohidrați și bolusuri</string>
-    <string name="show_invalidated_records">Arată înregistrările invalidate / şterse</string>
-    <string name="hide_invalidated_records">Ascunde înregistrările invalidate / eliminate</string>
     <string name="show_invalidated">Arată invalidat</string>
     <string name="hide_invalidated">Ascunde invalidat</string>
     <string name="careportal_remove_started_events">Eliminare intrări pornire AAPS</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Arată bucla</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonează</string>
-    <string name="show_loop_records">Afișare înregistrări buclă</string>
-    <string name="show_hide_records">Ascundere înregistrări buclă</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profilul 1</string>
-    <string name="profile2">Profilul 2</string>
     <string name="profile_type">Tip profil</string>
     <string name="basal_pct_from_tdd_label">% din bazală</string>
     <string name="selected_profile">Selectat:</string>
-    <string name="compare_profile">Compară profilurile</string>
-    <string name="nav_profile_helper">Ajutor Profil</string>
     <string name="motol_default_profile">Profil implicit</string>
     <string name="current_profile">Profil curent</string>
     <string name="available_profile">Profil disponibil</string>
@@ -156,9 +140,12 @@
     <string name="widget_configuration">Configurare widget</string>
     <string name="until_changed">Până la schimbare</string>
     <string name="limitations">Limitări</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambele</item>
         <item>Doar pozitiv</item>
         <item>Doar negativ</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>
