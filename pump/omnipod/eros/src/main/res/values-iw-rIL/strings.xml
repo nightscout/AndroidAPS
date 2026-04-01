@@ -57,7 +57,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">סטטיסטיקת ריילילינק</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">ממתין לחיבור לריילילינק…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">איפוס תצורת ריילילינק</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">קרא יומן פעימות</string>
     <string name="omnipod_eros_pod_management_button_reading_pulse_log">קורא יומן פעימות…</string>
     <string name="omnipod_eros_pod_management_pulse_log">יומן פעימות</string>
