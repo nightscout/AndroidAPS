@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Χρήση σύνδεσης κινητής τηλεφωνίας</string>
     <string name="ns_wifi">Χρήση σύνδεσης Wi-Fi</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Κατά τη διάρκεια της φόρτισης</string>
     <string name="ns_battery">Κατά την χρήση μπαταρίας</string>
     <string name="connection_settings_title">Ρυθμίσεις σύνδεσης</string>
-    <string name="ns_wifi_allowed_ssids">Επιτρέπονται SSID (διαχωρίζονται με ελληνικό ερωτηματικό)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Επιτρέψτε τη σύνδεση περιαγωγής</string>
     <string name="ns_create_announcements_from_errors_title">Δημιουργήστε ειδοποιήσεις σφαλμάτων</string>
     <string name="ns_create_announcements_from_carbs_req_title">Δημιουργία ανακοινώσεων από τις ειδοποιήσεις απαιτούμενων υδατανθράκων</string>
@@ -17,13 +17,15 @@
     <string name="blocked_by_charging">Αποκλεισμός από τις επιλογές φόρτισης</string>
     <string name="blocked_by_connectivity">Αποκλεισμός από τις επιλογές συνδεσιμότητας</string>
     <string name="unsupported_ns_version">Μη υποστηριζόμενη έκδοση Nightscout</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Επανεκκίνηση</string>
-    <string name="ns_client_url_title">Διεύθυνση Nightscout</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Έγχυση τώρα</string>
     <string name="queue">Σειρά:</string>
     <string name="status">Κατάσταση:</string>
@@ -51,7 +53,6 @@
     <string name="ns_alarm_stale_data_value_label">Οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Επείγουσα οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="ns_log_app_started_event">Η εφαρμογή καταγραφής ξεκινά από το NS</string>
-    <string name="copy_existing_values">Αντιγραφή ρυθμίσεων NS (αν υπάρχουν);</string>
     <string name="ns_use_ws_title">Σύνδεση σε websockets</string>
     <string name="ns_use_ws_summary">Ενεργοποίηση σημαίνει: ταχύτερες ενημερώσεις, λήψη ειδοποιήσεων και ανακοινώσεις και υψηλότερη κατανάλωση μπαταρίας παρόμοια με την v1. Όλοι οι άλλοι μεταφορτωτές στο NS πρέπει να χρησιμοποιούν το πρωτόκολλο v3.</string>
     <!-- Tidepool -->
@@ -137,4 +138,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Σήμερα</string>
     <string name="weighted">σταθμισμένο</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
