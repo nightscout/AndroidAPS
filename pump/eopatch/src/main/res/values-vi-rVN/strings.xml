@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Chuẩn bị gắn Patch</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Tháo băng dính y tế, sau đó nhấn ‘Tiếp theo’.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Cảnh báo1] Nếu kim lộ ra ngoài, nhấn ‘Hủy bỏ’.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Cảnh báo2] Nếu Patch bị ướt hoặc bẩn, hoặc băng dính bị gập, nhấn ‘Hủy bỏ\'.</string>
     <string name="patch_remove_protection_tape">Gắn Patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Làm sạch và lau khô vị trí dán, sau đó gắn Patch lên da.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Kiểm tra an toàn…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Mất khoảng 30 giây.</string>
-    <string name="patch_safety_check_desc_2">[Chú ý] Để sử dụng an toàn, không tháo cần thao tác kim cho đến khi quá trình kiểm tra an toàn hoàn tất!</string>
     <string name="patch_rotate_knob">Đang đưa kim vào</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Xoay cần thao tác kim hơn 100° để đưa kim vào, sau đó xoay hết cỡ để rút kim ra</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Hủy bỏ/Thay Patch</string>
     <string name="string_activate_patch">Kích hoạt Patch</string>
     <string name="string_discard_patch">Hủy Patch</string>
-    <string name="string_resume">Tiếp tục</string>
     <string name="discard">Loại bỏ</string>
     <string name="string_communication_check">Kiểm tra giao tiếp</string>
-    <string name="string_suspend">Tạm dừng</string>
-    <string name="string_suspended">Bị tạm dừng</string>
     <string name="string_running">Đang chạy</string>
     <string name="cancel">Hủy</string>
     <string name="confirm">Xác nhận</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Đang thay đổi</string>
     <string name="string_in_progress">Đang xử lý</string>
     <string name="retry">Thử lại</string>
-    <string name="string_caution_not_remove_needle_cap">[Cảnh báo] KHÔNG tháo nắp kim và lớp băng dính cho đến khi có hướng dẫn tiếp theo.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Bạn có chắc chắn muốn bỏ Patch không?</string>
     <string name="needle_insertion_error_1">Lỗi khi đưa kim vào.</string>
     <string name="needle_insertion_error_2">Kiểm tra xem hướng của lỗ sau khi xoay cần thao tác có thẳng không, sau đó nhấn ‘Thử lại’.</string>
     <string name="needle_insertion_error_3">Nhấn ‘Hủy bỏ’ để hủy kích hoạt Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Thời gian tạm dừng liều nền</string>
     <string name="string_resume_insulin_delivery_title">Phục hồi liều insulin</string>
-    <string name="string_resume_insulin_delivery_message">Kết thúc tạm ngừng tiêm insulin.\nNhấn \'Xác nhận\' để tiếp tục tiêm insulin.\n\n[Cảnh báo]\nViệc tiêm insulin sẽ không tiếp tục cho đến khi bạn nhấn \'Xác nhận\'.\nNếu bạn không nhấn \'Xác nhận\', bạn có thể bị tăng đường huyết.</string>
     <string name="string_suspended_insulin_delivery_message">Việc tiêm insulin đã bị tạm dừng.</string>
     <string name="string_resumed_insulin_delivery_message">Việc truyền insulin đã được tiếp tục.</string>
     <string name="finish">Kết thúc</string>
     <string name="string_temp_basal_remained_hhmm">thời gian còn lại: %1$s:%2$s</string>
     <string name="next">Tiếp theo</string>
-    <string name="string_pause_failed">Tạm dừng thất bại.</string>
     <string name="string_resume_failed">Tiếp tục thất bại.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
