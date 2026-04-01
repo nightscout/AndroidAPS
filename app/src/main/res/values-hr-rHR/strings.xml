@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Postavke</string>
-    <string name="nav_exit">Izlaz</string>
     <string name="delta">Delta</string>
     <string name="save">Spremi</string>
     <string name="invalid">GREŠKA</string>
