@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Įvesties Dizainas</string>
-    <string name="pref_default">Numatytasis</string>
-    <string name="pref_quick_righty">Greitai dešinėn</string>
-    <string name="pref_quick_lefty">Greitai kairėn</string>
-    <string name="pref_modern_sparse">Minimalistinis</string>
     <string name="pref_big_numbers">Dideli Skaičiai</string>
     <string name="pref_ring_history">Glikemijos istorija</string>
     <string name="pref_light_ring_history">Glikemijos istorija - šviesi</string>
@@ -185,7 +180,6 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">senas</string>
     <string name="old_warning">!senas!</string>
-    <string name="error">!klaida!</string>
     <string name="pref_heartRateSampling">Pulsas</string>
     <string name="pref_heartRateSmoothing">Širdies ritmo glodinimas</string>
     <string name="pref_stepsSampling">Įjungti žingsnių skaičiavimą</string>
