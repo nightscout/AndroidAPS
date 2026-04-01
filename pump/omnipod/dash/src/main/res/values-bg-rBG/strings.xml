@@ -19,7 +19,6 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Напълнете новия Pod
         с достатъчно инсулин за 3 дни.\n\nИзчакайте два сигнала от Pod по време на процеса на зареждане. Те показват, че е сложен минималният размер от 80Е. Уверете се, че сте изпразнили напълно спринцовката, дори след като сте чули двата сигнала.\n\nСлед пълнене на Pod, моля натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> не вадете капачката на иглата на Pod в този момент.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Опитвате се да се сдвоите с новия Pod и да го заредите.\n\nКогато процесът на инициализация приключи успешно, можете да натиснете <b>Напред</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Сигнализирай при активирано известие за спряна доставка</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Неуспешна връзка с pod</string>
     <string name="omnipod_dash_found_too_many_pods">Намерени са твърде много подове за активиране</string>
