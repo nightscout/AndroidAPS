@@ -39,4 +39,6 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">從修改版 Sino App 接收血糖資料。</string>
+    <!-- Notification Reader -->
+    <!-- Permission rationales -->
 </resources>
