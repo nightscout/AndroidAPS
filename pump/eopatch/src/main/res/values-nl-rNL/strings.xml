@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Bereid je voor om patch aan te brengen</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Verwijder de plakker en druk op \'Volgende\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Als een naald uitsteekt tik dan op \'Verwijderen\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Als de Patch nat of vies is, of de applicatie tape gevouwen is, tik dan op \'Verwijderen\'.</string>
     <string name="patch_remove_protection_tape">Patch aanbrengen</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Maak de applicatie plaats schoon en droog en breng de patch aan op de huid.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Veiligheidscontrole…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Het duurt ongeveer dertig seconden.</string>
-    <string name="patch_safety_check_desc_2">[Caution] Voor veilig gebruik, van de naald bedieningshendel afblijven en eerst de veiligheidscheck uitvoeren!</string>
     <string name="patch_rotate_knob">De naald inbrengen</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Draai de naald bedieningshendel meer dan 100 ° om de naald in te brengen en draai daarna volledig om deze te verwijderen</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Verwijder/wissel Patch</string>
     <string name="string_activate_patch">Activeer Patch</string>
     <string name="string_discard_patch">Patch verwijderen</string>
-    <string name="string_resume">Hervatten</string>
     <string name="discard">Verwijder</string>
     <string name="string_communication_check">Communicatie check</string>
-    <string name="string_suspend">Onderbreken</string>
-    <string name="string_suspended">Onderbroken</string>
     <string name="string_running">Wordt uitgevoerd</string>
     <string name="cancel">Annuleren</string>
     <string name="confirm">Bevestig</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Wijzigen</string>
     <string name="string_in_progress">Verwerken</string>
     <string name="retry">Opnieuw</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] Verwijder de naaldop en plakkers NIET tot verdere instructies.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Weet je zeker dat je de huidige Patch wilt verwijderen?</string>
     <string name="needle_insertion_error_1">Naald inbreng fout.</string>
     <string name="needle_insertion_error_2">Controleer of de richting van het gat links na het draaien van de hendel recht is en druk op \'Opnieuw proberen\'.</string>
     <string name="needle_insertion_error_3">Druk op \'Verwijderen\' om de Patch te deactiveren.</string>
     <string name="string_suspend_time_insulin_delivery_title">Periode uitstel basaal</string>
     <string name="string_resume_insulin_delivery_title">Insuline toediening hervatten</string>
-    <string name="string_resume_insulin_delivery_message">Uitstellen insuline is verlopen.\nDruk op \'Bevestigen\' om de insuline toediening te hervatten.\n\n[Caution]\nInsuline levering wordt niet hervat zolang je niet op \'Bevestigen\' klikt.\nAls je niet op \'Bevestigen\' klikt, kun je een ernstige hyper ontwikkelen.</string>
     <string name="string_suspended_insulin_delivery_message">Insuline toediening is uitgesteld.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinetoediening is hervat.</string>
     <string name="finish">Voltooien</string>
     <string name="string_temp_basal_remained_hhmm">resterende tijd: %1$s:%2$s</string>
     <string name="next">Volgende</string>
-    <string name="string_pause_failed">Uitstellen mislukt.</string>
     <string name="string_resume_failed">Hervatten mislukt.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE d MMM, yyyy hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
