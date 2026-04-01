@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Επιλέξτε τις μονάδες μέτρησης στις οποίες θέλετε να εμφανίζονται οι τιμές</string>
     <string name="next_button">Επόμενο</string>
     <string name="previous_button">Προηγ</string>
-    <string name="nav_setupwizard">Οδηγός εγκατάστασης</string>
     <string name="setupwizard_finish">ΤΕΛΟΣ</string>
     <string name="welcome">Καλώς ήρθατε</string>
     <string name="welcometosetupwizard">Καλώς ήρθατε στον οδηγό εγκατάστασης. Θα σας καθοδηγήσει μέσα από το πρόγραμμα εγκατάστασης\n</string>
@@ -18,18 +17,13 @@
     <string name="high_mark_comment">Υψηλότερη τιμή της περιοχής εντός στόχου (μόνο εμφάνιση)</string>
     <string name="permission">Άδεια</string>
     <string name="need_system_window_permission">Η εφαρμογή χρειάζεται άδεια παραθύρου συστήματος για ειδοποιήσεις</string>
-    <string name="need_location_permission">Η εφαρμογή χρειάζεται άδεια τοποθεσίας για τη σάρωση Bluetooth και τη σύνδεση σε δίκτυο WiFi</string>
-    <string name="need_storage_permission">Η εφαρμογή απαιτεί πρόσβαση στη μνήμη για την αποθήκευση αρχείων καταγραφής και εξαγωγή των ρυθμίσεων</string>
     <string name="askforpermission">Ζητείστε άδεια</string>
-    <string name="need_whitelisting">Το %1$s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
     <string name="storedsettingsfound">Βρέθηκαν αποθηκευμένες ρυθμίσεις</string>
     <string name="master_password_summary">Ο κύριος κωδικός πρόσβασης χρησιμοποιείται για την κρυπτογράφηση αντιγράφων ασφαλείας και για την αντικατάσταση της ασφάλειας στην εφαρμογή. Θυμηθείτε ή αποθηκεύστε τον σε ασφαλές μέρος.</string>
-    <string name="current_master_password">Τρέχων κύριος κωδικός</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Χρησιμοποιήστε τις τιμές της μέγιστης ποσότητας φαγητού, που τρώτε συνήθως\n</string>
     <string name="syncinfotext">Συγχρονισμός δεδομένων στο cloud. Μπορείτε να παραλείψετε αυτό το βήμα τώρα, αλλά δε θα είστε σε θέση να περάσετε τα objectives μέχρι να ρυθμίσετε το Nightscout ή το Tidepool client.</string>
     <string name="status">Κατάσταση:</string>
-    <string name="patient_name">Όνομα Ασθενή</string>
-    <string name="patient_name_summary">Παρακαλώ δώστε όνομα ασθενούς ή ψευδώνυμο για τη διαφοροποίηση μεταξύ πολλαπλών ρυθμίσεων</string>
     <string name="diawarning">Προσοχή: Τα νέα προφίλ ινσουλίνης απαιτούν DIA τουλάχιστον 5 ωρών. Η DIA 5-6 ώρες στα νέα προφίλ είναι ισοδύναμα με DIA των 3 ωρών στα παλιά προφίλ ινσουλινών.</string>
     <string name="profile">Προφίλ</string>
     <string name="doprofileswitch">Κάντε αλλαγή προφίλ</string>
@@ -51,25 +45,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Διαμόρφωση</string>
-    <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_pump_description">Ποια αντλία θα θέλατε να χρησιμοποιήσετε με το AndroidAPS;</string>
     <string name="configbuilder_profile">Προφίλ</string>
-    <string name="configbuilder_profile_description">Ποιο προφίλ πρέπει να χρησιμοποιεί AAPS;</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Ποιος APS αλγόριθμος πρέπει να κάνει θεραπείες;</string>
-    <string name="configbuilder_general">Γενικά</string>
     <string name="configbuilder_general_description">Αυτά είναι μερικά πρόσθετα που μπορεί να βρείτε χρήσιμα.</string>
-    <string name="configbuilder_sync">Συγχρονισμός</string>
-    <string name="configbuilder_sync_description">Πρόσθετα μεταφόρτωσης δεδομένων και συγχρονισμού.</string>
     <string name="configbuilder_constraints_description">Ποιοι περιορισμοί έχουν εφαρμοστεί;</string>
-    <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="configbuilder_loop_description">Χρησιμοποιήστε αυτό για να ενεργοποιήσετε την ενσωμάτωση του κυκλώματος AndroidAPS.</string>
     <string name="configbuilder_insulin_description">Ποιο τύπο ινσουλίνης χρησιμοποιείτε;</string>
-    <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="configbuilder_bgsource_description">Από πού πρέπει το AndroidAPS να πάρει τα δεδομένα του;</string>
-    <string name="configbuilder_smoothing">Εξομάλυνση</string>
     <string name="configbuilder_smoothing_description">Επιλέξτε αλγόριθμο εξομάλυνσης</string>
-    <string name="configbuilder_sensitivity">Ανίχνευση ευαισθησίας</string>
     <string name="configbuilder_sensitivity_description">Ποιος αλγόριθμος ευαισθησίας να χρησιμοποιηθεί;</string>
     <string name="config_builder_shortname">Διαμόρφωση</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
@@ -78,19 +62,18 @@
     <string name="nsclient_version_does_not_match">Η έκδοση AAPSClient δεν ταιριάζει με την έκδοση AAPS. Παρακαλούμε ενημερώστε την υπάρχουσα έκδοση.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Επιλογές</string>
-    <string name="password_preferences_encrypt_prompt">Θα σας ζητηθεί ο κύριος κωδικός πρόσβασης, ο οποίος θα χρησιμοποιηθεί για να κωδικοποιηθούν οι εξαγώμενες προτιμήσεις.</string>
-    <string name="preferences_export_canceled">Η εξαγωγή ακυρώθηκε! Οι προτιμήσεις ΔΕΝ έχουν εξαχθεί!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Η εισαγωγή ακυρώθηκε! Οι προτιμήσεις δεν έχουν εισαχθεί!</string>
     <string name="preferences_import_impossible">Η εισαγωγή προτιμήσεων δεν είναι δυνατή!</string>
     <string name="check_preferences_details_btn">Εξηγήστε τα προβλήματα εισαγωγής…</string>
     <string name="check_preferences_details_title">Λεπτομέρειες προβλημάτων εισαγωγής</string>
     <string name="check_preferences_import_btn">Εισαγωγή</string>
     <string name="check_preferences_import_anyway_btn">Εισαγωγή οπωσδήποτε(ΕΠΙΚΙΝΔΥΝΟ)</string>
-    <string name="import_setting">Εισαγωγή ρυθμίσεων</string>
     <string name="check_preferences_before_import">Ελέγξτε τις προτιμήσεις πριν την εισαγωγή:</string>
     <string name="check_preferences_cannot_import">Δεν είναι δυνατή η εισαγωγή προτιμήσεων!</string>
     <string name="check_preferences_dangerous_import">Δεν πρέπει να εισαχθούν προτιμήσεις!</string>
-    <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
     <string name="setting_imported">Ρυθμίσεις εισήχθησαν</string>
     <string name="old_master_password">Παλιός Κύριος Κωδικός Πρόσβασης</string>
@@ -101,25 +84,12 @@
     <string name="goto_main_try_again">Επιστρέψτε στην αρχική οθόνη και δοκιμάστε ξανά.</string>
     <string name="restartingapp">Έξοδος από το application για την εφαρμογή των ρυθμίσεων</string>
     <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
-    <string name="protection">Προστασία</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Συντήρηση</string>
     <string name="maintenance_shortname">ΣΥΝΤΗΡ</string>
-    <string name="description_maintenance">Παρέχει λειτουργίες συντήρησης (π. χ. αποστολή, καθαρισμό καταγραφής).</string>
-    <string name="database_cleanup">Εκκαθάριση βάσης δεδομένων</string>
-    <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="maintenance_settings">Ρυθμίσεις συντήρησης</string>
     <string name="maintenance_email">E-mail</string>
     <string name="maintenance_amount">Αριθμός αρχείων καταγραφής για αποστολή</string>
-    <string name="send_all_logs">Αποστολή αρχείων καταγραφής μέσω Email</string>
-    <string name="delete_logs">Διαγραφή αρχείων καταγραφής</string>
-    <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
-    <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
-    <string name="log_files">Αρχεία καταγραφής</string>
-    <string name="nav_logsettings">Ρυθμίσεις Αρχείου Καταγραφής</string>
-    <string name="miscellaneous">Διάφορα</string>
-    <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
-    <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">εξαγωγή πριν από %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">εξαγωγή στις %1$s</string>
@@ -142,8 +112,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Σφάλμα αποκρυπτογράφησης, ο παρεχόμενος κωδικός πρόσβασης δεν είναι έγκυρος ή το αρχείο ρυθμίσεων τροποποιήθηκε! Μπορεί να συμβεί ότι το εισαγόμενο αρχείο εξήχθη με διαφορετικό Κύριο κωδικό πρόσβασης.</string>
     <string name="prefdecrypt_issue_wrong_format">Λείπει η διαμόρφωση κρυπτογράφησης, η μορφή των ρυθμίσεων δεν είναι έγκυρη!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Μη υποστηριζόμενο ή μη καθορισμένος αλγόριθμος κρυπτογράφησης!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Επιλογή προσαρμοσμένης όψης ρολογιου</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Μορφή αρχείου</string>
     <string name="metadata_label_created_at">Δημιουργήθηκε στις</string>
@@ -154,6 +122,7 @@
     <string name="metadata_label_encryption">Κρυπτογράφηση αρχείων</string>
     <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
     <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
