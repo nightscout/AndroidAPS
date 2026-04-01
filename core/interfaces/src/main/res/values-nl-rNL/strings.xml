@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <string name="bolus_delivering">Toedienen van %1$.2fE</string>
     <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E toegediend</string>
@@ -89,4 +90,7 @@
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f E/u @%2$s %3$d/%4$d min</string>
     <string name="forever">Voor altijd</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>
