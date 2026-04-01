@@ -64,17 +64,36 @@
     <string name="record_site_arrow">Områdepil: %1$s</string>
     <string name="record_site_note">Notat: %1$s</string>
     <string name="delete_site_note">Notat slettet</string>
+    <string name="site_filter_info">Velg hvilken type behandlingshendelse du vil se: Kanylebytte og/eller sensorbytte</string>
     <!-- FillDialog -->
     <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
     <string name="record_pump_site_change">Logg bytte av slangesett</string>
     <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
+    <string name="fill_prime_amount">Prime-mengde</string>
+    <string name="fill_pump_units_note">Prime-mengden er i pumpeenheter</string>
+    <string name="fill_insulin_change">Bytt insulin til: %1$s (profilbytte vil bli brukt)</string>
+    <string name="fill_current_insulin">Nåværende insulin</string>
+    <string name="fill_change_insulin">Bytt insulin</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør hendelse</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Mangler insulinnavn</string>
+    <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
+    <string name="a11y_add_new_insulin">Legg til nytt insulin</string>
+    <string name="a11y_delete_current_insulin">Slett nåværende insulin</string>
+    <string name="save_or_reset_changes_first">Lagre eller tilbakestill gjeldende endringer først</string>
+    <string name="activate_insulin_no_profile">Ingen aktiv profil funnet</string>
+    <string name="activate_insulin_new_insulin">Nytt insulin: %1$s</string>
+    <string name="activate_insulin_remaining">Gjenværende: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Profilbytte vil bli opprettet:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Last topp fra</string>
+    <string name="cannot_delete_last_insulin">Kan ikke slette siste insulin</string>
+    <string name="cannot_delete_active_insulin">Kan ikke slette aktivt insulin</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
     <string name="timeshift_label">Tidsforskyving</string>
     <string name="percentage_label">Prosent</string>
+    <string name="permanent_profile_switch">Permanent (0 = ingen varighetsgrense)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Pause loop i 1t</string>
     <string name="suspendloopfor2h">Pause loop i 2t</string>
@@ -100,9 +119,14 @@
     <string name="two_hours">2t</string>
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% karbo umiddelbart, ingen forlenget karbo</string>
+    <string name="wizard_carbs_type_desc">Karbo redusert med %1$d%%, tillagt eKarbo %2$d%% forsinket %3$dmin for %4$dt</string>
+    <string name="wizard_include_info">Trykk for å inkludere/ekskludere fra beregning:\n• BS — blodsukker (på ved start)\n• TT — midl. mål (på ved start)\n• Trend — BS-trend (siste huskede tilstand)\n• IOB — insulin ombord (på ved start)\n• COB — karbo ombord (siste huskede tilstand)</string>
+    <string name="wizard_bg_age">BS-alder: %1$d min</string>
     <string name="a11y_current_bg">nåværende blodsukker</string>
     <string name="carb_time_label">Karbotid</string>
     <string name="a11y_set_carb_timer">angi nedtellingsalarm for karbo</string>
+    <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
     <string name="calculation_short">Kalk</string>
@@ -121,10 +145,30 @@
     <string name="show_loop">Vis loop</string>
     <string name="user_entry">Brukeroppføring</string>
     <string name="clone_label">Dupliser</string>
+    <string name="add_new_profile">Legg til ny profil</string>
+    <string name="show_profile">Vis profil</string>
+    <string name="edit_label">Rediger</string>
+    <string name="edit_profile">Rediger profil</string>
+    <string name="activate_label">Aktiver</string>
+    <string name="activate_profile">Aktiver profil</string>
+    <string name="remove_label">Fjern</string>
+    <string name="active_profile_indicator">AKTIV</string>
+    <string name="remaining_time_label">Gjenværende</string>
+    <string name="confirm_remove_profile">Fjern profil \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Klon profil \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profiltype</string>
+    <string name="profile_parameters">Profilparametere</string>
+    <string name="active_profile">Aktiv profil</string>
+    <string name="available_profiles">Tilgjengelige profiler</string>
+    <string name="profile_switches">Profilbytter</string>
     <string name="basal_pct_from_tdd_label">% av basal</string>
     <string name="selected_profile">Valgt:</string>
+    <string name="comparation">Sammenligning</string>
     <string name="motol_default_profile">Standard profil</string>
     <string name="current_profile">Gjeldende profil</string>
     <string name="available_profile">Tilgjengelige profiler</string>
@@ -142,6 +186,9 @@
     <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
     <string name="overview_edit_quickwizard_button_text">Knappetekst</string>
+    <string name="quick_wizard_mode_wizard">Hurtigknapp</string>
+    <string name="quick_wizard_mode_insulin">Insulin</string>
+    <string name="quick_wizard_mode_carbs">Karbo</string>
     <string name="overview_edit_quickwizard_valid">Gyldig:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
@@ -149,6 +196,14 @@
     <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
     <string name="additional_ecarbs">Legg til eKarbo</string>
     <string name="overview_edit_quickwizard_useforcalculation">Bruk i beregning:</string>
+    <string name="calculator_options">Kalkulatoralternativer</string>
+    <string name="use_bg">Bruk BS</string>
+    <string name="use_cob">Bruk COB</string>
+    <string name="use_iob">Bruk IOB</string>
+    <string name="use_trend">Bruk trend</string>
+    <string name="trend_all">Alt</string>
+    <string name="trend_positive_only">Kun positiv</string>
+    <string name="trend_negative_only">Kun negativ</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="change_your_input">Endre dine inndata!</string>
     <string name="confirm_treatment">Bekreft behandling</string>
