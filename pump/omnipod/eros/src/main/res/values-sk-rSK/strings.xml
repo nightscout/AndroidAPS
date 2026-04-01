@@ -57,7 +57,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Štatistika RileyLink</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Čakám na pripojenie RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetovať konfiguráciu RileyLinku</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Čítať protokol pulzov</string>
     <string name="omnipod_eros_pod_management_button_reading_pulse_log">Čítanie protokolu pulzov…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Protokol pulzov</string>
