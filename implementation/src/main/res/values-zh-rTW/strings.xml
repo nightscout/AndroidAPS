@@ -25,4 +25,6 @@
     <string name="short_status_reservoir">儲存槽：%1$dU</string>
     <string name="short_status_battery">電池：%1$d%%</string>
     <string name="short_status_not_initialized">幫浦未初始化</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
