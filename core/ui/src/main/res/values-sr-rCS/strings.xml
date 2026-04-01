@@ -9,6 +9,7 @@
     <string name="constraints">Ograničenja</string>
     <string name="result">Rezultat</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="pump">Pumpa</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="goingtodeliver">Isporučujem %1$.2f U</string>
@@ -31,6 +32,7 @@
     <!--    ProfileFunction-->
     <!--    APSResult-->
     <string name="duration">Trajanje</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
@@ -47,6 +49,7 @@
     <!--    Ntp-->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
@@ -62,18 +65,32 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
-    <!-- SmsCommunicator -->
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <!--    Maintenance-->
     <!--    Weekday-->
     <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
