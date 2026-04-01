@@ -290,10 +290,11 @@ private fun StepButton(
                                 delay(100)          // allow pager to claim swipe gestures first
                                 stepped = true
                                 onStep(delta)
-                                delay(200)          // hold-to-repeat: 300ms total from press
+                                var repeatDelay = 300L
                                 while (true) {
+                                    delay(repeatDelay)
                                     onStep(delta)
-                                    delay(150)
+                                    repeatDelay = maxOf(40L, (repeatDelay * 0.75).toLong())
                                 }
                             }
                             val released = tryAwaitRelease()  // false if pager cancelled the gesture
@@ -320,6 +321,18 @@ private fun StepButton(
                 modifier = Modifier.size(28.dp)
             )
         }
+    }
+}
+
+@Composable
+internal fun CurvedTitle(title: String) {
+    val fontSize = when {
+        title.length <= 15 -> 12.sp
+        title.length <= 19 -> 10.sp
+        else               -> 9.sp
+    }
+    CurvedLayout(anchor = 270f, anchorType = AnchorType.Center) {
+        curvedText(text = title, color = WearSecondaryText, fontSize = fontSize)
     }
 }
 
