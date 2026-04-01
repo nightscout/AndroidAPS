@@ -55,7 +55,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Estatísticas do RileyLink</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">À espera de ligação RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Redefinir configuração RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Ler Pulse Log</string>
     <string name="omnipod_eros_pod_management_button_reading_pulse_log">A Ler Pulse Log…</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (copiado para a área de transferência)</string>
