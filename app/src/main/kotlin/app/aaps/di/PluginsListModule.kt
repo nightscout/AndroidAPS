@@ -28,6 +28,7 @@ import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
 import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.EversensePlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.GlunovoPlugin
 import app.aaps.plugins.source.IntelligoPlugin
@@ -280,6 +281,7 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(440)
     abstract fun bindDexcomPlugin(plugin: DexcomPlugin): PluginBase
+    @Binds abstract fun bindEversensePlugin(plugin: EversensePlugin): PluginBase
 
     @Binds
     @AllConfigs

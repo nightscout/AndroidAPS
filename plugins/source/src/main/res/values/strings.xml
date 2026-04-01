@@ -48,4 +48,66 @@
     <string name="permission_dexcom_description">Application needs permission to receive CGM data from Dexcom app</string>
     <string name="permission_notification_listener_title">Notification Access</string>
     <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
+<!-- Eversense plugin -->
+    <string name="source_eversense">Eversense</string>
+    <string name="description_source_eversense">Eversense E3/365 driver</string>
+    <string name="eversense_information_title">Information</string>
+    <string name="eversense_information_connected">Connected</string>
+    <string name="eversense_information_battery">Battery percentage</string>
+    <string name="eversense_information_insertion_date">Insertion date</string>
+    <string name="eversense_information_last_sync">Last synchronisation</string>
+    <string name="eversense_calibration_title">Calibration</string>
+    <string name="eversense_calibration_phase">Phase</string>
+    <string name="eversense_calibration_last">Last calibration</string>
+    <string name="eversense_calibration_next">Next calibration</string>
+    <string name="eversense_calibration_action">Calibrate transmitter</string>
+    <string name="eversense_use_smoothing">Use ESEL Smoothing</string>
+    <!-- Credentials section for Eversense 365 DMS login -->
+    <string name="eversense_not_connected">Not connected</string>
+    <string name="eversense_credentials_title">Eversense 365 credentials</string>
+    <string name="eversense_credentials_username">Username</string>
+    <string name="eversense_credentials_password">Password</string>
+    <string name="eversense_credentials_not_set">Not set</string>
+    <string name="eversense_credentials_password_set">Set (hidden)</string>
+    <!-- Device scan dialog -->
+    <string name="eversense_scan_title">Select Eversense transmitter</string>
+    <string name="eversense_scan_cancel">Cancel</string>
+    <string name="eversense_scan_unknown_device">Unknown device</string>
+    <!-- Calibration activity -->
+    <string name="eversense_calibration_ready">Ready to calibrate</string>
+    <string name="eversense_calibration_status">Calibration status</string>
+    <string name="eversense_calibration_bg_value">Blood glucose value</string>
+    <string name="eversense_calibration_bg_hint">Enter BG value</string>
+    <string name="eversense_calibration_submit">Submit calibration</string>
+    <string name="eversense_calibration_invalid_value">Please enter a valid blood glucose value</string>
+    <string name="eversense_calibration_not_supported">Calibration submission is not yet supported by the Eversense SDK</string>
+    <string name="eversense_calibration_not_supported_notice">Note: Calibration submission requires a future SDK update. The UI is ready but the submit action is not yet functional.</string>
+    <string name="eversense_calibration_success">Calibration submitted successfully</string>
+    <string name="eversense_calibration_failed">Failed to submit calibration. Make sure the transmitter is connected and ready.</string>
+    <string name="eversense_information_last_sync_tap">Tap to trigger a full sync</string>
+    <string name="eversense_placement_signal">Placement signal</string>
+    <string name="eversense_placement_title">Transmitter Placement</string>
+    <string name="eversense_placement_guide_heading">Transmitter Placement Guide</string>
+    <string name="eversense_placement_guide_subtitle">Adjust your transmitter position\nto improve signal strength</string>
+    <string name="eversense_signal_excellent">Excellent</string>
+    <string name="eversense_signal_good">Good</string>
+    <string name="eversense_signal_fair">Fair</string>
+    <string name="eversense_signal_weak">Weak</string>
+    <string name="eversense_signal_poor">Poor</string>
+    <string name="eversense_placement_instruction_excellent">Great placement! Keep the transmitter in this position.</string>
+    <string name="eversense_placement_instruction_good">Good placement. Signal is strong.</string>
+    <string name="eversense_placement_instruction_fair">Signal is acceptable. Try moving the transmitter slightly for a better reading.</string>
+    <string name="eversense_placement_instruction_weak">Weak signal. Reposition the transmitter closer to the sensor.</string>
+    <string name="eversense_placement_instruction_poor">Poor signal. Make sure the transmitter is placed directly over the sensor site.</string>
+    <string name="eversense_placement_instruction_not_connected">Connect to your transmitter to view signal strength.</string>
+    <string name="eversense_placement_reading">Reading&#8230;</string>`n    <string name="eversense_placement_connected">Transmitter Connected</string>
+    <string name="eversense_placement_connected_instruction">Your transmitter is connected. Make sure it is positioned directly over your sensor site and secured with the adhesive patch.</string>
+    <string name="eversense_calibration_sending">Sending calibration&#8230;</string>
+    <string name="eversense_release_for_official_app">Release for Official App</string>
+    <string name="eversense_release_summary">Disconnect so the official Eversense app can connect. AAPS will reconnect every 5 minutes automatically.</string>
+    <string name="eversense_release_active">Released — AAPS reconnecting every 5 minutes…</string>
+    <string name="eversense_coexistence_mode">Coexistence Mode</string>
+    <string name="eversense_coexistence_summary">Automatically disconnect after each sync to give the official Eversense app time to connect and upload data</string>
+    <string name="eversense_transmitter_not_placed">Eversense transmitter not detecting — check placement</string>
+    <string name="eversense_transmitter_not_placed_summary">Make sure the transmitter is placed directly over the sensor site and secured with the adhesive patch.</string>
 </resources>

@@ -18,6 +18,7 @@ android {
 
 
 dependencies {
+    implementation(project(":plugins:eversense"))
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))

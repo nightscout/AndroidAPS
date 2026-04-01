@@ -18,6 +18,14 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".activities.RequestEversensePermissionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.EversenseCalibrationActivity"
+            android:exported="false" />
+        <activity android:name=".activities.EversensePlacementActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

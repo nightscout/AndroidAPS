@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="@android:color/background_light">
+
+    <TextView
+        android:id="@+id/placement_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eversense_placement_guide_heading"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eversense_placement_guide_subtitle"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:gravity="center"
+        android:layout_marginBottom="48dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/signal_bar_1"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/eversense_signal_bar"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/signal_bar_2"
+            android:layout_width="28dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/eversense_signal_bar"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/signal_bar_3"
+            android:layout_width="28dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/eversense_signal_bar"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/signal_bar_4"
+            android:layout_width="28dp"
+            android:layout_height="84dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/eversense_signal_bar"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/signal_bar_5"
+            android:layout_width="28dp"
+            android:layout_height="104dp"
+            android:src="@drawable/eversense_signal_bar"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/signal_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/rssi_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/last_update_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#999999"
+        android:layout_marginBottom="40dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
+        android:id="@+id/instruction_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.4" />
+
+</LinearLayout>
