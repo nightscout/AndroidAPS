@@ -4,11 +4,11 @@
     <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
     <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Dialog anulat</string>
-    <string name="start_activity_tt">Start TT activitate</string>
-    <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
-    <string name="start_hypo_tt">Start TT hipo</string>
+    <string name="start_activity_tt">Start Țintă Temporară activitate</string>
+    <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
+    <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
     <string name="time_offset">Decalaj</string>
-    <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
+    <string name="remind_to_bolus_later">Amintește-mi să fac bolus mai târziu</string>
     <!--    Widget-->
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
@@ -63,15 +63,15 @@
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
     <string name="suspendloopfor10h">Suspendă bucla pentru 10h</string>
     <string name="disconnectpump">Deconectează pompa</string>
-    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
-    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
+    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 minute</string>
+    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 minute</string>
     <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
     <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
     <string name="resume">Restabilește</string>
     <string name="reconnect">Reconectați pompa</string>
-    <string name="duration15m">15 min</string>
-    <string name="duration30m">30 min</string>
+    <string name="duration15m">15 minute</string>
+    <string name="duration30m">30 minute</string>
     <string name="duration1h">1 oră</string>
     <string name="duration2h">2 ore</string>
     <string name="duration3h">3 ore</string>
@@ -86,8 +86,8 @@
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
     <!-- Treatments -->
-    <string name="no_records_available">Nicio înregistrare disponibila</string>
-    <string name="calculation_short">Calc</string>
+    <string name="no_records_available">Nicio înregistrare disponibilă</string>
+    <string name="calculation_short">Calcul</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="tempbasals_netratio_label_string">Raport:</string>
