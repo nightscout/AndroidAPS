@@ -4,9 +4,7 @@
     <string name="next_button">Sljedeći</string>
     <string name="permission">Dozvola</string>
     <string name="need_system_window_permission">Aplikacija treba dopuštenje sustava za obavijesti</string>
-    <string name="need_location_permission">Aplikaciji je potrebna dozvola za lokaciju za BT skeniranje i WiFi identifikaciju</string>
-    <string name="need_storage_permission">Aplikaciji je potrebno dopuštenje za pohranu kako bi mogla pohranjivati datoteke dnevnika i izvoziti postavke</string>
-    <string name="need_whitelisting">%1$s potrebno stavljanje na popis dopuštenih za optimizaciju baterije za pravilan rad</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="profile">Profil</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Zahtjev</string>
@@ -14,12 +12,8 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na popis dopuštenih za optimizaciju baterije - mogli biste imati problema s performansama.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Config Builder</string>
-    <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Koju pumpu želite koristiti s AndroidAPS-om?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Koji profil treba koristiti AAPS?</string>
-    <string name="configbuilder_aps">APS</string>
-    <string name="configbuilder_general">Općenito</string>
     <string name="configbuilder_loop_description">Koristite ovo za aktiviranje integracije AAPS-ove petlje.</string>
     <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
     <string name="description_config_builder">Koristi se za konfiguriranje aktivnih softverskih dodataka</string>
@@ -28,14 +22,13 @@
     <string name="nsclient_version_does_not_match">Verzija AAPS klijenta ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Osobne postavke</string>
-    <string name="import_setting">Uvezi postavke</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
     <string name="setting_imported">Postavke su uvezene</string>
     <string name="filenotfound">Datoteka nije pronađena</string>
-    <string name="protection">Zaštita</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="database_cleanup">Čišćenje baze podataka</string>
-    <string name="reset_db_confirm">Stvarno želiš resetirati bazu?</string>
-    <string name="nav_resetdb">Resetiraj bazu</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">izvezeno prije %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">izvezeno u %1$s</string>
@@ -58,8 +51,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Pogreška dešifriranja, navedena lozinka je nevažeća ili je datoteka postavki izmijenjena! Može se dogoditi da je uvezena datoteka izvezena s drugom glavnom lozinkom.</string>
     <string name="prefdecrypt_issue_wrong_format">Nedostaje konfiguracija enkripcije, format postavki nije valjan!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritam šifriranja nije podržan ili nije naveden!</string>
-    <!-- Custom Watchface -->
     <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
