@@ -51,13 +51,10 @@
     <string name="patch_remove_needle_cap">מתכונן לחיבור ה-Patch</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">הורידו את כיסוי הדבק ולאחר מכן הקישו \'הבא\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] אם המחט יצאה החוצה, הקישו על \'ניתוק\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] אם ה-Patch רטוב או מלוכלך, או שהדבק שלו מקופל, הקישו על \'ניתוק\'.</string>
     <string name="patch_remove_protection_tape">מצמיד את ה-Patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">זה לוקח כ-30 שניות.</string>
-    <string name="patch_safety_check_desc_2">[Caution] לבטיחותכם, על תסירו את מנוף החדרת המחט עד שבדיקת הבטיחות הושלמה!</string>
     <string name="patch_rotate_knob">מחדיר את המחט</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">סובבו את מנוף החדרת המחט ליותר מ-100° על מנת להחדיר את המחט ולאחר מכן סובבו עד הסוף בכדי להסיר את המנוף</string>
@@ -75,11 +72,8 @@
     <string name="string_change_patch">ניתוק/החלפת Patch</string>
     <string name="string_activate_patch">הפעלת Patch</string>
     <string name="string_discard_patch">ניתוק Patch</string>
-    <string name="string_resume">חידוש</string>
     <string name="discard">ניתוק</string>
     <string name="string_communication_check">בדיקת תקשורת</string>
-    <string name="string_suspend">השהיה</string>
-    <string name="string_suspended">מושהה</string>
     <string name="string_running">פועל</string>
     <string name="cancel">ביטול</string>
     <string name="confirm">אישור</string>
@@ -88,20 +82,18 @@
     <string name="string_changing">משנה</string>
     <string name="string_in_progress">מעבד</string>
     <string name="retry">נסה שוב</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] אל תסירו את מכסה המחט ואת כיסוי הדבק עד להוראה נוספת.</string>
     <string name="string_are_you_sure_to_discard_current_patch">האם אתם בטוחים רוצים לנתק את ה-Patch הנוכחי?</string>
     <string name="needle_insertion_error_1">שגיאה בהכנסת מחט.</string>
     <string name="needle_insertion_error_2">בדקו שכיוון חור פתח המחט ישר, לאחר סיבוב מנוף החרדת המחט, ולאחר מכן לחצו \'נסה שוב\'.</string>
     <string name="needle_insertion_error_3">לחצו על \'ניתוק\' בכדי לנתק את ה-Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">זמן השעיית הבאזלי</string>
     <string name="string_resume_insulin_delivery_title">חידוש הזרקת האינסולין</string>
-    <string name="string_resume_insulin_delivery_message">סוף הפסקת האינסולין.\nלחצו על \'אשר\' כדי לחדש את מתן האינסולין.\n\n[Caution]\nמתן האינסולין לא יחודש עד שתלחצו על \'אשר\'.\nאם לא תלחצו על \'אשר\', הסוכר עלול לעלות ותגיעו לכדי היפרגליקמיה.</string>
     <string name="string_suspended_insulin_delivery_message">הזרקת האינסולין מופסקת.</string>
     <string name="string_resumed_insulin_delivery_message">הזרקת האינסולין התחדשה.</string>
     <string name="finish">סיום</string>
     <string name="string_temp_basal_remained_hhmm">זמן נותר: %1$s:%2$s</string>
     <string name="next">הבא</string>
-    <string name="string_pause_failed">ההשעיה נכשלה.</string>
     <string name="string_resume_failed">חידוש ההזרקה נכשל.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
